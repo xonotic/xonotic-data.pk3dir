@@ -564,7 +564,6 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-.int survival_status;
 void Ent_RemovePlayerScore(entity this)
 {
 	if(this.owner) {
@@ -577,8 +576,7 @@ void Ent_RemovePlayerScore(entity this)
 		this.owner.eliminated = 0;
 		this.owner.ignored = false;
 		this.owner.colormap = 0;
-		// TODO add a hook to reset this Survival field
-		this.owner.survival_status = 0;
+		this.owner.gametype_status = 0;
 	}
 }
 

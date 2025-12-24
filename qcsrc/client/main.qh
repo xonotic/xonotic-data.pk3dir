@@ -193,6 +193,8 @@ string GetSpeedUnit(int speed_unit);
 .int team;
 .int team_size;
 
+.int gametype_status;
+
 int binddb;
 
 // Spectating

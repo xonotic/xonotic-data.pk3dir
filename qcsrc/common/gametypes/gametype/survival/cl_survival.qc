@@ -3,88 +3,104 @@
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
 
-NET_HANDLE(ENT_CLIENT_SURVIVALSTATUSES, bool isnew)
+// hardcoded player colors for Survival
+const int SURV_COLOR_PREY    = 51; // green
+const int SURV_COLOR_HUNTER  = 68; // red
+
+bool autocvar_cl_survival_reveal = true;
+bool surv_reveal; ///< Show Hunters regardless of autocvar_cl_survival_reveal, since it's the end of the round
+bool surv_show_hunters; ///< Cache of whether we're showing Hunters
+
+NET_HANDLE(ENT_CLIENT_SURV_STATUSES, bool isNew)
 {
-	make_pure(this);
-	int sf = ReadByte();
-	if (sf & BIT(0)) // make all players survivors
+	int i, sf = ReadByte();
+	surv_reveal = (sf & SF_SURV_REVEAL);
+
+	if (sf & (SF_SURV_HUNTERS | SF_SURV_REVEAL)) // receive Hunter statuses, in a bitset
 	{
-		for (int j = 0; j < maxclients; ++j)
-			if (playerslots[j])
-				playerslots[j].survival_status = SURV_STATUS_PREY;
-	}
-	if (sf & BIT(1)) // receive hunter statuses
-	{
-		for (int i = 1; i <= maxclients; i += 8)
-		{
-			int f = ReadByte();
-			for (int b = 0; b < 8; ++b)
+		int B, b;
+		for (i = 0; i < maxclients; )
+			for (B = ReadByte(), b = BIT(0); b < BIT(8) && i < maxclients; b <<= 1, ++i)
 			{
-				if (!(f & BIT(b))) continue;
-				int j = i - 1 + b;
-				if (playerslots[j])
-					playerslots[j].survival_status = SURV_STATUS_HUNTER;
+				if (!playerslots[i] && (B & b))
+					playerslots[i] = new_pure(playerslot);
+				if (playerslots[i])
+					playerslots[i].gametype_status = (B & b) ? SURV_STATUS_HUNTER : SURV_STATUS_PREY;
 			}
-		}
 	}
+	else if (sf & (SF_SURV_SET | SF_SURV_RESET)) // make everyone Survivors (SF_SURV_SET) or 0 status (SF_SURV_RESET)
+		for (i = 0; i < maxclients; ++i)
+			if (playerslots[i])
+				playerslots[i].gametype_status = (sf & SF_SURV_RESET) ? 0 : SURV_STATUS_PREY;
 
-	// color all players
-	for (int i = 1; i <= maxclients; ++i)
-	{
-		entity e = playerslots[i - 1];
-		if (!e) continue;
-
-		int plcolor = SURV_COLOR_PREY; // default color
-		if(e.survival_status == SURV_STATUS_HUNTER) // if client knows this hunter
-			plcolor = SURV_COLOR_HUNTER;
-
-		e.colormap = 1024 + plcolor; // override scoreboard and player model colors
-	}
-
+	surv_show_hunters = HUD_Mod_Survival_ShowHunters();
+	HUD_Mod_Survival_ColorPlayers();
 	return true;
 }
 
-void HUD_Mod_Survival(vector pos, vector mySize, bool should_draw)
+bool HUD_Mod_Survival_ShowHunters()
 {
-	if (!should_draw)
+	return (surv_reveal // reveal all Hunters
+		|| playerslots[player_localnum].gametype_status == SURV_STATUS_HUNTER // we are a Hunter
+		|| (spectatee_status > 0 && entcs_GetSpecState(player_localnum) == ENTCS_SPEC_PURE
+			&& playerslots[spectatee_status - 1].gametype_status == SURV_STATUS_HUNTER && autocvar_cl_survival_reveal)); // we're spectating a Hunter and chose to reveal them
+}
+
+void HUD_Mod_Survival_ColorPlayers()
+{
+	entity e;
+	for (int plcolor, i = 0; i < maxclients; ++i)
+	{
+		e = playerslots[i];
+		if (!e)
+			continue;
+
+		plcolor = (surv_show_hunters && e.gametype_status == SURV_STATUS_HUNTER)
+			? SURV_COLOR_HUNTER
+			: SURV_COLOR_PREY;
+		e.colormap = 1024 + plcolor; // override scoreboard & player model colors
+	}
+}
+
+void HUD_Mod_Survival(vector myPos, vector mySize, bool should_draw)
+{
+	bool surv_show_hunters_prev = surv_show_hunters;
+	surv_show_hunters = HUD_Mod_Survival_ShowHunters();
+	if (surv_show_hunters != surv_show_hunters_prev) // specced a different player or changed cl_survival_reveal
+		HUD_Mod_Survival_ColorPlayers();
+
+	if (!should_draw) // return after updating player colors
 		return;
 
-	mod_active = true; // survival should always show the mod HUD
+	int my_status = (spectatee_status > 0 && entcs_GetSpecState(player_localnum) == ENTCS_SPEC_PURE && autocvar_cl_survival_reveal)
+		? playerslots[spectatee_status - 1].gametype_status
+		: playerslots[player_localnum].gametype_status;
 
-	int mystatus = playerslots[player_localnum].survival_status;
-	string player_text = "";
-	vector player_color = '1 1 1';
-	//string player_icon = "";
-
-	if(STAT(GAMESTARTTIME) > time || STAT(ROUNDSTARTTIME) > time || entcs_IsSpectating(player_localnum))
+	mod_active = (my_status != 0 // there's a status to show
+		&& !(spectatee_status == -1 && entcs_GetSpecState(player_localnum) == ENTCS_SPEC_PURE)); // we're not an observer
+	if (autocvar__hud_configure && !mod_active) // make up something, so the panel isn't empty
 	{
-		if (autocvar__hud_configure) // make up something, so the panel isn't empty
-			mystatus = SURV_STATUS_HUNTER;
-		else
-			return;
+		my_status = SURV_STATUS_HUNTER;
+		mod_active = true;
 	}
 
-	if(mystatus == SURV_STATUS_HUNTER)
-	{
-		player_text = _("Hunter");
-		player_color = '1 0 0';
+	if (!mod_active)
+		return;
+
+	//string player_icon;
+	if (my_status == SURV_STATUS_HUNTER)
+		drawstring_aspect(myPos, _("Hunter"),   mySize, '1 0.0625 0.0625', panel_fg_alpha, DRAWFLAG_NORMAL);
 		//player_icon = "player_red";
-	}
-	else if(mystatus == SURV_STATUS_PREY)
-	{
-		player_text = _("Survivor");
-		player_color = '0 1 0';
-		//player_icon = "player_neutral";
-	}
-
-	drawstring_aspect(pos, player_text, vec2(mySize.x, mySize.y), player_color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	else
+		drawstring_aspect(myPos, _("Survivor"), mySize, '0.0625 1 0.0625', panel_fg_alpha, DRAWFLAG_NORMAL);
+		//player_icon = "player_neutral"; // TODO need a green version
 }
 
 REGISTER_MUTATOR(cl_surv, true);
 
 MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 {
-	if(!ISGAMETYPE(SURVIVAL))
+	if (!ISGAMETYPE(SURVIVAL))
 		return false;
 
 	entity player = M_ARGV(0, entity);
@@ -98,12 +114,12 @@ MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 
 MUTATOR_HOOKFUNCTION(cl_surv, DrawScoreboard)
 {
-	if(!ISGAMETYPE(SURVIVAL))
+	if (!ISGAMETYPE(SURVIVAL))
 		return false;
 
 	// initialize colors of new players
-	for(entity pl = players.sort_next; pl; pl = pl.sort_next)
-		if(pl.gotscores && pl.colormap == 0)
+	for (entity pl = players.sort_next; pl; pl = pl.sort_next)
+		if (pl.gotscores && pl.colormap == 0)
 			pl.colormap = 1024 + SURV_COLOR_PREY;
 	return false;
 }
