@@ -53,6 +53,11 @@ CLASS(TeamKeepaway, Gametype)
 	{
 		cvar_set("g_tka_teams", sa);
 	}
+	METHOD(TeamKeepaway, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),     5,  100,  5, "g_tka_point_limit",         "g_tka_teams_override",         _("The amount of points needed before the match will end"));
+	}
 #ifdef CSQC
 	ATTRIB(TeamKeepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_TeamKeepaway);
 #endif
