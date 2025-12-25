@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorRocketFlyingTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorRocketFlyingTab, fill, void(entity));
+	ATTRIB(XonoticMutatorRocketFlyingTab, title, string, _("Rocket flying"));
+	ATTRIB(XonoticMutatorRocketFlyingTab, message, string, "g_rocket_flying");
+	METHOD(XonoticMutatorRocketFlyingTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorRocketFlyingTab)
+entity makeXonoticMutatorRocketFlyingTab();
