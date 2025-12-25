@@ -25,16 +25,17 @@ bool isinf(float e)
 bool isnan(float e)
 {
 	// The sane way to detect NaN is this:
-	// float f = e;
-	// return (e != f);
+	float f = e;
+	return (e != f);
 	// but darkplaces used to be compiled with -ffinite-math-only which broke it.
 	// DP is fixed now but until all clients update (so after 0.8.3) we have to use the following workaround
 	// or they'd have issues when connecting to newer servers.
+	// bones_was_here: fixed in 0.8.5 and later.
 
 	// Negative NaN ("-nan") is much more common but plain "nan" can be created by negating *some* -nans so we need to check both.
 	// DP's QCVM and GMQCC's QCVM behave differently - one needs ftos(-(0.0 / 0.0)), the other ftos(-sqrt(-1)).
-	string s = ftos(e);
-	return s == "nan" || s == "-nan";
+//	string s = ftos(e);
+//	return s == "nan" || s == "-nan";
 }
 bool isnormal(float e)
 {
