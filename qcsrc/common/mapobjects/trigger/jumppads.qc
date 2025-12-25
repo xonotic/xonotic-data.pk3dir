@@ -539,7 +539,7 @@ entity get_pusher_from_trigger(entity this)
 	entity pusher = NULL;
 	if(this.classname != "trigger_push")
 	{
-		for(entity t = NULL; (t = find(t, targetname, this.target)); )
+		for(entity t = ftoe(maxclients); (t = find(t, targetname, this.target)); )
 		{
 			if(t.classname == "target_push")
 			{
