@@ -36,7 +36,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = PHYS_GRAVITY(NULL);
+	grav = PHYS_GRAVITY(pushed_entity);
 	if(pushed_entity && pushed_entity.gravity)
 		grav *= pushed_entity.gravity;
 

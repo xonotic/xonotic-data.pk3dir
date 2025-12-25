@@ -2817,6 +2817,8 @@ frametime is always set here.
 */
 void PlayerFrame (entity this)
 {
+	Physics_UpdateStats(this);
+
 // formerly PreThink code
 
 	if (this.score_frame_dmg)
