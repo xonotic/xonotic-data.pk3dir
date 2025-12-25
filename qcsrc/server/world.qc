@@ -758,6 +758,22 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+	// Must be checked first because we don't always error() and don't want to print this twice.
+	if (world_already_spawned)
+	{
+		string msg = "world already spawned - your map may have EXACTLY ONE worldspawn!";
+		if (q3compat) // must be set during (first) worldspawn
+		{
+			// Q3 ignores spurious/extra worldspawn entities, test map: q3dmz_carnage
+			LOG_WARN(msg);
+			delete(this);
+			return;
+		}
+		else
+			error(msg);
+	}
+	world_already_spawned = true;
+
 #ifdef WATERMARK
 	string watermark_start = cvar_string("sv_watermark_start");
 	if (watermark_start == "") // always true on Xonotic (re)start
@@ -843,10 +859,6 @@ spawnfunc(worldspawn)
 			// let initialization continue, shutdown depends on it
 		}
 	}
-
-	if(world_already_spawned)
-		error("world already spawned - you may have EXACTLY ONE worldspawn!");
-	world_already_spawned = true;
 
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
