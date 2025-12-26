@@ -202,6 +202,7 @@ int binddb;
 // 0 - playing
 // >0 - id of spectated player
 int spectatee_status = -1; ///< the -1 disables HUD panels before CSQC receives necessary data
+int spectatee_status_prev; ///< the previous spectatee_status value
 float spectatee_status_changed_time;
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
