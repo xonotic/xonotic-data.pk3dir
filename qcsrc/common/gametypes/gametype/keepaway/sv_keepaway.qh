@@ -4,6 +4,7 @@
 #include <common/scores.qh>
 int autocvar_g_keepaway_point_limit;
 
+void ka_BallStatuses_Init();
 void ka_Handler_CheckBall(entity this);
 
 IntrusiveList g_kaballs;
@@ -24,6 +25,7 @@ REGISTER_MUTATOR(ka, false)
 		entity ka_Handler = new_pure(ka_Handler);
 		setthink(ka_Handler, ka_Handler_CheckBall);
 		InitializeEntity(ka_Handler, ka_Handler_CheckBall, INITPRIO_SETLOCATION);
+		ka_BallStatuses_Init();
 	}
 	return false;
 }
