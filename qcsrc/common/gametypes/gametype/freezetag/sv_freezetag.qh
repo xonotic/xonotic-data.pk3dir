@@ -34,7 +34,6 @@ REGISTER_MUTATOR(ft, false)
 .float freezetag_frozen_armor;
 const float ICE_MAX_ALPHA = 1;
 const float ICE_MIN_ALPHA = 0.1;
-float freezetag_teams;
 
 bool autocvar_g_freezetag_revive_auto = 1;
 int autocvar_g_freezetag_revive_auto_progress = 1;
