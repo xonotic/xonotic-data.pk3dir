@@ -54,6 +54,7 @@ const string STATIC_NAME_TEAM_1 = "Red";
 const string STATIC_NAME_TEAM_2 = "Blue";
 const string STATIC_NAME_TEAM_3 = "Yellow";
 const string STATIC_NAME_TEAM_4 = "Pink";
+const string STATIC_NAME_NEUTRAL = "Neutral";
 
 #ifdef CSQC
 bool teamplay;
@@ -110,7 +111,7 @@ string Static_Team_ColorName(int teamid)
 		case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
 	}
 
-	return NAME_NEUTRAL;
+	return STATIC_NAME_NEUTRAL;
 }
 
 float Team_ColorToTeam(string team_color)
