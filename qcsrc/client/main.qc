@@ -757,6 +757,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
 			prev_health = -1;
 	}
+
+	if (newspectatee_status != spectatee_status) // update the prev value if spectatee_status is changing
+		spectatee_status_prev = spectatee_status;
 	spectatee_status = newspectatee_status;
 
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
