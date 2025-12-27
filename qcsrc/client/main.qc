@@ -819,8 +819,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 {
 	make_pure(this);
-	int sf = 0;
-	serialize(byte, 0, sf);
+	int sf = ReadByte();
 	if (sf & 1) {
 		for (int j = 0; j < maxclients; ++j) {
 			if (playerslots[j]) {
@@ -828,8 +827,7 @@ NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 			}
 		}
 		for (int i = 1; i <= maxclients; i += 8) {
-			int f = 0;
-			serialize(byte, 0, f);
+			int f = ReadByte();
 			for (int b = 0; b < 8; ++b) {
 				if (f & BIT(b)) continue;
 				int j = i - 1 + b;

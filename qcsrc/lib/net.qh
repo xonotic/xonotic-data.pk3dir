@@ -15,19 +15,20 @@
 #define NET_HANDLE(id, param) bool Net_Handle_##id(entity this, entity sender, param)
 
 #define NET_GUARD(id) \
-    bool Net_Handle_##id##_guard(entity this, entity sender, bool isNew) { \
-        bool valid = false; \
-        serialize_marker(to, valid); \
-        if (!valid) LOG_FATALF("Last message not fully parsed: %s", _net_prevmsgstr); \
-        _net_prevmsgstr = #id; \
-        return Net_Handle_##id(this, sender, isNew); \
-    }
+	bool Net_Handle_##id##_guard(entity this, entity sender, bool isNew) { \
+		bool valid = false; \
+		net_guard_marker(to, valid); \
+		if (!valid) \
+			LOG_FATALF("Last message not fully parsed: %s", _net_prevmsgstr); \
+		_net_prevmsgstr = #id; \
+		return Net_Handle_##id(this, sender, isNew); \
+	}
 
 #ifdef CSQC
 string _net_prevmsgstr;
 	#define REGISTER_NET_TEMP(id) \
 		NET_HANDLE(id, bool); \
-        NET_GUARD(id); \
+		NET_GUARD(id); \
 		REGISTER(TempEntities, NET, id, m_id, new_pure(net_temp_packet)) { \
 			this.netname = #id; \
 			this.m_read = Net_Handle_##id##_guard; \
@@ -39,6 +40,35 @@ string _net_prevmsgstr;
 		{ \
 			this.netname = #id; \
 		}
+#endif
+
+// k9er: why is this needed? this is the engine's job
+#if defined(CSQC)
+	#define net_guard_marker(stream, this) MACRO_BEGIN \
+		if (NDEBUG) \
+			this = true; \
+		else \
+		{ \
+			int _de = ReadByte(); \
+			int _ad = ReadByte(); \
+			int _be = ReadByte(); \
+			int _ef = ReadByte(); \
+			this = (_de == 0xDE && _ad == 0xAD && _be == 0xBE && _ef == 0xEF); \
+		} \
+	MACRO_END
+#elif defined(SVQC)
+	#define net_guard_marker(stream, this) MACRO_BEGIN \
+		if (NDEBUG) \
+			this = true; \
+		else \
+		{ \
+			WriteByte(stream, 0xDE); \
+			WriteByte(stream, 0xAD); \
+			WriteByte(stream, 0xBE); \
+			WriteByte(stream, 0xEF); \
+			this = true; \
+		} \
+	MACRO_END
 #endif
 
 REGISTRY(TempEntities, BITS(8) - 80)
@@ -225,7 +255,8 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		MACRO_BEGIN \
 			if (NET_##id##_istemp) WriteByte(to, SVC_TEMPENTITY); \
 			WriteByte(to, NET_##id.m_id); \
-			bool _net_valid = false; serialize_marker(to, _net_valid); \
+			bool _net_valid = false; \
+			net_guard_marker(to, _net_valid); \
 		MACRO_END
 #endif
 
@@ -239,59 +270,6 @@ USING(Stream, int);
 	#define stream_reading(stream) true
 	#define stream_writing(stream) false
 #endif
-
-#define serialize(T, stream, ...) \
-MACRO_BEGIN \
-    noref Stream _stream = stream; \
-    serialize_##T(_stream, __VA_ARGS__); \
-MACRO_END
-
-#if defined(SVQC)
-	#define serialize_byte(stream, this) \
-		MACRO_BEGIN \
-		WriteByte(stream, this); \
-		MACRO_END
-#elif defined(CSQC)
-	#define serialize_byte(stream, this) \
-		MACRO_BEGIN \
-		this = ReadByte(); \
-		MACRO_END
-#endif
-
-#if defined(SVQC)
-	#define serialize_float(stream, this) \
-		MACRO_BEGIN \
-		WriteCoord(stream, this); \
-		MACRO_END
-#elif defined(CSQC)
-	#define serialize_float(stream, this) \
-		MACRO_BEGIN \
-		this = ReadCoord(); \
-		MACRO_END
-#endif
-
-#define serialize_vector(stream, this) \
-MACRO_BEGIN \
-    vector _v = this; \
-    serialize_float(stream, _v.x); \
-    serialize_float(stream, _v.y); \
-    serialize_float(stream, _v.z); \
-    this = _v; \
-MACRO_END
-
-#define serialize_marker(stream, this) \
-MACRO_BEGIN \
-    if (NDEBUG) { \
-        this = true; \
-    } else { \
-        int _de = 0xDE, _ad = 0xAD, _be = 0xBE, _ef = 0xEF; \
-        serialize_byte(stream, _de); \
-        serialize_byte(stream, _ad); \
-        serialize_byte(stream, _be); \
-        serialize_byte(stream, _ef); \
-        this = (_de == 0xDE && _ad == 0xAD && _be == 0xBE && _ef == 0xEF); \
-    } \
-MACRO_END
 
 // serialization: old
 
