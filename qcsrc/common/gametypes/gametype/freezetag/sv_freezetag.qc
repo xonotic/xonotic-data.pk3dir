@@ -949,7 +949,7 @@ MUTATOR_HOOKFUNCTION(ft, TurretValidateTarget)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ft, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(ft, Bot_ForbidAttack)
 {
 	entity targ = M_ARGV(1, entity);
 

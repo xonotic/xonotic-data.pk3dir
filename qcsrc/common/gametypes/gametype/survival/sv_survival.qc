@@ -483,7 +483,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(surv, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(surv, Bot_ForbidAttack)
 {
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);

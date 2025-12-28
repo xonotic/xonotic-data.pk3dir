@@ -423,7 +423,7 @@ MUTATOR_HOOKFUNCTION(inv, Damage_Calculate)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(inv, Bot_ForbidAttack)
 {
 	entity targ = M_ARGV(1, entity);
 
