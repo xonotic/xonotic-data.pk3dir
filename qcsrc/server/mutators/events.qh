@@ -221,6 +221,13 @@ MUTATOR_HOOKABLE(TeamBalance_GetPlayerForTeamSwitch, params);
 MUTATOR_HOOKABLE(SpectateCopy, params);
 #undef params
 
+/// Called after client's spectatee is updated, including when they become an observer
+#define params(i, o) \
+    i(entity, 0) /* client */ \
+    /**/
+MUTATOR_HOOKABLE(SpectateUpdated, params);
+#undef params
+
 /// Called when formatting a chat message to replace fancy functions
 #define params(i, o) \
 	i(entity, 0) /* player */ \
