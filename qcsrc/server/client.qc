@@ -1855,7 +1855,7 @@ void SpectateCopy(entity this, entity spectatee)
 		//WriteByte (MSG_ONE, SVC_SETVIEW);
 		//    WriteEntity(MSG_ONE, this);
 		//makevectors(spectatee.v_angle);
-		//setorigin(this, spectatee.origin - v_forward * 400 + v_up * 300);*/
+		//setorigin(this, spectatee.origin - v_forward * 400 + v_up * 300);
 	}
 }
 
@@ -1937,7 +1937,8 @@ void SetSpectatee(entity this, entity spectatee)
 		return; // bots abuse .enemy, this code is useless to them
 
 	entity old_spectatee = this.enemy;
-
+	if (spectatee == old_spectatee)
+		return;
 	this.enemy = spectatee;
 
 	// WEAPONTODO
@@ -1967,6 +1968,8 @@ void SetSpectatee(entity this, entity spectatee)
 	// needed to update spectator list
 	if(old_spectatee)
 		ClientData_Touch(old_spectatee, true);
+
+	MUTATOR_CALLHOOK(SpectateUpdated, this);
 }
 
 bool Spectate(entity this, entity pl)
