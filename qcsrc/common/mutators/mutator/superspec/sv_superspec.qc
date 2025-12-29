@@ -4,7 +4,6 @@ string autocvar_g_superspectate;
 REGISTER_MUTATOR(superspec, expr_evaluate(autocvar_g_superspectate));
 
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
-#define _ISLOCAL(ent) ((edict_num(1) == (ent)) ? true : false)
 
 const int ASF_STRENGTH      = BIT(0);
 const int ASF_SHIELD        = BIT(1);
@@ -36,7 +35,7 @@ void superspec_save_client_conf(entity this)
 	string fn = "superspec-local.options";
 	float fh;
 
-	if (!_ISLOCAL(this))
+	if (!IS_LOCAL(this))
 	{
 		if(this.crypto_idfp == "")
 			return;
@@ -393,7 +392,7 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 	setthink(_hello, superspec_hello);
 	_hello.nextthink = time + 5;
 
-	if (!_ISLOCAL(player))
+	if (!IS_LOCAL(player))
 	{
 		if(player.crypto_idfp == "")
 			return;
