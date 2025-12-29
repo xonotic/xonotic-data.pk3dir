@@ -17,9 +17,9 @@ void XonoticHUDEngineInfoDialog_fill(entity me)
 		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("FPS:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_engineinfo_framecounter_exponentialmovingaverage", _("Use an averaging algorithm")));
+		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_engineinfo_fps_movingaverage", _("Use an averaging algorithm")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Decimal places:")));
-		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 2, 1, "hud_panel_engineinfo_framecounter_decimals"));
+		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 2, 1, "hud_panel_engineinfo_fps_decimals"));
 }
