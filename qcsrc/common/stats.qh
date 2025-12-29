@@ -67,12 +67,6 @@ REGISTER_STAT(PL_CROUCH_MIN, VECTOR)
 REGISTER_STAT(PL_MAX, VECTOR)
 REGISTER_STAT(PL_CROUCH_MAX, VECTOR)
 
-// networked bitflag for game objective display (modicons)
-REGISTER_STAT(OBJECTIVE_STATUS, INT)
-#ifdef SVQC
-SPECTATE_COPYFIELD(_STAT(OBJECTIVE_STATUS))
-#endif
-
 #ifdef GAMEQC
 const int OVERTIME_SUDDENDEATH = BITS(24); // max value that can be sent as unsigned int
 #endif
