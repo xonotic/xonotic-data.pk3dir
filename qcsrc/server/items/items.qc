@@ -325,18 +325,13 @@ void Item_RespawnThink(entity this)
 void Item_ScheduleRespawnIn(entity e, float t)
 {
 	// if the respawn time is longer than 10 seconds, show a waypoint, otherwise, just respawn normally
-	if ((Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS) || MUTATOR_CALLHOOK(Item_ScheduleRespawn, e, t)) && (t - ITEM_RESPAWN_TICKS) > 0)
+	bool set_itemstime = Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS);
+	if ((set_itemstime || MUTATOR_CALLHOOK(Item_ScheduleRespawn, e, t)) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.item_respawncounter = 0;
-		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
-		{
-			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
-			Item_ItemsTime_SetTime(e, t);
-			Item_ItemsTime_SetTimesForAllPlayers();
-		}
 	}
 	else
 	{
@@ -344,13 +339,13 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.nextthink = time;
 		e.scheduledrespawntime = time + t;
 		e.wait = time + t;
+	}
 
-		if(Item_ItemsTime_Allow(e.itemdef) || (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
-		{
-			t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
-			Item_ItemsTime_SetTime(e, t);
-			Item_ItemsTime_SetTimesForAllPlayers();
-		}
+	if (set_itemstime)
+	{
+		t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
+		Item_ItemsTime_SetTime(e, t);
+		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 }
 
