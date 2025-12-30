@@ -34,8 +34,11 @@ void HUD_Pickup(bool should_draw)
 {
 	if (!should_draw)
 		return;
-	if (!autocvar_hud_panel_pickup)
-		return;
+	if (!autocvar__hud_configure)
+	{
+		if (!autocvar_hud_panel_pickup)
+			return;
+	}
 
 	HUD_Panel_LoadCvars();
 	vector pos = panel_pos;
