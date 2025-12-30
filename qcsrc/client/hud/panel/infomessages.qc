@@ -68,8 +68,10 @@ string get_team_list(int team_mask, string suf_col)
 	);
 }
 
-void HUD_InfoMessages()
+void HUD_InfoMessages(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure && !autocvar_hud_panel_infomessages)
 		return;
 

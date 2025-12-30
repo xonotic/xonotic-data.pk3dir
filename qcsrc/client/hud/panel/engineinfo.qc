@@ -17,8 +17,10 @@ float frametimeavg;
 float frametimeavg1; // 1 frame ago
 float frametimeavg2; // 2 frames ago
 
-void HUD_EngineInfo()
+void HUD_EngineInfo(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure && !autocvar_hud_panel_engineinfo)
 		return;
 

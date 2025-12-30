@@ -34,7 +34,7 @@ REGISTER_REGISTRY(hud_panels)
 REGISTRY_DEFINE_GET(hud_panels, NULL)
 
 #define _REGISTER_HUD_PANEL(id, draw_func, export_func, configflags, showflags) \
-	void draw_func(); \
+	void draw_func(bool should_draw); \
 	void export_func(int fh); \
 	REGISTER(hud_panels, HUD_PANEL, id, m_id, new_pure(hud_panel)) \
 	{ \
@@ -174,7 +174,7 @@ string panel_bg_border_str;
 float panel_bg_padding;
 string panel_bg_padding_str;
 
-classfield(HUDPanel) .void() panel_draw;
+classfield(HUDPanel) .void(bool should_draw) panel_draw;
 classfield(HUDPanel) .void(int fh) panel_export;
 
 // chat panel can be reduced / moved while the mapvote is active
@@ -250,7 +250,7 @@ float old_p_healthtime, old_p_armortime;
 // set to -1 to forcedly stop effects when we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
 int prev_p_health, prev_p_armor;
 
-void HUD_ItemsTime();
+void HUD_ItemsTime(bool should_draw);
 
 REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // WEAPONS
 REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           PANEL_CONFIG_MAIN | PANEL_CONFIG_CANBEOFF, PANEL_SHOW_MAINGAME                                                                ) // AMMO
@@ -438,5 +438,5 @@ string notify_icons[NOTIFY_MAX_ENTRIES];
 
 void HUD_Notify_Push(string icon, string attacker, string victim);
 
-var void HUD_ModIcons_GameType(vector pos, vector size);
+var void HUD_ModIcons_GameType(vector myPos, vector mySize, bool should_draw);
 void HUD_ModIcons_SetFunc();

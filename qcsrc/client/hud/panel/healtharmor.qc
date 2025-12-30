@@ -20,8 +20,11 @@ void HUD_HealthArmor_Export(int fh)
 	HUD_Write_Cvar("hud_panel_healtharmor_text");
 }
 
-void HUD_HealthArmor()
+void HUD_HealthArmor(bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	int armor, health, fuel, air_time;
 	if (!autocvar__hud_configure)
 	{

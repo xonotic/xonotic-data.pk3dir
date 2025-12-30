@@ -81,8 +81,11 @@ void HUD_Mod_CA_Draw(vector myPos, vector mySize, int layout)
 }
 
 // Clan Arena and Freeze Tag HUD modicons
-void HUD_Mod_CA(vector myPos, vector mySize)
+void HUD_Mod_CA(vector myPos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1; // required in each mod function that always shows something
 
 	HUD_Mod_CA_Draw(myPos, mySize, autocvar_hud_panel_modicons_ca_layout);

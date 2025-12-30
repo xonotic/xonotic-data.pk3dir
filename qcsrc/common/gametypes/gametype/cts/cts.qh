@@ -1,7 +1,7 @@
 #pragma once
 
 #include <common/mapinfo.qh>
-#if defined(CSQC)
+#ifdef CSQC
 	#include <common/gametypes/gametype/race/cl_race.qh>
 #endif
 
@@ -28,7 +28,7 @@ CLASS(RaceCTS, Gametype)
 		returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
 	}
 #ifdef CSQC
-	ATTRIB(RaceCTS, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
+	ATTRIB(RaceCTS, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_Race);
 #endif
 	ATTRIB(RaceCTS, m_legacydefaults, string, "20 0 0");
 ENDCLASS(RaceCTS)

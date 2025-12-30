@@ -114,9 +114,11 @@ MACRO_END
 
 string cl_weaponpriority_old;
 bool weapons_orderbyimpulse_old;
-void HUD_Weapons()
+void HUD_Weapons(bool should_draw)
 {
 	// check to see if we want to continue
+	if (!should_draw)
+		return;
 	if (hud != HUD_NORMAL)
 		return;
 

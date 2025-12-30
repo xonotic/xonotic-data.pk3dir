@@ -422,8 +422,10 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 }
 
 // draws map vote or gametype vote
-void MapVote_Draw()
+void MapVote_Draw(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	//if (intermission != 2) return;
 	if (!mv_active)
 		return;

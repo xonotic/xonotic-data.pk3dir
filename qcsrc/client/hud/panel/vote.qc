@@ -10,8 +10,10 @@ void HUD_Vote_Export(int fh)
 	HUD_Write_Cvar("hud_panel_vote_alreadyvoted_alpha");
 }
 
-void HUD_Vote()
+void HUD_Vote(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (autocvar_cl_allow_uid2name == -1 && (MUTATOR_CALLHOOK(ShowRankings) || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		// this dialog gets overriden by the uid2name menu dialog, if it exists

@@ -39,8 +39,11 @@ void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, 
 	}
 }
 
-void HUD_Mod_Race(vector pos, vector mySize)
+void HUD_Mod_Race(vector pos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	entity me = playerslots[player_localnum];
 	float score = me.(scores(ps_primary));
 

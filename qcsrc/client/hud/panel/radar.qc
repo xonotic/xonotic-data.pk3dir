@@ -175,8 +175,10 @@ float HUD_Radar_GetAngle(int rotation)
 	return (view_angles.y - 90) * DEG2RAD;
 }
 
-void HUD_Radar()
+void HUD_Radar(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (hud_panel_radar_maximized)
