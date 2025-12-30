@@ -39,6 +39,23 @@ void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, 
 	}
 }
 
+void race_UpdateDB(string rr, float new_score, float old_score)
+{
+	// TODO: relocate this out of HUD code
+	db_put(ClientProgsDB, strcat(mi_shortname, rr, "time"), ftos(new_score));
+	if (autocvar_cl_autodemo_delete_keeprecords)
+	{
+		int i = autocvar_cl_autodemo_delete;
+		i &= ~1;
+		cvar_set("cl_autodemo_delete", itos(i)); // don't delete demo with new record!
+	}
+	localcmd("\ncl_hook_race_pb \"",
+		TIME_ENCODED_TOSTRING(new_score, false), "\" \"",
+		TIME_ENCODED_TOSTRING(old_score, false), "\" \"",
+		(old_score ? TIME_ENCODED_TOSTRING(old_score - new_score, false) : "0"), "\" \"",
+		sprintf("%d", race_myrank), "\"\n");
+}
+
 void HUD_Mod_Race(vector pos, vector mySize, bool should_draw)
 {
 	if (!should_draw)
@@ -63,20 +80,8 @@ void HUD_Mod_Race(vector pos, vector mySize, bool should_draw)
 		rr = RACE_RECORD;
 	float t = stof(db_get(ClientProgsDB, strcat(mi_shortname, rr, "time")));
 
-	if(score && (score < t || !t) && !isdemo()) {
-		db_put(ClientProgsDB, strcat(mi_shortname, rr, "time"), ftos(score));
-		if(autocvar_cl_autodemo_delete_keeprecords)
-		{
-			float f = autocvar_cl_autodemo_delete;
-			f &= ~1;
-			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
-		}
-		localcmd("\ncl_hook_race_pb \"",
-			TIME_ENCODED_TOSTRING(score, false), "\" \"",
-			TIME_ENCODED_TOSTRING(t, false), "\" \"",
-			(t ?  TIME_ENCODED_TOSTRING(t-score, false) : "0"), "\" \"",
-			sprintf("%d", race_myrank), "\"\n");
-	}
+	if (score && (score < t || !t) && !isdemo())
+		race_UpdateDB(rr, score, t);
 
 	if(t != crecordtime_prev) {
 		crecordtime_prev = t;

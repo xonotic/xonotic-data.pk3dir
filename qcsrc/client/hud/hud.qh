@@ -241,11 +241,6 @@ const int PANEL_CONFIG_CANBEOFF  = BIT(1); ///< panel can be disabled (if disabl
 // prev_* vars contain the health/armor at the previous FRAME
 // set to -1 when player is dead or was not playing
 int prev_health, prev_armor;
-float health_damagetime, armor_damagetime;
-int health_beforedamage, armor_beforedamage;
-// old_p_* vars keep track of previous values when smoothing value changes of the progressbar
-int old_p_health, old_p_armor;
-float old_p_healthtime, old_p_armortime;
 // prev_p_* vars contain the health/armor progressbar value at the previous FRAME
 // set to -1 to forcedly stop effects when we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
 int prev_p_health, prev_p_armor;
