@@ -512,7 +512,7 @@ void HUD_Panel_Draw(entity panent)
 		if (!(panel.panel_configflags & PANEL_CONFIG_MAIN))
 			return;
 		panel_fade_alpha = 1;
-		Hud_Panel_GetPanelEnabled();
+		HUD_Panel_GetPanelEnabled();
 		panel.panel_draw();
 		return;
 	}

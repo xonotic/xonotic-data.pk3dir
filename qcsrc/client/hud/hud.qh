@@ -12,8 +12,8 @@ void LoadMenuSkinValues();
 void HUD_Scale_Disable();
 void HUD_Scale_Enable();
 
-#define HUD_ScaleX(f) (f * hud_scale.x)
-#define HUD_ScaleY(f) (f * hud_scale.y)
+#define HUD_ScaleX(f) ((f) * hud_scale.x)
+#define HUD_ScaleY(f) ((f) * hud_scale.y)
 #define HUD_ShiftX(f) (f + hud_shift.x + hud_shift.z * (f - hud_scale_center.x))
 #define HUD_ShiftY(f) (f + hud_shift.y + hud_shift.z * (f - hud_scale_center.y))
 vector HUD_Scale(vector v);
@@ -227,15 +227,15 @@ vector hud_scale_center;
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
 
 .int panel_showflags;
-const int PANEL_SHOW_MAINGAME  = BIT(0); // show in the main HUD
-const int PANEL_SHOW_MINIGAME  = BIT(1); // show when minigames panels are shown
-const int PANEL_SHOW_MAPVOTE   = BIT(2); // show during map vote
-const int PANEL_SHOW_WITH_SB   = BIT(3); // show when scoreboard is on
+const int PANEL_SHOW_MAINGAME  = BIT(0); ///< show in the main HUD
+const int PANEL_SHOW_MINIGAME  = BIT(1); ///< show when minigames panels are shown
+const int PANEL_SHOW_MAPVOTE   = BIT(2); ///< show during map vote
+const int PANEL_SHOW_WITH_SB   = BIT(3); ///< show when scoreboard is on
 
 .int panel_configflags;
-const int PANEL_CONFIG_NO        = 0x00;
-const int PANEL_CONFIG_MAIN      = 0x01;
-const int PANEL_CONFIG_CANBEOFF  = 0x02; // panel can be disabled (if disabled it's displayed with a low alpha)
+const int PANEL_CONFIG_NO        = 0;
+const int PANEL_CONFIG_MAIN      = BIT(0);
+const int PANEL_CONFIG_CANBEOFF  = BIT(1); ///< panel can be disabled (if disabled it's displayed with a low alpha)
 
 
 // prev_* vars contain the health/armor at the previous FRAME
@@ -289,8 +289,7 @@ REGISTER_HUD_PANEL(CHECKPOINTS,     HUD_Checkpoints,    PANEL_CONFIG_MAIN | PANE
 // ----------------------
 // Little help for the poor people who have to make sense of this: Start from the bottom ;)
 
-// Get value for panel.current_panel_bg: if "" fetch default, else use panel_bg_str
-// comment on last line of macro: // we probably want to see a background in config mode at all times...
+/// Get value for panel.current_panel_bg: if "" fetch default, else use panel_bg_str
 #define HUD_Panel_GetBg() MACRO_BEGIN \
 	string panel_bg; \
 	if (!autocvar__hud_configure && panel_bg_str == "0") \
@@ -315,17 +314,15 @@ REGISTER_HUD_PANEL(CHECKPOINTS,     HUD_Checkpoints,    PANEL_CONFIG_MAIN | PANE
 		} \
 	} \
 	strcpy(panel.current_panel_bg, panel_bg); \
+	/* we probably want to see a background in config mode at all times... */ \
 MACRO_END
 
-// Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
+/// Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
 #define HUD_Panel_GetColor() MACRO_BEGIN \
 	if (teamplay && panel_bg_color_team > 0) \
-	{ \
-		if (autocvar__hud_configure && myteam == NUM_SPECTATOR) \
-			panel_bg_color = '1 0 0' * panel_bg_color_team; \
-		else \
-			panel_bg_color = myteamcolors * panel_bg_color_team; \
-	} \
+		panel_bg_color = (autocvar__hud_configure && myteam == NUM_SPECTATOR) \
+			? '1 0 0' * panel_bg_color_team \
+			: myteamcolors * panel_bg_color_team; \
 	else if (autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && panel_bg_color_team > 0) \
 		panel_bg_color = '1 0 0' * panel_bg_color_team; \
 	else \
@@ -344,21 +341,18 @@ MACRO_END
 	} \
 MACRO_END
 
-// Get value for panel_bg_color_team: if "" fetch default, else use panel_bg_color_team_str
-#define HUD_Panel_GetColorTeam() MACRO_BEGIN \
-	if (panel_bg_color_team_str == "") \
-		panel_bg_color_team = autocvar_hud_panel_bg_color_team; \
-	else \
-		panel_bg_color_team = stof(panel_bg_color_team_str); \
-MACRO_END
+/// Get value for panel_bg_color_team: if "" fetch default, else use panel_bg_color_team_str
+#define HUD_Panel_GetColorTeam() \
+	panel_bg_color_team = ((panel_bg_color_team_str == "") \
+		? autocvar_hud_panel_bg_color_team \
+		: stof(panel_bg_color_team_str))
 
-// Get value for panel_bg_alpha: if "" fetch default, else use panel_bg_alpha. Also do various menu dialog fadeout/in checks, and minalpha checks
-// comment on line 3 of macro: // do not set a minalpha cap when showing the config dialog for this panel
+/// Get value for panel_bg_alpha: if "" fetch default, else use panel_bg_alpha. Also do various menu dialog fadeout/in checks, and minalpha checks
 #define HUD_Panel_GetBgAlpha() MACRO_BEGIN \
 	if (panel_bg_alpha_str == "") \
 		panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha); \
 	panel_bg_alpha = stof(panel_bg_alpha_str); \
-	if (autocvar__hud_configure) \
+	if (autocvar__hud_configure) /* do not set a minalpha cap when showing the config dialog for this panel */ \
 	{ \
 		if (!panel_enabled) \
 			panel_bg_alpha = 0.25; \
@@ -369,34 +363,29 @@ MACRO_END
 	} \
 MACRO_END
 
-// Get value for panel_fg_alpha. Also do various minalpha checks
-// comment on line 2 of macro: // ALWAYS show disabled panels at 0.25 alpha when in config mode
-#define HUD_Panel_GetFgAlpha() MACRO_BEGIN \
-	panel_fg_alpha = autocvar_hud_panel_fg_alpha; \
-	if (autocvar__hud_configure && !panel_enabled) \
-		panel_fg_alpha = 0.25; \
-MACRO_END
+/// Get value for panel_fg_alpha. Also do various minalpha checks
+#define HUD_Panel_GetFgAlpha() \
+	panel_fg_alpha = ((autocvar__hud_configure && !panel_enabled) \
+		? panel_fg_alpha = 0.25 /* ALWAYS show disabled panels at 0.25 alpha when in config mode */ \
+		: autocvar_hud_panel_fg_alpha)
 
-// Get border. See comments above, it's similar.
-#define HUD_Panel_GetBorder() MACRO_BEGIN \
-	if (panel_bg_border_str == "") \
-		panel_bg_border = autocvar_hud_panel_bg_border; \
-	else \
-		panel_bg_border = stof(panel_bg_border_str); \
-MACRO_END
+/// Get border. See comments above, it's similar.
+#define HUD_Panel_GetBorder() \
+	panel_bg_border = ((panel_bg_border_str == "") \
+		? autocvar_hud_panel_bg_border \
+		: stof(panel_bg_border_str))
 
-// Get padding. See comments above, it's similar.
-// last line is a port of the old function, basically always make sure the panel contents are at least 5 pixels tall/wide, to disallow extreme padding values
+/// Get padding. See comments above, it's similar.
+/// last line is a port of the old function, basically always make sure the panel contents are at least 5 pixels tall/wide, to disallow extreme padding values
 #define HUD_Panel_GetPadding() MACRO_BEGIN \
-	if (panel_bg_padding_str == "") \
-		panel_bg_padding = autocvar_hud_panel_bg_padding; \
-	else \
-		panel_bg_padding = stof(panel_bg_padding_str); \
+	panel_bg_padding = ((panel_bg_padding_str == "") \
+		? autocvar_hud_panel_bg_padding \
+		: stof(panel_bg_padding_str)); \
 	panel_bg_padding = min(min(panel_size.x, panel_size.y) * 0.5 - 5, panel_bg_padding); \
 MACRO_END
 
-// return smoothly faded pos and size of given panel when a dialog is active
-// don't center too wide panels, it doesn't work with different resolutions
+/// return smoothly faded pos and size of given panel when a dialog is active
+/// don't center too wide panels, it doesn't work with different resolutions
 #define HUD_Panel_UpdatePosSize_ForMenu() MACRO_BEGIN \
 	vector new_size = panel_size; \
 	float max_panel_width = 0.52 * vid_conwidth; \
@@ -410,7 +399,7 @@ MACRO_END
 	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * new_size; \
 MACRO_END
 
-// Scale the pos and size vectors to absolute coordinates
+/// Scale the pos and size vectors to absolute coordinates
 #define HUD_Panel_ScalePosSize() MACRO_BEGIN \
 	panel_pos.x *= vid_conwidth; \
 	panel_pos.y *= vid_conheight; \
@@ -421,12 +410,13 @@ MACRO_END
 float panel_fade_alpha;
 void HUD_Panel_LoadCvars();
 
-#define Hud_Panel_GetPanelEnabled() \
+#define HUD_Panel_GetPanelEnabled() \
 	panel_enabled = ((panel.panel_configflags & PANEL_CONFIG_CANBEOFF) \
-		? cvar(strcat("hud_panel_", panel.panel_name)) : true)
+		? cvar(strcat("hud_panel_", panel.panel_name)) \
+		: true)
 
 #define HUD_Panel_UpdatePosSize() MACRO_BEGIN \
-	Hud_Panel_GetPanelEnabled(); \
+	HUD_Panel_GetPanelEnabled(); \
 	panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
 	panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
 	HUD_Panel_ScalePosSize(); \
