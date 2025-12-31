@@ -16,9 +16,9 @@ MUTATOR_HOOKFUNCTION(cl_ca, DrawInfoMessages)
 	return (ISGAMETYPE(CA) && entcs_GetSpecState(player_localnum) == ENTCS_SPEC_IN_SCOREBOARD);
 }
 
-void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
+void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int i)
 {
-	TC(int, layout); TC(int, i);
+	TC(int, i);
 	int stat = -1;
 	string pic = "";
 	vector color = '0 0 0';
@@ -44,40 +44,13 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 		mySize.y = i;
 	}
 
-	if(layout)
+	if(aspect_ratio != 1)
 	{
 		drawpic_aspect_skin(myPos, pic, vec2(0.5 * mySize.x, mySize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring_aspect(myPos + eX * 0.5 * mySize.x, ftos(stat), vec2(0.5 * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else
 		drawstring_aspect(myPos, ftos(stat), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-}
-
-void HUD_Mod_CA_Draw(vector myPos, vector mySize, int layout)
-{
-	int rows, columns;
-	float aspect_ratio = (layout) ? 2 : 1;
-	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
-	columns = ceil(team_count/rows);
-
-	int i;
-	float row = 0, column = 0;
-	vector pos = '0 0 0', itemSize;
-	itemSize = vec2(mySize.x / columns, mySize.y / rows);
-	for(i=0; i<team_count; ++i)
-	{
-		pos.x = myPos.x + column * itemSize.x;
-		pos.y = myPos.y + row * itemSize.y;
-
-		DrawCAItem(pos, itemSize, aspect_ratio, layout, i);
-
-		++row;
-		if(row >= rows)
-		{
-			row = 0;
-			++column;
-		}
-	}
 }
 
 // Clan Arena and Freeze Tag HUD modicons
@@ -88,5 +61,5 @@ void HUD_Mod_CA(vector myPos, vector mySize, bool should_draw)
 
 	mod_active = true; // required in each mod function that always shows something
 
-	HUD_Mod_CA_Draw(myPos, mySize, autocvar_hud_panel_modicons_ca_layout);
+	HUD_Mod_TableWithAR_Draw(myPos, mySize, team_count, (autocvar_hud_panel_modicons_ca_layout ? 2 : 1), DrawCAItem);
 }
