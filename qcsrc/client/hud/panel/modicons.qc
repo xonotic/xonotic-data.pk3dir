@@ -89,6 +89,14 @@ void HUD_Mod_EliminatedPlayers_DrawItem(vector itemPos, vector itemSize, float a
 	drawstring_aspect(itemPos, itos(stat), itemSize, color, panel_fg_alpha * f, DRAWFLAG_NORMAL);
 }
 
+/// Smoothly moves cache_value towards real_value, initially fast then slowing down. Returns new cache_value
+float HUD_Mod_SmoothlyUpdateCachedValue(float cache_value, float real_value, float epsilon)
+{
+	return (fabs(cache_value - real_value) < epsilon)
+		? real_value
+		: real_value + (cache_value - real_value) * ((33/32) ** (-256 * frametime)); // -256*frametime should be close to 1, ideal for floating point inaccuracies
+}
+
 float mod_alpha;
 
 void HUD_ModIcons(bool should_draw)

@@ -8,65 +8,85 @@ void HUD_Mod_Dom_Export(int fh)
 	HUD_Write_Cvar("hud_panel_modicons_dom_layout");
 }
 
+float dom_pps_total; ///< Total pps (points per second), all controlpoints combined
+float dom_pps[NUM_TEAMS]; ///< pps (points per second) for each team
+float dom_pps_ratio_cache[NUM_TEAMS]; ///< Cache of pps_ratio for each team
+
+NET_HANDLE(ENT_CLIENT_DOM_PPSSTATUSES, bool isNew)
+{
+	// receive pps statuses
+	dom_pps_total = ReadFloat();
+	for (int i = 0; i < NUM_TEAMS; ++i)
+		if (autocvar__teams_available & BIT(i))
+			dom_pps[i] = (dom_pps_total ? ReadFloat() : 0);
+	return true;
+}
+
 int autocvar_hud_panel_modicons_dom_layout;
 
-void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int i)
+void HUD_Mod_Dom_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, int i)
 {
-	TC(int, i);
-	float stat = -1;
-	string pic = "";
-	vector color = '0 0 0';
-	switch(i)
-	{
-		case 0: stat = STAT(DOM_PPS_RED); pic = "dom_icon_red"; color = '1 0 0'; break;
-		case 1: stat = STAT(DOM_PPS_BLUE); pic = "dom_icon_blue"; color = '0 0 1'; break;
-		case 2: stat = STAT(DOM_PPS_YELLOW); pic = "dom_icon_yellow"; color = '1 1 0'; break;
-		default:
-		case 3: stat = STAT(DOM_PPS_PINK); pic = "dom_icon_pink"; color = '1 0 1'; break;
-	}
-	float pps_ratio = 0;
-	if(STAT(DOM_TOTAL_PPS))
-		pps_ratio = stat / STAT(DOM_TOTAL_PPS);
-
-	if(mySize.x/mySize.y > aspect_ratio)
-	{
-		i = aspect_ratio * mySize.y;
-		myPos.x += (mySize.x - i) / 2;
-		mySize.x = i;
-	}
-	else
-	{
-		i = 1/aspect_ratio * mySize.x;
-		myPos.y += (mySize.y - i) / 2;
-		mySize.y = i;
-	}
+	int tm = Team_IndexToTeam(i + 1);
 
 	if (autocvar_hud_panel_modicons_dom_layout) // show text too
 	{
-		//draw the text
-		color *= 0.5 + pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
-		if (autocvar_hud_panel_modicons_dom_layout == 2) // average pps
-			drawstring_aspect(myPos + eX * mySize.y, ftos_decimals(stat, 2), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
-		else // percentage of average pps
-			drawstring_aspect(myPos + eX * mySize.y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		float f; // this code is only required if drawing text
+		if (itemSize.x / itemSize.y > aspect_ratio)
+		{
+			f = itemSize.y * aspect_ratio;
+			itemPos.x += (itemSize.x - f) * 0.5;
+			itemSize.x = f;
+		}
+		else
+		{
+			f = itemSize.x / aspect_ratio;
+			itemPos.y += (itemSize.y - f) * 0.5;
+			itemSize.y = f;
+		}
+
+		vector textSize = vec2(itemSize.x * ((aspect_ratio - 1) / aspect_ratio), itemSize.y);
+		itemSize.x /= aspect_ratio;
+
+		float pps = dom_pps[i];
+		float pps_ratio = (dom_pps_total)
+			? pps / dom_pps_total
+			: 0;
+		vector color = Team_ColorRGB(tm) * (0.5 + dom_pps_ratio_cache[i] * (1 - 0.5)); // half saturated color at min, full saturated at max
+		string s = (autocvar_hud_panel_modicons_dom_layout == 2)
+			? ftos_decimals(pps, 2) // average pps
+			: ftos_decimals_percentage(pps_ratio, 0); // percentage of average pps
+		drawstring_aspect(itemPos + eX * itemSize.x, s, textSize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	//draw the icon
-	drawpic_aspect_skin(myPos, pic, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	if (stat > 0)
+	// draw the icon
+	string pic = strcat("dom_icon_", Static_Team_ColorName_Lower(tm));
+	if (dom_pps_ratio_cache[i] < 1 || tm == entcs_GetTeam(player_currententnum - 1)) // background image
+		drawpic_aspect_skin(itemPos, pic, itemSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	if (dom_pps_ratio_cache[i] > 0) // colored image
 	{
-		drawsetcliparea(myPos.x, myPos.y + mySize.y * (1 - pps_ratio), mySize.y, mySize.y * pps_ratio);
-		drawpic_aspect_skin(myPos, strcat(pic, "-highlighted"), '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		float alpha = (tm == entcs_GetTeam(player_currententnum - 1))
+			? blink(0.85, 0.15, 5) // make our teams blink
+			: 1;
+		drawsetcliparea(itemPos.x, itemPos.y + itemSize.y * (1 - dom_pps_ratio_cache[i]), itemSize.x, itemSize.y * dom_pps_ratio_cache[i]);
+		drawpic_aspect_skin(itemPos, strcat(pic, "-highlighted"), itemSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 		drawresetcliparea();
 	}
 }
 
 void HUD_Mod_Dom(vector myPos, vector mySize, bool should_draw)
 {
+	// update caches
+	for (int pps_ratio, i = 0; i < NUM_TEAMS; ++i)
+	{
+		pps_ratio = (dom_pps_total ? dom_pps[i] / dom_pps_total : 0);
+		if (dom_pps_ratio_cache[i] != pps_ratio)
+			dom_pps_ratio_cache[i] = HUD_Mod_SmoothlyUpdateCachedValue(dom_pps_ratio_cache[i], pps_ratio, 0.001);
+	}
+
 	if (!should_draw)
 		return;
 
 	mod_active = true; // required in each mod function that always shows something
 
-	HUD_Mod_TableWithAR_Draw(myPos, mySize, team_count, (autocvar_hud_panel_modicons_dom_layout ? 3 : 1), DrawDomItem);
+	HUD_Mod_TableWithAR_Draw(myPos, mySize, team_count, (autocvar_hud_panel_modicons_dom_layout ? 3 : 1), HUD_Mod_Dom_DrawItem);
 }
