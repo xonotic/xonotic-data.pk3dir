@@ -200,6 +200,8 @@ void HUD_Radar(bool should_draw)
 		}
 	}
 
+	if (!autocvar__hud_configure && minimapname == "")
+		return;
 	if (hud_panel_radar_temp_hidden)
 		return;
 
@@ -249,7 +251,7 @@ void HUD_Radar(bool should_draw)
 	teamradar_origin2d = HUD_Shift(pos + 0.5 * mySize);
 	teamradar_size2d = mySize;
 
-	if (minimapname == "")
+	if (autocvar__hud_configure && minimapname == "")
 		return;
 
 	teamradar_loadcvars();
