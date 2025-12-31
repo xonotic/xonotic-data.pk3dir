@@ -14,7 +14,7 @@ void HUD_Mod_FreezeTag(vector myPos, vector mySize, bool should_draw)
 
 	mod_active = true; // required in each mod function that always shows something
 
-	HUD_Mod_CA_Draw(myPos, mySize, autocvar_hud_panel_modicons_freezetag_layout);
+	HUD_Mod_TableWithAR_Draw(myPos, mySize, team_count, (autocvar_hud_panel_modicons_freezetag_layout ? 2 : 1), DrawCAItem);
 }
 
 REGISTER_MUTATOR(cl_ft, true);
