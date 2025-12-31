@@ -10,9 +10,9 @@ void HUD_Mod_Dom_Export(int fh)
 
 int autocvar_hud_panel_modicons_dom_layout;
 
-void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
+void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int i)
 {
-	TC(int, layout); TC(int, i);
+	TC(int, i);
 	float stat = -1;
 	string pic = "";
 	vector color = '0 0 0';
@@ -41,11 +41,11 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 		mySize.y = i;
 	}
 
-	if (layout) // show text too
+	if (autocvar_hud_panel_modicons_dom_layout) // show text too
 	{
 		//draw the text
 		color *= 0.5 + pps_ratio * (1 - 0.5); // half saturated color at min, full saturated at max
-		if (layout == 2) // average pps
+		if (autocvar_hud_panel_modicons_dom_layout == 2) // average pps
 			drawstring_aspect(myPos + eX * mySize.y, ftos_decimals(stat, 2), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		else // percentage of average pps
 			drawstring_aspect(myPos + eX * mySize.y, strcat( ftos(floor(pps_ratio*100 + 0.5)), "%" ), vec2((2/3) * mySize.x, mySize.y), color, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -68,27 +68,5 @@ void HUD_Mod_Dom(vector myPos, vector mySize, bool should_draw)
 
 	mod_active = true; // required in each mod function that always shows something
 
-	int layout = autocvar_hud_panel_modicons_dom_layout;
-	int rows, columns;
-	float aspect_ratio = (layout) ? 3 : 1;
-	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
-	columns = ceil(team_count/rows);
-
-	int i;
-	float row = 0, column = 0;
-	vector pos, itemSize;
-	itemSize = vec2(mySize.x / columns, mySize.y / rows);
-	for(i=0; i<team_count; ++i)
-	{
-		pos = myPos + vec2(column * itemSize.x, row * itemSize.y);
-
-		DrawDomItem(pos, itemSize, aspect_ratio, layout, i);
-
-		++row;
-		if(row >= rows)
-		{
-			row = 0;
-			++column;
-		}
-	}
+	HUD_Mod_TableWithAR_Draw(myPos, mySize, team_count, (autocvar_hud_panel_modicons_dom_layout ? 3 : 1), DrawDomItem);
 }
