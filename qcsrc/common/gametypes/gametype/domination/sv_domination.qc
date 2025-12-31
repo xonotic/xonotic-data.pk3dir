@@ -21,21 +21,32 @@ float autocvar_g_domination_warmup;
 float autocvar_g_domination_point_rate;
 int autocvar_g_domination_teams_override;
 
+bool dom_PPSStatuses_SendEntity(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_DOM_PPSSTATUSES);
+	WriteFloat(MSG_ENTITY, pps_total);
+	if (pps_total)
+		for (int i = 0; i < AVAILABLE_TEAMS; ++i)
+			if (teamplay_bitmask & BIT(i))
+				WriteFloat(MSG_ENTITY, pps_team[i]);
+	return true;
+}
+
+entity dom_ppsStatuses;
+void dom_PPSStatuses_Init()
+{
+	if (dom_ppsStatuses)
+	{
+		backtrace("Can't spawn dom_ppsStatuses again!");
+		return;
+	}
+	Net_LinkEntity(dom_ppsStatuses = new_pure(dom_ppsStatuses), false, 0, dom_PPSStatuses_SendEntity);
+}
+
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":dom:", mode, ":", ftos(team_before), ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
-}
-
-void set_dom_state(entity e)
-{
-	STAT(DOM_TOTAL_PPS, e) = total_pps;
-	STAT(DOM_PPS_RED, e) = pps_red;
-	STAT(DOM_PPS_BLUE, e) = pps_blue;
-	if(teamplay_bitmask & BIT(2))
-		STAT(DOM_PPS_YELLOW, e) = pps_yellow;
-	if(teamplay_bitmask & BIT(3))
-		STAT(DOM_PPS_PINK, e) = pps_pink;
 }
 
 void dompoint_captured(entity this)
@@ -111,7 +122,9 @@ void dompoint_captured(entity this)
 	vector expcol = Team_ColorRGB(real_team);
 	Send_Effect_Core(EFFECT_DOM_CAPTURE, this.origin, '0 0 0', 1, expcol, expcol * 0.6 + '0.4 0.4 0.4', -1, -1, -1, NULL);
 
-	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
+	pps_total = 0;
+	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
+		pps_team[i] = 0;
 	IL_EACH(g_dompoints, true,
 	{
 		if (autocvar_g_domination_point_amt)
@@ -122,22 +135,18 @@ void dompoint_captured(entity this)
 			wait_time = autocvar_g_domination_point_rate;
 		else
 			wait_time = it.wait;
-		switch(it.goalentity.team)
-		{
-			case NUM_TEAM_1: pps_red += points/wait_time; break;
-			case NUM_TEAM_2: pps_blue += points/wait_time; break;
-			case NUM_TEAM_3: pps_yellow += points/wait_time; break;
-			case NUM_TEAM_4: pps_pink += points/wait_time; break;
-		}
-		total_pps += points/wait_time;
+
+		int team_idx = Team_TeamToIndex(it.goalentity.team) - 1;
+		if (team_idx >= 0)
+			pps_team[team_idx] += points / wait_time;
+		pps_total += points / wait_time;
 	});
+	dom_ppsStatuses.SendFlags = 0xFFFFFF;
 
 	WaypointSprite_UpdateTeamRadar(this.sprite, RADARICON_DOMPOINT, colormapPaletteColor(this.goalentity.team - 1, 0));
 	WaypointSprite_Ping(this.sprite);
 
 	this.captime = time;
-
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), { set_dom_state(it); });
 }
 
 void AnimateDomPoint(entity this)
@@ -288,7 +297,7 @@ void dom_controlpoint_setup(entity this)
 	else
 		waittime = this.wait;
 
-	total_pps += points/waittime;
+	pps_total += points / waittime;
 
 	if(!this.t_width)
 		this.t_width = 0.02; // frame animation rate
@@ -399,16 +408,15 @@ void havocbot_role_dom(entity this)
 
 MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 {
-	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	FOREACH_CLIENT(true, {
-		if (IS_PLAYER(it))
-		{
-			PutClientInServer(it);
-			if(domination_roundbased)
-				it.player_blocked = 1;
-		}
-		if(IS_REAL_CLIENT(it))
-			set_dom_state(it);
+	pps_total = 0;
+	for (int i = 0; i < NUM_TEAMS; ++i)
+		pps_team[i] = 0;
+	dom_ppsStatuses.SendFlags = 0xFFFFFF;
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		PutClientInServer(it);
+		if (domination_roundbased)
+			it.player_blocked = 1;
 	});
 	return true;
 }
@@ -419,13 +427,6 @@ MUTATOR_HOOKFUNCTION(dom, PlayerSpawn)
 
 	if(domination_roundbased)
 		player.player_blocked = !round_handler_IsRoundStarted();
-}
-
-MUTATOR_HOOKFUNCTION(dom, ClientConnect)
-{
-	entity player = M_ARGV(0, entity);
-
-	set_dom_state(player);
 }
 
 MUTATOR_HOOKFUNCTION(dom, HavocBot_ChooseRole)
@@ -638,4 +639,5 @@ void dom_Initialize()
 	g_dompoints = IL_NEW();
 
 	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
+	dom_PPSStatuses_Init();
 }
