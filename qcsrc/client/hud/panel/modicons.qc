@@ -21,6 +21,31 @@ void HUD_ModIcons_SetFunc()
 	HUD_ModIcons_GameType = gametype.m_modicons;
 }
 
+void HUD_Mod_TableWithAR_Draw(vector myPos, vector mySize, int limit, float aspect_ratio, void(vector, vector, float, int) drawFunc)
+{
+	int rows = HUD_GetRowCount(limit, mySize, aspect_ratio);
+	int cols = ceil(limit / rows);
+
+	int row = 0, col = 0;
+	vector itemPos, itemSize = vec2(mySize.x / cols, mySize.y / rows);
+	itemPos.z = 0;
+	for (int i = 0; i < limit; ++i)
+	{
+		itemPos.x = myPos.x + col * itemSize.x;
+		itemPos.y = myPos.y + row * itemSize.y;
+
+		drawFunc(itemPos, itemSize, aspect_ratio, i);
+
+		if (row == rows - 1)
+		{
+			row = 0;
+			++col;
+		}
+		else
+			++row;
+	}
+}
+
 float mod_alpha;
 
 void HUD_ModIcons(bool should_draw)
