@@ -219,6 +219,8 @@ void door_use(entity this, entity actor, entity trigger)
 
 	if (!this.owner)
 		return;
+	if (this.owner.active != ACTIVE_ACTIVE)
+		return;
 	this = this.owner;
 
 	if (this.spawnflags & DOOR_TOGGLE)
@@ -297,6 +299,10 @@ void door_touch(entity this, entity toucher)
 		return;
 	if (this.owner.door_finished > time)
 		return;
+#ifdef SVQC
+	if (this.owner.active != ACTIVE_ACTIVE)
+		return;
+#endif
 
 	this.owner.door_finished = time + 2;
 
@@ -364,6 +370,10 @@ void door_trigger_touch(entity this, entity toucher)
 		if(!((IS_CLIENT(toucher) || toucher.classname == "ENT_CLIENT_PROJECTILE") && !IS_DEAD(toucher)))
 #endif
 			return;
+#ifdef SVQC
+	if (this.owner.active != ACTIVE_ACTIVE)
+		return;
+#endif
 
 	if (this.owner.state == STATE_UP)
 		return;
@@ -614,6 +624,15 @@ void door_link()
 {
 	//Net_LinkEntity(this, false, 0, door_send);
 }
+
+void door_init_keys(entity this)
+{
+	// Quake 1 and QL keys compatibility
+	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
+		this.itemkeys |= BIT(0);
+	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
+		this.itemkeys |= BIT(1);
+}
 #endif
 
 void door_init_startopen(entity this)
@@ -632,11 +651,13 @@ void door_reset(entity this)
 	setorigin(this, this.pos1);
 	this.velocity = '0 0 0';
 	this.state = STATE_BOTTOM;
+	this.active = ACTIVE_ACTIVE;
 	setthink(this, func_null);
 	this.nextthink = 0;
 
 #ifdef SVQC
 	this.SendFlags |= SF_TRIGGER_RESET;
+	door_init_keys(this);
 #endif
 }
 
@@ -682,6 +703,10 @@ void door_init_shared(entity this)
 		// CPMA adds these fields for overriding the Q3 default sounds
 		string s = GetField_fullspawndata(this, "sound_start", true);
 		string e = GetField_fullspawndata(this, "sound_end", true);
+
+		// Quake Live adds these ones, because of course it had to be different from CPMA
+		if (!s) s = GetField_fullspawndata(this, "startsound", true);
+		if (!e) e = GetField_fullspawndata(this, "endsound", true);
 
 		if (s)
 			this.noise2 = strzone(s);
@@ -746,11 +771,7 @@ void door_init_shared(entity this)
 // spawnflags require key (for now only func_door)
 spawnfunc(func_door)
 {
-	// Quake 1 keys compatibility
-	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
-		this.itemkeys |= ITEM_KEY_BIT(0);
-	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
-		this.itemkeys |= ITEM_KEY_BIT(1);
+	door_init_keys(this);
 
 	SetMovedir(this);
 
@@ -761,6 +782,7 @@ spawnfunc(func_door)
 
 	setblocked(this, door_blocked);
 	this.use = door_use;
+	this.active = ACTIVE_ACTIVE;
 
 	if(this.spawnflags & DOOR_NONSOLID)
 		this.solid = SOLID_NOT;
@@ -799,7 +821,7 @@ spawnfunc(func_door)
 
 		if (!this.team)
 		{
-			string t = GetField_fullspawndata(this, "team");
+			string t = GetField_fullspawndata(this, "team", false);
 			// bones_was_here: same hack as used to support teamed items on Q3 maps
 			if (t) this.team = crc16(false, t);
 		}

@@ -1,17 +1,28 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(HLAC_VIEW, W_Model("h_hlac.iqm"));
+MODEL(HLAC_WORLD, W_Model("v_hlac.md3"));
+MODEL(HLAC_ITEM, W_Model("g_hlac.md3"));
+
+SOUND(HLAC_FIRE, W_Sound("lasergun_fire"));
+#endif
+
 CLASS(HLAC, Weapon)
 /* spawnfunc */ ATTRIB(HLAC, m_canonical_spawnfunc, string, "weapon_hlac");
 /* ammotype  */ ATTRIB(HLAC, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
 /* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, 4000);
-/* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
+/* color     */ ATTRIB(HLAC, m_color, vector, '0.506 0.945 0.239');
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
 #ifdef GAMEQC
 /* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);
 /* flash mdl */ ATTRIB(HLAC, m_muzzlemodel, Model, MDL_Null);
-/* flash eff */ ATTRIB(HLAC, m_muzzleeffect, entity, EFFECT_BLASTER_MUZZLEFLASH);
+/* flash eff */ ATTRIB(HLAC, m_muzzleeffect, entity,
+	(particleeffectnum(EFFECT_GREEN_HLAC_MUZZLEFLASH) < 0)
+		? EFFECT_BLASTER_MUZZLEFLASH // compatible with Xonotic v0.8.6 or lower
+		: EFFECT_GREEN_HLAC_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(HLAC, w_crosshair, string, "gfx/crosshairhlac");
 /* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);
@@ -27,6 +38,7 @@ CLASS(HLAC, Weapon)
 		P(class, prefix, edgedamage, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, radius, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload_ammo, float, NONE) \
@@ -46,10 +58,10 @@ CLASS(HLAC, Weapon)
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, HLAC, hlac)
+	W_PROPS(X, HLAC, hlac)
 #undef X
 
 ENDCLASS(HLAC)
-REGISTER_WEAPON(HLAC, hlac, NEW(HLAC));
+REGISTER_WEAPON(HLAC, NEW(HLAC));
 
 SPAWNFUNC_WEAPON(weapon_hlac, WEP_HLAC)

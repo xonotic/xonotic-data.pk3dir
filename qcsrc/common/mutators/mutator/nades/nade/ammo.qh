@@ -1,0 +1,25 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+bool autocvar_g_nades_ammo;
+float autocvar_g_nades_ammo_time;
+float autocvar_g_nades_ammo_rate;
+float autocvar_g_nades_ammo_friend;
+float autocvar_g_nades_ammo_foe;
+float autocvar_g_nades_ammo_clip_empty_rate;
+
+void nade_ammo_boom(entity this);
+#endif // SVQC
+
+const int PROJECTILE_NADE_AMMO = 88;
+const int PROJECTILE_NADE_AMMO_BURN = 89;
+
+CLASS(AmmoNade, Nade)
+	ATTRIB(AmmoNade, m_color, vector, '0.33 0.33 1');
+	ATTRIB(AmmoNade, m_name, string, _("Ammo grenade"));
+	ATTRIB(AmmoNade, m_icon, string, "nade_ammo");
+	ATTRIB(AmmoNade, netname, string, "ammo");
+	ATTRIB(AmmoNade, impulse, int, 10);
+ENDCLASS(AmmoNade)

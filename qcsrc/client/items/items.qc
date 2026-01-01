@@ -15,6 +15,7 @@
 .float anim_start_time; // reusing for bob waveform synchronisation
 .vector angles_held; // reusing for (re)storing original angles
 .float wait, delay, pointtime; // reusing for despawn effects
+.vector m_mins, m_maxs; // reusing for storing standard bbox (same purpose as in SVQC itemdef)
 
 HashMap ENT_CLIENT_ITEM_simple;
 STATIC_INIT(ENT_CLIENT_ITEM_simple)
@@ -69,8 +70,7 @@ void ItemSetModel(entity this, bool wantsimple)
 		LOG_WARNF("this.model is unset for item %s", this.classname);
 	precache_model(this.model);
 	_setmodel(this, this.model);
-	setsize(this, '-16 -16 0', '16 16 48');
-	// bones_was_here TODO: network proper box size for sv_legacy_bbox_expand 0
+	setsize(this, this.m_mins, this.m_maxs);
 }
 
 void ItemDraw(entity this)
@@ -80,7 +80,7 @@ void ItemDraw(entity this)
 		ItemSetModel(this, wantsimple);
 
 	// no bobbing applied to simple items, for consistency's sake (no visual difference between ammo and weapons)
-	bool animate = (autocvar_cl_items_animate & 1) && this.item_simple <= 0 && ((this.ItemStatus & ITS_ANIMATE1) || (this.ItemStatus & ITS_ANIMATE2));
+	bool animate = (autocvar_cl_items_animate & 1) && this.item_simple <= 0 && (this.ItemStatus & (ITS_ANIMATE1 | ITS_ANIMATE2));
 
 	// rotation must be set before running physics
 	if(!animate)
@@ -137,9 +137,8 @@ void ItemDraw(entity this)
 	if (bobheight != this.origin_z - this.oldorigin_z)
 	{
 		this.origin_z = this.oldorigin_z + bobheight;
-		this.mins_z = 0 - bobheight; // don't want the absmin and absmax to bob
-		this.maxs_z = 48 - bobheight;
-		// bones_was_here TODO: network proper box size for sv_legacy_bbox_expand 0
+		this.mins_z = this.m_mins.z - bobheight; // don't want the absmin and absmax to bob
+		this.maxs_z = this.m_maxs.z - bobheight;
 	}
 
 	// set alpha based on distance
@@ -235,13 +234,6 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		this.angles = this.angles_held = ReadAngleVector();
 	}
 
-	/* bones_was_here TODO: network proper box size for sv_legacy_bbox_expand 0
-	if(sf & ISF_SIZE)
-	{
-		setsize(this, '-16 -16 0', '16 16 48');
-	}
-	*/
-
 	if(sf & ISF_STATUS) // need to read/write status first so model can handle simple, fb etc.
 	{
 		int prevItemStatus = this.ItemStatus;
@@ -280,7 +272,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		}
 	}
 
-	if(sf & ISF_MODEL)
+	if(sf & (ISF_SIZE | ISF_SIZE2)) // always true when it's spawned (in CSQC's perspective)
 	{
 		if(isnew)
 		{
@@ -288,6 +280,22 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 			this.draw = ItemDraw;
 			this.flags |= FL_ITEM;
 			this.entremove = ItemRemove;
+		}
+
+		if(sf & ISF_SIZE && !(sf & ISF_SIZE2)) // Small
+		{
+			this.m_mins = ITEM_S_MINS;
+			this.m_maxs = ITEM_S_MAXS;
+		}
+		else if(!(sf & ISF_SIZE) && sf & ISF_SIZE2) // Large
+		{
+			this.m_mins = ITEM_D_MINS;
+			this.m_maxs = ITEM_L_MAXS;
+		}
+		else // Default
+		{
+			this.m_mins = ITEM_D_MINS;
+			this.m_maxs = ITEM_D_MAXS;
 		}
 
 		this.fade_end = ReadShort();
@@ -323,7 +331,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 		SET_ONGROUND(this); // extra overkill
 	}
 
-	if(sf & ISF_REMOVEFX && !(sf & ISF_SIZE) && !(sf & ISF_MODEL)) // TODO !isnew isn't reliable for this... are we double sending initialisations?
+	if(sf & ISF_REMOVEFX && !(sf & (ISF_SIZE | ISF_SIZE2))) // TODO !isnew isn't reliable for this... are we double sending initialisations?
 	{
 		// no longer available to pick up, about to be removed
 		if (this.drawmask) // this.alpha > 0

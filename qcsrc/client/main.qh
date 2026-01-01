@@ -4,11 +4,6 @@
 #include <common/weapons/_all.qh>
 
 bool autocvar_cl_db_saveasdump;
-bool autocvar_cl_spawn_event_particles;
-bool autocvar_cl_spawn_event_sound = 1;
-// float autocvar_cl_spawn_point_model;
-bool autocvar_cl_spawn_point_particles;
-float autocvar_cl_spawn_point_dist_max = 1200;
 bool autocvar_cl_unpress_zoom_on_spawn = true;
 bool autocvar_cl_unpress_zoom_on_death = true;
 bool autocvar_cl_unpress_zoom_on_weapon_switch = true;
@@ -17,9 +12,25 @@ bool autocvar_hud_showbinds;
 bool autocvar_hud_showbinds_limit;
 bool autocvar__hud_showbinds_reload;
 bool autocvar_developer_csqcentities;
-bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gamemode
+#if 0
+// TODO: change this path after next (0.9) release
+// or the release after it to support the old-stable release
+// this can't be done now as players would lack these from their configs then
+bool autocvar_cl_race_checkpoint_splits_console;
+bool autocvar_cl_race_cptimes_showspeed = false;
+bool autocvar_cl_race_cptimes_showspeed_unit = true;
+float autocvar_cl_race_cptimes_namesize = 10;
+#else
+AUTOCVAR_SAVE(cl_race_checkpoint_splits_console, bool, 1, "print checkpoint splits to console");
+AUTOCVAR_SAVE(cl_race_cptimes_showspeed, bool, 0, "show race checkpoint speed (NOTE: ignores vertical speed)");
+AUTOCVAR_SAVE(cl_race_cptimes_showspeed_unit, bool, 1, "show race checkpoint speed units");
+AUTOCVAR_SAVE(cl_race_cptimes_namesize, float, 10, "maximum player name length in race checkpoint messages");
+#endif
+bool autocvar_cl_race_cptimes_onlyself; // TODO: move to race gametype
 bool autocvar_cl_race_cptimes_showself = false;
 bool autocvar_cl_welcome = true;
+bool autocvar_cl_autodemo_delete;
+bool autocvar_cl_autodemo_delete_keepmatches;
 bool autocvar_menu_gamemenu = true;
 
 // Map coordinate base calculations need these
@@ -30,6 +41,7 @@ string minimapname;
 
 bool postinit;
 entity gametype;
+string gametype_custom_name;
 // temporary hack
 #define ISGAMETYPE(NAME) (gametype == MAPINFO_TYPE_##NAME)
 
@@ -40,7 +52,7 @@ void PostInit();
 
 void Ent_Remove(entity this);
 
-void Gamemode_Init();
+void Gametype_Init();
 
 entity players;
 entity teams;
@@ -103,7 +115,7 @@ bool spectatorbutton_zoom;
 bool observe_blocked;
 bool button_attack2;
 
-float current_viewzoom;
+float current_viewzoom = 1;
 float zoomin_effect;
 bool warmup_stage;
 
@@ -114,6 +126,10 @@ int srv_minplayers;
 int srv_maxplayers;
 float welcome_msg_menu_check_maxtime;
 void Welcome_Message_Show_Try();
+
+string ignore_list;
+bool ignore_list_apply_time;
+void ignore_list_apply();
 
 void Fog_Force();
 
@@ -146,8 +162,9 @@ float damagepush_speedfactor;
 
 //hooks
 int calledhooks;
-const int HOOK_START =    1;
-const int HOOK_END =      2;
+const int HOOK_START        = 1; // VM init
+const int HOOK_END          = 2; // VM shutdown
+const int HOOK_INTERMISSION = 4; // intermission start
 
 .float ping, ping_packetloss, ping_movementloss;
 
@@ -177,7 +194,7 @@ int binddb;
 // -1 - observing
 // 0 - playing
 // >0 - id of spectated player
-float spectatee_status;
+int spectatee_status = -1; ///< the -1 disables HUD panels before CSQC receives necessary data
 float spectatee_status_changed_time;
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
@@ -186,7 +203,6 @@ float spectatee_status_changed_time;
 int tempdb;
 int ClientProgsDB;
 vector hook_shotorigin[4]; // WEAPONTODO
-vector lightning_shotorigin[4]; // TODO: unused
 
 float serverprevtime, serverdeltatime;
 

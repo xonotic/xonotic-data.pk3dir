@@ -16,7 +16,8 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 
         // teamcolor / hit beam effect
         vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-        Send_Effect(EFFECT_VAPORIZER(it.team), it.tur_shotorg, v, 1);
+        vector rgb = Team_ColorRGB(it.team);
+        Send_Effect_Except(EFFECT_VAPORIZER_BEAM, it.tur_shotorg, v, 1, rgb, rgb, NULL);
     }
     else
     {
@@ -43,4 +44,18 @@ METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
     turret_do_updates(it);
 }
 
-#endif
+#endif // SVQC
+#ifdef MENUQC
+#include <common/weapons/weapon/electro.qh>
+#include "plasma_dual.qh"
+
+METHOD(PlasmaTurret, describe, string(PlasmaTurret this))
+{
+    TC(PlasmaTurret, this);
+    PAGE_TEXT_INIT();
+    PAR(_("The %s is a turret that fires electric balls forwards, similar to those of the %s."), COLORED_NAME(this), COLORED_NAME(WEP_ELECTRO));
+    PAR(_("It is a weaker version of the %s, which has two electric ball cannons."), COLORED_NAME(TUR_PLASMA_DUAL));
+    return PAGE_TEXT;
+}
+
+#endif // MENUQC

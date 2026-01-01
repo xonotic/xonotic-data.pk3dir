@@ -1,0 +1,16 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+CLASS(Deathmatch, Gametype)
+	INIT(Deathmatch)
+	{
+		this.gametype_init(this, _("Deathmatch"),"dm","g_dm",GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PREFERRED,"","timelimit=15 pointlimit=30 leadlimit=0",_("Score as many frags as you can"));
+	}
+	METHOD(Deathmatch, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		return true;
+	}
+	ATTRIB(Deathmatch, m_legacydefaults, string, "30 20 0");
+ENDCLASS(Deathmatch)
+REGISTER_GAMETYPE(DEATHMATCH, NEW(Deathmatch));

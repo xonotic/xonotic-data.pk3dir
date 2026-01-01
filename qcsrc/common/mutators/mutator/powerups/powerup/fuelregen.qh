@@ -1,0 +1,47 @@
+#pragma once
+
+#include <common/items/all.qh>
+#include <common/mutators/mutator/powerups/powerups.qh>
+#ifdef SVQC
+    #include <server/items/items.qh>
+#endif
+
+#ifdef GAMEQC
+MODEL(FuelRegen_ITEM, Item_Model("g_fuelregen.md3"));
+#endif
+
+#ifdef SVQC
+bool autocvar_g_powerups_fuelregen = true;
+void powerup_fuelregen_init(Pickup def, entity item)
+{
+    if(!autocvar_g_powerups || !autocvar_g_powerups_fuelregen)
+        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+}
+#endif
+
+CLASS(FuelRegen, Powerup)
+/* spawnfunc  */ ATTRIB(FuelRegen, m_canonical_spawnfunc, string, "item_fuel_regen");
+#ifdef SVQC
+/* iteminit   */ ATTRIB(FuelRegen, m_iteminit, void(Pickup this, entity item), powerup_fuelregen_init);
+#endif
+#ifdef GAMEQC
+/* spawnflags */ ATTRIB(FuelRegen, spawnflags, int, ITEM_FLAG_NORMAL);
+/* model      */ ATTRIB(FuelRegen, m_model, Model, MDL_FuelRegen_ITEM);
+/* itemid     */ ATTRIB(FuelRegen, m_itemid, int, IT_FUEL_REGEN);
+#endif
+/* refname    */ ATTRIB(FuelRegen, netname, string, "fuel_regen");
+/* itemname   */ ATTRIB(FuelRegen, m_name, string, _("Fuel regenerator"));
+/* icon       */ ATTRIB(FuelRegen, m_icon, string, "fuelregen");
+/* color      */ ATTRIB(FuelRegen, m_color, vector, '1 0.5 0');
+/* wptext     */ ATTRIB(FuelRegen, m_waypoint, string, _("Fuel regen"));
+/* wpblink    */ ATTRIB(FuelRegen, m_waypointblink, int, 2);
+#ifdef SVQC
+/* botvalue   */ ATTRIB(FuelRegen, m_botvalue, int, 3000);
+/* pickupfunc */ ATTRIB(FuelRegen, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);
+#endif
+ENDCLASS(FuelRegen)
+REGISTER_ITEM(FuelRegen, NEW(FuelRegen));
+
+SPAWNFUNC_ITEM(item_fuel_regen, ITEM_FuelRegen)
+
+// no PowerupStatusEffect for FuelRegen

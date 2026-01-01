@@ -11,14 +11,14 @@
 	{
 		if (me.checked)
 		{
-			if (me.allowDeselect) me.setChecked(me, 0);
+			if (me.allowDeselect) me.setChecked(me, false);
 		}
 		else
 		{
 			entity e;
 			for (e = me.parent.firstChild; e; e = e.nextSibling)
 				if (e != me)
-					if (e.group == me.group) e.setChecked(e, 0);
-			me.setChecked(me, 1);
+					if (e.group == me.group) e.setChecked(e, false);
+			me.setChecked(me, true);
 		}
 	}

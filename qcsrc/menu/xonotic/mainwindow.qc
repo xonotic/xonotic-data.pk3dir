@@ -15,6 +15,7 @@
 #include "dialog_hudpanel_powerups.qh"
 #include "dialog_hudpanel_pressedkeys.qh"
 #include "dialog_hudpanel_racetimer.qh"
+#include "dialog_hudpanel_checkpoints.qh"
 #include "dialog_hudpanel_radar.qh"
 #include "dialog_hudpanel_score.qh"
 #include "dialog_hudpanel_timer.qh"
@@ -37,9 +38,9 @@
 #include "dialog_settings_game_hudconfirm.qh"
 #include "dialog_singleplayer_winner.qh"
 #include "dialog_multiplayer_join_serverinfo.qh"
-#include "dialog_multiplayer_media_demo_startconfirm.qh"
-#include "dialog_multiplayer_media_demo_timeconfirm.qh"
-#include "dialog_multiplayer_media_screenshot_viewer.qh"
+#include "dialog_media_demo_startconfirm.qh"
+#include "dialog_media_demo_timeconfirm.qh"
+#include "dialog_media_screenshot_viewer.qh"
 #include "dialog_multiplayer_create_mapinfo.qh"
 #include "dialog_multiplayer_create_mutators.qh"
 #include "dialog_sandboxtools.qh"
@@ -50,6 +51,7 @@
 #include "dialog_uid2name.qh"
 #include "dialog_singleplayer.qh"
 #include "dialog_multiplayer.qh"
+#include "dialog_media.qh"
 #include "dialog_settings.qh"
 #include "dialog_credits.qh"
 #include "dialog_quit.qh"
@@ -135,6 +137,10 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
+	i = NEW(XonoticHUDCheckpointsDialog);
+	i.configureDialog(i);
+	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
 	i = NEW(XonoticHUDRadarDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -193,6 +199,10 @@ void MainWindow_configureMainWindow(entity me)
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	me.bindingsResetDialog = i = NEW(XonoticBindingsResetDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	me.skinResetDialog = i = NEW(XonoticSkinResetDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
@@ -297,6 +307,11 @@ void MainWindow_configureMainWindow(entity me)
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_MULTIPLAYER, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
+
+		i = NEW(XonoticMediaDialog);
+		i.configureDialog(i);
+		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+		n.setNexposee(n, i, SKINPOSITION_DIALOG_MEDIA, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 
 		i = NEW(XonoticSettingsDialog);
 		i.configureDialog(i);

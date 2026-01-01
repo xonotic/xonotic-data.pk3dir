@@ -1,0 +1,23 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+bool autocvar_g_nades_ice = true;
+float autocvar_g_nades_ice_freeze_time;
+bool autocvar_g_nades_ice_explode;
+bool autocvar_g_nades_ice_teamcheck;
+
+void nade_ice_boom(entity this);
+#endif // SVQC
+
+const int PROJECTILE_NADE_ICE = 76;
+const int PROJECTILE_NADE_ICE_BURN = 77;
+
+CLASS(IceNade, Nade)
+	ATTRIB(IceNade, m_color, vector, '0 0.66 1');
+	ATTRIB(IceNade, m_name, string, _("Ice grenade"));
+	ATTRIB(IceNade, m_icon, string, "nade_ice");
+	ATTRIB(IceNade, netname, string, "ice");
+	ATTRIB(IceNade, impulse, int, 3);
+ENDCLASS(IceNade)

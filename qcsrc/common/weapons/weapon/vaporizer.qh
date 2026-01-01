@@ -1,12 +1,22 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(VAPORIZER_MUZZLEFLASH, "models/nexflash.md3");
+MODEL(VAPORIZER_VIEW, W_Model("h_minstanex.iqm"));
+MODEL(VAPORIZER_WORLD, W_Model("v_minstanex.md3"));
+MODEL(VAPORIZER_ITEM, W_Model("g_minstanex.md3"));
+
+SOUND(VAPORIZER_FIRE, W_Sound("minstanexfire"));
+SOUND(VAPORIZER_IMPACT, W_Sound("neximpact"));
+#endif
+
 CLASS(Vaporizer, Weapon)
 /* spawnfunc */ ATTRIB(Vaporizer, m_canonical_spawnfunc, string, "weapon_vaporizer");
 /* ammotype  */ ATTRIB(Vaporizer, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Vaporizer, impulse, int, 7);
 /* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, 10000);
-/* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.5 1 1');
+/* color     */ ATTRIB(Vaporizer, m_color, vector, '0.592 0.557 0.824');
 /* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);
@@ -24,37 +34,29 @@ CLASS(Vaporizer, Weapon)
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, PRI) \
-    	P(class, prefix, animtime, float, PRI) \
-        P(class, prefix, damage, float, PRI) \
-    	P(class, prefix, force, float, PRI) \
-    	P(class, prefix, refire, float, PRI) \
-    	P(class, prefix, ammo, float, SEC) \
-    	P(class, prefix, animtime, float, SEC) \
-    	P(class, prefix, damage, float, SEC) \
-    	P(class, prefix, delay, float, SEC) \
-    	P(class, prefix, edgedamage, float, SEC) \
-    	P(class, prefix, force, float, SEC) \
-        P(class, prefix, force_zscale, float, SEC) \
-    	P(class, prefix, lifetime, float, SEC) \
-    	P(class, prefix, radius, float, SEC) \
-    	P(class, prefix, refire, float, SEC) \
-    	P(class, prefix, shotangle, float, SEC) \
-    	P(class, prefix, speed, float, SEC) \
-    	P(class, prefix, spread, float, SEC) \
-    	P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, animtime, float, PRI) \
+		P(class, prefix, damage, float, PRI) \
+		P(class, prefix, damagefalloff_forcehalflife, float, PRI) \
+		P(class, prefix, damagefalloff_halflife, float, PRI) \
+		P(class, prefix, damagefalloff_maxdist, float, PRI) \
+		P(class, prefix, damagefalloff_mindist, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, pickup_ammo, float, NONE) \
+		P(class, prefix, refire, float, PRI) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Vaporizer, vaporizer)
+	W_PROPS(X, Vaporizer, vaporizer)
 #undef X
 
 ENDCLASS(Vaporizer)
-REGISTER_WEAPON(VAPORIZER, vaporizer, NEW(Vaporizer));
+REGISTER_WEAPON(VAPORIZER, NEW(Vaporizer));
 
 SPAWNFUNC_WEAPON(weapon_vaporizer, WEP_VAPORIZER)
 SPAWNFUNC_WEAPON(weapon_minstanex, WEP_VAPORIZER)

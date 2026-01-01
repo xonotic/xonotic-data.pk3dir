@@ -10,14 +10,14 @@ REGISTER_MUTATOR(status_effects, true);
 
 #ifdef GAMEQC
 /** Entity statuseffects */
-.StatusEffects statuseffects;
+.StatusEffect statuseffects;
 /** Player statuseffects storage (holds previous state) */
-.StatusEffects statuseffects_store;
+.StatusEffect statuseffects_store;
 
 REGISTER_NET_LINKED(ENT_CLIENT_STATUSEFFECTS)
 
 const int StatusEffects_groups_minor = 8; // must be a multiple of 8 (one byte) to optimize bandwidth usage
-const int StatusEffects_groups_major = 4; // must be >= ceil(REGISTRY_COUNT(StatusEffect) / StatusEffects_groups_minor)
+const int StatusEffects_groups_major = 4; // must be >= ceil(REGISTRY_COUNT(StatusEffects) / StatusEffects_groups_minor)
 #endif
 
 // no need to perform these checks on both server and client
@@ -26,7 +26,7 @@ STATIC_INIT(StatusEffects)
 {
 	if (StatusEffects_groups_minor / 8 != floor(StatusEffects_groups_minor / 8))
 		error("StatusEffects_groups_minor is not a multiple of 8.");
-	int min_major_value = ceil(REGISTRY_COUNT(StatusEffect) / StatusEffects_groups_minor);
+	int min_major_value = ceil(REGISTRY_COUNT(StatusEffects) / StatusEffects_groups_minor);
 	if (StatusEffects_groups_major < min_major_value)
 		error(sprintf("StatusEffects_groups_major can not be < %d.", min_major_value));
 }
@@ -38,7 +38,7 @@ STATIC_INIT(StatusEffects)
 #endif
 
 #ifdef CSQC
-StatusEffects g_statuseffects;
+StatusEffect g_statuseffects;
 void StatusEffects_entremove(entity this)
 {
     if(g_statuseffects == this)
@@ -60,7 +60,7 @@ NET_HANDLE(ENT_CLIENT_STATUSEFFECTS, bool isnew)
             if (!(minorBits & BIT(j))) {
                 continue;
             }
-            const StatusEffects it = REGISTRY_GET(StatusEffect, StatusEffects_groups_minor * i + j);
+            const StatusEffect it = REGISTRY_GET(StatusEffects, StatusEffects_groups_minor * i + j);
             this.statuseffect_time[it.m_id] = ReadFloat();
             this.statuseffect_flags[it.m_id] = ReadByte();
         }
@@ -71,19 +71,19 @@ NET_HANDLE(ENT_CLIENT_STATUSEFFECTS, bool isnew)
 
 #ifdef SVQC
 int SEFminorBitsArr[StatusEffects_groups_major];
-void StatusEffects_Write(StatusEffects data, StatusEffects store)
+void StatusEffects_Write(StatusEffect data, StatusEffect store)
 {
     if (!data) {
         WriteShort(MSG_ENTITY, 0);
         return;
     }
-    TC(StatusEffects, data);
+    TC(StatusEffect, data);
 
 	for (int i = 0; i < StatusEffects_groups_major; ++i)
 		SEFminorBitsArr[i] = 0;
 
     int majorBits = 0;
-    FOREACH(StatusEffect, true, {
+    FOREACH(StatusEffects, true, {
         .float fld = statuseffect_time[it.m_id];
         .int flg = statuseffect_flags[it.m_id];
         const bool changed = (store.(fld) != data.(fld) || store.(flg) != data.(flg));
@@ -109,7 +109,7 @@ void StatusEffects_Write(StatusEffects data, StatusEffects store)
 			if (!(minorBits & BIT(j)))
 				continue;
 
-			const entity it = REGISTRY_GET(StatusEffect, StatusEffects_groups_minor * i + j);
+			const entity it = REGISTRY_GET(StatusEffects, StatusEffects_groups_minor * i + j);
             WriteFloat(MSG_ENTITY, data.statuseffect_time[it.m_id]);
 			WriteByte(MSG_ENTITY, data.statuseffect_flags[it.m_id]);
 		}
@@ -121,9 +121,9 @@ void StatusEffects_Write(StatusEffects data, StatusEffects store)
 #undef G_MINOR
 
 #ifdef SVQC
-bool StatusEffects_Send(StatusEffects this, Client to, int sf)
+bool StatusEffects_Send(StatusEffect this, entity to, int sf)
 {
-    TC(StatusEffects, this);
+    TC(StatusEffect, this);
     WriteHeader(MSG_ENTITY, ENT_CLIENT_STATUSEFFECTS);
     StatusEffects_Write(this, to.statuseffects_store);
     return true;
@@ -137,7 +137,7 @@ bool StatusEffects_customize(entity this, entity client)
 
 void StatusEffects_new(entity this)
 {
-    StatusEffects eff = NEW(StatusEffects);
+    StatusEffect eff = NEW(StatusEffect);
 	this.statuseffects = eff;
 	eff.owner = this;
     if(this.statuseffects_store)
@@ -146,8 +146,10 @@ void StatusEffects_new(entity this)
         Net_LinkEntity(eff, false, 0, StatusEffects_Send);
     }
 }
+
 void StatusEffects_delete(entity e) { delete(e.statuseffects); e.statuseffects = NULL; }
 // may be called on non-player entities, should be harmless!
+
 void StatusEffects_update(entity e) { e.statuseffects.SendFlags = 0xFFFFFF; }
 
 // this clears the storage entity instead of the statuseffects object, useful for map resets and such
@@ -157,13 +159,13 @@ void StatusEffects_clearall(entity store)
         return; // safety net
     // NOTE: you will need to perform StatusEffects_update after this to update the storage entity
     // (unless store is the storage entity)
-    FOREACH(StatusEffect, true, {
+    FOREACH(StatusEffects, true, {
         store.statuseffect_time[it.m_id] = 0;
         store.statuseffect_flags[it.m_id] = 0;
     });
 }
 
-void StatusEffectsStorage_attach(entity e) { e.statuseffects_store = NEW(StatusEffects); e.statuseffects_store.drawonlytoclient = e; }
+void StatusEffectsStorage_attach(entity e) { e.statuseffects_store = NEW(StatusEffect); e.statuseffects_store.drawonlytoclient = e; }
 void StatusEffectsStorage_delete(entity e) { delete(e.statuseffects_store); e.statuseffects_store = NULL; }
 
 // called when an entity is deleted with delete() / remove()
@@ -177,7 +179,7 @@ void ONREMOVE(entity this)
 #endif
 
 #ifdef GAMEQC
-bool StatusEffects_active(StatusEffects this, entity actor);
+bool StatusEffects_active(StatusEffect this, entity actor);
 
 // runs every SV_StartFrame on the server
 // called by HUD_Powerups_add on the client
@@ -186,18 +188,18 @@ void StatusEffects_tick(entity actor);
 // accesses the status effect timer, returns 0 if the entity has no statuseffects object
 // pass g_statuseffects as the actor on client side
 // pass the entity with a .statuseffects on server side
-float StatusEffects_gettime(StatusEffects this, entity actor);
+float StatusEffects_gettime(StatusEffect this, entity actor);
 #endif
 #ifdef SVQC
 // call when applying the effect to an entity
-void StatusEffects_apply(StatusEffects this, entity actor, float eff_time, int eff_flags);
+void StatusEffects_apply(StatusEffect this, entity actor, float eff_time, int eff_flags);
 
 // copies all the status effect fields to the specified storage entity
 // does not perform an update
-void StatusEffects_copy(StatusEffects this, entity store, float time_offset);
+void StatusEffects_copy(StatusEffect this, entity store, float time_offset);
 
 // call when removing the effect
-void StatusEffects_remove(StatusEffects this, entity actor, int removal_type);
+void StatusEffects_remove(StatusEffect this, entity actor, int removal_type);
 
 void StatusEffects_removeall(entity actor, int removal_type);
 #endif

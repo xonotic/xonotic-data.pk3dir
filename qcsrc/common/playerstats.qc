@@ -47,7 +47,7 @@ void PlayerStats_GameReport_Reset_All()
 	if(PS_GR_OUT_DB < 0)
 		return;
 
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 16; ++i)
 		if (teamscorekeepers[i])
 			PlayerStats_GameReport_AddTeam(i + 1);
 	FOREACH_CLIENT(true, {
@@ -56,6 +56,8 @@ void PlayerStats_GameReport_Reset_All()
 		strfree(it.playerstats_id);
 		PlayerStats_GameReport_AddEvent(sprintf("kills-%d", it.playerid));
 		PlayerStats_GameReport_AddPlayer(it);
+		it.handicap_avg_given_sum = 0;
+		it.handicap_avg_taken_sum = 0;
 	});
 	FOREACH(Scores, true, {
 		string label = scores_label(it);
@@ -154,7 +156,8 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 {
 	if((prefix == "") || PS_GR_OUT_DB < 0) { return 0; }
 
-	string key = sprintf("%s:%s", prefix, event_id);
+	// use a cheaper strcat here since this function is called often in game
+	string key = strcat(prefix, ":", event_id);
 	float val = stof(db_get(PS_GR_OUT_DB, key));
 	val += value;
 	db_put(PS_GR_OUT_DB, key, ftos(val));
@@ -167,6 +170,7 @@ void PlayerStats_GameReport_Accuracy(entity p)
 		PlayerStats_GameReport_Event_Player(p, \
 			sprintf("acc-%s-%s", it.netname, suffix), CS(p).accuracy.(field[i-1]));
 	FOREACH(Weapons, it != WEP_Null, {
+		ACCMAC("real", accuracy_real)
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
 		ACCMAC("cnt-hit", accuracy_cnt_hit)
@@ -181,10 +185,10 @@ void PlayerStats_GameReport_FinalizePlayer(entity p)
 	if((p.playerstats_id == "") || PS_GR_OUT_DB < 0) { return; }
 
 	// add global info!
-	if(p.alivetime)
+	if(p.alivetime_start)
 	{
-		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_ALIVETIME, time - p.alivetime);
-		p.alivetime = 0;
+		PlayerStats_GameReport_Event_Player(p, PLAYERSTATS_ALIVETIME, max(0, time - p.alivetime_start));
+		p.alivetime_start = 0;
 	}
 
 	db_put(PS_GR_OUT_DB, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
@@ -254,6 +258,12 @@ void PlayerStats_GameReport(bool finished)
 			}
 		}
 
+		// handicap
+		const float given = GameRules_scoring_add(it, DMG, 0);
+		const float taken = GameRules_scoring_add(it, DMGTAKEN, 0);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_HANDICAP_GIVEN, given <= 0 ? 1 : it.handicap_avg_given_sum / given);
+		PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_HANDICAP_TAKEN, taken <= 0 ? 1 : it.handicap_avg_taken_sum / taken);
+
 		// collect final player information
 		PlayerStats_GameReport_FinalizePlayer(it);
 	});
@@ -288,11 +298,11 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 	{
 		PlayerStats_GameReport_DelayMapVote = true;
 
-		serverflags |= SERVERFLAG_PLAYERSTATS;
 		if(autocvar_g_playerstats_gamereport_uri != cvar_defstring("g_playerstats_gamereport_uri"))
-		{
-			serverflags |= SERVERFLAG_PLAYERSTATS_CUSTOM;
-		}
+			serverflags |= SERVERFLAG_PLAYERSTATS | SERVERFLAG_PLAYERSTATS_CUSTOM;
+		else if(checkextension("DP_CRYPTO") && checkextension("DP_QC_URI_POST"))
+			// XonStat submission requires player and server IDs, and HTTPS POST
+			serverflags |= SERVERFLAG_PLAYERSTATS;
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_AVGLATENCY);
@@ -302,9 +312,12 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_HANDICAP_GIVEN);
+		PlayerStats_GameReport_AddEvent(PLAYERSTATS_HANDICAP_TAKEN);
 
 		// accuracy stats
 		FOREACH(Weapons, it != WEP_Null, {
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-real"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-hit"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-fired"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-hit"));
@@ -360,7 +373,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 * V: format version (always a fixed number) - this MUST be the first line!
 		 * #: comment (MUST be ignored by any parser)
 		 * R: release information on the server
-		 * G: game type
+		 * G: gametype
 		 * O: mod name (icon request) as in server browser
 		 * M: map name
 		 * I: match ID (see "matchid" in world.qc)
@@ -389,8 +402,11 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		 *   achievement-<achievementname>: achievement counters (their "count" is usually 1 if nonzero at all)
 		 *   kills-<index>: number of kills against the indexed player
 		 *   rank <number>: rank of player
-		 *   acc-<weapon netname>-hit: total damage dealt
-		 *   acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
+		 *   handicapgiven: average handicap on given (dealt) damage throughout the match
+		 *   handicaptaken: average handicap on taken (received) damage throughout the match
+		 *   acc-<weapon netname>-real: total damage dealt excluding excess after death
+		 *   acc-<weapon netname>-hit: total damage dealt including excess after death
+		 *   acc-<weapon netname>-fired: total damage that all fired shots could have dealt
 		 *   acc-<weapon netname>-cnt-hit: amount of shots that actually hit
 		 *   acc-<weapon netname>-cnt-fired: amount of fired shots
 		 *   acc-<weapon netname>-frags: amount of frags dealt by weapon
@@ -452,7 +468,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 					url_fputs(fh, sprintf("t %s\n", tt));
 				}
 
-				// elo ranking enabled
+				// skill ranking enabled
 				nn = db_get(PS_GR_OUT_DB, sprintf("%s:_ranked", p));
 				if(nn != "") { url_fputs(fh, sprintf("r %s\n", nn)); }
 
@@ -515,24 +531,25 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 {
-	GameRules_scoring_add(joiningplayer, ELO, -1);
-	// http://stats.xonotic.org/player/GgXRw6piDtFIbMArMuiAi8JG4tiin8VLjZgsKB60Uds=/elo.txt
+	GameRules_scoring_add(joiningplayer, SKILL, -1);
+	// http://stats.xonotic.org/skill?hashkey=Cm5mzXa1Vn9VX0%2FySV4Pp8ca9CTZvklERDqrrNOUFZU%3D
 	if(autocvar_g_playerstats_playerbasic_uri != "")
 	{
 		string uri = autocvar_g_playerstats_playerbasic_uri;
 		if (joiningplayer.crypto_idfp == "") {
-			GameRules_scoring_add(joiningplayer, ELO, -1);
+			GameRules_scoring_add(joiningplayer, SKILL, -1);
 		} else {
 			// create the database if it doesn't already exist
 			if(PS_B_IN_DB < 0)
 				PS_B_IN_DB = db_create();
 
 			// now request the information
-			uri = strcat(uri, "/player/", uri_escape(uri_escape(uri_escape(joiningplayer.crypto_idfp))), "/elo.txt");
+			uri = strcat(uri, "/skill?game_type_cd=", uri_escape(PlayerStats_GetGametype()));
+			uri = strcat(uri, "&hashkey=", uri_escape(joiningplayer.crypto_idfp));
 			LOG_DEBUG("Retrieving playerstats from URL: ", uri);
 			url_single_fopen(
 				uri,
-				FILE_APPEND,
+				FILE_READ,
 				PlayerStats_PlayerBasic_Handler,
 				joiningplayer
 			);
@@ -553,7 +570,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 	else
 	{
 		// server has this disabled, kill the DB and set status to idle
-		GameRules_scoring_add(joiningplayer, ELO, -1);
+		GameRules_scoring_add(joiningplayer, SKILL, -1);
 		if(PS_B_IN_DB >= 0)
 		{
 			db_close(PS_B_IN_DB);
@@ -606,80 +623,40 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
+			// THIS should be never called
 			LOG_DEBUG("-- Sending data to player stats server");
-			/*url_fputs(fh, "V 1\n");
-			#ifdef WATERMARK
-			url_fputs(fh, sprintf("R %s\n", WATERMARK));
-			#endif
-			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
-			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
-			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
-			*/url_fputs(fh, "\n");
+			url_fputs(fh, "\n");
 			url_fclose(fh);
 			return;
 		}
 
 		case URL_READY_CANREAD:
 		{
-			bool handled = false;
-			string gt = string_null;
-			for (string s = ""; (s = url_fgets(fh)); ) {
-				int n = tokenizebyseparator(s, " "); // key value? data
-				if (n == 1) continue;
-				string key = "", value = "", data = "";
-				if (n == 2) {
-                    key = argv(0);
-                    data = argv(1);
-				} else if (n >= 3) {
-                    key = argv(0);
-                    value = argv(1);
-                    data = argv(2);
-				}
-                switch (key) {
-                    case "V":
-                        // PlayerInfo_AddItem(p, "_version", data);
-                        break;
-                    case "R":
-                        // PlayerInfo_AddItem(p, "_release", data);
-                        break;
-                    case "T":
-                        // PlayerInfo_AddItem(p, "_time", data);
-                        break;
-                    case "S":
-                        // PlayerInfo_AddItem(p, "_statsurl", data);
-                        break;
-                    case "P":
-                        // PlayerInfo_AddItem(p, "_hashkey", data);
-                        break;
-                    case "n":
-                        // PlayerInfo_AddItem(p, "_playernick", data);
-                        break;
-                    case "i":
-                        // PlayerInfo_AddItem(p, "_playerid", data);
-                        // p.xonstat_id = stof(data);
-                        break;
-                    case "G":
-                        gt = data;
-                        break;
-                    case "e":
-                        //LOG_TRACE("G: ", gt);
-                        //LOG_TRACE("e: ", data);
-                        if (gt == PlayerStats_GetGametype()) {
-                            handled = true;
-                            float e = stof(data);
-                            GameRules_scoring_add(p, ELO, +1 + e);
-                        }
-                        if (gt == "") {
-                            // PlayerInfo_AddItem(p, value, data);
-                        } else {
-                            // PlayerInfo_AddItem(p, sprintf("%s/%s", gt, value), data);
-                        }
-                        break;
-                }
+			string temp = "";
+			for (string s; (s = url_fgets(fh)); )
+			{
+				if (temp != "")
+					temp = strcat(temp, "\n", s);
+				else
+					temp = s;
 			}
 			url_fclose(fh);
-			if (handled) return;
+			int buf = json_parse(temp, _json_parse_array);
+			EXPECT_NE(-1, buf);
+			string gametype = PlayerStats_GetGametype();
+			if (json_get(buf, "0.game_type_cd") == gametype && gametype != "")
+			{
+				float mu = stof(json_get(buf, "0.mu"));
+				//float sigma = stof(json_get(buf, "0.sigma"));
+				float skill = max(0, mu);
+				/* we display just the mean skill, since this most accurately represents how players will play on an average match.
+				 * displaying mu - 3 * sigma would display worst-case performance, but when applied to every player this becomes meaningless.
+				 * also we're not interested in the skill that we're confident players can operate above, rather where we expect them to operate.
+				 */
+				GameRules_scoring_add(p, SKILL, skill + 1);
+				return;
+
+			}
 			break;
 		}
 		case URL_READY_CLOSED:
@@ -696,7 +673,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			break;
 		}
 	}
-	GameRules_scoring_add(p, ELO, -1);
+	GameRules_scoring_add(p, SKILL, -1);
 }
 #endif // SVQC
 

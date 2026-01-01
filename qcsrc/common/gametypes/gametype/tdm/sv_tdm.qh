@@ -1,0 +1,17 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+int autocvar_g_tdm_point_limit;
+int autocvar_g_tdm_point_leadlimit;
+bool autocvar_g_tdm_team_spawns;
+void tdm_Initialize();
+
+REGISTER_MUTATOR(tdm, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		tdm_Initialize();
+	}
+	return 0;
+}

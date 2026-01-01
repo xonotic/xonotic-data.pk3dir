@@ -1,0 +1,24 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+.float buff_flight_oldgravity;
+.bool buff_flight_crouchheld;
+#endif // SVQC
+
+CLASS(FlightBuff, Buff)
+	ATTRIB(FlightBuff, m_name, string, _("Flight"));
+	ATTRIB(FlightBuff, netname, string, "flight");
+#ifndef SVQC
+	ATTRIB(FlightBuff, m_icon, string, "buff_flight");
+#endif
+#ifdef GAMEQC
+	ATTRIB(FlightBuff, m_skin, int, 11);
+#endif
+	ATTRIB(FlightBuff, m_color, vector, '0.23 0.44 1');
+ENDCLASS(FlightBuff)
+
+REGISTER_BUFF(FLIGHT, NEW(FlightBuff));
+BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)
+BUFF_SPAWNFUNC_Q3COMPAT(item_flight, BUFF_FLIGHT)

@@ -1,0 +1,27 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_disability_slowtime;
+float autocvar_g_buffs_disability_speed;
+float autocvar_g_buffs_disability_attack_time_multiplier;
+float autocvar_g_buffs_disability_weaponspeed;
+
+void buff_Disability_ApplyStunned(entity frag_target, entity frag_attacker);
+#endif // SVQC
+
+CLASS(DisabilityBuff, Buff)
+	ATTRIB(DisabilityBuff, m_name, string, _("Disability"));
+	ATTRIB(DisabilityBuff, netname, string, "disability");
+#ifndef SVQC
+	ATTRIB(DisabilityBuff, m_icon, string, "buff_disability");
+#endif
+#ifdef GAMEQC
+	ATTRIB(DisabilityBuff, m_skin, int, 7);
+#endif
+	ATTRIB(DisabilityBuff, m_color, vector, '0.94 0.3 1');
+ENDCLASS(DisabilityBuff)
+
+REGISTER_BUFF(DISABILITY, NEW(DisabilityBuff));
+BUFF_SPAWNFUNCS(disability, BUFF_DISABILITY)

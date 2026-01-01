@@ -1,0 +1,30 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_inferno_burntime_factor;
+float autocvar_g_buffs_inferno_burntime_min_time;
+float autocvar_g_buffs_inferno_burntime_target_damage;
+float autocvar_g_buffs_inferno_burntime_target_time;
+float autocvar_g_buffs_inferno_damagemultiplier;
+
+float buff_Inferno_CalculateTime(float dmg);
+float buff_Inferno_CalculateDamage(float frag_damage);
+#endif // SVQC
+
+CLASS(InfernoBuff, Buff)
+	ATTRIB(InfernoBuff, m_name, string, _("Inferno"));
+	ATTRIB(InfernoBuff, netname, string, "inferno");
+#ifndef SVQC
+	ATTRIB(InfernoBuff, m_icon, string, "buff_inferno");
+#endif
+#ifdef GAMEQC
+	ATTRIB(InfernoBuff, m_skin, int, 16);
+#endif
+	ATTRIB(InfernoBuff, m_color, vector, '1 0.62 0');
+ENDCLASS(InfernoBuff)
+
+REGISTER_BUFF(INFERNO, NEW(InfernoBuff));
+BUFF_SPAWNFUNCS(inferno, BUFF_INFERNO)
+BUFF_SPAWNFUNC_Q3COMPAT(item_doubler, BUFF_INFERNO)

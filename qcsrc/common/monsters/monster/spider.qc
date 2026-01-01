@@ -6,6 +6,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_spider_health;
+string autocvar_g_monster_spider_loot = "health_medium";
 float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_attack_bite_damage;
 float autocvar_g_monster_spider_attack_bite_delay;
@@ -43,7 +44,7 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 	}
 }
 
-SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
+SOUND(SpiderAttack_FIRE, W_Sound("electro_fire2"));
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire))
 {
     TC(SpiderAttack, thiswep);
@@ -108,7 +109,7 @@ void M_Spider_Attack_Web_Touch(entity this, entity toucher)
 
 void M_Spider_Attack_Web(entity this)
 {
-	sound(this, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_SpiderAttack_FIRE, VOL_BASE, ATTEN_NORM);
 
 	entity proj = new(plasma);
 	proj.owner = proj.realowner = this;
@@ -229,9 +230,20 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
-    actor.monster_loot = ITEM_HealthMedium;
+    actor.monster_loot = autocvar_g_monster_spider_loot;
     actor.monster_attackfunc = M_Spider_Attack;
 
     return true;
+}
+#endif
+#ifdef MENUQC
+METHOD(Spider, describe, string(Spider this))
+{
+	TC(Spider, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The Spider is a large mechanically-enhanced arachnoid adept at hunting speedy enemies."));
+	PAR(_("To slow down its target, the Spider launches a synthetic web-like substance from its cannons. "
+	      "Approaching its enwebbed prey, the Spider will inflict a series of high damage bites."));
+	return PAGE_TEXT;
 }
 #endif

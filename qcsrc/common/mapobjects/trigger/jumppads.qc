@@ -36,7 +36,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = PHYS_GRAVITY(NULL);
+	grav = PHYS_GRAVITY(pushed_entity);
 	if(pushed_entity && pushed_entity.gravity)
 		grav *= pushed_entity.gravity;
 
@@ -365,11 +365,17 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 		// or when a dead player gets stuck in the jumppad for some reason
 		if(!already_pushed && this.pushltime < time && !(IS_DEAD(targ) && targ.velocity == '0 0 0'))
 		{
-			// flash when activated
-			Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
+			if (Q3COMPAT_COMMON && this.classname == "target_push")
+				this.pushltime = time + 1.5;
+			else
+			{
+				// flash when activated
+				Send_Effect(EFFECT_JUMPPAD, targ.origin, targ.velocity, 1);
+				this.pushltime = time + 0.2;
+			}
 			_sound (targ, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
-			this.pushltime = time + 0.2;
 		}
+
 		if(IS_REAL_CLIENT(targ) || IS_BOT_CLIENT(targ))
 		{
 			bool found = false;
@@ -489,7 +495,7 @@ bool trigger_push_testorigin(entity tracetest_ent, entity targ, entity jp, vecto
 		tracetoss(tracetest_ent, tracetest_ent);
 		if (trace_startsolid && ofs.z)
 		{
-			setorigin(tracetest_ent, targ.origin + ofs / 2);
+			setorigin(tracetest_ent, targ.origin + ofs * 0.5);
 			tracetoss(tracetest_ent, tracetest_ent);
 			if (trace_startsolid && ofs.z)
 			{
@@ -524,6 +530,33 @@ bool trigger_push_testorigin_for_item(entity tracetest_ent, entity item, vector 
 #endif
 
 #ifdef SVQC
+// get the push entity in cases where a non-push entity acts as the trigger of a jump pad
+entity get_pusher_from_trigger(entity this)
+{
+	// triggers could point to several pusher but each pusher would overwrite the effect of the previous one
+	// this means only one pusher has to be considered
+	// we still have to traverse the target list though since entities other than pushers could be in it
+	entity pusher = NULL;
+	if(this.classname != "trigger_push")
+	{
+		for(entity t = ftoe(maxclients); (t = find(t, targetname, this.target)); )
+		{
+			if(t.classname == "target_push")
+			{
+				pusher = t;
+				break;
+			}
+		}
+
+		if(!pusher) objerror (this, "Jump pad with non-existent target");
+	}
+
+	if(pusher)
+		return pusher; // if the target field points to a target_push entity, return it
+	else
+		return this; // otherwise, return the original entity
+}
+
 vector trigger_push_get_start_point(entity this)
 {
 	// calculate a typical start point for the jump
@@ -535,25 +568,26 @@ vector trigger_push_get_start_point(entity this)
 float trigger_push_get_push_time(entity this, vector endpos)
 {
 	vector org = trigger_push_get_start_point(this);
+	entity pusher = get_pusher_from_trigger(this); // function might get called from a non-push trigger entity
 
 	float grav = PHYS_GRAVITY(NULL);
 
-	entity t = this.enemy;
+	entity t = pusher.enemy;
 	if (t)
 	{
 		entity e = spawn();
 		setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 		e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-		vector v = trigger_push_calculatevelocity(org, t, this.height, e);
-		vector v2 = trigger_push_calculatevelocity(endpos, t, this.height, e);
+		vector v = trigger_push_calculatevelocity(org, t, pusher.height, e);
+		vector v2 = trigger_push_calculatevelocity(endpos, t, pusher.height, e);
 		delete(e);
 		return (v.z + v2.z) / grav;
 	}
-	else if (!(this.target && this.target != ""))
+	else if (!(pusher.target && pusher.target != ""))
 	{
 		if (!this.team)
 		{
-			vector v = this.movedir;
+			vector v = pusher.movedir;
 
 			float t = v.z / grav;
 			float jump_height = 1/2 * grav * (t ** 2);
@@ -567,21 +601,25 @@ float trigger_push_get_push_time(entity this, vector endpos)
 }
 #endif
 
-/// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
-/// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
+// if (item != NULL) returns true if the item can be reached by using this jumppad, false otherwise
+// if (item == NULL) tests jumppad's trajectory and eventually spawns waypoints for it (return value doesn't matter)
+// NOTE: for simplicity's sake it improperly tests jumppad bboxes instead of bmodels
 bool trigger_push_test(entity this, entity item)
 {
 #ifdef SVQC
 	vector org = trigger_push_get_start_point(this);
+	entity pusher = get_pusher_from_trigger(this); // function might get called from a non-push trigger entity
+#elif defined(CSQC)
+	entity pusher = this; // client-side code never calls this on a non-push entity
 #endif
 
-	if (this.target)
+	if (pusher.target)
 	{
 		int n = 0;
 #ifdef SVQC
 		vector vel = '0 0 0';
 #endif
-		for(entity t = NULL; (t = find(t, targetname, this.target)); )
+		for(entity t = NULL; (t = find(t, targetname, pusher.target)); )
 		{
 			++n;
 #ifdef SVQC
@@ -595,7 +633,7 @@ bool trigger_push_test(entity this, entity item)
 			entity e = spawn();
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-			e.velocity = trigger_push_calculatevelocity(org, t, this.height, e);
+			e.velocity = trigger_push_calculatevelocity(org, t, pusher.height, e);
 
 			vel = e.velocity;
 			vector best_target = '0 0 0';
@@ -615,7 +653,7 @@ bool trigger_push_test(entity this, entity item)
 				// optimization: if horizontal velocity is 0 then target is not good since the trajectory
 				// will definitely go back to the jumppad (horizontal velocity of best_vel can't be 0 anyway)
 				if ((e.velocity.x != 0 || e.velocity.y != 0)
-					&& trigger_push_testorigin(e, t, this, org))
+					&& trigger_push_testorigin(e, t, pusher, org))
 				{
 					best_target = trace_endpos;
 					best_org = org;
@@ -636,7 +674,7 @@ bool trigger_push_test(entity this, entity item)
 				new_org = org + ofs;
 
 				LABEL(new_test)
-				e.velocity = trigger_push_calculatevelocity(new_org, t, this.height, e);
+				e.velocity = trigger_push_calculatevelocity(new_org, t, pusher.height, e);
 				if (item)
 				{
 					if (!trigger_push_testorigin_for_item(e, item, new_org))
@@ -650,7 +688,7 @@ bool trigger_push_test(entity this, entity item)
 					vel = e.velocity;
 					if (vdist(vec2(e.velocity), <, autocvar_sv_maxspeed))
 						e.velocity = autocvar_sv_maxspeed * flatdir;
-					if (trigger_push_testorigin(e, t, this, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
+					if (trigger_push_testorigin(e, t, pusher, new_org) && (!valid_best_target || trace_endpos.z > best_target.z + 50))
 					{
 						best_target = trace_endpos;
 						best_org = new_org;
@@ -702,14 +740,14 @@ bool trigger_push_test(entity this, entity item)
 		{
 			// exactly one dest - bots love that
 			if (!this.team)
-				this.enemy = find(NULL, targetname, this.target);
+				pusher.enemy = find(NULL, targetname, pusher.target);
 			else // bots can't tell teamed jumppads from normal ones
-				this.enemy = NULL;
+				pusher.enemy = NULL;
 		}
 		else
 		{
 			// have to use random selection every single time
-			this.enemy = NULL;
+			pusher.enemy = NULL;
 		}
 
 	}
@@ -722,7 +760,7 @@ bool trigger_push_test(entity this, entity item)
 			setsize(e, PL_MIN_CONST, PL_MAX_CONST);
 			e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 			setorigin(e, org);
-			e.velocity = this.movedir;
+			e.velocity = pusher.movedir;
 			tracetoss(e, e);
 			if (item)
 			{
@@ -738,7 +776,7 @@ bool trigger_push_test(entity this, entity item)
 			return false;
 	}
 
-	defer(this, 0.1, trigger_push_updatelink);
+	defer(pusher, 0.1, trigger_push_updatelink);
 #endif
 	return true;
 }
@@ -803,7 +841,7 @@ void trigger_push_velocity_link(entity this)
  *            or OUTSIDE (negative) of the jump trajectory. General rule: use
  *            positive values for targets mounted on the floor, and use negative
  *            values to target a point on the ceiling.
- *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
+ *   movedir: if target is not set, movedir * speed * 10 is the velocity to be reached.
  */
 spawnfunc(trigger_push)
 {
@@ -891,20 +929,40 @@ void target_push_init(entity this)
 	target_push_link(this);
 }
 
-void target_push_init2(entity this)
-{
-	if(this.target && this.target != "") // we have an old style pusher!
-	{
-		InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
-		this.use = target_push_use;
-	}
-
-	target_push_init(this); // normal push target behaviour can be combined with a legacy pusher?
-}
-
 spawnfunc(target_push)
 {
-	target_push_init2(this);
+	target_push_init(this); // normal push target behaviour can be combined with a legacy pusher?
+	this.use = target_push_use;
+
+	if(this.target && this.target != "") // Q3 or old style Nexuiz pusher
+	{
+		for (entity trigger_ent = findchain(target, this.targetname); trigger_ent; trigger_ent = trigger_ent.chain)
+		{
+			// add the triggering entity to the g_jumppads list
+			// multiple jump pads can use the same target_push
+			if(!IL_CONTAINS(g_jumppads, trigger_ent))
+			{
+				IL_PUSH(g_jumppads, trigger_ent);
+				InitializeEntity(trigger_ent, trigger_push_findtarget, INITPRIO_FINDTARGET);
+			}
+		}
+	}
+	else // Q3 .angles and .speed pusher
+	{
+		if (!this.speed)
+			this.speed = 1000;
+		SetMovedir(this); // this clears .angles so it must be after target_push_init()
+		this.movedir *= this.speed;
+	}
+
+	if (!this.noise)
+	{
+		if (Q3COMPAT_COMMON && !(this.spawnflags & Q3_TARGET_PUSH_JUMPPAD))
+			this.noise = "sound/misc/windfly.wav"; // Q3 mappers provide this, it's not in pak0
+		else
+			this.noise = "misc/jumppad.wav";
+	}
+	precache_sound (this.noise);
 }
 
 spawnfunc(info_notnull)

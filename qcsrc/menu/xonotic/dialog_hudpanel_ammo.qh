@@ -6,8 +6,8 @@ CLASS(XonoticHUDAmmoDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDAmmoDialog, title, string, _("Ammo Panel"));
 	ATTRIB(XonoticHUDAmmoDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDAmmoDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDAmmoDialog, rows, float, 15.5);
+	ATTRIB(XonoticHUDAmmoDialog, rows, float, 16);
 	ATTRIB(XonoticHUDAmmoDialog, columns, float, 4);
 	ATTRIB(XonoticHUDAmmoDialog, name, string, "HUDammo");
-	ATTRIB(XonoticHUDAmmoDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDAmmoDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDAmmoDialog)

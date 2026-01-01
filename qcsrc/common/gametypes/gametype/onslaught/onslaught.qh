@@ -1,0 +1,32 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+CLASS(Onslaught, Gametype)
+	INIT(Onslaught)
+	{
+		this.gametype_init(this, _("Onslaught"),"ons","g_onslaught",GAMETYPE_FLAG_TEAMPLAY,"","pointlimit=1 timelimit=20",_("Capture control points to reach and destroy the enemy generator"));
+	}
+	METHOD(Onslaught, m_generate_mapinfo, void(Gametype this, string v))
+	{
+		if(v == "onslaught_generator")
+			MapInfo_Map_supportedGametypes |= this.gametype_flags;
+	}
+	METHOD(Onslaught, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
+	}
+	ATTRIB(Onslaught, m_legacydefaults, string, "20 0");
+ENDCLASS(Onslaught)
+REGISTER_GAMETYPE(ONSLAUGHT, NEW(Onslaught));
+
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_GENERATOR)
+REGISTER_NET_LINKED(ENT_CLIENT_CONTROLPOINT_ICON)
+#endif
+
+#ifdef CSQC
+IntrusiveList g_onsgenerators;
+STATIC_INIT(g_onsgenerators) { g_onsgenerators = IL_NEW(); }
+#endif

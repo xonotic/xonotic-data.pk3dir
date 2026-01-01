@@ -4,17 +4,21 @@
 
 .bool disabled;
 
+string XonoticWeaponsList_cb_name, XonoticWeaponsList_cb_icon;
+void XonoticWeaponsList_cb(string _name, string _icon)
+{
+	XonoticWeaponsList_cb_name = _name;
+	XonoticWeaponsList_cb_icon = _icon;
+}
+
 entity makeXonoticWeaponsList()
 {
 	entity me;
 	me = NEW(XonoticWeaponsList);
-	me.configureXonoticWeaponsList(me);
+	me.configureXonoticListBox(me);
 	return me;
 }
-void XonoticWeaponsList_configureXonoticWeaponsList(entity me)
-{
-	me.configureXonoticListBox(me);
-}
+
 void XonoticWeaponsList_draw(entity me)
 {
 	// read in cvar?
@@ -46,9 +50,21 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 {
 	SUPER(XonoticWeaponsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
+	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
+
+	entity e = REGISTRY_GET(Weapons, WEP_FIRST);
+	e.display(e, XonoticWeaponsList_cb);
+	vector sz = draw_PictureSize(XonoticWeaponsList_cb_icon);
+	float aspect_ratio = sz.y ? sz.x / sz.y : 1;
+	me.columnIconOrigin = 0.25 * me.realFontSize.x;
+	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x * aspect_ratio;
+
+	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.25 * me.realFontSize.x);
+	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize.x); // unused
 }
 float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 {
@@ -92,32 +108,39 @@ void XonoticWeaponsList_drawListBoxItem(entity me, int i, vector absSize, bool i
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
 	e = REGISTRY_GET(Weapons, stof(argv(i)));
-	string msg = e.m_name;
-	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-		msg = strcat(msg, "*");
+	e.display(e, XonoticWeaponsList_cb);
+	string msg = XonoticWeaponsList_cb_name;
+	string icon = XonoticWeaponsList_cb_icon;
 
+	draw_Picture(me.columnIconOrigin * eX, icon, me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+
+	bool drawStar = e.spawnflags & WEP_FLAG_MUTATORBLOCKED;
 	vector save_fontscale = draw_fontscale;
-	float f = draw_CondensedFontFactor(msg, false, me.realFontSize, 1);
+	float f = draw_CondensedFontFactor(strcat(msg, drawStar ? "*" : ""), false, me.realFontSize, 1);
 	draw_fontscale.x *= f;
 	vector fs = me.realFontSize;
 	fs.x *= f;
-	draw_Text(me.realUpperMargin * eY, msg, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, msg, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	if(drawStar)
+		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + draw_TextWidth(msg, 0, fs)) * eX, "*", fs, SKINCOLOR_HEADER, SKINALPHA_HEADER, 0);
 	draw_fontscale = save_fontscale;
 }
 
-float XonoticWeaponsList_keyDown(entity me, float scan, float ascii, float shift)
+float XonoticWeaponsList_keyDown(entity me, float key, float ascii, float shift)
 {
-	if(ascii == 43) // +
+	if (((shift & S_CTRL) && (key == K_UPARROW || key == K_KP_UPARROW))
+		|| ascii == '+')
 	{
 		WeaponsList_MoveUp_Click(NULL, me);
 		return 1;
 	}
-	else if(ascii == 45) // -
+	else if (((shift & S_CTRL) && (key == K_DOWNARROW || key == K_KP_DOWNARROW))
+		|| ascii == '-')
 	{
 		WeaponsList_MoveDown_Click(NULL, me);
 		return 1;
 	}
-	else if(SUPER(XonoticWeaponsList).keyDown(me, scan, ascii, shift))
+	else if(SUPER(XonoticWeaponsList).keyDown(me, key, ascii, shift))
 		return 1;
 	return 0;
 }

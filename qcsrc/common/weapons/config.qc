@@ -34,6 +34,33 @@ void Dump_Weapon_Settings()
 	int totalweapons = 0, totalsettings = 0;
 	int wepcount = 1;
 	#define WEP_CONFIG_WRITETOFILE(str) write_String_To_File(wep_config_file, str, wep_config_alsoprint)
+
+	WEP_CONFIG_WRITETOFILE(
+		"// ************************************************************************************ //\n"
+		"// **                 WARNING - MANUALLY EDIT THIS FILE WITH CAUTION                 ** //\n"
+		"// **                                                                                ** //\n"
+		"// **  This file can be automatically generated with the command 'dumpweapons'.      ** //\n"
+		"// **  This is useful to create custom weapon balance configs, after changing some   ** //\n"
+		"// **  weapon balance cvars in-game.                                                 ** //\n"
+		"// **  If you are creating a custom weapon balance config file, delete this.         ** //\n"
+		"// **                                                                                ** //\n"
+		"// **  If you are just editing the default weapon balance (bal-wep-xonotic.cfg),     ** //\n"
+		"// **  please keep this comment as it contains helpful documentation.                ** //\n"
+		"// **                                                                                ** //\n"
+		"// **  These are the default weapon-related balance config settings, categorized by  ** //\n"
+		"// **  weapon.                                                                       ** //\n"
+		"// **  Other default settings are in balance-xonotic.cfg, which executes this file.  ** //\n"
+		"// **  Other wep balance configs like bal-wep-nexuiz25.cfg first execute this, then  ** //\n"
+		"// **  override some settings.                                                       ** //\n"
+		"// **  Therefore any changes made to the default balance here will affect all        ** //\n"
+		"// **  bal-wep-*.cfg files, unless you override it in such files.                    ** //\n"
+		"// **                                                                                ** //\n"
+		"// **  If you add a new weapon cvar, remove a weapon cvar, or rename a weapon cvar,  ** //\n"
+		"// **  please regenerate this file with that command, or manually add it here.       ** //\n"
+		"// **                                                                                ** //\n"
+		"// ************************************************************************************ //\n"
+		"\n");
+
 	FOREACH(Weapons, it != WEP_Null, {
 		if(it.spawnflags & WEP_FLAG_SPECIALATTACK)
 			continue; // never include the attacks

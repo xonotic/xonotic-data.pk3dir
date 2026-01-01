@@ -2,7 +2,7 @@
 
 #include <common/command/_mod.qh>
 #include <common/constants.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/items/inventory.qh>
 #include <common/mapinfo.qh>
 #include <common/net_linked.qh>
@@ -155,10 +155,13 @@ void VoteReset(bool verbose)
 
 void VoteStop(entity stopper, bool canceled)
 {
-	if (canceled)
+	if (canceled) // Code such as NextLevel() stopped it, not a direct action by a human.
 		bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote was canceled\n");
+	else if (stopper == vote_caller)
+		bprint("\{1}^2* ^3", OriginalCallerName(), "^2 stopped their vote\n");
 	else
 		bprint("\{1}^2* ^3", GetCallerName(stopper), "^2 stopped ^3", OriginalCallerName(), "^2's vote\n");
+
 	if (autocvar_sv_eventlog)   GameLogEcho(strcat(":vote:vstop:", ftos(stopper.playerid)));
 	// Don't force them to wait for next vote, this way they can e.g. correct their vote.
 	if ((vote_caller) && (stopper == vote_caller))   vote_caller.vote_waittime = time + autocvar_sv_vote_stop;
@@ -373,9 +376,7 @@ void reset_map(bool is_fake_round_start)
 			accuracy_reset(it); // for spectators too because weapon accuracy is persistent
 		if (!IS_PLAYER(it))
 			continue;
-		if (STAT(FROZEN, it))
-			Unfreeze(it, false);
-		player_powerups_remove_all(it);
+		player_powerups_remove_all(it, true);
 		entity store = PS(it);
 		if (store)
 		{
@@ -460,7 +461,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 
 	// clear player attributes
 	FOREACH_CLIENT(IS_PLAYER(it), {
-		it.alivetime = 0;
+		it.alivetime_start = 0;
 		CS(it).killcount = 0;
 	});
 
@@ -485,10 +486,35 @@ void ReadyRestart_force(bool is_fake_round_start)
 		restart_timer.nextthink = game_starttime;
 	}
 
+	// If we're returning to warmup join/switch all queued players for consistency:
+	// there's no queueing in warmup and imbalances are handled by sv_teamnagger blocking end of warmup.
+	if (warmup_stage)
+	{
+		// First pass: join player(s) queued for specific team(s)
+		FOREACH_CLIENT(it.wants_join > 0, Join(it, false));
+		// Second pass: join player(s) queued for team autoselection
+		FOREACH_CLIENT(it.wants_join < 0, Join(it, false));
+	}
+
 	// after a restart every players number of allowed timeouts gets reset, too
 	if (autocvar_sv_timeout)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { CS(it).allowed_timeouts = autocvar_sv_timeout_number; });
+	}
+
+	if (autocvar_sv_spectate == 2 && !warmup_stage)
+	{
+		FOREACH_CLIENT(IS_SPEC(it),
+		{
+			if (it.vote_master)
+				ClientData_Touch(it.enemy, true);
+			else
+			{
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_MULTI, SPECTATE_SPEC_NOTALLOWED);
+				TRANSMUTE(Observer, it);
+				PutClientInServer(it);
+			}
+		});
 	}
 
 	if (!sv_ready_restart_after_countdown || warmup_stage)
@@ -549,23 +575,33 @@ void ReadyCount()
 	// map_minplayers can only be > 0 if g_warmup was -1 at worldspawn
 	int minplayers = autocvar_g_warmup > 1 ? autocvar_g_warmup : map_minplayers;
 
-	if (total_players < minplayers)
+	// This allows warmup to end with zero players to prevent complaints
+	// of server never changing map with legacy config (sv_autopause 0).
+	bool badteams = (teamplay && total_players && autocvar_sv_teamnagger)
+		? TeamBalance_SizeDifference(NULL) >= autocvar_sv_teamnagger
+		: false;
+
+	if (total_players < minplayers || badteams)
 	{
 		if (game_starttime > time) // someone bailed during countdown, back to warmup
 		{
 			warmup_stage = autocvar_g_warmup; // CAN change it AFTER calling Nagger_ReadyCounted() this frame
 			game_starttime = time;
-			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP, minplayers);
+			if (total_players < minplayers)
+				Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP_MINPLAYERS, minplayers);
+			else
+				Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, COUNTDOWN_STOP_BADTEAMS);
 			if (!sv_ready_restart_after_countdown) // if we ran reset_map() at start of countdown
 				FOREACH_CLIENT(IS_PLAYER(it), { GiveWarmupResources(it); });
 		}
-		if (warmup_limit > 0)
-			warmup_limit = -1;
-		return; // don't ReadyRestart if players are ready but too few
+		warmup_limit = -1;
+		return; // don't ReadyRestart if players are ready but too few or teams are bad
 	}
-	else if (minplayers && warmup_limit <= 0)
+	else if (warmup_limit <= 0
+	&& game_starttime <= time) // No countdown in progress, check prevents early countdown end if only player leaves
 	{
-		// there's enough players now but we're still in infinite warmup
+		// there's enough players now and teams are ok
+		// but we're still in infinite warmup and may need to switch to timed warmup
 		warmup_limit = cvar("g_warmup_limit");
 		if (warmup_limit == 0)
 			warmup_limit = autocvar_timelimit * 60;
@@ -654,7 +690,7 @@ string ValidateMap(string validated_map, entity caller)
 
 	if (!MapInfo_CheckMap(validated_map))
 	{
-		print_to(caller, strcat("^1Invalid mapname, \"^3", validated_map, "^1\" does not support the current game mode."));
+		print_to(caller, strcat("^1Invalid mapname, \"^3", validated_map, "^1\" does not support the current gametype."));
 		return string_null;
 	}
 
@@ -743,7 +779,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 	if (autocvar_sv_vote_limit > 0 && strlen(vote_command) > autocvar_sv_vote_limit)
 		return 0;
 
-	if (!VoteCommand_checkinlist(first_command, vote_list)) return 0;
+	if (caller && !VoteCommand_checkinlist(first_command, vote_list)) return 0;
 
 	if (!VoteCommand_checkargs(startpos, argc)) return 0;
 
@@ -1192,9 +1228,9 @@ void VoteCommand_no(int request, entity caller)  // CLIENT ONLY
 			{
 				print_to(caller, "^1You have already voted.");
 			}
-			else if (((caller == vote_caller) || caller.vote_master) && autocvar_sv_vote_no_stops_vote)
+			else if (caller == vote_caller && autocvar_sv_vote_no_stops_vote)
 			{
-				VoteStop(caller, true);
+				VoteStop(caller, false);
 			}
 
 			else  // everything went okay, continue changing vote

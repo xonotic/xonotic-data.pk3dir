@@ -85,7 +85,7 @@ CLASS(DamageText, Object)
 			if (autocvar_cl_damagetext_color_per_weapon)
 			{
 				Weapon w = DEATH_WEAPONOF(this.m_deathtype);
-				if (w != WEP_Null) rgb = w.wpcolor;
+				if (w != WEP_Null) rgb = w.m_color;
 			}
 
 			vector drawfontscale_save = drawfontscale;
@@ -286,9 +286,11 @@ NET_HANDLE(damagetext, bool isNew)
 		// disown the parent entity from this DamageText
 		// and (likely) give the entity a new DT afterwards
 		// this should only cancel damage accumulation for this DT
-		if ((autocvar_cl_damagetext_accumulate_lifetime >= 0) // negative never disowns
-		&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime)
-		&& (current_alpha(it) > alphathreshold))
+
+		if (flags & DTFLAG_STOP_ACCUMULATION
+			|| (current_alpha(it) < alphathreshold)
+			|| ((autocvar_cl_damagetext_accumulate_lifetime >= 0) // negative never disowns
+				&& (time - it.hit_time > autocvar_cl_damagetext_accumulate_lifetime)))
 		{
 			it.m_group = 0;
 		}

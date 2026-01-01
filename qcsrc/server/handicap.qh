@@ -1,5 +1,9 @@
 #pragma once
 
+#include <common/mapinfo.qh>
+#include <common/gametypes/gametype/cts/cts.qh>
+#include <common/gametypes/gametype/race/race.qh>
+
 /// \file
 /// \brief Header file that describes the handicap system.
 /// \author Lyberta
@@ -9,9 +13,12 @@
 // weak players. Values greater than 1 make the game harder and values less than
 // 1 make the game easier. Right now handicap only affects damage. There are 2
 // types of handicap: voluntary and forced. Voluntary handicap can be set via
-// cl_handicap cvar. For obvious reasons, it can't be less than 1. Forced
+// cl_handicap cvars. For obvious reasons, it can't be less than 1. Forced
 // handicap can be set by server mutators. The total handicap is the product of
 // voluntary and forced handicap.
+// Both handicaps are separated into _take and _give so that mutators and
+// players are able to nerf their damage output or increase intake
+// without changing the other.
 
 /// \brief Initializes handicap to its default value.
 /// \param[in,out] player Player to initialize.
@@ -20,21 +27,47 @@ void Handicap_Initialize(entity player);
 
 /// \brief Returns the voluntary handicap of the player.
 /// \param[in] player Player to check.
+/// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return Voluntary handicap of the player.
-float Handicap_GetVoluntaryHandicap(entity player);
+float Handicap_GetVoluntaryHandicap(entity player, bool receiving);
 
 /// \brief Returns the forced handicap of the player.
 /// \param[in] player Player to check.
+/// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return Forced handicap of the player.
-float Handicap_GetForcedHandicap(entity player);
+float Handicap_GetForcedHandicap(entity player, bool receiving);
 
 /// \brief Sets the forced handicap of the player.
 /// \param[in] player Player to alter.
 /// \param[in] value Handicap value to set.
+/// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return No return.
-void Handicap_SetForcedHandicap(entity player, float value);
+void Handicap_SetForcedHandicap(entity player, float value, bool receiving);
 
 /// \brief Returns the total handicap of the player.
 /// \param[in] player Player to check.
+/// \param[in] receiving Whether handicap is for receiving or dealing.
 /// \return Total handicap of the player.
-float Handicap_GetTotalHandicap(entity player);
+float Handicap_GetTotalHandicap(entity player, bool receiving);
+
+/// \brief Updates .handicap_level for the player.
+/// \param[in] player Player to check.
+void Handicap_UpdateHandicapLevel(entity player);
+
+#define HANDICAP_DISABLED() \
+	(IS_GAMETYPE(CTS) || IS_GAMETYPE(RACE))
+
+// This int ranges from 0 to 16, representing handicap "levels" mapped from
+// 1.0 to HANDICAP_MAX_LEVEL_EQUIVALENT, using (given + taken)/2 (i.e. both-ways handicap).
+// It is networked to the client.
+// The levels are mostly meaningless, just used to determine the player_handicap icon color.
+.int handicap_level;
+
+#define HANDICAP_MAX_LEVEL_EQUIVALENT  2.0
+
+// These store the player's total "average-sum" given/taken damage handicaps respectively.
+// average-sum refers to the arithmetic sum of damage taken/given, weighted by respective handicap.
+// To calculate the average handicap, divide by damage taken/given.
+.float handicap_avg_given_sum;
+.float handicap_avg_taken_sum;
+

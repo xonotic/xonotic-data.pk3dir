@@ -21,15 +21,16 @@ CLASS(XonoticCvarList, XonoticListBox)
 
 	METHOD(XonoticCvarList, mouseRelease, float(entity, vector));
 	METHOD(XonoticCvarList, setSelected, void(entity, float));
-	METHOD(XonoticCvarList, updateCvarType, float(entity));
+	METHOD(XonoticCvarList, updateCvarType, bool(entity));
 
 	ATTRIB(XonoticCvarList, controlledTextbox, entity);
+	ATTRIB(XonoticCvarList, cvarlistResultCountBox, entity);
 	ATTRIB(XonoticCvarList, cvarNameBox, entity);
 	ATTRIB(XonoticCvarList, cvarDescriptionBox, entity);
 	ATTRIB(XonoticCvarList, cvarTypeBox, entity);
 	ATTRIB(XonoticCvarList, cvarValueBox, entity);
 	ATTRIB(XonoticCvarList, cvarDefaultBox, entity);
-	ATTRIB(XonoticCvarList, cvarNeedsForcing, float, 0);
+	ATTRIB(XonoticCvarList, cvarNeedsForcing, bool, false);
 
 	ATTRIB(XonoticCvarList, handle, float, -1);
 	ATTRIB(XonoticCvarList, cvarName, string);
@@ -40,8 +41,10 @@ ENDCLASS(XonoticCvarList)
 entity makeXonoticCvarList();
 void CvarList_Filter_Change(entity box, entity me);
 void CvarList_Filter_ModifiedCvars(entity box, entity me);
+void CvarList_Filter_Descriptions(entity box, entity me);
 void CvarList_Value_Change(entity box, entity me);
 void CvarList_Revert_Click(entity btn, entity me);
 void CvarList_End_Editing(entity box, entity me);
 
-float autocvar_menu_cvarlist_onlymodified;
+bool autocvar_menu_cvarlist_onlymodified;
+bool autocvar_menu_cvarlist_descriptions;

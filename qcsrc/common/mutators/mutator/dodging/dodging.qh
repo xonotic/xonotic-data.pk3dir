@@ -1,1 +1,9 @@
 #pragma once
+
+#ifdef MENUQC
+CLASS(MutatorDodging, Mutator)
+	ATTRIB(MutatorDodging, message, string, _("Dodging"));
+ENDCLASS(MutatorDodging)
+
+REGISTER_MUTATOR(dodging, true, MutatorDodging);
+#endif

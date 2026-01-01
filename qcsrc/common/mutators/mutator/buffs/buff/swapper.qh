@@ -1,0 +1,23 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_swapper_range;
+#endif // SVQC
+
+CLASS(SwapperBuff, Buff)
+	ATTRIB(SwapperBuff, m_name, string, _("Swapper"));
+	ATTRIB(SwapperBuff, netname, string, "swapper");
+#ifndef SVQC
+	ATTRIB(SwapperBuff, m_icon, string, "buff_swapper");
+#endif
+#ifdef GAMEQC
+	ATTRIB(SwapperBuff, m_skin, int, 17);
+#endif
+	ATTRIB(SwapperBuff, m_color, vector, '0.63 0.36 1');
+ENDCLASS(SwapperBuff)
+
+REGISTER_BUFF(SWAPPER, NEW(SwapperBuff));
+BUFF_SPAWNFUNCS(swapper, BUFF_SWAPPER)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_teleporter, BUFF_SWAPPER)

@@ -1,7 +1,0 @@
-// generated file; do not modify
-#include <common/gamemodes/rules.qh>
-#ifdef SVQC
-    #include <common/gamemodes/sv_rules.qh>
-#endif
-
-#include <common/gamemodes/gamemode/_mod.qh>

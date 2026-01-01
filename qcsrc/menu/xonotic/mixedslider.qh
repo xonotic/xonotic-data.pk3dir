@@ -1,0 +1,29 @@
+#pragma once
+
+#include "../item/mixedslider.qh"
+CLASS(XonoticMixedSlider, MixedSlider)
+	METHOD(XonoticMixedSlider, configureXonoticMixedSlider, void(entity, string, string));
+	METHOD(XonoticMixedSlider, setValue, void(entity, float, bool));
+	METHOD(XonoticMixedSlider, setValueSpace, void(entity, float));
+	METHOD(XonoticMixedSlider, configureXonoticMixedSliderValues, void(entity));
+	ATTRIB(XonoticMixedSlider, fontSize, float, SKINFONTSIZE_NORMAL);
+	ATTRIB(XonoticMixedSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT);
+	ATTRIB(XonoticMixedSlider, image, string, SKINGFX_SLIDER);
+	ATTRIB(XonoticMixedSlider, tolerance, vector, '0.2 2 0');
+	ATTRIB(XonoticMixedSlider, align, float, 0.5);
+	ATTRIB(XonoticMixedSlider, color, vector, SKINCOLOR_SLIDER_N);
+	ATTRIB(XonoticMixedSlider, colorC, vector, SKINCOLOR_SLIDER_C);
+	ATTRIB(XonoticMixedSlider, colorF, vector, SKINCOLOR_SLIDER_F);
+	ATTRIB(XonoticMixedSlider, colorD, vector, SKINCOLOR_SLIDER_D);
+	ATTRIB(XonoticMixedSlider, color2, vector, SKINCOLOR_SLIDER_S);
+
+	ATTRIB(XonoticMixedSlider, controlledCvar, string);
+	METHOD(XonoticMixedSlider, loadCvars, void(entity));
+	METHOD(XonoticMixedSlider, saveCvars, void(entity));
+	ATTRIB(XonoticMixedSlider, sendCvars, float, 0);
+
+	ATTRIB(XonoticMixedSlider, alpha, float, SKINALPHA_TEXT);
+	ATTRIB(XonoticMixedSlider, disabledAlpha, float, SKINALPHA_DISABLED);
+ENDCLASS(XonoticMixedSlider)
+entity makeXonoticMixedSlider_T(string, string theTooltip);
+entity makeXonoticMixedSlider(string);  // note: you still need to call addRange, addText, and configureXonoticMixedSliderValues!

@@ -1,5 +1,0 @@
-// generated file; do not modify
-#include <common/gamemodes/gamemode/duel/duel.qh>
-#ifdef SVQC
-    #include <common/gamemodes/gamemode/duel/sv_duel.qh>
-#endif

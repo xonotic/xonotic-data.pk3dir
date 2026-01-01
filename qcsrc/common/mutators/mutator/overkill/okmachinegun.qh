@@ -1,12 +1,20 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(OK_MG_VIEW, W_Model("h_ok_mg.iqm"));
+MODEL(OK_MG_WORLD, W_Model("v_ok_mg.md3"));
+MODEL(OK_MG_ITEM, W_Model("g_ok_mg.md3"));
+
+SOUND(OK_MG_FIRE, W_Sound("uzi_fire"));
+#endif
+
 CLASS(OverkillMachineGun, Weapon)
 /* spawnfunc */ ATTRIB(OverkillMachineGun, m_canonical_spawnfunc, string, "weapon_okmachinegun");
 /* ammotype  */ ATTRIB(OverkillMachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(OverkillMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(OverkillMachineGun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(OverkillMachineGun, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(OverkillMachineGun, wpcolor, vector, '1 1 0');
+/* color     */ ATTRIB(OverkillMachineGun, m_color, vector, '0.678 0.886 0.267');
 /* modelname */ ATTRIB(OverkillMachineGun, mdl, string, "ok_mg");
 #ifdef GAMEQC
 /* model     */ ATTRIB(OverkillMachineGun, m_model, Model, MDL_OK_MG_ITEM);
@@ -29,19 +37,11 @@ CLASS(OverkillMachineGun, Weapon)
 		P(class, prefix, spread_add, float, PRI) \
 		P(class, prefix, spread_max, float, PRI) \
 		P(class, prefix, spread_min, float, PRI) \
-		P(class, prefix, animtime, float, SEC) \
-		P(class, prefix, damage, float, SEC) \
-		P(class, prefix, delay, float, SEC) \
-		P(class, prefix, edgedamage, float, SEC) \
-		P(class, prefix, force, float, SEC) \
-		P(class, prefix, force_zscale, float, SEC) \
-		P(class, prefix, lifetime, float, SEC) \
-		P(class, prefix, radius, float, SEC) \
-		P(class, prefix, refire, float, SEC) \
 		P(class, prefix, refire_type, float, SEC) \
-		P(class, prefix, shotangle, float, SEC) \
-		P(class, prefix, speed, float, SEC) \
-		P(class, prefix, spread, float, SEC) \
+		P(class, prefix, damagefalloff_forcehalflife, float, NONE) \
+		P(class, prefix, damagefalloff_halflife, float, NONE) \
+		P(class, prefix, damagefalloff_maxdist, float, NONE) \
+		P(class, prefix, damagefalloff_mindist, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
@@ -55,6 +55,6 @@ CLASS(OverkillMachineGun, Weapon)
 #undef X
 
 ENDCLASS(OverkillMachineGun)
-REGISTER_WEAPON(OVERKILL_MACHINEGUN, okmachinegun, NEW(OverkillMachineGun));
+REGISTER_WEAPON(OVERKILL_MACHINEGUN, NEW(OverkillMachineGun));
 
 //SPAWNFUNC_WEAPON(weapon_okmachinegun, WEP_OVERKILL_MACHINEGUN)

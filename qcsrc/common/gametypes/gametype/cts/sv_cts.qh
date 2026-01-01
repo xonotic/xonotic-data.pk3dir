@@ -1,0 +1,24 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <server/race.qh>
+
+void cts_Initialize();
+
+REGISTER_MUTATOR(cts, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		g_race_qualifying = 1;
+		independent_players = 1;
+		GameRules_limit_score(0);
+		GameRules_limit_lead(0);
+
+		cts_Initialize();
+	}
+	return 0;
+}
+
+// scores
+const float ST_CTS_LAPS = 1;

@@ -19,25 +19,26 @@ CLASS(InputBox, Label)
 	ATTRIB(InputBox, cursorPos, float, 0);  // characters
 	ATTRIB(InputBox, scrollPos, float, 0);  // widths
 
-	ATTRIB(InputBox, focusable, float, 1);
-	ATTRIB(InputBox, allowFocusSound, float, 1);
+	ATTRIB(InputBox, focusable, bool, true);
+	ATTRIB(InputBox, allowFocusSound, bool, true);
 	ATTRIB(InputBox, disabled, float, 0);
 	ATTRIB(InputBox, lastChangeTime, float, 0);
 	ATTRIB(InputBox, dragScrollTimer, float, 0);
 	ATTRIB(InputBox, dragScrollPos, vector, '0 0 0');
-	ATTRIB(InputBox, pressed, float, 0);
-	ATTRIB(InputBox, editColorCodes, float, 1);
+	ATTRIB(InputBox, pressed, bool, false);
+	ATTRIB(InputBox, editColorCodes, bool, true);
 	ATTRIB(InputBox, forbiddenCharacters, string, "");
+	ATTRIB(InputBox, allowedCharacters, string, "");
 	ATTRIB(InputBox, color, vector, '1 1 1');
 	ATTRIB(InputBox, colorF, vector, '1 1 1');
 	ATTRIB(InputBox, maxLength, float, 255);  // if negative, it counts bytes, not chars
 	ATTRIB(InputBox, applyButton, entity);
 
-	ATTRIB(InputBox, enableClearButton, float, 1);
+	ATTRIB(InputBox, enableClearButton, bool, true);
 	ATTRIB(InputBox, clearButton, entity);
 	ATTRIB(InputBox, cb_width, float, 0);
-	ATTRIB(InputBox, cb_pressed, float, 0);
-	ATTRIB(InputBox, cb_focused, float, 0);
+	ATTRIB(InputBox, cb_pressed, bool, false);
+	ATTRIB(InputBox, cb_focused, bool, false);
 	ATTRIB(InputBox, cb_color, vector, '1 1 1');
 	ATTRIB(InputBox, cb_colorF, vector, '1 1 1');
 	ATTRIB(InputBox, cb_colorC, vector, '1 1 1');

@@ -1,0 +1,24 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+.int buff_ammo_prev_infitems;
+.int buff_ammo_prev_clipload;
+#endif // SVQC
+
+CLASS(AmmoBuff, Buff)
+	ATTRIB(AmmoBuff, m_name, string, _("Ammo"));
+	ATTRIB(AmmoBuff, netname, string, "ammo");
+#ifndef SVQC
+	ATTRIB(AmmoBuff, m_icon, string, "buff_ammo");
+#endif
+#ifdef GAMEQC
+	ATTRIB(AmmoBuff, m_skin, int, 3);
+#endif
+	ATTRIB(AmmoBuff, m_color, vector, '0.29 0.37 1');
+ENDCLASS(AmmoBuff)
+
+REGISTER_BUFF(AMMO, NEW(AmmoBuff));
+BUFF_SPAWNFUNCS(ammo, BUFF_AMMO)
+BUFF_SPAWNFUNC_Q3COMPAT(item_ammoregen, BUFF_AMMO)

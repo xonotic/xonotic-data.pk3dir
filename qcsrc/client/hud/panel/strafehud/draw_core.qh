@@ -1,0 +1,8 @@
+#pragma once
+#include "../strafehud.qh"
+
+void StrafeHUD_DrawStrafeMeter(float, float, float, float, float, bool, float);
+void StrafeHUD_DrawAngleIndicator(float, vector, float, int, bool, bool, vector, float, float);
+void StrafeHUD_DrawAngleIndicatorLine(vector, float, int, vector, float);
+void StrafeHUD_DrawAngleIndicatorArrow(float, float, vector, vector, float, bool);
+void StrafeHUD_DrawDirectionIndicator(int, bool, bool);

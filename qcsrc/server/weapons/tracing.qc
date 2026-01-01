@@ -64,7 +64,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
-		accuracy_add(ent, wep, maxdamage, 0);
+		accuracy_add(ent, wep, maxdamage, 0, 0); // add to fired
 
 	if(IS_PLAYER(ent))
 		W_HitPlotAnalysis(ent, wep, forward, right, up);
@@ -208,7 +208,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	mspercallsum -= gettime(GETTIME_HIRES);
 	#endif
 
-	dir = W_CalculateSpread(dir, spread, autocvar_g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+	dir = W_CalculateSpread(dir, spread, autocvar_g_projectiles_spread_style, false);
 
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
@@ -346,7 +346,7 @@ void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector 
 
 	// calculate hits and fired shots for hitscan
 	if(this.(weaponentity))
-		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg));
+		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg), 0); // add to hit
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -361,9 +361,14 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = NULL;
 }
 
-void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect, bool do_antilag)
+void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector dir,
+                        float spread, float max_solid_penetration, float damage,
+                        float falloff_halflife, float falloff_mindist,
+                        float falloff_maxdist, float headshot_multiplier,
+                        float force, float falloff_forcehalflife,
+                        float dtype, entity tracer_effect, bool do_antilag)
 {
-	dir = normalize(dir + randomvec() * spread);
+	dir = W_CalculateSpread(dir, spread, autocvar_g_hitscan_spread_style, true);
 	vector end = start + dir * max_shot_distance;
 
 	fireBullet_last_hit = NULL;
@@ -426,7 +431,9 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 		if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
 			Damage_DamageInfo(start, damage * damage_fraction, 0, 0, max(1, force) * dir * damage_fraction, dtype, hit.species, this);
 
-		if (hit && hit != WarpZone_trace_forent && hit != fireBullet_last_hit)  // Avoid self-damage (except after going through a warp); avoid hitting the same entity twice (engine bug).
+		// Avoid self-damage (except after going through a warp)
+		// avoid hitting the same entity twice (engine bug)
+		if (hit && hit != WarpZone_trace_forent && hit != fireBullet_last_hit)
 		{
 			fireBullet_last_hit = hit;
 			yoda = 0;
@@ -438,14 +445,36 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 				headshot = true;
 			}
 			bool gooddamage = accuracy_isgooddamage(this, hit);
-			Damage(hit, this, this, damage * damage_fraction, dtype, weaponentity, start, force * dir * damage_fraction);
+
+			float dealt_damage = damage * damage_fraction;
+			vector dealt_force = force * dir * damage_fraction;
+
+			if (falloff_halflife || falloff_forcehalflife)
+			{
+				// start, end and trace_endpos seem unreliable for
+				// falloff calculations, using `entity.origin`s instead.
+				// dist is only used to measure distance between shooter
+				// and target entities and do math based on the distance
+				// target's location = hit.origin
+				// shooter's location = this.origin
+				float dist = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hit.origin) - this.origin);
+
+				if (falloff_halflife)
+					dealt_damage *= ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_halflife,      dist);
+
+				if (falloff_forcehalflife)
+					dealt_force  *= ExponentialFalloff(falloff_mindist, falloff_maxdist, falloff_forcehalflife, dist);
+			}
+
+			Damage(hit, this, this, dealt_damage, dtype, weaponentity, start, dealt_force);
+
 			// calculate hits for ballistic weapons
 			if(gooddamage)
 			{
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * damage_fraction);
 				total_damage += damage * damage_fraction;
-				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage);
+				accuracy_add(this, this.(weaponentity).m_weapon, 0, added_damage, 0); // add to hit
 			}
 		}
 
@@ -505,6 +534,11 @@ void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector 
 	// restore shooter solid type
 	if(this)
 		this.dphitcontentsmask = oldsolid;
+}
+
+void fireBullet_antilag(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect, bool do_antilag)
+{
+	fireBullet_falloff(this, weaponentity, start, dir, spread, max_solid_penetration, damage, 0, 0, 0, headshot_multiplier, force, 0, dtype, tracer_effect, do_antilag);
 }
 
 void fireBullet(entity this, .entity weaponentity, vector start, vector dir, float spread, float max_solid_penetration, float damage, float headshot_multiplier, float force, float dtype, entity tracer_effect)

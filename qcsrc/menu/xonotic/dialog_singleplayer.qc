@@ -1,11 +1,11 @@
 #include "dialog_singleplayer.qh"
 
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include "bigbutton.qh"
-#include "commandbutton.qh"
 #include "leavematchbutton.qh"
 #include "radiobutton.qh"
 #include "textlabel.qh"
+#include "mainwindow.qh"
 #include "campaign.qh"
 
 void InstantAction_LoadMap(entity btn, entity dummy)
@@ -145,15 +145,15 @@ void XonoticSingleplayerDialog_fill(entity me)
 	entity e, btnPrev, btnNext, lblTitle;
 
 	me.TR(me);
-		me.TDempty(me, (me.columns - 3) / 2);
-		me.TD(me, 2, 3, e = makeXonoticBigButton(_("Instant action! (random map with bots)"), '0 0 0'));
+		me.TDempty(me, (me.columns - 3) * 0.5);
+		me.TD(me, 2, 3, e = makeXonoticBigButton(_("Instant action with bots!"), '0 0 0'));
 			e.onClick = InstantAction_LoadMap;
 			e.onClickEntity = NULL;
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, btnPrev = makeXonoticButton("<<", '0 0 0'));
-		me.TD(me, 1, me.columns - 2, lblTitle = makeXonoticTextLabel(0.5, "???"));
+		me.TD(me, 1, me.columns - 2, lblTitle = makeXonoticHeaderLabel("???"));
 		me.TD(me, 1, 1, btnNext = makeXonoticButton(">>", '0 0 0'));
 	me.TR(me);
 		me.TD(me, me.rows - 6, me.columns, me.campaignBox = makeXonoticCampaignList());

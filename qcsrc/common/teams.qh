@@ -83,7 +83,7 @@ vector Team_ColorRGB(int teamid)
 		case NUM_TEAM_4: return '1 0.0625 1'; // 0xFF0FFF
 	}
 
-	return '0 0 0';
+	return '1 1 1';
 }
 
 string Team_ColorName(int teamid)
@@ -226,8 +226,10 @@ int Team_IndexToBit(int index)
 #define Static_Team_ColorName_Lower(teamid) strtolower(Static_Team_ColorName(teamid))
 #define Static_Team_ColorName_Upper(teamid) strtoupper(Static_Team_ColorName(teamid))
 
-#define Team_FullName(teamid) strcat(Team_ColorName(teamid), " ", NAME_TEAM, "^7")
-#define Team_ColoredFullName(teamid) strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", NAME_TEAM, "^7")
+#define Team_FullName_WithSuffixColor(teamid, suf_col) strcat(Team_ColorName(teamid), " ", NAME_TEAM, suf_col)
+#define Team_FullName(teamid) Team_FullName_WithSuffixColor(teamid, "^7")
+#define Team_ColoredFullName_WithSuffixColor(teamid, suf_col) strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", NAME_TEAM, suf_col)
+#define Team_ColoredFullName(teamid) Team_ColoredFullName_WithSuffixColor(teamid, "^7")
 
 #define Team_IndexToFullName(index) Team_FullName(Team_IndexToTeam(index))
 #define Team_IndexToColoredFullName(index) Team_ColoredFullName(Team_IndexToTeam(index))

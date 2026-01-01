@@ -1,12 +1,28 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(HAGAR_VIEW, W_Model("h_hagar.iqm"));
+MODEL(HAGAR_WORLD, W_Model("v_hagar.md3"));
+MODEL(HAGAR_ITEM, W_Model("g_hagar.md3"));
+
+SOUND(HAGAR_BEEP, W_Sound("hagar_beep"));
+SOUND(HAGAR_FIRE, W_Sound("hagar_fire"));
+SOUND(HAGAR_LOAD, W_Sound("hagar_load"));
+SOUND(HAGEXP1, W_Sound("hagexp1"));
+SOUND(HAGEXP2, W_Sound("hagexp2"));
+SOUND(HAGEXP3, W_Sound("hagexp3"));
+Sound SND_HAGEXP_RANDOM(float rnd) {
+    return REGISTRY_GET(Sounds, SND_HAGEXP1.m_id + rint(rnd * 2));
+}
+#endif
+
 CLASS(Hagar, Weapon)
 /* spawnfunc */ ATTRIB(Hagar, m_canonical_spawnfunc, string, "weapon_hagar");
 /* ammotype  */ ATTRIB(Hagar, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Hagar, impulse, int, 8);
 /* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');
+/* color     */ ATTRIB(Hagar, m_color, vector, '0.886 0.545 0.345');
 /* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Hagar, m_model, Model, MDL_HAGAR_ITEM);
@@ -22,42 +38,43 @@ CLASS(Hagar, Weapon)
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
 		P(class, prefix, ammo, float, BOTH) \
-        P(class, prefix, damageforcescale, float, BOTH) \
-        P(class, prefix, damage, float, BOTH) \
-        P(class, prefix, edgedamage, float, BOTH) \
-        P(class, prefix, force, float, BOTH) \
-        P(class, prefix, health, float, BOTH) \
-        P(class, prefix, lifetime, float, PRI) \
-        P(class, prefix, lifetime_min, float, SEC) \
-        P(class, prefix, lifetime_rand, float, SEC) \
-        P(class, prefix, load, float, SEC) \
-        P(class, prefix, load_abort, float, SEC) \
-        P(class, prefix, load_animtime, float, SEC) \
-        P(class, prefix, load_hold, float, SEC) \
-        P(class, prefix, load_linkexplode, float, SEC) \
-        P(class, prefix, load_max, float, SEC) \
-        P(class, prefix, load_releasedeath, float, SEC) \
-        P(class, prefix, load_speed, float, SEC) \
-        P(class, prefix, load_spread, float, SEC) \
-        P(class, prefix, load_spread_bias, float, SEC) \
-        P(class, prefix, radius, float, BOTH) \
-        P(class, prefix, refire, float, BOTH) \
-        P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, secondary, float, NONE) \
-        P(class, prefix, speed, float, BOTH) \
-        P(class, prefix, spread, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, damageforcescale, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, health, float, BOTH) \
+		P(class, prefix, lifetime, float, PRI) \
+		P(class, prefix, lifetime_min, float, SEC) \
+		P(class, prefix, lifetime_rand, float, SEC) \
+		P(class, prefix, load, float, SEC) \
+		P(class, prefix, load_abort, float, SEC) \
+		P(class, prefix, load_animtime, float, SEC) \
+		P(class, prefix, load_hold, float, SEC) \
+		P(class, prefix, load_linkexplode, float, SEC) \
+		P(class, prefix, load_max, float, SEC) \
+		P(class, prefix, load_releasedeath, float, SEC) \
+		P(class, prefix, load_speed, float, SEC) \
+		P(class, prefix, load_spread, float, SEC) \
+		P(class, prefix, load_spread_bias, float, SEC) \
+		P(class, prefix, pickup_ammo, float, NONE) \
+		P(class, prefix, radius, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Hagar, hagar)
+	W_PROPS(X, Hagar, hagar)
 #undef X
 
 ENDCLASS(Hagar)
-REGISTER_WEAPON(HAGAR, hagar, NEW(Hagar));
+REGISTER_WEAPON(HAGAR, NEW(Hagar));
 
 SPAWNFUNC_WEAPON(weapon_hagar, WEP_HAGAR)

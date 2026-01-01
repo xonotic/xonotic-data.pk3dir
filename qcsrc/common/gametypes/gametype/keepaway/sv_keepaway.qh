@@ -1,0 +1,36 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <common/scores.qh>
+
+void ka_Handler_CheckBall(entity this);
+
+IntrusiveList g_kaballs;
+REGISTER_MUTATOR(ka, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0,
+		{
+			field(SP_KEEPAWAY_PICKUPS, "pickups", 0);
+			field(SP_KEEPAWAY_CARRIERKILLS, "bckills", 0);
+			field(SP_KEEPAWAY_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
+		});
+
+		g_kaballs = IL_NEW();
+		entity ka_Handler = new_pure(ka_Handler);
+		setthink(ka_Handler, ka_Handler_CheckBall);
+		InitializeEntity(ka_Handler, ka_Handler_CheckBall, INITPRIO_SETLOCATION);
+	}
+	return false;
+}
+
+void(entity this) havocbot_role_ka_carrier;
+void(entity this) havocbot_role_ka_collector;
+
+void ka_DamageEvent(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
+
+void ka_TouchEvent(entity this, entity toucher);
+
+void ka_DropEvent(entity plyr);

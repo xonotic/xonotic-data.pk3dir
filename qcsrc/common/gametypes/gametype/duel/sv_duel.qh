@@ -1,0 +1,10 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+REGISTER_MUTATOR(duel, false)
+{
+	MUTATOR_STATIC();
+	return 0;
+}
+
+bool autocvar_g_duel_with_powerups;

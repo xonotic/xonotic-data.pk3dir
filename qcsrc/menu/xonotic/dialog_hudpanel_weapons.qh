@@ -6,8 +6,8 @@ CLASS(XonoticHUDWeaponsDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDWeaponsDialog, title, string, _("Weapons Panel"));
 	ATTRIB(XonoticHUDWeaponsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDWeaponsDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 21.5);
+	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 22);
 	ATTRIB(XonoticHUDWeaponsDialog, columns, float, 4);
 	ATTRIB(XonoticHUDWeaponsDialog, name, string, "HUDweapons");
-	ATTRIB(XonoticHUDWeaponsDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDWeaponsDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDWeaponsDialog)

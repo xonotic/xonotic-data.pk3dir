@@ -2,12 +2,15 @@
 
 #include <common/mutators/mutator/status_effects/all.qh>
 
-CLASS(Superweapons, StatusEffects)
-    ATTRIB(Superweapons, netname, string, "superweapons");
-    ATTRIB(Superweapons, m_name, string, _("Superweapons"));
-    ATTRIB(Superweapons, m_icon, string, "superweapons");
+CLASS(Superweapon, StatusEffect)
+    ATTRIB(Superweapon, netname, string, "superweapons");
+    ATTRIB(Superweapon, m_name, string, _("Superweapons"));
+    ATTRIB(Superweapon, m_icon, string, "superweapons");
 #ifdef GAMEQC
-    ATTRIB(Superweapons, m_sound_rm, Sound, SND_POWEROFF);
+    ATTRIB(Superweapon, m_sound_rm, Sound, SND_POWEROFF);
 #endif
-ENDCLASS(Superweapons)
-REGISTER_STATUSEFFECT(Superweapons, NEW(Superweapons));
+#ifdef MENUQC
+    ATTRIB(Superweapon, m_hidden, bool, true);
+#endif
+ENDCLASS(Superweapon)
+REGISTER_STATUSEFFECT(Superweapon, NEW(Superweapon));

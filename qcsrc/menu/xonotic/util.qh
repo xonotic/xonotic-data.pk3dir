@@ -1,7 +1,22 @@
 #pragma once
 
-float GL_CheckExtension(string ext);
-float GL_Have_TextureCompression();
+.string cvar1_setDependent;
+.float cvar1Min_setDependent;
+.float cvar1Max_setDependent;
+.string cvar2_setDependent;
+.float cvar2Min_setDependent;
+.float cvar2Max_setDependent;
+.string cvar3_setDependent;
+.float cvar3Min_setDependent;
+.float cvar3Max_setDependent;
+.int op_setDependent;
+.string cvarString_setDependent;
+.string cvarValue_setDependent;
+.float(entity) func_setDependent;
+.bool disabled;
+
+bool GL_CheckExtension(string ext);
+bool GL_Have_TextureCompression();
 
 void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass);
 void saveAllCvars(entity root);
@@ -12,9 +27,9 @@ string getCvarsMulti(entity me);
 void makeCallback(entity me, entity cbent, void(entity, entity) cbfunc);
 
 void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax);
-void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
-void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
-void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max);
+void setDependentNOT(entity e, string theCvarName, float theCvarValue);
+void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax);
+void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax);
 void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValue);
 void setDependentWeird(entity e, float(entity) func);
 
@@ -23,11 +38,11 @@ void clearTooltip(entity e);
 
 string resolvemod(string m);
 
-float updateCompression();
+void updateCompression();
 
 void UpdateNotification_URI_Get_Callback(float id, float status, string data);
 
-// game type list box stuff (does not NEED to contain all game types, other
+// gametype list box stuff (does not NEED to contain all gametypes, other
 // types stay available via console)
 entity GameType_GetID(int cnt);
 string GameType_GetName(int cnt);

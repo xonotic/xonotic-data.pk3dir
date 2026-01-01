@@ -6,8 +6,8 @@ CLASS(XonoticHUDRadarDialog, XonoticRootDialog)
 	ATTRIB(XonoticHUDRadarDialog, title, string, _("Radar Panel"));
 	ATTRIB(XonoticHUDRadarDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
 	ATTRIB(XonoticHUDRadarDialog, intendedWidth, float, 0.4);
-	ATTRIB(XonoticHUDRadarDialog, rows, float, 15.5);
+	ATTRIB(XonoticHUDRadarDialog, rows, float, 18);
 	ATTRIB(XonoticHUDRadarDialog, columns, float, 4);
 	ATTRIB(XonoticHUDRadarDialog, name, string, "HUDradar");
-	ATTRIB(XonoticHUDRadarDialog, requiresConnection, float, true);
+	ATTRIB(XonoticHUDRadarDialog, requiresConnection, bool, true);
 ENDCLASS(XonoticHUDRadarDialog)

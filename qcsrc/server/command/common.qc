@@ -37,14 +37,14 @@ string GetCallerName(entity caller)
 }
 
 // verify that the client provided is acceptable for kicking
-float VerifyKickableEntity(entity client)
+int VerifyKickableEntity(entity client)
 {
 	if (!IS_REAL_CLIENT(client)) return CLIENT_NOT_REAL;
 	return CLIENT_ACCEPTABLE;
 }
 
 // verify that the client provided is acceptable for use
-float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
+int VerifyClientEntity(entity client, bool must_be_real, bool must_be_bots)
 {
 	if (!IS_CLIENT(client)) return CLIENT_DOESNT_EXIST;
 	else if (must_be_real && !IS_REAL_CLIENT(client)) return CLIENT_NOT_REAL;
@@ -74,16 +74,15 @@ string GetClientErrorString_color(float clienterror, string original_input, stri
 }
 
 // is this entity number even in the possible range of entities?
-float VerifyClientNumber(float tmp_number)
+bool VerifyClientNumber(int num)
 {
-	if ((tmp_number < 1) || (tmp_number > maxclients)) return false;
-	else return true;
+	return (num >= 1 && num <= maxclients);
 }
 
-entity GetIndexedEntity(int argc, float start_index)
+entity GetIndexedEntity(int argc, int start_index)
 {
 	entity selection;
-	float tmp_number, index;
+	int tmp_number, index;
 	string tmp_string;
 
 	next_token = -1;
@@ -144,7 +143,7 @@ entity GetIndexedEntity(int argc, float start_index)
 entity GetFilteredEntity(string input)
 {
 	entity selection;
-	float tmp_number;
+	int tmp_number;
 
 	if (substring(input, 0, 1) == "#") tmp_number = stof(substring(input, 1, -1));
 	else tmp_number = stof(input);
@@ -244,13 +243,6 @@ void timeout_handler_think(entity this)
 				// set the slowmo value to the timeout default slowmo value
 				cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
 
-				// reset all the flood variables
-				FOREACH_CLIENT(true, {
-					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
-						it.floodcontrol_chatteam = it.floodcontrol_chattell =
-							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
-				});
-
 				// copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
 				FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 					it.lastV_angle = it.v_angle;
@@ -348,11 +340,11 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
-					string mon_oldname = mon.monster_name;
+					string mon_oldname = mon.m_name;
 
-					mon.monster_name = argument;
+					mon.m_name = argument;
 					if (mon.sprite)   WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); // TODO: the new name is never actually sent to CSQC!
-					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
+					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.m_name));
 					return;
 				}
 				case "spawn":
@@ -376,7 +368,6 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!IS_PLAYER(caller)) { print_to(caller, "You must be playing to spawn a monster"); return; }
 					if (MUTATOR_CALLHOOK(AllowMobSpawning, caller)) { print_to(caller, M_ARGV(1, string)); return; }
 					if (caller.vehicle) { print_to(caller, "You can't spawn monsters while driving a vehicle"); return; }
-					if (STAT(FROZEN, caller)) { print_to(caller, "You can't spawn monsters while frozen"); return; }
 					if (IS_DEAD(caller)) { print_to(caller, "You can't spawn monsters while dead"); return; }
 					if (tmp_moncount >= autocvar_g_monsters_max) { print_to(caller, "The maximum monster count has been reached"); return; }
 					if (tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
@@ -393,7 +384,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					totalspawned += 1;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
 					mon = spawnmonster(spawn(), arg_lower, MON_Null, caller, caller, trace_endpos, false, false, moveflag);
-					print_to(caller, strcat("Spawned ", mon.monster_name));
+					print_to(caller, strcat("Spawned ", mon.m_name));
 					return;
 				}
 				case "kill":
@@ -403,7 +394,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
 					Damage(mon, NULL, NULL, GetResource(mon, RES_HEALTH) + mon.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, mon.origin, '0 0 0');
-					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
+					print_to(caller, strcat("Your pet '", mon.m_name, "' has been brutally mutilated"));
 					return;
 				}
 				case "skin":

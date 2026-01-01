@@ -22,7 +22,6 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	ATTRIB(XonoticRegisteredSettingsList, source, DataSource);
 	ATTRIB(XonoticRegisteredSettingsList, onChange, void(entity, entity));
 	ATTRIB(XonoticRegisteredSettingsList, onChangeEntity, entity);
-	METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity));
 	METHOD(XonoticRegisteredSettingsList, drawListBoxItem, void(entity this, int i, vector absSize, bool isSelected, bool isFocused));
 	METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity this));
 	METHOD(XonoticRegisteredSettingsList, refilter, void(entity this));
@@ -46,8 +45,5 @@ CLASS(XonoticGameSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameSettingsTab, currentItem, entity);
 	METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this));
 	METHOD(XonoticGameSettingsTab, fill, void(entity this));
-	INIT(XonoticGameSettingsTab)
-    {
-        this.configureDialog(this);
-    }
 ENDCLASS(XonoticGameSettingsTab)
+entity makeXonoticGameSettingsTab();

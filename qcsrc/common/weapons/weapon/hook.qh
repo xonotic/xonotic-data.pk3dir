@@ -1,12 +1,24 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(HOOK, "models/hook.md3");
+MODEL(HOOK_VIEW, W_Model("h_hookgun.iqm"));
+MODEL(HOOK_WORLD, W_Model("v_hookgun.md3"));
+MODEL(HOOK_ITEM, W_Model("g_hookgun.md3"));
+
+SOUND(HOOKBOMB_FIRE, W_Sound("hookbomb_fire"));
+SOUND(HOOKBOMB_IMPACT, W_Sound("hookbomb_impact"));
+SOUND(HOOK_FIRE, W_Sound("hook_fire"));
+SOUND(HOOK_IMPACT, W_Sound("hook_impact"));
+#endif
+
 CLASS(Hook, Weapon)
 /* spawnfunc */ ATTRIB(Hook, m_canonical_spawnfunc, string, "weapon_hook");
 /* ammotype  */ ATTRIB(Hook, ammo_type, Resource, RES_FUEL);
 /* impulse   */ ATTRIB(Hook, impulse, int, 0);
 /* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM);
 /* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
+/* color     */ ATTRIB(Hook, m_color, vector, '0.471 0.817 0.392');
 /* modelname */ ATTRIB(Hook, mdl, string, "hookgun");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Hook, m_model, Model, MDL_HOOK_ITEM);
@@ -35,33 +47,34 @@ CLASS(Hook, Weapon)
 		P(class, prefix, hooked_time_free, float, PRI) \
 		P(class, prefix, hooked_time_max, float, PRI) \
 		P(class, prefix, lifetime, float, SEC) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, power, float, SEC) \
 		P(class, prefix, radius, float, SEC) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, speed, float, SEC) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Hook, hook)
+	W_PROPS(X, Hook, hook)
 #undef X
 
 ENDCLASS(Hook)
-REGISTER_WEAPON(HOOK, hook, NEW(Hook));
+REGISTER_WEAPON(HOOK, NEW(Hook));
 
 SPAWNFUNC_WEAPON(weapon_hook, WEP_HOOK)
 
 CLASS(OffhandHook, OffhandWeapon)
 #ifdef SVQC
-    METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
-    {
-    	Weapon wep = WEP_HOOK;
-    	.entity weaponentity = weaponentities[1];
-    	wep.wr_think(wep, actor, weaponentity, key_pressed ? 1 : 0);
-    }
+	METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
+	{
+		Weapon wep = WEP_HOOK;
+		.entity weaponentity = weaponentities[1];
+		wep.wr_think(wep, actor, weaponentity, key_pressed ? 1 : 0);
+	}
 #endif
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK;

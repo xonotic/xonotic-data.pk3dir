@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
+string autocvar_g_monster_zombie_loot = "health_medium";
 float autocvar_g_monster_zombie_damageforcescale = 0.55;
 float autocvar_g_monster_zombie_attack_melee_damage;
 float autocvar_g_monster_zombie_attack_melee_delay;
@@ -159,7 +160,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 
     actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
-    actor.monster_loot = ITEM_HealthMedium;
+    actor.monster_loot = autocvar_g_monster_zombie_loot;
     actor.monster_attackfunc = M_Zombie_Attack;
     StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
     actor.respawntime = 0.2;
@@ -169,5 +170,19 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
     actor.spawn_time = actor.animstate_endtime;
 
     return true;
+}
+#endif
+#ifdef MENUQC
+METHOD(Zombie, describe, string(Zombie this))
+{
+	TC(Zombie, this);
+	PAGE_TEXT_INIT();
+	PAR(_("Zombies are the undead remains of deceased soldiers, risen with a ravenous hunger and no sense of self-preservation."));
+	PAR(_("When a Zombie senses a nearby player it will begin to charge its target at high speeds. "
+	      "While charging, a Zombie may leap towards the player, dealing massive damage on contact. "
+	      "If it gets close, the Zombie will punch and bite repeatedly."));
+	PAR(_("When threatened the Zombie may hold up its hands to block incoming attacks briefly."));
+	PAR(_("It is no small task to kill that which is already dead. Once a Zombie is defeated, destroy its corpse to prevent it from rising again!"));
+	return PAGE_TEXT;
 }
 #endif

@@ -11,7 +11,6 @@
 // Generic aiming
 vector turret_aim_generic(entity this)
 {
-
 	vector pre_pos, prep;
 	float distance, impact_time = 0, i, mintime;
 
@@ -67,7 +66,7 @@ vector turret_aim_generic(entity this)
 	return pre_pos;
 }
 
-float turret_targetscore_support(entity _turret,entity _target)
+float turret_targetscore_support(entity _turret, entity _target)
 {
 	float score;		// Total score
 	float s_score = 0, d_score;
@@ -183,7 +182,7 @@ void turret_die(entity this)
 	this.deadflag		  = DEAD_DEAD;
 	this.tur_head.deadflag = this.deadflag;
 
-// Unsolidify and hide real parts
+	// Unsolidify and hide real parts
 	this.solid			 = SOLID_NOT;
 	this.tur_head.solid	 = this.solid;
 
@@ -193,7 +192,7 @@ void turret_die(entity this)
 
 	SetResourceExplicit(this, RES_HEALTH, 0);
 
-// Go boom
+	// Go boom
 	//RadiusDamage (this,this, min(this.ammo,50),min(this.ammo,50) * 0.25,250,NULL,min(this.ammo,50)*5,DEATH_TURRET,NULL);
 
 	Turret tur = get_turretinfo(this.m_id);
@@ -297,7 +296,7 @@ void turret_respawn(entity this)
 	this.volly_counter			= this.shot_volly;
 	this.ammo					= this.ammo_max;
 
-	this.nextthink = time + this.ticrate;
+	this.nextthink = time;
 	setthink(this, turret_think);
 
 	this.SendFlags = TNSF_FULL_UPDATE;
@@ -319,7 +318,7 @@ void turrets_setframe(entity this, float _frame, float client_only)
 		this.anim_start_time = time;
 	}
 
-	 if(client_only)
+	if(client_only)
 		this.clientframe = _frame;
 	else
 		this.frame = _frame;
@@ -427,7 +426,6 @@ void load_unit_settings(entity ent, bool is_reload)
 
 void turret_projectile_explode(entity this)
 {
-
 	this.takedamage = DAMAGE_NO;
 	this.event_damage = func_null;
 #ifdef TURRET_DEBUG
@@ -572,10 +570,10 @@ void turret_track(entity this)
 	switch(this.track_type)
 	{
 		case TFL_TRACKTYPE_STEPMOTOR:
-			f_tmp = this.aim_speed * this.ticrate; // dgr/sec -> dgr/tic
+			f_tmp = this.aim_speed * frametime;
 			if (this.track_flags & TFL_TRACK_PITCH)
 			{
-				this.tur_head.angles_x += bound(-f_tmp,move_angle_x, f_tmp);
+				this.tur_head.angles_x += bound(-f_tmp, move_angle_x, f_tmp);
 				if(this.tur_head.angles_x > this.aim_maxpitch)
 					this.tur_head.angles_x = this.aim_maxpitch;
 
@@ -599,7 +597,7 @@ void turret_track(entity this)
 			return;
 
 		case TFL_TRACKTYPE_FLUIDINERTIA:
-			f_tmp = this.aim_speed * this.ticrate; // dgr/sec -> dgr/tic
+			f_tmp = this.aim_speed * frametime;
 			move_angle_x = bound(-this.aim_speed, move_angle_x * this.track_accel_pitch * f_tmp, this.aim_speed);
 			move_angle_y = bound(-this.aim_speed, move_angle_y * this.track_accel_rot * f_tmp, this.aim_speed);
 			move_angle = (this.tur_head.avelocity * this.track_blendrate) + (move_angle * (1 - this.track_blendrate));
@@ -617,7 +615,7 @@ void turret_track(entity this)
 	if (this.track_flags & TFL_TRACK_PITCH)
 	{
 		this.tur_head.avelocity_x = move_angle_x;
-		if((this.tur_head.angles_x + this.tur_head.avelocity_x * this.ticrate) > this.aim_maxpitch)
+		if((this.tur_head.angles_x + this.tur_head.avelocity_x * frametime) > this.aim_maxpitch)
 		{
 			this.tur_head.avelocity_x = 0;
 			this.tur_head.angles_x = this.aim_maxpitch;
@@ -625,7 +623,7 @@ void turret_track(entity this)
 			this.SendFlags  |= TNSF_ANG;
 		}
 
-		if((this.tur_head.angles_x + this.tur_head.avelocity_x * this.ticrate) < -this.aim_maxpitch)
+		if((this.tur_head.angles_x + this.tur_head.avelocity_x * frametime) < -this.aim_maxpitch)
 		{
 			this.tur_head.avelocity_x = 0;
 			this.tur_head.angles_x = -this.aim_maxpitch;
@@ -639,7 +637,7 @@ void turret_track(entity this)
 	{
 		this.tur_head.avelocity_y = move_angle_y;
 
-		if((this.tur_head.angles_y + this.tur_head.avelocity_y * this.ticrate) > this.aim_maxrot)
+		if((this.tur_head.angles_y + this.tur_head.avelocity_y * frametime) > this.aim_maxrot)
 		{
 			this.tur_head.avelocity_y = 0;
 			this.tur_head.angles_y = this.aim_maxrot;
@@ -647,7 +645,7 @@ void turret_track(entity this)
 			this.SendFlags  |= TNSF_ANG;
 		}
 
-		if((this.tur_head.angles_y + this.tur_head.avelocity_y * this.ticrate) < -this.aim_maxrot)
+		if((this.tur_head.angles_y + this.tur_head.avelocity_y * frametime) < -this.aim_maxrot)
 		{
 			this.tur_head.avelocity_y = 0;
 			this.tur_head.angles_y = -this.aim_maxrot;
@@ -717,8 +715,6 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 
 	// Cant touch this
 	if (GetResource(e_target, RES_HEALTH) <= 0)
-		return -6;
-	else if (STAT(FROZEN, e_target))
 		return -6;
 
 	// vehicle
@@ -1022,7 +1018,7 @@ void turret_fire(entity this)
 
 void turret_think(entity this)
 {
-	this.nextthink = time + this.ticrate;
+	this.nextthink = time;
 
 	MUTATOR_CALLHOOK(TurretThink, this);
 
@@ -1038,7 +1034,7 @@ void turret_think(entity this)
 	// Handle ammo
 	if (!(this.spawnflags & TSF_NO_AMMO_REGEN))
 	if (this.ammo < this.ammo_max)
-		this.ammo = min(this.ammo + this.ammo_recharge, this.ammo_max);
+		this.ammo = min(this.ammo + this.ammo_recharge * frametime, this.ammo_max);
 
 	// Inactive turrets needs to run the think loop,
 	// So they can handle animation and wake up if need be.
@@ -1184,7 +1180,7 @@ void turret_think(entity this)
 */
 void turret_use(entity this, entity actor, entity trigger)
 {
-	LOG_TRACE("Turret ",this.netname, " used by ", actor.classname);
+	LOG_TRACE("Turret ", this.netname, " used by ", actor.classname);
 
 	this.team = actor.team;
 
@@ -1192,7 +1188,6 @@ void turret_use(entity this, entity actor, entity trigger)
 		this.active = ACTIVE_NOT;
 	else
 		this.active = ACTIVE_ACTIVE;
-
 }
 
 void turret_link(entity this)
@@ -1299,13 +1294,12 @@ bool turret_initialize(entity this, Turret tur)
 	}
 
 	if(!(this.spawnflags & TSF_SUSPENDED))
-		droptofloor(this);
+		DropToFloor_QC_DelayedInit(this);
 
 	this.netname = tur.netname;
 	load_unit_settings(this, 0);
 
 	if(!this.team || !teamplay)		{ this.team = FLOAT_MAX; }
-	if(!this.ticrate)				{ this.ticrate = ((this.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
 	if(!GetResource(this, RES_HEALTH)) { SetResourceExplicit(this, RES_HEALTH, 1000); }
 	if(!this.shot_refire)			{ this.shot_refire = 1; }
 	if(!this.tur_shotorg)			{ this.tur_shotorg = '50 0 50'; }
@@ -1360,12 +1354,10 @@ bool turret_initialize(entity this, Turret tur)
 	this.m_id					= tur.m_id;
 	this.active					= ACTIVE_ACTIVE;
 	this.effects				= EF_NODRAW;
-	this.netname				= tur.turret_name;
-	this.ticrate				= bound(sys_frametime, this.ticrate, 60);
+	this.netname				= tur.m_name;
 	this.max_health				= GetResource(this, RES_HEALTH);
 	this.target_validate_flags	= this.target_select_flags;
 	this.ammo					= this.ammo_max;
-	this.ammo_recharge		   *= this.ticrate;
 	this.solid					= SOLID_BBOX;
 	this.takedamage				= DAMAGE_AIM;
 	set_movetype(this, MOVETYPE_NOCLIP);
@@ -1376,7 +1368,7 @@ bool turret_initialize(entity this, Turret tur)
 	this.event_heal 			= turret_heal;
 	this.use					= turret_use;
 	this.bot_attack				= true;
-	this.nextthink				= time + 1 + turret_count * sys_frametime;
+	this.nextthink				= time + 1;
 	this.reset					= turret_reset;
 
 	this.tur_head = new(turret_head);

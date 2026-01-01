@@ -1,0 +1,8 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+REGISTER_MUTATOR(dm, false)
+{
+	MUTATOR_STATIC();
+	return 0;
+}

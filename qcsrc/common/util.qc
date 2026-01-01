@@ -4,7 +4,7 @@
 	#include <client/mutators/_mod.qh>
 	#include <common/constants.qh>
 	#include <common/deathtypes/all.qh>
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/mapinfo.qh>
 	#include <common/notifications/all.qh>
 	#include <common/scores.qh>
@@ -12,7 +12,7 @@
 #elif defined(SVQC)
 	#include <common/constants.qh>
 	#include <common/deathtypes/all.qh>
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/mapinfo.qh>
 	#include <common/notifications/all.qh>
 	#include <common/scores.qh>
@@ -211,6 +211,46 @@ string draw_UseSkinFor(string pic)
 		return strcat(draw_currentSkin, "/", pic);
 }
 
+#ifdef CSQC
+	#define PRECACHE_PIC precache_pic
+	#define SKIN_PATH    hud_skin_path
+#endif
+#ifdef MENUQC
+	#define PRECACHE_PIC draw_PreloadPicture
+	#define SKIN_PATH    (strreplace("gfx/menu", "gfx/hud", draw_currentSkin))
+#endif
+
+/// CLIENT: Returns icon path from the current HUD skin
+/// MENU: Returns icon path from the HUD skin with the same name as the current menu skin
+string icon_path_from_HUDskin(string theIcon)
+{
+	if (theIcon == "")
+		return "";
+
+	string img = strcat("/", SKIN_PATH, "/", theIcon);
+	if (PRECACHE_PIC(img) == "")
+		img = sprintf("/gfx/hud/default/%s", theIcon);
+	return img;
+}
+
+#ifdef MENUQC
+/// Returns icon path from the current menu skin (MENU only)
+string icon_path_from_menuskin(string theIcon)
+{
+	if (theIcon == "")
+		return "";
+
+	string img = strcat("/", draw_currentSkin, "/", theIcon);
+	if (draw_PreloadPicture(img) == "")
+		img = sprintf("/gfx/menu/wickedx/%s", theIcon); // default menu skin
+	return img;
+}
+#endif
+
+#undef PRECACHE_PIC
+#undef SKIN_PATH
+
+
 void mut_set_active(int mut)
 {
 	if (mut >= 24)
@@ -227,11 +267,19 @@ bool mut_is_active(int mut)
 		return (active_mutators[0] & BIT(mut));
 }
 
-// if s == "" (MENUQC) builds the mutator list for the Mutators dialog based on local cvar values
-// otherwise (CSQC) translates the mutator list (s) that client has received from server
-// NOTE: this function merges MENUQC and CSQC code in order to avoid duplicating and separating strings
+// MENUQC: it builds the mutator list based on local cvars (for the Mutators dialog)
+// CSQC: it translates the mutator list received from server (for the Welcome dialog)
+// MENUQC and CSQC code is merged in order to avoid duplicating and separating strings
 string build_mutator_list(string s)
 {
+	#ifdef CSQC
+	if (s == "") return "";
+	#endif
+
+	#ifdef MENUQC
+	if (s != "") s = "";
+	#endif
+
 	int i = -1, n = 0; // allow only 1 iteration in the following for loop if (s == "")
 	if (s != "")
 	{
@@ -239,7 +287,7 @@ string build_mutator_list(string s)
 		n = tokenizebyseparator(s, ", ");
 	}
 	string s2 = "";
-	for (string arg = ""; i < n; i++)
+	for (string arg = ""; i < n; ++i)
 	{
 		if (i >= 0) arg = argv(i);
 		// cond is the condition for showing the mutator enabled in the menu
@@ -457,10 +505,11 @@ vector decompressShortVector(int data)
 	}
 	else
 	{
-		q = .19634954084936207740 * q;
-		p = .19634954084936207740 * p - 1.57079632679489661922;
-		out.x = cos(q) *  cos(p);
-		out.y = sin(q) *  cos(p);
+		q = M_PI / 16 * q;
+		p = M_PI / 16 * p - M_PI_2;
+		float cos_p = cos(p);
+		out.x = cos(q) *  cos_p;
+		out.y = sin(q) *  cos_p;
 		out.z =          -sin(p);
 	}
 
@@ -484,7 +533,7 @@ float compressShortVector(vector vec)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	p = floor(0.5 + (ang.x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	p = floor(0.5 + (ang.x + 90) * (16 / 180)) & 15; // -90..90 to 0..14
 	if(p == 0)
 	{
 		if(vec.z < 0)
@@ -493,7 +542,7 @@ float compressShortVector(vector vec)
 			y = 30;
 	}
 	else
-		y = floor(0.5 + ang.y * 32 / 360) & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang.y * (32 / 360)) & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
 	//print("compressed: p:", ftos(p)); print(" y:", ftos(y)); print(" len:", ftos(len), "\n");
@@ -928,14 +977,22 @@ string find_last_color_code(string s)
 		{
 			if(i+1 <= len)
 			if(IS_DIGIT(substring(s, i+1, 1)))
+			{
+				if(start == 0 && len == 1)
+					return "";
 				return substring(s, i, 2);
+			}
 
 			if(i+4 <= len)
 			if(substring(s, i+1, 1) == "x")
 			if(IS_HEXDIGIT(substring(s, i + 2, 1)))
 			if(IS_HEXDIGIT(substring(s, i + 3, 1)))
 			if(IS_HEXDIGIT(substring(s, i + 4, 1)))
+			{
+				if(start == 0 && len == 4)
+					return "";
 				return substring(s, i, 5);
+			}
 		}
 		i -= carets; // this also skips one char before the carets
 	}
@@ -943,80 +1000,178 @@ string find_last_color_code(string s)
 	return "";
 }
 
+bool should_break_before(int c) {
+	switch (c)
+	{
+		case 0x3008: /* 〈 */
+		case 0x300a: /* 《 */
+		case 0x300c: /* 「 */
+		case 0x300e: /* 『 */
+		case 0x3010: /* 【 */
+		case 0xff08: /* （ */
+		/* rarely used */
+		// case 0x3014: /* 〔 */
+		// case 0x3016: /* 〖 */
+		// case 0x3018: /* 〘 */
+		// case 0x301a: /* 〚 */
+		// case 0x301d: /* 〝 */
+		// case 0xff3b: /* ［ */
+		// case 0xff5b: /* ｛ */
+		// case 0xff5f: /* ｟ */
+		// case 0xff62: /* ｢ */
+			return true;
+	}
+	return false;
+}
+
+bool should_break_after(int c) {
+	switch (c)
+	{
+		case 0x3001: /* 、 */
+		case 0x3002: /* 。 */
+		case 0x3009: /* 〉 */
+		case 0x300b: /* 》 */
+		case 0x300d: /* 」 */
+		case 0x300f: /* 』 */
+		case 0x3011: /* 】 */
+		case 0xff01: /* ！ */
+		case 0xff09: /* ） */
+		case 0xff0c: /* ， */
+		case 0xff1a: /* ： */
+		case 0xff1b: /* ； */
+		case 0xff1f: /* ？ */
+		/* rarely used */
+		// case 0x3015: /* 〕 */
+		// case 0x3017: /* 〗 */
+		// case 0x3019: /* 〙 */
+		// case 0x301b: /* 〛 */
+		// case 0x301e: /* 〞 */
+		// case 0x301f: /* 〟 */
+		// case 0x3099: /* ゙ */
+		// case 0x309a: /* ゚ */
+		// case 0x309b: /* ゛ */
+		// case 0x309c: /* ゜ */
+		// case 0xff0e: /* ． */
+		// case 0xff3d: /* ］ */
+		// case 0xff5d: /* ｝ */
+		// case 0xff60: /* ｠ */
+		// case 0xff63: /* ｣ */
+		// case 0xff61: /* ｡ */
+		// case 0xff64: /* ､ */
+		// case 0xff9e: /* ﾞ */
+		// case 0xff9f: /* ﾟ */
+			return true;
+	}
+	return false;
+}
+
+string take_wrapped_line_until(int take_until, float colorlen)
+{
+	string s = getWrappedLine_remaining;
+	int c = 0;
+	int i = take_until;
+	int skip = 0;
+	bool take_next_char = false;
+	while (i > 0)
+	{
+		--i;
+		c = str2chr(s, i);
+
+		// break at ascii space, and skip it
+		if (c == 0x20)
+		{
+			skip = 1;
+			break;
+		}
+
+		// optimize for many non-CJK languages
+		if (c < 0x3000)
+			continue;
+
+		if (should_break_before(c))
+			break;
+
+		if (should_break_after(c)
+			/* Unicode range that can break anywhere */
+			|| (c >= 0x3000 && c <= 0x9fff) // CJK Symbols and Ideographs
+			|| (c >= 0xac00 && c <= 0xd7af) // Hangul Syllables
+			/* CJK Unified Ideographs Extension, B to G, rarely used */
+			/*
+			|| (c >= 0x20000 && c <= 0x2a6df)
+			|| (c >= 0x2a700 && c <= 0x2b73f)
+			|| (c >= 0x2b740 && c <= 0x2b81f)
+			|| (c >= 0x2b820 && c <= 0x2ceaf)
+			|| (c >= 0x2ebf0 && c <= 0x2eeff)
+			|| (c >= 0x30000 && c <= 0x303ff)
+			*/
+		)
+		{
+			++i;
+			take_next_char = true;
+			break;
+		}
+	}
+
+	if (i != 0)
+	{
+		// If the next line starts with a punctuation,
+		// wrap before the last character instead.
+		if (take_next_char)
+		{
+			// str2chr is bound checked in darkplaces.
+			c = str2chr(s, i);
+			if (should_break_after(c))
+				--i;
+		}
+		take_until = i;
+	}
+
+	getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
+	if (getWrappedLine_remaining == "")
+		getWrappedLine_remaining = string_null;
+	else if (colorlen == 0)
+		getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+	return substring(s, 0, take_until);
+}
+
 string getWrappedLine(float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
-
-	if(maxWidth <= 0)
+	if (maxWidth <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
 	int take_until = textLengthUpToWidth(s, maxWidth, theFontSize, tw);
-	if(take_until > 0 && take_until < strlen(s))
-	{
-		int last_word = take_until - 1;
-		while(last_word > 0 && substring(s, last_word, 1) != " ")
-			--last_word;
 
-		int skip = 0;
-		if(last_word != 0)
-		{
-			take_until = last_word;
-			skip = 1;
-		}
-
-		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
-		if(getWrappedLine_remaining == "")
-			getWrappedLine_remaining = string_null;
-		else if (tw("^7", theFontSize) == 0)
-			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
-		return substring(s, 0, take_until);
-	}
-	else
-	{
+	if (take_until <= 0 || take_until >= strlen(s)) {
 		getWrappedLine_remaining = string_null;
-		return s;
+		return s; // remaining text fits the line
 	}
+
+	float colorlen = tw("^7", theFontSize);
+	return take_wrapped_line_until(take_until, colorlen);
 }
 
 string getWrappedLineLen(int maxLength, textLengthUpToLength_lenFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
-
-	if(maxLength <= 0)
+	if (maxLength <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
 	int take_until = textLengthUpToLength(s, maxLength, tw);
-	if(take_until > 0 && take_until < strlen(s))
-	{
-		int last_word = take_until - 1;
-		while(last_word > 0 && substring(s, last_word, 1) != " ")
-			--last_word;
 
-		int skip = 0;
-		if(last_word != 0)
-		{
-			take_until = last_word;
-			skip = 1;
-		}
-
-		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
-		if(getWrappedLine_remaining == "")
-			getWrappedLine_remaining = string_null;
-		else if (tw("^7") == 0)
-			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
-		return substring(s, 0, take_until);
-	}
-	else
-	{
+	if (take_until <= 0 || take_until >= strlen(s)) {
 		getWrappedLine_remaining = string_null;
-		return s;
+		return s; // remaining text fits the line
 	}
+
+	float colorlen = tw("^7");
+	return take_wrapped_line_until(take_until, colorlen);
 }
 
 string textShortenToWidth(string theText, float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
@@ -1184,44 +1339,43 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 	return myvel + spd * mydir;
 }
 
-/*
- * Compresses the shot origin offset vector to an int with the following format:
- * xxxxxxxx|Syyyyyyy|Syzzzzzz
- * 32109876|54321098|76543210
- * 1st byte: x component
- * 2nd byte: y component in the last 7 bits and the sign of the x component in the 1st bit
- * 3rd byte: z component in the last 7 bits and the sign of the z component in the 1st bit
- * All values are multiplied on compression and divided on decompression
- * so the precision of the values is 0.5 if multiplied by 2 and 0.25 if multiplied by 4
- * Values are bound to the following ranges:
- * x: -127.5  +127.5
- * y:      0  +31.75 negative values not allowed because the gun can't be aligned to the left by default
- * z: -31.75  +31.75
- */
+// compresses the shot origin offset vector to an int with the following format:
+// xxxxxxxx SSyyyyyy SUzzzzzz
+// 32109876 54321098 76543210
+// 1st byte: x component (it uses all 8 bits)
+// 2nd byte: y component in the last 6 bits and the signs of the x and y components
+// 3rd byte: z component in the last 6 bits and the sign of the z component (the 2nd bit is unused)
+// all values are doubled on compression and halved on decompression
+// so the precision for all components is 0.5
+// values are bound to the following ranges:
+// x: -127.5 +127.5
+// y:  -31.5  +31.5
+// z:  -31.5  +31.5
 float compressShotOrigin(vector v)
 {
 	int rx_neg = (v.x < 0) ? 1 : 0;
+	int ry_neg = (v.y < 0) ? 1 : 0;
 	int rz_neg = (v.z < 0) ? 1 : 0;
 	int rx = rint(fabs(v.x) * 2);
-	int ry = rint(v.y * 4);
-	int rz = rint(fabs(v.z) * 4);
+	int ry = rint(fabs(v.y) * 2);
+	int rz = rint(fabs(v.z) * 2);
 	if(rx > 255) // 128 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " x out of bounds\n");
 		rx = bound(0, rx, 255);
 	}
-	if(ry > 127 || ry < 0) // 32 * 4 - 1
+	if(ry > 63) // 32 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " y out of bounds\n");
-		ry = bound(0, ry, 127);
+		ry = bound(0, ry, 63);
 	}
-	if(rz > 127) // 32 * 4 - 1
+	if(rz > 63) // 32 * 2 - 1
 	{
 		LOG_DEBUG("shot origin ", vtos(v), " z out of bounds\n");
-		rz = bound(0, rz, 127);
+		rz = bound(0, rz, 63);
 	}
-	ry |= rx_neg * BIT(7);
-	rz |= rz_neg * BIT(7);
+	ry |= ry_neg * BIT(6) + rx_neg * BIT(7);
+	rz |= rz_neg * BIT(6); // BIT(7) unused
 	return rx * 0x10000 + ry * 0x100 + rz;
 }
 vector decompressShotOrigin(int f)
@@ -1232,8 +1386,9 @@ vector decompressShotOrigin(int f)
 	v.z = f & 0xFF;
 	// remove sign bits and apply sign
 	if (v.y & BIT(7)) { v.y &= ~BIT(7); v.x *= -1; }
-	if (v.z & BIT(7)) { v.z &= ~BIT(7); v.z *= -1; }
-	return vec3(v.x / 2, v.y / 4, v.z / 4);
+	if (v.y & BIT(6)) { v.y &= ~BIT(6); v.y *= -1; }
+	if (v.z & BIT(6)) { v.z &= ~BIT(6); v.z *= -1; }
+	return v * 0.5;
 }
 
 #ifdef GAMEQC

@@ -1,0 +1,77 @@
+#pragma once
+
+#include "nades.qh"
+
+bool autocvar_g_nades;
+bool autocvar_g_nades_override_dropweapon = true;
+vector autocvar_g_nades_throw_offset;
+bool autocvar_g_nades_onspawn;
+int autocvar_g_nades_spawn_count;
+float autocvar_g_nades_spawn_health_respawn;
+float autocvar_g_nades_spawn_destroy_damage = 25;
+bool autocvar_g_nades_pickup = true;
+float autocvar_g_nades_pickup_time = 2;
+float autocvar_g_nades_nade_lifetime;
+float autocvar_g_nades_nade_minforce;
+float autocvar_g_nades_nade_maxforce;
+float autocvar_g_nades_nade_health;
+float autocvar_g_nades_nade_refire;
+float autocvar_g_nades_nade_damage;
+float autocvar_g_nades_nade_edgedamage;
+float autocvar_g_nades_nade_radius;
+float autocvar_g_nades_nade_force;
+int autocvar_g_nades_nade_newton_style;
+string autocvar_g_nades_nade_type;
+bool autocvar_g_nades_client_select;
+
+bool autocvar_g_nades_bonus;
+string autocvar_g_nades_bonus_type;
+bool autocvar_g_nades_bonus_client_select;
+bool autocvar_g_nades_bonus_onstrength;
+bool autocvar_g_nades_bonus_only;
+int autocvar_g_nades_bonus_max;
+int autocvar_g_nades_bonus_score_max;
+int autocvar_g_nades_bonus_score_time;
+int autocvar_g_nades_bonus_score_time_flagcarrier;
+int autocvar_g_nades_bonus_score_minor;
+int autocvar_g_nades_bonus_score_low;
+int autocvar_g_nades_bonus_score_high;
+int autocvar_g_nades_bonus_score_medium;
+int autocvar_g_nades_bonus_score_spree;
+
+
+.entity nade;
+.entity fake_nade;
+.float nade_lifetime;
+.float nade_refire;
+.float nade_special_time;
+.string pokenade_type;
+.entity nade_damage_target;
+.string cvar_cl_nade_type;
+.string cvar_cl_pokenade_type;
+.float toss_time;
+.float nade_show_particles;
+
+bool orb_send(entity this, entity to, int sf);
+
+// Remove nades that are being thrown
+void nades_Clear(entity player);
+
+// Remove nades and bonus nades from a player
+void nades_RemovePlayer(entity player);
+
+// Give a bonus grenade to a player
+void nades_GiveBonus(entity player, float score);
+
+/**
+ * called to adjust nade damage and force on hit
+ */
+#define EV_Nade_Damage(i, o) \
+    /** nade */   i(entity, MUTATOR_ARGV_0_entity) \
+ 	/** weapon */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** force */  i(vector, MUTATOR_ARGV_2_vector) \
+    /**/          o(vector, MUTATOR_ARGV_2_vector) \
+ 	/** damage */ i(float,  MUTATOR_ARGV_3_float) \
+    /**/          o(float,  MUTATOR_ARGV_3_float) \
+    /**/
+MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);

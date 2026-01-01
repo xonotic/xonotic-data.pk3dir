@@ -2,9 +2,20 @@
 
 #ifdef SVQC
 
-void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, float pDamage, float pHeadshotDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
+void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, int deathtype, Sound pSound, entity actor, bool isprimary)
 {
-	float i;
+	float pAmmo = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, ammo);
+	float pDamage = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, damage);
+	float pDF_HalfLife = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, damagefalloff_halflife);
+	float pDF_ForceHalfLife = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, damagefalloff_forcehalflife);
+	float pDF_MaxDist = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, damagefalloff_maxdist);
+	float pDF_MinDist = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, damagefalloff_mindist);
+	float pForce = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, force);
+	float pHeadshotDamage = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, headshot_multiplier);
+	float pShots = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, shots);
+	float pSolidPenetration = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, solidpenetration);
+	float pSpread = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, spread);
+	float pTracer = WEP_CVAR_BOTH(WEP_RIFLE, isprimary, tracer);
 
 	W_DecreaseAmmo(thiswep, actor, pAmmo, weaponentity);
 
@@ -18,8 +29,11 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 		w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;
 	}
 
-	for(i = 0; i < pShots; ++i)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pHeadshotDamage, pForce, deathtype, (pTracer ? EFFECT_RIFLE : EFFECT_RIFLE_WEAK));
+	for(int i = 0; i < pShots; ++i)
+		fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, pSpread,
+			pSolidPenetration, pDamage, pDF_HalfLife, pDF_MinDist,
+			pDF_MaxDist, pHeadshotDamage, pForce, pDF_ForceHalfLife,
+			deathtype, (pTracer ? EFFECT_RIFLE : EFFECT_RIFLE_WEAK), true);
 
 	if(autocvar_g_casings >= 2)
 	{
@@ -30,12 +44,12 @@ void W_Rifle_FireBullet(Weapon thiswep, .entity weaponentity, float pSpread, flo
 
 void W_Rifle_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(thiswep, weaponentity, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, headshot_multiplier), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), thiswep.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND_CAMPINGRIFLE_FIRE, actor);
+	W_Rifle_FireBullet(thiswep, weaponentity, thiswep.m_id, SND_RIFLE_FIRE, actor, true);
 }
 
 void W_Rifle_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	W_Rifle_FireBullet(thiswep, weaponentity, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, headshot_multiplier), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), thiswep.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND_CAMPINGRIFLE_FIRE2, actor);
+	W_Rifle_FireBullet(thiswep, weaponentity, thiswep.m_id | HITTYPE_SECONDARY, SND_RIFLE_FIRE2, actor, false);
 }
 
 .void(Weapon thiswep, entity actor, .entity weaponentity) rifle_bullethail_attackfunc;
@@ -88,110 +102,121 @@ void W_Rifle_BulletHail(Weapon thiswep, entity actor, .entity weaponentity, floa
 
 METHOD(Rifle, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    PHYS_INPUT_BUTTON_ATCK(actor) = false;
-    PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-    if(vdist(actor.origin - actor.enemy.origin, >, 1000))
-        actor.bot_secondary_riflemooth = 0;
-    if(actor.bot_secondary_riflemooth == 0)
-    {
-        if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true))
-        {
-            PHYS_INPUT_BUTTON_ATCK(actor) = true;
-            if(random() < 0.01) actor.bot_secondary_riflemooth = 1;
-        }
-    }
-    else
-    {
-        if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true))
-        {
-            PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-            if(random() < 0.03) actor.bot_secondary_riflemooth = 0;
-        }
-    }
+	PHYS_INPUT_BUTTON_ATCK(actor) = false;
+	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+	if(vdist(actor.origin - actor.enemy.origin, >, 1000))
+		actor.bot_secondary_riflemooth = 0;
+	if(actor.bot_secondary_riflemooth == 0)
+	{
+		if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true))
+		{
+			PHYS_INPUT_BUTTON_ATCK(actor) = true;
+			if(random() < 0.01) actor.bot_secondary_riflemooth = 1;
+		}
+	}
+	else
+	{
+		if(bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true))
+		{
+			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+			if(random() < 0.03) actor.bot_secondary_riflemooth = 0;
+		}
+	}
 }
+
 METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(autocvar_g_balance_rifle_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
-        thiswep.wr_reload(thiswep, actor, weaponentity);
-    } else
-    {
-        actor.(weaponentity).rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), actor.(weaponentity).rifle_accumulator, time);
-        if(fire & 1)
-        if(weapon_prepareattack_check(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(rifle, refire)))
-        if(time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
-        {
-            weapon_prepareattack_do(actor, weaponentity, false, WEP_CVAR_PRI(rifle, refire));
-            W_Rifle_BulletHail(thiswep, actor, weaponentity, WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
-            actor.(weaponentity).rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
-        }
-        if(fire & 2)
-        {
-            if(WEP_CVAR(rifle, secondary))
-            {
-                if(WEP_CVAR_SEC(rifle, reload)) {
-                    thiswep.wr_reload(thiswep, actor, weaponentity);
-                } else
-                {
-                    if(weapon_prepareattack_check(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(rifle, refire)))
-                    if(time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
-                    {
-                        weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(rifle, refire));
-                        W_Rifle_BulletHail(thiswep, actor, weaponentity, WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
-                        actor.(weaponentity).rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
-                    }
-                }
-            }
-        }
-    }
+	if(autocvar_g_balance_rifle_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_RIFLE, ammo), WEP_CVAR_SEC(WEP_RIFLE, ammo)))
+	{ // forced reload
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+	}
+	else
+	{
+		actor.(weaponentity).rifle_accumulator = bound(time - WEP_CVAR(WEP_RIFLE, bursttime), actor.(weaponentity).rifle_accumulator, time);
+		if(fire & 1)
+		if(weapon_prepareattack_check(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_RIFLE, refire)))
+		if(time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_PRI(WEP_RIFLE, burstcost))
+		{
+			weapon_prepareattack_do(actor, weaponentity, false, WEP_CVAR_PRI(WEP_RIFLE, refire));
+			W_Rifle_BulletHail(thiswep, actor, weaponentity, WEP_CVAR_PRI(WEP_RIFLE, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_RIFLE, animtime), WEP_CVAR_PRI(WEP_RIFLE, refire));
+			actor.(weaponentity).rifle_accumulator += WEP_CVAR_PRI(WEP_RIFLE, burstcost);
+		}
+		if(fire & 2)
+		{
+			if(WEP_CVAR(WEP_RIFLE, secondary))
+			{
+				if(WEP_CVAR_SEC(WEP_RIFLE, reload)) {
+					thiswep.wr_reload(thiswep, actor, weaponentity);
+				}
+				else
+				{
+					if(weapon_prepareattack_check(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_RIFLE, refire)))
+					if(time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_SEC(WEP_RIFLE, burstcost))
+					{
+						weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(WEP_RIFLE, refire));
+						W_Rifle_BulletHail(thiswep, actor, weaponentity, WEP_CVAR_SEC(WEP_RIFLE, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_RIFLE, animtime), WEP_CVAR_PRI(WEP_RIFLE, refire));
+						actor.(weaponentity).rifle_accumulator += WEP_CVAR_SEC(WEP_RIFLE, burstcost);
+					}
+				}
+			}
+		}
+	}
 }
+
 METHOD(Rifle, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(rifle, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
-    return ammo_amount;
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_RIFLE, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_PRI(WEP_RIFLE, ammo);
+	return ammo_amount;
 }
+
 METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(rifle, ammo);
-    ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
-    return ammo_amount;
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_RIFLE, ammo);
+	ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(WEP_RIFLE, ammo);
+	return ammo_amount;
 }
+
 METHOD(Rifle, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-    {
-        .entity weaponentity = weaponentities[slot];
-        actor.(weaponentity).rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
-    }
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		actor.(weaponentity).rifle_accumulator = time - WEP_CVAR(WEP_RIFLE, bursttime);
+	}
 }
+
 METHOD(Rifle, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND_RELOAD);
+	W_Reload(actor, weaponentity, min(WEP_CVAR_PRI(WEP_RIFLE, ammo), WEP_CVAR_SEC(WEP_RIFLE, ammo)), SND_RELOAD);
 }
+
 METHOD(Rifle, wr_suicidemessage, Notification(entity thiswep))
 {
-    return WEAPON_THINKING_WITH_PORTALS;
+	return WEAPON_THINKING_WITH_PORTALS;
 }
+
 METHOD(Rifle, wr_killmessage, Notification(entity thiswep))
 {
-    if(w_deathtype & HITTYPE_SECONDARY)
-    {
-        if(w_deathtype & HITTYPE_BOUNCE)
-            return WEAPON_RIFLE_MURDER_HAIL_PIERCING;
-        else
-            return WEAPON_RIFLE_MURDER_HAIL;
-    }
-    else
-    {
-        if(w_deathtype & HITTYPE_BOUNCE)
-            return WEAPON_RIFLE_MURDER_PIERCING;
-        else
-            return WEAPON_RIFLE_MURDER;
-    }
+	if(w_deathtype & HITTYPE_SECONDARY)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_RIFLE_MURDER_HAIL_PIERCING;
+		else
+			return WEAPON_RIFLE_MURDER_HAIL;
+	}
+	else
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_RIFLE_MURDER_PIERCING;
+		else
+			return WEAPON_RIFLE_MURDER;
+	}
 }
+
 METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
 {
-    return PHYS_INPUT_BUTTON_ATCK2(actor) && WEP_CVAR(rifle, secondary) == 0;
+	return PHYS_INPUT_BUTTON_ATCK2(actor) && WEP_CVAR(WEP_RIFLE, secondary) == 0;
 }
 
 #endif
@@ -199,35 +224,58 @@ METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
 
 METHOD(Rifle, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    vector org2 = w_org + w_backoff * 2;
-    pointparticles(EFFECT_RIFLE_IMPACT, org2, w_backoff * 1000, 1);
-    if(!w_issilent)
-    {
-        sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
-    }
+	vector org2 = w_org + w_backoff * 2;
+	pointparticles(EFFECT_RIFLE_IMPACT, org2, w_backoff * 1000, 1);
+	if(!w_issilent)
+	{
+		sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
+	}
 }
+
 METHOD(Rifle, wr_init, void(entity thiswep))
 {
-    if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-    {
-        precache_pic("gfx/reticle_nex");
-    }
+	if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
+	{
+		precache_pic("gfx/reticle_nex");
+	}
 }
+
 METHOD(Rifle, wr_zoom, bool(entity thiswep, entity actor))
 {
-    if(button_zoom || zoomscript_caught)
-    {
-        return true;
-    }
-    else
-    {
-        // no weapon specific image for this weapon
-        return false;
-    }
+	if(button_zoom || zoomscript_caught)
+	{
+		return true;
+	}
+	else
+	{
+		// no weapon specific image for this weapon
+		return false;
+	}
 }
+
 METHOD(Rifle, wr_zoomdir, bool(entity thiswep))
 {
-    return button_attack2 && !WEP_CVAR(rifle, secondary);
+	return button_attack2 && !WEP_CVAR(WEP_RIFLE, secondary);
+}
+
+#endif
+#ifdef MENUQC
+#include <common/items/item/ammo.qh>
+#include "vortex.qh"
+
+METHOD(Rifle, describe, string(Rifle this))
+{
+	TC(Rifle, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s fires bullets that traverse the map instantaneously and deal a significant chunk of damage on impact."), COLORED_NAME(this));
+	PAR(_("The secondary fire shoots a few less powerful bullets at once with a bit of scatter."));
+	PAR(_("It consumes %s ammo for each bullet shot."), COLORED_NAME(ITEM_Bullets)); // shared string
+	PAR(_("Unlike the %s, the secondary fire doesn't zoom, so %s needs to be used manually with the %s. "
+	      "Also, it needs to be reloaded after its magazine is emptied."), COLORED_NAME(WEP_VORTEX), strcat("^3", _("zoom"), "^7"), COLORED_NAME(this));
+	PAR(_("Similar to the %s, the %s can be used at any range, but it stands out at long ranges."), COLORED_NAME(WEP_VORTEX), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_secondaryMultishot(this.netname, "primary", "secondary", "secondary_shots", "", false));
+	return PAGE_TEXT;
 }
 
 #endif

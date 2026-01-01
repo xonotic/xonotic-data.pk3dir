@@ -15,56 +15,6 @@ void XonoticMutatorsDialog_showNotify(entity me)
 	loadAllCvars(me);
 }
 
-string weaponarenastring;
-string weaponarenastring_cvar;
-string WeaponArenaString()
-{
-	string s;
-	float n;
-	s = cvar_string("g_weaponarena");
-	if(s == "0" || s == "") return "";
-	if(s == "all" || s == "1") return _("All Weapons Arena");
-	if(s == "all_available") return _("All Available Weapons Arena");
-	if(s == "most") return _("Most Weapons Arena");
-	if(s == "most_available") return _("Most Available Weapons Arena");
-	if(s == "devall") return "Dev All Weapons Arena"; // development option, do not translate
-	if(s == "devall_available") return "Dev All Available Weapons Arena"; // development option, do not translate
-	if(s == weaponarenastring_cvar)
-		return weaponarenastring;
-
-	strcpy(weaponarenastring_cvar, s);
-
-	n = tokenize_console(s);
-	s = "";
-	for(int j = 0; j < n; ++j)
-	{
-		Weapon wep = Weapon_from_name(argv(j));
-		if(wep != WEP_Null)
-		{
-			s = cons_mid(s, " & ", wep.m_name);
-		}
-	}
-	if (s != "")
-		s = sprintf(_("%s Arena"), s);
-	else
-		s = _("No Weapons Arena");
-
-	strcpy(weaponarenastring, s);
-
-	return weaponarenastring;
-}
-
-string XonoticMutatorsDialog_toString(entity me)
-{
-	string s = build_mutator_list("");
-	if(cvar_string("g_weaponarena") != "0")
-		s = cons_mid(s, ", ", WeaponArenaString());
-	if(s == "")
-		return ZCTX(_("MUT^None"));
-	else
-		return s;
-}
-
 float checkCompatibility_pinata(entity me)
 {
 	if(cvar("g_instagib"))
@@ -94,6 +44,12 @@ float checkCompatibility_newtoys(entity me)
 	if(cvar_string("g_weaponarena") != "0")
 		return 0;
 	return 1;
+}
+float checkCompatibility_newtoys_autoreplace(entity me)
+{
+	if(!cvar("g_new_toys"))
+		return 0;
+	return checkCompatibility_newtoys(me);
 }
 float checkCompatibility_weaponarena_weapon(entity me)
 {
@@ -179,9 +135,20 @@ void XonoticMutatorsDialog_fill(entity me)
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
-			_("Some weapon spawns will be randomly replaced with new weapons: Heavy Laser Assault Cannon, Mine Layer, Rifle, T.A.G. Seeker")));
+		me.TD(me, 1, 1.8 / 2, e = makeXonoticCheckBox_T(0, "g_new_toys", _("New Toys"),
+			_("Allow maps to spawn additional weapons (new toys)")));
 			setDependentWeird(e, checkCompatibility_newtoys);
+		me.TD(me, 1, 1.8 / 2, e = makeXonoticTextLabel(0, _("Replacement:")));
+			setDependentWeird(e, checkCompatibility_newtoys_autoreplace);
+	string nta_tooltip = _("Automatically replace some normal weapons of the map with their corresponding additional weapons");
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 1.6 / 3, e = makeXonoticRadioButton_T(3, "g_new_toys_autoreplace", "0", _("Never"), nta_tooltip));
+			setDependentWeird(e, checkCompatibility_newtoys_autoreplace);
+		me.TD(me, 1, 1.6 / 3, e = makeXonoticRadioButton_T(3, "g_new_toys_autoreplace", "1", _("Always"), nta_tooltip));
+			setDependentWeird(e, checkCompatibility_newtoys_autoreplace);
+		me.TD(me, 1, 1.6 / 3, e = makeXonoticRadioButton_T(3, "g_new_toys_autoreplace", "2", _("Randomly"), nta_tooltip));
+			setDependentWeird(e, checkCompatibility_newtoys_autoreplace);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_rocket_flying", _("Rocket Flying"),
@@ -201,7 +168,7 @@ void XonoticMutatorsDialog_fill(entity me)
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
-	string weaponarena_tooltip = strzone(_("Players will be given a set of weapons at spawn as well as unlimited ammo, without weapon pickups"));
+	string weaponarena_tooltip = _("Players will be given a set of weapons at spawn as well as unlimited ammo, without weapon pickups");
 	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon arenas:")));
 	me.TR(me);
@@ -214,7 +181,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
 		w = REGISTRY_GET(Weapons, i);
-		if (w.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK))
+		if (w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
 		if ((j % 3) == 0)
 		{
@@ -235,7 +202,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "all", _("All weapons"), weaponarena_tooltip));
 			e.cvarOffValue = "0";
 	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
+		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Special arenas:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_instagib", "1", _("InstaGib"),

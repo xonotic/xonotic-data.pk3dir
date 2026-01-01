@@ -16,6 +16,7 @@ bool autocvar_g_instagib_ammo_convert_cells;
 bool autocvar_g_instagib_ammo_convert_rockets;
 bool autocvar_g_instagib_ammo_convert_shells;
 bool autocvar_g_instagib_ammo_convert_bullets;
+bool autocvar_g_instagib_allow_jetpacks;
 
 /// \brief Returns a random classname of the instagib item.
 /// \param[in] prefix Prefix of the cvars that hold probabilities.
@@ -107,9 +108,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, RandomItems_GetRandomItemClassName)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
-	entity item = M_ARGV(1, entity);
-
-	item.itemdef = ITEM_VaporizerCells;
+	M_ARGV(1, string) = "vaporizer_cells";
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
@@ -212,20 +211,17 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 
 		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 		{
-			if(frag_deathtype & HITTYPE_SECONDARY)
+			if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
 			{
-				if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
-				{
-					frag_damage = 0;
-					if(!autocvar_g_instagib_mirrordamage)
-						frag_mirrordamage = 0; // never do mirror damage on enemies
-				}
+				frag_damage = 0;
+				if(!autocvar_g_instagib_mirrordamage)
+					frag_mirrordamage = 0; // never do mirror damage on enemies
+			}
 
-				if(frag_target != frag_attacker)
-				{
-					if(!autocvar_g_instagib_blaster_keepforce)
-						frag_force = '0 0 0';
-				}
+			if(frag_target != frag_attacker)
+			{
+				if(!autocvar_g_instagib_blaster_keepforce)
+					frag_force = '0 0 0';
 			}
 		}
 	}
@@ -263,7 +259,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems, CBC_ORDER_LAST)
 	start_ammo_shells  = warmup_start_ammo_shells  = 0;
 	start_ammo_nails   = warmup_start_ammo_nails   = 0;
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
-	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
 	start_ammo_rockets = warmup_start_ammo_rockets = 0;
 	//start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
@@ -326,6 +321,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			if(autocvar_g_powerups)
 				instagib_replace_item_with_random_powerup(item);
 			return true;
+		case ITEM_Invisibility: case ITEM_ExtraLife: case ITEM_Speed:
+			return false;
 		case ITEM_Cells:
 			if(autocvar_g_instagib_ammo_convert_cells)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
@@ -342,6 +339,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			if(autocvar_g_instagib_ammo_convert_bullets)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
+		case ITEM_Jetpack:
+		case ITEM_FuelRegen:
+			return !autocvar_g_instagib_allow_jetpacks;
 	}
 
 	switch (item.weapon)
@@ -357,9 +357,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
 	}
-
-	if(item.itemdef.instanceOfPowerup)
-		return false;
 
 	float cells = GetResource(item, RES_CELLS);
 	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")

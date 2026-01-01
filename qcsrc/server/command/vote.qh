@@ -11,6 +11,7 @@ float autocvar_sv_vote_majority_factor_of_voted;
 bool autocvar_sv_vote_master;
 bool autocvar_sv_vote_master_callable;
 string autocvar_sv_vote_master_commands;
+string autocvar_sv_vote_master_ids;
 string autocvar_sv_vote_master_password;
 int autocvar_sv_vote_master_playerlimit;
 bool autocvar_sv_vote_no_stops_vote;
@@ -59,6 +60,7 @@ string vote_parsed_display; // visual string which is fixed after being parsed
 void VoteThink();
 void VoteReset(bool verbose);
 void VoteCommand(int request, entity caller, int argc, string vote_command);
+string ValidateMap(string validated_map, entity caller);
 
 // warmup and nagger stuff
 const float RESTART_COUNTDOWN = 10;

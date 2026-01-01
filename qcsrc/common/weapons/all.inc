@@ -23,9 +23,8 @@
 #include "weapon/rifle.qh"
 #include "weapon/fireball.qh"
 #include "weapon/seeker.qh"
-#include "weapon/shockwave.qh"
 #include "weapon/arc.qh"
 
 // Weapon registry is sorted to allocate the weapons included above first, update the value below to the number of listed weapons
 // TODO: remove eventually in a way that does not cause https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2714
-#define WEP_HARDCODED_IMPULSES 20
+#define WEP_HARDCODED_IMPULSES 19

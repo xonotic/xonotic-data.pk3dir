@@ -1,0 +1,27 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_bash_force;
+float autocvar_g_buffs_bash_force_self;
+
+vector buff_Bash_TargetCalculateForce(vector frag_force, entity frag_target, entity frag_attacker);
+vector buff_Bash_AttackerCalculateForce(vector frag_force, entity frag_target, entity frag_attacker);
+#endif // SVQC
+
+CLASS(BashBuff, Buff)
+	ATTRIB(BashBuff, m_name, string, _("Bash"));
+	ATTRIB(BashBuff, netname, string, "bash");
+#ifndef SVQC
+	ATTRIB(BashBuff, m_icon, string, "buff_bash");
+#endif
+#ifdef GAMEQC
+	ATTRIB(BashBuff, m_skin, int, 5);
+#endif
+	ATTRIB(BashBuff, m_color, vector, '1 0.39 0');
+ENDCLASS(BashBuff)
+
+REGISTER_BUFF(BASH, NEW(BashBuff));
+BUFF_SPAWNFUNCS(bash, BUFF_BASH)
+BUFF_SPAWNFUNC_Q3COMPAT(item_scout, BUFF_BASH)

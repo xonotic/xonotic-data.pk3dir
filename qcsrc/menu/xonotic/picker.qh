@@ -9,7 +9,7 @@ CLASS(XonoticPicker, MenuItem)
 	METHOD(XonoticPicker, mouseDrag, float(entity, vector));
 	METHOD(XonoticPicker, keyDown, float(entity, float, float, float));
 	METHOD(XonoticPicker, draw, void(entity));
-	ATTRIB(XonoticPicker, focusable, float, 1);
+	ATTRIB(XonoticPicker, focusable, bool, true);
 	ATTRIB(XonoticPicker, disabled, float, 0);
 	ATTRIB(XonoticPicker, alpha, float, 1);
 	ATTRIB(XonoticPicker, disabledAlpha, float, SKINALPHA_DISABLED);

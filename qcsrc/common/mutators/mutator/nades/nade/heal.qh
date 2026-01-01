@@ -1,0 +1,24 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+bool autocvar_g_nades_heal = true;
+float autocvar_g_nades_heal_time;
+float autocvar_g_nades_heal_rate;
+float autocvar_g_nades_heal_friend;
+float autocvar_g_nades_heal_foe;
+
+void nade_heal_boom(entity this);
+#endif // SVQC
+
+const int PROJECTILE_NADE_HEAL = 80;
+const int PROJECTILE_NADE_HEAL_BURN = 81;
+
+CLASS(HealNade, Nade)
+	ATTRIB(HealNade, m_color, vector, '1 0 0');
+	ATTRIB(HealNade, m_name, string, _("Heal grenade"));
+	ATTRIB(HealNade, m_icon, string, "nade_heal");
+	ATTRIB(HealNade, netname, string, "heal");
+	ATTRIB(HealNade, impulse, int, 6);
+ENDCLASS(HealNade)

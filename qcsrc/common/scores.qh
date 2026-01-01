@@ -19,8 +19,8 @@ STATIC_INIT(Scores_renumber) { FOREACH(Scores, true, it.m_id = i); }
 // networked fields
 // NOTE: score registration order is used as player sort priority (after primary and secondary)
 
-// TODO: move gamemode scores to gamemode files
-// TODO: allow gamemodes to fully customize player sorting priority, even the common ones
+// TODO: move gametype scores to gametype files
+// TODO: allow gametypes to fully customize player sorting priority, even the common ones
 
 REGISTER_SP(RACE_LAPS);
 REGISTER_SP(RACE_TIME);
@@ -47,7 +47,7 @@ REGISTER_SP(KEEPAWAY_PICKUPS);
 REGISTER_SP(KH_CAPS);
 REGISTER_SP(KH_KCKILLS);
 REGISTER_SP(KH_LOSSES);
-REGISTER_SP(KH_DESTROYS);
+REGISTER_SP(KH_DESTRUCTIONS);
 REGISTER_SP(KH_PUSHES);
 REGISTER_SP(KH_PICKUPS);
 
@@ -77,7 +77,7 @@ REGISTER_SP(DMGTAKEN);
 
 REGISTER_SP(ROUNDS_PL);
 
-REGISTER_SP(ELO); // not sortable
+REGISTER_SP(SKILL); // not sortable
 REGISTER_SP(FPS); // not sortable
 
 // fields not networked via the score system

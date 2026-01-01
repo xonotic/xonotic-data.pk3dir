@@ -6,8 +6,8 @@ bool autocvar_sv_doors_always_open;
 
 const int DOOR_START_OPEN = BIT(0); // has same meaning in Q3: reverse position 1 and 2
 const int DOOR_DONT_LINK = BIT(2);
-const int SPAWNFLAGS_GOLD_KEY = BIT(3); // Quake 1 compat, can only be used with func_door!
-const int SPAWNFLAGS_SILVER_KEY = BIT(4); // Quake 1 compat, can only be used with func_door!
+const int SPAWNFLAGS_GOLD_KEY = BIT(3); // Quake 1 and QL compat, can only be used with func_door!
+const int SPAWNFLAGS_SILVER_KEY = BIT(4); // Quake 1 and QL compat, can only be used with func_door!
 const int DOOR_TOGGLE = BIT(5);
 
 const int DOOR_NONSOLID = BIT(10);

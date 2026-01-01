@@ -20,7 +20,7 @@ entity makeXonoticMapList()
 	return me;
 }
 
-entity MapList_Set_String_Filter_Box(entity me, entity e)
+entity MapList_Set_StringFilterBox(entity me, entity e)
 {
 	me.stringFilterBox = e;
 	return e;
@@ -158,7 +158,7 @@ void XonoticMapList_drawListBoxItem(entity me, int i, vector absSize, bool isSel
 
 	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
 	{
-		if(!draw_PictureExists(strcat("/levelshots/", MapInfo_Map_bspname)))
+		if(draw_PictureSize(strcat("/levelshots/", MapInfo_Map_bspname)) == '0 0 0')
 			draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 		else
 			draw_Picture(me.columnPreviewOrigin * eX, strcat("/levelshots/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
@@ -188,7 +188,10 @@ void XonoticMapList_refilter(entity me)
 	me.nItems = MapInfo_count;
 
 	for(i = 0; i < MapInfo_count; ++i)
-		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
+	{
+		if(draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i))) == "")
+			draw_PreloadPicture(strcat("/levelshots/", MapInfo_BSPName_ByID(i)));
+	}
 	s = "0";
 	for(i = 1; i < MapInfo_count; i *= 2)
 		s = strcat(s, s);
@@ -234,7 +237,7 @@ void MapList_Add_Shown(entity btn, entity me)
 {
 	float i, n;
 	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
+	for (i = 0 ; i < n; ++i)
 	{
 		if (!me.g_maplistCacheQuery(me, i))
 			me.g_maplistCacheToggle(me, i);
@@ -246,7 +249,7 @@ void MapList_Remove_Shown(entity btn, entity me)
 {
 	float i, n;
 	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
+	for (i = 0 ; i < n; ++i)
 	{
 		if (me.g_maplistCacheQuery(me, i))
 			me.g_maplistCacheToggle(me, i);
@@ -261,8 +264,8 @@ void MapList_Add_All(entity btn, entity me)
 	_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
-		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
-	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
+		s = cons(s, MapInfo_BSPName_ByID(i));
+	cvar_set("g_maplist", s);
 	me.refilter(me);
 }
 
@@ -304,7 +307,7 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 	else
 	{
-		LOG_INFO(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again."));
+		LOG_INFO(_("Huh? Can't play this (invalid gametype). Refiltering so this won't happen again."));
 		me.refilter(me);
 		return;
 	}
@@ -322,12 +325,12 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 		main.mapInfoDialog.loadMapInfo(main.mapInfoDialog, me.selectedItem, me);
 		DialogOpenButton_Click_withCoords(NULL, main.mapInfoDialog, me.origin + eX * (me.columnNameOrigin * me.size.x) + eY * ((me.itemHeight * me.selectedItem - me.scrollPos) * me.size.y), eY * me.itemAbsSize.y + eX * (me.itemAbsSize.x * me.columnNameSize));
 	}
-	else if(scan == K_MOUSE3 || scan == K_INS || scan == K_KP_INS)
+	else if(scan == K_MOUSE3 || scan == K_INS || scan == K_KP_INS || ((shift & S_CTRL) && scan == K_MOUSE1))
 	{
 		m_play_click_sound(MENU_SOUND_SELECT);
 		me.g_maplistCacheToggle(me, me.selectedItem);
 	}
-	else if(ascii == 43) // +
+	else if(ascii == '+')
 	{
 		if (!me.g_maplistCacheQuery(me, me.selectedItem))
 		{
@@ -335,7 +338,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 			me.g_maplistCacheToggle(me, me.selectedItem);
 		}
 	}
-	else if(ascii == 45) // -
+	else if(ascii == '-')
 	{
 		if(me.g_maplistCacheQuery(me, me.selectedItem))
 		{
@@ -375,7 +378,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		me.parent.setFocus(me.parent, me.stringFilterBox);
 	}
-	else if((shift & S_CTRL) && scan == 'u') // ctrl-u (remove stringFilter line
+	else if((shift & S_CTRL) && scan == 'u') // ctrl-u (remove stringFilter line)
 	{
 		me.stringFilterBox.setText(me.stringFilterBox, "");
 		MapList_StringFilterBox_Change(me.stringFilterBox, me);

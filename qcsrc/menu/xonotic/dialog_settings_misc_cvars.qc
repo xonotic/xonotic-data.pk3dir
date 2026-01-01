@@ -28,7 +28,8 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 	// add button which does cvar_resettodefaults_saveonly
 
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Cvar filter:")));
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Filter:")));
 		me.TD(me, 1, 3, e = makeXonoticInputBox(0, string_null));
 			e.color = e.colorF = SKINCOLOR_CVARLIST_CONTROLS;
 			e.cb_color = e.cb_colorC = e.cb_colorF = SKINCOLOR_CVARLIST_CONTROLS;
@@ -40,10 +41,18 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			e.onClickEntity = cvarlist;
 			e.onClick = CvarList_Filter_ModifiedCvars;
 	me.TR(me);
-		me.TD(me, me.rows - me.currentRow - 9, me.columns, cvarlist);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, string_null));
+			cvarlist.cvarlistResultCountBox = e;
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_cvarlist_descriptions", _("Search in cvar descriptions too")));
+			e.color = e.colorC = e.colorF = e.colorD = SKINCOLOR_CVARLIST_CONTROLS;
+			e.onClickEntity = cvarlist;
+			e.onClick = CvarList_Filter_Descriptions;
+	me.TR(me);
+		me.TD(me, me.rows - me.currentRow - 8, me.columns, cvarlist);
 	me.gotoRC(me, me.rows - 8, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Setting:")));
 		me.TD(me, 1, me.columns - 1, e = makeXonoticTextLabel(0, string_null));
+			e.colorL = '1 1 0'; // draw the cvar name yellow
 			cvarlist.cvarNameBox = e;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Type:")));
@@ -59,18 +68,18 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			e.onChangeEntity = cvarlist;
 			e.onEnter = CvarList_End_Editing;
 			e.onEnterEntity = cvarlist;
-		me.TD(me, 1, 1, e = makeXonoticButton(string_null, SKINCOLOR_CVARLIST_CONTROLS));
+		me.TD(me, 1, 1, e = makeXonoticButton_T(string_null, SKINCOLOR_CVARLIST_CONTROLS, _("Reset to default")));
 			cvarlist.cvarDefaultBox = e;
 			e.onClick = CvarList_Revert_Click;
 			e.onClickEntity = cvarlist;
-			e.allowCut = 1;
+			e.allowCut = true;
 			e.marginLeft = e.marginRight = 0.5;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Description:")));
 		me.TD(me, 1, me.columns - 1, e = makeXonoticTextLabel(0, string_null));
 			cvarlist.cvarDescriptionBox = e;
-			e.allowWrap = 1;
+			e.allowWrap = true;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), SKINCOLOR_CVARLIST_CONTROLS));
 			e.onClick = Dialog_Close;

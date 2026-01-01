@@ -19,8 +19,6 @@ float pickup_crosshair_time, pickup_crosshair_size;
 float hitindication_crosshair_size;
 float use_vortex_chargepool;
 
-float reticle_type;
-
 vector wcross_origin;
 float wcross_scale_prev, wcross_alpha_prev;
 vector wcross_color_prev;
@@ -49,44 +47,37 @@ void TrueAim_Init()
 	(trueaim_rifle = new_pure(trueaim_rifle)).dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
-float EnemyHitCheck()
+int EnemyHitCheck()
 {
-	float t, n;
 	wcross_origin = project_3d_to_2d(trace_endpos);
 	wcross_origin.z = 0;
-	if(trace_ent)
+	float n;
+	if (trace_ent)
 		n = trace_ent.entnum;
 	else
 		n = trace_networkentity;
-	if(n < 1)
+	if (n < 1)
 		return SHOTTYPE_HITWORLD;
-	if(n > maxclients)
+	if (n > maxclients)
 		return SHOTTYPE_HITWORLD;
-	t = entcs_GetTeam(n - 1);
-	if(teamplay && t == myteam)
+	int t = entcs_GetTeam(n - 1);
+	if (teamplay && t == myteam)
 		return SHOTTYPE_HITTEAM;
-	if(t == NUM_SPECTATOR)
+	if (t == NUM_SPECTATOR)
 		return SHOTTYPE_HITWORLD;
 	return SHOTTYPE_HITENEMY;
 }
 
-float TrueAimCheck(entity wepent)
+int TrueAimCheck(entity wepent)
 {
-	if(wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
+	if (wepent.activeweapon.spawnflags & WEP_FLAG_NOTRUEAIM)
 		return SHOTTYPE_HITWORLD;
 
-	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
-	vector vecs, trueaimpoint, w_shotorg;
-	vector mi, ma, dv;
-	float shottype;
-	entity ta;
-	float mv;
+	vector mi = '0 0 0', ma = '0 0 0';
+	entity ta = trueaim;
+	float mv = MOVE_NOMONSTERS;
 
-	mi = ma = '0 0 0';
-	ta = trueaim;
-	mv = MOVE_NOMONSTERS;
-
-	switch(wepent.activeweapon) // WEAPONTODO
+	switch (wepent.activeweapon) // WEAPONTODO
 	{
 		case WEP_VORTEX:
 		case WEP_OVERKILL_NEX:
@@ -96,7 +87,7 @@ float TrueAimCheck(entity wepent)
 		case WEP_RIFLE:
 			ta = trueaim_rifle;
 			mv = MOVE_NORMAL;
-			if(zoomscript_caught)
+			if (zoomscript_caught)
 			{
 				tracebox(view_origin, '0 0 0', '0 0 0', view_origin + view_forward * max_shot_distance, mv, ta);
 				return EnemyHitCheck();
@@ -123,37 +114,38 @@ float TrueAimCheck(entity wepent)
 	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * STAT(VIEWHEIGHT));
 
 	traceline(traceorigin, traceorigin + view_forward * max_shot_distance, mv, ta);
-	trueaimpoint = trace_endpos;
+	vector trueaimpoint = trace_endpos;
 	// move trueaimpoint a little bit forward to make the final tracebox reliable
 	// since it sometimes doesn't reach a teammate by a hair
 	trueaimpoint += view_forward;
 
-	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
+	if (vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
 
-	vecs = decompressShotOrigin(STAT(SHOTORG));
+	vector vecs = decompressShotOrigin(STAT(SHOTORG));
 
-	if(vecs.x > 0)
+	if (vecs.x > 0)
 		vecs.y = -vecs.y;
 	else
 		vecs = '0 0 0';
 
-	dv = view_right * vecs.y + view_up * vecs.z;
-	w_shotorg = traceorigin + dv;
+	vector dv = view_right * vecs.y + view_up * vecs.z;
+	vector w_shotorg = traceorigin + dv;
 
 	// now move the vecs forward as much as requested if possible
+	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	tracebox(w_shotorg, mi, ma, w_shotorg + view_forward * (vecs.x + nudge), MOVE_NORMAL, ta); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
 	w_shotorg = trace_endpos - view_forward * nudge;
 
 	tracebox(w_shotorg, mi, ma, trueaimpoint, MOVE_NORMAL, ta);
-	shottype = EnemyHitCheck();
-	if(shottype != SHOTTYPE_HITWORLD)
+	float shottype = EnemyHitCheck();
+	if (shottype != SHOTTYPE_HITWORLD)
 		return shottype;
 
 #if 0
 	// FIXME WHY DOES THIS NOT WORK FOR THE ROCKET LAUNCHER?
 	// or rather, I know why, but see no fix
-	if(vlen(trace_endpos - trueaimpoint) > vlen(ma) + vlen(mi) + 1)
+	if (vlen(trace_endpos - trueaimpoint) > vlen(ma) + vlen(mi) + 1)
 		// yes, this is an ugly hack... but it seems good enough to find out whether the test hits the same place as the initial trace
 		return SHOTTYPE_HITOBSTRUCTION;
 #endif
@@ -163,7 +155,7 @@ float TrueAimCheck(entity wepent)
 
 void HUD_Crosshair_Vehicle(entity this)
 {
-	if(hud != HUD_BUMBLEBEE_GUN)
+	if (hud != HUD_BUMBLEBEE_GUN)
 	{
 		Vehicle info = REGISTRY_GET(Vehicles, hud);
 		info.vr_crosshair(info, this);
@@ -175,17 +167,16 @@ vector crosshair_getcolor(entity this, float health_stat)
 	static float rainbow_last_flicker;
 	static vector rainbow_prev_color;
 	vector wcross_color = '0 0 0';
-	switch(autocvar_crosshair_color_special)
+	switch (autocvar_crosshair_color_special)
 	{
 		case 1: // weapon color
-		{
-			if(this != WEP_Null && hud == HUD_NORMAL)
+			if (this != WEP_Null && hud == HUD_NORMAL)
 			{
-				wcross_color = this.wpcolor;
+				wcross_color = this.m_color;
 				break;
 			}
-			else { goto normalcolor; }
-		}
+			else
+				goto normalcolor;
 
 		case 2: // color based on health and armor
 		{
@@ -196,17 +187,17 @@ vector crosshair_getcolor(entity this, float health_stat)
 		}
 
 		case 3: // rainbow/random color
-		{
-			if(time >= rainbow_last_flicker)
+			if (time >= rainbow_last_flicker)
 			{
 				rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
 				rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
 			}
 			wcross_color = rainbow_prev_color;
 			break;
-		}
 LABEL(normalcolor)
-		default: { wcross_color = stov(autocvar_crosshair_color); break; }
+		default:
+			wcross_color = stov(autocvar_crosshair_color);
+			break;
 	}
 
 	return wcross_color;
@@ -216,16 +207,13 @@ LABEL(normalcolor)
 void HUD_Crosshair_ApplyPlayerAlpha(float new_alpha)
 {
 	csqcplayer.alpha = new_alpha;
-	FOREACH_ENTITY_CLASS("ENT_CLIENT_MODEL", it.tag_entity == csqcplayer,
-	{
-		it.alpha = new_alpha;
-	});
+	FOREACH_ENTITY_CLASS("ENT_CLIENT_MODEL", it.tag_entity == csqcplayer, it.alpha = new_alpha);
 }
 
 void HUD_Crosshair(entity this)
 {
 	// reset player's alpha here upon death since forced scoreboard prevents running the crosshair_chase code
-	if(autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
+	if (autocvar_chase_active > 0 && autocvar_crosshair_chase && STAT(HEALTH) <= 0 && csqcplayer)
 		csqcplayer.alpha = csqcplayer.m_alpha;
 
 	if (autocvar_chase_active > 0 && (autocvar_chase_front || autocvar_cl_lockview))
@@ -235,10 +223,9 @@ void HUD_Crosshair(entity this)
 		return;
 	}
 
-	float f, i, j;
-	vector v;
-	if(!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) && !autocvar_cl_lockview
-		&& spectatee_status != -1 && (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))) && !MUTATOR_CALLHOOK(DrawCrosshair)
+	if (!scoreboard_active && !camera_active && intermission != 2 && !STAT(GAME_STOPPED) && !autocvar_cl_lockview
+		&& spectatee_status != -1 && STAT(HEALTH) > 0 && !MUTATOR_CALLHOOK(DrawCrosshair)
+		&& (!csqcplayer.viewloc || (!spectatee_status && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM)))
 		&& !HUD_MinigameMenu_IsOpened())
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
@@ -267,20 +254,17 @@ void HUD_Crosshair(entity this)
 		if (wcross_alpha == 0)
 			return;
 
-		// TrueAim check
-		float shottype;
-
 		static int crosshair_chase_state = 0;
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		if(csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
+		if (csqcplayer.viewloc && (csqcplayer.viewloc.spawnflags & VIEWLOC_FREEAIM))
 			wcross_origin = viewloc_mousepos;
-		else if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
+		else if (autocvar_chase_active > 0 && autocvar_crosshair_chase)
 		{
-			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
-			float my_alpha = (!csqcplayer.m_alpha) ? 1 : csqcplayer.m_alpha;
+			vector player_org = (csqcplayer ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
+			float my_alpha = !csqcplayer.m_alpha ? 1 : csqcplayer.m_alpha;
 			float chase_playeralpha = bound(0.001, autocvar_crosshair_chase_playeralpha, 1);
-			if(csqcplayer && chase_playeralpha < 1 && my_alpha > chase_playeralpha)
+			if (csqcplayer && chase_playeralpha < 1 && my_alpha > chase_playeralpha)
 			{
 				crosshair_chase_state = 2;
 				bool hit = false;
@@ -289,15 +273,13 @@ void HUD_Crosshair(entity this)
 				else
 				{
 					WarpZone_TraceLine(view_origin, view_origin + max_shot_distance * view_forward, MOVE_NORMAL, NULL);
-					if(trace_ent == csqcplayer)
+					if (trace_ent == csqcplayer)
 						hit = true;
 				}
 				float prev_alpha = csqcplayer.alpha;
-				float new_alpha;
-				if(hit)
-					new_alpha = max(csqcplayer.alpha - frametime * 5, chase_playeralpha);
-				else
-					new_alpha = min(csqcplayer.alpha + frametime * 5, my_alpha);
+				float new_alpha = hit
+					? max(csqcplayer.alpha - frametime * 5, chase_playeralpha)
+					: min(csqcplayer.alpha + frametime * 5, my_alpha);
 
 				if (new_alpha != prev_alpha)
 					HUD_Crosshair_ApplyPlayerAlpha(new_alpha);
@@ -318,21 +300,24 @@ void HUD_Crosshair(entity this)
 			crosshair_chase_state = 0; // turned off and alpha reset
 		}
 
-		if(autocvar_crosshair_hittest)
+		// TrueAim check
+		float shottype;
+
+		if (autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;
 			entity thiswep = viewmodels[0]; // TODO: unhardcode
 			wcross_oldorigin = wcross_origin;
 			shottype = TrueAimCheck(thiswep);
-			if(shottype == SHOTTYPE_HITWORLD)
+			if (shottype == SHOTTYPE_HITWORLD)
 			{
-				v = wcross_origin - wcross_oldorigin;
+				vector v = wcross_origin - wcross_oldorigin;
 				v.x /= vid_conwidth;
 				v.y /= vid_conheight;
-				if(vdist(v, >, 0.01))
+				if (vdist(v, >, 0.01))
 					shottype = SHOTTYPE_HITOBSTRUCTION;
 			}
-			if(!autocvar_crosshair_hittest_showimpact)
+			if (!autocvar_crosshair_hittest_showimpact)
 				wcross_origin = wcross_oldorigin;
 		}
 		else
@@ -343,55 +328,50 @@ void HUD_Crosshair(entity this)
 		float wcross_scale, wcross_blur;
 
 		entity e = WEP_Null;
-		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
+		if (autocvar_crosshair_per_weapon || autocvar_crosshair_color_special == 1)
 		{
 			entity wepent = viewmodels[0]; // TODO: unhardcode
 			e = wepent.switchingweapon;
-			if(e)
+			if (e && autocvar_crosshair_per_weapon)
 			{
-				if(autocvar_crosshair_per_weapon)
-				{
-					// WEAPONTODO: access these through some general settings (with non-balance config settings)
-					//wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
-					//if (wcross_resolution == 0)
-						//return;
+				// WEAPONTODO: access these through some general settings (with non-balance config settings)
+				//wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+				//if (wcross_resolution == 0)
+					//return;
 
-					//wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
-					wcross_resolution *= e.w_crosshair_size;
-					wcross_name = e.w_crosshair;
-				}
+				//wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
+				wcross_resolution *= e.w_crosshair_size;
+				wcross_name = e.w_crosshair;
 			}
 		}
 
-		if(wcross_name == "")
+		if (wcross_name == "")
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 
 		// MAIN CROSSHAIR COLOR DECISION
 		wcross_color = crosshair_getcolor(e, STAT(HEALTH));
 
-		if(autocvar_crosshair_effect_scalefade)
+		if (autocvar_crosshair_effect_scalefade)
 		{
 			wcross_scale = wcross_resolution;
 			wcross_resolution = 1;
 		}
 		else
-		{
 			wcross_scale = 1;
-		}
 
-		if(autocvar_crosshair_pickup)
+		if (autocvar_crosshair_pickup)
 		{
 			float stat_pickup_time = STAT(LAST_PICKUP);
 
-			if(pickup_crosshair_time < stat_pickup_time)
+			if (pickup_crosshair_time < stat_pickup_time)
 			{
-				if(time - stat_pickup_time < 5) // don't trigger the animation if it's too old
+				if (time - stat_pickup_time < 5) // don't trigger the animation if it's too old
 					pickup_crosshair_size = 1;
 
 				pickup_crosshair_time = stat_pickup_time;
 			}
 
-			if(pickup_crosshair_size > 0)
+			if (pickup_crosshair_size > 0)
 				pickup_crosshair_size -= autocvar_crosshair_pickup_speed * frametime;
 			else
 				pickup_crosshair_size = 0;
@@ -400,21 +380,19 @@ void HUD_Crosshair(entity this)
 		}
 
 		// todo: make crosshair hit indication dependent on damage dealt
-		if(autocvar_crosshair_hitindication)
+		if (autocvar_crosshair_hitindication)
 		{
-			vector col = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
+			vector col = (autocvar_crosshair_color_special == 1 ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
 
-			if(unaccounted_damage)
-			{
+			if (unaccounted_damage)
 				hitindication_crosshair_size = 1;
-			}
 
-			if(hitindication_crosshair_size > 0)
+			if (hitindication_crosshair_size > 0)
 				hitindication_crosshair_size -= autocvar_crosshair_hitindication_speed * frametime;
 			else
 				hitindication_crosshair_size = 0;
 
-			wcross_scale += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
+			wcross_scale   += sin(hitindication_crosshair_size) * autocvar_crosshair_hitindication;
 			wcross_color.x += sin(hitindication_crosshair_size) * col.x;
 			wcross_color.y += sin(hitindication_crosshair_size) * col.y;
 			wcross_color.z += sin(hitindication_crosshair_size) * col.z;
@@ -422,21 +400,19 @@ void HUD_Crosshair(entity this)
 
 		// no effects needed for targeting enemies, this can't possibly span all valid targets!
 		// just show for teammates to give a sign that they're an invalid target
-		//if(shottype == SHOTTYPE_HITENEMY)
+		//if (shottype == SHOTTYPE_HITENEMY)
 			//wcross_scale *= autocvar_crosshair_hittest; // is not queried if hittest is 0
-		if(shottype == SHOTTYPE_HITTEAM)
+		if (shottype == SHOTTYPE_HITTEAM)
 			wcross_scale /= autocvar_crosshair_hittest; // is not queried if hittest is 0
 
-		f = fabs(autocvar_crosshair_effect_time);
-		if(wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
-		{
+		float f = fabs(autocvar_crosshair_effect_time);
+		if (wcross_scale != wcross_scale_goal_prev || wcross_alpha != wcross_alpha_goal_prev || wcross_color != wcross_color_goal_prev)
 			wcross_changedonetime = time + f;
-		}
-		if(wcross_name != wcross_name_goal_prev || wcross_resolution != wcross_resolution_goal_prev)
+		if (wcross_name != wcross_name_goal_prev || wcross_resolution != wcross_resolution_goal_prev)
 		{
 			wcross_name_changestarttime = time;
 			wcross_name_changedonetime = time + f;
-			if(wcross_name_goal_prev_prev)
+			if (wcross_name_goal_prev_prev)
 				strunzone(wcross_name_goal_prev_prev);
 			wcross_name_goal_prev_prev = wcross_name_goal_prev;
 			wcross_name_goal_prev = strzone(wcross_name);
@@ -449,8 +425,8 @@ void HUD_Crosshair(entity this)
 		wcross_alpha_goal_prev = wcross_alpha;
 		wcross_color_goal_prev = wcross_color;
 
-		if((shottype == SHOTTYPE_HITTEAM && autocvar_crosshair_hittest_blur_teammate)
-			|| (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur_wall && !autocvar_chase_active))
+		if ((shottype == SHOTTYPE_HITTEAM && autocvar_crosshair_hittest_blur_teammate)
+		||  (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur_wall && !autocvar_chase_active))
 		{
 			wcross_blur = 1;
 			wcross_alpha *= 0.75;
@@ -460,7 +436,7 @@ void HUD_Crosshair(entity this)
 		// *_prev is at time-frametime
 		// * is at wcross_changedonetime+f
 		// what do we have at time?
-		if(time < wcross_changedonetime)
+		if (time < wcross_changedonetime)
 		{
 			f = frametime / (wcross_changedonetime - time + frametime);
 			wcross_scale = f * wcross_scale + (1 - f) * wcross_scale_prev;
@@ -478,7 +454,7 @@ void HUD_Crosshair(entity this)
 		wcross_alpha *= 1 - autocvar__menu_alpha;
 		wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
 
-		if(wcross_scale >= 0.001 && wcross_alpha >= 0.001)
+		if (wcross_scale >= 0.001 && wcross_alpha >= 0.001)
 		{
 			// crosshair rings for weapon stats
 			if (autocvar_crosshair_ring || autocvar_crosshair_ring_reload)
@@ -497,7 +473,7 @@ void HUD_Crosshair(entity this)
 
 				float arc_heat = wepent.arc_heat_percent;
 
-				if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+				if (vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 					vortex_charge_movingavg = wepent.vortex_charge;
 
 				float charge = 0;
@@ -521,10 +497,13 @@ void HUD_Crosshair(entity this)
 
 				if (ring_vortex_enabled)
 				{
-					if (chargepool || use_vortex_chargepool) {
+					if (chargepool || use_vortex_chargepool)
+					{
 						use_vortex_chargepool = 1;
 						ring_inner_value = chargepool;
-					} else {
+					}
+					else
+					{
 						float rate = autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate;
 						vortex_charge_movingavg = (1 - rate) * vortex_charge_movingavg + rate * charge;
 						ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (charge - vortex_charge_movingavg), 1);
@@ -540,21 +519,21 @@ void HUD_Crosshair(entity this)
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun";
 				}
-				else if (autocvar_crosshair_ring && wepent.activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
+				else if (autocvar_crosshair_ring && wepent.activeweapon == WEP_MINE_LAYER && WEP_CVAR(WEP_MINE_LAYER, limit) && autocvar_crosshair_ring_minelayer)
 				{
-					ring_value = bound(0, wepent.minelayer_mines / WEP_CVAR(minelayer, limit), 1);
+					ring_value = bound(0, wepent.minelayer_mines / WEP_CVAR(WEP_MINE_LAYER, limit), 1);
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring";
 				}
 				else if (wepent.activeweapon == WEP_HAGAR && wepent.hagar_load && autocvar_crosshair_ring_hagar)
 				{
-					ring_value = bound(0, wepent.hagar_load / WEP_CVAR_SEC(hagar, load_max), 1);
+					ring_value = bound(0, wepent.hagar_load / WEP_CVAR_SEC(WEP_HAGAR, load_max), 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring";
 				}
-				else if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring
+				else if (autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring
 				{
 					ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
 					ring_scale = autocvar_crosshair_ring_reload_size;
@@ -563,37 +542,35 @@ void HUD_Crosshair(entity this)
 
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
-					if ((wepent.activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
+					if (wepent.activeweapon == WEP_RIFLE && weapon_clipsize == 80)
 						ring_image = "gfx/crosshair_ring_rifle";
 					else
 						ring_image = "gfx/crosshair_ring";
 				}
-				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && wepent.activeweapon == WEP_ARC )
+				else if (autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && wepent.activeweapon == WEP_ARC)
 				{
 					ring_value = arc_heat;
-					ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
-						arc_heat*autocvar_crosshair_ring_arc_hot_alpha;
-					ring_rgb = (1-arc_heat)*wcross_color + arc_heat*autocvar_crosshair_ring_arc_hot_color;
+					ring_alpha = (1 - arc_heat) * autocvar_crosshair_ring_arc_cold_alpha +
+						arc_heat * autocvar_crosshair_ring_arc_hot_alpha;
+					ring_rgb = (1 - arc_heat) * wcross_color + arc_heat * autocvar_crosshair_ring_arc_hot_color;
 					ring_image = "gfx/crosshair_ring";
 				}
 
 				// if in weapon switch animation, fade ring out/in
-				if(autocvar_crosshair_effect_time > 0)
+				if (autocvar_crosshair_effect_time > 0)
 				{
 					f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
 					if (f >= 1)
-					{
-						wcross_ring_prev = ((ring_image) ? true : false);
-					}
+						wcross_ring_prev = (ring_image ? true : false);
 
-					if(wcross_ring_prev)
+					if (wcross_ring_prev)
 					{
-						if(f < 1)
+						if (f < 1)
 							ring_alpha *= fabs(1 - bound(0, f, 1));
 					}
 					else
 					{
-						if(f < 1)
+						if (f < 1)
 							ring_alpha *= bound(0, f, 1);
 					}
 				}
@@ -605,28 +582,24 @@ void HUD_Crosshair(entity this)
 					DrawCircleClippedPic(wcross_origin, wcross_size.x * wcross_resolution * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
 			}
 
-#define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
-			MACRO_BEGIN \
+			#define CROSSHAIR_DO_BLUR(M, sz, wcross_name, wcross_alpha) MACRO_BEGIN \
 				vector scaled_sz = sz * wcross_size; \
-				if(wcross_blur > 0) \
-				{ \
-					for(i = -2; i <= 2; ++i) \
-					for(j = -2; j <= 2; ++j) \
-					M(i,j,sz,scaled_sz,wcross_name,wcross_alpha*0.04); \
-				} \
+				if (wcross_blur > 0) \
+					for (int j, i = -2; i <= 2; ++i) \
+						for (j = -2; j <= 2; ++j) \
+							M(i, j, sz, scaled_sz, wcross_name, wcross_alpha * 0.04); \
 				else \
-				{ \
-					M(0,0,sz,scaled_sz,wcross_name,wcross_alpha); \
-				} \
+					M(0, 0, sz, scaled_sz, wcross_name, wcross_alpha); \
 			MACRO_END
 
-#define CROSSHAIR_DRAW_SINGLE(i,j,sz,scaled_sz,wcross_name,wcross_alpha) \
-			drawpic(wcross_origin - ('0.5 0 0' * (scaled_sz.x + i * wcross_blur) + '0 0.5 0' * (scaled_sz.y + j * wcross_blur)), wcross_name, scaled_sz, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
+			#define CROSSHAIR_DRAW_SINGLE(i, j, sz, scaled_sz, wcross_name, wcross_alpha) \
+				drawpic(wcross_origin - ('0.5 0 0' * (scaled_sz.x + i * wcross_blur) + '0 0.5 0' * (scaled_sz.y + j * wcross_blur)), wcross_name, scaled_sz, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
 
-#define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
-			CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE,sz,wcross_name,wcross_alpha)
+			#define CROSSHAIR_DRAW(sz,wcross_name,wcross_alpha) \
+				CROSSHAIR_DO_BLUR(CROSSHAIR_DRAW_SINGLE, sz, wcross_name, wcross_alpha)
 
-			if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
+			if (autocvar_crosshair_effect_time > 0 && time < wcross_name_changedonetime
+				&& wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
 			{
 				f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
 				wcross_size = draw_getimagesize(wcross_name_goal_prev_prev) * wcross_scale;
@@ -634,20 +607,19 @@ void HUD_Crosshair(entity this)
 				f = 1 - f;
 			}
 			else
-			{
 				f = 1;
-			}
+
 			wcross_name_alpha_goal_prev = f;
 
 			wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
 			CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
 
-			if(autocvar_crosshair_dot)
+			if (autocvar_crosshair_dot)
 			{
 				vector wcross_color_old;
 				wcross_color_old = wcross_color;
 
-				if((autocvar_crosshair_dot_color_custom) && (autocvar_crosshair_dot_color != "0"))
+				if (autocvar_crosshair_dot_color_custom && autocvar_crosshair_dot_color != "0")
 					wcross_color = stov(autocvar_crosshair_dot_color);
 
 				CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot", f * autocvar_crosshair_dot_alpha);
@@ -676,23 +648,19 @@ void HUD_Crosshair(entity this)
 
 void DrawReticle(entity this)
 {
-	if(!autocvar_cl_reticle || MUTATOR_CALLHOOK(DrawReticle))
-	{
-		reticle_type = 0;
+	if (!autocvar_cl_reticle || MUTATOR_CALLHOOK(DrawReticle))
 		return;
-	}
 
-	float is_dead = (STAT(HEALTH) <= 0);
 	string reticle_image = string_null;
 	bool wep_zoomed = false;
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		entity wepe = viewmodels[slot];
 		Weapon wep = wepe.activeweapon;
-		if(wep != WEP_Null && wep.wr_zoom)
+		if (wep != WEP_Null && wep.wr_zoom)
 		{
 			bool do_zoom = wep.wr_zoom(wep, NULL);
-			if(!reticle_image && wep.w_reticle && wep.w_reticle != "")
+			if (!reticle_image && wep.w_reticle && wep.w_reticle != "")
 				reticle_image = wep.w_reticle;
 			wep_zoomed += do_zoom;
 		}
@@ -701,26 +669,25 @@ void DrawReticle(entity this)
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
-	if(spectatee_status || is_dead || hud != HUD_NORMAL || this.viewloc)
+	int reticle_type;
+	if (spectatee_status || (STAT(HEALTH) <= 0) || hud != HUD_NORMAL || this.viewloc || (autocvar_chase_active != 0 && !autocvar_cl_reticle_chase))
+		reticle_type = 0; // no zoom reticle while dead
+	else if (wep_zoomed && autocvar_cl_reticle_weapon)
 	{
-		// no zoom reticle while dead
+		if (reticle_image)
+			reticle_type = 2;
+		else
+			reticle_type = 0;
+	}
+	else if (button_zoom || zoomscript_caught)
+		reticle_type = 1; // normal zoom
+	else
 		reticle_type = 0;
-	}
-	else if(wep_zoomed && autocvar_cl_reticle_weapon)
-	{
-		if(reticle_image) { reticle_type = 2; }
-		else { reticle_type = 0; }
-	}
-	else if(button_zoom || zoomscript_caught)
-	{
-		// normal zoom
-		reticle_type = 1;
-	}
 
-	if(reticle_type)
+	if (reticle_type)
 	{
 		vector reticle_pos = '0 0 0', reticle_size = '0 0 0';
-		if(autocvar_cl_reticle_stretch)
+		if (autocvar_cl_reticle_stretch)
 		{
 			reticle_size.x = vid_conwidth;
 			reticle_size.y = vid_conheight;
@@ -735,15 +702,17 @@ void DrawReticle(entity this)
 			reticle_pos.y = (vid_conheight - reticle_size.y) / 2;
 		}
 
-		float f = (zoomscript_caught) ? 1 : current_zoomfraction;
-
-		if(f)
-		{
-			switch(reticle_type)
+		float f = (zoomscript_caught ? 1 : max(0.25, current_zoomfraction));
+		if (f)
+			switch (reticle_type)
 			{
-				case 1: drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_normal_alpha, DRAWFLAG_NORMAL); break;
-				case 2: if(reticle_image) drawpic(reticle_pos, reticle_image, reticle_size, '1 1 1', f * autocvar_cl_reticle_weapon_alpha, DRAWFLAG_NORMAL); break;
+				case 1:
+					drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_normal_alpha, DRAWFLAG_NORMAL);
+					break;
+				case 2:
+					if (reticle_image)
+						drawpic(reticle_pos, reticle_image, reticle_size, '1 1 1', f * autocvar_cl_reticle_weapon_alpha, DRAWFLAG_NORMAL);
+					break;
 			}
-		}
 	}
 }

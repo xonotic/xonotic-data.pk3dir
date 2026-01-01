@@ -3,6 +3,7 @@
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/net_linked.qh>
+#include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/stats.qh>
 #include <common/teams.qh>
@@ -52,6 +53,8 @@ entity bot_spawn()
 		ClientConnect(bot);
 		bot_setclientfields(bot);
 		PutClientInServer(bot);
+		if (!teamplay)
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JOIN_PLAY, bot.netname);
 	}
 	return bot;
 }
@@ -309,8 +312,9 @@ void bot_setnameandstuff(entity this)
 
 	this.bot_config_loaded = true;
 
-	// this is really only a default, TeamBalance_JoinBestTeam is called later
 	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
+	this.team = -1; // undo team change by setcolor
+	// save clientcolors now because they may be overriden when joining a team
 	this.bot_preferredcolors = this.clientcolors;
 
 	string prefix = (autocvar_g_campaign ? "" : autocvar_bot_prefix);
@@ -634,7 +638,7 @@ bool bot_fixcount(bool multiple_per_frame)
 	int bots;
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
-	bots_would_leave = false;
+	bots_would_leave = 0;
 	if (autocvar_bot_vs_human && AVAILABLE_TEAMS == 2)
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
@@ -652,8 +656,7 @@ bool bot_fixcount(bool multiple_per_frame)
 			bots = min(bots, max(player_limit - activerealplayers, 0));
 		bots = min(bots, maxclients - realplayers);
 
-		if(bots > minbots)
-			bots_would_leave = true;
+		bots_would_leave = max(0, bots - minbots);
 	}
 	else
 	{

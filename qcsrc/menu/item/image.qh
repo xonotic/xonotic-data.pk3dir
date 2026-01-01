@@ -17,9 +17,9 @@ CLASS(Image, MenuItem)
 	ATTRIB(Image, zoomBox, float, 0);             // used by forcedAspect -2 when the image is larger than the containing box
 	ATTRIB(Image, zoomFactor, float, 1);
 	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0');
-	ATTRIB(Image, zoomSnapToTheBox, float, 1);    // snap the zoomed in image to the box borders when zooming/dragging it
+	ATTRIB(Image, zoomSnapToTheBox, bool, true);    // snap the zoomed in image to the box borders when zooming/dragging it
 	ATTRIB(Image, zoomTime, float, 0);
-	ATTRIB(Image, zoomLimitedByTheBox, float, 0); // forbids zoom if image would be larger than the containing box
+	ATTRIB(Image, zoomLimitedByTheBox, bool, false); // forbids zoom if image would be larger than the containing box
 	ATTRIB(Image, zoomMax, float, 0);
 	ATTRIB(Image, start_zoomOffset, vector, '0 0 0');
 	ATTRIB(Image, start_coords, vector, '0 0 0');

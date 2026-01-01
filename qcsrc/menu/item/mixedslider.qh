@@ -1,0 +1,28 @@
+#pragma once
+
+// Note:
+//   this is a numeric slider allowing replacement of some numbers with text, hence a "mixed" slider
+//   that's why addText takes a string (the text) and a float (the corresponding number)
+//   to use this, you FIRST call configureSliderVisuals, then multiple times addRange and/or addText, then configureMixedSlider
+#include "slider.qh"
+CLASS(MixedSlider, Slider)
+	METHOD(MixedSlider, valueToText, string(entity, int));
+	METHOD(MixedSlider, valueToNumberIdentifier, float(entity, int));
+	METHOD(MixedSlider, setValueFromNumberIdentifier, void(entity, float, bool));
+	METHOD(MixedSlider, getNumberIdentifier, float(entity));
+	METHOD(MixedSlider, rangedIdentifierToText, string(entity, float));
+	METHOD(MixedSlider, adjustDigitsForStep, void(entity, float));
+	METHOD(MixedSlider, clearValues, void(entity));
+	METHOD(MixedSlider, addRange, void(entity, float, float, float));
+	METHOD(MixedSlider, addText, void(entity, string, float));
+	METHOD(MixedSlider, insertRange, void(entity, int, float, float, float));
+	METHOD(MixedSlider, insertText, void(entity, int, string, float));
+	METHOD(MixedSlider, configureMixedSliderValues, void(entity, float));
+	ATTRIBARRAY(MixedSlider, valueStrings, string, 256);
+	ATTRIBARRAY(MixedSlider, valueNumberIdentifiers, float, 256);
+	/* `value` ranges from 0 to nValues - 1,
+	 * for each `value` there is a `valueNumberIdentifiers` and `valueStrings` entry,
+	 * representing the value to set the cvar, and what to display, respectively
+	 */
+	ATTRIB(MixedSlider, nValues, int, 0);
+ENDCLASS(MixedSlider)

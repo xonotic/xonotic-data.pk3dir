@@ -16,7 +16,7 @@ CLASS(XonoticColorpickerString, Image)
 	ATTRIB(XonoticColorpickerString, prevcoords, vector, '0 0 0');
 	ATTRIB(XonoticColorpickerString, image, string, SKINGFX_COLORPICKER);
 	ATTRIB(XonoticColorpickerString, imagemargin, vector, SKINMARGIN_COLORPICKER);
-	ATTRIB(XonoticColorpickerString, focusable, float, 1);
+	ATTRIB(XonoticColorpickerString, focusable, bool, true);
 	METHOD(XonoticColorpickerString, draw, void(entity));
 	ATTRIB(XonoticColorpickerString, disabledAlpha, float, 0.3);
 ENDCLASS(XonoticColorpickerString)

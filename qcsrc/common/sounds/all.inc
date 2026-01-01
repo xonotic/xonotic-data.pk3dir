@@ -7,31 +7,7 @@
 string W_Sound(string w_snd);
 string Item_Sound(string it_snd);
 
-SOUND(ARC_FIRE, W_Sound("arc_fire"));
-SOUND(ARC_LOOP, W_Sound("arc_loop"));
-SOUND(ARC_LOOP_OVERHEAT, W_Sound("arc_loop_overheat"));
-SOUND(ARC_STOP, W_Sound("arc_stop"));
-SOUND(CAMPINGRIFLE_FIRE2, W_Sound("campingrifle_fire2"));
-SOUND(CAMPINGRIFLE_FIRE, W_Sound("campingrifle_fire"));
-SOUND(CRYLINK_FIRE2, W_Sound("crylink_fire2"));
-SOUND(CRYLINK_FIRE, W_Sound("crylink_fire"));
-SOUND(CRYLINK_IMPACT2, W_Sound("crylink_impact2"));
-SOUND(CRYLINK_IMPACT, W_Sound("crylink_impact"));
-SOUND(CRYLINK_LINKJOIN, W_Sound("crylink_linkjoin"));
 SOUND(DRYFIRE, W_Sound("dryfire"));
-SOUND(ELECTRO_BOUNCE, W_Sound("electro_bounce"));
-SOUND(ELECTRO_FIRE2, W_Sound("electro_fire2"));
-SOUND(ELECTRO_FIRE, W_Sound("electro_fire"));
-SOUND(ELECTRO_FLY, W_Sound("electro_fly"));
-SOUND(ELECTRO_IMPACT, W_Sound("electro_impact"));
-SOUND(ELECTRO_IMPACT_COMBO, W_Sound("electro_impact_combo"));
-SOUND(FIREBALL_FIRE2, W_Sound("fireball_fire2"));
-SOUND(FIREBALL_FIRE, W_Sound("fireball_fire"));
-SOUND(FIREBALL_FLY2, W_Sound("fireball_fly2"));
-SOUND(FIREBALL_FLY, W_Sound("fireball_fly"));
-SOUND(FIREBALL_IMPACT2, W_Sound("fireball_impact2"));
-SOUND(FIREBALL_PREFIRE2, W_Sound("fireball_prefire2"));
-SOUND(FLAC_FIRE, W_Sound("flac_fire"));
 SOUND(GRENADE_BOUNCE1, W_Sound("grenade_bounce1"));
 SOUND(GRENADE_BOUNCE2, W_Sound("grenade_bounce2"));
 SOUND(GRENADE_BOUNCE3, W_Sound("grenade_bounce3"));
@@ -41,35 +17,8 @@ SOUND(GRENADE_BOUNCE6, W_Sound("grenade_bounce6"));
 Sound SND_GRENADE_BOUNCE_RANDOM() {
     return REGISTRY_GET(Sounds, SND_GRENADE_BOUNCE1.m_id + rint(random() * 5));
 }
-SOUND(GRENADE_FIRE, W_Sound("grenade_fire"));
-SOUND(GRENADE_IMPACT, W_Sound("grenade_impact"));
-SOUND(GRENADE_STICK, W_Sound("grenade_stick"));
-SOUND(HAGAR_BEEP, W_Sound("hagar_beep"));
-SOUND(HAGAR_FIRE, W_Sound("hagar_fire"));
-SOUND(HAGAR_LOAD, W_Sound("hagar_load"));
-SOUND(HAGEXP1, W_Sound("hagexp1"));
-SOUND(HAGEXP2, W_Sound("hagexp2"));
-SOUND(HAGEXP3, W_Sound("hagexp3"));
-Sound SND_HAGEXP_RANDOM() {
-    return REGISTRY_GET(Sounds, SND_HAGEXP1.m_id + rint(random() * 2));
-}
 
-SOUND(HOOKBOMB_FIRE, W_Sound("hookbomb_fire"));
-SOUND(HOOKBOMB_IMPACT, W_Sound("hookbomb_impact"));
-SOUND(HOOK_FIRE, W_Sound("hook_fire"));
-SOUND(HOOK_IMPACT, W_Sound("hook_impact"));
-SOUND(LASERGUN_FIRE, W_Sound("lasergun_fire"));
 SOUND(LASERIMPACT, W_Sound("laserimpact"));
-SOUND(LGBEAM_FLY, W_Sound("lgbeam_fly"));
-SOUND(MINE_DET, W_Sound("mine_det"));
-SOUND(MINE_EXP, W_Sound("mine_exp"));
-SOUND(MINE_FIRE, W_Sound("mine_fire"));
-SOUND(MINE_STICK, W_Sound("mine_stick"));
-SOUND(MINE_TRIGGER, W_Sound("mine_trigger"));
-SOUND(MINSTANEXFIRE, W_Sound("minstanexfire"));
-SOUND(NEXCHARGE, W_Sound("nexcharge"));
-SOUND(NEXFIRE, W_Sound("nexfire"));
-SOUND(NEXIMPACT, W_Sound("neximpact"));
 SOUND(NEXWHOOSH1, W_Sound("nexwhoosh1"));
 SOUND(NEXWHOOSH2, W_Sound("nexwhoosh2"));
 SOUND(NEXWHOOSH3, W_Sound("nexwhoosh3"));
@@ -85,26 +34,9 @@ Sound SND_RIC_RANDOM() {
     return REGISTRY_GET(Sounds, SND_RIC1.m_id + rint(random() * 2));
 }
 
-SOUND(ROCKET_DET, W_Sound("rocket_det"));
-SOUND(ROCKET_FIRE, W_Sound("rocket_fire"));
-SOUND(ROCKET_FLY, W_Sound("rocket_fly"));
-SOUND(ROCKET_IMPACT, W_Sound("rocket_impact"));
-SOUND(ROCKET_MODE, W_Sound("rocket_mode"));
-SOUND(SEEKEREXP1, W_Sound("seekerexp1"));
-SOUND(SEEKEREXP2, W_Sound("seekerexp2"));
-SOUND(SEEKEREXP3, W_Sound("seekerexp3"));
-SOUND(SEEKER_FIRE, W_Sound("seeker_fire"));
-SOUND(SHOTGUN_FIRE, W_Sound("shotgun_fire"));
-SOUND(SHOTGUN_MELEE, W_Sound("shotgun_melee"));
+SOUND(ROCKET_IMPACT, W_Sound("rocket_impact")); // heavily used as a generic explosion sound
 SOUND(STRENGTH_FIRE, W_Sound("strength_fire"));
-SOUND(TAGEXP1, W_Sound("tagexp1"));
-SOUND(TAGEXP2, W_Sound("tagexp2"));
-SOUND(TAGEXP3, W_Sound("tagexp3"));
-SOUND(TAG_FIRE, W_Sound("tag_fire"));
-SOUND(TAG_IMPACT, W_Sound("tag_impact"));
-SOUND(TAG_ROCKET_FLY, W_Sound("tag_rocket_fly"));
 SOUND(UNAVAILABLE, W_Sound("unavailable"));
-SOUND(UZI_FIRE, W_Sound("uzi_fire"));
 SOUND(WEAPONPICKUP, W_Sound("weaponpickup"));
 SOUND(WEAPONPICKUP_NEW_TOYS, W_Sound("weaponpickup_new_toys"));
 SOUND(WEAPON_SWITCH, W_Sound("weapon_switch"));
@@ -202,30 +134,36 @@ SOUND(ONS_ELECTRICITY_EXPLODE, "onslaught/electricity_explode");
 //SOUND(ONS_GENERATOR_ALARM, "kh/alarm"); // FIXME: unique sound
 SOUND(ONS_GENERATOR_DECAY, "onslaught/generator_decay");
 SOUND(ONS_GENERATOR_UNDERATTACK, "onslaught/generator_underattack");
+SOUND(ONS_GENERATOR_EXPLODE, W_Sound("grenade_impact"));
 SOUND(ONS_HIT1, "onslaught/ons_hit1");
 SOUND(ONS_HIT2, "onslaught/ons_hit2");
 SOUND(ONS_SPARK1, "onslaught/ons_spark1");
 SOUND(ONS_SPARK2, "onslaught/ons_spark2");
 SOUND(ONS_SHOCKWAVE, "onslaught/shockwave");
 
-SOUND(PORTO_BOUNCE, "porto/bounce");
-SOUND(PORTO_CREATE, "porto/create");
-SOUND(PORTO_EXPIRE, "porto/expire");
-SOUND(PORTO_EXPLODE, "porto/explode");
-SOUND(PORTO_FIRE, "porto/fire");
-SOUND(PORTO_UNSUPPORTED, "porto/unsupported");
+SOUND(MON_GOLEM_LIGHTNING_IMPACT, W_Sound("electro_impact"));
 
+SOUND(FLACEXP1, W_Sound("hagexp1"));
+SOUND(FLACEXP2, W_Sound("hagexp2"));
+SOUND(FLACEXP3, W_Sound("hagexp3"));
+Sound SND_FLACEXP_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_FLACEXP1.m_id + rint(random() * 2));
+}
 SOUND(TUR_PHASER, "turrets/phaser");
+SOUND(TUR_PLASMA_IMPACT, W_Sound("electro_impact"));
+SOUND(TUR_WALKER_FIRE, W_Sound("hagar_fire"));
 
 SOUND(VEH_ALARM, "vehicles/alarm");
 SOUND(VEH_ALARM_SHIELD, "vehicles/alarm_shield");
 SOUND(VEH_MISSILE_ALARM, "vehicles/missile_alarm");
 
 SOUND(VEH_BUMBLEBEE_FIRE, W_Sound("flacexp3"));
+SOUND(VEH_BUMBLEBEE_IMPACT, W_Sound("fireball_impact2"));
 
 SOUND(VEH_RACER_BOOST, "vehicles/racer_boost");
 SOUND(VEH_RACER_IDLE, "vehicles/racer_idle");
 SOUND(VEH_RACER_MOVE, "vehicles/racer_move");
+SOUND(VEH_RACER_ROCKET_FLY, W_Sound("tag_rocket_fly"));
 
 SOUND(VEH_RAPTOR_FLY, "vehicles/raptor_fly");
 SOUND(VEH_RAPTOR_SPEED, "vehicles/raptor_speed");
@@ -236,10 +174,18 @@ SOUND(VEH_SPIDERBOT_JUMP, "vehicles/spiderbot_jump");
 SOUND(VEH_SPIDERBOT_LAND, "vehicles/spiderbot_land");
 SOUND(VEH_SPIDERBOT_STRAFE, "vehicles/spiderbot_strafe");
 SOUND(VEH_SPIDERBOT_WALK, "vehicles/spiderbot_walk");
+SOUND(VEH_SPIDERBOT_MINIGUN_FIRE, W_Sound("uzi_fire"));
+SOUND(VEH_SPIDERBOT_ROCKET_FLY, W_Sound("tag_rocket_fly"));
+SOUND(VEH_SPIDERBOT_ROCKET_FIRE, W_Sound("rocket_fire"));
 
 SOUND(NADE_BEEP, "overkill/grenadebip");
+ // FIXME: unique sounds
 #define SND_NADE_BONUS SND_KH_ALARM
-//SOUND(NADE_BONUS, "kh/alarm"); // FIXME: unique sound
+//SOUND(NADE_BONUS, "kh/alarm");
+#define SND_NADE_NAPALM_FIRE SND_FIREBALL_FIRE
+//SOUND(NADE_NAPALM_FIRE, W_Sound("fireball_fire"));
+#define SND_NADE_NAPALM_FLY SND_FIREBALL_FLY2
+//SOUND(NADE_NAPALM_FLY, W_Sound("fireball_fly2"));
 
 SOUND(BUFF_LOST, "relics/relic_effect");
 
@@ -279,8 +225,7 @@ SOUND(SPAWN, "misc/spawn");
 SOUND(TALK, "misc/talk");
 SOUND(TALK2, "misc/talk2");
 
+SOUND(BLIND, "misc/blind");
 SOUND(TELEPORT, "misc/teleport");
-
 SOUND(INVSHOT, "misc/invshot");
-
 SOUND(JETPACK_FLY, "misc/jetpack_fly");

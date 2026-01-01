@@ -1,0 +1,35 @@
+#pragma once
+
+#include <common/gametypes/gametype/deathmatch/deathmatch.qh>
+#include <common/gametypes/gametype/tdm/tdm.qh>
+#include <common/mapinfo.qh>
+
+CLASS(mayhem, Gametype)
+	INIT(mayhem)
+	{
+		this.gametype_init(this, _("Mayhem"),"mayhem","g_mayhem",GAMETYPE_FLAG_USEPOINTS,"","timelimit=15 pointlimit=1000 leadlimit=0",_("Compete for the most damage dealt and frags in this chaotic mayhem"));
+	}
+	METHOD(mayhem, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		return true;
+	}
+	METHOD(mayhem, m_isForcedSupported, bool(Gametype this))
+	{
+		if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
+		{
+			return true;
+		}
+		if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags))
+		{
+			return true;
+		}
+		return false;
+	}
+	METHOD(mayhem, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),     200,  2000,  100, "g_mayhem_point_limit",         string_null,         _("How much score is needed before the match will end"));
+	}
+	ATTRIB(mayhem, m_legacydefaults, string, "1000 20 0");
+ENDCLASS(mayhem)
+REGISTER_GAMETYPE(MAYHEM, NEW(mayhem));

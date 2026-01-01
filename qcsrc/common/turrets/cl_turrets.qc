@@ -216,7 +216,7 @@ void turret_construct(entity this, bool isnew)
 	if(this.tur_head == NULL)
 		this.tur_head = spawn();
 
-	this.netname = tur.turret_name;
+	this.netname = tur.m_name;
 
 	setorigin(this, this.origin);
 	_setmodel(this, tur.model);

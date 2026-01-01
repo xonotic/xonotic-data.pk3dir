@@ -1,3 +1,0 @@
-#pragma once
-
-SYSTEM(in, 30, 10);

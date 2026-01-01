@@ -1,0 +1,31 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+CLASS(Invasion, Gametype)
+	INIT(Invasion)
+	{
+		this.gametype_init(this, _("Invasion"),"inv","g_invasion",GAMETYPE_FLAG_USEPOINTS,"","pointlimit=50 type=0",_("Survive against waves of monsters"));
+	}
+	METHOD(Invasion, m_parse_mapinfo, bool(string k, string v))
+	{
+		switch (k)
+		{
+			case "type":
+				cvar_set("g_invasion_type", v);
+				return true;
+		}
+		return false;
+	}
+	METHOD(Invasion, m_generate_mapinfo, void(Gametype this, string v))
+	{
+		if(v == "invasion_spawnpoint")
+			MapInfo_Map_supportedGametypes |= this.gametype_flags;
+	}
+	METHOD(Invasion, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
+	}
+ENDCLASS(Invasion)
+REGISTER_GAMETYPE(INVASION, NEW(Invasion));

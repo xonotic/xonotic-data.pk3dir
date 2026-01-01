@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_golem_health;
+string autocvar_g_monster_golem_loot = "health_mega electro";
 float autocvar_g_monster_golem_damageforcescale = 0.1;
 float autocvar_g_monster_golem_attack_smash_damage;
 float autocvar_g_monster_golem_attack_smash_force = 100;
@@ -45,7 +46,7 @@ void M_Golem_Attack_Swing(entity this)
 
 void M_Golem_Attack_Lightning_Explode(entity this, entity directhitentity)
 {
-	sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_MON_GOLEM_LIGHTNING_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 
 	this.event_damage = func_null;
@@ -269,8 +270,7 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_golem_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_golem_damageforcescale); }
 
-    actor.monster_loot = ITEM_HealthMega;
-    actor.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
+    actor.monster_loot = autocvar_g_monster_golem_loot;
 
     setanim(actor, actor.anim_spawn, false, true, true);
     actor.spawn_time = actor.animstate_endtime;
@@ -278,5 +278,17 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
     actor.monster_attackfunc = M_Golem_Attack;
 
     return true;
+}
+#endif
+#ifdef MENUQC
+METHOD(Golem, describe, string(Golem this))
+{
+	TC(Golem, this);
+	PAGE_TEXT_INIT();
+	PAR(_("Golems are large powerful brutes capable of taking and dealing a beating. Keeping your distance is advised."));
+	PAR(_("The Golem's primary melee attack is a series of punches. "
+	      "On occasion the Golem may jump into the air, dealing massive damage in an area as it slams the ground."));
+	PAR(_("To deal with distant foes, the Golem may throw a chunk of its electrified rocky exterior, zapping nearby targets on impact."));
+	return PAGE_TEXT;
 }
 #endif

@@ -93,13 +93,13 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	{
 		if (wpn.spawnflags & WEP_FLAG_SUPERWEAPON)
 		{
-			this.respawntime = g_pickup_respawntime_superweapon;
-			this.respawntimejitter = g_pickup_respawntimejitter_superweapon;
+			this.respawntime = autocvar_g_pickup_respawntime_superweapon;
+			this.respawntimejitter = autocvar_g_pickup_respawntimejitter_superweapon;
 		}
 		else
 		{
-			this.respawntime = g_pickup_respawntime_weapon;
-			this.respawntimejitter = g_pickup_respawntimejitter_weapon;
+			this.respawntime = autocvar_g_pickup_respawntime_weapon;
+			this.respawntimejitter = autocvar_g_pickup_respawntimejitter_weapon;
 		}
 	}
 
@@ -108,28 +108,10 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	// TODO: registry handles
+	// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
 	if ((wpn.ammo_type != RES_NONE) && !GetResource(this, wpn.ammo_type))
-	{
-		int ammo = 0;
-		if (q3compat && this.count > 0)
-			ammo = this.count * GetAmmoConsumptionQ3(wpn.netname);
-			// WEAPONTODO: magazines of MG, rifle and OK weapons are unaccounted for
-		else
-		{
-			switch (wpn.ammo_type)
-			{
-				case RES_SHELLS:  ammo = cvar("g_pickup_shells_weapon");  break;
-				case RES_BULLETS: ammo = cvar("g_pickup_nails_weapon");   break;
-				case RES_ROCKETS: ammo = cvar("g_pickup_rockets_weapon"); break;
-				case RES_CELLS:   ammo = cvar("g_pickup_cells_weapon");   break;
-				case RES_PLASMA:  ammo = cvar("g_pickup_plasma_weapon");  break;
-				case RES_FUEL:    ammo = cvar("g_pickup_fuel_weapon");    break;
-			}
-		}
-
-		SetResource(this, wpn.ammo_type, ammo);
-	}
+		SetResource(this, wpn.ammo_type,
+		            this.count > 0 ? rint(this.count * GetAmmoConsumption(wpn)) : WEP_CVAR(wpn, pickup_ammo));
 
 	#if 0 // WEAPONTODO
 	if (wpn.items)
@@ -147,11 +129,11 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	#endif
 
 	// pickup anyway
-	if (g_pickup_weapons_anyway)
+	if (autocvar_g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
 
 	if(!this.owner)
-		this.glowmod = wpn.wpcolor;
+		this.glowmod = wpn.m_color;
 	else
 		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true);
 

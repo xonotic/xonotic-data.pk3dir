@@ -14,3 +14,15 @@ METHOD(MachineGunTurret, tr_setup, void(MachineGunTurret this, entity it))
 }
 
 #endif // SVQC
+#ifdef MENUQC
+#include <common/weapons/weapon/machinegun.qh>
+
+METHOD(MachineGunTurret, describe, string(MachineGunTurret this))
+{
+    TC(MachineGunTurret, this);
+    PAGE_TEXT_INIT();
+    PAR(_("As the name suggests, the %s fires bullets in a burst at its targets, similar to the %s."), COLORED_NAME(this), COLORED_NAME(WEP_MACHINEGUN));
+    return PAGE_TEXT;
+}
+
+#endif // MENUQC

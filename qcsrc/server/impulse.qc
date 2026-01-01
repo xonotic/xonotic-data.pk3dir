@@ -1,6 +1,6 @@
 #include "impulse.qh"
 
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/minigames/sv_minigames.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 #include <common/state.qh>
@@ -158,7 +158,7 @@ void weapon_byid_handle(entity this, int number, int imp)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		W_SwitchWeapon_TryOthers(this, REGISTRY_GET(Weapons, WEP_FIRST + number), weaponentity);
+		W_SwitchWeapon_TryOthers(this, Weapon_from_impulse(imp), weaponentity);
 		if(autocvar_g_weaponswitch_debug != 1)
 			break;
 	}

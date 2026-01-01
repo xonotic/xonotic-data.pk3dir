@@ -1,7 +1,7 @@
 #include "spawnpoints.qh"
 
 #include <common/constants.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/target/spawnpoint.qh>
 #include <common/mapobjects/triggers.qh>
@@ -39,6 +39,8 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 	{
 		WriteByte(MSG_ENTITY, etof(this.owner));
 		WriteVector(MSG_ENTITY, this.owner.origin);
+		WriteByte(MSG_ENTITY, this.owner.team);
+		WriteByte(MSG_ENTITY, autocvar_g_spawn_alloweffects);
 		send = true;
 	}
 	else if((to == this.owner) || (IS_SPEC(to) && (to.enemy == this.owner)) )
@@ -74,8 +76,30 @@ void spawnpoint_use(entity this, entity actor, entity trigger)
 	//LOG_INFO("spawnpoint was used!\n");
 }
 
+bool spawnpoint_customize(entity this, entity client)
+{
+	return (this.active == ACTIVE_ACTIVE);
+}
+
+void spawnpoint_setactive(entity this, int act)
+{
+	int old_status = this.active;
+	if(act == ACTIVE_TOGGLE)
+		this.active = (this.active == ACTIVE_ACTIVE) ? ACTIVE_NOT : ACTIVE_ACTIVE;
+	else
+		this.active = act;
+
+	if(this.active != old_status)
+	{
+		// mappers may attempt to let players disable enemy spawns
+		if(teamplay && have_team_spawns > 0)
+			some_spawn_has_been_used = true;
+		this.SendFlags |= 1;
+	}
+}
 void spawnpoint_reset(entity this)
 {
+	this.active = ACTIVE_ACTIVE;
 	this.SendFlags |= 1; // update team since it was restored during reset
 }
 
@@ -124,6 +148,9 @@ void relocate_spawnpoint(entity this)
         }
     }
 
+    this.active = ACTIVE_ACTIVE;
+    this.setactive = spawnpoint_setactive;
+    setcefc(this, spawnpoint_customize);
     this.use = spawnpoint_use;
     setthink(this, spawnpoint_think);
     this.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
@@ -220,6 +247,9 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck, boo
 	if(race_spawns)
 		if(!spot.target || spot.target == "")
 			return '-1 0 0';
+
+	if(spot.active != ACTIVE_ACTIVE && targetcheck)
+		return '-1 0 0';
 
 	if(IS_REAL_CLIENT(this))
 	{

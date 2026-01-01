@@ -6,6 +6,7 @@
 /// \copyright GNU GPLv2 or any later version.
 
 #include <common/mapobjects/subs.qh>
+#include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/weapons/all.qh>
 #include <server/items/items.qh>
 #include <server/mutators/_mod.qh>
@@ -50,7 +51,7 @@ bool Item_Initialise(entity item)
 			StartItem(item, it);
 			goto classname_found;
 		});
-		LOG_FATALF("Item_Initialize: Invalid classname: %s", item.classname);
+		LOG_FATALF("Invalid classname: %s", item.classname);
 		LABEL(classname_found)
 	}
 
@@ -65,11 +66,37 @@ bool Item_Initialise(entity item)
 	return true;
 }
 
+/// Takes a space-separated list of netnames,
+/// returns the itemdef of one of them (or NULL if none are available).
+entity Item_RandomFromList(string itemlist)
+{
+	if(itemlist == "")
+		return NULL;
+
+	RandomSelection_Init();
+	FOREACH_WORD(itemlist, true,
+	{
+		string item = it;
+
+		FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED),
+		{
+			if(it.netname == item || (item == "random" && (it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON)))
+				RandomSelection_AddEnt(it, 1, 1);
+		});
+		FOREACH(Items, Item_IsDefinitionAllowed(it),
+		{
+			if(it.netname == item || (item == "random" && (it.spawnflags & ITEM_FLAG_NORMAL) && !it.instanceOfPowerup))
+				RandomSelection_AddEnt(it, 1, 1);
+		});
+	});
+	return RandomSelection_chosen_ent;
+}
+
 
 // Compatibility spawn functions
 
 // in Quake this is green armor, in Xonotic maps it is an armor shard
-SPAWNFUNC_ITEM_COND(item_armor1, autocvar_sv_mapformat_is_quake3, ITEM_ArmorSmall, ITEM_ArmorMedium)
+SPAWNFUNC_ITEM(item_armor1, autocvar_sv_mapformat_is_quake3 ? ITEM_ArmorSmall : ITEM_ArmorMedium)
 SPAWNFUNC_ITEM(item_armor25, ITEM_ArmorMega) // Nexuiz used item_armor25 to spawn a Mega Armor
 SPAWNFUNC_ITEM(item_health1, ITEM_HealthSmall)
 SPAWNFUNC_ITEM(item_health25, ITEM_HealthMedium)

@@ -405,7 +405,7 @@ void ps_hud_board(vector pos, vector mySize)
 				tile_size * 0.8, '0.5 0.5 0.5', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
-	if ( ( active_minigame.minigame_flags & PS_TURN_WIN ) || ( active_minigame.minigame_flags & PS_TURN_DRAW ) )
+	if(active_minigame.minigame_flags & (PS_TURN_WIN | PS_TURN_DRAW))
 	{
 		int remaining = 0;
 		FOREACH_MINIGAME_ENTITY(e)
@@ -431,6 +431,8 @@ void ps_hud_board(vector pos, vector mySize)
 			strcat(_("Game over!"), " ", remaining_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
+
+	minigame_show_allspecs(ps_boardpos, ps_boardsize);
 }
 
 
@@ -554,7 +556,7 @@ int ps_client_event(entity minigame, string event, ...)
 		case "key_released":
 		{
 			bool event_blocked = (event == "key_released" || minigame_self.team == PS_SPECTATOR_TEAM);
-			if (!(minigame.minigame_flags & PS_TURN_WIN) && !(minigame.minigame_flags & PS_TURN_DRAW))
+			if (!(minigame.minigame_flags & (PS_TURN_WIN | PS_TURN_DRAW)))
 			{
 				switch ( ...(0,int) )
 				{

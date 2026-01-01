@@ -1,12 +1,21 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(RIFLE_VIEW, W_Model("h_campingrifle.iqm"));
+MODEL(RIFLE_WORLD, W_Model("v_campingrifle.md3"));
+MODEL(RIFLE_ITEM, W_Model("g_campingrifle.md3"));
+
+SOUND(RIFLE_FIRE2, W_Sound("campingrifle_fire2"));
+SOUND(RIFLE_FIRE, W_Sound("campingrifle_fire"));
+#endif
+
 CLASS(Rifle, Weapon)
 /* spawnfunc */ ATTRIB(Rifle, m_canonical_spawnfunc, string, "weapon_rifle");
 /* ammotype  */ ATTRIB(Rifle, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(Rifle, impulse, int, 7);
 /* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS);
 /* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(Rifle, wpcolor, vector, '0.5 1 0');
+/* color     */ ATTRIB(Rifle, m_color, vector, '0.886 0.620 0.353');
 /* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);
@@ -28,31 +37,37 @@ CLASS(Rifle, Weapon)
 		P(class, prefix, burstcost, float, BOTH) \
 		P(class, prefix, bursttime, float, NONE) \
 		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, damagefalloff_forcehalflife, float, BOTH) \
+		P(class, prefix, damagefalloff_halflife, float, BOTH) \
+		P(class, prefix, damagefalloff_maxdist, float, BOTH) \
+		P(class, prefix, damagefalloff_mindist, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, headshot_multiplier, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, reload, float, SEC) \
 		P(class, prefix, reload_ammo, float, NONE) \
-    	P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, shots, float, BOTH) \
 		P(class, prefix, solidpenetration, float, BOTH) \
 		P(class, prefix, spread, float, BOTH) \
-    	P(class, prefix, switchdelay_drop, float, NONE) \
-    	P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, tracer, float, BOTH) \
-    	P(class, prefix, weaponreplace, string, NONE) \
-    	P(class, prefix, weaponstartoverride, float, NONE) \
-    	P(class, prefix, weaponstart, float, NONE) \
-    	P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Rifle, rifle)
+	W_PROPS(X, Rifle, rifle)
 #undef X
+
 ENDCLASS(Rifle)
-REGISTER_WEAPON(RIFLE, rifle, NEW(Rifle));
+REGISTER_WEAPON(RIFLE, NEW(Rifle));
 
 SPAWNFUNC_WEAPON(weapon_rifle, WEP_RIFLE)
-SPAWNFUNC_WEAPON(weapon_campingrifle, WEP_RIFLE)
+SPAWNFUNC_WEAPON(weapon_campingrifle, WEP_RIFLE) // Nexuiz compat
 SPAWNFUNC_WEAPON(weapon_sniperrifle, WEP_RIFLE)
 
 #ifdef SVQC

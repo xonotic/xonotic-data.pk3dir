@@ -1,12 +1,23 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(VORTEX_MUZZLEFLASH, "models/nexflash.md3");
+MODEL(VORTEX_VIEW, W_Model("h_nex.iqm"));
+MODEL(VORTEX_WORLD, W_Model("v_nex.md3"));
+MODEL(VORTEX_ITEM, W_Model("g_nex.md3"));
+
+SOUND(VORTEX_CHARGE, W_Sound("nexcharge"));
+SOUND(VORTEX_FIRE, W_Sound("nexfire"));
+SOUND(VORTEX_IMPACT, W_Sound("neximpact"));
+#endif
+
 CLASS(Vortex, Weapon)
 /* spawnfunc */ ATTRIB(Vortex, m_canonical_spawnfunc, string, "weapon_vortex");
 /* ammotype  */ ATTRIB(Vortex, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Vortex, impulse, int, 7);
 /* flags     */ ATTRIB(Vortex, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
 /* rating    */ ATTRIB(Vortex, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(Vortex, wpcolor, vector, '0.5 1 1');
+/* color     */ ATTRIB(Vortex, m_color, vector, '0.459 0.765 0.835');
 /* modelname */ ATTRIB(Vortex, mdl, string, "nex");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Vortex, m_model, Model, MDL_VORTEX_ITEM);
@@ -42,31 +53,32 @@ CLASS(Vortex, Weapon)
 		P(class, prefix, charge_shot_multiplier, float, NONE) \
 		P(class, prefix, charge_start, float, NONE) \
 		P(class, prefix, charge_velocity_rate, float, NONE) \
+		P(class, prefix, damage, float, BOTH) \
 		P(class, prefix, damagefalloff_forcehalflife, float, BOTH) \
 		P(class, prefix, damagefalloff_halflife, float, BOTH) \
 		P(class, prefix, damagefalloff_maxdist, float, BOTH) \
 		P(class, prefix, damagefalloff_mindist, float, BOTH) \
-		P(class, prefix, damage, float, BOTH) \
 		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, secondary, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Vortex, vortex)
+	W_PROPS(X, Vortex, vortex)
 #undef X
 
 ENDCLASS(Vortex)
-REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
+REGISTER_WEAPON(VORTEX, NEW(Vortex));
 
 SPAWNFUNC_WEAPON(weapon_vortex, WEP_VORTEX)
-SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX)
+SPAWNFUNC_WEAPON(weapon_nex, WEP_VORTEX) // Nexuiz compat
 
 #ifdef CSQC
 bool autocvar_cl_particles_oldvortexbeam;

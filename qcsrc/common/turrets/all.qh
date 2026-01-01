@@ -118,7 +118,10 @@ const int TUR_FIRST = 1;
 
 #define REGISTER_TURRET(id, inst) REGISTER(Turrets, TUR, id, m_id, inst)
 
-REGISTER_TURRET(Null, NEW(Turret));
+CLASS(NullTurret, Turret)
+    ATTRIB(NullTurret, m_hidden, bool, true);
+ENDCLASS(NullTurret)
+REGISTER_TURRET(Null, NEW(NullTurret));
 REGISTRY_DEFINE_GET(Turrets, TUR_Null)
 
 #include "turret/_mod.qh"

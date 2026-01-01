@@ -1,8 +1,0 @@
-// generated file; do not modify
-#include <common/gamemodes/gamemode/tka/tka.qh>
-#ifdef CSQC
-    #include <common/gamemodes/gamemode/tka/cl_tka.qh>
-#endif
-#ifdef SVQC
-    #include <common/gamemodes/gamemode/tka/sv_tka.qh>
-#endif

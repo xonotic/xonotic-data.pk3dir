@@ -374,6 +374,8 @@ void pp_hud_board(vector pos, vector mySize)
 			sprintf(_("%s^7 won the game!"), pname),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
+
+	minigame_show_allspecs(pp_boardpos, pp_boardsize);
 }
 
 
@@ -511,7 +513,7 @@ int pp_client_event(entity minigame, string event, ...)
 		{
 			bool event_blocked = ((event == "key_released")
 				|| ((minigame.minigame_flags & PP_TURN_TEAM) != minigame_self.team));
-			if (!(minigame.minigame_flags & PP_TURN_WIN) && !(minigame.minigame_flags & PP_TURN_DRAW))
+			if (!(minigame.minigame_flags & (PP_TURN_WIN | PP_TURN_DRAW)))
 			{
 				switch ( ...(0,int) )
 				{

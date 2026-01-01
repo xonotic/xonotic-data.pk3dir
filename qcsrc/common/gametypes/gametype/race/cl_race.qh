@@ -1,0 +1,5 @@
+#pragma once
+
+bool autocvar_cl_autodemo_delete_keeprecords;
+
+void HUD_Mod_Race(vector pos, vector mySize);

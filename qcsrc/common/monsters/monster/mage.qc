@@ -2,6 +2,7 @@
 
 #ifdef SVQC
 float autocvar_g_monster_mage_health;
+string autocvar_g_monster_mage_loot = "health_big";
 float autocvar_g_monster_mage_damageforcescale = 0.5;
 float autocvar_g_monster_mage_attack_spike_damage;
 float autocvar_g_monster_mage_attack_spike_radius;
@@ -36,6 +37,8 @@ float autocvar_g_monster_mage_speed_run;
 float autocvar_g_monster_mage_speed_walk;
 
 SOUND(MageSpike_FIRE, W_Sound("electro_fire"));
+SOUND(MageSpike_IMPACT, W_Sound("grenade_impact"));
+SOUND(MageSpike_PUSH, W_Sound("tagexp1"));
 void M_Mage_Attack_Spike(entity this, vector dir);
 void M_Mage_Attack_Push(entity this);
 METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weaponentity, int fire))
@@ -81,7 +84,8 @@ void M_Mage_Defend_Shield(entity this);
 
 bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
-	if(targ == NULL)
+	// TODO: mutator hook to choose valid healing targets?
+	if(!targ)
 		return false;
 	if(GetResource(targ, RES_HEALTH) <= 0)
 		return false;
@@ -99,12 +103,11 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 		case 0: return (GetResource(targ, RES_HEALTH) < autocvar_g_balance_health_regenstable);
 		case 1:
 		{
-			return ((GetResource(targ, RES_CELLS) && GetResource(targ, RES_CELLS) < g_pickup_cells_max)
-				||  (GetResource(targ, RES_PLASMA) && GetResource(targ, RES_PLASMA) < g_pickup_plasma_max)
-				||  (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < g_pickup_rockets_max)
-				||  (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < g_pickup_nails_max)
-				||  (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < g_pickup_shells_max)
-					);
+			return ((GetResource(targ, RES_CELLS) && GetResource(targ, RES_CELLS) < autocvar_g_pickup_cells_max)
+			     || (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < autocvar_g_pickup_rockets_max)
+			     || (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < autocvar_g_pickup_nails_max)
+			     || (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < autocvar_g_pickup_shells_max)
+			);
 		}
 		case 2: return (GetResource(targ, RES_ARMOR) < autocvar_g_balance_armor_regenstable);
 	}
@@ -116,7 +119,7 @@ void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 
-	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_MageSpike_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	this.realowner.mage_spike = NULL;
 
@@ -236,11 +239,10 @@ void M_Mage_Defend_Heal(entity this)
 				}
 				case 1:
 				{
-					if(GetResource(it, RES_CELLS)) GiveResourceWithLimit(it, RES_CELLS, 1, g_pickup_cells_max);
-					if(GetResource(it, RES_PLASMA)) GiveResourceWithLimit(it, RES_PLASMA, 1, g_pickup_plasma_max);
-					if(GetResource(it, RES_ROCKETS)) GiveResourceWithLimit(it, RES_ROCKETS, 1, g_pickup_rockets_max);
-					if(GetResource(it, RES_SHELLS)) GiveResourceWithLimit(it, RES_SHELLS, 2, g_pickup_shells_max);
-					if(GetResource(it, RES_BULLETS)) GiveResourceWithLimit(it, RES_BULLETS, 5, g_pickup_nails_max);
+					if(GetResource(it, RES_CELLS)) GiveResourceWithLimit(it, RES_CELLS, 1, autocvar_g_pickup_cells_max);
+					if(GetResource(it, RES_ROCKETS)) GiveResourceWithLimit(it, RES_ROCKETS, 1, autocvar_g_pickup_rockets_max);
+					if(GetResource(it, RES_SHELLS)) GiveResourceWithLimit(it, RES_SHELLS, 2, autocvar_g_pickup_shells_max);
+					if(GetResource(it, RES_BULLETS)) GiveResourceWithLimit(it, RES_BULLETS, 5, autocvar_g_pickup_nails_max);
 					// TODO: fuel?
 					fx = EFFECT_AMMO_REGEN;
 					break;
@@ -276,7 +278,7 @@ void M_Mage_Defend_Heal(entity this)
 
 void M_Mage_Attack_Push(entity this)
 {
-	sound(this, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_MageSpike_PUSH, 1, ATTEN_NORM);
 	RadiusDamage (this, this, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius),
 						NULL, NULL, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, DMG_NOWEP, this.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, this.origin, '0 0 0', 1);
@@ -303,8 +305,8 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 			vector a = vectoangles(targ.origin - this.origin);
 			this.angles = '0 1 0' * a.y;
 			this.fixangle = true;
-			Send_Effect(EFFECT_SPAWN_NEUTRAL, oldpos, '0 0 0', 1);
-			Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN, oldpos, '0 0 0', 1);
+			Send_Effect(EFFECT_SPAWN, this.origin, '0 0 0', 1);
 			this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_teleport_delay;
 			return;
 		}
@@ -320,8 +322,8 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 
 	vector newpos = trace_endpos;
 
-	Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
-	Send_Effect(EFFECT_SPAWN_NEUTRAL, newpos, '0 0 0', 1);
+	Send_Effect(EFFECT_SPAWN, this.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_SPAWN, newpos, '0 0 0', 1);
 
 	setorigin(this, newpos);
 
@@ -482,9 +484,24 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
     if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
     if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
 
-    actor.monster_loot = ITEM_HealthBig;
+    actor.monster_loot = autocvar_g_monster_mage_loot;
     actor.monster_attackfunc = M_Mage_Attack;
 
     return true;
+}
+#endif
+#ifdef MENUQC
+METHOD(Mage, describe, string(Mage this))
+{
+	TC(Mage, this);
+	PAGE_TEXT_INIT();
+	PAR(_("Wielding nanotechnology as if it were sorcery, the Mage employs a range of unique abilities of its own creation in combat."));
+	PAR(_("As a primary attack, the Mage throws a homing electric sphere towards the player. "
+	      "This sphere will track its target at high speed, exploding on impact or if it does not reach its target in time."));
+	PAR(_("When threatened, the Mage may deploy an energy shield to protect itself from damage briefly. "
+	      "Enemies approaching too closely during this time may be pushed away with explosive force!"));
+	PAR(_("Defensively the Mage is capable of healing itself and nearby allies, with some variants also providing armor and ammunition."));
+	PAR(_("The Mage may sometimes appear to blink out of existence as it teleports behind its target for a sneak attack."));
+	return PAGE_TEXT;
 }
 #endif

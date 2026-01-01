@@ -3,11 +3,13 @@
 #include "../item/modalcontroller.qh"
 #include "mainwindow.qh"
 
-const float LANGPARM_ID = 0;
-const float LANGPARM_NAME = 1;
-const float LANGPARM_NAME_LOCALIZED = 2;
-const float LANGPARM_PERCENTAGE = 3;
-const float LANGPARM_COUNT = 4;
+const int LANGPARM_ID = 0;
+const int LANGPARM_NAME = 1;
+const int LANGPARM_NAME_LOCALIZED = 2;
+const int LANGPARM_PERCENTAGE = 3;
+const int LANGPARM_COUNT = 4;
+
+const string PERCENTAGE_FULL_ICON = "/gfx/scoreboard/player_ready";
 
 entity makeXonoticLanguageList()
 {
@@ -35,8 +37,10 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 	}
 
 	string p = me.languageParameter(me, i, LANGPARM_PERCENTAGE);
-	float alpha_factor = 1;
-	if (p != "")
+	float alpha_factor;
+	if(p == "") // 100%
+		alpha_factor = 1;
+	else
 	{
 		float percent = stof(p);
 		if (percent >= 90)
@@ -45,9 +49,8 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 			alpha_factor = 0.65;
 		else
 			alpha_factor = 0.3;
+		p = ftos_decimals_percentage(percent / 100, 0); // make it translatable
 	}
-	else
-		p = "\xE2\x9C\x94"; // Unicode Character 'HEAVY CHECK MARK' (U+2714)
 
 	string s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
 
@@ -59,7 +62,12 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, fs, SKINCOLOR_TEXT * alpha_factor, SKINALPHA_TEXT, 0);
 	draw_fontscale = save_fontscale;
 
-	if(p != "")
+	if(p == "")
+	{
+		float x_ofs = me.columnPercentageOrigin + (me.columnPercentageSize - me.columnIconSize);
+		draw_Picture(me.realUpperMargin * eY + x_ofs * eX, PERCENTAGE_FULL_ICON, me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+	}
+	else
 	{
 		vector save_fontscale = draw_fontscale;
 		float f = draw_CondensedFontFactor(p, false, me.realFontSize, 1);
@@ -75,13 +83,21 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 void XonoticLanguageList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticLanguageList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+
+	me.itemAbsSize.y = absSize.y * me.itemHeight;
+	me.itemAbsSize.x = absSize.x * (1 - me.controlWidth);
+	me.realFontSize.y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize.x = me.fontSize / (absSize.x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
+
+	vector sz = draw_PictureSize(PERCENTAGE_FULL_ICON);
+	float aspect_ratio = sz.y ? sz.x / sz.y : 1;
+	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x * aspect_ratio;
+
 	me.columnPercentageSize = me.realFontSize.x * 3;
-	me.columnPercentageOrigin = 1 - me.columnPercentageSize;
-	me.columnNameOrigin = 0;
-	me.columnNameSize = me.columnPercentageOrigin;
+	me.columnPercentageOrigin = 1 - me.columnPercentageSize - 0.5 * me.realFontSize.x;
+	me.columnNameOrigin = 0.5 * me.realFontSize.x;
+	me.columnNameSize = me.columnPercentageOrigin - me.columnNameOrigin;
 }
 
 void XonoticLanguageList_setSelected(entity me, float i)
@@ -196,4 +212,12 @@ string XonoticLanguageList_languageParameter(entity me, float i, float key)
 void SetLanguage_Click(entity btn, entity me)
 {
 	me.setLanguage(me);
+}
+
+void XonoticLanguageList_focusedItemChangeNotify(entity me)
+{
+	if (me.focusedItem >= 0)
+		setZonedTooltip(me, me.languageParameter(me, me.focusedItem, LANGPARM_NAME), string_null);
+	else
+		clearTooltip(me);
 }

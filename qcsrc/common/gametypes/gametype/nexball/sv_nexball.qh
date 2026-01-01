@@ -1,0 +1,54 @@
+#pragma once
+
+#include "weapon.qh"
+
+void nb_Initialize();
+
+REGISTER_MUTATOR(nb, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		nb_Initialize();
+		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		WEP_NEXBALL.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+	}
+	return 0;
+}
+
+//EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
+const float BALL_EFFECTMASK = 1229;
+const vector BALL_MINS = '-16 -16 -16'; // The model is 24*24*24
+const vector BALL_MAXS = '16 16 16';
+const vector BALL_ATTACHORG = '3 0 16';
+const float BALL_FOOT = 1;
+const float BALL_BASKET = 2;
+//spawnflags
+const float GOAL_TOUCHPLAYER = 1;
+//goal types
+const float GOAL_FAULT = -1;
+const float GOAL_OUT = -2;
+
+void DropBall(entity ball, vector org, vector vel);
+float autocvar_g_nexball_football_boost_forward;
+float autocvar_g_nexball_football_boost_up;
+float autocvar_g_nexball_football_physics;
+float autocvar_g_nexball_delay_idle;
+float autocvar_g_nexball_basketball_delay_hold;
+float autocvar_g_nexball_basketball_delay_hold_forteam;
+float autocvar_g_nexball_basketball_effects_default;
+float autocvar_g_nexball_basketball_teamsteal;
+float autocvar_g_nexball_meter_period;
+
+float balls;
+float ball_scale;
+float nb_teams;
+
+.entity nb_dropper;
+.float nb_droptime;
+
+float g_nexball_meter_period;

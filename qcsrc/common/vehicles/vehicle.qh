@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
+
 CLASS(Vehicle, Object)
     ATTRIB(Vehicle, vehicleid, int, 0);
     /** hud icon */
@@ -7,7 +11,9 @@ CLASS(Vehicle, Object)
     /** short name */
     ATTRIB(Vehicle, netname, string, "");
     /** human readable name */
-    ATTRIB(Vehicle, vehicle_name, string, "Vehicle");
+    ATTRIB(Vehicle, m_name, string, _("Vehicle"));
+    /** color */
+    ATTRIB(Vehicle, m_color, vector, '1 1 1');
     /** full name of model */
     ATTRIB(Vehicle, model, string, "");
     /** currently a copy of the model */
@@ -34,6 +40,21 @@ CLASS(Vehicle, Object)
     ATTRIB(Vehicle, view_ofs, vector, '0 0 0');
     /** vehicle 3rd person view distance */
     ATTRIB(Vehicle, height, float, 0);
+
+#ifdef MENUQC
+    METHOD(Vehicle, describe, string(Vehicle this))
+    {
+        TC(Vehicle, this);
+        return SUPER(Vehicle).describe(this);
+    }
+#endif
+#ifndef SVQC
+    METHOD(Vehicle, display, void(Vehicle this, void(string name, string icon) returns))
+    {
+        TC(Vehicle, this);
+        returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
+    }
+#endif
 
     /** (BOTH) setup vehicle data */
     METHOD(Vehicle, vr_setup, void(Vehicle this, entity instance)) { }

@@ -1,0 +1,26 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+bool autocvar_g_nades_entrap;
+float autocvar_g_nades_entrap_strength = 0.01;
+float autocvar_g_nades_entrap_speed = 0.5;
+float autocvar_g_nades_entrap_radius = 500;
+float autocvar_g_nades_entrap_time = 10;
+
+.float nade_entrap_time;
+
+void nade_entrap_boom(entity this);
+#endif // SVQC
+
+const int PROJECTILE_NADE_ENTRAP = 84;
+const int PROJECTILE_NADE_ENTRAP_BURN = 85;
+
+CLASS(EntrapNade, Nade)
+	ATTRIB(EntrapNade, m_color, vector, '0.4 0.85 0.15');
+	ATTRIB(EntrapNade, m_name, string, _("Entrap grenade"));
+	ATTRIB(EntrapNade, m_icon, string, "nade_entrap");
+	ATTRIB(EntrapNade, netname, string, "entrap");
+	ATTRIB(EntrapNade, impulse, int, 8);
+ENDCLASS(EntrapNade)

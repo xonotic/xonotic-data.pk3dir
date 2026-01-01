@@ -1,14 +1,14 @@
 #pragma once
 
-#include <server/world.qh>
-
 float autocvar_sv_clientcommand_antispam_time;
 int autocvar_sv_clientcommand_antispam_count;
 
 .float cmd_floodtime;
 .string ignore_list; // stores player id's, maybe can be upgraded to store net address for reconnect protection
+const int IGNORE_LIST_SEND_NOW = -1; // special value that should be set only by ignore_list_send
+.float ignore_list_send_time; // allow sending ignore_list with a small delay to reduce spam especially on map switch
 
-const int IGNORE_MAXPLAYERS = 16; // maximum players to be ignored in the personal chat
+const int IGNORE_MAXPLAYERS = 16; // maximum players that can be ignored permanently
 
 string MapVote_Suggest(entity this, string m);
 
@@ -16,69 +16,10 @@ string MapVote_Suggest(entity this, string m);
 void ClientCommand_macro_write_aliases(float fh);
 
 // functions for ignore command
-string ignore_removefromlist(entity list, entity ignore)
-{
-	if(ignore.crypto_idfp && ignore.crypto_idfp != "" && list.crypto_idfp && list.crypto_idfp != "")
-	{
-		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
-		{
-			string pos = db_get(ServerProgsDB, strcat("/ignore/", list.crypto_idfp, "/", ftos(j)));
-			if(pos == ignore.crypto_idfp)
-			{
-				db_remove(ServerProgsDB, strcat("/ignore/", list.crypto_idfp, "/", ftos(j)));
-				return string_null;
-			}
-		}
-		// should this fall back? we know advanced mode is being used
-	}
-
-	string newlist = "";
-	string theid = ftos(etof(ignore));
-
-	FOREACH_WORD(list.ignore_list, it != theid,
-	{
-		newlist = cons(newlist, it);
-	});
-
-	if(newlist == "")
-		return string_null;
-	else
-		return newlist;
-}
-
-bool ignore_playerinlist(entity sender, entity targ)
-{
-	// TODO: optimize this by saving it to .ignore_list?
-	if(targ.crypto_idfp && targ.crypto_idfp != "" && sender.crypto_idfp && sender.crypto_idfp != "")
-	{
-		string thelist = "";
-		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
-		{
-			string pos = db_get(ServerProgsDB, strcat("/ignore/", targ.crypto_idfp, "/", ftos(j)));
-			thelist = cons(thelist, pos);
-		}
-
-		return ((thelist != "") ? PlayerInList(sender, thelist) : false);
-	}
-	else if(!targ.ignore_list || targ.ignore_list == "")
-		return false;
-
-	string theid = ftos(etof(sender));
-
-	FOREACH_WORD(targ.ignore_list, it == theid,
-	{
-		return true;
-	});
-
-	return false;
-}
-
-void ignore_clearall(entity this)
-{
-	for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
-	{
-		string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
-		if(pos != "")
-			db_remove(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
-	}
-}
+void ignore_remove_player(entity this, entity ignore, bool from_db_too);
+int ignore_add_player(entity this, entity ignore, bool to_db_too);
+bool ignore_playerindb(entity this, entity pl); // permanent ignores
+bool ignore_playerinlist(entity this, entity pl); // all ignores
+void ignore_clearall(entity this);
+void ignore_list_update_on_connection(entity this);
+void ignore_list_send(entity this);

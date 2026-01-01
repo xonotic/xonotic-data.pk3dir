@@ -1,0 +1,60 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+#ifdef CSQC
+void HUD_Mod_CTF(vector pos, vector mySize);
+void HUD_Mod_CTF_Reset();
+#endif
+CLASS(CaptureTheFlag, Gametype)
+	INIT(CaptureTheFlag)
+	{
+		this.gametype_init(this, _("Capture the Flag"),"ctf","g_ctf",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_PRIORITY,"","timelimit=20 caplimit=10 leadlimit=6",_("Find and bring the enemy flag to your base to capture it, defend your base from the other team"));
+	}
+	METHOD(CaptureTheFlag, m_generate_mapinfo, void(Gametype this, string v))
+	{
+		if(v == "item_flag_team2" || v == "team_CTF_blueflag")
+			MapInfo_Map_supportedGametypes |= this.gametype_flags;
+	}
+	METHOD(CaptureTheFlag, m_isTwoBaseMode, bool())
+	{
+		return true;
+	}
+	METHOD(CaptureTheFlag, m_setTeams, void(string sa))
+	{
+		cvar_set("fraglimit", sa);
+	}
+	METHOD(CaptureTheFlag, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The amount of captures needed before the match will end"));
+	}
+#ifdef CSQC
+	ATTRIB(CaptureTheFlag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CTF);
+	ATTRIB(CaptureTheFlag, m_modicons_reset, void(), HUD_Mod_CTF_Reset);
+#endif
+	ATTRIB(CaptureTheFlag, m_legacydefaults, string, "300 20 10 0");
+ENDCLASS(CaptureTheFlag)
+REGISTER_GAMETYPE(CTF, NEW(CaptureTheFlag));
+#define g_ctf IS_GAMETYPE(CTF)
+
+#ifdef GAMEQC
+const int CTF_RED_FLAG_TAKEN			= 1;
+const int CTF_RED_FLAG_LOST				= 2;
+const int CTF_RED_FLAG_CARRYING			= 3;
+const int CTF_BLUE_FLAG_TAKEN			= 4;
+const int CTF_BLUE_FLAG_LOST			= 8;
+const int CTF_BLUE_FLAG_CARRYING		= 12;
+const int CTF_YELLOW_FLAG_TAKEN			= 16;
+const int CTF_YELLOW_FLAG_LOST			= 32;
+const int CTF_YELLOW_FLAG_CARRYING		= 48;
+const int CTF_PINK_FLAG_TAKEN			= 64;
+const int CTF_PINK_FLAG_LOST			= 128;
+const int CTF_PINK_FLAG_CARRYING		= 192;
+const int CTF_NEUTRAL_FLAG_TAKEN		= 256;
+const int CTF_NEUTRAL_FLAG_LOST			= 512;
+const int CTF_NEUTRAL_FLAG_CARRYING		= 768;
+const int CTF_FLAG_NEUTRAL				= 2048;
+const int CTF_SHIELDED					= 4096;
+const int CTF_STALEMATE					= 8192;
+#endif

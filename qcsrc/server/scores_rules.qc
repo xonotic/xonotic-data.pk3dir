@@ -1,6 +1,6 @@
 #include "scores_rules.qh"
 
-#include <common/gamemodes/rules.qh>
+#include <common/gametypes/rules.qh>
 #include <common/stats.qh>
 #include <common/weapons/_all.qh>
 #include <server/client.qh>
@@ -8,6 +8,7 @@
 #include <server/teamplay.qh>
 
 int ScoreRules_teams;
+bool autocvar_sv_showskill;
 
 bool IsTeamAvailable(int team_num)
 {
@@ -55,7 +56,8 @@ void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled
 		ScoreInfo_SetLabel_PlayerScore(SP_DMG, "dmg", 0);
 		ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "dmgtaken", SFL_LOWER_IS_BETTER);
 
-		ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", SFL_NOT_SORTABLE);
+		if (autocvar_sv_showskill == 1 || (autocvar_sv_showskill == 2 && teamplay))
+			ScoreInfo_SetLabel_PlayerScore(SP_SKILL, "skill", SFL_NOT_SORTABLE);
 	}
 
 	if(STAT(SHOWFPS))

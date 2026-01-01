@@ -1,0 +1,25 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+#ifdef CSQC
+void HUD_Mod_Keepaway(vector pos, vector mySize);
+#endif
+CLASS(Keepaway, Gametype)
+	INIT(Keepaway)
+	{
+		this.gametype_init(this, _("Keepaway"),"ka","g_keepaway",GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=30",_("Hold the ball to get points for kills"));
+	}
+	METHOD(Keepaway, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		return true;
+	}
+#ifdef CSQC
+	ATTRIB(Keepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_Keepaway);
+#endif
+ENDCLASS(Keepaway)
+REGISTER_GAMETYPE(KEEPAWAY, NEW(Keepaway));
+
+#ifdef GAMEQC
+const int KA_CARRYING = BIT(0);
+#endif

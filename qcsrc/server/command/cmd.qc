@@ -4,7 +4,7 @@
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/minigames/sv_minigames.qh>
@@ -18,12 +18,14 @@
 #include <common/vehicles/all.qh>
 #include <lib/warpzone/common.qh>
 #include <server/bot/api.qh>
+#include <server/bot/default/cvars.qh> // for autocvar_bot_vs_human
 #include <server/bot/default/waypoints.qh>
 #include <server/campaign.qh>
 #include <server/chat.qh>
 #include <server/cheats.qh>
 #include <server/client.qh>
 #include <server/clientkill.qh>
+#include <server/command/_mod.qh>
 #include <server/command/common.qh>
 #include <server/command/getreplies.qh>
 #include <server/command/vote.qh>
@@ -31,15 +33,166 @@
 #include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
+#include <server/race.qh>
 #include <server/scores.qh>
 #include <server/teamplay.qh>
 #include <server/world.qh>
 
-// =========================================================
-//  Server side networked commands code, reworked by Samual
-//  Last updated: December 28th, 2011
-// =========================================================
+/**
+\brief Removes a player from the ignore list of another player
+\param[in] this ignore list owner
+\param[in] ignore player to remove from the ignore list
+\param[in] from_db_too whether to remove player from db too (permanent ignore) or not
+*/
+void ignore_remove_player(entity this, entity ignore, bool from_db_too)
+{
+	if (from_db_too && ignore.crypto_idfp && ignore.crypto_idfp != "" && this.crypto_idfp && this.crypto_idfp != "")
+	{
+		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+		{
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+			if(pos == ignore.crypto_idfp)
+			{
+				db_remove(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+				break;
+			}
+		}
+	}
 
+	if (this.ignore_list == "")
+		return;
+
+	string newlist = "";
+	string theid = ftos(etof(ignore));
+
+	// we use a tempstring here because if the input string of FOREACH_WORD is strzoned
+	// then it can no longer be strunzoned and updated correctly
+	string ignore_list_copy = strcat(this.ignore_list);
+	FOREACH_WORD(ignore_list_copy, it != theid,
+		newlist = cons(newlist, it););
+	strcpy(this.ignore_list, newlist);
+
+	this.ignore_list_send_time = time + 0.2;
+}
+
+/**
+\brief Adds a player to the ignore list of another player
+\param[in] this ignore list owner
+\param[in] ignore player to add to the ignore list
+\param[in] to_db_too whether to add ignore to db too (permanent ignore) or not
+\return status of the operation:
+- 0: ignore not added (can happen only when trying to add too many permanent ignores)
+- 1: ignore added as temporary (only for the current match)
+- 2: ignore added as permanent (to the db too)
+*/
+int ignore_add_player(entity this, entity ignore, bool to_db_too)
+{
+	int r = 1;
+	// permanent ignores work if both the player and the sender have a stats UID
+	if (to_db_too && ignore.crypto_idfp && ignore.crypto_idfp != "" && this.crypto_idfp && this.crypto_idfp != "")
+	{
+		for (int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+		{
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+			if(pos == "")
+			{
+				db_put(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)), ignore.crypto_idfp);
+				r = 2;
+				break;
+			}
+		}
+		if (r != 2)
+			return 0;
+	}
+
+	string list = cons(this.ignore_list, ftos(etof(ignore)));
+	strcpy(this.ignore_list, list);
+
+	this.ignore_list_send_time = time + 0.2;
+
+	return r;
+}
+
+/// \brief Checks if pl is permanently ignored by this
+bool ignore_playerindb(entity this, entity pl)
+{
+	if(this.crypto_idfp && this.crypto_idfp != "" && pl.crypto_idfp && pl.crypto_idfp != "")
+	{
+		string thelist = "";
+		for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+		{
+			string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+			thelist = cons(thelist, pos);
+		}
+
+		return ((thelist != "") ? PlayerInList(pl, thelist) : false);
+	}
+	return false;
+}
+
+/// \brief Checks if pl is ignored by this (permanently or for the current match)
+bool ignore_playerinlist(entity this, entity pl)
+{
+	if (!this.ignore_list || this.ignore_list == "")
+		return false;
+
+	string theid = ftos(etof(pl));
+
+	// we use a tempstring here because if the input string of FOREACH_WORD is strzoned
+	// then it can no longer be strunzoned and updated correctly
+	string ignore_list_copy = strcat(this.ignore_list);
+	FOREACH_WORD(ignore_list_copy, it == theid,
+		return true;
+	);
+
+	return false;
+}
+
+/// \brief Updates ignore list of all the players.
+/// It's meant to be called when player 'this' connects.
+void ignore_list_update_on_connection(entity this)
+{
+	if (!this)
+		return;
+
+	FOREACH_CLIENT(it != this && IS_REAL_CLIENT(it),
+	{
+		if (ignore_playerindb(this, it))
+			ignore_add_player(this, it, false); // update ignore list of the connecting player
+
+		if (ignore_playerindb(it, this))
+			ignore_add_player(it, this, false); // update ignore list of other players
+	});
+}
+
+void ignore_list_send(entity this)
+{
+	ClientData_Touch(this, false);
+	// changing ignore_list_send_time to IGNORE_LIST_SEND_NOW is needed
+	// to send ignore_list correctly in ClientData_Send
+	this.ignore_list_send_time = IGNORE_LIST_SEND_NOW;
+}
+
+void ignore_clearall(entity this)
+{
+	for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
+	{
+		string pos = db_get(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+		if(pos != "")
+		{
+			db_remove(ServerProgsDB, strcat("/ignore/", this.crypto_idfp, "/", ftos(j)));
+			FOREACH_CLIENT(it != this && IS_REAL_CLIENT(it),
+			{
+				if(pos == it.crypto_idfp)
+				{
+					// permanent ignores already removed from db, remove only from list now
+					ignore_remove_player(this, it, false);
+					this.ignore_list_send_time = time;
+				}
+			});
+		}
+	}
+}
 
 // =======================
 //  Command Sub-Functions
@@ -76,9 +229,7 @@ void ClientCommand_clear_ignores(entity caller, int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
-
-			if(!advanced)
+			if(!(caller.crypto_idfp && caller.crypto_idfp != ""))
 			{
 				sprint(caller, "You don't have a stats UID, unable to clear your ignore list.\n");
 				return;
@@ -94,6 +245,26 @@ void ClientCommand_clear_ignores(entity caller, int request)
 		{
 			sprint(caller, "\nUsage:^3 cmd clear_ignores\n");
 			sprint(caller, "  Removes all existing ignored clients whose are kept out of personal chat log.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_clear_bestcptimes(entity caller, int request)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			race_ClearPlayerRecords(caller);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(caller, "\nUsage:^3 cmd clear_bestcptimes\n");
+			sprint(caller, "  Clear all your checkpoint times for this game.\n");
 			return;
 		}
 	}
@@ -286,8 +457,6 @@ void ClientCommand_ignore(entity caller, int request, int argc, string command)
 		{
 			if (argc >= 2)
 			{
-				bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
-
 				if(!argv(1) || argv(1) == "")
 				{
 					sprint(caller, "This command requires an argument. Use a player's name or their ID from the ^2status^7 command.\n");
@@ -301,35 +470,20 @@ void ClientCommand_ignore(entity caller, int request, int argc, string command)
 				{
 					if (ignore_to != caller) // and we're allowed to ignore them heh
 					{
-						if(ignore_playerinlist(ignore_to, caller))
+						if(ignore_playerinlist(caller, ignore_to))
 						{
 							sprint(caller, ignore_to.netname, " ^7is already ignored!\n");
 							return;
 						}
 
-						// advanced ignore mode, works if both the player and the sender have a stats UID
-						if(advanced && ignore_to.crypto_idfp && ignore_to.crypto_idfp != "")
-						{
-							for(int j = 0; j < IGNORE_MAXPLAYERS; ++j)
-							{
-								string pos = db_get(ServerProgsDB, strcat("/ignore/", caller.crypto_idfp, "/", ftos(j)));
-								if(pos == "")
-								{
-									db_put(ServerProgsDB, strcat("/ignore/", caller.crypto_idfp, "/", ftos(j)), ignore_to.crypto_idfp);
-									sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
-									return;
-								}
-							}
-
+						int r = ignore_add_player(caller, ignore_to, true);
+						if (r == 2)
+							sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
+						else if (r == 1)
+							sprint(caller, "You will no longer receive messages from ", ignore_to.netname, "^7 for this match, use ^2unignore^7 to hear them again.\n");
+						else // r == 0
 							sprint(caller, "You may only ignore up to ", ftos(IGNORE_MAXPLAYERS), " players, remove one before trying again.\n");
-							return;
-						}
 
-						if(caller.ignore_list)
-							strunzone(caller.ignore_list);
-						caller.ignore_list = strzone(cons(caller.ignore_list, ftos(etof(ignore_to))));
-
-						sprint(caller, "You no longer receive messages from ", ignore_to.netname, "^7, use ^2unignore^7 to hear them again.\n");
 					}
 					else { sprint(caller, "You can't ^2ignore^7 yourself.\n"); }
 				}
@@ -358,8 +512,8 @@ void ClientCommand_join(entity caller, int request)
 		{
 			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
 			{
-				if (joinAllowed(caller))
-					Join(caller);
+				if (joinAllowed(caller, caller.wants_join))
+					Join(caller, teamplay);
 				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
 					CS(caller).autojoin_checked = -1;
 			}
@@ -523,7 +677,6 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 	}
 }
 
-.bool team_selected;
 void ClientCommand_selectteam(entity caller, int request, int argc)
 {
 	switch (request)
@@ -534,7 +687,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			{
 				return;
 			}
-			if (!IS_CLIENT(caller))
+			if (!IS_CLIENT(caller) || intermission_running)
 			{
 				return;
 			}
@@ -550,45 +703,62 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			}
 			if (lockteams)
 			{
-				sprint(caller, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LOCKED);
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LOCKED);
 				return;
 			}
 
+			// TEAMNUMBERS_THAT_ARENT_STUPID FIXME: 0 and -1 mean different things to different funcs
 			float team_num = Team_ColorToTeam(argv(1));
 			if (team_num == -1) // invalid
 				return;
-			if (caller.team == team_num && team_num && !IS_DEAD(caller))
+			int team_index = Team_TeamToIndex(team_num);
+
+			// players queued to change teams may leave the queue by selecting their current team or autoselect
+			if (caller.team > 0 && caller.wants_join && (!team_num || caller.team == team_num))
 			{
-				sprint(caller, "^7You already are on that team.\n");
+				if (caller.killindicator_teamchange > 0)
+					return; // teams would be unbalanced by cancelling change during g_balance_kill_delay
+				Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, caller.netname);
+				caller.wants_join = caller.team_selected = 0;
 				return;
 			}
-			if (CS(caller).wasplayer && autocvar_g_changeteam_banned)
+
+			if (caller.team == team_num && team_num)
 			{
-				sprint(caller, "^1You cannot change team, forbidden by the server.\n");
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_SAME);
+				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
 				return;
 			}
-			if (team_num && autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
+			if (team_num)
 			{
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
-				TeamBalance_GetTeamCounts(balance, caller);
-				if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
-					TeamBalance_FindBestTeams(balance, caller, false)) == 0)
+				if (!TeamBalance_IsTeamAllowed(balance, team_index))
 				{
-					Send_Notification(NOTIF_ONE, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
 					TeamBalance_Destroy(balance);
 					return;
 				}
+				if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
+				{
+					TeamBalance_GetTeamCounts(balance, caller);
+					if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
+					     TeamBalance_FindBestTeams(balance, caller, false)) == 0)
+					{
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
+						TeamBalance_Destroy(balance);
+						return;
+					}
+				}
 				TeamBalance_Destroy(balance);
 			}
-			if (team_num)
-				ClientKill_TeamChange(caller, team_num);
-			else // auto
-				ClientKill_TeamChange(caller, -1);
 
-			if (!IS_PLAYER(caller))
-			{
-				caller.team_selected = true; // avoids asking again for team selection on join
-			}
+			if (joinAllowed(caller, team_num ? team_index : -1))
+				ClientKill_TeamChange(caller, team_num ? team_num : -1);
+
 			return;
 		}
 		default:
@@ -671,22 +841,28 @@ void ClientCommand_spectate(entity caller, int request)
 			{
 				if(argv(1) != "")
 				{
-					if(IS_SPEC(caller) || IS_OBSERVER(caller))
+					if (!(IS_SPEC(caller) || IS_OBSERVER(caller)))
+						sprint(caller, "cmd spectate <client> only works when you are spectator/observer\n");
+					else if (argv(1) == "0")
+					{ // switch back to observing without leaving the CA team or join queue (like +attack2)
+						if (!IS_OBSERVER(caller))
+						{
+							TRANSMUTE(Observer, caller);
+							PutClientInServer(caller);
+						}
+					}
+					else if (autocvar_sv_spectate == 2 && !warmup_stage && !caller.vote_master)
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_SPECTATE_SPEC_NOTALLOWED);
+					else
 					{
 						entity client = GetFilteredEntity(argv(1));
-						float spec_accepted = VerifyClientEntity(client, false, false);
-						if(spec_accepted > 0 && IS_PLAYER(client))
-						{
-							bool caller_is_observer = (IS_OBSERVER(caller));
-							Spectate(caller, client);
-							if (caller_is_observer)
-								TRANSMUTE(Spectator, caller);
-						}
+						if (IS_PLAYER(client)
+						&& VerifyClientEntity(client, false, false)
+						&& Spectate(caller, client)) // mutator hook might say no
+							{ }
 						else
 							sprint(caller, "Can't spectate ", argv(1), "^7\n");
 					}
-					else
-						sprint(caller, "cmd spectate <client> only works when you are spectator/observer\n");
 					return;
 				}
 
@@ -694,9 +870,22 @@ void ClientCommand_spectate(entity caller, int request)
 
 				if (mutator_returnvalue == MUT_SPECCMD_RETURN) return;
 
-				if ((IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE))
-				if (autocvar_sv_spectate == 1)
-					ClientKill_TeamChange(caller, -2); // observe
+				if (caller.wants_join)
+				{
+					if (caller.killindicator_teamchange > 0)
+						return; // teams would be unbalanced by cancelling change during g_balance_kill_delay
+					Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_QUEUE, caller.netname);
+					caller.wants_join = caller.team_selected = 0;
+				}
+
+				if (IS_PLAYER(caller) || mutator_returnvalue == MUT_SPECCMD_FORCE)
+				{
+					if (autocvar_sv_spectate)
+						ClientKill_TeamChange(caller, -2); // observe
+					else
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_MULTI, SPECTATE_NOTALLOWED);
+				}
 			}
 			return; // never fall through to usage
 		}
@@ -800,8 +989,6 @@ void ClientCommand_unignore(entity caller, int request, int argc, string command
 		{
 			if (argc >= 2)
 			{
-				bool advanced = (caller.crypto_idfp && caller.crypto_idfp != "");
-
 				if(!argv(1) || argv(1) == "")
 				{
 					sprint(caller, "This command requires an argument. Use a player's name or their ID from the ^2status^7 command.\n");
@@ -815,15 +1002,8 @@ void ClientCommand_unignore(entity caller, int request, int argc, string command
 				{
 					if (unignore_to != caller)
 					{
-						string mylist = ignore_removefromlist(caller, unignore_to);
-						if(!advanced)
-						{
-							if(caller.ignore_list)
-								strunzone(caller.ignore_list);
-
-							caller.ignore_list = strzone(mylist);
-						}
-
+						// remove ignores both from db (if permanent) and list
+						ignore_remove_player(caller, unignore_to, true);
 						sprint(caller, "You can now receive messages from ", unignore_to.netname, " ^7again.\n");
 						return;
 					}
@@ -923,68 +1103,59 @@ void ClientCommand_(entity caller, int request)
 // =====================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define CLIENT_COMMANDS(ent, request, arguments, command) \
-	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(ent, request, arguments), "Whether or not to switch automatically when getting a better weapon") \
-	CLIENT_COMMAND("clear_ignores", ClientCommand_clear_ignores(ent, request), "Remove all existing ignored clients") \
-	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(ent, request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("ignore", ClientCommand_ignore(ent, request, arguments, command), "Ignore a client in the game keeping out of personal chat log for a match") \
-	CLIENT_COMMAND("join", ClientCommand_join(ent, request), "Become a player in the game") \
-	CLIENT_COMMAND("kill", ClientCommand_kill(ent, request), "Become a member of the dead") \
-	CLIENT_COMMAND("minigame", ClientCommand_minigame(ent, request, arguments, command), "Start a minigame") \
-	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(ent, request, arguments), "Retrieve mapshot picture from the server") \
-	CLIENT_COMMAND("physics", ClientCommand_physics(ent, request, arguments), "Change physics set") \
-	CLIENT_COMMAND("ready", ClientCommand_ready(ent, request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
-	CLIENT_COMMAND("say", ClientCommand_say(ent, request, arguments, command), "Print a message to chat to all players") \
-	CLIENT_COMMAND("say_team", ClientCommand_say_team(ent, request, arguments, command), "Print a message to chat to all team mates") \
-	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(ent, request, arguments), "Attempt to choose a team to join into") \
-	CLIENT_COMMAND("selfstuff", ClientCommand_selfstuff(ent, request, command), "Stuffcmd a command to your own client") \
-	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(ent, request, arguments), "New system for sending a client cvar to the server") \
-	CLIENT_COMMAND("spectate", ClientCommand_spectate(ent, request), "Become an observer") \
-	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(ent, request, arguments), "Suggest a map to the mapvote at match end") \
-	CLIENT_COMMAND("tell", ClientCommand_tell(ent, request, arguments, command), "Send a message directly to a player") \
-	CLIENT_COMMAND("voice", ClientCommand_voice(ent, request, arguments, command), "Send voice message via sound") \
-	CLIENT_COMMAND("unignore", ClientCommand_unignore(ent, request, arguments, command), "Remove an existing ignored player") \
-	CLIENT_COMMAND("wpeditor", ClientCommand_wpeditor(ent, request, arguments), "Waypoint editor commands") \
-	/* nothing */
+CLIENT_COMMAND(autoswitch, "Whether or not to switch automatically when getting a better weapon") { ClientCommand_autoswitch(caller, request, arguments); }
+CLIENT_COMMAND(clear_bestcptimes, "Clear all your best checkpoint times for this Race/CTS match") { ClientCommand_clear_bestcptimes(caller, request); }
+CLIENT_COMMAND(clear_ignores, "Remove all existing ignores of players") { ClientCommand_clear_ignores(caller, request); }
+CLIENT_COMMAND(clientversion, "Release version of the game") { ClientCommand_clientversion(caller, request, arguments); }
+CLIENT_COMMAND(ignore, "Ignore a player in the game keeping them out of your personal chat log") { ClientCommand_ignore(caller, request, arguments, command); }
+CLIENT_COMMAND(join, "Become a player in the game") { ClientCommand_join(caller, request); }
+CLIENT_COMMAND(kill, "Become a member of the dead") { ClientCommand_kill(caller, request); }
+CLIENT_COMMAND(minigame, "Start a minigame") { ClientCommand_minigame(caller, request, arguments, command); }
+CLIENT_COMMAND(mv_getpicture, "Retrieve mapshot picture from the server") { ClientCommand_mv_getpicture(caller, request, arguments); }
+CLIENT_COMMAND(physics, "Change physics set") { ClientCommand_physics(caller, request, arguments); }
+CLIENT_COMMAND(ready, "Qualify as ready to end warmup-stage") { ClientCommand_ready(caller, request); }
+CLIENT_COMMAND(say, "Send a public chat message to all players") { ClientCommand_say(caller, request, arguments, command); }
+CLIENT_COMMAND(say_team, "Send a chat message to all teammates") { ClientCommand_say_team(caller, request, arguments, command); }
+CLIENT_COMMAND(selectteam, "Attempt to choose a team to join into") { ClientCommand_selectteam(caller, request, arguments); }
+CLIENT_COMMAND(selfstuff, "Stuffcmd a command to your own client") { ClientCommand_selfstuff(caller, request, command); }
+CLIENT_COMMAND(sentcvar, "New system for sending a client cvar to the server") { ClientCommand_sentcvar(caller, request, arguments); }
+CLIENT_COMMAND(spectate, "Become a spectator") { ClientCommand_spectate(caller, request); }
+CLIENT_COMMAND(suggestmap, "Suggest a map to appear at the map voting screen") { ClientCommand_suggestmap(caller, request, arguments); }
+CLIENT_COMMAND(tell, "Send a private chat message to a player which may be visible to server admins") { ClientCommand_tell(caller, request, arguments, command); }
+CLIENT_COMMAND(voice, "Send voice message via sound") { ClientCommand_voice(caller, request, arguments, command); }
+CLIENT_COMMAND(unignore, "Remove an existing ignore of a player") { ClientCommand_unignore(caller, request, arguments, command); }
+CLIENT_COMMAND(wpeditor, "Waypoint editor commands") { ClientCommand_wpeditor(caller, request, arguments); }
 
 void ClientCommand_macro_help(entity caller)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ sprint(caller, "  ^2", name, "^7: ", description, "\n"); }
-
-	CLIENT_COMMANDS(NULL, 0, 0, "");
-#undef CLIENT_COMMAND
+	FOREACH(CLIENT_COMMANDS, true, { print_to(caller, sprintf("  ^2%s^7: %s", it.m_name, it.m_description)); });
 }
 
 float ClientCommand_macro_command(int argc, entity caller, string command)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(0))) { function; return true; } }
-
-	CLIENT_COMMANDS(caller, CMD_REQUEST_COMMAND, argc, command);
-#undef CLIENT_COMMAND
+	string c = strtolower(argv(0));
+	FOREACH(CLIENT_COMMANDS, it.m_name == c, {
+		it.m_invokecmd(it, CMD_REQUEST_COMMAND, caller, argc, command);
+		return true;
+	});
 
 	return false;
 }
 
 float ClientCommand_macro_usage(int argc, entity caller)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(1))) { function; return true; } }
-
-	CLIENT_COMMANDS(caller, CMD_REQUEST_USAGE, argc, "");
-#undef CLIENT_COMMAND
+	string c = strtolower(argv(1));
+	FOREACH(CLIENT_COMMANDS, it.m_name == c, {
+		it.m_invokecmd(it, CMD_REQUEST_USAGE, caller, argc, "");
+		return true;
+	});
 
 	return false;
 }
 
 void ClientCommand_macro_write_aliases(float fh)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ CMD_Write_Alias("qc_cmd_cmd", name, description); }
-
-	CLIENT_COMMANDS(NULL, 0, 0, "");
-#undef CLIENT_COMMAND
+	FOREACH(CLIENT_COMMANDS, true, { CMD_Write_Alias("qc_cmd_cmd", it.m_name, it.m_description); });
 }
 
 // ======================================
@@ -1025,6 +1196,19 @@ void SV_ParseClientCommand(entity this, string command)
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
 		case "say": case "say_team": case "tell": break;   // chat has its own flood control in chat.qc
+		case "minigame":                                   // flood control only for common commands
+			string arg = argv(1);
+			if (arg == "")
+				goto flood_control;
+			for (int i = 0; i < MINIGAME_COMMON_CMD_COUNT; ++i)
+			{
+				if (MINIGAME_COMMON_CMD[i] == arg)
+					goto flood_control;
+			}
+			// if we get here we haven't found any common command, so no flood control for other commands
+			// individual minigame commands shouldn't be limited for gameplay reasons
+			// FIXME unknown/wrong minigame commands have no flood control
+			break;
 		case "color": case "topcolor": case "bottomcolor": // handled by engine in host_cmd.c
 			if(!IS_CLIENT(this)) // on connection
 			{
@@ -1041,18 +1225,24 @@ void SV_ParseClientCommand(entity this, string command)
 			if(!IS_CLIENT(this)) break;
 			// else fall through to default: flood control
 		default:
-			if (!timeout_status)  // not while paused
+			LABEL(flood_control)
+			if(MUTATOR_CALLHOOK(ClientCommand_FloodControl, this, strtolower(argv(0)), argc, command))
+				break; // a mutator has prevented flood control
+
+			// this is basically the same as the chat flood control
+			entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+			// NOTE: using mod_time instead of time here to avoid initializing both this.cmd_floodtime
+			// and CS(this).cmd_floodtime to -(antispam_count * antispam_time) (or -999999)
+			float mod_time = gettime(GETTIME_FRAMESTART) + autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time;
+			if (mod_time < store.cmd_floodtime)
 			{
-				entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
-				// this is basically the same as the chat flood control
-				if (time < store.cmd_floodtime)
-				{
-					sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - time), "^3 seconds, command was: ", command, "\n"));
-					return;  // too much spam, halt
-				}
-				else
-					store.cmd_floodtime = max(time - autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time, store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
+				sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - mod_time),
+					"^3 seconds, command was: ", command, "\n"));
+				return;  // too much spam, halt
 			}
+			else
+				// micro-optimization: replaced mod_time - max_delay with time here as they are equal
+				store.cmd_floodtime = max(gettime(GETTIME_FRAMESTART), store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
 			break;  // continue, as we're not flooding yet
 	}
 

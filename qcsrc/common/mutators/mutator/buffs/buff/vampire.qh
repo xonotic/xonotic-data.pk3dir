@@ -1,0 +1,23 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_vampire_damage_steal;
+#endif // SVQC
+
+CLASS(VampireBuff, Buff)
+	ATTRIB(VampireBuff, m_name, string, _("Vampire"));
+	ATTRIB(VampireBuff, netname, string, "vampire");
+#ifndef SVQC
+	ATTRIB(VampireBuff, m_icon, string, "buff_vampire");
+#endif
+#ifdef GAMEQC
+	ATTRIB(VampireBuff, m_skin, int, 2);
+#endif
+	ATTRIB(VampireBuff, m_color, vector, '1 0 0.24');
+ENDCLASS(VampireBuff)
+
+REGISTER_BUFF(VAMPIRE, NEW(VampireBuff));
+BUFF_SPAWNFUNCS(vampire, BUFF_VAMPIRE)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_invulnerability, BUFF_VAMPIRE)

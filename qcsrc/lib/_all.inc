@@ -285,16 +285,16 @@ MACRO_END
 #endif
 
 #ifdef CSQC
-	void _CSQC_Init();
-	void CSQC_Init() { if (_CSQC_Init) _CSQC_Init(); }
+	void _CSQC_Init(float apilevel, string enginename, float engineversion);
+	void CSQC_Init(float apilevel, string enginename, float engineversion) { if (_CSQC_Init) _CSQC_Init(apilevel, enginename, engineversion); }
 	#define CSQC_Init _CSQC_Init
 
 	void _CSQC_Shutdown();
 	void CSQC_Shutdown() { if (_CSQC_Shutdown) _CSQC_Shutdown(); }
 	#define CSQC_Shutdown _CSQC_Shutdown
 
-	void _CSQC_UpdateView(entity this, float w, float h);
-	void CSQC_UpdateView(float w, float h) { ENGINE_EVENT(); if (_CSQC_UpdateView) _CSQC_UpdateView(this, w, h); }
+	void _CSQC_UpdateView(entity this, float w, float h, bool notmenu);
+	void CSQC_UpdateView(float w, float h, bool notmenu) { ENGINE_EVENT(); if (_CSQC_UpdateView) _CSQC_UpdateView(this, w, h, notmenu); }
 	#define CSQC_UpdateView _CSQC_UpdateView
 
 	bool _CSQC_InputEvent(int inputType, float nPrimary, float nSecondary);

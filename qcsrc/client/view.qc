@@ -15,7 +15,8 @@
 #include <common/deathtypes/all.qh>
 #include <common/debug.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/impulses/all.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
@@ -39,8 +40,8 @@
 #include <lib/warpzone/client.qh>
 #include <lib/warpzone/common.qh>
 
-float autocvar_cl_viewmodel_scale;
 float autocvar_cl_viewmodel_alpha = 1;
+float autocvar_cl_viewmodel_alpha_min;
 
 bool autocvar_cl_bobmodel;
 float autocvar_cl_bobmodel_speed;
@@ -217,6 +218,7 @@ vector bobmodel_ofs(entity view)
 	vector gunorg = '0 0 0';
 	static float bobmodel_scale = 0;
 	static float time_ofs = 0; // makes the effect always restart in the same way
+	static float avg_xyspeed = 0; // makes the effect always restart in the same way
 	if (clonground)
 	{
 		if (time - hitgroundtime > 0.05)
@@ -225,13 +227,27 @@ vector bobmodel_ofs(entity view)
 	else
 		bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
 
-	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
-	if (bobmodel_scale && xyspeed)
+	if (bobmodel_scale)
 	{
-		float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
-		float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
-		gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
-		gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
+		float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
+		// smooth speed changes to get rid of weapon stuttering on direction changes
+		const float avg_time = 0.1;
+		float frac = 1 - exp(-frametime / max(0.001, avg_time));
+		avg_xyspeed = frac * xyspeed + (1 - frac) * avg_xyspeed;
+		// stop bobbing at a very low value of avg_xyspeed instead of 0
+		// since the averaging formula takes a very long time to reach exactly 0
+		if (avg_xyspeed < 1)
+			time_ofs = time;
+		else
+		{
+			if (avg_xyspeed < 400) // reduce bob frequency too when player walks crouching
+				time_ofs += frametime * map_bound_ranges(avg_xyspeed, 150, 400, 0.08, 0);
+
+			float bspeed = avg_xyspeed * 0.01 * bobmodel_scale;
+			float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
+			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
+			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
+		}
 	}
 	else
 		time_ofs = time;
@@ -277,8 +293,12 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
+	// alpha calculations
+	float amax = (autocvar_cl_viewmodel_alpha != 0) ? autocvar_cl_viewmodel_alpha : 1;
+	float amin = (autocvar_cl_viewmodel_alpha_min != 0) ? autocvar_cl_viewmodel_alpha_min : -1;
+	float a = (amin >= amax) ? amax : bound(amin, this.m_alpha, amax);
+
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
-	float a = ((autocvar_cl_viewmodel_alpha) ? bound(-1, autocvar_cl_viewmodel_alpha, this.m_alpha) : this.m_alpha);
 	int wepskin = this.m_skin;
 	bool invehicle = player_localentnum > maxclients;
 	if (invehicle) a = -1;
@@ -401,6 +421,69 @@ STATIC_INIT(fpscounter_init)
 	showfps_prevfps_time = currentTime; // we must initialize it to avoid an instant low frame sending
 }
 
+bool IsZooming(bool ignore_spectatorbutton_zoom)
+{
+	bool zoomdir = button_zoom;
+
+	if (hud == HUD_NORMAL && !spectatee_status)
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			entity wepent = viewmodels[slot];
+			if (wepent.switchweapon != wepent.activeweapon)
+				continue;
+			Weapon wep = wepent.activeweapon;
+			if (wep != WEP_Null && wep.wr_zoomdir)
+			if (wep.wr_zoomdir(wep)) // TODO: merge this with wr_zoom?
+				zoomdir = true;
+		}
+
+	if (!ignore_spectatorbutton_zoom)
+	if (spectatorbutton_zoom && (spectatee_status > 0 || isdemo()))
+		zoomdir = !zoomdir;
+
+	return zoomdir;
+}
+
+const float MAX_ZOOMFACTOR = 30;
+float zoomscroll_factor;
+float zoomscroll_factor_target;
+void ZoomScroll(float nPrimary)
+{
+	bool zoomin = (nPrimary == K_MWHEELUP);
+	if (autocvar_cl_zoomscroll_scale < 0)
+		zoomin = !zoomin;
+
+	// allow negatives so that players can scroll the other way, biggest change allowed is +100%
+	float zoomscroll_scale = 1 + min(fabs(autocvar_cl_zoomscroll_scale), 1);
+
+	if (zoomin)
+		zoomscroll_factor_target = min(MAX_ZOOMFACTOR, zoomscroll_factor_target * zoomscroll_scale);
+	else
+		zoomscroll_factor_target = max(1, zoomscroll_factor_target / zoomscroll_scale);
+}
+
+bool View_InputEvent(int bInputType, float nPrimary, float nSecondary)
+{
+	if (bInputType == 2 || bInputType == 3)
+		return false;
+
+	// at this point bInputType can only be 0 or 1 (key pressed or released)
+	bool key_pressed = (bInputType == 0);
+
+	if (nPrimary == K_MWHEELUP || nPrimary == K_MWHEELDOWN)
+	{
+		if (!autocvar_cl_zoomscroll || autocvar_cl_zoomscroll_scale == 0)
+			return false; // zoom scroll disabled
+		if (!IsZooming(true))
+			return false;
+		if (key_pressed)
+			ZoomScroll(nPrimary);
+		return true;
+	}
+
+	return false;
+}
+
 float avgspeed;
 vector GetCurrentFov(float fov)
 {
@@ -408,63 +491,58 @@ vector GetCurrentFov(float fov)
 	float velocityzoom, curspeed;
 	vector v;
 
-	zoomsensitivity = autocvar_cl_zoomsensitivity;
-	zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > 30)
-		zoomfactor = 2.5;
+	zoomdir = IsZooming(false);
+
 	zoomspeed = autocvar_cl_zoomspeed;
-	if (zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
+	if(zoomspeed >= 0 && (zoomspeed < 0.5 || zoomspeed > 16))
 		zoomspeed = 3.5;
+	zoomsensitivity = autocvar_cl_zoomsensitivity;
 
-	zoomdir = button_zoom;
+	zoomfactor = autocvar_cl_zoomfactor;
+	if(zoomfactor < 1 || zoomfactor > MAX_ZOOMFACTOR)
+		zoomfactor = 2.5;
 
-	if(hud == HUD_NORMAL && !spectatee_status)
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			entity wepent = viewmodels[slot];
-			if(wepent.switchweapon != wepent.activeweapon)
-				continue;
-			Weapon wep = wepent.activeweapon;
-			if(wep != WEP_Null && wep.wr_zoomdir)
-			{
-				bool do_zoom = wep.wr_zoomdir(wep); // TODO: merge this with wr_zoom?
-				zoomdir += do_zoom;
-			}
-		}
-	}
-	if(spectatee_status > 0 || isdemo())
-	{
-		if(spectatorbutton_zoom)
-		{
-			if(zoomdir)
-				zoomdir = 0;
-			else
-				zoomdir = 1;
-		}
-		// fteqcc failed twice here already, don't optimize this
-	}
-
-	if(zoomdir) { zoomin_effect = 0; }
+	if(zoomdir)
+		zoomin_effect = 0;
 
 	if (spectatee_status > 0 && STAT(CAMERA_SPECTATOR) == 2)
-	{
 		current_viewzoom = 1;
-	}
 	else if (camera_active)
-	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
-	}
 	else if(autocvar_cl_spawnzoom && zoomin_effect)
 	{
-		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 30);
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, MAX_ZOOMFACTOR);
 
 		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime);
 		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
-		if(current_viewzoom == 1) { zoomin_effect = 0; }
+		if(current_viewzoom == 1)
+			zoomin_effect = 0;
 	}
 	else
 	{
+		if (autocvar_cl_zoomscroll && autocvar_cl_zoomscroll_scale)
+		{
+			// initialize zoom scroll in the first frame / reset zoom scroll when fully zoomed out
+			if (!zoomscroll_factor || (current_viewzoom == 1 && !zoomdir))
+			{
+				zoomscroll_factor_target = zoomfactor;
+				zoomscroll_factor = zoomfactor;
+			}
+			if (zoomscroll_factor != zoomscroll_factor_target)
+			{
+				if (fabs(zoomscroll_factor - zoomscroll_factor_target) < 0.001 || autocvar_cl_zoomscroll_speed < 0) // snap
+					zoomscroll_factor = zoomscroll_factor_target;
+				else if (autocvar_cl_zoomscroll_speed != 0)
+				{
+					// NOTE: this averaging formula is frametime independent
+					float avg_time = 1 / autocvar_cl_zoomscroll_speed;
+					float frac = 1 - exp(-drawframetime / max(0.001, avg_time));
+					zoomscroll_factor = frac * zoomscroll_factor_target + (1 - frac) * zoomscroll_factor;
+				}
+			}
+			zoomfactor = zoomscroll_factor;
+		}
+
 		if(zoomspeed < 0) // instant zoom
 		{
 			if(zoomdir)
@@ -523,20 +601,20 @@ vector GetCurrentFov(float fov)
 		velocityzoom = 1;
 
 	float frustumx, frustumy, fovx, fovy;
-	frustumy = tan(fov * M_PI / 360.0) * 0.75 * current_viewzoom * velocityzoom;
+	frustumy = tan(fov * (M_PI / 360)) * 0.75 * current_viewzoom * velocityzoom;
 	frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
-	fovx = atan2(frustumx, 1) / M_PI * 360.0;
-	fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	fovx = atan2(frustumx, 1) * (360 / M_PI);
+	fovy = atan2(frustumy, 1) * (360 / M_PI);
 
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
 vector GetViewLocationFOV(float fov)
 {
-	float frustumy = tan(fov * M_PI / 360.0) * 0.75;
+	float frustumy = tan(fov * (M_PI / 360)) * 0.75;
 	float frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
-	float fovx = atan2(frustumx, 1) / M_PI * 360.0;
-	float fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	float fovx = atan2(frustumx, 1) * (360 / M_PI);
+	float fovy = atan2(frustumy, 1) * (360 / M_PI);
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
@@ -574,6 +652,79 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+bool View_SpectatorCamera()
+{
+	static int waiting_CAMERA_SPECTATOR_update;
+	static bool camera_spectator_3rd_person;
+	if(spectatee_status > 0)
+	{
+		if(autocvar_chase_active > 0)
+		{
+			// if chase_active is enabled by the user, spectator camera never switches to 1st person
+			// that means CAMERA_SPECTATOR 1 behaves as 0 and is redundant, so we forcedly skip it
+			if (STAT(CAMERA_SPECTATOR) == 1)
+			{
+				if (!waiting_CAMERA_SPECTATOR_update)
+				{
+					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
+					waiting_CAMERA_SPECTATOR_update = 1;
+				}
+			}
+			else waiting_CAMERA_SPECTATOR_update = 0;
+			camera_spectator_3rd_person = true;
+		}
+
+		// chase_active disabled by the user?
+		if(camera_spectator_3rd_person && autocvar_chase_active == 0)
+		{
+			if (STAT(CAMERA_SPECTATOR) >= 1)
+			{
+				if (waiting_CAMERA_SPECTATOR_update != STAT(CAMERA_SPECTATOR))
+				{
+					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR (2 and) 0
+					waiting_CAMERA_SPECTATOR_update = STAT(CAMERA_SPECTATOR);
+				}
+			}
+			else
+			{
+				waiting_CAMERA_SPECTATOR_update = 0;
+				camera_spectator_3rd_person = false;
+			}
+			return true;
+		}
+	}
+
+	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
+	{
+		if(STAT(CAMERA_SPECTATOR))
+		{
+			if(spectatee_status > 0)
+			{
+				if(!camera_spectator_3rd_person)
+				{
+					cvar_set("chase_active", "-2");
+					camera_spectator_3rd_person = true;
+					return true;
+				}
+			}
+			else if(camera_spectator_3rd_person)
+			{
+				cvar_set("chase_active", "0");
+				camera_spectator_3rd_person = false;
+			}
+
+			if(autocvar_chase_active == -2)
+				return true;
+		}
+		else if(camera_spectator_3rd_person)
+		{
+			cvar_set("chase_active", "0");
+			camera_spectator_3rd_person = false;
+		}
+	}
+	return false;
+}
+
 float eventchase_current_distance;
 float eventchase_running;
 int WantEventchase(entity this, bool want_vehiclechase)
@@ -590,7 +741,7 @@ int WantEventchase(entity this, bool want_vehiclechase)
 			return 1;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return 1;
-		if(autocvar_cl_eventchase_frozen && STAT(FROZEN))
+		if(autocvar_cl_eventchase_frozen && StatusEffects_active(STATUSEFFECT_Frozen, this))
 			return 1;
 		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
@@ -618,25 +769,6 @@ void View_EventChase(entity this)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(STAT(CAMERA_SPECTATOR))
-		{
-			if(spectatee_status > 0)
-			{
-				if(!autocvar_chase_active)
-				{
-					cvar_set("chase_active", "-2");
-					return;
-				}
-			}
-			else if(autocvar_chase_active == -2)
-				cvar_set("chase_active", "0");
-
-			if(autocvar_chase_active == -2)
-				return;
-		}
-		else if(autocvar_chase_active == -2)
-			cvar_set("chase_active", "0");
-
 		bool vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 
 		float vehicle_viewdist = 0;
@@ -954,22 +1086,17 @@ void HUD_Draw(entity this)
 	{
 		if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 		{
-			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
-		}
-		else if(STAT(FROZEN))
-		{
-			vector col = '0.25 0.90 1';
-			float col_fade = max(0, STAT(REVIVE_PROGRESS) * 2 - 1);
-			float alpha_fade = 0.3 + 0.7 * (1 - max(0, STAT(REVIVE_PROGRESS) * 4 - 3));
-			if(col_fade)
-				col += vec3(col_fade, -col_fade, -col_fade);
-			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_fade, DRAWFLAG_ADDITIVE);
+			vector col = M_ARGV(0, vector);
+			float alpha_multipl = M_ARGV(1, float);
+			if (alpha_multipl > 0)
+				drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), col, autocvar_hud_colorflash_alpha * alpha_multipl, DRAWFLAG_ADDITIVE);
 		}
 	}
 
 	HUD_Scale_Enable();
 	if(!intermission)
 	{
+		// TODO: mutator hook for these? maybe something more generic!
 		if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 		{
 			vector col = '0.25 0.90 1' + vec3(STAT(NADE_TIMER), -STAT(NADE_TIMER), -STAT(NADE_TIMER));
@@ -1205,7 +1332,7 @@ void HUD_Contents()
 // provides some effects to the postprocessing function
 void HUD_Damage()
 {
-	if(!autocvar_hud_damage || STAT(FROZEN))
+	if(!autocvar_hud_damage || MUTATOR_CALLHOOK(HUD_Damage_show))
 		return;
 
 	vector splash_pos = '0 0 0', splash_size = '0 0 0';
@@ -1325,7 +1452,7 @@ void View_PostProcessing()
 
 		// edge detection postprocess handling done second (used by hud_powerup)
 		float sharpen_intensity = 0;
-		FOREACH(StatusEffect, it.instanceOfPowerups,
+		FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 		{
 			float powerup_finished = StatusEffects_gettime(it, g_statuseffects) - time;
 			if(powerup_finished > 0)
@@ -1629,7 +1756,7 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
-void CSQC_UpdateView(entity this, float w, float h)
+void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 {
 	TC(int, w); TC(int, h);
 
@@ -1695,7 +1822,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(!local_player)
 		local_player = this; // fall back!
 
-	View_EventChase(local_player);
+	if (!View_SpectatorCamera())
+		View_EventChase(local_player);
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
 	View_Lock();
@@ -1745,9 +1873,15 @@ void CSQC_UpdateView(entity this, float w, float h)
 	else if(game_stopped_time && !STAT(GAME_STOPPED))
 		game_stopped_time = 0;
 
-	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
+	// fire intermission hooks and gameend hook here
+	// gameend hook is executed on CSQC VM shutdown if
+	// the shutdown happens before intermission start
+	if (intermission
+	&& (calledhooks & HOOK_START) // ensure that we have initiated a gametype
+	&& !(calledhooks & HOOK_END) // fire only once
+	&& !(calledhooks & HOOK_INTERMISSION))
 	{
-		if(calledhooks & HOOK_START)
+		if(!isdemo())
 		{
 			int gamecount = cvar("cl_matchcount");
 			localcmd("\ncl_hook_gameend\n");
@@ -1756,6 +1890,14 @@ void CSQC_UpdateView(entity this, float w, float h)
 			localcmd(strcat("cl_matchcount ", itos(gamecount + 1), "\n"));
 			//cvar_set("cl_matchcount", itos(gamecount + 1));
 			calledhooks |= HOOK_END;
+
+			localcmd("\ncl_hook_gameintermission\n");
+			calledhooks |= HOOK_INTERMISSION;
+		}
+		else
+		{
+			localcmd("\ncl_hook_demointermission\n");
+			calledhooks |= HOOK_INTERMISSION;
 		}
 	}
 
@@ -1804,6 +1946,9 @@ void CSQC_UpdateView(entity this, float w, float h)
 	HUD_Contents();
 	HUD_Damage();
 	View_PostProcessing();
+
+	if (ignore_list_apply_time && time > ignore_list_apply_time)
+		ignore_list_apply();
 
 	// draw 2D entities
 	IL_EACH(g_drawables_2d, it.draw2d, it.draw2d(it));

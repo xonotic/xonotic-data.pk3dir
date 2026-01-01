@@ -210,7 +210,7 @@ void walker_fire_rocket(entity this, vector org)
     entity rocket = new(walker_rocket);
     setorigin(rocket, org);
     rocket.solid			  = SOLID_BBOX; // before setsize so it will be linked to the area grid
-    sound (this, CH_WEAPON_A, SND_HAGAR_FIRE, VOL_BASE, ATTEN_NORM);
+    sound (this, CH_WEAPON_A, SND_TUR_WALKER_FIRE, VOL_BASE, ATTEN_NORM);
     setsize (rocket, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
     rocket.owner			  = this;
@@ -569,8 +569,6 @@ METHOD(WalkerTurret, tr_death, void(WalkerTurret this, entity it))
 }
 METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 {
-    it.ticrate = 0.05;
-
     // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
     if(it.move_movetype == MOVETYPE_WALK)
     {
@@ -642,3 +640,18 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 }
 
 #endif // CSQC
+#ifdef MENUQC
+#include <common/weapons/weapon/devastator.qh>
+#include <common/weapons/weapon/machinegun.qh>
+
+METHOD(WalkerTurret, describe, string(WalkerTurret this))
+{
+    TC(WalkerTurret, this);
+    PAGE_TEXT_INIT();
+    PAR(_("The %s is an arachnid-like walking turret that hunts down its targets."), COLORED_NAME(this));
+    PAR(_("It has two weapons, both a machinegun like the %s for medium range combat, and a rocket launcher shooting homing missiles like the %s for long range targets. "
+          "It also has the ability to melee close by targets."), COLORED_NAME(WEP_MACHINEGUN), COLORED_NAME(WEP_DEVASTATOR));
+    return PAGE_TEXT;
+}
+
+#endif // MENUQC

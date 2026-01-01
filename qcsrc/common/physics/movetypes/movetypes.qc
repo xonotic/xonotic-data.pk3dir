@@ -20,7 +20,7 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 {
 	vector stuckorigin = this.origin;
 	vector goodmins = pivot, goodmaxs = pivot;
-	for(int bump = 0; bump < 6; bump++)
+	for(int bump = 0; bump < 6; ++bump)
 	{
 		int coord = 2 - (bump >> 1);
 		int dir = (bump & 1);
@@ -150,7 +150,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 	original_velocity = primal_velocity = this.velocity;
 
-	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
+	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES; ++bumpcount)
 	{
 		if(this.velocity == '0 0 0')
 			break;
@@ -265,11 +265,11 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		// modify original_velocity so it parallels all of the clip planes
 		vector new_velocity = '0 0 0';
 		int plane;
-		for (plane = 0;plane < numplanes;plane++)
+		for (plane = 0;plane < numplanes; ++plane)
 		{
 			int newplane;
 			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[plane], 1);
-			for (newplane = 0;newplane < numplanes;newplane++)
+			for (newplane = 0;newplane < numplanes; ++newplane)
 			{
 				if(newplane != plane)
 				{
@@ -329,12 +329,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	}
 
 	return blockedflag;
-}
-
-void _Movetype_CheckVelocity(entity this)  // SV_CheckVelocity
-{
-	// if(vlen(this.velocity) < 0.0001)
-	// this.velocity = '0 0 0';
 }
 
 bool _Movetype_CheckWater(entity this)  // SV_CheckWater
@@ -472,10 +466,18 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 	int save_trace_dphitq3surfaceflags = trace_dphitq3surfaceflags;
 	string save_trace_dphittexturename = trace_dphittexturename;
 
-    FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
+	vector emin = this.absmin, emax = this.absmax;
+	// Xonotic and Nexuiz maps assume triggers will be activated by adjacent players
+	// prior to sv_legacy_bbox_expand 0 DP always did this for SVQC and never for CSQC
+	// we also need this for zero-size bboxes because radius == 0 returns nothing
+	// see also: WarpZoneLib_ExactTrigger_Touch()
+	emin -= '1 1 1';
+	emax += '1 1 1';
+
+	FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(emin - emax), true, {
 		if (it.solid == SOLID_TRIGGER && it != this)
 		if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY)
-		if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
+		if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, emin, emax))
 		{
 			trace_allsolid = false;
 			trace_startsolid = false;
@@ -493,7 +495,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 
 			gettouch(it)(it, this);
 		}
-    });
+	});
 
 	trace_allsolid = save_trace_allsolid;
 	trace_startsolid = save_trace_startsolid;
@@ -515,44 +517,11 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 {
 	if(autocvar__movetype_debug)
 	{
-		vector mi, ma;
-		if(this.solid == SOLID_BSP)
-		{
-			// TODO set the absolute bbox
-			mi = this.mins;
-			ma = this.maxs;
-		}
-		else
-		{
-			mi = this.mins;
-			ma = this.maxs;
-		}
-		mi += this.origin;
-		ma += this.origin;
-
-		if(this.flags & FL_ITEM)
-		{
-			mi -= '15 15 1';
-			ma += '15 15 1';
-		}
-		else
-		{
-			mi -= '1 1 1';
-			ma += '1 1 1';
-		}
-
-		this.absmin = mi;
-		this.absmax = ma;
+		this.absmin = this.origin + this.mins;
+		this.absmax = this.origin + this.maxs;
 	}
 	else
-	{
 		setorigin(this, this.origin); // calls SV_LinkEdict
-	#ifdef CSQC
-		// NOTE: CSQC's version of setorigin doesn't expand
-		this.absmin -= '1 1 1';
-		this.absmax += '1 1 1';
-	#endif
-	}
 
 	if(touch_triggers)
 		_Movetype_LinkEdict_TouchAreaGrid(this);
@@ -585,7 +554,7 @@ int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
 entity _Movetype_TestEntityPosition_ent;
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
-    entity this = _Movetype_TestEntityPosition_ent;
+	entity this = _Movetype_TestEntityPosition_ent;
 	vector org = this.origin + ofs;
 
 	//int cont = this.dphitcontentsmask;
@@ -609,21 +578,21 @@ bool _Movetype_TestEntityPosition_Offset(int offset)
 	// NOTE: expects _Movetype_TestEntityPosition_ent to be set to the correct entity
 	// returns true if stuck
 
-    // start at 2, since the first position has already been checked
-    for(int j = 2; j <= offset; ++j)
-    {
-    	if(!_Movetype_TestEntityPosition('0 0 -1' * j))
-    		return false;
-    	if(!_Movetype_TestEntityPosition('0 0 1' * j))
-    		return false;
-    }
+	// start at 2, since the first position has already been checked
+	for(int j = 2; j <= offset; ++j)
+	{
+		if(!_Movetype_TestEntityPosition('0 0 -1' * j))
+			return false;
+		if(!_Movetype_TestEntityPosition('0 0 1' * j))
+			return false;
+	}
 
 	return true;
 }
 
 int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
-    _Movetype_TestEntityPosition_ent = this;
+	_Movetype_TestEntityPosition_ent = this;
 	if (!_Movetype_TestEntityPosition(' 0  0  0')) {
 	    return UNSTICK_FINE;
 	}
@@ -635,12 +604,12 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	X('-1  1  0') X(' 1  1  0')
 	#undef X
 	{
-        if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
-        {
-            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
-                etof(this), this.classname, vtos(this.origin));
-            return UNSTICK_STUCK;
-        }
+		if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
+		{
+			LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
+			etof(this), this.classname, vtos(this.origin));
+			return UNSTICK_STUCK;
+		}
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
@@ -708,7 +677,10 @@ bool _Movetype_PushEntity(entity this, vector push, bool dolink)  // SV_PushEnti
 		_Movetype_PushEntityTrace(this, push);
 		this.move_nomonsters = oldtype;
 		if(trace_startsolid)
+		{
+			trace_fraction = 0;
 			return true;
+		}
 	}
 
 	this.origin = trace_endpos;
@@ -801,11 +773,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			break;
 	}
 
-	//_Movetype_CheckVelocity(this);
-
 	_Movetype_LinkEdict(this, true);
-
-	//_Movetype_CheckVelocity(this);
 }
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient)  // to be run every move frame

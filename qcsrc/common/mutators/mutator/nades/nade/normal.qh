@@ -1,0 +1,15 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+void nade_normal_boom(entity this);
+#endif // SVQC
+
+CLASS(NormalNade, Nade)
+	ATTRIB(NormalNade, m_color, vector, '1 1 1');
+	ATTRIB(NormalNade, m_name, string, _("Grenade"));
+	ATTRIB(NormalNade, m_icon, string, "nade_normal");
+	ATTRIB(NormalNade, impulse, int, 1);
+	ATTRIB(NormalNade, netname, string, "normal");
+ENDCLASS(NormalNade)

@@ -5,7 +5,6 @@
 float autocvar_g_monsters;
 bool autocvar_g_monsters_edit;
 bool autocvar_g_monsters_sounds;
-float autocvar_g_monsters_think_delay;
 int autocvar_g_monsters_max;
 int autocvar_g_monsters_max_perplayer;
 float autocvar_g_monsters_damageforcescale = 0.8;
@@ -21,7 +20,8 @@ bool autocvar_g_monsters_owners;
 bool autocvar_g_monsters_playerclip_collisions;
 float autocvar_g_monsters_miniboss_chance;
 float autocvar_g_monsters_miniboss_healthboost;
-float autocvar_g_monsters_drop_time;
+string autocvar_g_monsters_miniboss_loot = "vortex";
+float autocvar_g_monsters_drop_time = 10;
 float autocvar_g_monsters_spawnshieldtime;
 bool autocvar_g_monsters_quake_resize = true;
 bool autocvar_g_monsters_teams;
@@ -57,6 +57,7 @@ int monsters_killed;
 .float stopspeed;
 .int oldskin;
 .string mdl_dead; // dead model for goombas
+.bool monster_item; // identifier for dropped monster loot TODO: generic identifiers? ok_item exists too!
 
 #define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 

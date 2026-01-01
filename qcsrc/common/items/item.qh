@@ -11,6 +11,14 @@
 #include <server/items/spawning.qh>
 #endif
 
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
+
+#ifdef MENUQC
+#include <menu/draw.qh>
+#endif
+
 #ifdef GAMEQC
 const int IT_UNLIMITED_AMMO 			=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
 const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
@@ -40,7 +48,7 @@ const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPER
 // item networking
 const int ISF_REMOVEFX          = BIT(0); // technically unnecessary (after the kludge in Item_Think() is reverted), but cheaper and cleaner than using ITS_AVAILABLE
 const int ISF_LOCATION          = BIT(1);
-const int ISF_MODEL             = BIT(2);
+const int ISF_SIZE2             = BIT(2);
 const int ISF_STATUS            = BIT(3);
 const int ISF_COLORMAP          = BIT(4);
 const int ISF_DROP              = BIT(5);
@@ -67,6 +75,14 @@ const float IT_DESPAWNFX_TIME = 1.5;
 // FIXME but updating faster applies the kludge in Item_Think() sooner so it's less noticeable
 const float IT_UPDATE_INTERVAL = 0.0625;
 
+// item bboxes for sv_legacy_bbox_expand 0
+// Small, Default and Large (large maxs are used with default mins)
+const vector ITEM_S_MINS = '-24 -24 0';
+const vector ITEM_S_MAXS = '24 24 48';
+const vector ITEM_D_MINS = '-30 -30 0'; // 0.8.6 set '-16 -16 0' then DP subtracted '15 15 1' but NetRadiant used '-30 -30 0'
+const vector ITEM_D_MAXS = '30 30 48';  // 0.8.6 set '16 16 48' then DP added '15 15 1' but NetRadiant used '30 30 32'
+const vector ITEM_L_MAXS = '30 30 70';  // 0.8.6 set '16 16 80' for powerups, '16 16 70' for megas, '16 16 60' for buffs
+
 .float fade_start;
 .float fade_end;
 
@@ -90,11 +106,8 @@ const float IT_UPDATE_INTERVAL = 0.0625;
 #define SPAWNFUNC_ITEM(name, item) \
 	spawnfunc(name) \
 	{ \
-		SPAWNFUNC_BODY(item) \
+		SPAWNFUNC_BODY((item)) \
 	}
-
-#define SPAWNFUNC_ITEM_COND(name, cond, item1, item2) \
-	SPAWNFUNC_ITEM(name, (cond ? item1 : item2))
 
 #else
 
@@ -111,28 +124,37 @@ enum
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)
-    ATTRIB(GameItem, m_id, int, 0);
-    /** the canonical spawnfunc name */
-    ATTRIB(GameItem, m_canonical_spawnfunc, string);
-    METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
-    ATTRIB(GameItem, m_name, string);
-    ATTRIB(GameItem, m_icon, string);
-    ATTRIB(GameItem, m_color, vector, '1 1 1');
-    ATTRIB(GameItem, m_waypoint, string);
-    ATTRIB(GameItem, m_waypointblink, int, 1);
+	ATTRIB(GameItem, m_id, int, 0);
+	/** the canonical spawnfunc name */
+	ATTRIB(GameItem, m_canonical_spawnfunc, string);
+	METHOD(GameItem, m_spawnfunc_hookreplace, GameItem(GameItem this, entity e)) { return this; }
+	ATTRIB(GameItem, m_name, string);
+	ATTRIB(GameItem, m_icon, string);
+	ATTRIB(GameItem, m_color, vector, '1 1 1');
+	ATTRIB(GameItem, m_waypoint, string);
+	ATTRIB(GameItem, m_waypointblink, int, 1);
 #ifdef GAMEQC
-    ATTRIB(GameItem, m_glow, bool, false);
-    ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
+	ATTRIB(GameItem, m_glow, bool, false);
+	ATTRIB(GameItem, m_respawnsound, Sound, SND_ITEMRESPAWN);
 #endif
-    METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
-    {
-        TC(GameItem, this);
-        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
-    }
-    METHOD(GameItem, show, void(GameItem this))
-    {
-        TC(GameItem, this);
-        LOG_INFO("A game item");
-    }
-    void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
+#ifdef MENUQC
+	METHOD(GameItem, describe, string(GameItem this))
+	{
+		TC(GameItem, this);
+		return SUPER(GameItem).describe(this);
+	}
+#endif
+#ifndef SVQC
+	METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
+	{
+		TC(GameItem, this);
+		returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
+	}
+#endif
+	METHOD(GameItem, show, void(GameItem this))
+	{
+		TC(GameItem, this);
+		LOG_INFO("A game item");
+	}
+	void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
 ENDCLASS(GameItem)

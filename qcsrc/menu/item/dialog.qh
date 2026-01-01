@@ -4,7 +4,6 @@
 // - isTabRoot is 0
 // - backgroundImage is the tab's background
 // - closable is 0
-// - rootDialog is 0
 // - title is ""
 // - marginTop is
 // - intendedHeight ends up to be the tab's actual height, or at least close
@@ -30,7 +29,7 @@ CLASS(Dialog, InputContainer)
 	METHOD(Dialog, TR, void(entity));
 	METHOD(Dialog, gotoRC, void(entity, float, float));
 
-	ATTRIB(Dialog, isTabRoot, float, 1);
+	ATTRIB(Dialog, isTabRoot, bool, true);
 	ATTRIB(Dialog, closeButton, entity);
 	ATTRIB(Dialog, intendedHeight, float, 0);
 	ATTRIB(Dialog, itemOrigin, vector, '0 0 0');
@@ -41,7 +40,7 @@ CLASS(Dialog, InputContainer)
 	ATTRIB(Dialog, firstColumn, float, 0);
 
 	// to be customized
-	ATTRIB(Dialog, closable, float, 1);
+	ATTRIB(Dialog, closable, bool, true);
 	ATTRIB(Dialog, title, string, "Form1");
 	ATTRIB(Dialog, name, string, ""); // if set to a string without spaces this dialog can be opened via menu_cmd directmenu
 	ATTRIB(Dialog, color, vector, '1 0.5 1');
@@ -59,17 +58,17 @@ CLASS(Dialog, InputContainer)
 	ATTRIB(Dialog, titleHeight, float, 0);   // pixels
 	ATTRIB(Dialog, titleFontSize, float, 0); // pixels; if 0, title causes no margin
 	ATTRIB(Dialog, zoomedOutTitleBarPosition, float, 0);
-	ATTRIB(Dialog, zoomedOutTitleBar, float, 0);
+	ATTRIB(Dialog, zoomedOutTitleBar, bool, false);
 
-	ATTRIB(Dialog, requiresConnection, float, 0);  // set to true if the dialog requires a connection to be opened
+	ATTRIB(Dialog, requiresConnection, bool, false);  // set to true if the dialog requires a connection to be opened
 
 	ATTRIB(Dialog, backgroundImage, string);
 	ATTRIB(Dialog, borderLines, float, 1);
 	ATTRIB(Dialog, closeButtonImage, string);
 
-	ATTRIB(Dialog, hideMenuOnClose, bool, false);
-
 	ATTRIB(Dialog, frame, entity);
 ENDCLASS(Dialog)
 
 void Dialog_Close(entity button, entity me);
+
+.bool hideMenuOnClose;

@@ -1,11 +1,10 @@
 #include "quake3.qh"
 
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/gametype/ctf/sv_ctf.qh>
 #include <common/mapobjects/trigger/counter.qh>
 #include <common/mapobjects/triggers.qh>
-#include <common/mutators/mutator/buffs/buffs.qh>
-#include <common/mutators/mutator/buffs/sv_buffs.qh>
+#include <common/mutators/mutator/buffs/_mod.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/notifications/all.qh>
@@ -37,55 +36,65 @@
  item_health_small           Q3A    health.qh
  item_health_mega            Q3A    health.qh
  item_regen                  Q3A    buffs/all.inc
+ item_key_gold               QL     keys.qc
+ item_key_silver             QL     keys.qc
+ item_key_master             QL     keys.qc
  weapon_machinegun           Q3A    machinegun.qh
  weapon_grenadelauncher      Q3A    mortar.qh
  weapon_rocketlauncher       Q3A    devastator.qh
  * CTF spawnfuncs in sv_ctf.qc
 
  NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
+ Guns that are very different may need .count scaling beyond that of GetAmmoConsumption().
 */
 
-// SG -> MG || SG
-SPAWNFUNC_Q3_COND(weapon_shotgun, ammo_shells, (q3compat & Q3COMPAT_ARENA), WEP_MACHINEGUN, WEP_SHOTGUN)
+// Shotgun <-> Machine Gun
+// We don't want the swap on defrag maps (some of which have a valid .arena file as well as the .defi).
+// In Q3 defaults SG has 10 shells and MG has 100 bullets, Xonotic's GetAmmoConsumption() will return 1 for both
+// so .count will be out by 10x, however Xonotic has a stronger MG than Q3 so using 8x for SG->MG.
+SPAWNFUNC_Q3(weapon_shotgun, ammo_shells,
+             q3compat == Q3COMPAT_ARENA ? WEP_MACHINEGUN : WEP_SHOTGUN,
+             q3compat == Q3COMPAT_ARENA ? 8 : 1)
+SPAWNFUNC_Q3(weapon_machinegun, ammo_bullets,
+             q3compat == Q3COMPAT_ARENA ? WEP_SHOTGUN : WEP_MACHINEGUN,
+             q3compat == Q3COMPAT_ARENA ? 0.1 : 1)
 
-// MG -> SG || MG
-// Technically we should replace weapon_machinegun with WEP_SHOTGUN if Q3COMPAT_ARENA, but it almost never occurs on Q3 maps
-SPAWNFUNC_Q3AMMO_COND(ammo_bullets, (q3compat & Q3COMPAT_ARENA), WEP_SHOTGUN, WEP_MACHINEGUN)
+// Grenade Launcher -> Mortar
+SPAWNFUNC_Q3(weapon_grenadelauncher, ammo_grenades, WEP_MORTAR)
 
-// GL -> Mortar
-SPAWNFUNC_Q3AMMO(ammo_grenades, WEP_MORTAR)
+// Team Arena Proximity Launcher -> Mine Layer
+SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MINE_LAYER)
 
-// Team Arena Proximity Launcher -> Mortar
-// It's more accurate to spawn Mine Layer but players prefer Mortar, and weapon_grenadelauncher is usually disabled by "notta" and weapon_prox_launcher placed at the same origin
-SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MORTAR)
-
-// Team Arena Chaingun -> HLAC
+// Team Arena Chain Gun -> HLAC
 SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
 
-// Quake Live Heavy Machine Gun -> HLAC
+// Quake Live Heavy MachineGun -> HLAC
 SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
 
-// Team Arena Nailgun -> Crylink || Quake Nailgun -> Electro
-SPAWNFUNC_Q3_COND(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3, WEP_CRYLINK, WEP_ELECTRO)
+// Team Arena Nail Gun -> Crylink || Quake Nail Gun -> Electro
+SPAWNFUNC_Q3(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3 ? WEP_CRYLINK : WEP_ELECTRO)
 
-// LG -> Electro
-SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO)
+// Lightning Gun -> Electro
+// Damage potential of 100 LG bolts (varies between Q3 derivatives) is roughly half that of 100 electro cells,
+// Xonotic's GetAmmoConsumption() will return 4 so we need a 1/8 .count scale here.
+SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO, 0.125)
 
-// Plasma -> Hagar
+// Plasma Gun -> Hagar
 SPAWNFUNC_Q3(weapon_plasmagun, ammo_cells, WEP_HAGAR)
 
-// Rail -> Vortex
+// Rail Gun -> Vortex
 SPAWNFUNC_Q3(weapon_railgun, ammo_slugs, WEP_VORTEX)
 
 // BFG -> Crylink || Fireball
-SPAWNFUNC_Q3_COND(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF", WEP_CRYLINK, WEP_FIREBALL)
-	// FIXME: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by SPAWNFUNC_BODY
+SPAWNFUNC_Q3(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF" ? WEP_CRYLINK : WEP_FIREBALL)
+	// NB: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by SPAWNFUNC_BODY
 
-// grappling hook -> hook
+// Grappling Hook
 SPAWNFUNC_WEAPON(weapon_grapplinghook, WEP_HOOK)
+	// NB: in Q3 this doesn't use ammo
 
-// RL -> RL
-SPAWNFUNC_Q3AMMO(ammo_rockets, WEP_DEVASTATOR)
+// Rocket Launcher -> Devastator
+SPAWNFUNC_Q3(weapon_rocketlauncher, ammo_rockets, WEP_DEVASTATOR)
 
 // Gauntlet -> Tuba
 SPAWNFUNC_ITEM(weapon_gauntlet, WEP_TUBA)
@@ -105,28 +114,8 @@ SPAWNFUNC_ITEM(item_invis, ITEM_Invisibility)
 // medkit -> armor (we have no holdables)
 SPAWNFUNC_ITEM(holdable_medkit, ITEM_ArmorBig)
 
-.float wait;
-.float delay;
 
 // weapon remove ent from df
-void target_init_verify(entity this)
-{
-	entity trigger, targ;
-	for(trigger = NULL; (trigger = find(trigger, classname, "trigger_multiple")); )
-		for(targ = NULL; (targ = find(targ, targetname, trigger.target)); )
-			if (targ.classname == "target_init" || targ.classname == "target_give" || targ.classname == "target_items")
-			{
-				trigger.wait = 0;
-				trigger.delay = 0;
-				targ.wait = 0;
-				targ.delay = 0;
-
-				//setsize(targ, trigger.mins, trigger.maxs);
-				//setorigin(targ, trigger.origin);
-				//remove(trigger);
-			}
-}
-
 void target_init_use(entity this, entity actor, entity trigger)
 {
 	if (!(this.spawnflags & 1))
@@ -150,7 +139,6 @@ void target_init_use(entity this, entity actor, entity trigger)
 			SetResource(actor, RES_BULLETS, 0);
 			SetResource(actor, RES_ROCKETS, 0);
 			SetResource(actor, RES_CELLS, 0);
-			SetResource(actor, RES_PLASMA, 0);
 			SetResource(actor, RES_FUEL, 0);
 
 			STAT(WEAPONS, actor) = WEPSET(SHOTGUN);
@@ -161,7 +149,6 @@ void target_init_use(entity this, entity actor, entity trigger)
 			SetResource(actor, RES_BULLETS, start_ammo_nails);
 			SetResource(actor, RES_ROCKETS, start_ammo_rockets);
 			SetResource(actor, RES_CELLS, start_ammo_cells);
-			SetResource(actor, RES_PLASMA, start_ammo_plasma);
 			SetResource(actor, RES_FUEL, start_ammo_fuel);
 
 			STAT(WEAPONS, actor) = start_weapons;
@@ -170,7 +157,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 
 	if (!(this.spawnflags & 8))
 	{
-		FOREACH(StatusEffect, it.instanceOfPowerups,
+		FOREACH(StatusEffects, it.instanceOfPowerupStatusEffect,
 		{
 			it.m_remove(it, actor, STATUSEFFECT_REMOVE_NORMAL);
 		});
@@ -197,49 +184,8 @@ void target_init_use(entity this, entity actor, entity trigger)
 spawnfunc(target_init)
 {
 	this.use = target_init_use;
-	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }
 
-// weapon give ent from Q3
-void target_give_init(entity this)
-{
-	IL_EACH(g_items, it.targetname == this.target,
-	{
-		if (it.classname == "item_buff")
-		{
-			this.netname = cons(this.netname, it.buffdef.netname);
-			this.buffs_finished += it.buffs_finished;
-		}
-		else
-		{
-			this.ammo_rockets          += it.ammo_rockets;
-			this.ammo_cells            += it.ammo_cells;
-			this.ammo_shells           += it.ammo_shells;
-			this.ammo_nails            += it.ammo_nails;
-			this.invincible_finished   += it.invincible_finished;
-			this.strength_finished     += it.strength_finished;
-			this.speed_finished        += it.speed_finished;
-			this.invisibility_finished += it.invisibility_finished;
-			this.health                += it.health;
-			this.armorvalue            += it.armorvalue;
-
-			this.netname = cons(this.netname, (it.itemdef.m_weapon) ? it.itemdef.m_weapon.netname : it.itemdef.netname);
-		}
-
-		//remove(it); // removing ents in init functions causes havoc, workaround:
-		setthink(it, SUB_Remove);
-		it.nextthink = time;
-	});
-	this.spawnflags = 2;
-	this.spawnfunc_checked = true;
-	spawnfunc_target_items(this);
-	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
-}
-
-spawnfunc(target_give)
-{
-	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
-}
 
 void score_use(entity this, entity actor, entity trigger)
 {
@@ -256,12 +202,29 @@ spawnfunc(target_score)
 	this.use = score_use;
 }
 
+#define FRAGSFILTER_REMOVER BIT(0)
+#define FRAGSFILTER_RUNONCE BIT(1) // introduced but now unused by q3df
+#define FRAGSFILTER_SILENT  BIT(2)
+#define FRAGSFILTER_RESET   BIT(3)
+
 void fragsfilter_use(entity this, entity actor, entity trigger)
 {
 	if(!IS_PLAYER(actor))
 		return;
 	if(actor.fragsfilter_cnt >= this.frags)
+	{
+		if(this.spawnflags & FRAGSFILTER_RESET)
+			actor.fragsfilter_cnt = 0;
+		else if(this.spawnflags & FRAGSFILTER_REMOVER)
+			actor.fragsfilter_cnt -= this.frags;
 		SUB_UseTargets(this, actor, trigger);
+	}
+	else if(!(this.spawnflags & FRAGSFILTER_SILENT))
+	{
+		int req_frags = this.frags - actor.fragsfilter_cnt;
+		centerprint(actor, sprintf("%d more frag%s needed", req_frags, req_frags > 1 ? "s" : ""));
+		play2(actor, SND(TALK));
+	}
 }
 spawnfunc(target_fragsFilter)
 {
@@ -331,80 +294,103 @@ spawnfunc(target_smallprint)
 	spawnfunc_target_print(this);
 }
 
-.bool notteam;
-.bool notsingle;
-.bool notfree;
-.bool notta;
-.bool notvq3;
-.bool notcpm;
 .string gametype;
+.string not_gametype;
 bool DoesQ3ARemoveThisEntity(entity this)
 {
 	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
+
+	if (!this.classname)
+		return true;
 
 	// DeFRaG mappers use "notcpm" or "notvq3" to disable an entity in CPM or VQ3 physics
 	// Xonotic is usually played with a CPM-based physics so we default to CPM mode
 	if(cvar_string("g_mod_physics") == "Q3")
 	{
-		if(this.notvq3)
+		if(stof(GetField_fullspawndata(this, "notvq3", false)))
 			return true;
 	}
-	else if(this.notcpm)
+	else if(stof(GetField_fullspawndata(this, "notcpm", false)))
 		return true;
 
 	// Q3 mappers use "notq3a" or "notta" to disable an entity in Q3A or Q3TA
 	// Xonotic has ~equivalent features to Team Arena
-	if(this.notta)
+	if(stof(GetField_fullspawndata(this, "notta", false)))
 		return true;
 
-	// FIXME: singleplayer does not use maxclients 1 as that would prevent bots
-	if(this.notsingle)
-		if(maxclients == 1)
+	// FIXME: singleplayer does not use maxclients 1 as that would prevent bots,
+	// this is the case in Q3 also, it uses another method to block clients.
+	// Only accessible in VQ3, via the `spmap` command.
+	if(stof(GetField_fullspawndata(this, "notsingle", false)))
+		if(maxclients == 1 && IS_GAMETYPE(DEATHMATCH))
 			return true;
 
-	if(this.notteam)
+	if(stof(GetField_fullspawndata(this, "notteam", false)))
 		if(teamplay)
 			return true;
 
-	if(this.notfree)
+	if(stof(GetField_fullspawndata(this, "notfree", false)))
 		if(!teamplay)
 			return true;
 
-	if(this.gametype)
+	if(this.gametype || this.not_gametype)
 	{
-		string gametypename;
-		// From ioq3 g_spawn.c: static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester"};
-		gametypename = "ffa";
+		// Q3 checks these with strstr(): case-sensitive, no gametype can be a substring of another,
+		// any separator is allowed (conventions are: spaces, commas, or commas with spaces).
+		// QL's entities.def says they're space delineated.
+
+		// Q3 gametype entity fields: ffa tournament single team ctf oneflag obelisk  harvester    (game/g_spawn.c)
+		// Q3 arena file 'type' key:  ffa tourney                ctf oneflag overload harvester    (ui/ui_gameinfo.c)
+
+		// QL gametype entity fields: ffa duel tdm ca ft rr ctf ad dom har 1f      race ob
+		// QL arena file 'type' key:  ffa duel tdm ca ft rr ctf ad dom har oneflag race
+
+		string gametypename_q3, gametypename_ql;
+
+		// One of these will apply if our gametype has no Q3/QL equivalent
 		if(teamplay)
-			gametypename = "team";
+		{
+			gametypename_q3 = "team";
+			gametypename_ql = "tdm";
+		}
+		else
+			gametypename_q3 = gametypename_ql = "ffa";
+
 		if(g_ctf)
-			gametypename = "ctf";
-		if(g_ctf && ctf_oneflag)
-			gametypename = "oneflag";
-		if(g_duel)
-			gametypename = "tournament";
-		if(maxclients == 1)
-			gametypename = "single";
-		// we do not have the other types (obelisk, harvester)
-		if(strstrofs(this.gametype, gametypename, 0) < 0)
+		{
+			if (cvar("g_ctf_oneflag"))
+			{
+				gametypename_q3 = "oneflag";
+				gametypename_ql = "1f";
+			}
+			else
+				gametypename_q3 = gametypename_ql = "ctf";
+		}
+		else if(g_duel)
+		{
+			gametypename_q3 = "tournament";
+			gametypename_ql = "duel";
+		}
+		else if(IS_GAMETYPE(DEATHMATCH) && maxclients == 1)
+			gametypename_q3 = "single";
+		else if(g_ca)
+			gametypename_ql = "ql";
+		else if(IS_GAMETYPE(FREEZETAG))
+			gametypename_ql = "ft";
+		else if(IS_GAMETYPE(DOMINATION))
+			gametypename_ql = "dom";
+		else if(g_race || g_cts)
+			gametypename_ql = "race";
+
+		if(this.gametype)
+		if(strstrofs(this.gametype, gametypename_q3, 0) < 0
+		&& strstrofs(this.gametype, gametypename_ql, 0) < 0)
+			return true;
+
+		// Only supported by QL
+		if(strstrofs(this.not_gametype, gametypename_ql, 0) >= 0)
 			return true;
 	}
 
 	return false;
 }
-
-int GetAmmoConsumptionQ3(string netname)
-// Returns ammo consumed per shot by the primary/default fire mode
-// Returns 0 if the netname has no ammo cvar
-{
-	switch (netname)
-	{
-		case "arc":	   return autocvar_g_balance_arc_beam_ammo;
-		case "devastator": return autocvar_g_balance_devastator_ammo;
-		case "machinegun": return autocvar_g_balance_machinegun_sustained_ammo;
-		case "minelayer":  return autocvar_g_balance_minelayer_ammo;
-		case "seeker":	   return autocvar_g_balance_seeker_tag_ammo;
-		default:	   return cvar(strcat("g_balance_", netname, "_primary_ammo"));
-	}
-}
-

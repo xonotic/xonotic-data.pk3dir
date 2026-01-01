@@ -8,13 +8,13 @@ CLASS(Label, MenuItem)
 	METHOD(Label, setText, void(entity, string));
 	METHOD(Label, toString, string(entity));
 	METHOD(Label, recalcPositionWithText, void(entity, string));
-	ATTRIB(Label, isBold, float, 0);
+	ATTRIB(Label, isBold, bool, false);
 	ATTRIB(Label, text, string);
 	ATTRIB(Label, currentText, string);
 	ATTRIB(Label, fontSize, float, 8);
 	ATTRIB(Label, align, float, 0.5);
-	ATTRIB(Label, allowCut, float, 0);
-	ATTRIB(Label, allowColors, float, 0);
+	ATTRIB(Label, allowCut, bool, false);
+	ATTRIB(Label, allowColors, bool, false);
 	ATTRIB(Label, keepspaceLeft, float, 0); // for use by subclasses (radiobuttons for example);
 	ATTRIB(Label, keepspaceRight, float, 0);
 	ATTRIB(Label, marginLeft, float, 0);    // alternate way to specify keepspace* (in characters from the font);
@@ -26,9 +26,13 @@ CLASS(Label, MenuItem)
 	ATTRIB(Label, disabled, float, 0);
 	ATTRIB(Label, disabledAlpha, float, 0.3);
 	ATTRIB(Label, textEntity, entity);
-	ATTRIB(Label, allowWrap, float, 0);
-	ATTRIB(Label, recalcPos, float, 0);
+	// if allowWrap is enabled text is wrapped on multiple lines and can't be condensed;
+	// lines are centered vertically and are allowed to extend outside the item box
+	// so there should be some free space above and below the item
+	ATTRIB(Label, allowWrap, bool, false);
+	ATTRIB(Label, allowWrap_spacing, float, 0);
+	ATTRIB(Label, recalcPos, bool, false);
 	ATTRIB(Label, condenseFactor, float, 1);
 	ATTRIB(Label, overrideRealOrigin, vector, '0 0 0');
-	ATTRIB(Label, overrideCondenseFactor, float, 0);
+	ATTRIB(Label, overrideCondenseFactor, bool, false);
 ENDCLASS(Label)

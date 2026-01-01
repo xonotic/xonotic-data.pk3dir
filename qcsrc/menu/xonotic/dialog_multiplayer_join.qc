@@ -55,11 +55,11 @@ void XonoticServerListTab_fill(entity me)
 			e.onClickEntity = slist;
 			e.onClick = ServerList_ShowLaggy_Click;
 		/* END FILTER CONTROLS */
-		me.TDempty(me, 0.1);
+		me.TDempty(me, 0.05);
 		me.TD(me, 1, 0.8, e = makeXonoticButton_T(_("Refresh"), '0 0 0', _("Reload the server list")));
 			e.onClick = XonoticServerListTab_refresh;
 			e.onClickEntity = slist;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "net_slist_pause", _("Pause"),
+		me.TD(me, 1, 0.65, e = makeXonoticCheckBox_T(0, "net_slist_pause", _("Pause"),
 			_("Pause updating the server list to prevent servers from \"jumping around\"")));
 
 	me.gotoRC(me, 2, 0);

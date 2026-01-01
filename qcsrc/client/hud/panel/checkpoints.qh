@@ -1,0 +1,8 @@
+#pragma once
+#include "../panel.qh"
+
+bool autocvar_hud_panel_checkpoints = true;
+bool autocvar_hud_panel_checkpoints_dynamichud = true;
+bool autocvar_hud_panel_checkpoints_flip = false;
+bool autocvar_hud_panel_checkpoints_align = true;
+float autocvar_hud_panel_checkpoints_fontscale = 1.1;

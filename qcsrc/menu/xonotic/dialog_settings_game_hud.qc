@@ -5,6 +5,7 @@
 #include "textlabel.qh"
 #include "slider.qh"
 #include "slider_sbfadetime.qh"
+#include "mixedslider.qh"
 #include "checkbox.qh"
 #include "button.qh"
 
@@ -42,8 +43,9 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
 	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
-	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_panel_scoreboard_bg_alpha"));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_scoreboard_bg_alpha"));
+			e.formatString = "%";
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fading speed:")));
 		me.TD(me, 1, 2, e = makeXonoticScoreboardFadeTimeSlider());
@@ -53,11 +55,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_panel_scoreboard_accuracy", _("Show accuracy underneath scoreboard")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Show team sizes:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Left=on the left side of the scoreboard and move team scores to the right; Right=on the right of the scoreboard")));
-			e.addValue(e, _("Left"), "1");
-			e.addValue(e, _("Off"), "0");
-			e.addValue(e, _("Right"), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("hud_panel_scoreboard_team_size_position", _("Team size position: Off=do not show; Left=on the left side of the scoreboard and move team scores to the right; Right=on the right of the scoreboard")));
+			e.addText(e, _("Left"),  1);
+			e.addText(e, _("Off"),   0);
+			e.addText(e, _("Right"), 2);
+			e.configureXonoticMixedSliderValues(e);
 
 	me.TR(me);
 	me.TR(me);
@@ -67,33 +69,39 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			_("Show various gametype specific waypoints")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.05, "g_waypointsprite_alpha",
-			_("Control transparency of the waypoints")));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.1, "g_waypointsprite_alpha", "-"));
+			e.formatString = "%";
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Font size:")));
-			setDependent(e, "cl_hidewaypoints", 0, 0);
+			setDependentNOT(e, "g_waypointsprite_alpha", 0);
+			setDependentAND(e, "cl_hidewaypoints", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider(5, 16, 1, "g_waypointsprite_fontsize"));
-			setDependent(e, "cl_hidewaypoints", 0, 0);
+			setDependentNOT(e, "g_waypointsprite_alpha", 0);
+			setDependentAND(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Edge offset:")));
-			setDependent(e, "cl_hidewaypoints", 0, 0);
+			setDependentNOT(e, "g_waypointsprite_alpha", 0);
+			setDependentAND(e, "cl_hidewaypoints", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 0.3, 0.01, "g_waypointsprite_edgeoffset_bottom", "-"));
 			makeMulti(e, "g_waypointsprite_edgeoffset_top g_waypointsprite_edgeoffset_left g_waypointsprite_edgeoffset_right");
-			setDependent(e, "cl_hidewaypoints", 0, 0);
+			setDependentNOT(e, "g_waypointsprite_alpha", 0);
+			setDependentAND(e, "cl_hidewaypoints", 0, 0);
 
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.25, 1, "g_waypointsprite_crosshairfadealpha", _("Fade when near the crosshair")));
-			setDependent(e, "cl_hidewaypoints", 0, 0);
+			setDependentNOT(e, "g_waypointsprite_alpha", 0);
+			setDependentAND(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "g_waypointsprite_text", _("Display names instead of icons")));
-			setDependent(e, "cl_hidewaypoints", 0, 0);
+			setDependentNOT(e, "g_waypointsprite_alpha", 0);
+			setDependentAND(e, "cl_hidewaypoints", 0, 0);
 
 	#if 0
 	me.TR(me);
@@ -103,83 +111,97 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Factor:")));
-			setDependent(e, "hud_damage", 0.001, 100);
+			setDependentNOT(e, "hud_damage", 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.025, 0.1, 0.025, "hud_damage_factor"));
-			setDependent(e, "hud_damage", 0.001, 100);
+			setDependentNOT(e, "hud_damage", 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fade rate:")));
-			setDependent(e, "hud_damage", 0.001, 100);
+			setDependentNOT(e, "hud_damage", 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.25, 1, 0.05, "hud_damage_fade_rate"));
-			setDependent(e, "hud_damage", 0.001, 100);
+			setDependentNOT(e, "hud_damage", 0);
 	me.TR(me);
 	#endif
 
-	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Player Names")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players")));
 
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Opacity:")));
 			setDependent(e, "hud_shownames", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.05, "hud_shownames_alpha"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_shownames_alpha"));
+			e.formatString = "%";
 			setDependent(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Font size:")));
-			setDependent(e, "hud_shownames", 1, 1);
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(5, 16, 1, "hud_shownames_fontsize"));
-			setDependent(e, "hud_shownames", 1, 1);
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Max distance:")));
-			setDependent(e, "hud_shownames", 1, 1);
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider(2000, 10000, 500, "hud_shownames_maxdistance"));
-			setDependent(e, "hud_shownames", 1, 1);
+			e.formatString = _("%s qu");
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Decolorize:")));
-			setDependent(e, "hud_shownames", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_shownames_decolorize"));
-			e.addValue(e, _("Never"), "0");
-			e.addValue(e, _("Teamplay"), "1");
-			e.addValue(e, _("Always"), "2");
-			e.configureXonoticTextSliderValues(e);
-			setDependent(e, "hud_shownames", 1, 1);
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_shownames_decolorize"));
+			e.addText(e, _("Never"),    0);
+			e.addText(e, _("Teamplay"), 1);
+			e.addText(e, _("Always"),   2);
+			e.configureXonoticMixedSliderValues(e);
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
 
 	me.TR(me);
 	//me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(25, 0, "hud_shownames_crosshairdistance", _("Only when near crosshair")));
-			setDependent(e, "hud_shownames", 1, 1);
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "hud_shownames_status", _("Display health and armor")));
-			setDependent(e, "hud_shownames", 1, 1);
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
 
 	me.TR(me);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed unit:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_speed_unit"));
-			e.addValue(e, _("qu/s") , "1");
-			e.addValue(e, _("m/s")  , "2");
-			e.addValue(e, _("km/h") , "3");
-			e.addValue(e, _("mph")  , "4");
-			e.addValue(e, _("knots"), "5");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_speed_unit"));
+			e.addText(e, _("qu/s"),  1);
+			e.addText(e, _("m/s"),   2);
+			e.addText(e, _("km/h"),  3);
+			e.addText(e, _("mph"),   4);
+			e.addText(e, _("knots"), 5);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("hud_damage"));
+			e.formatString = "%";
+			e.addText(e, _("Disable"), 0);
+			e.addRange(e, 0.05, 1, 0.05);
+			e.configureXonoticMixedSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
 			_("HUD moves around following player's movement")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
-	me.TR(me);
-	me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
+
+	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
 			e.onClick = HUDSetup_Check_Gamestatus;
 			e.onClickEntity = me;
 		// TODO: show hud config name with text here

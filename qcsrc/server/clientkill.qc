@@ -17,21 +17,20 @@
 
 void ClientKill_Now_TeamChange(entity this)
 {
-	if (this.killindicator_teamchange == -1)
+	if (this.killindicator_teamchange == -2)
 	{
-		TeamBalance_JoinBestTeam(this);
-	}
-	else if (this.killindicator_teamchange == -2)
-	{
-		if (blockSpectators)
+		if (!autocvar_sv_spectate)
+			// shouldn't get here because of condition in ClientCommand_spectate()
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+
 		PutObserverInServer(this, false, true);
+		if (!TeamBalance_QueuedPlayersTagIn(this))
+		if (autocvar_g_balance_teams_remove)
+			TeamBalance_RemoveExcessPlayers(this);
 	}
 	else
-	{
-		Player_SetTeamIndexChecked(this, Team_TeamToIndex(
-			this.killindicator_teamchange));
-	}
+		SetPlayerTeam(this, Team_TeamToIndex(this.killindicator_teamchange), TEAM_CHANGE_MANUAL);
+
 	this.killindicator_teamchange = 0;
 }
 
@@ -54,11 +53,9 @@ void ClientKill_Now(entity this)
 
 	if (this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
-
-	if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
-	{
+	// SetPlayerTeam() already killed if team changed, auto-selecting the current team shouldn't kill.
+	else if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
-	}
 
 	// now I am sure the player IS dead
 }
@@ -109,6 +106,31 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		killtime = min(killtime, 1);
 
+	if (targetteam == -1)
+	{
+		if (this.team <= 0)
+		{
+			// Defer autoselect to Join(), after any queued players were joined, to avoid 2 players on same team
+			// when the first player(s) chose specific teams and the last player chose autoselect (they skip the queue).
+			this.team_selected = -1; // don't stop at ShowTeamSelection()
+			return;
+		}
+
+		/* Decide the team now because the "best" team could change during g_balance_kill_delay.
+		 * This lets balancing code consider this player to be on the team they're about to change to,
+		 * so we won't need to cancel the change after informing the player it's happening,
+		 * and so we don't need to handle that in other code such as TeamBalance_QueuedPlayersTagIn().
+		 * Also so we can notify immediately when already on a best team instead of counting down for nothing.
+		 */
+		entity balance = TeamBalance_CheckAllowedTeams(this);
+		targetteam = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, this, true));
+		TeamBalance_Destroy(balance);
+		if (targetteam == this.team)
+		{
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_ALREADYBEST);
+			return;
+		}
+	}
 	this.killindicator_teamchange = targetteam;
 
 	// this.killindicator.count == 1 means that the kill indicator was spawned by ClientKill_Silent
@@ -172,11 +194,6 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 			this.killindicator.colormod = '0 0 0';
 			notif = CENTER_TEAMCHANGE_SUICIDE;
 		}
-		else if (targetteam == -1) // auto
-		{
-			this.killindicator.colormod = '0 1 0';
-			notif = CENTER_TEAMCHANGE_AUTO;
-		}
 		else if (targetteam == -2) // spectate
 		{
 			this.killindicator.colormod = '0.5 0.5 0.5';
@@ -195,7 +212,9 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 
 void ClientKill_Silent(entity this, float _delay)
 {
-	this.killindicator = new(killindicator);
+	// overrides queued silent killindicators
+	if (!this.killindicator || this.killindicator.count != 1)
+		this.killindicator = new(killindicator);
 	this.killindicator.owner = this;
 	setthink(this.killindicator, KillIndicator_Think);
 	this.killindicator.nextthink = time + (this.lip) * 0.05;
@@ -207,7 +226,7 @@ void ClientKill_Silent(entity this, float _delay)
 // Called when a client types 'kill' in the console
 void ClientKill(entity this)
 {
-	if (game_stopped || this.player_blocked || STAT(FROZEN, this))
+	if (game_stopped || this.player_blocked)
 		return;
 
 	ClientKill_TeamChange(this, 0);

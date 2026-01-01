@@ -6,8 +6,8 @@
 #include <common/deathtypes/all.qh>
 #include <common/effects/all.qh>
 #include <common/effects/qc/_mod.qh>
-#include <common/gamemodes/_mod.qh>
-#include <common/gamemodes/sv_rules.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/gametypes/sv_rules.qh>
 #include <common/mapobjects/_mod.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/teleporters.qh>
@@ -127,6 +127,7 @@ void CopyBody(entity this, float keepvelocity)
 
 	if(clone.colormap <= maxclients && clone.colormap > 0)
 		clone.colormap = 1024 + this.clientcolors;
+	clone.sv_entnum = etof(this); // sent to CSQC for color mapping purposes
 
 	CSQCMODEL_AUTOINIT(clone);
 	clone.CopyBody_nextthink = this.nextthink;
@@ -165,12 +166,16 @@ void player_anim(entity this)
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(STAT(FROZEN, this))
+	if(StatusEffects_active(STATUSEFFECT_Frozen, this))
 		animbits |= ANIMSTATE_FROZEN;
 	if(this.move_movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
 	if(IS_DUCKED(this))
 		animbits |= ANIMSTATE_DUCK;
+
+	MUTATOR_CALLHOOK(PlayerAnim, this, animbits);
+	animbits = M_ARGV(1, int);
+
 	animdecide_setstate(this, animbits, false);
 	animdecide_setimplicitstate(this, IS_ONGROUND(this));
 }
@@ -237,19 +242,14 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		if(!DEATH_ISSPECIAL(deathtype))
 		{
-			damage *= Handicap_GetTotalHandicap(this);
+			damage *= Handicap_GetTotalHandicap(this, true);
 			if (this != attacker && IS_PLAYER(attacker))
 			{
-				damage /= Handicap_GetTotalHandicap(attacker);
+				damage /= Handicap_GetTotalHandicap(attacker, false);
 			}
 		}
 
-		if (STAT(FROZEN, this))
-		{
-			if (!ITEM_DAMAGE_NEEDKILL(deathtype))
-				damage = 0;
-		}
-		else if (StatusEffects_active(STATUSEFFECT_SpawnShield, this) && autocvar_g_spawnshield_blockdamage < 1)
+		if (StatusEffects_active(STATUSEFFECT_SpawnShield, this) && autocvar_g_spawnshield_blockdamage < 1)
 			damage *= 1 - bound(0, autocvar_g_spawnshield_blockdamage, 1);
 
 		if(deathtype & HITTYPE_SOUND) // sound based attacks cause bleeding from the ears
@@ -308,6 +308,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		attacker = this.pusher;
 		this.pushltime = max(this.pushltime, time + 0.6);
 	}
+	else if(IS_MONSTER(attacker) && IS_PLAYER(attacker.realowner))
+	{
+		attacker = attacker.realowner;
+		this.istypefrag = 0;
+	}
 	else
 	{
 		this.pushltime = 0;
@@ -344,7 +349,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			if(take)
 				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-			if (time > this.pain_finished && !STAT(FROZEN, this)) // Don't switch pain sequences like crazy
+			if (time > this.pain_finished && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this)) // Don't switch pain sequences like crazy
 			{
 				this.pain_finished = time + 0.5;	//Supajoe
 
@@ -366,15 +371,15 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
 						if(deathtype == DEATH_FALL.m_id)
-							PlayerSound(this, playersound_fall, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_fall, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 						else if(myhp > 75)
-							PlayerSound(this, playersound_pain100, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain100, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 						else if(myhp > 50)
-							PlayerSound(this, playersound_pain75, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain75, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 						else if(myhp > 25)
-							PlayerSound(this, playersound_pain50, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain50, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 						else
-							PlayerSound(this, playersound_pain25, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain25, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 					}
 				}
 			}
@@ -427,13 +432,18 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if ((dh || da) && !forbid_logging_damage)
 	{
 		float realdmg = damage - excess;
-		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg && !STAT(FROZEN, this)
+		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg
 			&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 		{
+			// accumulate damage, it will be logged later in this frame
 			if (IS_PLAYER(attacker) && DIFF_TEAM(attacker, this) && deathtype != DEATH_KILL.m_id)
-				GameRules_scoring_add(attacker, DMG, realdmg);
+			{
+				if (accuracy_isgooddamage(attacker, this))
+					accuracy_add(attacker, awep, 0, 0, realdmg); // add to real
+				attacker.score_frame_dmg += realdmg;
+			}
 			if (IS_PLAYER(this))
-				GameRules_scoring_add(this, DMGTAKEN, realdmg);
+				this.score_frame_dmgtaken += realdmg;
 		}
 	}
 
@@ -441,10 +451,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		bool defer_ClientKill_Now_TeamChange = false;
 
-		if(this.alivetime)
+		if(this.alivetime_start)
 		{
-			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
-			this.alivetime = 0;
+			PlayerStats_GameReport_Event_Player(this, PLAYERSTATS_ALIVETIME, max(0, time - this.alivetime_start));
+			this.alivetime_start = 0;
 		}
 
 		if(valid_damage_for_weaponstats)
@@ -454,9 +464,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN.m_id)
-				PlayerSound(this, playersound_drown, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
+				PlayerSound(this, playersound_drown, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 			else
-				PlayerSound(this, playersound_death, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND);
+				PlayerSound(this, playersound_death, CH_PAIN, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 		}
 
 		// get rid of kill indicator
@@ -509,7 +519,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			ClientKill_Now_TeamChange(this); // can turn player into spectator
 
 		// player could have been miraculously resuscitated ;)
-		// e.g. players in freezetag get frozen, they don't really die
 		if(GetResource(this, RES_HEALTH) >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
 
@@ -517,8 +526,6 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			calculate_player_respawn_time(this);
 
 		// when we get here, player actually dies
-
-		Unfreeze(this, false); // remove any icy remains
 
 		// clear waypoints
 		WaypointSprite_PlayerDead(this);
@@ -607,7 +614,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 bool PlayerHeal(entity targ, entity inflictor, float amount, float limit)
 {
-	if(GetResource(targ, RES_HEALTH) <= 0 || GetResource(targ, RES_HEALTH) >= limit)
+	float hlth = GetResource(targ, RES_HEALTH);
+	if (hlth <= 0 || hlth >= limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, limit);

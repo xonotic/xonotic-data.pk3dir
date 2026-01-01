@@ -2,7 +2,7 @@
 
 #include <common/constants.qh>
 #include <common/effects/all.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/net_linked.qh>
@@ -778,9 +778,13 @@ void GameCommand_gametype(int request, int argc)
 				Gametype t = MapInfo_Type_FromString(s, false, false);
 
 				if (t)
-					GameTypeVote_SetGametype(t);
+				{
+					// don't execute gametype hooks because they can change active
+					// gametype rules if executed during the game
+					GameTypeVote_SetGametype(t, "", false);
+				}
 				else
-					bprint("Failed to switch to ", s, ": this game type does not exist!\n");
+					bprint("Failed to switch to ", s, ": this gametype does not exist!\n");
 
 				return;
 			}
@@ -965,11 +969,13 @@ void GameCommand_lockteams(int request)
 			if (teamplay)
 			{
 				lockteams = 1;
-				bprint("^1The teams are now locked.\n");
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_LOCKED);
+				// nobody can join or change teams now so remove everyone from the queue
+				FOREACH_CLIENT(it.wants_join, it.wants_join = it.team_selected = 0);
 			}
 			else
 			{
-				bprint("lockteams command can only be used in a team-based gamemode.\n");
+				bprint("lockteams command can only be used in a team-based gametype.\n");
 			}
 			return;
 		}
@@ -1089,7 +1095,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (team_num == client.team)  // already on the destination team
 						{
 							// keep the forcing undone
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ",
+								Team_ColoredFullName(team_num), ".");
 							continue;
 						}
 						else if (team_num == 0)  // auto team
@@ -1119,7 +1126,8 @@ void GameCommand_moveplayer(int request, int argc)
 						}
 						if (!TeamBalance_IsTeamAllowed(balance, team_id))
 						{
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is not allowed to join the ",
+								Team_ColoredFullName(team_num), ".");
 							TeamBalance_Destroy(balance);
 							continue;
 						}
@@ -1130,7 +1138,8 @@ void GameCommand_moveplayer(int request, int argc)
 						if (MoveToTeam(client, team_id, 6))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
-							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ", Team_ColoredFullName(team_num), "^7.");
+							LOG_INFO("Player #", client_num_str, " (", pl_name, ") has been moved to the ",
+								Team_ColoredFullName(team_num), ".");
 						}
 						else
 						{
@@ -1162,6 +1171,42 @@ void GameCommand_moveplayer(int request, int argc)
 	}
 }
 
+void GameCommand_nextmap(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argc >= 2) // nextmap with mapname arg
+			{
+				if (argc > 2)
+					LOG_HELP("Warning: nextmap only takes 1 argument");
+
+				string map = ValidateMap(argv(1), NULL);
+				if (map != "" && map != get_nextmap())
+					Set_NextMap(map);
+			}
+			else // nextmap without args
+			{
+				if (get_nextmap() != "")
+					LOG_HELP(get_nextmap());
+				else
+					LOG_HELP("none");
+			}
+			return;  // never fall through to usage
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd nextmap [<mapname>]");
+			LOG_HELP("  Without arguments it prints current nextmap if one is set");
+			LOG_HELP("  With arguments it attempts to set nextmap");
+			return;
+		}
+	}
+}
+
 void GameCommand_nospectators(int request)
 {
 	switch (request)
@@ -1173,13 +1218,8 @@ void GameCommand_nospectators(int request)
 				LOG_HELPF("This command works only when the server is running.");
 				return;
 			}
-			blockSpectators = 1;
-			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !INGAME(it), {
-				CS(it).spectatortime = time;
-				Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-			});
-			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
+			cvar_settemp("sv_spectate", "0");
+			// if sv_spectate was enabled PlayerFrame() sends SPECTATE_WARNING notifications
 			return;
 		}
 
@@ -1188,6 +1228,7 @@ void GameCommand_nospectators(int request)
 		{
 			LOG_HELP("Usage:^3 sv_cmd nospectators");
 			LOG_HELP("  No arguments required.");
+			LOG_HELP("Temporarily disables the ^3sv_spectate ^7cvar.");
 			return;
 		}
 	}
@@ -1638,11 +1679,11 @@ void GameCommand_unlockteams(int request)
 			if (teamplay)
 			{
 				lockteams = 0;
-				bprint("^1The teams are now unlocked.\n");
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_UNLOCKED);
 			}
 			else
 			{
-				bprint("unlockteams command can only be used in a team-based gamemode.\n");
+				bprint("unlockteams command can only be used in a team-based gametype.\n");
 			}
 			return;
 		}
@@ -1754,6 +1795,7 @@ SERVER_COMMAND(gotomap, "Simple command to switch to another map") { GameCommand
 SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter teams") { GameCommand_lockteams(request); }
 SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
 SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
+SERVER_COMMAND(nextmap, "Set/Query the next map") { GameCommand_nextmap(request, arguments); }
 SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
 SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
 SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }

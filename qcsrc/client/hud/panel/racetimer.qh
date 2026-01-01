@@ -2,19 +2,25 @@
 #include "../panel.qh"
 
 bool autocvar_hud_panel_racetimer;
-bool autocvar_hud_panel_racetimer_dynamichud    = true;
+bool autocvar_hud_panel_racetimer_dynamichud = true;
 
 // QUALIFYING
 float race_checkpoint;
 float race_time;
+float race_timespeed;
+float race_timebestspeed;
 float race_laptime;
 float race_checkpointtime;
+string race_checkpoint_splits[256];
+float race_checkpoint_splits_speed[256];
 float race_previousbesttime;
 float race_mypreviousbesttime;
 string race_previousbestname;
 float race_nextcheckpoint;
 float race_nextbesttime;
+float race_nextbestspeed;
 float race_mybesttime;
+float race_mybestspeed;
 string race_nextbestname;
 float race_penaltyaccumulator; // qualifying: total penalty time in tenths
 float race_penaltyeventtime; // time when the player got the penalty

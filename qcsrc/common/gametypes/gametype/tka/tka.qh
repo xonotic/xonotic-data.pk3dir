@@ -1,0 +1,67 @@
+#pragma once
+
+#include <common/gametypes/gametype/deathmatch/deathmatch.qh>
+#include <common/gametypes/gametype/keepaway/keepaway.qh>
+#include <common/mapinfo.qh>
+#if defined(CSQC)
+	#include <common/gametypes/gametype/tka/cl_tka.qh>
+#endif
+
+CLASS(TeamKeepaway, Gametype)
+	INIT(TeamKeepaway)
+	{
+		this.gametype_init(this, _("Team Keepaway"),"tka","g_tka",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Keep the ball in your team's possession to get points for kills"));
+	}
+	METHOD(TeamKeepaway, m_parse_mapinfo, bool(string k, string v))
+	{
+		if (!k)
+		{
+			cvar_set("g_tka_teams", cvar_defstring("g_tka_teams"));
+			return true;
+		}
+		switch (k)
+		{
+			case "teams":
+				cvar_set("g_tka_teams", v);
+				return true;
+		}
+		return false;
+	}
+	METHOD(TeamKeepaway, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		if(spawnpoints >= 8 && diameter > 4096)
+			return true;
+		return false;
+	}
+	METHOD(TeamKeepaway, m_isForcedSupported, bool(Gametype this))
+	{
+		if(cvar("g_tka_on_ka_maps"))
+		{
+			// if this is set, all KA maps support TKA too
+			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_KEEPAWAY.gametype_flags))
+			return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
+		}
+		if(cvar("g_tka_on_tdm_maps"))
+		{
+			// if this is set, all TDM maps support TKA too
+			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags))
+			return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
+		}
+		return false;
+	}
+	METHOD(TeamKeepaway, m_setTeams, void(string sa))
+	{
+		cvar_set("g_tka_teams", sa);
+	}
+#ifdef CSQC
+	ATTRIB(TeamKeepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_TeamKeepaway);
+#endif
+ENDCLASS(TeamKeepaway)
+REGISTER_GAMETYPE(TEAM_KEEPAWAY, NEW(TeamKeepaway));
+
+const int TKA_BALL_TAKEN_RED            = BIT(0);
+const int TKA_BALL_TAKEN_BLUE           = BIT(1);
+const int TKA_BALL_TAKEN_YELLOW         = BIT(2);
+const int TKA_BALL_TAKEN_PINK           = BIT(3);
+const int TKA_BALL_CARRYING             = BIT(4);
+const int TKA_BALL_DROPPED              = BIT(5);

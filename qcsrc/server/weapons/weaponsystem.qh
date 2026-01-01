@@ -2,7 +2,6 @@
 
 #include <common/weapons/all.qh>
 
-float autocvar_g_weaponspreadfactor;
 float autocvar_g_weaponforcefactor;
 float autocvar_g_weapondamagefactor;
 float autocvar_g_weaponratefactor;
@@ -47,7 +46,7 @@ void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 
 void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 
-vector CL_Weapon_GetShotOrg(float wpn);
+vector CL_Weapon_GetShotOrg(int wpn);
 
 bool weaponUseForbidden(entity player);
 bool weaponLocked(entity player);
@@ -56,7 +55,7 @@ void W_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector 
 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponentity);
 
-void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity);
+void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, int weapon_type, entity weapon_item, .entity weaponentity);
 
 void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sent_sound);
 
@@ -70,9 +69,9 @@ float W_WeaponSpeedFactor(entity this);
 
 bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bool secondary, float attacktime);
 
-bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponentity, float secondary, float attacktime);
+bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponentity, bool secondary, float attacktime);
 
-void weapon_prepareattack_do(entity actor, .entity weaponentity, float secondary, float attacktime);
+void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary, float attacktime);
 
 void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor, .entity weaponentity, int fire) func);
 

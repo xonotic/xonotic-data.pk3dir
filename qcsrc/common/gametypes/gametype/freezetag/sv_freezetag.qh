@@ -1,0 +1,63 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <server/command/sv_cmd.qh>
+
+int autocvar_g_freezetag_point_limit;
+int autocvar_g_freezetag_point_leadlimit;
+bool autocvar_g_freezetag_team_spawns;
+string autocvar_g_freezetag_weaponarena = "most_available";
+
+const int ST_FT_ROUNDS = 1;
+
+void freezetag_Initialize();
+
+REGISTER_MUTATOR(ft, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_teams(true);
+		GameRules_spawning_teams(autocvar_g_freezetag_team_spawns);
+		GameRules_limit_score(autocvar_g_freezetag_point_limit);
+		GameRules_limit_lead(autocvar_g_freezetag_point_leadlimit);
+
+		freezetag_Initialize();
+	}
+	return 0;
+}
+
+.float freezetag_revive_time;
+.float freezetag_frozen_time;
+.float freezetag_frozen_timeout;
+.float freezetag_frozen_force;
+.float freezetag_frozen_armor;
+const float ICE_MAX_ALPHA = 1;
+const float ICE_MIN_ALPHA = 0.1;
+float freezetag_teams;
+
+bool autocvar_g_freezetag_revive_auto = 1;
+int autocvar_g_freezetag_revive_auto_progress = 1;
+int autocvar_g_freezetag_revive_auto_reducible;
+float autocvar_g_freezetag_revive_auto_reducible_forcefactor = 0.01;
+float autocvar_g_freezetag_revive_auto_reducible_maxforce;
+float autocvar_g_freezetag_revive_extra_size;
+float autocvar_g_freezetag_revive_speed;
+float autocvar_g_freezetag_revive_speed_t2s = 0.25;
+float autocvar_g_freezetag_revive_time_to_score = 1.5;
+bool autocvar_g_freezetag_revive_nade;
+float autocvar_g_freezetag_revive_nade_health;
+float autocvar_g_freezetag_revive_spawnshield = 1;
+float autocvar_g_frozen_revive_falldamage;
+int autocvar_g_frozen_revive_falldamage_health;
+bool autocvar_g_frozen_damage_trigger;
+float autocvar_g_frozen_force;
+
+// frozen (eliminated) state
+.float revival_time; // time at which player was last revived
+.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.float freeze_time;
+.entity iceblock;
+.entity frozen_by; // for ice fields
+
+void freezetag_Unfreeze(entity targ, bool reset_health);

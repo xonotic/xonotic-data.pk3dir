@@ -42,7 +42,7 @@ void orb_setup(entity e)
 	setorigin(e, e.origin);
 
 	float model_radius = e.maxs.x;
-	vector size = '1 1 1' * e.orb_radius / 2;
+	vector size = '.5 .5 .5' * e.orb_radius;
 	setsize(e,-size,size);
 	e.orb_radius = e.orb_radius/model_radius*0.6;
 

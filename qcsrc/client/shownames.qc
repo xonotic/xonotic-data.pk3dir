@@ -120,7 +120,7 @@ void Draw_ShowNames(entity this)
 		else
 			this.alpha = min(minalpha, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}
-	else if (this.sameteam)  // fade in for team mates
+	else if (this.sameteam)  // fade in for teammates
 	{
 		this.alpha = min(1, this.alpha + SHOWNAMES_FADESPEED * frametime);
 	}
@@ -138,6 +138,9 @@ void Draw_ShowNames(entity this)
 	}
 	if (MUTATOR_CALLHOOK(ShowNames_Draw, this, a)) return;
 	a = M_ARGV(1, float);
+
+	if (a < ALPHA_MIN_VISIBLE) return;
+
 	float dist = -1; // dist will be calculated only when really needed to avoid wasting a vlen call
 	if (autocvar_hud_shownames_maxdistance)
 	{

@@ -17,7 +17,7 @@ void XonoticCommandButton_Click(entity me, entity other)
 {
 	//if(me.flags & COMMANDBUTTON_APPLY)
 	//	saveAllCvars(me.parent);
-	cmd("\n", me.onClickCommand, "\n");
+	localcmd("\n", me.onClickCommand, "\n");
 	//if(me.flags & COMMANDBUTTON_REVERT)
 	//	loadAllCvars(me.parent);
 	if(me.flags & COMMANDBUTTON_CLOSE)

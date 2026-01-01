@@ -1,12 +1,36 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(SEEKER_VIEW, W_Model("h_seeker.iqm"));
+MODEL(SEEKER_WORLD, W_Model("v_seeker.md3"));
+MODEL(SEEKER_ITEM, W_Model("g_seeker.md3"));
+
+SOUND(SEEKER_FLAC_FIRE, W_Sound("flac_fire"));
+SOUND(TAGEXP1, W_Sound("tagexp1"));
+SOUND(TAGEXP2, W_Sound("tagexp2"));
+SOUND(TAGEXP3, W_Sound("tagexp3"));
+Sound SND_TAGEXP_RANDOM(float rnd) {
+    return REGISTRY_GET(Sounds, SND_TAGEXP1.m_id + rint(rnd * 2));
+}
+SOUND(TAG_FIRE, W_Sound("tag_fire"));
+SOUND(TAG_IMPACT, W_Sound("tag_impact"));
+SOUND(SEEKEREXP1, W_Sound("seekerexp1"));
+SOUND(SEEKEREXP2, W_Sound("seekerexp2"));
+SOUND(SEEKEREXP3, W_Sound("seekerexp3"));
+Sound SND_SEEKEREXP_RANDOM(float rnd) {
+    return REGISTRY_GET(Sounds, SND_SEEKEREXP1.m_id + rint(rnd * 2));
+}
+SOUND(SEEKER_FIRE, W_Sound("seeker_fire"));
+SOUND(SEEKER_ROCKET_FLY, W_Sound("tag_rocket_fly"));
+#endif
+
 CLASS(Seeker, Weapon)
 /* spawnfunc */ ATTRIB(Seeker, m_canonical_spawnfunc, string, "weapon_seeker");
 /* ammotype  */ ATTRIB(Seeker, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Seeker, impulse, int, 8);
 /* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, 5000);
-/* color     */ ATTRIB(Seeker, wpcolor, vector, '0.5 1 0');
+/* color     */ ATTRIB(Seeker, m_color, vector, '0.957 0.439 0.533');
 /* modelname */ ATTRIB(Seeker, mdl, string, "seeker");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Seeker, m_model, Model, MDL_SEEKER_ITEM);
@@ -21,59 +45,60 @@ CLASS(Seeker, Weapon)
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
-    	P(class, prefix, flac_ammo, float, NONE) \
-    	P(class, prefix, flac_animtime, float, NONE) \
-    	P(class, prefix, flac_damage, float, NONE) \
-    	P(class, prefix, flac_edgedamage, float, NONE) \
-    	P(class, prefix, flac_force, float, NONE) \
-    	P(class, prefix, flac_lifetime, float, NONE) \
-    	P(class, prefix, flac_lifetime_rand, float, NONE) \
-    	P(class, prefix, flac_radius, float, NONE) \
-    	P(class, prefix, flac_refire, float, NONE) \
-    	P(class, prefix, flac_speed, float, NONE) \
-    	P(class, prefix, flac_speed_up, float, NONE) \
-    	P(class, prefix, flac_speed_z, float, NONE) \
-    	P(class, prefix, flac_spread, float, NONE) \
-    	P(class, prefix, missile_accel, float, NONE) \
-    	P(class, prefix, missile_ammo, float, NONE) \
-    	P(class, prefix, missile_animtime, float, NONE) \
-    	P(class, prefix, missile_count, float, NONE) \
-    	P(class, prefix, missile_damageforcescale, float, NONE) \
-    	P(class, prefix, missile_damage, float, NONE) \
-    	P(class, prefix, missile_decel, float, NONE) \
-    	P(class, prefix, missile_delay, float, NONE) \
-    	P(class, prefix, missile_edgedamage, float, NONE) \
-    	P(class, prefix, missile_force, float, NONE) \
-    	P(class, prefix, missile_health, float, NONE) \
-    	P(class, prefix, missile_lifetime, float, NONE) \
-    	P(class, prefix, missile_proxy, float, NONE) \
-    	P(class, prefix, missile_proxy_delay, float, NONE) \
-    	P(class, prefix, missile_proxy_maxrange, float, NONE) \
-    	P(class, prefix, missile_radius, float, NONE) \
-    	P(class, prefix, missile_refire, float, NONE) \
-    	P(class, prefix, missile_smart, float, NONE) \
-    	P(class, prefix, missile_smart_mindist, float, NONE) \
-    	P(class, prefix, missile_smart_trace_max, float, NONE) \
-    	P(class, prefix, missile_smart_trace_min, float, NONE) \
-    	P(class, prefix, missile_speed, float, NONE) \
-    	P(class, prefix, missile_speed_max, float, NONE) \
-    	P(class, prefix, missile_speed_up, float, NONE) \
-    	P(class, prefix, missile_speed_z, float, NONE) \
-    	P(class, prefix, missile_spread, float, NONE) \
-    	P(class, prefix, missile_turnrate, float, NONE) \
-    	P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, flac_ammo, float, NONE) \
+		P(class, prefix, flac_animtime, float, NONE) \
+		P(class, prefix, flac_damage, float, NONE) \
+		P(class, prefix, flac_edgedamage, float, NONE) \
+		P(class, prefix, flac_force, float, NONE) \
+		P(class, prefix, flac_lifetime, float, NONE) \
+		P(class, prefix, flac_lifetime_rand, float, NONE) \
+		P(class, prefix, flac_radius, float, NONE) \
+		P(class, prefix, flac_refire, float, NONE) \
+		P(class, prefix, flac_speed, float, NONE) \
+		P(class, prefix, flac_speed_up, float, NONE) \
+		P(class, prefix, flac_speed_z, float, NONE) \
+		P(class, prefix, flac_spread, float, NONE) \
+		P(class, prefix, missile_accel, float, NONE) \
+		P(class, prefix, missile_ammo, float, NONE) \
+		P(class, prefix, missile_animtime, float, NONE) \
+		P(class, prefix, missile_count, float, NONE) \
+		P(class, prefix, missile_damageforcescale, float, NONE) \
+		P(class, prefix, missile_damage, float, NONE) \
+		P(class, prefix, missile_decel, float, NONE) \
+		P(class, prefix, missile_delay, float, NONE) \
+		P(class, prefix, missile_edgedamage, float, NONE) \
+		P(class, prefix, missile_force, float, NONE) \
+		P(class, prefix, missile_health, float, NONE) \
+		P(class, prefix, missile_lifetime, float, NONE) \
+		P(class, prefix, missile_proxy, float, NONE) \
+		P(class, prefix, missile_proxy_delay, float, NONE) \
+		P(class, prefix, missile_proxy_maxrange, float, NONE) \
+		P(class, prefix, missile_radius, float, NONE) \
+		P(class, prefix, missile_refire, float, NONE) \
+		P(class, prefix, missile_smart, float, NONE) \
+		P(class, prefix, missile_smart_mindist, float, NONE) \
+		P(class, prefix, missile_smart_trace_max, float, NONE) \
+		P(class, prefix, missile_smart_trace_min, float, NONE) \
+		P(class, prefix, missile_speed, float, NONE) \
+		P(class, prefix, missile_speed_max, float, NONE) \
+		P(class, prefix, missile_speed_up, float, NONE) \
+		P(class, prefix, missile_speed_z, float, NONE) \
+		P(class, prefix, missile_spread, float, NONE) \
+		P(class, prefix, missile_turnrate, float, NONE) \
+		P(class, prefix, pickup_ammo, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-    	P(class, prefix, tag_ammo, float, NONE) \
-    	P(class, prefix, tag_animtime, float, NONE) \
-    	P(class, prefix, tag_damageforcescale, float, NONE) \
-    	P(class, prefix, tag_health, float, NONE) \
-    	P(class, prefix, tag_lifetime, float, NONE) \
-    	P(class, prefix, tag_refire, float, NONE) \
-    	P(class, prefix, tag_speed, float, NONE) \
-    	P(class, prefix, tag_spread, float, NONE) \
-    	P(class, prefix, tag_tracker_lifetime, float, NONE) \
+		P(class, prefix, tag_ammo, float, NONE) \
+		P(class, prefix, tag_animtime, float, NONE) \
+		P(class, prefix, tag_damageforcescale, float, NONE) \
+		P(class, prefix, tag_health, float, NONE) \
+		P(class, prefix, tag_lifetime, float, NONE) \
+		P(class, prefix, tag_refire, float, NONE) \
+		P(class, prefix, tag_speed, float, NONE) \
+		P(class, prefix, tag_spread, float, NONE) \
+		P(class, prefix, tag_tracker_lifetime, float, NONE) \
 		P(class, prefix, type, float, NONE) \
 		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
@@ -82,8 +107,9 @@ CLASS(Seeker, Weapon)
 	END()
 	W_PROPS(X, Seeker, seeker)
 #undef X
+
 ENDCLASS(Seeker)
-REGISTER_WEAPON(SEEKER, seeker, NEW(Seeker));
+REGISTER_WEAPON(SEEKER, NEW(Seeker));
 
 SPAWNFUNC_WEAPON(weapon_seeker, WEP_SEEKER)
 

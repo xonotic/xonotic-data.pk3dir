@@ -1,0 +1,13 @@
+#pragma once
+
+#include "rootdialog.qh"
+CLASS(XonoticHUDCheckpointsDialog, XonoticRootDialog)
+	METHOD(XonoticHUDCheckpointsDialog, fill, void(entity));
+	ATTRIB(XonoticHUDCheckpointsDialog, title, string, _("Checkpoints Panel"));
+	ATTRIB(XonoticHUDCheckpointsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT);
+	ATTRIB(XonoticHUDCheckpointsDialog, intendedWidth, float, 0.4);
+	ATTRIB(XonoticHUDCheckpointsDialog, rows, float, 15.5);
+	ATTRIB(XonoticHUDCheckpointsDialog, columns, float, 4);
+	ATTRIB(XonoticHUDCheckpointsDialog, name, string, "HUDcheckpoints");
+	ATTRIB(XonoticHUDCheckpointsDialog, requiresConnection, bool, true);
+ENDCLASS(XonoticHUDCheckpointsDialog)

@@ -30,27 +30,22 @@ float GetResourceLimit(entity e, Resource res_type)
 		}
 		case RES_SHELLS:
 		{
-			limit = g_pickup_shells_max;
+			limit = autocvar_g_pickup_shells_max;
 			break;
 		}
 		case RES_BULLETS:
 		{
-			limit = g_pickup_nails_max;
+			limit = autocvar_g_pickup_nails_max;
 			break;
 		}
 		case RES_ROCKETS:
 		{
-			limit = g_pickup_rockets_max;
+			limit = autocvar_g_pickup_rockets_max;
 			break;
 		}
 		case RES_CELLS:
 		{
-			limit = g_pickup_cells_max;
-			break;
-		}
-		case RES_PLASMA:
-		{
-			limit = g_pickup_plasma_max;
+			limit = autocvar_g_pickup_cells_max;
 			break;
 		}
 		case RES_FUEL:
@@ -231,4 +226,18 @@ void TakeResourceWithLimit(entity receiver, Resource res_type, float amount, flo
 		amount = -limit + current_amount;
 	}
 	TakeResource(receiver, res_type, amount);
+}
+
+int GetAmmoConsumption(entity wpn)
+{
+	if (wpn.ammo_type == RES_NONE) return 0;
+	switch (wpn)
+	{
+		case WEP_ARC:        return WEP_CVAR(WEP_ARC,        beam_ammo);
+		case WEP_DEVASTATOR: return WEP_CVAR(WEP_DEVASTATOR, ammo);
+		case WEP_MACHINEGUN: return WEP_CVAR(WEP_MACHINEGUN, sustained_ammo);
+		case WEP_MINE_LAYER: return WEP_CVAR(WEP_MINE_LAYER, ammo);
+		case WEP_SEEKER:     return WEP_CVAR(WEP_SEEKER,     tag_ammo);
+		default:             return WEP_CVAR_PRI(wpn, ammo);
+	}
 }

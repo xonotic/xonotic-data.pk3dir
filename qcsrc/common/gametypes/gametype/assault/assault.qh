@@ -1,0 +1,27 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+CLASS(Assault, Gametype)
+	INIT(Assault)
+	{
+		this.gametype_init(this, _("Assault"),"as","g_assault",GAMETYPE_FLAG_TEAMPLAY,"","timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out"));
+	}
+	METHOD(Assault, m_generate_mapinfo, void(Gametype this, string v))
+	{
+		if(v == "target_assault_roundend")
+			MapInfo_Map_supportedGametypes |= this.gametype_flags;
+	}
+	METHOD(Assault, m_isTwoBaseMode, bool())
+	{
+		return true;
+	}
+	METHOD(Assault, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
+	}
+	ATTRIB(Assault, m_legacydefaults, string, "20 0");
+ENDCLASS(Assault)
+REGISTER_GAMETYPE(ASSAULT, NEW(Assault));
+#define g_assault IS_GAMETYPE(ASSAULT)

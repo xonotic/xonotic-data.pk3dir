@@ -14,7 +14,7 @@ void XonoticWeaponarenaCheckBox_configureXonoticWeaponarenaCheckBox(entity me, s
 	me.loadCvars(me);
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 }
-void XonoticWeaponarenaCheckBox_setChecked(entity me, float foo)
+void XonoticWeaponarenaCheckBox_setChecked(entity me, bool foo)
 {
 	me.checked = !me.checked;
 	me.saveCvars(me);
@@ -22,7 +22,7 @@ void XonoticWeaponarenaCheckBox_setChecked(entity me, float foo)
 void XonoticWeaponarenaCheckBox_loadCvars(entity me)
 {
 	int n = tokenize_console(cvar_string("menu_weaponarena"));
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 	{
 		if(argv(i) == me.netname)
 		{

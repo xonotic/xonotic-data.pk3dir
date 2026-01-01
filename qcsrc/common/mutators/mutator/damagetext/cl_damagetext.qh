@@ -38,6 +38,6 @@ vector autocvar_cl_damagetext_offset_screen;
 float autocvar_cl_damagetext_lifetime = -1;
 float autocvar_cl_damagetext_accumulate_lifetime = -1;
 #else
-AUTOCVAR_SAVE(cl_damagetext_lifetime,             float,  -1,  "Damage text lifetime, edit this if you wish for damage text to disappear before it fades out");
-AUTOCVAR_SAVE(cl_damagetext_accumulate_lifetime,  float,  -1,  "Only update existing damage text when it is younger than this many seconds, negative always updates");
+AUTOCVAR_SAVE(cl_damagetext_lifetime,             float,  -1,  "damage text lifetime, edit this if you wish for damage text to disappear before it fades out");
+AUTOCVAR_SAVE(cl_damagetext_accumulate_lifetime,  float,  -1,  "only update existing damage text when it is younger than this many seconds, negative always updates");
 #endif

@@ -10,21 +10,21 @@ float autocvar_g_turrets_unit_hk_shot_speed_max;
 float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
 void turret_hk_missile_think(entity this);
-SOUND(HunterKillerAttack_FIRE, W_Sound("electro_fire"));
+SOUND(HunterKillerAttack_FIRE, W_Sound("rocket_fire"));
 METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	bool isPlayer = IS_PLAYER(actor);
 	if (fire & 1)
-	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
+	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1)) {
 		if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_HunterKillerAttack_FIRE, CH_WEAPON_B, 0, DEATH_TURRET_HK.m_id);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0.5, w_ready);
         }
-        entity missile = turret_projectile(actor, SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HK.m_id, PROJECTILE_ROCKET, false, false);
+        entity missile = turret_projectile(actor, SND_HunterKillerAttack_FIRE, 6, 10, DEATH_TURRET_HK.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
 
         setthink(missile, turret_hk_missile_think);
@@ -33,7 +33,6 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
         missile.velocity = actor.tur_shotdir_updated * (actor.shot_speed * 0.75);
         missile.angles = vectoangles(missile.velocity);
         missile.cnt = time + 30;
-        missile.ticrate = max(autocvar_sys_ticrate, 0.05);
         missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_AI;
 
         if (!isPlayer)
@@ -53,7 +52,7 @@ void turret_hk_missile_think(entity this)
     float pt_seek;  // Pitch of Trace SEEK (How mutch to angele left, right up, down trace towards v_forward)
     float myspeed;
 
-    this.nextthink = time + this.ticrate;
+    this.nextthink = time;
 
     //if (this.cnt < time)
     //	turret_hk_missile_explode();

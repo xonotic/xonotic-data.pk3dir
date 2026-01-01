@@ -53,6 +53,14 @@ MUTATOR_HOOKABLE(PlayerSpawn, EV_PlayerSpawn);
     /**/
 MUTATOR_HOOKABLE(PlayerWeaponSelect, EV_PlayerWeaponSelect);
 
+/** called when setting the player's animation state */
+#define EV_PlayerAnim(i, o) \
+    /** player    */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** anim bits */ i(int, MUTATOR_ARGV_1_int) \
+    /**           */ o(int, MUTATOR_ARGV_1_int) \
+    /**/
+MUTATOR_HOOKABLE(PlayerAnim, EV_PlayerAnim);
+
 /** called in reset_map */
 #define EV_reset_map_global(i, o) \
     /**/
@@ -145,6 +153,9 @@ MUTATOR_HOOKABLE(ItemSound, EV_ItemSound);
     /** wep entity */ i(entity, MUTATOR_ARGV_4_entity) \
     /**/
 MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
+
+/** called when the match ends, before recording scores */
+MUTATOR_HOOKABLE(MatchEnd_BeforeScores, EV_NO_ARGS);
 
 /** called when the match ends */
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
@@ -253,7 +264,7 @@ MUTATOR_HOOKABLE(WeaponRateFactor, EV_WeaponRateFactor);
     /**/
 MUTATOR_HOOKABLE(WeaponSpeedFactor, EV_WeaponSpeedFactor);
 
-/** adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}} */
+/** adjusts {warmup_}start_{items,weapons,ammo_{cells,rockets,nails,shells,fuel}} */
 MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
 
 /** called every frame. customizes the waypoint for spectators */
@@ -372,11 +383,11 @@ MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
 /** called when a monster is dropping loot */
 #define EV_MonsterDropItem(i, o) \
     /* monster */                          i(entity, MUTATOR_ARGV_0_entity) \
-    /* item (can be removed or changed) */ i(entity, MUTATOR_ARGV_1_entity) \
-    /**/                                   o(entity, MUTATOR_ARGV_1_entity) \
+    /* list of items to drop */            i(string, MUTATOR_ARGV_1_string) \
+    /**/                                   o(string, MUTATOR_ARGV_1_string) \
     /* attacker */                         i(entity, MUTATOR_ARGV_2_entity) \
     /**/
-.entity monster_loot;
+.string monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
 
 /**
@@ -406,7 +417,10 @@ MUTATOR_HOOKABLE(MonsterFindTarget, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(MonsterValidTarget, EV_MonsterValidTarget);
 
-/** called to change a random monster to a miniboss */
+/**
+ * called when checking if a monster should be a miniboss
+ * return true to prevent the monster from becoming a miniboss
+ */
 #define EV_MonsterCheckBossFlag(i, o) \
     /** monster */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
@@ -568,6 +582,18 @@ MUTATOR_HOOKABLE(PlayerUseKey, EV_PlayerUseKey);
     /**/
 MUTATOR_HOOKABLE(SV_ParseClientCommand, EV_SV_ParseClientCommand);
 
+/**
+ * please read EV_SV_ParseClientCommand description before using
+ * return true to skip flood control on the given command
+ */
+#define EV_ClientCommand_FloodControl(i, o) \
+    /** client sending the command */       i(entity, MUTATOR_ARGV_0_entity) \
+    /** command name */                     i(string, MUTATOR_ARGV_1_string) \
+    /** argc (also, argv() can be used) */  i(int, MUTATOR_ARGV_2_int) \
+    /** whole command, use only if you really have to */ i(string, MUTATOR_ARGV_3_string) \
+    /**/
+MUTATOR_HOOKABLE(ClientCommand_FloodControl, EV_ClientCommand_FloodControl);
+
 /** please read EV_SV_ParseClientCommand description before using */
 #define EV_SV_ParseServerCommand(i, o) \
    /** command name */ i(string, MUTATOR_ARGV_0_string) \
@@ -623,13 +649,13 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
 /**
  * called when a bot checks a target to attack
- * return false to allow the bot to attack the target (inverted logic)
+ * return true to forbid the bot from attacking the target
  */
-#define EV_BotShouldAttack(i, o) \
+#define EV_Bot_ForbidAttack(i, o) \
     /** bot */    i(entity, MUTATOR_ARGV_0_entity) \
     /** target */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
-MUTATOR_HOOKABLE(BotShouldAttack, EV_BotShouldAttack);
+MUTATOR_HOOKABLE(Bot_ForbidAttack, EV_Bot_ForbidAttack);
 
 /**
  * called whenever a player goes through a portal gun teleport
@@ -992,8 +1018,8 @@ MUTATOR_HOOKABLE(CheckRules_World, EV_CheckRules_World);
     /** weapon info entity */    i(entity, MUTATOR_ARGV_0_entity) \
     /** do want? */              i(float, MUTATOR_ARGV_1_float) \
     /**/                         o(float, MUTATOR_ARGV_1_float) \
-    /** want all guns */         i(bool, MUTATOR_ARGV_2_bool) \
-    /**/                         o(bool, MUTATOR_ARGV_2_bool) \
+    /** want all guns */         i(int, MUTATOR_ARGV_2_int) \
+    /**/                         o(int, MUTATOR_ARGV_2_int) \
     /** want mutator blocked */  i(bool, MUTATOR_ARGV_3_bool) \
     /**/                         o(bool, MUTATOR_ARGV_3_bool) \
     /**/
@@ -1146,6 +1172,7 @@ MUTATOR_HOOKABLE(CopyBody, EV_CopyBody);
     /** sender */ i(entity, MUTATOR_ARGV_0_entity) \
     /** ret */ i(int, MUTATOR_ARGV_1_int) \
     /**/ o(int, MUTATOR_ARGV_1_int) \
+    /** message */ i(string, MUTATOR_ARGV_2_string) \
     /**/
 MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
 
@@ -1174,12 +1201,6 @@ enum {
     MUT_FUSREAC_TARG_VALID, // return this flag to make the function return true (valid target)
     MUT_FUSREAC_TARG_INVALID // return this flag to make the function return false (invalid target)
 };
-
-/** return true to hide the 'teamnumbers are imbalanced' message */
-#define EV_HideTeamNagger(i, o) \
-    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
-    /**/
-MUTATOR_HOOKABLE(HideTeamNagger, EV_HideTeamNagger);
 
 /** return true to show a waypoint while the item is spawning */
 #define EV_Item_ScheduleRespawn(i, o) \
@@ -1231,24 +1252,6 @@ enum {
 };
 
 /**
- * Called when freezing an entity (monster or player), return true to force showing a waypoint
- */
-#define EV_Freeze(i, o) \
-    /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
-    /** revive speed */     i(float, MUTATOR_ARGV_1_float) \
-    /** frozen type */      i(int, MUTATOR_ARGV_2_int) \
-    /**/
-MUTATOR_HOOKABLE(Freeze, EV_Freeze);
-
-/**
- * Called when an entity (monster or player) is defrosted
- */
-#define EV_Unfreeze(i, o) \
-    /** targ */             i(entity, MUTATOR_ARGV_0_entity) \
-    /**/
-MUTATOR_HOOKABLE(Unfreeze, EV_Unfreeze);
-
-/**
  * Called when a player is trying to join, argument is the number of players allowed to join the match
  */
 #define EV_GetPlayerLimit(i, o) \
@@ -1277,3 +1280,25 @@ MUTATOR_HOOKABLE(AllowRocketJumping, EV_AllowRocketJumping);
     /** player */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(W_PlayStrengthSound, EV_W_PlayStrengthSound);
+
+/** Return true to prevent sandbox objects from being dragged */
+#define EV_Sandbox_DragAllowed(i, o) \
+    /** object */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Sandbox_DragAllowed, EV_Sandbox_DragAllowed);
+
+/** Return true to prevent writing sandbox changes to storage */
+MUTATOR_HOOKABLE(Sandbox_SaveAllowed, EV_NO_ARGS);
+
+/** Return true to prevent the player from editing sandbox objects with commands */
+#define EV_Sandbox_EditAllowed(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(Sandbox_EditAllowed, EV_Sandbox_EditAllowed);
+
+/** Return true to hide the chat bubble above typing players */
+#define EV_ShowChatBubble(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** bubble */ i(entity, MUTATOR_ARGV_1_entity) \
+    /**/
+MUTATOR_HOOKABLE(ShowChatBubble, EV_ShowChatBubble);

@@ -22,17 +22,6 @@ a_cells_luma
 	}
 }
 
-a_plasma_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/items/a_plasma_luma
-		blendfunc blend
-	}
-}
-
 a_rockets_luma
 {
 	deformVertexes autosprite
@@ -376,17 +365,6 @@ g_seeker_luma
 	nopicmip
 	{
 		map models/weapons/g_seeker_luma
-		blendfunc blend
-	}
-}
-
-g_shockwave_luma
-{
-	deformVertexes autosprite
-	cull none
-	nopicmip
-	{
-		map models/weapons/g_shockwave_luma
 		blendfunc blend
 	}
 }

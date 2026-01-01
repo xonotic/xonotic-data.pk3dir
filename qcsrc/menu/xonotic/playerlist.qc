@@ -68,8 +68,8 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnScoreSize = 5 * me.realFontSize.x;
 	me.columnNameSize = 1 - 3 * me.realFontSize.x - me.columnScoreSize;
 
-	me.columnNameOrigin = me.realFontSize.x;
-	me.columnScoreOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
+	me.columnScoreOrigin = me.realFontSize.x;
+	me.columnNameOrigin = me.columnScoreOrigin + me.columnScoreSize + me.realFontSize.x;
 }
 
 void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
@@ -88,10 +88,13 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	string name = me.getPlayerList(me, i, PLAYERPARM_NAME);
 	string score = me.getPlayerList(me, i, PLAYERPARM_SCORE);
+	string ping = me.getPlayerList(me, i, PLAYERPARM_PING);
 
+	bool is_bot = (ping == "0");
+	bool is_spectator = false;
 	if(substring(score, strlen(score) - 10, 10) == ":spectator")
 	{
-		score = _("spectator");
+		is_spectator = true;
 	}
 	else
 	{
@@ -101,7 +104,16 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 			score = substring(score, 0, t);
 
 		if(stof(score) == FRAGS_SPECTATOR)
-			score = _("spectator");
+			is_spectator = true;
+	}
+
+	if(is_bot)
+		name = cons("^9(bot)^7", name);
+
+	if (is_spectator)
+	{
+		score = _("spectator");
+		rgb = '0.3 0.3 0.3';
 	}
 
 	name = draw_TextShortenToWidth(name, me.columnNameSize, 1, me.realFontSize);

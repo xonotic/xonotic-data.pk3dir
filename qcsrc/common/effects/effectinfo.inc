@@ -2203,12 +2203,11 @@ SUB(electro_combo) {
 SUB(electro_combo) {
 	MY(alpha_min) = 444;
 	MY(alpha_max) = 512;
-	MY(alpha_fade) = 700;
+	MY(alpha_fade) = 500;
 	MY(bounce) = 1.600000;
 	MY(color_min) = "0xa9cacf";
 	MY(color_max) = "0x0054ff";
 	MY(count) = 32;
-	MY(gravity) = 0.300000;
 	MY(originjitter) = '1.0 1.0 1.0';
 	MY(size_min) = 2;
 	MY(size_max) = 4;
@@ -2216,8 +2215,8 @@ SUB(electro_combo) {
 	MY(tex_min) = 41;
 	MY(tex_max) = 41;
 	MY(type) = "spark";
-	MY(velocityjitter) = '312.0 312.0 312.0';
-	MY(velocitymultiplier) = 3;
+	MY(velocityjitter) = '128.0 128.0 128.0';
+	MY(velocitymultiplier) = 0.300000;
 }
 // inner cloud of smoke
 SUB(electro_combo) {
@@ -2236,15 +2235,14 @@ SUB(electro_combo) {
 }
 // shockwave
 SUB(electro_combo) {
-	MY(alpha_min) = 40;
-	MY(alpha_max) = 40;
-	MY(alpha_fade) = 100;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 40;
 	MY(color_min) = "0xa9cacf";
 	MY(color_max) = "0x0054ff";
 	MY(countabsolute) = 1;
-	MY(sizeincrease) = 600;
-	MY(size_min) = 30;
-	MY(size_max) = 30;
+	MY(size_min) = 120;
+	MY(size_max) = 120;
 	MY(tex_min) = 33;
 	MY(tex_max) = 33;
 	MY(type) = "smoke";
@@ -5668,7 +5666,7 @@ SUB(EF_FLAME) {
 	MY(color_max) = "0xff5a00";
 	MY(count) = 100;
 	MY(gravity) = -0.500000;
-	MY(originjitter) = '12.0 12.0 34.0';
+	MY(originjitter) = '12.0 12.0 24.0';
 	MY(originoffset) = '0.0 0.0 10.0';
 	MY(sizeincrease) = -1;
 	MY(size_min) = 5;
@@ -5680,28 +5678,22 @@ SUB(EF_FLAME) {
 }
 // smoke
 SUB(EF_FLAME) {
-	MY(alpha_min) = 200;
-	MY(alpha_max) = 256;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 156;
 	MY(alpha_fade) = 200;
 	MY(bounce) = 2;
 	MY(color_min) = "0x000000";
-	MY(color_max) = "0x111111";
-	MY(count) = 50;
-	MY(gravity) = -0.300000;
-	MY(originjitter) = '12.0 12.0 34.0';
-	MY(originoffset) = '0.0 0.0 10.0';
+	MY(color_max) = "0x444444";
+	MY(count) = 30;
+	MY(gravity) = -0.500000;
+	MY(originjitter) = '6.0 6.0 24.0';
+	MY(originoffset) = '0.0 0.0 40.0';
 	MY(sizeincrease) = 6;
 	MY(size_min) = 11;
 	MY(size_max) = 15;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
 	MY(velocityjitter) = '11.0 11.0 50.0';
-}
-SUB(EF_FLAME) {
-	MY(count) = 0.500000;
-	MY(lightcolor) = '0.9 0.9 0.2';
-	MY(lightradiusfade) = 10000;
-	MY(lightradius) = 200;
 }
 
 // rifle bullet trail (somewhat like a tracer)
@@ -7725,8 +7717,8 @@ SUB(damage_hlac) {
 	MY(alpha_min) = 128;
 	MY(alpha_max) = 16;
 	MY(alpha_fade) = 128;
-	MY(color_min) = "0x880000";
-	MY(color_max) = "0xff4400";
+	MY(color_min) = "0x008800";
+	MY(color_max) = "0x44ff00";
 	MY(count) = 3;
 	MY(notunderwater) = true;
 	MY(originjitter) = '4.0 4.0 4.0';
@@ -9167,6 +9159,206 @@ SUB(item_despawn) {
 	MY(lightradiusfade) 64;
 	MY(lightcolor) '1 0.75 0.36';
 	MY(lightshadow) 1;
+}
+
+DEF(hlac_muzzleflash);
+// glow and light
+SUB(hlac_muzzleflash) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0x00cc00";
+	MY(color_max) = "0x00ff00";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '0.4 0.8 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 100;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 2;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(type) = "smoke";
+}
+// electricity
+SUB(hlac_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 0;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x92e045";
+	MY(color_max) = "0x64f42a";
+	MY(count) = 15;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -400;
+	MY(spin_max) = 400;
+	MY(size_min) = 2;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(hlac_impact);
+// decal
+SUB(hlac_impact) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '0.4 0.8 0.2';
+	MY(lightradiusfade) = 500;
+	MY(lightradius) = 150;
+	MY(originjitter) = '14.0 14.0 14.0';
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+// flare effect
+SUB(hlac_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x1be508";
+	MY(color_max) = "0xd5f0a1";
+	MY(countabsolute) = 1;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(type) = "static";
+}
+// sparks that rapidly expand and rapidly slow down to form an interesting spherical effect
+SUB(hlac_impact) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x92e045";
+	MY(color_max) = "0x54e51a";
+	MY(count) = 128;
+	MY(liquidfriction) = 2;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 45;
+	MY(tex_max) = 45;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(hlac_impact) {
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x92e045";
+	MY(color_max) = "0xc7eda1";
+	MY(count) = 4;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = 6;
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(tex_min) = 4;
+	MY(tex_max) = 6;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+
+DEF(shotgun_woosh);
+// puff
+SUB(shotgun_woosh) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 192;
+	MY(alpha_fade) = 512;
+	MY(bounce) = 0.100000;
+	MY(color_min) = "0x111111";
+	MY(color_max) = "0x979797";
+	MY(count) = 24;
+	MY(notunderwater) = true;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 14;
+	MY(size_min) = 1;
+	MY(size_max) = 12;
+	MY(tex_min) = 0;
+	MY(tex_max) = 8;
+	MY(velocityjitter) = '128 128 64';
+	MY(velocitymultiplier) = 1;
+	MY(type) = "smoke";
+}
+
+DEF(EF_SHOCK);
+// impact sparks
+SUB(EF_SHOCK) {
+	MY(airfriction) = 110;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xDDFDFF";
+	MY(color_max) = "0xFDFDFF";
+	MY(count) = 50;
+	MY(originjitter) = '6.0 6.0 10.0';
+	MY(startangle_max) = 360;
+	MY(spin_min) = 0;
+	MY(spin_max) = 0;
+	MY(sizeincrease) = -1;
+	MY(size_min) = 4;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 71;
+	MY(tex_max) = 74;
+	MY(type) = "static";
+	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocitymultiplier) = 100;
+}
+// impact sparks (underwater)
+SUB(EF_SHOCK) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xDDFDFF";
+	MY(color_max) = "0xFDFDFF";
+	MY(count) = 30;
+	MY(liquidfriction) = 5;
+	MY(orientation) = "spark";
+	MY(originjitter) = '12.0 12.0 12.0';
+	MY(startangle_max) = 360;
+	MY(spin_min) = -36000;
+	MY(spin_max) = 36000;
+	MY(sizeincrease) = -5;
+	MY(size_min) = 4;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 71;
+	MY(tex_max) = 74;
+	MY(type) = "static";
+	MY(underwater) = true;
+	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocitymultiplier) = 20;
+}
+// impact smoke
+SUB(EF_SHOCK) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 60;
+	MY(alpha_fade) = 350;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(count) = 10;
+	MY(sizeincrease) = 400;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 100;
 }
 
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!

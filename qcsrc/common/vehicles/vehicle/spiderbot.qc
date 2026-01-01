@@ -1,7 +1,9 @@
 #include "spiderbot.qh"
 
 #if defined(SVQC)
-	#include <common/gamemodes/gamemode/ctf/sv_ctf.qh>
+	#include <common/gametypes/gametype/ctf/sv_ctf.qh>
+#elif defined(MENUQC)
+	#include "raptor.qh"
 #endif
 
 #ifdef GAMEQC
@@ -20,7 +22,6 @@ float autocvar_g_vehicle_spiderbot_respawntime = 45;
 float autocvar_g_vehicle_spiderbot_speed_stop = 50;
 float autocvar_g_vehicle_spiderbot_speed_strafe = 400;
 float autocvar_g_vehicle_spiderbot_speed_walk = 500;
-float autocvar_g_vehicle_spiderbot_speed_run = 700;
 float autocvar_g_vehicle_spiderbot_turnspeed = 90;
 float autocvar_g_vehicle_spiderbot_turnspeed_strafe = 300;
 float autocvar_g_vehicle_spiderbot_movement_inertia = 0.15;
@@ -201,7 +202,7 @@ bool spiderbot_frame(entity this, float dt)
 					}
 					CS(this).movement_y = 0;
 					float oldvelz = vehic.velocity_z;
-					movelib_move_simple(vehic, normalize(v_forward * CS(this).movement_x),((PHYS_INPUT_BUTTON_JUMP(this)) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(vehic, normalize(v_forward * CS(this).movement_x), autocvar_g_vehicle_spiderbot_speed_walk, autocvar_g_vehicle_spiderbot_movement_inertia);
 					vehic.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(vehic.velocity_z <= 20) // not while jumping
@@ -272,7 +273,7 @@ bool spiderbot_frame(entity this, float dt)
 			fireBullet(this, weaponentity, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
 				autocvar_g_vehicle_spiderbot_minigun_damage, 0, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
 
-			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
+			sound (gun, CH_WEAPON_A, SND_VEH_SPIDERBOT_MINIGUN_FIRE, VOL_BASE, ATTEN_NORM);
 			//trailparticles(this, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
 			Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward * 2500, 1);
 
@@ -643,5 +644,21 @@ METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 }
 
 #endif
+
+#endif
+#ifdef MENUQC
+
+METHOD(Spiderbot, describe, string(Spiderbot this))
+{
+	TC(Spiderbot, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s vehicle walks and jumps around, and takes only one rider."), COLORED_NAME(this));
+	PAR(_("It can jump from very high altitudes while protecting the rider."));
+	PAR(_("It has two weapons the rider can control, which have different reticles for them similar to the %s. "
+	      "The primary weapon is a machine gun, and is shot toward the green reticle. "
+	      "The secondary weapon shoots rockets towards the white reticle. "
+	      "The white reticle points to the front of the vehicle, while the green reticle also points to the front but with a bit of delay when the %s rotates."), COLORED_NAME(VEH_RAPTOR), COLORED_NAME(this));
+	return PAGE_TEXT;
+}
 
 #endif

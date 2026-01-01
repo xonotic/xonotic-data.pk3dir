@@ -2,7 +2,6 @@
 
 #include "../item/nexposee.qh"
 CLASS(XonoticNexposee, Nexposee)
-	METHOD(XonoticNexposee, configureXonoticNexposee, void(entity));
 	METHOD(XonoticNexposee, close, void(entity));
 ENDCLASS(XonoticNexposee)
 entity makeXonoticNexposee();

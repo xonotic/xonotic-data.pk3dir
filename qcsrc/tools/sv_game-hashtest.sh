@@ -23,7 +23,6 @@ command -V md5sum    > /dev/null
 command -V mkdir     > /dev/null
 command -V mktemp    > /dev/null
 command -V rm        > /dev/null
-command -V rmdir     > /dev/null
 command -V sed       > /dev/null
 command -V tee       > /dev/null
 command -V test      > /dev/null
@@ -55,22 +54,19 @@ hashtestcleanup() {
 	# Few files' removal has been disabled for file reuse
 	# It's possible to get rate limited with enough testing
 
-	rm lock
-	rm data/darkplaces_history.txt
-	rm data/xonotic-data.pk3dir
-	#rm data/stormkeep.pk3
-	rm data/data/defaultSVQC.cfg
-	rm data/data/hits---1.plot
-	rm data/data/hits---2.plot
-	rm data/data/hits---3.plot
-	rm data/data/notifications_dump.cfg
-	rm data/data/server.db
-	rmdir data/data/
-	#rm data/maps/_init.bsp
-	#rm data/maps/stormkeep.mapinfo
-	#rm data/maps/stormkeep.waypoints
-	#rm data/maps/stormkeep.waypoints.cache
-	#rmdir data/maps/
+	rm -fv lock
+	rm -fv data/darkplaces_history.txt
+	rm -fv data/xonotic-data.pk3dir
+	#rm -fv data/stormkeep.pk3
+	rm -fv data/data/defaultSVQC.cfg
+	rm -fv data/data/hits---1.plot
+	rm -fv data/data/hits---2.plot
+	rm -fv data/data/hits---3.plot
+	rm -fv data/data/notifications_dump.cfg
+	rm -fv data/data/server.db
+	rm -dfv data/data/
+	#rm -fv data/maps/_init.bsp
+	#rm -dfv data/maps/
 
 	set -e
 }
@@ -90,7 +86,7 @@ then # file exists
 	then # file exists but it's not a symlink, replace it
 		if [ -d data/xonotic-data.pk3dir ]
 		then # it's a dir
-			rmdir data/xonotic-data.pk3dir
+			rm -dfv data/xonotic-data.pk3dir
 			ln -s "$PWD" data/xonotic-data.pk3dir
 		else # it's not a dir
 			rm data/xonotic-data.pk3dir
@@ -176,7 +172,7 @@ else
 		fi
 	fi
 fi
-export ENGINE="$ENGINE -noconfig -nohome"
+export ENGINE="$ENGINE -noconfig -nohome +sys_stdout_blocks 1"
 
 make qc || exit 1
 
@@ -185,33 +181,24 @@ mkdir -p data/maps
 createdtoday "data/maps/_init.bsp" \
 	|| wget -nv -O data/maps/_init.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
 
+PASS=0
 while read -r LINE
 do
 	printf "%s\n" "$LINE"
-	[ "$LINE" = "All tests OK" ] && PASS=1
-done < <(${ENGINE} +developer 1 +map _init +sv_cmd runtest +wait +quit)
-test "$PASS" = "1" || { printf 'sv_cmd runtest failed!'; exit 1; }
-
-${ENGINE} +map _init +sv_cmd dumpnotifs +wait +quit
+	printf "%s\n" "$LINE" | grep -q ".*All tests OK$" && PASS=1
+done < <(${ENGINE} +developer 1 +map _init +sv_cmd dumpnotifs +sv_cmd runtest +wait +quit)
+test "$PASS" = "1" || { printf "\033[1;31m%s\033[0m\n" "sv_cmd runtest failed!"; exit 1; }
 diff notifications.cfg data/data/notifications_dump.cfg ||
 	{ printf "Please update notifications.cfg using \`dumpnotifs\`!"; exit 1; }
 
 createdtoday "data/stormkeep.pk3" \
 	|| wget -nv -O data/stormkeep.pk3 https://beta.xonotic.org/pipeline-bin/stormkeep.pk3
-createdtoday "data/maps/stormkeep.mapinfo" \
-	|| wget -nv -O data/maps/stormkeep.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.mapinfo
-createdtoday "data/maps/stormkeep.waypoints" \
-	|| wget -nv -O data/maps/stormkeep.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints
-createdtoday "data/maps/stormkeep.waypoints.cache" \
-	|| wget -nv -O data/maps/stormkeep.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/stormkeep.waypoints.cache
 
-set +u
-if [ -z "$EXPECT" ]
+if [ -z "${EXPECT-}" ]
 then
 	# find the line with expected hash from .gitlab-ci.yml, extract the hash and remove carriage return
 	EXPECT="$(grep 'EXPECT=' './.gitlab-ci.yml' | cut -d '=' -f 2 | tr -d $'\r')"
 fi
-set -u
 HASH=$(${ENGINE} +exec serverbench.cfg \
       | tee /dev/stderr \
       | grep '^:' \
@@ -228,8 +215,10 @@ then # green ok print
 	printf "\033[32m%s\033[0m\n" "hashes match"
 	exit 0
 else # red error print
-	printf "\033[32m%s\033[0m\n" "expected: $EXPECT"
-	printf "\033[32m%s\033[0m\n" "  actual: $HASH"
-	printf "\033[31m%s\033[0m\n" "!!! ERROR: HASHES DO NOT MATCH !!!"
+	printf "\033[31m%s\033[0m\n" "expected: $EXPECT"
+	printf "\033[31m%s\033[0m\n" "  actual: $HASH"
+	printf "\033[1;31m%s\033[0m\n" "!!! ERROR: HASHES DO NOT MATCH !!!"
+	printf "\033[35mThis is expected if the number or execution order of random() calls changed,\n"
+	printf "otherwise it indicates a more meaningful change in gameplay and match outcomes.\033[0m\n"
 	exit 1
 fi

@@ -3,7 +3,7 @@
 #include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/debug.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapobjects/trigger/jumppads.qh>
 #include <common/net_linked.qh>
 #include <common/physics/player.qh>
@@ -138,7 +138,7 @@ void waypoint_getSymmetricalAxis_cmd(entity caller, bool save, int arg_idx)
 {
 	vector v1 = stov(argv(arg_idx++));
 	vector v2 = stov(argv(arg_idx++));
-	vector mid = (v1 + v2) / 2;
+	vector mid = (v1 + v2) * 0.5;
 
 	float diffy = (v2.y - v1.y);
 	float diffx = (v2.x - v1.x);
@@ -170,7 +170,7 @@ void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
 {
 	vector org = '0 0 0';
 	int ctf_flags = 0;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; ++i)
 	{
 		if (argv(arg_idx + i) != "")
 			ctf_flags++;
@@ -190,14 +190,16 @@ void waypoint_getSymmetricalOrigin_cmd(entity caller, bool save, int arg_idx)
 	else
 	{
 		vector v1, v2, v3, v4, v5, v6;
-		for (int i = 1; i <= ctf_flags; i++)
+		// TODO: Consider inlining this away after https://github.com/graphitemaster/gmqcc/issues/210.
+		float r_ctf_flags = 1 / ctf_flags;
+		for (int i = 1; i <= ctf_flags; ++i)
 		{
-			if (i == 1) { v1 = stov(argv(arg_idx++)); org = v1 / ctf_flags; }
-			else if (i == 2) { v2 = stov(argv(arg_idx++)); org += v2 / ctf_flags; }
-			else if (i == 3) { v3 = stov(argv(arg_idx++)); org += v3 / ctf_flags; }
-			else if (i == 4) { v4 = stov(argv(arg_idx++)); org += v4 / ctf_flags; }
-			else if (i == 5) { v5 = stov(argv(arg_idx++)); org += v5 / ctf_flags; }
-			else if (i == 6) { v6 = stov(argv(arg_idx++)); org += v6 / ctf_flags; }
+			if (i == 1) { v1 = stov(argv(arg_idx++)); org = v1 * r_ctf_flags; }
+			else if (i == 2) { v2 = stov(argv(arg_idx++)); org += v2 * r_ctf_flags; }
+			else if (i == 3) { v3 = stov(argv(arg_idx++)); org += v3 * r_ctf_flags; }
+			else if (i == 4) { v4 = stov(argv(arg_idx++)); org += v4 * r_ctf_flags; }
+			else if (i == 5) { v5 = stov(argv(arg_idx++)); org += v5 * r_ctf_flags; }
+			else if (i == 6) { v6 = stov(argv(arg_idx++)); org += v6 * r_ctf_flags; }
 		}
 	}
 
@@ -245,7 +247,7 @@ vector waypoint_getSymmetricalPoint(vector org, int ctf_flags)
 		if (autocvar_g_waypointeditor_symmetrical == -1)
 			map_center = autocvar_g_waypointeditor_symmetrical_origin;
 
-		new_org = Rotate(org - map_center, 360 * DEG2RAD / ctf_flags) + map_center;
+		new_org = Rotate(org - map_center, 2 * M_PI / ctf_flags) + map_center;
 	}
 	else if (fabs(autocvar_g_waypointeditor_symmetrical) == 2)
 	{
@@ -647,7 +649,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 			e = it; break;
 		});
 		if (!e)
-			e = waypoint_spawn(jp.absmin - PL_MAX_CONST + '1 1 1', jp.absmax - PL_MIN_CONST + '-1 -1 -1', WAYPOINTFLAG_TELEPORT);
+			e = waypoint_spawn(jp.absmin - PL_MAX_CONST, jp.absmax - PL_MIN_CONST, WAYPOINTFLAG_TELEPORT);
 		if (!pl.wp_locked)
 			pl.wp_locked = e;
 	}
@@ -2062,7 +2064,7 @@ void waypoint_spawnforteleporter_wz(entity e, entity tracetest_ent)
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken, entity tracetest_ent)
 {
 	destination = waypoint_fixorigin(destination, tracetest_ent);
-	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST + '1 1 1', e.absmax - PL_MIN_CONST + '-1 -1 -1', destination, destination, timetaken);
+	waypoint_spawnforteleporter_boxes(e, WAYPOINTFLAG_TELEPORT, e.absmin - PL_MAX_CONST, e.absmax - PL_MIN_CONST, destination, destination, timetaken);
 }
 
 entity waypoint_spawnpersonal(entity this, vector position)

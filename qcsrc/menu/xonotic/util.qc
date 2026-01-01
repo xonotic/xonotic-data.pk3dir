@@ -1,21 +1,23 @@
 #include "util.qh"
 #include "dialog.qh"
+#include "textslider.qh"
 
 #include "../item.qh"
 
 #include "../menu.qh"
 #include <common/campaign_common.qh>
 #include <common/constants.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/util.qh>
 #include <common/command/_mod.qh>
+#include <menu/xonotic/gametypelist.qh>
 
-float GL_CheckExtension(string ext)
+bool GL_CheckExtension(string ext)
 {
 	return strhasword(cvar_string("gl_info_extensions"), ext);
 }
 
-float GL_Have_TextureCompression()
+bool GL_Have_TextureCompression()
 {
 	return GL_CheckExtension("GL_EXT_texture_compression_s3tc");
 }
@@ -110,61 +112,61 @@ void makeCallback(entity e, entity cbent, void(entity, entity) cbfunc)
 	e.saveCvars_Callback_func = cbfunc;
 }
 
+/* So far this allows for:
+ * A
+ * A AND B
+ * A AND B AND C
+ * A OR B
+ * A OR B OR C
+ * Same but with (NOT A) instead of A
+ * A can be range, function, string exactly equal
+ * Must call setDependent/setDependentNOT/setDependentStringNotEqual first,
+ * ... then setDependentAND/setDependentOR after
+ */
 .void(entity) draw_setDependent;
-.string cvar_setDependent;
-.float cvarMin_setDependent;
-.float cvarMax_setDependent;
-.string cvar2_setDependent;
-.float cvar2Min_setDependent;
-.float cvar2Max_setDependent;
-.string cvar3_setDependent;
-.float cvar3Min_setDependent;
-.float cvar3Max_setDependent;
-.float op_setDependent;
-.string cvarString_setDependent;
-.string cvarValue_setDependent;
-.float(entity) func_setDependent;
-.bool disabled;
 void setDependent_Check(entity e)
 {
 	bool disabled_prev = e.disabled;
 	float f;
 	string s;
-	if(e.func_setDependent)
+	if (e.func_setDependent)
 	{
 		e.disabled = !(e.func_setDependent(e));
 	}
-	else if(e.cvarString_setDependent)
+	else if (e.cvarString_setDependent)
 	{
 		s = cvar_string(e.cvarString_setDependent);
 		e.disabled = (cvar_string(e.cvarString_setDependent) == e.cvarValue_setDependent);
 	}
-	else
+	else if (e.cvar1_setDependent)
 	{
-		if(e.cvar_setDependent)
+		f = cvar(e.cvar1_setDependent);
+		if (e.op_setDependent & BIT(1)) // NOT
+			e.disabled = (f == e.cvar1Min_setDependent);
+		else
 		{
-			f = cvar(e.cvar_setDependent);
-			if(e.cvarMin_setDependent <= e.cvarMax_setDependent)
-				e.disabled = ((f < e.cvarMin_setDependent) || (f > e.cvarMax_setDependent));
+			if (e.cvar1Min_setDependent <= e.cvar1Max_setDependent)
+				e.disabled = ((f < e.cvar1Min_setDependent) || (f > e.cvar1Max_setDependent));
 			else
-				e.disabled = ((f >= e.cvarMax_setDependent) && (f <= e.cvarMin_setDependent));
+				e.disabled = ((f >= e.cvar1Max_setDependent) && (f <= e.cvar1Min_setDependent));
 		}
-		if(e.cvar2_setDependent)
-		{
-			f = cvar(e.cvar2_setDependent);
-			if(e.cvar2Min_setDependent <= e.cvar2Max_setDependent)
-				e.disabled = (e.disabled + ((f < e.cvar2Min_setDependent) || (f > e.cvar2Max_setDependent)) > e.op_setDependent);
-			else
-				e.disabled = (e.disabled + ((f >= e.cvar2Max_setDependent) && (f <= e.cvar2Min_setDependent)) > e.op_setDependent);
-		}
-		if(e.cvar3_setDependent)
-		{
-			f = cvar(e.cvar3_setDependent);
-			if(e.cvar3Min_setDependent <= e.cvar3Max_setDependent)
-				e.disabled = (e.disabled + ((f < e.cvar3Min_setDependent) || (f > e.cvar3Max_setDependent)) > e.op_setDependent);
-			else
-				e.disabled = (e.disabled + ((f >= e.cvar3Max_setDependent) && (f <= e.cvar3Min_setDependent)) > e.op_setDependent);
-		}
+	}
+	int op = e.op_setDependent & BIT(0);
+	if (e.cvar2_setDependent)
+	{
+		f = cvar(e.cvar2_setDependent);
+		if (e.cvar2Min_setDependent <= e.cvar2Max_setDependent)
+			e.disabled = (e.disabled + ((f < e.cvar2Min_setDependent) || (f > e.cvar2Max_setDependent)) > op);
+		else
+			e.disabled = (e.disabled + ((f >= e.cvar2Max_setDependent) && (f <= e.cvar2Min_setDependent)) > op);
+	}
+	if (e.cvar3_setDependent)
+	{
+		f = cvar(e.cvar3_setDependent);
+		if (e.cvar3Min_setDependent <= e.cvar3Max_setDependent)
+			e.disabled = (e.disabled + ((f < e.cvar3Min_setDependent) || (f > e.cvar3Max_setDependent)) > op);
+		else
+			e.disabled = (e.disabled + ((f >= e.cvar3Max_setDependent) && (f <= e.cvar3Min_setDependent)) > op);
 	}
 	if (disabled_prev != e.disabled && e.loadCvars)
 		e.loadCvars(e);
@@ -178,11 +180,23 @@ void setDependent_Draw(entity e)
 void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax)
 {
 	e.draw_setDependent = e.draw;
-	e.cvar_setDependent = theCvarName;
-	e.cvarMin_setDependent = theCvarMin;
-	e.cvarMax_setDependent = theCvarMax;
-	e.cvar2_setDependent = string_null;
-	e.cvar3_setDependent = string_null;
+	e.cvar1_setDependent = theCvarName;
+	e.cvar1Min_setDependent = theCvarMin;
+	e.cvar1Max_setDependent = theCvarMax;
+	e.op_setDependent = 0;
+	e.cvarString_setDependent = string_null;
+	e.func_setDependent = func_null;
+	e.draw = setDependent_Draw;
+	setDependent_Check(e);
+}
+void setDependentNOT(entity e, string theCvarName, float theCvarValue)
+{
+	e.draw_setDependent = e.draw;
+	e.cvar1_setDependent = theCvarName;
+	e.cvar1Min_setDependent = theCvarValue;
+	e.cvar1Max_setDependent = theCvarValue;
+	e.op_setDependent |= BIT(1); // NOT
+	e.cvarString_setDependent = string_null;
 	e.func_setDependent = func_null;
 	e.draw = setDependent_Draw;
 	setDependent_Check(e);
@@ -192,58 +206,44 @@ void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValu
 	e.draw_setDependent = e.draw;
 	e.cvarString_setDependent = theCvarName;
 	e.cvarValue_setDependent = theCvarValue;
-	e.cvar_setDependent = string_null;
-	e.cvar2_setDependent = string_null;
-	e.cvar3_setDependent = string_null;
 	e.func_setDependent = func_null;
 	e.draw = setDependent_Draw;
 	setDependent_Check(e);
 }
-void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max)
+void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax)
 {
-	e.draw_setDependent = e.draw;
-	e.cvar_setDependent = theCvarName;
-	e.cvarMin_setDependent = theCvarMin;
-	e.cvarMax_setDependent = theCvarMax;
-	e.cvar2_setDependent = theCvar2Name;
-	e.cvar2Min_setDependent = theCvar2Min;
-	e.cvar2Max_setDependent = theCvar2Max;
-	e.cvar3_setDependent = string_null;
-	e.op_setDependent = 0;
+	if (e.cvar2_setDependent)
+	{
+		e.cvar3_setDependent = theCvarName;
+		e.cvar3Min_setDependent = theCvarMin;
+		e.cvar3Max_setDependent = theCvarMax;
+	}
+	else
+	{
+		e.cvar2_setDependent = theCvarName;
+		e.cvar2Min_setDependent = theCvarMin;
+		e.cvar2Max_setDependent = theCvarMax;
+	}
+	e.op_setDependent &= ~BIT(0); // AND
 	e.func_setDependent = func_null;
-	e.draw = setDependent_Draw;
 	setDependent_Check(e);
 }
-void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max)
+void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax)
 {
-	e.draw_setDependent = e.draw;
-	e.cvar_setDependent = theCvarName;
-	e.cvarMin_setDependent = theCvarMin;
-	e.cvarMax_setDependent = theCvarMax;
-	e.cvar2_setDependent = theCvar2Name;
-	e.cvar2Min_setDependent = theCvar2Min;
-	e.cvar2Max_setDependent = theCvar2Max;
-	e.cvar3_setDependent = string_null;
-	e.op_setDependent = 1;
+	if (e.cvar2_setDependent)
+	{
+		e.cvar3_setDependent = theCvarName;
+		e.cvar3Min_setDependent = theCvarMin;
+		e.cvar3Max_setDependent = theCvarMax;
+	}
+	else
+	{
+		e.cvar2_setDependent = theCvarName;
+		e.cvar2Min_setDependent = theCvarMin;
+		e.cvar2Max_setDependent = theCvarMax;
+	}
+	e.op_setDependent |= BIT(0); // OR
 	e.func_setDependent = func_null;
-	e.draw = setDependent_Draw;
-	setDependent_Check(e);
-}
-void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max)
-{
-	e.draw_setDependent = e.draw;
-	e.cvar_setDependent = theCvarName;
-	e.cvarMin_setDependent = theCvarMin;
-	e.cvarMax_setDependent = theCvarMax;
-	e.cvar2_setDependent = theCvar2Name;
-	e.cvar2Min_setDependent = theCvar2Min;
-	e.cvar2Max_setDependent = theCvar2Max;
-	e.cvar3_setDependent = theCvar3Name;
-	e.cvar3Min_setDependent = theCvar3Min;
-	e.cvar3Max_setDependent = theCvar3Max;
-	e.op_setDependent = 0;
-	e.func_setDependent = func_null;
-	e.draw = setDependent_Draw;
 	setDependent_Check(e);
 }
 void setDependentWeird(entity e, float(entity) func)
@@ -601,57 +601,35 @@ string resolvemod(string m)
 		return m;
 }
 
-float updateCompression()
+void updateCompression()
 {
-	float have_dds, have_jpg, have_tga;
-	float can_dds;
-	have_dds = (fexists("dds/particles/particlefont.dds"));
-	have_jpg = (fexists("particles/particlefont.jpg"));
-	have_tga = (fexists("particles/particlefont.tga"));
-	can_dds = GL_Have_TextureCompression();
+	bool have_dds = (fexists("dds/particles/particlefont.dds"));
+	bool have_jpg = (fexists("particles/particlefont.jpg"));
+	bool have_tga = (fexists("particles/particlefont.tga"));
+	bool can_dds = GL_Have_TextureCompression();
+
+	if (!can_dds)
+		cvar_set("gl_texturecompression", "0");
+
 	if(have_dds && (have_jpg || have_tga))
 	{
 		// both? Let's only use good quality precompressed files
 		// but ONLY if we actually support it!
-		if(can_dds)
-		{
-			// these builds are meant to have GOOD quality, so let's not compress non-skinframes
-			cvar_set("gl_texturecompression", "0");
-			return 1;
-
-			//cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
-			//return 2;
-		}
-		else
-		{
-			cvar_set("gl_texturecompression", "0");
-			cvar_set("r_texture_dds_load", "0");
-			return 0;
-		}
+		// bones_was_here: quality settings moved to effects configs and menu
 	}
 	else if(have_dds)
 	{
-		// DDS only? We probably always want texture compression
-		cvar_set("gl_texturecompression", "1");
+		// DDS only? We _must_ load DDS files!
 		cvar_set("r_texture_dds_load", "1");
 		if(!can_dds)
-			LOG_INFO(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems."));
-		return 0;
+		{
+			cvar_set("r_texture_dds_swdecode", "1");
+			LOG_WARN(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems."));
+		}
 	}
 	else
 	{
 		// TGA only? Allow runtime compression
-		if(can_dds)
-		{
-			cvar_set("gl_texturecompression", cvar_string("r_texture_dds_load"));
-			return 2;
-		}
-		else
-		{
-			cvar_set("gl_texturecompression", "0");
-			cvar_set("r_texture_dds_load", "0");
-			return 0;
-		}
 	}
 }
 
@@ -696,11 +674,11 @@ Gametype GameType_GetID(int cnt)
 int GameType_GetCount()
 {
 	int i = 0;
-	int dev = cvar("developer");
+	bool showall = autocvar_menu_create_show_all;
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
 	#undef GAMETYPE
-	#define GAMETYPE(it) { if (dev > 0) ++i; }
+	#define GAMETYPE(it) { if (showall) ++i; }
 	HIDDEN_GAMETYPES
 	#undef GAMETYPE
 	return i;
@@ -758,6 +736,7 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 	me.gotoRC(me, me.currentRow + 1.5, 0);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg"))));
+				e.setValueSpace(e, e.valueSpace * 1.25);
 				e.addValue(e, _("Default"), "");
 				e.addValue(e, _("Disable"), "0");
 				e.addValue(e, strzone(strcat("border_", panelname)), strzone(strcat("border_", panelname)));
@@ -765,11 +744,12 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Color:")));
+			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg")), "0");
 		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString(strzone(strcat("hud_panel_", panelname, "_bg_color")), "hud_panel_bg_color"));
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg_color")), "");
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.0, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_panel_", panelname, "_bg_color")), _("Use default")));
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 3.6, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_panel_", panelname, "_bg_color")), _("Default")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Border size:")));
@@ -781,21 +761,23 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Alpha:")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Opacity:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_alpha"))));
 				e.addValue(e, _("Default"), "");
-				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+				for(i = 1; i <= 20; ++i)
+					e.addValue(e, strzone(ftos_decimals_percentage(i / 20, 0)), strzone(ftos_mindecimals(i / 20)));
 				e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team Color:")));
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team color:")));
+			setDependentNOT(e, strzone(strcat("hud_panel_", panelname, "_bg_alpha")), 0);
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_color_team"))));
 				e.addValue(e, _("Default"), "");
 				e.addValue(e, _("Disable"), "0");
 				for(i = 1; i <= 10; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/10, 1)), strzone(ftos(i/10)));
+					e.addValue(e, strzone(ftos_decimals_percentage(i / 10, 0)), strzone(ftos_mindecimals(i / 10)));
 				e.configureXonoticTextSliderValues(e);
+				setDependentNOT(e, strzone(strcat("hud_panel_", panelname, "_bg_alpha")), 0);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 3.6, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", _("Test team color in configure mode")));
@@ -807,6 +789,16 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+
+	string hide_ondeath = strcat("hud_panel_", panelname, "_hide_ondeath");
+	if(cvar_type(hide_ondeath) & CVAR_TYPEFLAG_EXISTS)
+	{
+		me.TR(me);
+			me.TDempty(me, 0.2);
+			me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, strzone(hide_ondeath), _("Hide on death")));
+	}
+
+	me.gotoRC(me, me.currentRow + 0.5, 0); me.setFirstColumn(me, me.currentColumn);
 }
 
 bool isServerSingleplayer()
@@ -837,7 +829,7 @@ void CheckSendCvars(entity me, string cvarnamestring)
 		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 		{
 			LOG_INFOF("Sending cvar: %s -> %s", cvarnamestring, cvar_string(cvarnamestring));
-			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));
+			localcmd(sprintf("\nsendcvar %s\n", cvarnamestring));
 		}
 	}
 }

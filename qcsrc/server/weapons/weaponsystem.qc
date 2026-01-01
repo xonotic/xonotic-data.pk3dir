@@ -243,7 +243,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	}
 
 	if (thiswep == WEP_SHOTGUN)
-		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;           // no clicking, just allow
+		if (!secondary && WEP_CVAR(WEP_SHOTGUN, secondary) == 1) return false;           // no clicking, just allow
 
 	if (thiswep == actor.(weaponentity).m_switchweapon && time - actor.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 	{
@@ -428,7 +428,7 @@ bool weaponLocked(entity player)
 	if (time < game_starttime && !sv_ready_restart_after_countdown) return true;
 	if (player.player_blocked) return true;
 	if (game_stopped) return true;
-	if (STAT(FROZEN, player)) return true;
+	if (StatusEffects_active(STATUSEFFECT_Frozen, player)) return true;
 	if (MUTATOR_CALLHOOK(LockWeapon, player)) return true;
 	return false;
 }
@@ -710,7 +710,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use, .entity weaponenti
 			backtrace(sprintf(
 				"W_DecreaseAmmo(%.2f): '%s' subtracted too much %s from '%s', resulting with '%.2f' left... "
 				"Please notify the developers immediately with a copy of this backtrace!\n",
-				ammo_use, wep.netname, GetAmmoPicture(wep.ammo_type), actor.netname, ammo));
+				ammo_use, wep.netname, wep.ammo_type.netname, actor.netname, ammo));
 		}
 		SetResource(actor, wep.ammo_type, ammo - ammo_use);
 	}
@@ -833,7 +833,7 @@ void W_Reload(entity actor, .entity weaponentity, float sent_ammo_min, Sound sen
 	this.clip_load = this.(weapon_load[this.m_weapon.m_id]) = -1;
 }
 
-void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, float weapon_type, entity weapon_item, .entity weaponentity)
+void W_DropEvent(.void(Weapon, entity actor, .entity) event, entity player, int weapon_type, entity weapon_item, .entity weaponentity)
 {
 	Weapon w = REGISTRY_GET(Weapons, weapon_type);
 	weapon_dropevent_item = weapon_item;

@@ -1,11 +1,11 @@
 #include "ent_cs.qh"
 
 #if defined(CSQC)
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/resources/resources.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include <common/gamemodes/_mod.qh>
+	#include <common/gametypes/_mod.qh>
 	#include <common/resources/resources.qh>
 	#include <common/resources/sv_resources.qh>
 #endif
@@ -152,6 +152,15 @@ ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
 	{ WriteShort(chan, ent.frags); },
 	{ ent.frags = ReadShort(); })
 
+ENTCS_PROP(HANDICAP_LEVEL, true, handicap_level, handicap_level, ENTCS_SET_NORMAL,
+	{ WriteByte(chan, ent.handicap_level); },
+	{ ent.handicap_level = ReadByte(); })
+
+// index of join queue team selection, max 127 because -1 means any available team
+ENTCS_PROP(WANTSJOIN, true, wants_join, wants_join, ENTCS_SET_NORMAL,
+	{ WriteChar(chan, ent.wants_join); },
+	{ ent.wants_join = ReadChar(); })
+
 // use sv_solid to avoid changing solidity state of entcs entities
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.sv_solid); },
@@ -215,7 +224,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 
 	void entcs_think(entity this)
 	{
-		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
+		this.nextthink = time + 0.015625;  // TODO: increase this to like 0.125 once the client can do smoothing
 		entity player = this.owner;
 		FOREACH(EntCSProps, it.m_check(this, player),
 		{

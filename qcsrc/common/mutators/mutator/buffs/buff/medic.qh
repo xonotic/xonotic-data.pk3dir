@@ -1,0 +1,30 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_medic_survive_chance;
+float autocvar_g_buffs_medic_survive_health;
+float autocvar_g_buffs_medic_rot;
+float autocvar_g_buffs_medic_max;
+float autocvar_g_buffs_medic_regen;
+
+float buff_Medic_CalculateSurviveDamage(float frag_damage, float health);
+#endif // SVQC
+
+CLASS(MedicBuff, Buff)
+	ATTRIB(MedicBuff, m_name, string, _("Medic"));
+	ATTRIB(MedicBuff, netname, string, "medic");
+#ifndef SVQC
+	ATTRIB(MedicBuff, m_icon, string, "buff_medic");
+#endif
+#ifdef GAMEQC
+	ATTRIB(MedicBuff, m_skin, int, 1);
+#endif
+	ATTRIB(MedicBuff, m_color, vector, '1 0.12 0');
+ENDCLASS(MedicBuff)
+
+REGISTER_BUFF(MEDIC, NEW(MedicBuff));
+BUFF_SPAWNFUNCS(medic, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3COMPAT(item_regen, BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3COMPAT(item_revival, BUFF_MEDIC)

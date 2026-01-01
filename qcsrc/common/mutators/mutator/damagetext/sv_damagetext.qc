@@ -1,6 +1,6 @@
 #include "sv_damagetext.qh"
 
-AUTOCVAR(sv_damagetext, int, 2, "<= 0: disabled, >= 1: visible to spectators, >= 2: visible to attacker, >= 3: all players see everyone's damage");
+AUTOCVAR(sv_damagetext, int, 2, "\\\"0\\\" = disable damage text, \\\"1\\\" = show damage text to spectators, \\\"2\\\" = also to the attacker, \\\"3\\\" = show damage text to all players");
 
 REGISTER_MUTATOR(damagetext, true);
 
@@ -14,6 +14,11 @@ REGISTER_MUTATOR(damagetext, true);
 .float dent_net_health;
 .float dent_net_armor;
 .float dent_net_potential;
+
+const int BITS_PER_INT = 24;
+const int DENT_ATTACKERS_SIZE = 11; // ceil(255 / BITS_PER_INT)
+// where 255 is the max number of clients that the engine can support
+.int dent_attackers[DENT_ATTACKERS_SIZE];
 
 bool write_damagetext(entity this, entity client, int sf)
 {
@@ -63,9 +68,26 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	float armor = M_ARGV(3, float);
 	int deathtype = M_ARGV(5, int);
 	float potential_damage = M_ARGV(6, float);
-
-	if(MUTATOR_IS_ENABLED(mutator_instagib) && DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER)
+	if (potential_damage == 0)
 		return;
+	if (MUTATOR_IS_ENABLED(mutator_instagib) && DEATH_WEAPONOF(deathtype) == WEP_VAPORIZER)
+		return;
+
+	static entity net_text_prev;
+	static float net_damagetext_prev_time;
+
+	bool multiple = (net_damagetext_prev_time == time && net_text_prev && !wasfreed(net_text_prev)
+		&& net_text_prev.realowner == attacker && net_text_prev.enemy == hit
+		&& net_text_prev.dent_net_deathtype == deathtype);
+
+	if (multiple)
+	{
+		// damage of multiple projectiles hitting player at the same time, e.g. shotgun
+		// is accumulated on the same damagetext entity
+		health += net_text_prev.dent_net_health;
+		armor += net_text_prev.dent_net_armor;
+		potential_damage += net_text_prev.dent_net_potential;
+	}
 
 	int flags = 0;
 	if (SAME_TEAM(hit, attacker)) flags |= DTFLAG_SAMETEAM;
@@ -74,6 +96,27 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	if (potential_damage >= DAMAGETEXT_SHORT_LIMIT) flags |= DTFLAG_BIG_POTENTIAL;
 	if (!armor) flags |= DTFLAG_NO_ARMOR;
 	if (almost_equals_eps(armor + health, potential_damage, 5)) flags |= DTFLAG_NO_POTENTIAL;
+
+	if (multiple)
+	{
+		net_text_prev.dent_net_flags = flags;
+		net_text_prev.dent_net_health = health;
+		net_text_prev.dent_net_armor = armor;
+		net_text_prev.dent_net_potential = potential_damage;
+		return;
+	}
+	else if (attacker)
+	{
+		int attacker_id = etof(attacker) - 1;
+		int idx = floor(attacker_id / BITS_PER_INT);
+		int bit = attacker_id % BITS_PER_INT;
+		if (!(hit.dent_attackers[idx] & BIT(bit)))
+		{
+			// player is hit for the first time after respawn by this attacker
+			hit.dent_attackers[idx] |= BIT(bit);
+			flags |= DTFLAG_STOP_ACCUMULATION; // forcedly stop client-side damage accumulation
+		}
+	}
 
 	entity net_text = new_pure(net_damagetext);
 	net_text.realowner = attacker;
@@ -84,8 +127,30 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 	net_text.dent_net_armor = armor;
 	net_text.dent_net_potential = potential_damage;
 
+	net_text_prev = net_text;
+	net_damagetext_prev_time = time;
+
 	setthink(net_text, SUB_Remove);
 	net_text.nextthink = (time > 10) ? (time + 0.5) : 10; // allow a buffer from start time for clients to load in
 
 	Net_LinkEntity(net_text, false, 0, write_damagetext);
+}
+
+MUTATOR_HOOKFUNCTION(damagetext, ClientDisconnect)
+{
+	entity player = M_ARGV(0, entity);
+	int player_id = etof(player) - 1;
+	int idx = floor(player_id / BITS_PER_INT);
+	int bit = player_id % BITS_PER_INT;
+	// remove from attacker list of all players
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		it.dent_attackers[idx] &= ~BIT(bit);
+	});
+}
+
+MUTATOR_HOOKFUNCTION(damagetext, PlayerSpawn)
+{
+	entity player = M_ARGV(0, entity);
+	for (int i = 0; i < DENT_ATTACKERS_SIZE; ++i)
+		player.dent_attackers[i] = 0;
 }

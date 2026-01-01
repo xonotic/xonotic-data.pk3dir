@@ -1,0 +1,25 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_jump_velocity;
+
+float buff_Jump_ChangeDamage(float frag_damage, float frag_deathtype);
+#endif // SVQC
+
+CLASS(JumpBuff, Buff)
+	ATTRIB(JumpBuff, m_name, string, _("Jump"));
+	ATTRIB(JumpBuff, netname, string, "jump");
+#ifndef SVQC
+	ATTRIB(JumpBuff, m_icon, string, "buff_jump");
+#endif
+#ifdef GAMEQC
+	ATTRIB(JumpBuff, m_skin, int, 10);
+#endif
+	ATTRIB(JumpBuff, m_color, vector, '0.24 0.78 1');
+ENDCLASS(JumpBuff)
+
+REGISTER_BUFF(JUMP, NEW(JumpBuff));
+BUFF_SPAWNFUNCS(jump, BUFF_JUMP)
+BUFF_SPAWNFUNC_Q3COMPAT(item_jumper, BUFF_JUMP)

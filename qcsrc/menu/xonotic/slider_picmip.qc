@@ -9,7 +9,7 @@ entity makeXonoticPicmipSlider()
 }
 void XonoticPicmipSlider_configureXonoticPicmipSlider(entity me)
 {
-	me.configureXonoticTextSlider(me, "gl_picmip",
+	me.configureXonoticMixedSlider(me, "gl_picmip",
 		_("Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry."));
 	me.autofix(me);
 	me.have_s3tc = GL_Have_TextureCompression();
@@ -32,7 +32,7 @@ void XonoticPicmipSlider_autofix(entity me)
 	if(max_hard > 0)
 	{
 		while(me.value > 0 && texmemsize(me.have_s3tc) > max_hard)
-			me.setValue(me, me.value - 1);
+			me.setValue(me, me.value - 1, autocvar_menu_animations > 0);
 	}
 	// TODO also check the soft limit!
 	// TODO better handling than clamping the slider!

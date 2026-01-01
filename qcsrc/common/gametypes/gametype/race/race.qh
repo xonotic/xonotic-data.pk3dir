@@ -1,0 +1,48 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+#ifdef CSQC
+void HUD_Mod_Race(vector pos, vector mySize);
+#endif
+CLASS(Race, Gametype)
+	INIT(Race)
+	{
+		this.gametype_init(this, _("Race"),"rc","g_race",GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0",_("Race against other players to the finish line"));
+	}
+	METHOD(Race, m_parse_mapinfo, bool(string k, string v))
+	{
+		if (!k)
+		{
+			cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
+			return true;
+		}
+		switch (k)
+		{
+			case "qualifying_timelimit":
+				cvar_set("g_race_qualifying_timelimit", v);
+				return true;
+		}
+		return false;
+	}
+	METHOD(Race, m_generate_mapinfo, void(Gametype this, string v))
+	{
+		if(v == "trigger_race_checkpoint")
+			MapInfo_Map_supportedGametypes |= this.gametype_flags;
+	}
+	METHOD(Race, m_isTwoBaseMode, bool())
+	{
+		return true;
+	}
+	METHOD(Race, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Laps:"),            1,   25,  1, "g_race_laps_limit",         string_null,                    string_null);
+	}
+#ifdef CSQC
+	ATTRIB(Race, m_modicons, void(vector pos, vector mySize), HUD_Mod_Race);
+#endif
+	ATTRIB(Race, m_legacydefaults, string, "20 5 7 15 0");
+ENDCLASS(Race)
+REGISTER_GAMETYPE(RACE, NEW(Race));
+#define g_race IS_GAMETYPE(RACE)

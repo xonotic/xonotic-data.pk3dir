@@ -1,0 +1,26 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_vengeance_damage_multiplier;
+
+void buff_Vengeance_DelayedDamage(entity this);
+float buff_Vengeance_CalculateDamage(float frag_damage);
+#endif // SVQC
+
+CLASS(VengeanceBuff, Buff)
+	ATTRIB(VengeanceBuff, m_name, string, _("Vengeance"));
+	ATTRIB(VengeanceBuff, netname, string, "vengeance");
+#ifndef SVQC
+	ATTRIB(VengeanceBuff, m_icon, string, "buff_vengeance");
+#endif
+#ifdef GAMEQC
+	ATTRIB(VengeanceBuff, m_skin, int, 15);
+#endif
+	ATTRIB(VengeanceBuff, m_color, vector, '1 0.23 0.61');
+ENDCLASS(VengeanceBuff)
+
+REGISTER_BUFF(VENGEANCE, NEW(VengeanceBuff));
+BUFF_SPAWNFUNCS(vengeance, BUFF_VENGEANCE)
+BUFF_SPAWNFUNC_Q3COMPAT(holdable_kamikaze, BUFF_VENGEANCE)

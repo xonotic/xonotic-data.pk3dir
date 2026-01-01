@@ -240,7 +240,7 @@ void W_Tuba_NoteThink(entity this)
 		return;
 	}
 	this.nextthink = time;
-	dist_mult = WEP_CVAR(tuba, attenuation) / autocvar_snd_soundradius;
+	dist_mult = WEP_CVAR(WEP_TUBA, attenuation) / autocvar_snd_soundradius;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this.realowner, {
 		v = this.origin - (it.origin + it.view_ofs);
 		vol0 = max(0, 1 - vlen(v) * dist_mult);
@@ -273,7 +273,7 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	if(actor.(weaponentity).tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
 
-	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage), hittype | WEP_TUBA.m_id);
+	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(WEP_TUBA, damage), hittype | WEP_TUBA.m_id);
 
 	if(actor.(weaponentity).tuba_note)
 	{
@@ -297,10 +297,10 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 		Net_LinkEntity(note, false, 0, W_Tuba_NoteSendEntity);
 	}
 
-	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
+	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(WEP_TUBA, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
-	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
+	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * autocvar_cl_tuba_volume, 1), autocvar_cl_tuba_attenuation);
+	RadiusDamage(actor, actor, WEP_CVAR(WEP_TUBA, damage), WEP_CVAR(WEP_TUBA, edgedamage), WEP_CVAR(WEP_TUBA, radius), NULL, NULL, WEP_CVAR(WEP_TUBA, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
 
 	if(time > actor.(weaponentity).tuba_smoketime)
 	{
@@ -322,7 +322,7 @@ METHOD(Tuba, wr_aim, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// bots cannot play the Tuba well yet
 	// I think they should start with the recorder first
-	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(tuba, radius)))
+	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(WEP_TUBA, radius)))
 	{
 		if (random() > 0.5)
 			PHYS_INPUT_BUTTON_ATCK(actor) = true;
@@ -334,20 +334,20 @@ METHOD(Tuba, wr_aim, void(Tuba this, entity actor, .entity weaponentity))
 METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int fire))
 {
 	if (fire & 1)
-	if (weapon_prepareattack(this, actor, weaponentity, false, WEP_CVAR(tuba, refire)))
+	if (weapon_prepareattack(this, actor, weaponentity, false, WEP_CVAR(WEP_TUBA, refire)))
 	{
 		W_Tuba_NoteOn(actor, weaponentity, 0);
-		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(WEP_TUBA, animtime), w_ready);
 	}
 	if (fire & 2)
-	if (weapon_prepareattack(this, actor, weaponentity, true, WEP_CVAR(tuba, refire)))
+	if (weapon_prepareattack(this, actor, weaponentity, true, WEP_CVAR(WEP_TUBA, refire)))
 	{
 		W_Tuba_NoteOn(actor, weaponentity, HITTYPE_SECONDARY);
-		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(WEP_TUBA, animtime), w_ready);
 	}
 	if (actor.(weaponentity).tuba_note)
 	{
-		if (!(fire & 1) && !(fire & 2))
+		if (!(fire & (1 | 2)))
 		{
 			W_Tuba_NoteOff(actor.(weaponentity).tuba_note);
 		}
@@ -476,21 +476,21 @@ void tubasound(entity e, bool restart)
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		}
 
-		sound7(e, CH_TUBA_SINGLE, snd1, e.tuba_volume * vol1, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation, 100 * speed1, 0);
+		sound7(e, CH_TUBA_SINGLE, snd1, e.tuba_volume * vol1, e.tuba_attenuate * autocvar_cl_tuba_attenuation, 100 * speed1, 0);
 		if (vol2) {
-			sound7(e.enemy, CH_TUBA_SINGLE, snd2, e.tuba_volume * vol2, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation, 100 * speed2, 0);
+			sound7(e.enemy, CH_TUBA_SINGLE, snd2, e.tuba_volume * vol2, e.tuba_attenuate * autocvar_cl_tuba_attenuation, 100 * speed2, 0);
 		}
 	} else {
 		if (restart) {
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		}
-		_sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation);
+		_sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_cl_tuba_attenuation);
 	}
 }
 
 void Ent_TubaNote_Think(entity this)
 {
-	float f = autocvar_g_balance_tuba_fadetime;
+	float f = autocvar_cl_tuba_fadetime;
 	if (f > 0) {
 		this.tuba_volume -= frametime * this.tuba_volume_initial / f;
 	} else {
@@ -511,7 +511,7 @@ void Ent_TubaNote_Think(entity this)
 
 void Ent_TubaNote_UpdateSound(entity this)
 {
-	this.enemy.tuba_volume = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
+	this.enemy.tuba_volume = bound(0, VOL_BASE * autocvar_cl_tuba_volume, 1);
 	this.enemy.tuba_volume_initial = this.enemy.tuba_volume;
 	this.enemy.note = this.note;
 	this.enemy.tuba_instrument = this.tuba_instrument;
@@ -576,7 +576,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 
 PRECACHE(Tuba)
 {
-	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
+	Tuba_PitchStep = autocvar_cl_tuba_pitchstep;
 	if (Tuba_PitchStep) {
 		if (!checkextension("DP_SND_SOUND7_WIP2") && !checkextension("DP_SND_SOUND7")) {
 			LOG_WARN("requested pitch shifting, but not supported by this engine build");
@@ -590,6 +590,23 @@ PRECACHE(Tuba)
 			}
 		}
 	}
+}
+
+#endif
+#ifdef MENUQC
+
+METHOD(Tuba, describe, string(Tuba this))
+{
+	TC(Tuba, this);
+	PAGE_TEXT_INIT();
+	PAR(_("The %s is a unique weapon that makes the ears of nearby enemies bleed by playing awful sounds, also slightly knocking them back."), COLORED_NAME(this));
+	PAR(_("The secondary fire works the same way, playing a higher pitch."));
+	PAR(_("The only ammo it needs to operate is the breath from your lungs."));
+	PAR(_("Since your enemies need to be close by to hear your rubbish music, the %s is only effective at very close ranges."), COLORED_NAME(this));
+	PAR(_("The pitch the %s plays depends on the movement keys pressed."), COLORED_NAME(this));
+	PAR(W_Guide_Keybinds(this));
+	PAR(W_Guide_DPS_onlyOne_unnamed(this.netname));
+	return PAGE_TEXT;
 }
 
 #endif

@@ -1,0 +1,23 @@
+#pragma once
+
+#include <common/mutators/mutator/nades/nades.qh>
+
+#ifdef SVQC
+// TODO: rename these to `monster`
+bool autocvar_g_nades_pokenade;
+string autocvar_g_nades_pokenade_monster_type;
+float autocvar_g_nades_pokenade_monster_lifetime;
+
+void nade_monster_boom(entity this);
+#endif // SVQC
+
+const int PROJECTILE_NADE_MONSTER = 82;
+const int PROJECTILE_NADE_MONSTER_BURN = 83;
+
+CLASS(MonsterNade, Nade)
+	ATTRIB(MonsterNade, m_color, vector, '0.1 0.65 0');
+	ATTRIB(MonsterNade, m_name, string, _("Monster grenade"));
+	ATTRIB(MonsterNade, m_icon, string, "nade_monster");
+	ATTRIB(MonsterNade, netname, string, "pokenade"); // TODO: "monster"? nade needs renaming!
+	ATTRIB(MonsterNade, impulse, int, 7);
+ENDCLASS(MonsterNade)

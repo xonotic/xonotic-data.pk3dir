@@ -1,0 +1,36 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <common/scores.qh>
+
+// set before a lms_RemovePlayer call, if true player becomes a real spectator
+// otherwise it gets eliminated becoming spectator but as player out of game with a rank
+.bool lms_spectate;
+
+#define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
+string autocvar_g_lms_weaponarena = "most_available";
+
+void lms_Initialize();
+
+REGISTER_MUTATOR(lms, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_limit_score(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override));
+		GameRules_limit_lead(0);
+		GameRules_score_enabled(false);
+		GameRules_scoring(0, 0, 0,
+		{
+			field(SP_LMS_LIVES, "lives", SFL_SORT_PRIO_SECONDARY);
+			field(SP_LMS_RANK, "rank", SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
+		});
+
+		lms_Initialize();
+	}
+	return 0;
+}
+
+// lives related defs
+int lms_lowest_lives;
+int LMS_NewPlayerLives();

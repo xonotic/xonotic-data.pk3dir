@@ -7,6 +7,9 @@
 #ifdef SVQC
 #include <common/effects/qc/_mod.qh>
 #endif
+#ifndef SVQC
+#include <common/util.qh> // for icon_path_from_HUDskin
+#endif
 
 USING(WepSet, vector);
 
@@ -41,104 +44,111 @@ const int WS_READY  = 4;
 CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_id, int, 0);
 	/** the canonical spawnfunc name */
-    ATTRIB(Weapon, m_canonical_spawnfunc, string);
-    /** control what happens when this weapon is spawned */
-    METHOD(Weapon, m_spawnfunc_hookreplace, Weapon(Weapon this, entity e)) { return this; }
-    /** M: ammotype  : main ammo type */
-    ATTRIB(Weapon, ammo_type, Resource, RES_NONE);
-    /** M: impulse   : weapon impulse */
-    ATTRIB(Weapon, impulse, int, -1);
-    /** M: flags     : WEPSPAWNFLAG_... combined */
-    ATTRIB(Weapon, spawnflags, int, 0);
-    /** M: rating    : bot weapon priority */
-    ATTRIB(Weapon, bot_pickupbasevalue, float, 0);
-    /** M: color     : waypointsprite color */
-    ATTRIB(Weapon, wpcolor, vector, '0 0 0');
-    /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
-    ATTRIB(Weapon, mdl, string, "");
+	ATTRIB(Weapon, m_canonical_spawnfunc, string);
+	/** control what happens when this weapon is spawned */
+	METHOD(Weapon, m_spawnfunc_hookreplace, Weapon(Weapon this, entity e)) { return this; }
+	/** M: ammotype  : main ammo type */
+	ATTRIB(Weapon, ammo_type, Resource, RES_NONE);
+	/** M: impulse   : weapon impulse */
+	ATTRIB(Weapon, impulse, int, -1);
+	/** M: flags     : WEPSPAWNFLAG_... combined */
+	ATTRIB(Weapon, spawnflags, int, 0);
+	/** M: rating    : bot weapon priority */
+	ATTRIB(Weapon, bot_pickupbasevalue, float, 0);
+	/** M: color     : waypointsprite color. previously called "wpcolor" */
+	ATTRIB(Weapon, m_color, vector, '0 0 0');
+	/** M: modelname : name of model (without g_ v_ or h_ prefixes) */
+	ATTRIB(Weapon, mdl, string, "");
 #ifdef GAMEQC
-    /** M: model MDL_id_ITEM */
-    ATTRIB(Weapon, m_model, entity);
-    /** M: flash model MDL_id_MUZZLEFLASH */
-    ATTRIB(Weapon, m_muzzlemodel, entity, MDL_Null);
-    /** M: flash effect EFFECT_id_MUZZLEFLASH */
-    ATTRIB(Weapon, m_muzzleeffect, entity);
+	/** M: model MDL_id_ITEM */
+	ATTRIB(Weapon, m_model, entity);
+	/** M: flash model MDL_id_MUZZLEFLASH */
+	ATTRIB(Weapon, m_muzzlemodel, entity, MDL_Null);
+	/** M: flash effect EFFECT_id_MUZZLEFLASH */
+	ATTRIB(Weapon, m_muzzleeffect, entity);
 #endif
-    /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
-    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshairmoustache");
-    /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
-    ATTRIB(Weapon, w_crosshair_size, float, 1);
-    /** A: reticle   : per-weapon zoom reticle */
-    ATTRIB(Weapon, w_reticle, string, string_null);
-    /** M: wepimg    : "weaponfoobar" side view image file of weapon. WEAPONTODO: Move out of skin files, move to common files */
-    ATTRIB(Weapon, model2, string, "");
-    /** M: refname   : reference name name */
-    ATTRIB(Weapon, netname, string, "");
-    /** M: wepname   : human readable name */
-    ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
-    /** M: deprecated refname : old reference name for compatibility with weapons that were renamed */
-    ATTRIB(Weapon, m_deprecated_netname, string, "");
+	/** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
+	ATTRIB(Weapon, w_crosshair, string, "gfx/crosshairmoustache");
+	/** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
+	ATTRIB(Weapon, w_crosshair_size, float, 1);
+	/** A: reticle   : per-weapon zoom reticle */
+	ATTRIB(Weapon, w_reticle, string, string_null);
+	/** M: wepimg    : "weaponfoobar" side view image file of weapon. WEAPONTODO: Move out of skin files, move to common files */
+	ATTRIB(Weapon, model2, string, "");
+	/** M: refname   : reference name name */
+	ATTRIB(Weapon, netname, string, "");
+	/** M: wepname   : human readable name */
+	ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
+	/** M: deprecated refname : old reference name for compatibility with weapons that were renamed */
+	ATTRIB(Weapon, m_deprecated_netname, string, "");
 
-    ATTRIB(Weapon, m_pickup, entity);
+	ATTRIB(Weapon, m_pickup, entity);
 
-    /** (SERVER) setup weapon data */
-    METHOD(Weapon, wr_setup, void(Weapon this, entity actor, .entity weaponentity)) {}
-    /** (SERVER) logic to run every frame */
-    METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
-    /** (SERVER) checks ammo for weapon primary */
-    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
-    /** (SERVER) checks ammo for weapon second */
-    METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
-    /** (SERVER) runs bot aiming code for this weapon */
-    METHOD(Weapon, wr_aim, void(Weapon this, entity actor, .entity weaponentity)) {}
-    /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
-    METHOD(Weapon, wr_init, void(Weapon this)) {}
-    /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
-    METHOD(Weapon, wr_suicidemessage, entity(Weapon this)) {return NULL;}
-    /** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
-    METHOD(Weapon, wr_killmessage, entity(Weapon this)) {return NULL;}
-    /** (SERVER) handles reloading for weapon */
-    METHOD(Weapon, wr_reload, void(Weapon this, entity actor, .entity weaponentity)) {}
-    /** (SERVER) clears fields that the weapon may use */
-    METHOD(Weapon, wr_resetplayer, void(Weapon this, entity actor)) {}
-    /** (CLIENT) impact effect for weapon explosion */
-    METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) {}
-    /** (SERVER) called whenever a player dies */
-    METHOD(Weapon, wr_playerdeath, void(Weapon this, entity actor, .entity weaponentity)) {}
-    /** (SERVER) logic to run when weapon is lost */
-    METHOD(Weapon, wr_gonethink, void(Weapon this, entity actor, .entity weaponentity)) {}
-    /** (SERVER) dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
-    METHOD(Weapon, wr_config, void(Weapon this)) {}
-    /** (BOTH) weapon specific zoom reticle */
-    METHOD(Weapon, wr_zoom, bool(Weapon this, entity actor)) {
-        // no weapon specific image for this weapon
-        return false;
-    }
-    /** (CLIENT) check whether the weapon should zoom (special handling) */
-    METHOD(Weapon, wr_zoomdir, bool(Weapon this)) {return false;}
-    /** (CLIENT) weapon specific view model */
-    METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
-    /** (BOTH) weapon specific glow */
-    METHOD(Weapon, wr_glow, vector(Weapon this, int actor_colors, entity wepent)) { return '0 0 0'; }
-    /** (SERVER) the weapon is dropped */
-    METHOD(Weapon, wr_drop, void(Weapon this, entity actor, .entity weaponentity)) {}
-    /** (SERVER) a weapon is picked up */
-    METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
-    /** (SERVER) update cvar based properties */
-    METHOD(Weapon, wr_update, void(Weapon this)) {}
-	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
+	/** (SERVER) setup weapon data */
+	METHOD(Weapon, wr_setup, void(Weapon this, entity actor, .entity weaponentity)) {}
+	/** (SERVER) logic to run every frame */
+	METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
+	/** (SERVER) checks ammo for weapon primary */
+	METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
+	/** (SERVER) checks ammo for weapon second */
+	METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor, .entity weaponentity)) {return false;}
+	/** (SERVER) runs bot aiming code for this weapon */
+	METHOD(Weapon, wr_aim, void(Weapon this, entity actor, .entity weaponentity)) {}
+	/** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
+	METHOD(Weapon, wr_init, void(Weapon this)) {}
+	/** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
+	METHOD(Weapon, wr_suicidemessage, entity(Weapon this)) {return NULL;}
+	/** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
+	METHOD(Weapon, wr_killmessage, entity(Weapon this)) {return NULL;}
+	/** (SERVER) handles reloading for weapon */
+	METHOD(Weapon, wr_reload, void(Weapon this, entity actor, .entity weaponentity)) {}
+	/** (SERVER) clears fields that the weapon may use */
+	METHOD(Weapon, wr_resetplayer, void(Weapon this, entity actor)) {}
+	/** (CLIENT) impact effect for weapon explosion */
+	METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) {}
+	/** (SERVER) called whenever a player dies */
+	METHOD(Weapon, wr_playerdeath, void(Weapon this, entity actor, .entity weaponentity)) {}
+	/** (SERVER) logic to run when weapon is lost */
+	METHOD(Weapon, wr_gonethink, void(Weapon this, entity actor, .entity weaponentity)) {}
+	/** (SERVER) dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
+	METHOD(Weapon, wr_config, void(Weapon this)) {}
+	/** (BOTH) weapon specific zoom reticle */
+	METHOD(Weapon, wr_zoom, bool(Weapon this, entity actor)) {
+		// no weapon specific image for this weapon
+		return false;
 	}
+	/** (CLIENT) check whether the weapon should zoom (special handling) */
+	METHOD(Weapon, wr_zoomdir, bool(Weapon this)) {return false;}
+	/** (CLIENT) weapon specific view model */
+	METHOD(Weapon, wr_viewmodel, string(Weapon this, entity wep)) { return string_null; }
+	/** (BOTH) weapon specific glow */
+	METHOD(Weapon, wr_glow, vector(Weapon this, int actor_colors, entity wepent)) { return '0 0 0'; }
+	/** (SERVER) the weapon is dropped */
+	METHOD(Weapon, wr_drop, void(Weapon this, entity actor, .entity weaponentity)) {}
+	/** (SERVER) a weapon is picked up */
+	METHOD(Weapon, wr_pickup, void(Weapon this, entity actor, .entity weaponentity)) {}
+	/** (SERVER) update cvar based properties */
+	METHOD(Weapon, wr_update, void(Weapon this)) {}
+#ifdef MENUQC
+	METHOD(Weapon, describe, string(Weapon this))
+	{
+		TC(Weapon, this);
+		return SUPER(Weapon).describe(this);
+	}
+#endif
+#ifndef SVQC
+	METHOD(Weapon, display, void(Weapon this, void(string name, string icon) returns))
+	{
+		returns(this.m_name, icon_path_from_HUDskin(this.model2));
+	}
+#endif
 ENDCLASS(Weapon)
 
 #ifdef SVQC
 
 void weapon_defaultspawnfunc(entity this, Weapon e);
 #define SPAWNFUNC_WEAPON(name, weapon) \
-    spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
-
-#define SPAWNFUNC_WEAPON_COND(name, cond, wep1, wep2) \
-	SPAWNFUNC_WEAPON(name, (cond ? wep1 : wep2))
+	spawnfunc(name) { weapon_defaultspawnfunc(this, weapon); }
 
 #else
 
@@ -148,41 +158,41 @@ void weapon_defaultspawnfunc(entity this, Weapon e);
 
 #include <common/items/_mod.qh>
 CLASS(WeaponPickup, Pickup)
-    ATTRIB(WeaponPickup, m_weapon, Weapon);
-    ATTRIB(WeaponPickup, m_name, string);
+	ATTRIB(WeaponPickup, m_weapon, Weapon);
+	ATTRIB(WeaponPickup, m_name, string);
 #ifdef GAMEQC
-    ATTRIB(WeaponPickup, m_sound, Sound, SND_WEAPONPICKUP);
+	ATTRIB(WeaponPickup, m_sound, Sound, SND_WEAPONPICKUP);
 #endif
 #ifdef SVQC
-    ATTRIB(WeaponPickup, m_itemflags, int, FL_WEAPON);
-    float weapon_pickupevalfunc(entity player, entity item);
-    ATTRIB(WeaponPickup, m_pickupevalfunc, float(entity player, entity item), weapon_pickupevalfunc);
+	ATTRIB(WeaponPickup, m_itemflags, int, FL_WEAPON);
+	float weapon_pickupevalfunc(entity player, entity item);
+	ATTRIB(WeaponPickup, m_pickupevalfunc, float(entity player, entity item), weapon_pickupevalfunc);
 #endif
-    CONSTRUCTOR(WeaponPickup, Weapon w) {
-        CONSTRUCT(WeaponPickup);
-        this.m_weapon = w;
-        this.m_name = w.m_name;
+	CONSTRUCTOR(WeaponPickup, Weapon w) {
+		CONSTRUCT(WeaponPickup);
+		this.m_weapon = w;
+		this.m_name = w.m_name;
 #ifdef GAMEQC
-        this.m_model = w.m_model;
+		this.m_model = w.m_model;
 #endif
 #ifdef SVQC
-        this.m_botvalue = w.bot_pickupbasevalue;
+		this.m_botvalue = w.bot_pickupbasevalue;
 #endif
-    }
+	}
 #ifdef SVQC
-    METHOD(WeaponPickup, giveTo, bool(entity this, entity item, entity player))
-    {
-        bool b = Item_GiveTo(item, player);
-        //if (b) {
-            //LOG_TRACEF("entity %i picked up %s", player, this.m_name);
-        //}
-        return b;
-    }
+	METHOD(WeaponPickup, giveTo, bool(entity this, entity item, entity player))
+	{
+		bool b = Item_GiveTo(item, player);
+		//if (b) {
+			//LOG_TRACEF("entity %i picked up %s", player, this.m_name);
+		//}
+		return b;
+	}
 #endif
 ENDCLASS(WeaponPickup)
 
 CLASS(OffhandWeapon, Object)
-    METHOD(OffhandWeapon, offhand_think, void(OffhandWeapon this, entity player, bool key_pressed)) {}
+	METHOD(OffhandWeapon, offhand_think, void(OffhandWeapon this, entity player, bool key_pressed)) {}
 ENDCLASS(OffhandWeapon)
 
 #ifdef SVQC
@@ -191,6 +201,10 @@ ENDCLASS(OffhandWeapon)
 
 #ifdef GAMEQC
 int max_shot_distance = 32768; // determined by world mins/maxs when map loads
+#endif
+
+#ifdef CSQC
+int autocvar_cl_tracers_teamcolor;
 #endif
 
 // weapon flags
@@ -210,29 +224,7 @@ const int WEP_FLAG_NODUAL         =  BIT(12); // weapon doesn't work well with d
 const int WEP_FLAG_PENETRATEWALLS =  BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
 const int WEP_FLAG_BLEED          =  BIT(14); // weapon pierces and causes bleeding (used for damage effects)
 const int WEP_FLAG_NOTRUEAIM      =  BIT(15); // weapon doesn't aim directly at targets
-const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // marked as a special attack (not a true weapon), hidden from most weapon lists
+const int WEP_FLAG_SPECIALATTACK  =  BIT(16); // special attack (not a true weapon); NOTE: if this flag is set then WEP_FLAG_HIDDEN must be set as well
 
 // variables:
 string weaponorder_byid;
-
-// functions:
-string W_FixWeaponOrder(string order, float complete);
-string W_NameWeaponOrder(string order);
-string W_NumberWeaponOrder(string order);
-string W_FixWeaponOrder_BuildImpulseList(string o);
-string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
-string W_FixWeaponOrder_ForceComplete(string order);
-WepSet W_RandomWeapons(entity e, WepSet remaining, int n);
-
-string GetAmmoPicture(Resource ammotype);
-
-string GetAmmoName(Resource ammotype);
-
-entity GetAmmoItem(Resource ammotype);
-
-#ifdef CSQC
-int GetAmmoStat(Resource ammotype);
-#endif
-
-string W_Sound(string w_snd);
-string W_Model(string w_mdl);

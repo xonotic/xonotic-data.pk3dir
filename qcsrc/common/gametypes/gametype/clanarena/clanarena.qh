@@ -1,0 +1,51 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+#ifdef CSQC
+void HUD_Mod_CA(vector pos, vector mySize);
+void HUD_Mod_CA_Export(int fh);
+#endif
+CLASS(ClanArena, Gametype)
+	INIT(ClanArena)
+	{
+		this.gametype_init(this, _("Clan Arena"),"ca","g_ca",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill all enemy teammates to win the round"));
+	}
+	METHOD(ClanArena, m_parse_mapinfo, bool(string k, string v))
+	{
+		if (!k)
+		{
+			cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
+			return true;
+		}
+		switch (k)
+		{
+			case "teams":
+				cvar_set("g_ca_teams", v);
+				return true;
+		}
+		return false;
+	}
+	METHOD(ClanArena, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		if(spawnpoints >= 8 && diameter > 3250)
+			return true;
+		return false;
+	}
+	METHOD(ClanArena, m_setTeams, void(string sa))
+	{
+		cvar_set("g_ca_teams", sa);
+	}
+	METHOD(ClanArena, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of rounds won needed before the match will end"));
+	}
+#ifdef CSQC
+	ATTRIB(ClanArena, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
+	ATTRIB(ClanArena, m_modicons_export, void(int fh), HUD_Mod_CA_Export);
+#endif
+	ATTRIB(ClanArena, m_legacydefaults, string, "10 20 0");
+ENDCLASS(ClanArena)
+REGISTER_GAMETYPE(CA, NEW(ClanArena));
+#define g_ca IS_GAMETYPE(CA)

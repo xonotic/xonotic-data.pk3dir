@@ -1,0 +1,25 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_resistance_blockpercent;
+
+float buff_Resistance_CalculateDamage(float frag_damage);
+#endif // SVQC
+
+CLASS(ResistanceBuff, Buff)
+	ATTRIB(ResistanceBuff, m_name, string, _("Resistance"));
+	ATTRIB(ResistanceBuff, netname, string, "resistance");
+#ifndef SVQC
+	ATTRIB(ResistanceBuff, m_icon, string, "buff_resistance");
+#endif
+#ifdef GAMEQC
+	ATTRIB(ResistanceBuff, m_skin, int, 0);
+#endif
+	ATTRIB(ResistanceBuff, m_color, vector, '0.36 1 0.07');
+ENDCLASS(ResistanceBuff)
+
+REGISTER_BUFF(RESISTANCE, NEW(ResistanceBuff));
+BUFF_SPAWNFUNCS(resistance, BUFF_RESISTANCE)
+BUFF_SPAWNFUNC_Q3COMPAT(item_guard, BUFF_RESISTANCE)

@@ -1,5 +1,7 @@
 #include "sv_new_toys.qh"
 
+#include "new_toys.qh"
+
 #include "../random_items/sv_random_items.qh"
 #include <server/weapons/spawning.qh>
 
@@ -73,8 +75,6 @@ roflsound "New toys, new toys!" sound.
 
 //string autocvar_g_new_toys;
 
-bool nt_IsNewToy(int w);
-
 REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok))
 {
 	MUTATOR_ONADD
@@ -114,21 +114,6 @@ const float NT_AUTOREPLACE_NEVER = 0;
 const float NT_AUTOREPLACE_ALWAYS = 1;
 const float NT_AUTOREPLACE_RANDOM = 2;
 
-bool nt_IsNewToy(int w)
-{
-	switch(w)
-	{
-		case WEP_SEEKER.m_id:
-		case WEP_MINE_LAYER.m_id:
-		case WEP_HLAC.m_id:
-		case WEP_RIFLE.m_id:
-		case WEP_SHOCKWAVE.m_id:
-			return true;
-		default:
-			return false;
-	}
-}
-
 string nt_GetFullReplacement(string w)
 {
 	switch(w)
@@ -137,7 +122,6 @@ string nt_GetFullReplacement(string w)
 		case "devastator": return "minelayer";
 		case "machinegun": return "hlac";
 		case "vortex": return "rifle";
-		//case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }

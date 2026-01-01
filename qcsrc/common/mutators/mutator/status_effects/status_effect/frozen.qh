@@ -1,0 +1,11 @@
+#pragma once
+
+#include <common/mutators/mutator/status_effects/all.qh>
+
+CLASS(Frozen, StatusEffect)
+    ATTRIB(Frozen, netname, string, "frozen");
+    ATTRIB(Frozen, m_color, vector, '0 0.62 1');
+    ATTRIB(Frozen, m_hidden, bool, true);
+    ATTRIB(Frozen, m_lifetime, float, 10);
+ENDCLASS(Frozen)
+REGISTER_STATUSEFFECT(Frozen, NEW(Frozen));

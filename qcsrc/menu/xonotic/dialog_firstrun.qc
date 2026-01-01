@@ -42,7 +42,8 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 1);
 		me.TD(me, 2, 4, e = makeXonoticTextLabel(0, _("Welcome to Xonotic, please select your language preference and enter your player name to get started.  You can change these options later through the menu system.")));
-		e.allowWrap = 1;
+		e.allowWrap = true;
+		e.allowWrap_spacing = 0.5;
 	me.TR(me);
 
 	me.TR(me);
@@ -50,16 +51,16 @@ void XonoticFirstRunDialog_fill(entity me)
 		me.TD(me, 1, 0.5, me.playerNameLabel = makeXonoticTextLabel(0, _("Name:")));
 			me.playerNameLabelAlpha = me.playerNameLabel.alpha;
 		me.TD(me, 1, 3.25, label = makeXonoticTextLabel(0, string_null));
-			label.allowCut = 1;
-			label.allowColors = 1;
+			label.allowCut = true;
+			label.allowColors = true;
 			label.alpha = 1;
 	me.TR(me);
 		me.TD(me, 1, 3.75, box = makeXonoticInputBox_T(1, "_cl_name",
 			_("Name under which you will appear in the game")));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
-			box.enableClearButton = 0;
+			box.saveImmediately = false;  // Sorry, can't do this, it spams "name" commands.
+			box.enableClearButton = false;
 			label.textEntity = box;
 	me.TR(me);
 		me.TD(me, 5, 1.25, e = makeXonoticColorpicker(box));
@@ -79,7 +80,7 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 
-	me.gotoRC(me, me.rows - 4, 0);
+	me.gotoRC(me, me.rows - 4, 0); me.setFirstColumn(me, me.currentColumn);
 	me.TD(me, 1, me.columns, e = makeXonoticTextLabel(0.5, _("Allow player statistics to use your nickname at stats.xonotic.org?")));
 
 	me.gotoRC(me, me.rows - 3, 0);

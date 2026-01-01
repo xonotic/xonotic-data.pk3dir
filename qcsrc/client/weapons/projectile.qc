@@ -4,7 +4,7 @@
 #include <common/constants.qh>
 #include <common/effects/all.qh>
 #include <common/effects/effect.qh>
-#include <common/mutators/mutator/nades/nades.qh>
+#include <common/mutators/mutator/nades/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <lib/csqcmodel/interpolate.qh>
@@ -13,6 +13,7 @@
 .float alpha;
 .float scale;
 .vector colormod;
+.vector glowmod;
 
 void SUB_Stop(entity this, entity toucher)
 {
@@ -38,11 +39,41 @@ void Projectile_DrawTrail(entity this, vector to)
 		if (from == to)
 			from.z += 1;
 
-	if (this.traileffect)
+	// Note: alpha value 0 actually means 1 on entities.
+	// This can be relevant when coming from CSQCModel_Effects_Apply.
+	float a = (this.alpha == 0) ? 1 : this.alpha;
+
+	// TODO: Do we actually need alpha support? Consider removing this
+	// support entirely and instead making necessary adjustments in
+	// effectinfo.
+	//
+	// Right now (2024-12-30), only Crylink can generate alpha via
+	// fade_rate/fade_time, and only PROJECTILE_PORTO_* set a fixed alpha
+	// (and reuse the Arc's TE_WIZSPIKE).
+	if (this.traileffect && a > 0)
 	{
-		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
+		float f = PARTICLES_DRAWASTRAIL;
+		if (a < 1)
+		{
+			// Do some of the fading using particle count, and some of it using alpha.
+			// Fading by particle count is less smooth but also cheaper to render.
+			// A higher power here performs more of the fading using particle count.
+			const float fade_power = 0.5;
+			particles_fade = pow(a, fade_power);
+			particles_alphamin = particles_alphamax = a / particles_fade;  // == pow(a, 1 - fade_power)
+			f |= PARTICLES_USEALPHA | PARTICLES_USEFADE;
+			//LOG_INFOF("particle fade: %f alpha: %f", particles_fade, particles_alphamin);
+		}
+		//else
+		//	LOG_INFOF("particle fade skipped");
+
+		if (this.colormod != '0 0 0')
+		{
+			particles_colormin = particles_colormax = this.colormod;
+			f |= PARTICLES_USECOLOR;
+		}
 		entity eff = REGISTRY_GET(Effects, this.traileffect);
-		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		boxparticles(particleeffectnum(eff), this, from, to, this.velocity, this.velocity, 1, f);
 	}
 }
 
@@ -121,6 +152,7 @@ void Projectile_Draw(entity this)
 		}
 	}
 
+	// negation used to ensure a zero fade_(time/rate) does not affect opacity
 	a = 1 - (time - this.fade_time) * this.fade_rate;
 	this.alpha = bound(0, this.alphamod * a, 1);
 	if (this.alpha <= 0)
@@ -251,8 +283,21 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 		if (f & 0x20)
 		{
-			this.fade_time = time + ReadByte() * ticrate;
-			this.fade_rate = 1 / (ReadByte() * ticrate);
+			float fadetime = ReadByte();
+			float faderate = ReadByte();
+
+			// workaround for division by 0
+			// TODO: apply fade settings WITHOUT ticrate here and multiply during use cases
+			if(ticrate <= 0)
+			{
+				this.fade_time = 0;
+				this.fade_rate = 0;
+			}
+			else
+			{
+				this.fade_time = time + fadetime * ticrate;
+				this.fade_rate = 1 / (faderate * ticrate);
+			}
 		}
 		else
 		{
@@ -261,10 +306,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		}
 
 		int proj_team = ReadByte();
-		this.team = proj_team - 1;
 
 		if(teamplay)
 		{
+			this.team = proj_team - 1;
 			if(proj_team)
 				this.colormap = (this.team) * 0x11; // note: team - 1 on server (client uses different numbers)
 			else
@@ -272,7 +317,10 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			this.colormap |= BIT(10); // RENDER_COLORMAPPED
 		}
 		else
+		{
+			this.team = 0;
 			this.colormap = proj_team;
+		}
 		// TODO: projectiles use glowmaps for their color, not teams
 		#if 0
 		if(this.colormap > 0)
@@ -332,7 +380,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 			HANDLE(RPC)                this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 
-			HANDLE(ROCKETMINSTA_LASER) this.traileffect = EFFECT_ROCKETMINSTA_LASER(this.team).m_id; break;
+			HANDLE(ROCKETMINSTA_LASER) this.traileffect = EFFECT_ROCKETMINSTA_LASER.m_id; break;
 #undef HANDLE
 			default:
 				if (MUTATOR_CALLHOOK(Ent_Projectile, this))
@@ -358,12 +406,12 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '4 4 4';
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
-				this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
-				this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
+				this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
+				this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_DEVASTATOR_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				break;
@@ -376,8 +424,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '3 3 3';
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
-				this.bouncefactor = WEP_CVAR(mortar, bouncefactor);
-				this.bouncestop = WEP_CVAR(mortar, bouncestop);
+				this.bouncefactor = WEP_CVAR(WEP_MORTAR, bouncefactor);
+				this.bouncestop = WEP_CVAR(WEP_MORTAR, bouncestop);
 				break;
 			case PROJECTILE_GOLEM_LIGHTNING:
 				this.mins = '-8 -8 -8';
@@ -388,6 +436,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_MINE:
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
+				this.glowmod = colormapPaletteColor(this.colormap & 0x0F, true);
 				break;
 			case PROJECTILE_PORTO_RED:
 				this.colormod = '2 1 1';
@@ -430,7 +479,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_SEEKER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
@@ -447,25 +496,15 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_RAPTORCANNON:
 				break;
 			case PROJECTILE_SPIDERROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_VEH_SPIDERBOT_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 			case PROJECTILE_WAKIROCKET:
-				loopsound(this, CH_SHOTS_SINGLE, SND_TAG_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
+				loopsound(this, CH_SHOTS_SINGLE, SND_VEH_RACER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
-			/*
-			case PROJECTILE_WAKICANNON:
-			    break;
-			case PROJECTILE_BUMBLE_GUN:
-			    // only new engines support sound moving with object
-			    loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
-			    this.mins = '0 0 -4';
-			    this.maxs = '0 0 -4';
-			    this.move_movetype = MOVETYPE_BOUNCE;
-			    settouch(this, func_null);
-			    this.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
-			    this.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
-			    break;
-			*/
+			case PROJECTILE_ROCKETMINSTA_LASER:
+				if(this.colormap > 0)
+					this.colormod = colormapPaletteColor(this.colormap & 0x0F, true);
+				break;
 			default:
 				break;
 		}

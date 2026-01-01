@@ -20,7 +20,7 @@ void XonoticUserSettingsTab_fill(entity me)
 
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, 1, 2.5, e = makeXonoticHeaderLabel(_("Menu Skins")));
+		me.TD(me, 1, 2.5, e = makeXonoticHeaderLabel(_("Menu Skin")));
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, me.rows - 3.5, 2.5, sk = makeXonoticSkinList());
@@ -58,18 +58,27 @@ void XonoticUserSettingsTab_fill(entity me)
 			e.onClick = SetLanguage_Click;
 			e.onClickEntity = sk;*/
 
-	me.gotoRC(me, 0, 3.75); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1.5, e = makeXonoticHeaderLabel(_("Text Language")));
+	me.gotoRC(me, 0, 3.65); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 1.7, e = makeXonoticHeaderLabel(_("Text Language")));
 	me.TR(me);
-		me.TD(me, 8, 1.5, sk = makeXonoticLanguageList());
+		me.TD(me, 8, 1.7, sk = makeXonoticLanguageList());
 
-	me.gotoRC(me, 9, 3.75); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Set language"), '0 0 0'));
+	me.gotoRC(me, 9, 3.65); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 1.7, e = makeXonoticButton(_("Set language"), '0 0 0'));
 			e.onClick = SetLanguage_Click;
 			e.onClickEntity = sk;
 
-	me.gotoRC(me, 11.5, 3.25); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 11, 3.25); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox_T(0, "cl_gentle", _("Disable gore effects and harsh language"),
 			_("Replace blood and gibs with content that does not have any gore effects")));
 			e.sendCvars = true;
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.3, e = makeXonoticCheckBox(0, "cl_gentle_gibs", _("Just the gore")));
+			makeMulti(e, "cl_gentle_damage");
+			setDependent(e, "cl_gentle", 0, 0);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.3, e = makeXonoticCheckBox(0, "cl_gentle_messages", _("Just the language")));
+			setDependent(e, "cl_gentle", 0, 0);
 }

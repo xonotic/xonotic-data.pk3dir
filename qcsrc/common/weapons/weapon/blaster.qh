@@ -1,12 +1,20 @@
 #pragma once
 
+#ifdef GAMEQC
+MODEL(BLASTER_VIEW, W_Model("h_laser.iqm"));
+MODEL(BLASTER_WORLD, W_Model("v_laser.md3"));
+MODEL(BLASTER_ITEM, W_Model("g_laser.md3"));
+
+SOUND(BLASTER_FIRE, W_Sound("lasergun_fire"));
+#endif
+
 CLASS(Blaster, Weapon)
 /* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
 /* ammotype  */ //ATTRIB(Blaster, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
-/* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
+/* color     */ ATTRIB(Blaster, m_color, vector, '0.969 0.443 0.482');
 /* modelname */ ATTRIB(Blaster, mdl, string, "laser");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
@@ -22,34 +30,33 @@ CLASS(Blaster, Weapon)
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
-		P(class, prefix, animtime, float, BOTH) \
-		P(class, prefix, damage, float, BOTH) \
-		P(class, prefix, delay, float, BOTH) \
-		P(class, prefix, edgedamage, float, BOTH) \
-		P(class, prefix, force, float, BOTH) \
-		P(class, prefix, force_zscale, float, BOTH) \
-		P(class, prefix, lifetime, float, BOTH) \
-		P(class, prefix, radius, float, BOTH) \
-		P(class, prefix, refire, float, BOTH) \
-		P(class, prefix, secondary, float, NONE) \
-		P(class, prefix, shotangle, float, BOTH) \
-		P(class, prefix, speed, float, BOTH) \
-		P(class, prefix, spread, float, BOTH) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, animtime, float, PRI) \
+		P(class, prefix, damage, float, PRI) \
+		P(class, prefix, delay, float, PRI) \
+		P(class, prefix, edgedamage, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, force_zscale, float, PRI) \
+		P(class, prefix, lifetime, float, PRI) \
+		P(class, prefix, radius, float, PRI) \
+		P(class, prefix, refire, float, PRI) \
+		P(class, prefix, shotangle, float, PRI) \
+		P(class, prefix, speed, float, PRI) \
+		P(class, prefix, spread, float, PRI) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 	END()
 	W_PROPS(X, Blaster, blaster)
 #undef X
 
 ENDCLASS(Blaster)
-REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
+REGISTER_WEAPON(BLASTER, NEW(Blaster));
 
 SPAWNFUNC_WEAPON(weapon_blaster, WEP_BLASTER)
-SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER)
+SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER) // Nexuiz compat
 
 CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)

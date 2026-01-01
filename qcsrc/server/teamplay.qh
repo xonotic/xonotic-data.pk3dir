@@ -2,17 +2,20 @@
 
 int autocvar_teamplay_mode;
 
-bool autocvar_g_changeteam_banned;
 bool autocvar_teamplay_lockonrestart;
 
 bool autocvar_g_balance_teams;
 bool autocvar_g_balance_teams_prevent_imbalance;
+bool autocvar_g_balance_teams_queue;
+bool autocvar_g_balance_teams_remove;
+int autocvar_g_balance_teams_remove_wait;
 
 string autocvar_g_forced_team_otherwise;
 
 bool lockteams;
 
 .int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
 
 // ========================== Global teams API ================================
 
@@ -113,17 +116,14 @@ enum
 	TEAM_CHANGE_SPECTATOR = 4 ///< Player is joining spectators. //TODO: Remove?
 };
 
+bool QueuedPlayersReady(entity this, bool checkspecificteam);
+
 /// \brief Sets the team of the player.
 /// \param[in,out] player Player to adjust.
 /// \param[in] team_index Index of the team to set.
 /// \param[in] type Type of the team change. See TEAM_CHANGE constants.
 /// \return True if team switch was successful, false otherwise.
 bool SetPlayerTeam(entity player, int team_index, int type);
-
-/// \brief Sets the team of the player with all sanity checks.
-/// \param[in,out] player Player to adjust.
-/// \param[in] team_index Index of the team to set.
-void Player_SetTeamIndexChecked(entity player, int team_index);
 
 /// \brief Moves player to the specified team.
 /// \param[in,out] client Client to move.
@@ -183,6 +183,19 @@ void TeamBalance_Destroy(entity balance);
 /// \return Bitmask of allowed teams.
 int TeamBalance_GetAllowedTeams(entity balance);
 
+/// Returns the size difference between the largest and smallest team (bots included).
+int TeamBalance_SizeDifference(entity ignore);
+
+bool TeamBalance_AreEqual(entity ignore, bool would_leave);
+void TeamBalance_RemoveExcessPlayers(entity ignore);
+/** Joins queued player(s) to team(s) with a shortage,
+ * this should be more robust than only replacing the player that left.
+ * Chooses players with a specific team preference first
+ * to increase chances of everyone getting what they want.
+ * Returns true if the teams are now balanced.
+ */
+bool TeamBalance_QueuedPlayersTagIn(entity ignore);
+
 /// \brief Returns whether the team change to the specified team is allowed.
 /// \param[in] balance Team balance entity.
 /// \param[in] index Index of the team.
@@ -212,8 +225,9 @@ int TeamBalance_GetNumberOfPlayers(entity balance, int index);
 /// \param[in] player Player to check.
 /// \param[in] ignore_player ???
 /// \return Index of the team that will make the game most balanced if the
-/// player joins it. If there are several equally good teams available, the
-/// function will pick a random one.
+/// player joins it. If there are several equally good teams available the
+/// function will pick a random one, unless the player is already on one of them
+/// in which case that one is returned.
 int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player);
 
 /// \brief Returns the bitmask of the teams that will make the game most
@@ -294,6 +308,7 @@ void TeamBalance_BanTeamsExcept(entity balance, int index);
 /// \param[in] balance Team balance entity.
 /// \param[in] index Index of the team.
 /// \return Team entity of the team balance entity at the given index.
+/// \note The team entities are temporary so you may write to their fields.
 entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 
 /// \brief Returns the team entity of the team balance entity that corresponds
@@ -302,6 +317,7 @@ entity TeamBalance_GetTeamFromIndex(entity balance, int index);
 /// \param[in] team_num Team value. See TEAM_NUM constants.
 /// \return Team entity of the team balance entity that corresponds to the given
 /// TEAM_NUM value.
+/// \note The team entities are temporary so you may write to their fields.
 entity TeamBalance_GetTeam(entity balance, int team_num);
 
 /// \brief Returns whether the team is allowed.
@@ -335,7 +351,10 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_index_b,
 	entity player, bool use_score);
 
 /// \brief Called when the player changes color with the "color" command.
-/// Note that the "color" command is always called early on player connection
+/// \note the "color" command is always called early on player connection
 /// \param[in,out] player Player that requested a new color.
 /// \param[in] new_color Requested color.
 void SV_ChangeTeam(entity player, int new_color);
+
+
+bool QueueNeeded(entity ignore);

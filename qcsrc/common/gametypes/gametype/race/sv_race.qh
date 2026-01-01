@@ -1,0 +1,17 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+void rc_SetLimits();
+void race_Initialize();
+
+REGISTER_MUTATOR(rc, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		rc_SetLimits();
+
+		race_Initialize();
+	}
+	return 0;
+}

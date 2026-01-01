@@ -1,0 +1,23 @@
+#pragma once
+
+#include <common/mutators/mutator/buffs/buffs.qh>
+
+#ifdef SVQC
+float autocvar_g_buffs_magnet_range_item;
+float autocvar_g_buffs_magnet_range_buff = 100;
+#endif // SVQC
+
+CLASS(MagnetBuff, Buff)
+	ATTRIB(MagnetBuff, m_name, string, _("Magnet"));
+	ATTRIB(MagnetBuff, netname, string, "magnet");
+#ifndef SVQC
+	ATTRIB(MagnetBuff, m_icon, string, "buff_magnet");
+#endif
+#ifdef GAMEQC
+	ATTRIB(MagnetBuff, m_skin, int, 18);
+#endif
+	ATTRIB(MagnetBuff, m_color, vector, '1 0.95 0.18');
+ENDCLASS(MagnetBuff)
+
+REGISTER_BUFF(MAGNET, NEW(MagnetBuff));
+BUFF_SPAWNFUNCS(magnet, BUFF_MAGNET)

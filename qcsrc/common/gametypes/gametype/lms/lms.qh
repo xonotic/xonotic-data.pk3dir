@@ -1,0 +1,27 @@
+#pragma once
+
+#include <common/mapinfo.qh>
+
+#ifdef CSQC
+void HUD_Mod_LMS(vector myPos, vector mySize);
+#endif
+CLASS(LastManStanding, Gametype)
+	INIT(LastManStanding)
+	{
+		this.gametype_init(this, _("Last Man Standing"),"lms","g_lms",GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_HIDELIMITS,"","timelimit=20 lives=5 leadlimit=0",_("Survive and kill until the enemies have no lives left"));
+	}
+	METHOD(LastManStanding, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+	{
+		return true;
+	}
+	METHOD(LastManStanding, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Lives:"),           3,   50,  1, "g_lms_lives_override",      string_null,                    string_null);
+	}
+	ATTRIB(LastManStanding, m_legacydefaults, string, "9 20 0");
+#ifdef CSQC
+	ATTRIB(LastManStanding, m_modicons, void(vector myPos, vector mySize), HUD_Mod_LMS);
+#endif
+ENDCLASS(LastManStanding)
+REGISTER_GAMETYPE(LMS, NEW(LastManStanding));

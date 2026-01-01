@@ -1,5 +1,7 @@
 #include "common.qh"
 
+#include <common/checkextension.qh>
+
 #if defined(CSQC)
     #include <client/items/items.qh>
 #elif defined(MENUQC)
@@ -37,7 +39,6 @@ void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
 	WarpZone_Accumulator_AddInverseTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
 }
 
-float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(entity this, vector org, vector ang)
 {
 	vector vf, vr, vu;
@@ -53,10 +54,7 @@ vector WarpZone_camera_transform(entity this, vector org, vector ang)
 	vf = WarpZone_TransformVelocity(this, vf);
 	vr = WarpZone_TransformVelocity(this, vr);
 	vu = WarpZone_TransformVelocity(this, vu);
-	if(autocvar_cl_warpzone_usetrace)
-		traceline(this.warpzone_targetorigin, org, MOVE_NOMONSTERS, NULL);
-	else
-		trace_endpos = this.warpzone_targetorigin;
+	traceline(this.warpzone_targetorigin, org, MOVE_NOMONSTERS, NULL);
 	v_forward = vf;
 	v_right = vr;
 	v_up = vu;
@@ -134,7 +132,7 @@ float WarpZoneLib_BoxTouchesBrush_Recurse(vector mi, vector ma, entity e, entity
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 {
-	// bones_was_here: TODO: when findbox() builtin is available, use it to
+	// bones_was_here: TODO: when findbox_OrFallback() is available, use it to
 	// optimise this into a single non-recursive function that only calls tracebox once
 
 	float f, s;
@@ -561,16 +559,22 @@ vector WarpZone_UnTransformAngles(entity wz, vector v)
 
 vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 {
+#ifdef KEEP_ROLL
 	float roll;
-
 	roll = ang.z;
 	ang.z = 0;
+#endif
 
 	ang = AnglesTransform_ApplyToVAngles(AnglesTransform_Invert(wz.warpzone_transform), ang);
+
+#ifdef KEEP_ROLL
 	ang = AnglesTransform_Normalize(ang, true);
 	ang = AnglesTransform_CancelRoll(ang);
-
 	ang.z = roll;
+#else
+	ang = AnglesTransform_Normalize(ang, false);
+#endif
+
 	return ang;
 }
 
@@ -811,12 +815,12 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher, bool touchfunc)
 {
 	vector emin = toucher.absmin, emax = toucher.absmax;
-	if(STAT(Q3COMPAT))
+	if (!Q3COMPAT_COMMON)
 	{
-		// DP's tracebox enlarges absolute bounding boxes by a single quake unit
-		// we must undo that here to allow accurate touching
-		emin += '1 1 1';
-		emax -= '1 1 1';
+		// Xonotic and Nexuiz maps assume triggers will be activated by adjacent players
+		// prior to sv_legacy_bbox_expand 0 DP always did this for SVQC and never for CSQC
+		emin -= '1 1 1';
+		emax += '1 1 1';
 	}
 
 	// if called from a touch func, we can assume the boxes do overlap
@@ -841,16 +845,16 @@ void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 	}
 }
 
-bool WarpZoneLib_MoveOutOfSolid(entity e)
+int WarpZoneLib_MoveOutOfSolid(entity e)
 {
 	vector o = e.origin;
 	traceline(o, o, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
-		return false;
+		return 0; // too stuck, giving up
 
 	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
 	if (!trace_startsolid)
-		return true;
+		return -1; // wasn't stuck
 
 	vector m0 = e.mins;
 	vector m1 = e.maxs;
@@ -868,8 +872,8 @@ bool WarpZoneLib_MoveOutOfSolid(entity e)
 	if (trace_startsolid)
 	{
 		setorigin(e, o);
-		return false;
+		return 0; // can't fix
 	}
 
-	return true;
+	return 1; // was stuck but is fixed now
 }

@@ -7,7 +7,7 @@
 #include <common/effects/all.inc>
 #include <common/effects/all.qh>
 #include <common/ent_cs.qh>
-#include <common/gamemodes/_mod.qh>
+#include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/player.qh>
@@ -16,7 +16,6 @@
 #include <lib/csqcmodel/cl_player.qh>
 #include <lib/csqcmodel/interpolate.qh>
 
-.float death_time;
 .int modelflags;
 
 // FEATURE: LOD
@@ -309,11 +308,15 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 			this.colormap = 1024 + autocvar_cl_forcemyplayercolors;
 		else if (autocvar_cl_forceuniqueplayercolors && !islocalplayer && !gametype.m_1v1)
 		{
-			// Assign each enemy unique colors
+			// Assign each enemy an unique color combination
 			// pick colors from 0 to 14 since 15 is the rainbow color
 			// pl01 0 1, pl02 1 2, ..., pl14 13 14, pl15 14 0
 			// pl16 0 2, pl17 1 3, ..., pl29 13  0, pl30 14 1
-			int num = this.entnum - 1;
+			int num;
+			if (this.isplayermodel & ISPLAYER_CLIENT)
+				num = this.entnum - 1;
+			else
+				num = this.sv_entnum - 1;
 			int c1 = num % 15;
 			int q = floor(num / 15);
 			int c2 = (c1 + 1 + q) % 15;
@@ -559,21 +562,33 @@ void CSQCModel_Effects_Apply(entity this)
 		this.drawmask = 0;
 	if(eff & EF_ADDITIVE)
 		this.renderflags |= RF_ADDITIVE;
-	if(eff & EF_BLUE)
-		adddynamiclight(this.origin, 200, '0.15 0.15 1.5');
-	if(eff & EF_RED)
-		adddynamiclight(this.origin, 200, '1.5 0.15 0.15');
+		if(eff & EF_BLUE)
+			adddynamiclight(this.origin, 200, '0.15 0.15 1.5');
+		if(eff & EF_RED)
+			adddynamiclight(this.origin, 200, '1.5 0.15 0.15');
 	// ignoring EF_NOGUNBOB
 	if(eff & EF_FULLBRIGHT)
 		this.renderflags |= RF_FULLBRIGHT;
 	if(eff & EF_FLAME)
 	{
-		boxparticles(particleeffectnum(EFFECT_EF_FLAME), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
+		// XONRELEASE TODO: xonotic-v0.9.0 after release remove the ef_shock_num check
+		// NOTE here we check if EF_SHOCK exists because it was added together with the change to EF_FLAME
+		int ef_shock_num = particleeffectnum(EFFECT_EF_SHOCK);
+		if (ef_shock_num >= 0) // in the old version of EF_FLAME the light was spawned by boxparticles
+			adddynamiclight2(this.origin + '0 0 10', 200, '1 0.35 0', 6, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
+		int ef_flame_num = particleeffectnum(EFFECT_EF_FLAME);
+		boxparticles(ef_flame_num, this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
 	if(eff & EF_SHOCK)
 	{
-		boxparticles(particleeffectnum(EFFECT_ARC_LIGHTNING), this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
+		// XONRELEASE TODO: xonotic-v0.9.0 after release remove the ef_shock_num check
+		int ef_shock_num = particleeffectnum(EFFECT_EF_SHOCK);
+		if (ef_shock_num >= 0) // in ARC_LIGHTNING the light is spawned by boxparticles
+			adddynamiclight2(this.origin, 50, '3.1 4.4 10', 10, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
+		else
+			ef_shock_num = particleeffectnum(EFFECT_ARC_LIGHTNING);
+		boxparticles(ef_shock_num, this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), 0);
 		//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	}
 	if(eff & EF_STARDUST)

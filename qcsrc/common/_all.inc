@@ -1,5 +1,7 @@
 noref float autocvar_net_connecttimeout = 30;
 
+#include "checkextension.qc"
+
 #ifdef GAMEQC
 #include "anim.qc"
 #include "animdecide.qc"
@@ -48,6 +50,6 @@ noref float autocvar_net_connecttimeout = 30;
         #include "vehicles/_mod.inc"
 
 #include "mutators/_mod.inc"
-    #include "gamemodes/_mod.inc"
+    #include "gametypes/_mod.inc"
 
 #include "resources/_mod.inc"

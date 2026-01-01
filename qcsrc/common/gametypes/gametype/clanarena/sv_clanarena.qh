@@ -1,0 +1,58 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#include <server/elimination.qh>
+#include <server/round_handler.qh>
+#include <server/world.qh>
+#include <server/command/sv_cmd.qh>
+
+int autocvar_g_ca_spectate_enemies;
+int autocvar_g_ca_point_limit;
+int autocvar_g_ca_point_leadlimit;
+float autocvar_g_ca_round_timelimit;
+bool autocvar_g_ca_team_spawns;
+//int autocvar_g_ca_teams;
+int autocvar_g_ca_teams_override;
+float autocvar_g_ca_warmup;
+string autocvar_g_ca_weaponarena = "most";
+
+int ca_teams;
+bool allowed_to_spawn;
+bool g_ca_spectate_enemies; // updated on map reset
+
+const int ST_CA_ROUNDS = 1;
+
+bool CA_CheckTeams();
+bool CA_CheckWinner();
+void CA_RoundStart();
+bool ca_isEliminated(entity e);
+
+REGISTER_MUTATOR(ca, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_teams(true);
+		GameRules_spawning_teams(autocvar_g_ca_team_spawns);
+		GameRules_limit_score(autocvar_g_ca_point_limit);
+		GameRules_limit_lead(autocvar_g_ca_point_leadlimit);
+
+		ca_teams = autocvar_g_ca_teams_override;
+		if (ca_teams < 2)
+			ca_teams = cvar("g_ca_teams"); // read the cvar directly as it gets written earlier in the same frame
+
+		ca_teams = BITS(bound(2, ca_teams, 4));
+		GameRules_scoring(ca_teams, SFL_SORT_PRIO_PRIMARY, 0,
+		{
+			field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+		});
+
+		allowed_to_spawn = true;
+		g_ca_spectate_enemies = autocvar_g_ca_spectate_enemies;
+		observe_blocked_if_eliminated = (g_ca_spectate_enemies == -1);
+		round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
+		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+		EliminatedPlayers_Init(ca_isEliminated);
+	}
+	return 0;
+}

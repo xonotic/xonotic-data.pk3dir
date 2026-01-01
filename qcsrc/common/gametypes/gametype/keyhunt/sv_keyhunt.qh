@@ -1,0 +1,37 @@
+#pragma once
+
+#include <common/mutators/base.qh>
+#define autocvar_g_keyhunt_point_limit cvar("g_keyhunt_point_limit")
+int autocvar_g_keyhunt_point_leadlimit;
+bool autocvar_g_keyhunt_team_spawns;
+void kh_Initialize();
+
+REGISTER_MUTATOR(kh, false)
+{
+	MUTATOR_STATIC();
+	MUTATOR_ONADD
+	{
+		GameRules_teams(true);
+		GameRules_spawning_teams(autocvar_g_keyhunt_team_spawns);
+		GameRules_limit_score(autocvar_g_keyhunt_point_limit);
+		GameRules_limit_lead(autocvar_g_keyhunt_point_leadlimit);
+
+		kh_Initialize();
+	}
+	return 0;
+}
+
+entity kh_worldkeylist;
+.entity kh_worldkeynext;
+
+#define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
+
+// ALL OF THESE should be removed in the future, as other code should not have to care
+
+// used by bots:
+bool kh_tracking_enabled;
+.entity kh_next;
+
+USING(kh_Think_t, void());
+void kh_StartRound();
+void kh_Controller_SetThink(float t, kh_Think_t func);
