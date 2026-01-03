@@ -19,16 +19,15 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	vector out;
 	in -= teamradar_origin3d_in_texcoord;
 
-	out = Rotate(in, teamradar_angle * DEG2RAD);
-	out.y = - out.y; // screen space is reversed
+	out = Rotate(in, teamradar_angle);
+	out.y = -out.y; // screen space is reversed
 
-	out = out * teamradar_size;
+	out *= teamradar_size;
 	if(v_flipped)
 		out.x = -out.x;
 	out += teamradar_origin2d;
 	return out;
 }
-
 
 vector teamradar_2dcoord_to_texcoord(vector in)
 {
@@ -37,23 +36,23 @@ vector teamradar_2dcoord_to_texcoord(vector in)
 
 	out -= teamradar_origin2d;
 	if(v_flipped)
-		out_x = -out_x;
-	out = out / teamradar_size;
+		out.x = -out.x;
+	out /= teamradar_size;
 
-	out_y = - out_y; // screen space is reversed
-	out = Rotate(out, -teamradar_angle * DEG2RAD);
+	out_y = -out.y; // screen space is reversed
+	out = Rotate(out, -teamradar_angle);
 
 	out += teamradar_origin3d_in_texcoord;
 
 	return out;
 }
 
-vector teamradar_texcoord_to_3dcoord(vector in,float oz)
+vector teamradar_texcoord_to_3dcoord(vector in, float oz)
 {
 	vector out;
-	out_x = in_x * (mi_picmax_x - mi_picmin_x) + mi_picmin_x;
-	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
-	out_z = oz;
+	out.x = in.x * (mi_picmax.x - mi_picmin.x) + mi_picmin.x;
+	out.y = in.y * (mi_picmax.y - mi_picmin.y) + mi_picmin.y;
+	out.z = oz;
 	return out;
 }
 
@@ -92,7 +91,7 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
 
 	vector forward, right, up;
-	MAKE_VECTORS(pangles - '0 1 0' * teamradar_angle, forward, right, up);
+	MAKE_VECTORS(pangles - '0 1 0' * (teamradar_angle * RAD2DEG), forward, right, up);
 	if(v_flipped)
 	{
 		forward.x = -forward.x;

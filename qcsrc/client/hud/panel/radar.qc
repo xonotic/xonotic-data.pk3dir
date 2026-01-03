@@ -171,8 +171,8 @@ float HUD_Radar_GetZoomFactor(int zoommode)
 float HUD_Radar_GetAngle(int rotation)
 {
 	if (rotation)
-		return 90 * rotation;
-	return view_angles.y - 90;
+		return 90 * rotation * DEG2RAD;
+	return (view_angles.y - 90) * DEG2RAD;
 }
 
 void HUD_Radar()
@@ -267,10 +267,10 @@ void HUD_Radar()
 	else
 	{
 		vector c0, c1, c2, c3, span;
-		c0 = Rotate(mi_min, teamradar_angle * DEG2RAD);
-		c1 = Rotate(mi_max, teamradar_angle * DEG2RAD);
-		c2 = Rotate('1 0 0' * mi_min.x + '0 1 0' * mi_max.y, teamradar_angle * DEG2RAD);
-		c3 = Rotate('1 0 0' * mi_max.x + '0 1 0' * mi_min.y, teamradar_angle * DEG2RAD);
+		c0 = Rotate(mi_min, teamradar_angle);
+		c1 = Rotate(mi_max, teamradar_angle);
+		c2 = Rotate('1 0 0' * mi_min.x + '0 1 0' * mi_max.y, teamradar_angle);
+		c3 = Rotate('1 0 0' * mi_max.x + '0 1 0' * mi_min.y, teamradar_angle);
 		span = '0 0 0';
 		span.x = max(c0.x, c1.x, c2.x, c3.x) - min(c0.x, c1.x, c2.x, c3.x);
 		span.y = max(c0.y, c1.y, c2.y, c3.y) - min(c0.y, c1.y, c2.y, c3.y);
