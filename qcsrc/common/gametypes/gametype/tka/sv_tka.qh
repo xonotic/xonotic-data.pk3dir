@@ -6,7 +6,6 @@ int autocvar_g_tka_point_leadlimit;
 bool autocvar_g_tka_team_spawns;
 void tka_Initialize();
 
-int tka_teams;
 //int autocvar_g_tka_teams;
 int autocvar_g_tka_teams_override;
 

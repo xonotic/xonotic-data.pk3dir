@@ -607,15 +607,9 @@ MUTATOR_HOOKFUNCTION(tka, SpectateCopy)
 	STAT(TKA_BALLSTATUS, client) = STAT(TKA_BALLSTATUS, spectatee);
 }
 
-MUTATOR_HOOKFUNCTION(tka, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
-{
-	M_ARGV(0, float) = tka_teams;
-	return true;
-}
-
 void tka_Initialize()
 {
-	tka_teams = autocvar_g_tka_teams_override;
+	int tka_teams = autocvar_g_tka_teams_override;
 	if(tka_teams < 2)
 		tka_teams = cvar("g_tka_teams"); // read the cvar directly as it gets written earlier in the same frame
 	tka_teams = BITS(bound(2, tka_teams, 4));
