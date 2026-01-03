@@ -35,7 +35,7 @@ float autocvar_sv_airaccelerate;
 float autocvar_sv_slickaccelerate;
 float autocvar_sv_airstopaccelerate;
 bool autocvar_sv_airstopaccelerate_full;
-float autocvar_sv_track_canjump;
+int autocvar_sv_track_canjump;
 string autocvar_g_physics_clientselect_options;
 string autocvar_g_physics_clientselect_default;
 bool autocvar_g_jump_grunt;
@@ -44,6 +44,7 @@ float autocvar_g_maxspeed;
 float autocvar_g_movement_highspeed = 1;
 bool autocvar_g_movement_highspeed_q3_compat = 0;
 bool autocvar_speedmeter;
+int autocvar_sv_doublejump;
 float autocvar_sv_jumpspeedcap_max;
 bool autocvar_sv_jumpspeedcap_max_disable_on_ramps;
 float autocvar_sv_jumpspeedcap_min;
@@ -77,7 +78,7 @@ bool IsFlying(entity a);
 #ifdef GAMEQC
 REPLICATE_INIT(string, cvar_cl_physics);
 REPLICATE_INIT(bool, cvar_cl_jetpack_jump);
-REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
+REPLICATE_INIT(int, cvar_cl_movement_track_canjump);
 #endif
 
 #define PHYS_PL_MAX(s)                      STAT(PL_MAX, s)
@@ -109,7 +110,12 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 
 #define PHYS_AMMO_FUEL(s)                   STAT(FUEL, s)
 
+#define PHYS_CROUCHJUMP(s)                  STAT(MOVEVARS_CROUCHJUMP, s)
+#define PHYS_CROUCHSPEEDSCALE(s)            STAT(MOVEVARS_CROUCHSPEEDSCALE, s)
+
 #define PHYS_DODGING_FROZEN(s)              STAT(DODGING_FROZEN, s)
+
+#define PHYS_DOUBLEJUMP(s)                  STAT(DOUBLEJUMP, s)
 
 #define PHYS_FRICTION(s)                    STAT(MOVEVARS_FRICTION, s)
 #define PHYS_FRICTION_ONLAND(s)             STAT(MOVEVARS_FRICTION_ONLAND, s)
@@ -137,6 +143,11 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_MAXAIRSTRAFESPEED(s)           STAT(MOVEVARS_MAXAIRSTRAFESPEED, s)
 #define PHYS_MAXSPEED(s)                    STAT(MOVEVARS_MAXSPEED, s)
 
+#define PHYS_SKIMMING(s)                    STAT(MOVEVARS_SKIMMING, s)
+
+#define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT, s)
+#define PHYS_STEPTYPE(s)                    STAT(MOVEVARS_STEPTYPE, s)
+
 #define PHYS_STOPSPEED(s)                   STAT(MOVEVARS_STOPSPEED, s)
 
 #define PHYS_TRACK_CANJUMP(s)               STAT(MOVEVARS_TRACK_CANJUMP, s)
@@ -147,7 +158,10 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_WARSOWBUNNY_TOPSPEED(s)        STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, s)
 #define PHYS_WARSOWBUNNY_TURNACCEL(s)       STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, s)
 
-#define PHYS_SLICK_APPLYGRAVITY(s)          STAT(SLICK_APPLYGRAVITY)
+#define PHYS_SWIMSCALE(s)                   STAT(MOVEVARS_SWIMSCALE, s)
+#define PHYS_WATERFLAGS(s)                  STAT(MOVEVARS_WATERFLAGS, s)
+#define PHYS_WATERACCELERATE(s)             STAT(MOVEVARS_WATERACCELERATE, s)
+#define PHYS_WATERFRICTION(s)               STAT(MOVEVARS_WATERFRICTION, s)
 
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)

@@ -8,7 +8,6 @@
 #include <common/mutators/mutator/cloaked/_mod.inc>
 #include <common/mutators/mutator/damagetext/_mod.inc>
 #include <common/mutators/mutator/dodging/_mod.inc>
-#include <common/mutators/mutator/doublejump/_mod.inc>
 #include <common/mutators/mutator/dynamic_handicap/_mod.inc>
 #include <common/mutators/mutator/globalforces/_mod.inc>
 #include <common/mutators/mutator/hook/_mod.inc>
