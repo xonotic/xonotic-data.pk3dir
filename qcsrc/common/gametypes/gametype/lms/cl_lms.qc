@@ -1,27 +1,19 @@
 #include "cl_lms.qh"
 
+#include <client/draw.qh>
+#include <client/hud/panel/modicons.qh>
 #include <common/mutators/base.qh>
 
-REGISTER_MUTATOR(cl_lms, true);
+int lms_leaders;
+int lms_leaders_lives_diff;
+bool lms_visible_leaders;
 
-MUTATOR_HOOKFUNCTION(cl_lms, DrawInfoMessages)
+NET_HANDLE(ENT_CLIENT_LMS_STATS, bool isNew)
 {
-	if(!warmup_stage && ISGAMETYPE(LMS))
-	{
-		entity sk = playerslots[player_localnum];
-		vector pos = M_ARGV(0, vector);
-		vector mySize = M_ARGV(1, vector);
-		vector fontsize = '0.2 0.2 0' * mySize.y;
-		int img_curr_group = M_ARGV(2, int);
-		if(sk.(scores(ps_primary)) > 0)
-		{
-			InfoMessage(_("^1You have no more lives left"));
-			M_ARGV(0, vector) = pos;
-			M_ARGV(2, int) = img_curr_group;
-			return true;
-		}
-	}
-	return false;
+	lms_leaders_lives_diff = ReadInt24_t();
+	lms_leaders = ReadByte();
+	lms_visible_leaders = ReadByte();
+	return true;
 }
 
 void HUD_Mod_LMS(vector myPos, vector mySize, bool should_draw)
@@ -29,41 +21,59 @@ void HUD_Mod_LMS(vector myPos, vector mySize, bool should_draw)
 	if (!should_draw)
 		return;
 
-	int leaders_count = STAT(REDALIVE); // recycled stat
-	if (autocvar__hud_configure || leaders_count) // make up something, so the panel isn't empty
-		mod_active = true;
-	else
-	{
-		mod_active = false;
+	mod_active = lms_leaders;
+	if (autocvar__hud_configure && !mod_active) // we'll make up something, so the panel isn't empty
+		mod_placeholder = mod_active = true;
+	else if (!mod_active)
 		return;
-	}
+	else
+		mod_placeholder = false;
 
-	int rows, columns;
-	float aspect_ratio = 2;
-	rows = HUD_GetRowCount(2, mySize, aspect_ratio);
-	columns = ceil(2 / rows);
+	if (!mod_active)
+		return;
 
-	vector pos = myPos;
-	vector itemSize = vec2(mySize.x / columns, mySize.y / rows);
+	int rows = HUD_GetRowCount(2, mySize, 2); // 2 items, aspect ratio 2
+	int cols = ceil(2 / rows);
 
-	bool visible_leaders = STAT(OBJECTIVE_STATUS);
+	vector itemSize = vec2(mySize.x / cols, mySize.y / rows);
 
-	if (visible_leaders)
-		drawpic_aspect_skin(pos, "flag_stalemate", vec2(0.5 * itemSize.x, itemSize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(pos, "player_neutral", vec2(0.5 * itemSize.x, itemSize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawstring_aspect(pos + eX * 0.5 * itemSize.x, ftos(leaders_count), vec2(0.5 * itemSize.x, itemSize.y), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	vector visLeadersSize = vec2(0.5 * itemSize.x, itemSize.y);
+	if (lms_visible_leaders)
+		drawpic_aspect_skin(myPos, "flag_stalemate", visLeadersSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(myPos, "player_neutral", visLeadersSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(myPos + eX * visLeadersSize.x, itos(mod_placeholder ? 1 : lms_leaders), visLeadersSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	if (rows > 1)
-		pos.y = myPos.y + itemSize.y;
+		myPos.y += itemSize.y;
 	else
-		pos.x = myPos.x + itemSize.x;
+		myPos.x += itemSize.x;
 
-	int lives_diff = STAT(BLUEALIVE); // recycled stat
-	vector color = '1 1 0';
-	if (lives_diff >= 4)
+	vector color;
+	if (lms_leaders_lives_diff >= 4)
 		color = '1 0 0';
-	else if (lives_diff == 3)
+	else if (lms_leaders_lives_diff == 3)
 		color = '1 0.5 0';
+	else
+		color = '1 1 0';
 	float scale = 0.75;
-	drawstring_aspect(pos + itemSize * (1 - scale) * 0.5, strcat("+", ftos(lives_diff)), itemSize * scale, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(myPos + itemSize * (1 - scale) * 0.5, strcat("+", itos(mod_placeholder ? 2 : lms_leaders_lives_diff)), itemSize * scale, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
+REGISTER_MUTATOR(cl_lms, true);
+
+MUTATOR_HOOKFUNCTION(cl_lms, DrawInfoMessages)
+{
+	if (!warmup_stage && ISGAMETYPE(LMS)
+	&& playerslots[player_localnum].(scores(ps_primary)) > 0)
+	{
+		vector pos = M_ARGV(0, vector);
+		vector mySize = M_ARGV(1, vector);
+		vector fontsize = '0.2 0.2 0' * mySize.y;
+		int img_curr_group = M_ARGV(2, int);
+		InfoMessage(_("^1You have no more lives left"));
+		M_ARGV(0, vector) = pos;
+		M_ARGV(2, int) = img_curr_group;
+		return true;
+	}
+	return false;
 }
