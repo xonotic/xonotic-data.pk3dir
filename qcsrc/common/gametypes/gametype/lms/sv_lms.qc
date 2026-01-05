@@ -26,13 +26,34 @@ float autocvar_g_lms_dynamic_vampire_factor_base = 0.1;
 float autocvar_g_lms_dynamic_vampire_factor_increase = 0.1;
 float autocvar_g_lms_dynamic_vampire_factor_max = 0.5;
 int autocvar_g_lms_dynamic_vampire_min_lives_diff = 2;
+bool autocvar_g_lms_rot;
 
-.float lms_leader;
+.bool lms_leader;
 int lms_leaders;
+int lms_leaders_lives_diff;
 float lms_visible_leaders_time;
 bool lms_visible_leaders = true; // triggers lms_visible_leaders_time update in the first frame
 bool lms_visible_leaders_prev;
-bool autocvar_g_lms_rot;
+
+bool LMSStats_SendEntity(entity this, entity dest, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_LMS_STATS);
+	WriteInt24_t(MSG_ENTITY, lms_leaders_lives_diff);
+	WriteByte(MSG_ENTITY, lms_leaders);
+	WriteByte(MSG_ENTITY, lms_visible_leaders);
+	return true;
+}
+
+entity lmsStats;
+void LMSStats_Init()
+{
+	if (lmsStats)
+	{
+		backtrace("Can't spawn lmsStats again!");
+		return;
+	}
+	Net_LinkEntity(lmsStats = new_pure(lmsStats), false, 0, LMSStats_SendEntity);
+}
 
 // main functions
 int LMS_NewPlayerLives()
@@ -167,7 +188,6 @@ bool lms_waypointsprite_visible_for_player(entity this, entity player, entity vi
 	return true;
 }
 
-int lms_leaders_lives_diff;
 void lms_UpdateLeaders()
 {
 	int max_lives = 0;
@@ -189,6 +209,7 @@ void lms_UpdateLeaders()
 			second_max_lives = lives;
 	});
 
+	int lms_leaders_lives_diff_prev = lms_leaders_lives_diff;
 	lms_leaders_lives_diff = max_lives - second_max_lives;
 
 	int lives_diff = autocvar_g_lms_leader_lives_diff;
@@ -211,6 +232,12 @@ void lms_UpdateLeaders()
 				WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 			it.lms_leader = false;
 		});
+
+	int lms_leaders_prev = lms_leaders;
+	lms_leaders = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME && it.lms_leader, ++lms_leaders);
+	if (lms_leaders != lms_leaders_prev || lms_leaders_lives_diff != lms_leaders_lives_diff_prev)
+		lmsStats.SendFlags = 0xFFFFFF;
 }
 
 // mutator hooks
@@ -240,6 +267,8 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 		if (it.waypointsprite_attachedforcarrier)
 			WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 	});
+	lms_leaders = 0;
+	lmsStats.SendFlags = 0xFFFFFF;
 }
 
 // FIXME add support for sv_ready_restart_after_countdown
@@ -445,10 +474,6 @@ MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	// recycled REDALIVE and BLUEALIVE to avoid adding a dedicated stat
-	STAT(REDALIVE, player) = lms_leaders;
-	STAT(BLUEALIVE, player) = lms_leaders_lives_diff;
-
 	if(player.deadflag == DEAD_DYING)
 		player.deadflag = DEAD_RESPAWNING;
 }
@@ -458,12 +483,6 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 	if (intermission_running)
 		return;
 
-	lms_leaders = 0;
-	FOREACH_CLIENT(true, {
-		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME && it.lms_leader)
-			++lms_leaders;
-	});
-
 	float leader_time = autocvar_g_lms_leader_wp_time;
 	float leader_interval = leader_time + autocvar_g_lms_leader_wp_interval;
 	lms_visible_leaders_prev = lms_visible_leaders;
@@ -471,8 +490,10 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 	if (!lms_leaders || (lms_visible_leaders_prev && !lms_visible_leaders))
 		lms_visible_leaders_time = time + leader_interval + random() * autocvar_g_lms_leader_wp_interval_jitter;
 
+	if (lms_visible_leaders != lms_visible_leaders_prev)
+		lmsStats.SendFlags = 0xFFFFFF;
+
 	FOREACH_CLIENT(true, {
-		STAT(OBJECTIVE_STATUS, it) = lms_visible_leaders;
 		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
 		{
 			if (it.lms_leader)
@@ -489,7 +510,7 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 				if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_LEADER);
 			}
-			else // if (!it.lms_leader)
+			else
 			{
 				if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
 				{
@@ -732,4 +753,5 @@ MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 void lms_Initialize()
 {
 	lms_lowest_lives = 999;
+	LMSStats_Init();
 }
