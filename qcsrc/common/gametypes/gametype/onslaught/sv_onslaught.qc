@@ -1152,20 +1152,13 @@ void Onslaught_count_generators()
 	entity e;
 	total_generators = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
-	}
-	for(e = ons_worldgeneratorlist; e; e = e.ons_worldgeneratornext)
+		Team_GetTeamFromIndex(i).m_num_owned_items = 0;
+	for (e = ons_worldgeneratorlist; e; e = e.ons_worldgeneratornext)
 	{
 		++total_generators;
 		if (GetResource(e, RES_HEALTH) < 1)
-		{
 			continue;
-		}
-		entity team_ = Entity_GetTeam(e);
-		int num_generators = Team_GetNumberOfOwnedItems(team_);
-		++num_generators;
-		Team_SetNumberOfOwnedItems(team_, num_generators);
+		++Entity_GetTeam(e).m_num_owned_items;
 	}
 }
 

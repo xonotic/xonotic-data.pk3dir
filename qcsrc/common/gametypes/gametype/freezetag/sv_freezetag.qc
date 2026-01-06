@@ -23,27 +23,20 @@ void freezetag_count_alive_players()
 {
 	total_players = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
-	}
+		Team_GetTeamFromIndex(i).m_num_players_alive = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
 		if (GetResource(it, RES_HEALTH) < 1 || STAT(FROZEN, it))
-		{
 			continue;
-		}
-		entity team_ = Entity_GetTeam(it);
-		int num_alive = Team_GetNumberOfAlivePlayers(team_);
-		++num_alive;
-		Team_SetNumberOfAlivePlayers(team_, num_alive);
+		++Entity_GetTeam(it).m_num_players_alive;
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
+		STAT(REDALIVE, it) = Team_GetTeamFromIndex(1).m_num_players_alive;
+		STAT(BLUEALIVE, it) = Team_GetTeamFromIndex(2).m_num_players_alive;
+		STAT(YELLOWALIVE, it) = Team_GetTeamFromIndex(3).m_num_players_alive;
+		STAT(PINKALIVE, it) = Team_GetTeamFromIndex(4).m_num_players_alive;
 	});
 
 	eliminatedPlayers.SendFlags |= 1;
@@ -58,13 +51,8 @@ bool freezetag_CheckTeams()
 	if(total_players == 0)
 		return false;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		if ((freezetag_teams & Team_IndexToBit(i)) &&
-			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
-		{
+		if ((freezetag_teams & Team_IndexToBit(i)) && !Team_GetTeamFromIndex(i).m_num_players_alive)
 			missing_teams_mask |= Team_IndexToBit(i);
-		}
-	}
 	if(prev_missing_teams_mask != missing_teams_mask)
 		prev_missing_teams_mask = missing_teams_mask;
 	return false;

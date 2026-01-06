@@ -312,20 +312,13 @@ void Domination_count_controlpoints()
 {
 	total_control_points = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
-	}
+		Team_GetTeamFromIndex(i).m_num_owned_items = 0;
 	IL_EACH(g_dompoints, true,
 	{
 		++total_control_points;
 		if (!Entity_HasValidTeam(it.goalentity))
-		{
 			continue;
-		}
-		entity team_ = Entity_GetTeam(it.goalentity);
-		int num_control_points = Team_GetNumberOfOwnedItems(team_);
-		++num_control_points;
-		Team_SetNumberOfOwnedItems(team_, num_control_points);
+		++Entity_GetTeam(it.goalentity).m_num_owned_items;
 	});
 }
 

@@ -18,27 +18,20 @@ void CA_count_alive_players()
 {
 	total_players = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
-	}
+		Team_GetTeamFromIndex(i).m_num_players_alive = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
 		if (IS_DEAD(it))
-		{
 			continue;
-		}
-		entity team_ = Entity_GetTeam(it);
-		int num_alive = Team_GetNumberOfAlivePlayers(team_);
-		++num_alive;
-		Team_SetNumberOfAlivePlayers(team_, num_alive);
+		++Entity_GetTeam(it).m_num_players_alive;
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
+		STAT(REDALIVE, it) = Team_GetTeamFromIndex(1).m_num_players_alive;
+		STAT(BLUEALIVE, it) = Team_GetTeamFromIndex(2).m_num_players_alive;
+		STAT(YELLOWALIVE, it) = Team_GetTeamFromIndex(3).m_num_players_alive;
+		STAT(PINKALIVE, it) = Team_GetTeamFromIndex(4).m_num_players_alive;
 	});
 }
 
@@ -62,23 +55,23 @@ int CA_PreventStalemate()
 
 		for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
 		{
-			if(!winnerTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)))
+			if(!winnerTeam || Team_GetTeamFromIndex(i).m_num_players_alive > Team_GetTeam(winnerTeam).m_num_players_alive)
 			{
 				secondTeam = winnerTeam;
 				winnerTeam = Team_IndexToTeam(i);
 			}
 			else
 			{
-				if(!secondTeam || Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) > Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+				if(!secondTeam || Team_GetTeamFromIndex(i).m_num_players_alive > Team_GetTeam(secondTeam).m_num_players_alive)
 					secondTeam = Team_IndexToTeam(i);
 			}
 		}
 
-		if(Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)) != Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam)))
+		if(Team_GetTeam(winnerTeam).m_num_players_alive != Team_GetTeam(secondTeam).m_num_players_alive)
 		{
 			bprint(sprintf("Stalemate broken by alive players. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)\n",
-				Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(winnerTeam)),
-				Team_ColorCode(secondTeam), Team_ColorName(secondTeam), Team_GetNumberOfAlivePlayers(Team_GetTeam(secondTeam))));
+				Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), Team_GetTeam(winnerTeam).m_num_players_alive,
+				Team_ColorCode(secondTeam), Team_ColorName(secondTeam), Team_GetTeam(secondTeam).m_num_players_alive));
 			return winnerTeam;
 		}
 	}
@@ -228,13 +221,8 @@ bool CA_CheckTeams()
 	if(total_players == 0)
 		return false;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		if ((ca_teams & Team_IndexToBit(i)) &&
-			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
-		{
+		if ((ca_teams & Team_IndexToBit(i)) && !Team_GetTeamFromIndex(i).m_num_players_alive)
 			missing_teams_mask |= Team_IndexToBit(i);
-		}
-	}
 	if(prev_missing_teams_mask != missing_teams_mask)
 		prev_missing_teams_mask = missing_teams_mask;
 	return false;
@@ -569,7 +557,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 	entity client = M_ARGV(0, entity);
 
 	if (g_ca_spectate_enemies != 1 && INGAME(client)
-		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
+	&& Entity_GetTeam(client).m_num_players_alive)
 	{
 		entity targ = M_ARGV(1, entity);
 		M_ARGV(1, entity) = CA_SpectateNext(client, targ);
@@ -584,7 +572,7 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	entity first = M_ARGV(2, entity);
 
 	if (g_ca_spectate_enemies != 1 && INGAME(client)
-		&& Team_GetNumberOfAlivePlayers(Entity_GetTeam(client)))
+	&& Entity_GetTeam(client).m_num_players_alive)
 	{
 		do { targ = targ.chain; }
 		while(targ && DIFF_TEAM(targ, client));
