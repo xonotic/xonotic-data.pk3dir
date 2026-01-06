@@ -1562,14 +1562,9 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	// TODO make everything use THIS winning condition (except LMS)
 	WinningConditionHelper(NULL);
 
-	if(teamplay)
-	{
+	if (teamplay)
 		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
-		{
-			Team_SetTeamScore(Team_GetTeamFromIndex(i),
-				TeamScore_GetCompareValue(Team_IndexToTeam(i)));
-		}
-	}
+			Team_GetTeamFromIndex(i).m_team_score = TeamScore_GetCompareValue(Team_IndexToTeam(i));
 
 	ClearWinners();
 	if(WinningConditionHelper_winner)
@@ -1650,31 +1645,21 @@ float WinningCondition_RanOutOfSpawns()
 		return WINNING_NO;
 
 	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
-	{
-		Team_SetTeamScore(Team_GetTeamFromIndex(i), 0);
-	}
+		Team_GetTeamFromIndex(i).m_team_score = 0;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
 		if (Team_IsValidTeam(it.team))
-		{
-			Team_SetTeamScore(Team_GetTeam(it.team), 1);
-		}
+			Team_GetTeam(it.team).m_team_score = 1;
 	});
 
-	IL_EACH(g_spawnpoints, true,
-	{
-		if (Team_IsValidTeam(it.team))
-		{
-			Team_SetTeamScore(Team_GetTeam(it.team), 1);
-		}
-	});
+	IL_EACH(g_spawnpoints, Team_IsValidTeam(it.team), Team_GetTeam(it.team).m_team_score = 1);
 
 	ClearWinners();
-	float team1_score = Team_GetTeamScore(Team_GetTeamFromIndex(1));
-	float team2_score = Team_GetTeamScore(Team_GetTeamFromIndex(2));
-	float team3_score = Team_GetTeamScore(Team_GetTeamFromIndex(3));
-	float team4_score = Team_GetTeamScore(Team_GetTeamFromIndex(4));
+	float team1_score = Team_GetTeamFromIndex(1).m_team_score;
+	float team2_score = Team_GetTeamFromIndex(2).m_team_score;
+	float team3_score = Team_GetTeamFromIndex(3).m_team_score;
+	float team4_score = Team_GetTeamFromIndex(4).m_team_score;
 	if(team1_score + team2_score + team3_score + team4_score == 0)
 	{
 		checkrules_equality = true;
