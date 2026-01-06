@@ -3,22 +3,22 @@
 const int NUM_TEAMS = 4; ///< Max number of teams that could exist, prefer AVAILABLE_TEAMS.
 
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
-const int NUM_TEAM_1 = 1; // red
-const int NUM_TEAM_2 = 2; // blue
-const int NUM_TEAM_3 = 3; // yellow
-const int NUM_TEAM_4 = 4; // pink
+const int NUM_TEAM_1 = 1; ///< red
+const int NUM_TEAM_2 = 2; ///< blue
+const int NUM_TEAM_3 = 3; ///< yellow
+const int NUM_TEAM_4 = 4; ///< pink
 const int NUM_SPECTATOR = 5;
 #else
 #ifdef CSQC
-const int NUM_TEAM_1 = 4; // red
-const int NUM_TEAM_2 = 13; // blue
-const int NUM_TEAM_3 = 12; // yellow
-const int NUM_TEAM_4 = 9; // pink
+const int NUM_TEAM_1 = 4;  ///< red
+const int NUM_TEAM_2 = 13; ///< blue
+const int NUM_TEAM_3 = 12; ///< yellow
+const int NUM_TEAM_4 = 9;  ///< pink
 #else
-const int NUM_TEAM_1 = 5; // red
-const int NUM_TEAM_2 = 14; // blue
-const int NUM_TEAM_3 = 13; // yellow
-const int NUM_TEAM_4 = 10; // pink
+const int NUM_TEAM_1 = 5;  ///< red
+const int NUM_TEAM_2 = 14; ///< blue
+const int NUM_TEAM_3 = 13; ///< yellow
+const int NUM_TEAM_4 = 10; ///< pink
 #endif
 const int NUM_SPECTATOR = 1337;
 #endif
@@ -62,68 +62,65 @@ int myteam;
 
 string Team_ColorCode(int teamid)
 {
-	switch(teamid)
+	switch (teamid)
 	{
 		case NUM_TEAM_1: return COL_TEAM_1;
 		case NUM_TEAM_2: return COL_TEAM_2;
 		case NUM_TEAM_3: return COL_TEAM_3;
 		case NUM_TEAM_4: return COL_TEAM_4;
 	}
-
 	return "^7";
 }
 
 vector Team_ColorRGB(int teamid)
 {
-	switch(teamid)
+	switch (teamid)
 	{
 		case NUM_TEAM_1: return '1 0.0625 0.0625'; // 0xFF0F0F
 		case NUM_TEAM_2: return '0.0625 0.0625 1'; // 0x0F0FFF
-		case NUM_TEAM_3: return '1 1 0.0625'; // 0xFFFF0F
-		case NUM_TEAM_4: return '1 0.0625 1'; // 0xFF0FFF
+		case NUM_TEAM_3: return '1 1 0.0625';      // 0xFFFF0F
+		case NUM_TEAM_4: return '1 0.0625 1';      // 0xFF0FFF
 	}
-
 	return '1 1 1';
 }
 
 string Team_ColorName(int teamid)
 {
-	switch(teamid)
+	switch (teamid)
 	{
 		case NUM_TEAM_1: return NAME_TEAM_1;
 		case NUM_TEAM_2: return NAME_TEAM_2;
 		case NUM_TEAM_3: return NAME_TEAM_3;
 		case NUM_TEAM_4: return NAME_TEAM_4;
 	}
-
 	return NAME_NEUTRAL;
 }
 
-// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+/// Used for replacement in filenames or such where the name CANNOT be allowed to be translated
 string Static_Team_ColorName(int teamid)
 {
-	switch(teamid)
+	switch (teamid)
 	{
 		case NUM_TEAM_1: return STATIC_NAME_TEAM_1;
 		case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
 		case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
 		case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
 	}
-
 	return NAME_NEUTRAL;
 }
 
 float Team_ColorToTeam(string team_color)
 {
-	switch(strtolower(team_color))
+	switch (strtolower(team_color))
 	{
-		case "red": return NUM_TEAM_1;
-		case "blue": return NUM_TEAM_2;
+		case "red":    return NUM_TEAM_1;
+		case "blue":   return NUM_TEAM_2;
 		case "yellow": return NUM_TEAM_3;
-		case "pink": return NUM_TEAM_4;
-		case "auto": case "": return 0;
+		case "pink":   return NUM_TEAM_4;
+		case "auto":
+		case "":
+			return 0;
 	}
-
 	return -1;
 }
 
@@ -138,9 +135,7 @@ bool Team_IsValidTeam(int team_num)
 		case NUM_TEAM_2:
 		case NUM_TEAM_3:
 		case NUM_TEAM_4:
-		{
 			return true;
-		}
 	}
 	return false;
 }
@@ -156,9 +151,7 @@ bool Team_IsValidIndex(int index)
 		case 2:
 		case 3:
 		case 4:
-		{
 			return true;
-		}
 	}
 	return false;
 }
@@ -199,9 +192,7 @@ int Team_TeamToIndex(int team_num)
 int Team_TeamToBit(int team_num)
 {
 	if (!Team_IsValidTeam(team_num))
-	{
 		return 0;
-	}
 	return BIT(Team_TeamToIndex(team_num) - 1);
 }
 
@@ -238,5 +229,5 @@ int Team_IndexToBit(int index)
 #define TCR(input, type, team) strreplace("^TC", COL_TEAM_##team, strreplace("^TT", strtoupper(type##_TEAM_##team), input))
 
 // safe team comparisons
-#define SAME_TEAM(a, b) (teamplay ? (a.team == b.team) : (a == b))
-#define DIFF_TEAM(a, b) (teamplay ? (a.team != b.team) : (a != b))
+#define SAME_TEAM(a, b) (teamplay ? ((a).team == (b).team) : ((a) == (b)))
+#define DIFF_TEAM(a, b) (teamplay ? ((a).team != (b).team) : ((a) != (b)))
