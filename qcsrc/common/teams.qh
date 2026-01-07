@@ -1,6 +1,8 @@
 #pragma once
 
 const int NUM_TEAMS = 4; ///< Number of teams in the game.
+const int NUM_TEAM_WORDS = 1; ///< ceil(NUM_TEAMS / 24), used for int  arrays with NUM_TEAMS total bits
+const int NUM_TEAM_BYTES = 1; ///< ceil(NUM_TEAMS / 8),  used for byte arrays with NUM_TEAMS total bits
 
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
 const int NUM_TEAM_1 = 1; // red

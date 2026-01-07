@@ -36,6 +36,43 @@ float autocvar_g_onslaught_teleport_radius;
 float autocvar_g_onslaught_spawn_choose;
 float autocvar_g_onslaught_click_radius;
 
+int ons_cps[NUM_TEAMS]; ///< Total controlpoints captured by each team
+int ons_gens[NUM_TEAMS]; ///< Total alive generators owned by each team
+
+bool ons_Statuses_SendEntity(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ONS_STATUSES);
+	WriteByte(MSG_ENTITY, sf);
+	int i;
+	if (sf & SF_ONS_COUNTS) // send controlpoint + generator counts
+		for (i = 0; i < NUM_TEAMS; ++i)
+			WriteShort(MSG_ENTITY, ons_cps[i] + ons_gens[i]);
+	if (sf & SF_ONS_GEN_MASK) // send generator bitmask
+	{
+		i = 0;
+		for (int b, B, byte_i = 0; byte_i < NUM_TEAM_BYTES; ++byte_i)
+		{
+			B = 0;
+			for (b = BIT(0); b < BIT(8) && i < NUM_TEAMS; b <<= 1, ++i)
+				if (ons_gens[i])
+					B |= b;
+			WriteByte(MSG_ENTITY, B);
+		}
+	}
+	return true;
+}
+
+entity onslaughtStatuses;
+void ons_Statuses_Init()
+{
+	if (onslaughtStatuses)
+	{
+		backtrace("Can't spawn onslaughtStatuses again!");
+		return;
+	}
+	Net_LinkEntity(onslaughtStatuses = new_pure(onslaughtStatuses), false, 0, ons_Statuses_SendEntity);
+}
+
 // =======================
 // CaptureShield Functions
 // =======================
@@ -428,6 +465,9 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 			});
 		}
 
+		--ons_cps[Team_TeamToIndex(this.owner.team) - 1];
+		onslaughtStatuses.SendFlags |= SF_ONS_COUNTS;
+
 		if (this.owner.message != "")
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
 		else
@@ -606,6 +646,9 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		// Use targets now (somebody make sure this is in the right place..)
 		SUB_UseTargets(this.owner, this, NULL);
 
+		++ons_cps[Team_TeamToIndex(this.owner.team) - 1];
+		onslaughtStatuses.SendFlags |= SF_ONS_COUNTS;
+
 		this.SendFlags |= CPSF_SETUP;
 	}
 	if(this.owner.model != MDL_ONS_CP_PAD2.model_str())
@@ -757,6 +800,12 @@ void ons_ControlPoint_Reset(entity this)
 {
 	if(this.goalentity)
 		delete(this.goalentity);
+
+	if (this.iscaptured) // it had a team
+	{
+		--ons_cps[Team_TeamToIndex(this.team) - 1];
+		onslaughtStatuses.SendFlags |= SF_ONS_COUNTS;
+	}
 
 	this.goalentity = NULL;
 	this.team = 0;
@@ -955,6 +1004,9 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 	}
 	else
 	{
+		--ons_gens[Team_TeamToIndex(this.team) - 1];
+		onslaughtStatuses.SendFlags |= SF_ONS_COUNTS | SF_ONS_GEN_MASK;
+
 		if (attacker == this)
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME));
 		else
@@ -1041,6 +1093,12 @@ void ons_GeneratorThink(entity this)
 
 void ons_GeneratorReset(entity this)
 {
+	if (!this.iscaptured) // it was destroyed
+	{
+		++ons_gens[Team_TeamToIndex(this.team_saved) - 1];
+		onslaughtStatuses.SendFlags |= SF_ONS_COUNTS | SF_ONS_GEN_MASK;
+	}
+
 	this.team = this.team_saved;
 	SetResourceExplicit(this, RES_HEALTH, autocvar_g_onslaught_gen_health);
 	this.lasthealth = this.max_health = autocvar_g_onslaught_gen_health;
@@ -1139,6 +1197,9 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	WaypointSprite_UpdateHealth(gen.sprite, GetResource(gen, RES_HEALTH));
 
 	InitializeEntity(gen, ons_DelayedGeneratorSetup, INITPRIO_SETLOCATION);
+
+	++ons_gens[Team_TeamToIndex(teamnum) - 1];
+	onslaughtStatuses.SendFlags |= SF_ONS_COUNTS | SF_ONS_GEN_MASK;
 }
 
 
@@ -2168,4 +2229,5 @@ void ons_Initialize()
 	cam = new(objective_camera);
 
 	InitializeEntity(NULL, ons_DelayedInit, INITPRIO_GAMETYPE);
+	ons_Statuses_Init();
 }
