@@ -2,6 +2,7 @@
 
 #include <client/hud/_mod.qh>
 #include <client/view.qh>
+#include <common/gametypes/gametype/onslaught/cl_onslaught.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <lib/csqcmodel/interpolate.qh>
 
@@ -103,18 +104,18 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	else
 		rgb2 = '1 1 1';
 
-	R_BeginPolygon("", 0, true);
+	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
 	R_PolygonVertex(coord+forward*3, '0 0 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord+right*4-forward*2.5, '0 1 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord-forward*2, '1 0 0', rgb2, panel_fg_alpha);
-	R_PolygonVertex(coord-right*4-forward*2.5, '1 1 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord+right*4-forward*2.5, '0 0 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord-forward*2, '0 0 0', rgb2, panel_fg_alpha);
+	R_PolygonVertex(coord-right*4-forward*2.5, '0 0 0', rgb2, panel_fg_alpha);
 	R_EndPolygon();
 
-	R_BeginPolygon("", 0, true);
+	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
 	R_PolygonVertex(coord+forward*2, '0 0 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord+right*3-forward*2, '0 1 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord-forward, '1 0 0', rgb, panel_fg_alpha);
-	R_PolygonVertex(coord-right*3-forward*2, '1 1 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord+right*3-forward*2, '0 0 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord-forward, '0 0 0', rgb, panel_fg_alpha);
+	R_PolygonVertex(coord-right*3-forward*2, '0 0 0', rgb, panel_fg_alpha);
 	R_EndPolygon();
 }
 
@@ -215,4 +216,6 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 	return = true;
 
 	InterpolateOrigin_Note(this);
+
+	HUD_Mod_Ons_UpdateLinks(); // ons has a cache involving g_radarlinks
 }
