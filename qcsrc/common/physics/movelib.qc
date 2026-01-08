@@ -91,10 +91,10 @@ void movelib_move(entity this, vector force,float max_velocity,float drag,float 
     if (this.waterlevel > 1)
     {
         this.velocity = this.velocity + force * (acceleration * deltatime);
-        this.velocity = this.velocity + '0 0 0.05' * autocvar_sv_gravity * deltatime;
+        this.velocity = this.velocity + '0 0 0.05' * PHYS_GRAVITY(NULL) * deltatime;
     }
     else
-        this.velocity = this.velocity + '0 0 -1' * autocvar_sv_gravity * deltatime;
+        this.velocity = this.velocity + '0 0 -1' * PHYS_GRAVITY(NULL) * deltatime;
 
     mspeed = vlen(this.velocity);
 
@@ -139,7 +139,7 @@ void movelib_update(entity this, vector dir,float force)
     old_speed    = vlen(this.velocity);
     old_dir      = normalize(this.velocity);
 
-    //ggravity      =  (autocvar_sv_gravity / this.mass) * '0 0 100';
+    //ggravity      =  (PHYS_GRAVITY(NULL) / this.mass) * '0 0 100';
     acceleration =  (force / this.mass) * dir;
     //acceleration -= old_dir * (old_speed / this.mass);
     acceleration -= ggravity;

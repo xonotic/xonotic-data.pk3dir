@@ -358,7 +358,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 
 	o0 = e.origin;
 	v0 = e.velocity;
-	g = cvar("sv_gravity") * e.gravity;
+	g = PHYS_GRAVITY(NULL) * e.gravity;
 
 	WarpZone_trace_forent = forent;
 	WarpZone_trace_firstzone = NULL;

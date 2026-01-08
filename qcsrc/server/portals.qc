@@ -315,7 +315,7 @@ void Portal_Touch(entity this, entity toucher)
 			if(IS_INDEPENDENT_PLAYER(toucher.aiment) || IS_INDEPENDENT_PLAYER(this.aiment))
 				return; // cannot go through someone else's portal
 	fixedmakevectors(this.mangle);
-	g = frametime * '0 0 -1' * autocvar_sv_gravity;
+	g = frametime * '0 0 -1' * PHYS_GRAVITY(toucher);
 	if(!Portal_WillHitPlane(toucher.origin, toucher.mins, toucher.maxs, toucher.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
 
@@ -481,24 +481,25 @@ void Portal_Think(entity this)
 	this.solid = SOLID_BBOX;
 	this.aiment = NULL;
 
-	g = frametime * '0 0 -1' * autocvar_sv_gravity;
-
 	fixedmakevectors(this.mangle);
 
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
 		if(it != o)
 			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
+
+		g = frametime * '0 0 -1' * PHYS_GRAVITY(it);
 
 		if(it != o || time >= this.portal_activatetime)
 			Portal_Think_TryTeleportPlayer(this, it, g, o);
 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook)
-	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g, o);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook)
+				Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g, o);
+		}
 	});
 	this.solid = SOLID_TRIGGER;
 	this.aiment = o;

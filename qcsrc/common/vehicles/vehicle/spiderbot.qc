@@ -206,7 +206,7 @@ bool spiderbot_frame(entity this, float dt)
 					vehic.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(vehic.velocity_z <= 20) // not while jumping
-						vehic.velocity_z -= g * PHYS_INPUT_FRAMETIME * autocvar_sv_gravity;
+						vehic.velocity_z -= g * PHYS_INPUT_FRAMETIME * PHYS_GRAVITY(NULL);
 					if(IS_ONGROUND(vehic))
 					if(vehic.sound_nexttime < time || vehic.delay != 1)
 					{
@@ -236,7 +236,7 @@ bool spiderbot_frame(entity this, float dt)
 					vehic.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(vehic.velocity_z <= 20) // not while jumping
-						vehic.velocity_z -= g * PHYS_INPUT_FRAMETIME * autocvar_sv_gravity;
+						vehic.velocity_z -= g * PHYS_INPUT_FRAMETIME * PHYS_GRAVITY(NULL);
 					if(IS_ONGROUND(vehic))
 					if(vehic.sound_nexttime < time || vehic.delay != 2)
 					{
