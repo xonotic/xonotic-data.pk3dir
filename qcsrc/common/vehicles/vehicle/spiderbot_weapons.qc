@@ -66,7 +66,7 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
     float grav, sdist, zdist, vs, vz, jumpheight;
     vector sdir;
 
-    grav  = autocvar_sv_gravity;
+    grav  = PHYS_GRAVITY(NULL);
     zdist = tgt_z - org_z;
     sdist = vlen(tgt - org - zdist * '0 0 1');
     sdir  = normalize(tgt - org - zdist * '0 0 1');
