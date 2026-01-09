@@ -33,7 +33,7 @@ void HUD_Mod_NexBall(vector myPos, vector mySize, bool should_draw)
 		return;
 
 	mod_active = playerslots[player_currententnum - 1].nb_status;
-	if (!mod_active && (time - ball_change_time) * 2 < 1)
+	if (!mod_active && autocvar_hud_panel_modicons_animations && (time - ball_change_time) * 2 < 1)
 		mod_active = true; // still need to draw the expanding icons
 
 	if (autocvar__hud_configure && !mod_active) // make up something, so the panel isn't empty & hidden
@@ -57,7 +57,7 @@ void HUD_Mod_NexBall(vector myPos, vector mySize, bool should_draw)
 	}
 
 	float f;
-	if (!mod_placeholder)
+	if (!mod_placeholder && autocvar_hud_panel_modicons_animations)
 	{
 		f = bound(0, (time - ball_change_time) * 2, 1);
 		if (f < 1)

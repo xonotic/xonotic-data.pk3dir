@@ -125,7 +125,7 @@ string HUD_Mod_KH_GetPic(int team_i, bool carrying)
 void HUD_Mod_KH_DrawItem(vector itemPos, vector itemSize, float alpha, int i, int owner, int team_i, int our_team)
 {
 	float f;
-	if (!mod_placeholder && i >= 0)
+	if (!mod_placeholder && autocvar_hud_panel_modicons_animations && i >= 0)
 	{
 		// try to draw expanding icon for our team in this slot
 		// we need this code since the expanding icon is drawn also after we lose a key
@@ -155,7 +155,7 @@ void HUD_Mod_KH(vector myPos, vector mySize, bool should_draw)
 
 	int i;
 	mod_active = keys;
-	if (!mod_active)
+	if (!mod_active && autocvar_hud_panel_modicons_animations)
 		for (i = 0; i < team_count; ++i)
 			if ((time - kh_carrying_change_time[i]) * 2 < 1)
 			{
@@ -172,7 +172,7 @@ void HUD_Mod_KH(vector myPos, vector mySize, bool should_draw)
 
 	// Make icons blink in case of "RUN HERE" (if our team has them all, and we have at least 1)
 	int our_team = Team_TeamToIndex(entcs_GetTeam(player_currententnum - 1)) - 1;
-	float alpha = (keys_carrying && keys_our_team == keys)
+	float alpha = (autocvar_hud_panel_modicons_animations && keys_carrying && keys_our_team == keys)
 		? blink(0.6, 0.4, 5) // oscillates between 0.2 and 1
 		: 1;
 
