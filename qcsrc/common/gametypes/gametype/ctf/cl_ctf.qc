@@ -142,11 +142,11 @@ void HUD_Mod_CTF_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, i
 		? (-i) % (FLAG_STATUS_CARRY - FLAG_STATUS_SHIELDED + 1) + FLAG_STATUS_CARRY // CARRY -> SHIELDED, repeat
 		: flag_status[team_i];
 
-	float alpha = (status == FLAG_STATUS_CARRY)
+	float alpha = (autocvar_hud_panel_modicons_animations && status == FLAG_STATUS_CARRY)
 		? blink(0.85, 0.15, 5) // blink only if we're carrying
 		: 1;
 	float f = 1;
-	if (!mod_placeholder)
+	if (!mod_placeholder && autocvar_hud_panel_modicons_animations)
 	{
 		float expanding_f;
 		#define DRAW_EXPANDING(the_arr, the_status) \

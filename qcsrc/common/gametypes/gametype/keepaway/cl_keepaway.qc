@@ -53,18 +53,18 @@ void HUD_Mod_Keepaway_DrawItem_Single(vector itemPos, vector itemSize, string pi
 	if (mod_placeholder && !is_carrying)
 		return;
 
-	float f, alpha = (is_carrying && cond)
+	float f, alpha = (autocvar_hud_panel_modicons_animations && is_carrying && cond)
 		? blink(0.85, 0.15, 5) // blink only if it's the carrying icon, and kaballs_carry == 0
 		: 1;
 
-	if (mod_placeholder)
-		f = 1;
-	else
+	if (!mod_placeholder && autocvar_hud_panel_modicons_animations)
 	{
 		f = bound(0, (time - change_time) * 2, 1);
 		if (!mod_placeholder && f < 1)
 			drawpic_aspect_skin_expanding(itemPos, pic, itemSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL, f);
 	}
+	else
+		f = 1;
 	if (cond)
 	{
 		drawpic_aspect_skin(itemPos, pic, itemSize, '1 1 1', panel_fg_alpha * alpha * f, DRAWFLAG_NORMAL);

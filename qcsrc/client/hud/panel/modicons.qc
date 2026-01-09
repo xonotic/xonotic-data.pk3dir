@@ -14,6 +14,7 @@ void HUD_ModIcons_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 
 	FOREACH(Gametypes, it.m_modicons_export, it.m_modicons_export(fh));
+	HUD_Write_Cvar("hud_panel_modicons_animations");
 }
 
 void HUD_ModIcons_SetFunc()
@@ -69,9 +70,13 @@ void HUD_Mod_EliminatedPlayers_DrawItem(vector itemPos, vector itemSize, float a
 
 	int stat = alive_on_team[i];
 	int tm = Team_IndexToTeam(i + 1);
-	float alpha = (stat == 1 && tm == entcs_GetTeam(player_currententnum - 1))
-		? blink(0.85, 0.15, 5) // blink if there's 1 player left on our team
-		: (stat ? 1 : 0.5); // half alpha if the team is eliminated
+	float alpha;
+	if (autocvar_hud_panel_modicons_animations)
+		alpha = (stat == 1 && tm == entcs_GetTeam(player_currententnum - 1))
+			? blink(0.85, 0.15, 5) // blink if there's 1 player left on our team
+			: (stat ? 1 : 0.5); // half alpha if the team is eliminated
+	else
+		alpha = 1;
 	vector color = Team_ColorRGB(tm) * alpha;
 
 	if (aspect_ratio != 1) // draw icon
@@ -83,15 +88,22 @@ void HUD_Mod_EliminatedPlayers_DrawItem(vector itemPos, vector itemSize, float a
 	}
 
 	// draw text
-	f = bound(0, (time - alive_on_team_change_time[i]) * 2, 1);
-	if (f < 1)
-		drawstring_aspect_expanding(itemPos, itos(stat), itemSize, color, panel_fg_alpha, DRAWFLAG_NORMAL, f);
+	if (autocvar_hud_panel_modicons_animations)
+	{
+		f = bound(0, (time - alive_on_team_change_time[i]) * 2, 1);
+		if (f < 1)
+			drawstring_aspect_expanding(itemPos, itos(stat), itemSize, color, panel_fg_alpha, DRAWFLAG_NORMAL, f);
+	}
+	else
+		f = 1;
 	drawstring_aspect(itemPos, itos(stat), itemSize, color, panel_fg_alpha * f, DRAWFLAG_NORMAL);
 }
 
 /// Smoothly moves cache_value towards real_value, initially fast then slowing down. Returns new cache_value
 float HUD_Mod_SmoothlyUpdateCachedValue(float cache_value, float real_value, float epsilon)
 {
+	if (!autocvar_hud_panel_modicons_animations)
+		return real_value;
 	return (fabs(cache_value - real_value) < epsilon)
 		? real_value
 		: real_value + (cache_value - real_value) * ((33/32) ** (-256 * frametime)); // -256*frametime should be close to 1, ideal for floating point inaccuracies

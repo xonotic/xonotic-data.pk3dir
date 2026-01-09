@@ -55,7 +55,7 @@ void HUD_Mod_NexBall(vector myPos, vector mySize, bool should_draw)
 	}
 
 	float f;
-	if (!mod_placeholder)
+	if (!mod_placeholder && autocvar_hud_panel_modicons_animations)
 	{
 		f = bound(0, (time - ball_change_time) * 2, 1);
 		if (f < 1)
