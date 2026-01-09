@@ -107,9 +107,14 @@ void HUD_Mod_Ons_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, i
 	if (!(ons_gen_team_mask[i / 24] & BIT(i % 24))) // this team has no generators left
 		color *= 0.5;
 
-	f = bound(0, (time - ons_points_change_time[i]) * 2, 1);
-	if (f < 1)
-		drawstring_aspect_expanding(itemPos, text, itemSize, color, panel_fg_alpha, DRAWFLAG_NORMAL, f);
+	if (autocvar_hud_panel_modicons_animations)
+	{
+		f = bound(0, (time - ons_points_change_time[i]) * 2, 1);
+		if (f < 1)
+			drawstring_aspect_expanding(itemPos, text, itemSize, color, panel_fg_alpha, DRAWFLAG_NORMAL, f);
+	}
+	else
+		f = 1;
 	drawstring_aspect(itemPos, text, itemSize, color, panel_fg_alpha * f, DRAWFLAG_NORMAL);
 }
 
