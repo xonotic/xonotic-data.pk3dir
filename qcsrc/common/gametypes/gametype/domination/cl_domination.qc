@@ -64,7 +64,7 @@ void HUD_Mod_Dom_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, i
 		drawpic_aspect_skin(itemPos, pic, itemSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	if (dom_pps_ratio_cache[i] > 0) // colored image
 	{
-		float alpha = (tm == entcs_GetTeam(player_currententnum - 1))
+		float alpha = (autocvar_hud_panel_modicons_animations && tm == entcs_GetTeam(player_currententnum - 1))
 			? blink(0.85, 0.15, 5) // make our teams blink
 			: 1;
 		drawsetcliparea(itemPos.x, itemPos.y + itemSize.y * (1 - dom_pps_ratio_cache[i]), itemSize.x, itemSize.y * dom_pps_ratio_cache[i]);
