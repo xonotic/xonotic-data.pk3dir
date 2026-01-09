@@ -224,7 +224,8 @@ void HUD_Radar(bool should_draw)
 			radar_panel_modified = true;
 		strcpy(panel.current_panel_bg, panel_bg);
 
-		zoom_factor = HUD_Radar_GetZoomFactor(hud_panel_radar_maximized_zoommode);
+		// use zoom_factor 1 when the radar is clickable, since we need to be able to click anywhere on it
+		zoom_factor = (hud_panel_radar_mouse ? 1 : HUD_Radar_GetZoomFactor(hud_panel_radar_maximized_zoommode));
 		teamradar_angle = HUD_Radar_GetAngle(hud_panel_radar_maximized_rotation);
 	}
 
