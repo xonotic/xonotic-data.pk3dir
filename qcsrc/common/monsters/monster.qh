@@ -33,47 +33,47 @@ const int MON_FLAG_HIDDEN = BIT(16);
 .vector anim_spawn;
 
 CLASS(Monster, Object)
-    ATTRIB(Monster, monsterid, int, 0);
-    /** attributes */
-    ATTRIB(Monster, spawnflags, int, 0);
-    /** human readable name */
-    ATTRIB(Monster, m_name, string, _("Monster"));
-    /** short name */
-    ATTRIB(Monster, netname, string, "");
-    /** color */
-    ATTRIB(Monster, m_color, vector, '1 1 1');
-    /** icon */
-    ATTRIB(Monster, m_icon, string);
-    /** model */
-    ATTRIB(Monster, m_model, entity);
-    /** hitbox size */
-    ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
-    /** hitbox size */
-    ATTRIB(Monster, m_maxs, vector, '0 0 0');
+	ATTRIB(Monster, monsterid, int, 0);
+	/** attributes */
+	ATTRIB(Monster, spawnflags, int, 0);
+	/** human readable name */
+	ATTRIB(Monster, m_name, string, _("Monster"));
+	/** short name */
+	ATTRIB(Monster, netname, string, "");
+	/** color */
+	ATTRIB(Monster, m_color, vector, '1 1 1');
+	/** icon */
+	ATTRIB(Monster, m_icon, string);
+	/** model */
+	ATTRIB(Monster, m_model, entity);
+	/** hitbox size */
+	ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
+	/** hitbox size */
+	ATTRIB(Monster, m_maxs, vector, '0 0 0');
 
-    /** (SERVER) setup monster data */
-    METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (SERVER) logic to run every frame */
-    METHOD(Monster, mr_think, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (SERVER) logic to run every frame after the monster has died */
-    METHOD(Monster, mr_deadthink, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (SERVER) called when monster dies */
-    METHOD(Monster, mr_death, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (SERVER) called when monster is damaged */
-    METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
-    /** (BOTH?) sets animations for monster */
-    METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+	/** (SERVER) setup monster data */
+	METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+	/** (SERVER) logic to run every frame */
+	METHOD(Monster, mr_think, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+	/** (SERVER) logic to run every frame after the monster has died */
+	METHOD(Monster, mr_deadthink, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+	/** (SERVER) called when monster dies */
+	METHOD(Monster, mr_death, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+	/** (SERVER) called when monster is damaged */
+	METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
+	/** (BOTH?) sets animations for monster */
+	METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
 #ifdef MENUQC
-    METHOD(Monster, describe, string(Monster this))
-    {
-        TC(Monster, this);
-        return SUPER(Monster).describe(this);
-    }
-    METHOD(Monster, display, void(Monster this, void(string name, string icon) returns))
-    {
-        TC(Monster, this);
-        returns(this.m_name, icon_path_from_menuskin(this.m_icon));
-    }
+	METHOD(Monster, describe, string(Monster this))
+	{
+		TC(Monster, this);
+		return SUPER(Monster).describe(this);
+	}
+	METHOD(Monster, display, void(Monster this, void(string name, string icon) returns))
+	{
+		TC(Monster, this);
+		returns(this.m_name, icon_path_from_menuskin(this.m_icon));
+	}
 #endif
 ENDCLASS(Monster)
 

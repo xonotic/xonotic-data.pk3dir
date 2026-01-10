@@ -206,78 +206,78 @@ spawnfunc(monster_shambler) { spawnfunc_monster_golem(this); }
 #ifdef SVQC
 METHOD(Golem, mr_think, bool(Golem this, entity actor))
 {
-    TC(Golem, this);
-    return true;
+	TC(Golem, this);
+	return true;
 }
 
 METHOD(Golem, mr_pain, float(Golem this, entity actor, float damage_take, entity attacker, float deathtype))
 {
-    TC(Golem, this);
-    actor.pain_finished = time + 0.5;
-    setanim(actor, ((random() >= 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
-    return damage_take;
+	TC(Golem, this);
+	actor.pain_finished = time + 0.5;
+	setanim(actor, ((random() >= 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
+	return damage_take;
 }
 
 METHOD(Golem, mr_death, bool(Golem this, entity actor))
 {
-    TC(Golem, this);
-    setanim(actor, actor.anim_die1, false, true, true);
-    return true;
+	TC(Golem, this);
+	setanim(actor, actor.anim_die1, false, true, true);
+	return true;
 }
 #endif
 #ifdef GAMEQC
 METHOD(Golem, mr_anim, bool(Golem this, entity actor))
 {
-    TC(Golem, this);
-    vector none = '0 0 0';
-    actor.anim_idle = animfixfps(actor, '0 1 1', none);
-    actor.anim_walk = animfixfps(actor, '1 1 1', none);
-    actor.anim_run = animfixfps(actor, '2 1 1', none);
-    //actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
-    actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-    actor.anim_melee3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
-    //actor.anim_melee4 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
-    actor.anim_melee1 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
-    actor.anim_pain1 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
-    actor.anim_pain2 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
-    //actor.anim_pain3 = animfixfps(actor, '9 1 2', none); // 0.5 seconds
-    //actor.anim_pain4 = animfixfps(actor, '10 1 2', none); // 0.5 seconds
-    //actor.anim_pain5 = animfixfps(actor, '11 1 2', none); // 0.5 seconds
-    actor.anim_spawn = animfixfps(actor, '12 1 5', none); // analyze models and set framerate
-    actor.anim_die1 = animfixfps(actor, '13 1 0.5', none); // 2 seconds
-    //actor.anim_dead = animfixfps(actor, '14 1 0.5', none); // 2 seconds
-    actor.anim_die2 = animfixfps(actor, '15 1 0.5', none); // 2 seconds
-    // dead2 16
-    //actor.anim_dieback = animfixfps(actor, '16 1 0.5', none); // 2 seconds
-    //actor.anim_deadback = animfixfps(actor, '17 1 0.5', none); // 2 seconds
-    //actor.anim_dead2 = animfixfps(actor, '18 1 0.5', none); // 2 seconds
-    //actor.anim_dead3 = animfixfps(actor, '19 1 0.5', none); // 2 seconds
-    //actor.anim_dead4 = animfixfps(actor, '20 1 0.5', none); // 2 seconds
-    //actor.anim_dead5 = animfixfps(actor, '21 1 0.5', none); // 2 seconds
-    //actor.anim_dead6 = animfixfps(actor, '22 1 0.5', none); // 2 seconds
-    return true;
+	TC(Golem, this);
+	vector none = '0 0 0';
+	actor.anim_idle = animfixfps(actor, '0 1 1', none);
+	actor.anim_walk = animfixfps(actor, '1 1 1', none);
+	actor.anim_run = animfixfps(actor, '2 1 1', none);
+	//actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+	actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+	actor.anim_melee3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+	//actor.anim_melee4 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+	actor.anim_melee1 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+	actor.anim_pain1 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
+	actor.anim_pain2 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
+	//actor.anim_pain3 = animfixfps(actor, '9 1 2', none); // 0.5 seconds
+	//actor.anim_pain4 = animfixfps(actor, '10 1 2', none); // 0.5 seconds
+	//actor.anim_pain5 = animfixfps(actor, '11 1 2', none); // 0.5 seconds
+	actor.anim_spawn = animfixfps(actor, '12 1 5', none); // analyze models and set framerate
+	actor.anim_die1 = animfixfps(actor, '13 1 0.5', none); // 2 seconds
+	//actor.anim_dead = animfixfps(actor, '14 1 0.5', none); // 2 seconds
+	actor.anim_die2 = animfixfps(actor, '15 1 0.5', none); // 2 seconds
+	// dead2 16
+	//actor.anim_dieback = animfixfps(actor, '16 1 0.5', none); // 2 seconds
+	//actor.anim_deadback = animfixfps(actor, '17 1 0.5', none); // 2 seconds
+	//actor.anim_dead2 = animfixfps(actor, '18 1 0.5', none); // 2 seconds
+	//actor.anim_dead3 = animfixfps(actor, '19 1 0.5', none); // 2 seconds
+	//actor.anim_dead4 = animfixfps(actor, '20 1 0.5', none); // 2 seconds
+	//actor.anim_dead5 = animfixfps(actor, '21 1 0.5', none); // 2 seconds
+	//actor.anim_dead6 = animfixfps(actor, '22 1 0.5', none); // 2 seconds
+	return true;
 }
 #endif
 #ifdef SVQC
 .float animstate_endtime;
 METHOD(Golem, mr_setup, bool(Golem this, entity actor))
 {
-    TC(Golem, this);
-    if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_golem_health);
-    if(!actor.attack_range) actor.attack_range = 150;
-    if(!actor.speed) { actor.speed = (autocvar_g_monster_golem_speed_walk); }
-    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_golem_speed_run); }
-    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_golem_speed_stop); }
-    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_golem_damageforcescale); }
+	TC(Golem, this);
+	if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_golem_health);
+	if(!actor.attack_range) actor.attack_range = 150;
+	if(!actor.speed) { actor.speed = (autocvar_g_monster_golem_speed_walk); }
+	if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_golem_speed_run); }
+	if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_golem_speed_stop); }
+	if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_golem_damageforcescale); }
 
-    actor.monster_loot = autocvar_g_monster_golem_loot;
+	actor.monster_loot = autocvar_g_monster_golem_loot;
 
-    setanim(actor, actor.anim_spawn, false, true, true);
-    actor.spawn_time = actor.animstate_endtime;
-    StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
-    actor.monster_attackfunc = M_Golem_Attack;
+	setanim(actor, actor.anim_spawn, false, true, true);
+	actor.spawn_time = actor.animstate_endtime;
+	StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
+	actor.monster_attackfunc = M_Golem_Attack;
 
-    return true;
+	return true;
 }
 #endif
 #ifdef MENUQC

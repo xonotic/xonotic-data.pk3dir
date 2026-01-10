@@ -35,7 +35,7 @@ MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics_UpdateStats)
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 {
-    entity mon = M_ARGV(0, entity);
+	entity mon = M_ARGV(0, entity);
 
 	if(StatusEffects_active(STATUSEFFECT_Webbed, mon))
 	{
@@ -47,10 +47,10 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire2"));
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire))
 {
-    TC(SpiderAttack, thiswep);
-    bool isPlayer = IS_PLAYER(actor);
-    if (fire & 1)
-    if ((!isPlayer && time >= actor.spider_web_delay) || (isPlayer && weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_spider_attack_web_delay))) {
+	TC(SpiderAttack, thiswep);
+	bool isPlayer = IS_PLAYER(actor);
+	if (fire & 1)
+	if ((!isPlayer && time >= actor.spider_web_delay) || (isPlayer && weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_spider_attack_web_delay))) {
 		if (!isPlayer) {
 			actor.spider_web_delay = time + autocvar_g_monster_spider_attack_web_delay;
 			setanim(actor, actor.anim_shoot, true, true, true);
@@ -60,23 +60,23 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 				actor.anim_finished = time + 1;
 			actor.attack_finished_single[0] = actor.anim_finished + 0.2;
 		}
-        if (isPlayer) actor.enemy = Monster_FindTarget(actor);
-        monster_makevectors(actor, actor.enemy);
-        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_SPIDER.m_id);
-    	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
+		if (isPlayer) actor.enemy = Monster_FindTarget(actor);
+		monster_makevectors(actor, actor.enemy);
+		W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_SPIDER.m_id);
+		if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web(actor);
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
-        return;
-    }
-    if (fire & 2)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5)) {
-    	if (isPlayer) {
-    		actor.enemy = Monster_FindTarget(actor);
-    		actor.attack_range = 60;
-    	}
-    	Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? actor.anim_melee : actor.anim_shoot), actor.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
-    }
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
+		return;
+	}
+	if (fire & 2)
+	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5)) {
+		if (isPlayer) {
+			actor.enemy = Monster_FindTarget(actor);
+			actor.attack_range = 60;
+		}
+		Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? actor.anim_melee : actor.anim_shoot), actor.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
+	}
 }
 
 void M_Spider_Attack_Web_Explode(entity this)
@@ -174,66 +174,66 @@ spawnfunc(monster_spider) { Monster_Spawn(this, true, MON_SPIDER); }
 #ifdef SVQC
 METHOD(Spider, mr_think, bool(Spider this, entity actor))
 {
-    TC(Spider, this);
-    return true;
+	TC(Spider, this);
+	return true;
 }
 
 METHOD(Spider, mr_pain, float(Spider this, entity actor, float damage_take, entity attacker, float deathtype))
 {
-    TC(Spider, this);
-    setanim(actor, ((random() > 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
-    actor.pain_finished = actor.animstate_endtime;
-    return damage_take;
+	TC(Spider, this);
+	setanim(actor, ((random() > 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
+	actor.pain_finished = actor.animstate_endtime;
+	return damage_take;
 }
 
 METHOD(Spider, mr_death, bool(Spider this, entity actor))
 {
-    TC(Spider, this);
-    setanim(actor, ((random() > 0.5) ? actor.anim_die2 : actor.anim_die1), false, true, true);
-    return true;
+	TC(Spider, this);
+	setanim(actor, ((random() > 0.5) ? actor.anim_die2 : actor.anim_die1), false, true, true);
+	return true;
 }
 #endif
 #ifdef GAMEQC
 METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 {
-    TC(Spider, this);
-    vector none = '0 0 0';
-    actor.anim_melee = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
-    actor.anim_die1 = animfixfps(actor, '1 1 1', none);
-    actor.anim_die2 = animfixfps(actor, '2 1 1', none);
-    actor.anim_shoot = animfixfps(actor, '3 1 1', none);
-    //actor.anim_fire2 = animfixfps(actor, '4 1 1', none);
-    actor.anim_idle = animfixfps(actor, '5 1 1', none);
-    //actor.anim_sight = animfixfps(actor, '6 1 1', none);
-    actor.anim_pain1 = animfixfps(actor, '7 1 1', none);
-    actor.anim_pain2 = animfixfps(actor, '8 1 1', none);
-    //actor.anim_pain3 = animfixfps(actor, '9 1 1', none);
-    actor.anim_walk = animfixfps(actor, '10 1 1', none);
-    actor.anim_run = animfixfps(actor, '10 1 1', none); // temp?
-    //actor.anim_forwardright = animfixfps(actor, '11 1 1', none);
-    //actor.anim_walkright = animfixfps(actor, '12 1 1', none);
-    //actor.anim_walkbackright = animfixfps(actor, '13 1 1', none);
-    //actor.anim_walkback = animfixfps(actor, '14 1 1', none);
-    //actor.anim_walkbackleft = animfixfps(actor, '15 1 1', none);
-    //actor.anim_walkleft = animfixfps(actor, '16 1 1', none);
-    //actor.anim_forwardleft = animfixfps(actor, '17 1 1', none);
-    return true;
+	TC(Spider, this);
+	vector none = '0 0 0';
+	actor.anim_melee = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
+	actor.anim_die1 = animfixfps(actor, '1 1 1', none);
+	actor.anim_die2 = animfixfps(actor, '2 1 1', none);
+	actor.anim_shoot = animfixfps(actor, '3 1 1', none);
+	//actor.anim_fire2 = animfixfps(actor, '4 1 1', none);
+	actor.anim_idle = animfixfps(actor, '5 1 1', none);
+	//actor.anim_sight = animfixfps(actor, '6 1 1', none);
+	actor.anim_pain1 = animfixfps(actor, '7 1 1', none);
+	actor.anim_pain2 = animfixfps(actor, '8 1 1', none);
+	//actor.anim_pain3 = animfixfps(actor, '9 1 1', none);
+	actor.anim_walk = animfixfps(actor, '10 1 1', none);
+	actor.anim_run = animfixfps(actor, '10 1 1', none); // temp?
+	//actor.anim_forwardright = animfixfps(actor, '11 1 1', none);
+	//actor.anim_walkright = animfixfps(actor, '12 1 1', none);
+	//actor.anim_walkbackright = animfixfps(actor, '13 1 1', none);
+	//actor.anim_walkback = animfixfps(actor, '14 1 1', none);
+	//actor.anim_walkbackleft = animfixfps(actor, '15 1 1', none);
+	//actor.anim_walkleft = animfixfps(actor, '16 1 1', none);
+	//actor.anim_forwardleft = animfixfps(actor, '17 1 1', none);
+	return true;
 }
 #endif
 #ifdef SVQC
 METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 {
-    TC(Spider, this);
-    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_spider_health);
-    if(!actor.speed) { actor.speed = (autocvar_g_monster_spider_speed_walk); }
-    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spider_speed_run); }
-    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
-    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
+	TC(Spider, this);
+	if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_spider_health);
+	if(!actor.speed) { actor.speed = (autocvar_g_monster_spider_speed_walk); }
+	if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spider_speed_run); }
+	if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
+	if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
-    actor.monster_loot = autocvar_g_monster_spider_loot;
-    actor.monster_attackfunc = M_Spider_Attack;
+	actor.monster_loot = autocvar_g_monster_spider_loot;
+	actor.monster_attackfunc = M_Spider_Attack;
 
-    return true;
+	return true;
 }
 #endif
 #ifdef MENUQC

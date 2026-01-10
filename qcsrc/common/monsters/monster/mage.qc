@@ -43,35 +43,35 @@ void M_Mage_Attack_Spike(entity this, vector dir);
 void M_Mage_Attack_Push(entity this);
 METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weaponentity, int fire))
 {
-    TC(MageSpike, thiswep);
-    if (fire & 1)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
-        if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
-        actor.enemy = Monster_FindTarget(actor);
-        monster_makevectors(actor, actor.enemy);
-        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_MAGE.m_id);
-    	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
-        M_Mage_Attack_Spike(actor, w_shotdir);
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
-    }
-    if (fire & 2)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5)) {
-        M_Mage_Attack_Push(actor);
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
-    }
+	TC(MageSpike, thiswep);
+	if (fire & 1)
+	if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
+		if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
+		actor.enemy = Monster_FindTarget(actor);
+		monster_makevectors(actor, actor.enemy);
+		W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_MAGE.m_id);
+		if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
+		M_Mage_Attack_Spike(actor, w_shotdir);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
+	}
+	if (fire & 2)
+	if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5)) {
+		M_Mage_Attack_Push(actor);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
+	}
 }
 
 void M_Mage_Attack_Teleport(entity this, entity targ);
 
 CLASS(OffhandMageTeleport, OffhandWeapon)
-    .bool OffhandMageTeleport_key_pressed;
-    METHOD(OffhandMageTeleport, offhand_think, void(OffhandMageTeleport this, entity player, bool key_pressed))
-    {
-        TC(OffhandMageTeleport, this);
-        if (key_pressed && !player.OffhandMageTeleport_key_pressed)
-        	M_Mage_Attack_Teleport(player, player.enemy);
-        player.OffhandMageTeleport_key_pressed = key_pressed;
-    }
+	.bool OffhandMageTeleport_key_pressed;
+	METHOD(OffhandMageTeleport, offhand_think, void(OffhandMageTeleport this, entity player, bool key_pressed))
+	{
+		TC(OffhandMageTeleport, this);
+		if (key_pressed && !player.OffhandMageTeleport_key_pressed)
+			M_Mage_Attack_Teleport(player, player.enemy);
+		player.OffhandMageTeleport_key_pressed = key_pressed;
+	}
 ENDCLASS(OffhandMageTeleport)
 OffhandMageTeleport OFFHAND_MAGE_TELEPORT;
 STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
@@ -104,9 +104,9 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 		case 1:
 		{
 			return ((GetResource(targ, RES_CELLS) && GetResource(targ, RES_CELLS) < autocvar_g_pickup_cells_max)
-			     || (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < autocvar_g_pickup_rockets_max)
-			     || (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < autocvar_g_pickup_nails_max)
-			     || (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < autocvar_g_pickup_shells_max)
+				 || (GetResource(targ, RES_ROCKETS) && GetResource(targ, RES_ROCKETS) < autocvar_g_pickup_rockets_max)
+				 || (GetResource(targ, RES_BULLETS) && GetResource(targ, RES_BULLETS) < autocvar_g_pickup_nails_max)
+				 || (GetResource(targ, RES_SHELLS) && GetResource(targ, RES_SHELLS) < autocvar_g_pickup_shells_max)
 			);
 		}
 		case 2: return (GetResource(targ, RES_ARMOR) < autocvar_g_balance_armor_regenstable);
@@ -397,97 +397,97 @@ spawnfunc(monster_mage) { Monster_Spawn(this, true, MON_MAGE); }
 #ifdef SVQC
 METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
 {
-    TC(Mage, thismon);
-    bool need_help = false;
+	TC(Mage, thismon);
+	bool need_help = false;
 
-    FOREACH_CLIENT(IS_PLAYER(it) && it != actor,
-    {
-    	if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
-        if(M_Mage_Defend_Heal_Check(actor, it))
-        {
-            need_help = true;
-            break;
-        }
-    });
+	FOREACH_CLIENT(IS_PLAYER(it) && it != actor,
+	{
+		if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+		if(M_Mage_Defend_Heal_Check(actor, it))
+		{
+			need_help = true;
+			break;
+		}
+	});
 
-    if(!need_help)
-    {
-    	IL_EACH(g_monsters, it != actor,
-    	{
-    		if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
-	        if(M_Mage_Defend_Heal_Check(actor, it))
-	        {
-	            need_help = true;
-	            break;
-	        }
-    	});
-    }
+	if(!need_help)
+	{
+		IL_EACH(g_monsters, it != actor,
+		{
+			if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+			if(M_Mage_Defend_Heal_Check(actor, it))
+			{
+				need_help = true;
+				break;
+			}
+		});
+	}
 
-    if(GetResource(actor, RES_HEALTH) < (autocvar_g_monster_mage_heal_minhealth) || need_help)
-    if(time >= actor.attack_finished_single[0])
-    if(random() < 0.5)
-        M_Mage_Defend_Heal(actor);
+	if(GetResource(actor, RES_HEALTH) < (autocvar_g_monster_mage_heal_minhealth) || need_help)
+	if(time >= actor.attack_finished_single[0])
+	if(random() < 0.5)
+		M_Mage_Defend_Heal(actor);
 
-    if(actor.enemy && time >= actor.mage_shield_delay && random() < 0.5)
-    if(GetResource(actor, RES_HEALTH) < actor.max_health && !StatusEffects_active(STATUSEFFECT_Shield, actor))
-        M_Mage_Defend_Shield(actor);
+	if(actor.enemy && time >= actor.mage_shield_delay && random() < 0.5)
+	if(GetResource(actor, RES_HEALTH) < actor.max_health && !StatusEffects_active(STATUSEFFECT_Shield, actor))
+		M_Mage_Defend_Shield(actor);
 
-    return true;
+	return true;
 }
 
 METHOD(Mage, mr_pain, float(Mage this, entity actor, float damage_take, entity attacker, float deathtype))
 {
-    TC(Mage, this);
-    return damage_take;
+	TC(Mage, this);
+	return damage_take;
 }
 
 METHOD(Mage, mr_death, bool(Mage this, entity actor))
 {
-    TC(Mage, this);
-    setanim(actor, ((random() > 0.5) ? actor.anim_die2 : actor.anim_die1), false, true, true);
-    return true;
+	TC(Mage, this);
+	setanim(actor, ((random() > 0.5) ? actor.anim_die2 : actor.anim_die1), false, true, true);
+	return true;
 }
 
 #endif
 #ifdef GAMEQC
 METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 {
-    TC(Mage, this);
-    vector none = '0 0 0';
-    actor.anim_idle = animfixfps(actor, '0 1 1', none);
-    actor.anim_walk = animfixfps(actor, '1 1 1', none);
-    actor.anim_run = animfixfps(actor, '1 1 1', none);
-    actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-    actor.anim_duckjump = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-    actor.anim_melee = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
-    //actor.anim_fire1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
-    //actor.anim_fire2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-    //actor.anim_fire3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
-    actor.anim_pain1 = animfixfps(actor, '6 1 2', none); // 0.5 seconds
-    actor.anim_pain2 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
-    //actor.anim_pain3 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
-    actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
-    actor.anim_die2 = animfixfps(actor, '10 1 0.5', none); // 2 seconds
-    //actor.anim_dead1 = animfixfps(actor, '11 1 0.5', none); // 2 seconds
-    //actor.anim_dead2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
-    return true;
+	TC(Mage, this);
+	vector none = '0 0 0';
+	actor.anim_idle = animfixfps(actor, '0 1 1', none);
+	actor.anim_walk = animfixfps(actor, '1 1 1', none);
+	actor.anim_run = animfixfps(actor, '1 1 1', none);
+	actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+	actor.anim_duckjump = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+	actor.anim_melee = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+	//actor.anim_fire1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+	//actor.anim_fire2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+	//actor.anim_fire3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+	actor.anim_pain1 = animfixfps(actor, '6 1 2', none); // 0.5 seconds
+	actor.anim_pain2 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
+	//actor.anim_pain3 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
+	actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
+	actor.anim_die2 = animfixfps(actor, '10 1 0.5', none); // 2 seconds
+	//actor.anim_dead1 = animfixfps(actor, '11 1 0.5', none); // 2 seconds
+	//actor.anim_dead2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
+	return true;
 }
 #endif
 #ifdef SVQC
 .float speed;
 METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 {
-    TC(Mage, this);
-    if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_mage_health);
-    if(!actor.speed) { actor.speed = (autocvar_g_monster_mage_speed_walk); }
-    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_mage_speed_run); }
-    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
-    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
+	TC(Mage, this);
+	if(!GetResource(this, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_mage_health);
+	if(!actor.speed) { actor.speed = (autocvar_g_monster_mage_speed_walk); }
+	if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_mage_speed_run); }
+	if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
+	if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
 
-    actor.monster_loot = autocvar_g_monster_mage_loot;
-    actor.monster_attackfunc = M_Mage_Attack;
+	actor.monster_loot = autocvar_g_monster_mage_loot;
+	actor.monster_attackfunc = M_Mage_Attack;
 
-    return true;
+	return true;
 }
 #endif
 #ifdef MENUQC
