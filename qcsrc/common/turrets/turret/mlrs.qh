@@ -11,7 +11,7 @@ CLASS(MLRSTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(MLRSTurret, head_model, string, strcat("models/turrets/", "mlrs.md3"));
 /* netname    */ ATTRIB(MLRSTurret, netname, string, "mlrs");
 /* fullname   */ ATTRIB(MLRSTurret, m_name, string, _("MLRS Turret"));
-    ATTRIB(MLRSTurret, m_weapon, Weapon, WEP_TUR_MLRS);
+	ATTRIB(MLRSTurret, m_weapon, Weapon, WEP_TUR_MLRS);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

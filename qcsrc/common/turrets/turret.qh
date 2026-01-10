@@ -6,68 +6,68 @@
 #include <common/weapons/_all.qh>
 
 CLASS(Turret, Object)
-    ATTRIB(Turret, m_id, int, 0);
+	ATTRIB(Turret, m_id, int, 0);
 
-    /** icon */
-    ATTRIB(Turret, m_icon, string);
-    /** short name */
-    ATTRIB(Turret, netname, string);
-    /** human readable name */
-    ATTRIB(Turret, m_name, string, _("Turret"));
-    /** color */
-    ATTRIB(Turret, m_color, vector, '1 1 1');
-    /** currently a copy of the model */
-    ATTRIB(Turret, mdl, string);
-    /** full name of model */
-    ATTRIB(Turret, model, string);
-    /** full name of tur_head model */
-    ATTRIB(Turret, head_model, string);
+	/** icon */
+	ATTRIB(Turret, m_icon, string);
+	/** short name */
+	ATTRIB(Turret, netname, string);
+	/** human readable name */
+	ATTRIB(Turret, m_name, string, _("Turret"));
+	/** color */
+	ATTRIB(Turret, m_color, vector, '1 1 1');
+	/** currently a copy of the model */
+	ATTRIB(Turret, mdl, string);
+	/** full name of model */
+	ATTRIB(Turret, model, string);
+	/** full name of tur_head model */
+	ATTRIB(Turret, head_model, string);
 
-    ATTRIB(Turret, spawnflags, int, 0);
-    /** turret hitbox size */
-    ATTRIB(Turret, m_mins, vector, '-0 -0 -0');
-    /** turret hitbox size */
-    ATTRIB(Turret, m_maxs, vector, '0 0 0');
+	ATTRIB(Turret, spawnflags, int, 0);
+	/** turret hitbox size */
+	ATTRIB(Turret, m_mins, vector, '-0 -0 -0');
+	/** turret hitbox size */
+	ATTRIB(Turret, m_maxs, vector, '0 0 0');
 
-    /** (BOTH) setup turret data */
-    METHOD(Turret, tr_setup, void(Turret this, entity it)) {
+	/** (BOTH) setup turret data */
+	METHOD(Turret, tr_setup, void(Turret this, entity it)) {
 
-    }
-    /** (SERVER) logic to run every frame */
-    METHOD(Turret, tr_think, void(Turret this, entity it)) {
+	}
+	/** (SERVER) logic to run every frame */
+	METHOD(Turret, tr_think, void(Turret this, entity it)) {
 
-    }
-    /** (SERVER) called when turret dies */
-    METHOD(Turret, tr_death, void(Turret this, entity it)) {
+	}
+	/** (SERVER) called when turret dies */
+	METHOD(Turret, tr_death, void(Turret this, entity it)) {
 
-    }
-    /** (BOTH) precaches models/sounds used by this turret */
-    METHOD(Turret, tr_precache, void(Turret this)) {
+	}
+	/** (BOTH) precaches models/sounds used by this turret */
+	METHOD(Turret, tr_precache, void(Turret this)) {
 
-    }
-    ATTRIB(Turret, m_weapon, Weapon);
+	}
+	ATTRIB(Turret, m_weapon, Weapon);
 #ifdef SVQC
-    /** (SERVER) called when turret attacks */
-    METHOD(Turret, tr_attack, void(Turret this, entity it)) {
-        Weapon w = this.m_weapon;
-        .entity weaponentity = weaponentities[0];
-        w.wr_think(w, it, weaponentity, 1);
-    }
+	/** (SERVER) called when turret attacks */
+	METHOD(Turret, tr_attack, void(Turret this, entity it)) {
+		Weapon w = this.m_weapon;
+		.entity weaponentity = weaponentities[0];
+		w.wr_think(w, it, weaponentity, 1);
+	}
 #endif
-    /** (SERVER) dump turret cvars to config in data directory (see: sv_cmd dumpturrets) */
-    METHOD(Turret, tr_config, void(Turret this)) { }
+	/** (SERVER) dump turret cvars to config in data directory (see: sv_cmd dumpturrets) */
+	METHOD(Turret, tr_config, void(Turret this)) { }
 
 #ifdef MENUQC
-    METHOD(Turret, describe, string(Turret this))
-    {
-        TC(Turret, this);
-        return SUPER(Turret).describe(this);
-    }
-    METHOD(Turret, display, void(Turret this, void(string name, string icon) returns))
-    {
-        TC(Turret, this);
-        returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
-    }
+	METHOD(Turret, describe, string(Turret this))
+	{
+		TC(Turret, this);
+		return SUPER(Turret).describe(this);
+	}
+	METHOD(Turret, display, void(Turret this, void(string name, string icon) returns))
+	{
+		TC(Turret, this);
+		returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
+	}
 #endif
 ENDCLASS(Turret)
 

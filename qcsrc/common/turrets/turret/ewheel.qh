@@ -13,7 +13,7 @@ CLASS(EWheel, Turret)
 /* head_model */ ATTRIB_STRZONE(EWheel, head_model, string, strcat("models/turrets/", "ewheel-gun1.md3"));
 /* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
 /* fullname   */ ATTRIB(EWheel, m_name, string, _("eWheel Turret"));
-    ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
+	ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

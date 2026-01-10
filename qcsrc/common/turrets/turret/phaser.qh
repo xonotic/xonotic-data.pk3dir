@@ -11,7 +11,7 @@ CLASS(PhaserTurret, Turret)
 /* head_model */ ATTRIB_STRZONE(PhaserTurret, head_model, string, strcat("models/turrets/", "phaser.md3"));
 /* netname    */ ATTRIB(PhaserTurret, netname, string, "phaser");
 /* fullname   */ ATTRIB(PhaserTurret, m_name, string, _("Phaser Cannon"));
-    ATTRIB(PhaserTurret, m_weapon, Weapon, WEP_PHASER);
+	ATTRIB(PhaserTurret, m_weapon, Weapon, WEP_PHASER);
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
