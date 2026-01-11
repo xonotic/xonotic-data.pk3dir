@@ -4,14 +4,14 @@
 #
 # Translators:
 # oblector o, 2022
-# oblector o, 2022-2025
+# oblector o, 2022-2026
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2026\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -996,7 +996,7 @@ msgid ""
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
 "^2scoreboard_columns_set ^3expand_default ^7rationarii formam ordinariam in "
-"variabili scoreboard_columns scribit ut legas et transcribas id quod vellis"
+"variabili scoreboard_columns scribit ut legas et transcribas id quod velis"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:720
 msgid "You can use a ^3|^7 to start the right-aligned fields."
@@ -1755,7 +1755,7 @@ msgstr ""
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
 msgid "XPM"
-msgstr ""
+msgstr "XPM"
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qh:9
 msgid "Duel"
@@ -1807,8 +1807,8 @@ msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
 msgstr ""
-"Hostes congelandos interficite, ad collegas congelatos restituendos state; "
-"omnes hostes congelate ut vincetis"
+"Hostes interficite ut eos congeletis, ad collegas congelatos state ut eos "
+"restituatis; omnes hostes congelate ut vincetis"
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qc:8
 #, c-format
@@ -4825,7 +4825,7 @@ msgstr "^BG%s^BG ^TCClavem ^TTm^BG amisit"
 #: qcsrc/common/notifications/all.inc:405
 #, c-format
 msgid "^BG%s^BG pushed %s^BG causing the ^TC^TT Key ^BGdestruction"
-msgstr "^BGA %s^BG %s^BG pulsus est, propterea ^TCClavis ^TT^BG deleta est"
+msgstr "^BG%s^BG pepulit %s^BG, propterea ^TCClavis ^TT^BG deleta est"
 
 #: qcsrc/common/notifications/all.inc:406
 #, c-format
@@ -4960,14 +4960,12 @@ msgstr "^BG%s^BG cursum reliquit"
 #, c-format
 msgid "^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"
 msgstr ""
-"^BG%s^BG non fuit celerior quam gradum %s%s^BG suum, cuius tempus fuit %s%s "
-"%s"
+"^BG%s^BG non fuit celerior gradu %s%s^BG suo, cuius tempus fuerat %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:440
 #, c-format
 msgid "^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"
-msgstr ""
-"^BG%s^BG non fuit celerior quam gradum %s%s^BG, cuius tempus fuit %s%s %s"
+msgstr "^BG%s^BG non fuit celerior gradu %s%s^BG, cuius tempus fuerat %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:441
 #, c-format
@@ -4977,15 +4975,12 @@ msgstr "^BG%s^BG cursum finivit"
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
-msgstr ""
-"^BG%s^BG celerior fuit quam %s^BG gradum %s%s^BG, tempus novum fuit %s%s %s"
+msgstr "^BG%s^BG celerior fuit %s^BG gradu %s%s^BG, tempus novum fuit %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:443
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
-msgstr ""
-"^BG%s^BG celerior fuit quam suum ipsum gradum %s%s^BG, tempus novum fuit "
-"%s%s %s"
+msgstr "^BG%s^BG celerior fuit gradu %s%s^BG suo, tempus novum fuit %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:444
 #, c-format
@@ -4993,8 +4988,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID "
 "and will be lost."
 msgstr ""
-"^BG%s^BG celerior fuit quam aliquid tempus horum, tempus novum ^F2%s^BG "
-"fuit, sed non est cryptographice consignatus, temporis igitur obliviscetur."
+"^BG%s^BG celerior fuit aliquo tempore horum, tempus novum ^F2%s^BG fuit, sed "
+"non est cryptographice consignatus, temporis igitur obliviscetur."
 
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
@@ -5002,8 +4997,8 @@ msgid ""
 "^BG%s^BG scored a new record with ^F2%s^BG, but is anonymous and will be "
 "lost."
 msgstr ""
-"^BG%s^BG celerior fuit quam aliquid tempus horum, tempus novum ^F2%s^BG "
-"fuit, sed anonymus est, temporis igitur obliviscetur."
+"^BG%s^BG celerior fuit aliquo tempore horum, tempus novum ^F2%s^BG fuit, sed "
+"anonymus est, temporis igitur obliviscetur."
 
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
@@ -5464,7 +5459,7 @@ msgstr "^F4Tempus incipi non potest"
 
 #: qcsrc/common/notifications/all.inc:568
 msgid "^F2Don't camp!"
-msgstr "^F2Stativus esse noli!"
+msgstr "^F2Noli stativus esse!"
 
 #: qcsrc/common/notifications/all.inc:572
 msgid ""
@@ -7516,12 +7511,12 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:907
 #, c-format
 msgid "(DPS: %.2f)"
-msgstr ""
+msgstr "(VIS: %.2f)"
 
 #: qcsrc/common/weapons/all.qc:880
 #, c-format
 msgid "It does %s damage"
-msgstr ""
+msgstr "%s vulneris infert"
 
 #: qcsrc/common/weapons/all.qc:881
 #, c-format
@@ -8842,7 +8837,7 @@ msgstr "Claves premendae"
 #: qcsrc/menu/xonotic/dialog_media.qc:13
 #: qcsrc/menu/xonotic/dialog_media_guide.qh:7
 msgid "Guide"
-msgstr ""
+msgstr "Documenta"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:60
 msgid "Quick menu"
@@ -10162,8 +10157,8 @@ msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
-"Quanta sanitas quae, quisque ludens ea egens sanguinem mittet (sanitas "
-"putrescet neque salire poterit)"
+"Quanta sanitate eget quicumque sanguinem mittet (sanitas putrescet neque "
+"salire poterit)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
@@ -10221,8 +10216,8 @@ msgid ""
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
 "Devastatri missilia ignea ab utente rumpi possunt statim (ne brevis mora "
-"quidem est). Itaque ludentes Devastatri missile emittere rumpereque possunt "
-"dum solo distant, ut eruptione iaciantur et celerius eant"
+"quidem est). Itaque quisque ludens Devastatri missile emittere rumpereque "
+"potest dum solo distat, ut eruptione iaciatur et celerius eat"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Players will drop all weapons they possessed when they are killed"
@@ -10272,9 +10267,9 @@ msgid ""
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
 "Quisque ludens una arma tenebit, quibus inimici statim per singulas "
-"emissiones occiduntur. Si ludens missilibus exhauriet, 10 secunda plura "
-"missilia invenire necesse erit, ne morietur. Ludens emissione secundaria non "
-"vulnerat tamen, atque per eam perniciter salire potest."
+"emissiones occiduntur. Si ludens missilia exhauriet, 10 secunda plura "
+"missilia invenire necesse erit, ne morietur. Ludens emissione secundaria "
+"tamen non vulnerat, at per eam perniciter salire potest."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
 msgid ""
@@ -10283,7 +10278,7 @@ msgid ""
 "switch to another weapon."
 msgstr ""
 "Xonoticus sine utilibus - non sunt utilia colligenda, sed ludentes aequa "
-"arma habent. Post aliquod tempus, numeratio regrediens fiet, et postea pro "
+"arma habent. Post quoddam tempus, numeratio regrediens fiet, et postea pro "
 "eis armis alia arma aequa commutabuntur."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:218
@@ -11157,7 +11152,7 @@ msgstr "Distantia:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:160
 msgid "Decals further away than this will not be drawn"
-msgstr "Sigilla quae distant plus quam hanc mensuram non pinguntur"
+msgstr "Sigilla quae distant mensura maiore quam hac non pinguntur"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:169
 msgid "Time in seconds before decals fade away"
@@ -11207,8 +11202,7 @@ msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
-"Lumina mutabilia quae quaedam harenae continent. Computatrum forte minus "
-"velox erit."
+"Lumina mutabilia in quibusdam harenis. Computatrum forte minus velox erit."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:192
 msgid "Shadows cast by realtime world lights"
@@ -11305,7 +11299,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:248
 msgid "Particles further away than this will not be drawn"
-msgstr "Particulae quae distant plus quam hanc mensuram non pinguntur"
+msgstr "Particulae quae distant mensura maiore quam hac non pinguntur"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:28
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
@@ -11516,7 +11510,7 @@ msgstr "Notae Superpositae"
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
 msgstr ""
-"Si Notarum Superpositarum optiones videre vis, necesse est ludus incipi."
+"Si Notarum Superpositarum optiones videre vis, necesse est ludum incipere."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:23
 msgid "Do you wish to start a local game to set up the HUD?"
@@ -11863,7 +11857,7 @@ msgstr "Visio"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:33
 msgid "Weapon Priority List (* = mutator weapon)"
-msgstr "Ordo armorum Praecedentia (* = mutationis arma)"
+msgstr "Ordo armorum Meritis (* = mutationis arma)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:39
 msgid "Up"
@@ -11881,8 +11875,8 @@ msgstr "Hoc ordine armorum uteris cum arma tenta permutas"
 msgid ""
 "Make use of the list above when cycling through weapons with the mouse wheel"
 msgstr ""
-"Hoc ordine armorum secundum praecedentias uteris cum arma tenta permutas, "
-"per muris rotam vel aliam clavem quam elegisti"
+"Hoc ordine armorum uteris cum arma tenta permutas, per muris rotam vel aliam "
+"clavem quam elegisti"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:54
 msgid "Cycle through only usable weapon selections"
@@ -12449,7 +12443,7 @@ msgid ""
 "strange input or video lag on some machines"
 msgstr ""
 "Si expectas eam partem ut pingat semper picturam completam, fortasse "
-"corrigat aliquae menda inusitata, morae imaginum, in aliquibus computatris"
+"corrigantur aliqua menda inusitata, morae imaginum, in aliquibus computatris"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:109
 msgid "Use OpenGL 2.0 shaders (GLSL)"
@@ -12501,7 +12495,7 @@ msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
-"Evidentia colorum mutare (0 = cinerei, 1 = ordinarii, 2 = nimis evidentes), "
+"Evidentiam colorum mutare (0 = cinerei, 1 = ordinarii, 2 = nimis evidentes), "
 "necesse est dominium colorum GLSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:146
@@ -12567,9 +12561,9 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
-"Si lineae iacentes pinguntur synchrone, imagines scissas non videbis, sed "
-"itaque imagines tardabuntur et numerus imaginum in secundum non maior erit "
-"quam numerum integrationum in quadro"
+"Si lineae iacentes pinguntur synchrone, imagines scissas non videbis, at "
+"imagines tardabuntur et numerus imaginum in secundum non maior erit numero "
+"integrationum in quadro"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:188
 msgid "Show frames per second"
@@ -12683,31 +12677,31 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/guide.qh:10
 msgid "Movement"
-msgstr ""
+msgstr "Momentum"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
-msgstr ""
+msgstr "Ludi modi"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
-msgstr ""
+msgstr "Beluae"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:18
 msgid "Vehicles"
-msgstr ""
+msgstr "Vehicula"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:19
 msgid "Turrets"
-msgstr ""
+msgstr "Turriolae"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:21
 msgid "Mods"
-msgstr ""
+msgstr "Mutationes"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
-msgstr ""
+msgstr "De his documentis"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
@@ -12736,7 +12730,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:30
 msgid "Community"
-msgstr ""
+msgstr "Communitas"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:32
 #, c-format
