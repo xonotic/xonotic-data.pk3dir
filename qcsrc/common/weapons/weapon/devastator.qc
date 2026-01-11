@@ -557,7 +557,7 @@ METHOD(Devastator, wr_suicidemessage, Notification(entity thiswep))
 
 METHOD(Devastator, wr_killmessage, Notification(entity thiswep))
 {
-	if ((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+	if (w_deathtype & (HITTYPE_BOUNCE | HITTYPE_SPLASH))
 		return WEAPON_DEVASTATOR_MURDER_SPLASH;
 	else
 		return WEAPON_DEVASTATOR_MURDER_DIRECT;

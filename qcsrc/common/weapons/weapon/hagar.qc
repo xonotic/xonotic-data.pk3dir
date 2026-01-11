@@ -55,12 +55,11 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
 
-	float is_linkexplode = (inflictor.owner != NULL ? inflictor.owner == this.owner : true)
-		&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY)
-		&& (this.projectiledeathtype & HITTYPE_SECONDARY);
+	bool is_linkexplode = (inflictor.owner != NULL ? inflictor.owner == this.owner : true)
+		&& (HITTYPE_SECONDARY & inflictor.projectiledeathtype & this.projectiledeathtype);
 
 	if (is_linkexplode)
-		is_linkexplode = (is_linkexplode && WEP_CVAR_SEC(WEP_HAGAR, load_linkexplode));
+		is_linkexplode = WEP_CVAR_SEC(WEP_HAGAR, load_linkexplode);
 	else
 		is_linkexplode = -1; // not secondary load, so continue as normal without exception.
 

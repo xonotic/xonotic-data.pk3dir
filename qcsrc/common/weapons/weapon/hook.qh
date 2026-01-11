@@ -89,8 +89,6 @@ STATIC_INIT(OFFHAND_HOOK)
 .float dmg_edge;
 .float dmg_radius;
 .float dmg_force;
-.float dmg_power;
-.float dmg_duration;
 .float dmg_last;
 .float hook_refire;
 .float hook_time_hooked;

@@ -115,11 +115,10 @@ vector W_Crylink_LinkJoin(entity e, float jspeed)
 		return avg_org; // nothing to do
 
 	// yes, mathematically we can do this in ONE step, but beware of 32bit floats...
-	float avg_dist = vlen(e.origin - avg_org) ** 2;
+	float avg_dist = vlen2(e.origin - avg_org);
 	for (p = e; (p = p.queuenext) != e; )
-		avg_dist += vlen(WarpZone_RefSys_TransformOrigin(p, e, p.origin) - avg_org) ** 2;
-	avg_dist *= 1.0 / n;
-	avg_dist = sqrt(avg_dist);
+		avg_dist += vlen2(WarpZone_RefSys_TransformOrigin(p, e, p.origin) - avg_org);
+	avg_dist = sqrt(avg_dist * (1.0 / n));
 
 	if (avg_dist == 0)
 		return avg_org; // no change needed
@@ -207,22 +206,20 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 	delete(this);
 }
 
-float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
+bool W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 {
 	entity head = WarpZone_FindRadius(projectile.origin + (projectile.mins + projectile.maxs) * 0.5, rad + MAX_DAMAGEEXTRARADIUS, false);
-	int hit_friendly = 0;
-	int hit_enemy = 0;
-
+	bool hit_friendly = false;
 	for (; head; head = head.chain)
 		if (head.takedamage != DAMAGE_NO && !IS_DEAD(head))
 		{
 			if (SAME_TEAM(head, projectile.realowner))
-				++hit_friendly;
+				hit_friendly = true;
 			else
-				++hit_enemy;
+				return false;
 		}
 
-	return (hit_enemy ? false : hit_friendly);
+	return hit_friendly;
 }
 
 // NO bounce protection, as bounces are limited!

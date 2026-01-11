@@ -31,7 +31,6 @@ void Dump_Weapon_Settings()
 {
 	int totalsettings = 0;
 	int totalweapons = 0;
-	int wepcount = 1;
 	#define WEP_CONFIG_WRITETOFILE(str) \
 		write_String_To_File(wep_config_file, str, wep_config_alsoprint)
 
@@ -86,7 +85,7 @@ void Dump_Weapon_Settings()
 		// step 4: write queue
 		WEP_CONFIG_WRITETOFILE(sprintf(
 			"// {{{ #%d: %s%s\n",
-			wepcount,
+			totalweapons + 1,
 			it.m_name,
 			((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) ? " (MUTATOR WEAPON)" : "")
 		));
@@ -98,7 +97,6 @@ void Dump_Weapon_Settings()
 		LOG_INFOF("#%d: %s: %d settings...", i, it.m_name, WEP_CONFIG_COUNT);
 		++totalweapons;
 		totalsettings += WEP_CONFIG_COUNT;
-		++wepcount;
 	});
 	#undef WEP_CONFIG_WRITETOFILE
 

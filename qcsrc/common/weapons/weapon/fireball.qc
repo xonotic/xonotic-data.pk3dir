@@ -322,19 +322,19 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-.float bot_primary_fireballmooth; // whatever a mooth is
+.bool bot_primary_fireballmooth; // whatever a mooth is
 
 METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	PHYS_INPUT_BUTTON_ATCK(actor)  = false;
 	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-	if (actor.bot_primary_fireballmooth == 0)
+	if (!actor.bot_primary_fireballmooth)
 	{
 		if (bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_FIREBALL, speed), 0, WEP_CVAR_PRI(WEP_FIREBALL, lifetime), false, false))
 		{
 			PHYS_INPUT_BUTTON_ATCK(actor) = true;
 			if (random() < 0.02)
-				actor.bot_primary_fireballmooth = 1;
+				actor.bot_primary_fireballmooth = true;
 		}
 	}
 	else
@@ -343,7 +343,7 @@ METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity
 		{
 			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 			if (random() < 0.01)
-				actor.bot_primary_fireballmooth = 0;
+				actor.bot_primary_fireballmooth = false;
 		}
 	}
 }

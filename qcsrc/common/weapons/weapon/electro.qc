@@ -600,14 +600,14 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 	w_ready(thiswep, actor, weaponentity, fire);
 }
 
-.float bot_secondary_electromooth; // whatever a mooth is
+.bool bot_secondary_electromooth; // whatever a mooth is
 
 METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	PHYS_INPUT_BUTTON_ATCK(actor) = PHYS_INPUT_BUTTON_ATCK2(actor) = false;
 	if (vdist(actor.origin - actor.enemy.origin, >, 1000))
-		actor.bot_secondary_electromooth = 0;
-	if (actor.bot_secondary_electromooth == 0)
+		actor.bot_secondary_electromooth = false;
+	if (!actor.bot_secondary_electromooth)
 	{
 		float shoot = (WEP_CVAR_PRI(WEP_ELECTRO, speed))
 			? bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_ELECTRO, speed), 0, WEP_CVAR_PRI(WEP_ELECTRO, lifetime), false, true)
@@ -617,7 +617,7 @@ METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 		{
 			PHYS_INPUT_BUTTON_ATCK(actor) = true;
 			if (random() < 0.01)
-				actor.bot_secondary_electromooth = 1;
+				actor.bot_secondary_electromooth = true;
 		}
 	}
 	else
@@ -626,7 +626,7 @@ METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 		{
 			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 			if (random() < 0.03)
-				actor.bot_secondary_electromooth = 0;
+				actor.bot_secondary_electromooth = false;
 		}
 	}
 }

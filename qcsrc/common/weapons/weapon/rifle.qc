@@ -91,21 +91,21 @@ void W_Rifle_BulletHail(Weapon thiswep, entity actor, .entity weaponentity, floa
 		weapon_thinkf(actor, weaponentity, fr, animtime, w_ready);
 }
 
-.float bot_secondary_riflemooth; // whatever a mooth is
+.bool bot_secondary_riflemooth; // whatever a mooth is
 
 METHOD(Rifle, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	PHYS_INPUT_BUTTON_ATCK(actor) = false;
 	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
 	if (vdist(actor.origin - actor.enemy.origin, >, 1000))
-		actor.bot_secondary_riflemooth = 0;
-	if (actor.bot_secondary_riflemooth == 0)
+		actor.bot_secondary_riflemooth = false;
+	if (!actor.bot_secondary_riflemooth)
 	{
 		if (bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true))
 		{
 			PHYS_INPUT_BUTTON_ATCK(actor) = true;
 			if (random() < 0.01)
-				actor.bot_secondary_riflemooth = 1;
+				actor.bot_secondary_riflemooth = true;
 		}
 	}
 	else
@@ -114,7 +114,7 @@ METHOD(Rifle, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 			if (random() < 0.03)
-				actor.bot_secondary_riflemooth = 0;
+				actor.bot_secondary_riflemooth = false;
 		}
 	}
 }

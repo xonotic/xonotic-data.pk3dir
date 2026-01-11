@@ -258,19 +258,19 @@ void W_Mortar_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-.float bot_secondary_grenademooth; // whatever a mooth is
+.bool bot_secondary_grenademooth; // whatever a mooth is
 
 METHOD(Mortar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	PHYS_INPUT_BUTTON_ATCK(actor)  = false;
 	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-	if (actor.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
+	if (!actor.bot_secondary_grenademooth) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
 	{
 		if (bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_MORTAR, speed), WEP_CVAR_PRI(WEP_MORTAR, speed_up), WEP_CVAR_PRI(WEP_MORTAR, lifetime), true, true))
 		{
 			PHYS_INPUT_BUTTON_ATCK(actor) = true;
 			if (random() < 0.01)
-				actor.bot_secondary_grenademooth = 1;
+				actor.bot_secondary_grenademooth = true;
 		}
 	}
 	else
@@ -279,7 +279,7 @@ METHOD(Mortar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 			if (random() < 0.02)
-				actor.bot_secondary_grenademooth = 0;
+				actor.bot_secondary_grenademooth = false;
 		}
 	}
 }

@@ -5,7 +5,7 @@
 void W_Hook_ExplodeThink(entity this)
 {
 	float dt = time - this.teleport_time;
-	float dmg_remaining_next = bound(0, 1 - dt / this.dmg_duration, 1) ** this.dmg_power;
+	float dmg_remaining_next = bound(0, 1 - dt / WEP_CVAR_SEC(WEP_HOOK, duration), 1) ** WEP_CVAR_SEC(WEP_HOOK, power);
 
 	float f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
@@ -35,7 +35,7 @@ void W_Hook_ExplodeThink(entity this)
 	);
 	#endif
 
-	if (dt < this.dmg_duration)
+	if (dt < WEP_CVAR_SEC(WEP_HOOK, duration))
 		this.nextthink = time + 0.05; // soon
 	else
 		delete(this);
@@ -53,8 +53,6 @@ void W_Hook_Explode2(entity this)
 	this.dmg_edge = WEP_CVAR_SEC(WEP_HOOK, edgedamage);
 	this.dmg_radius = WEP_CVAR_SEC(WEP_HOOK, radius);
 	this.dmg_force = WEP_CVAR_SEC(WEP_HOOK, force);
-	this.dmg_power = WEP_CVAR_SEC(WEP_HOOK, power);
-	this.dmg_duration = WEP_CVAR_SEC(WEP_HOOK, duration);
 	this.teleport_time = time;
 	this.dmg_last = 1;
 	set_movetype(this, MOVETYPE_NONE);

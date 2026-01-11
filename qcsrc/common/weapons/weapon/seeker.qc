@@ -72,7 +72,7 @@ void W_Seeker_Missile_Think(entity this)
 				traceline(this.origin, eorg, false, this);
 
 			// Setup adaptive tracelength
-			this.wait = bound(WEP_CVAR(WEP_SEEKER, missile_smart_trace_min), vlen(this.origin - trace_endpos), this.wait = WEP_CVAR(WEP_SEEKER, missile_smart_trace_max));
+			this.wait = bound(WEP_CVAR(WEP_SEEKER, missile_smart_trace_min), vlen(this.origin - trace_endpos), WEP_CVAR(WEP_SEEKER, missile_smart_trace_max));
 
 			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
 			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
