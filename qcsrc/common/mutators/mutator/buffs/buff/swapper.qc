@@ -7,76 +7,75 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		return;
 
 	entity player = M_ARGV(0, entity);
-	if (StatusEffects_active(BUFF_SWAPPER, player))
-	{
-		entity head = WarpZone_FindRadius(player.origin, autocvar_g_buffs_swapper_range, false);
-		entity closest = NULL;
-		float head_dist2, best_dist2 = autocvar_g_buffs_swapper_range ** 2;
-		for (; head; head = head.chain)
-			if (IS_PLAYER(head) && DIFF_TEAM(head, player)
-			&& !IS_DEAD(head) && !STAT(FROZEN, head) && !head.vehicle)
-			{
-				head_dist2 = vlen2(head.WarpZone_findradius_dist);
-				if (head_dist2 < best_dist2)
-				{
-					best_dist2 = head_dist2;
-					closest = head;
-				}
-			}
+	if (!StatusEffects_active(BUFF_SWAPPER, player))
+		return;
 
-		if (closest)
+	entity head = WarpZone_FindRadius(player.origin, autocvar_g_buffs_swapper_range, false);
+	entity closest = NULL;
+	float head_dist2, best_dist2 = autocvar_g_buffs_swapper_range ** 2;
+	for (; head; head = head.chain)
+		if (IS_PLAYER(head) && DIFF_TEAM(head, player)
+		&& !IS_DEAD(head) && !STAT(FROZEN, head) && !head.vehicle)
 		{
-			vector my_org = player.origin;
-			vector my_vel = player.velocity;
-			vector my_ang = player.angles;
-			vector their_org = closest.origin;
-			vector their_vel = closest.velocity;
-			vector their_ang = closest.angles;
-
-			Drop_Special_Items(closest);
-
-			MUTATOR_CALLHOOK(PortalTeleport, player); // initiate flag dropper
-
-			setorigin(player, their_org);
-			setorigin(closest, my_org);
-
-			closest.velocity = my_vel;
-			closest.angles = my_ang;
-			if (IS_BOT_CLIENT(closest))
+			head_dist2 = vlen2(head.WarpZone_findradius_dist);
+			if (head_dist2 < best_dist2)
 			{
-				closest.v_angle = closest.angles;
-				bot_aim_reset(closest);
+				best_dist2 = head_dist2;
+				closest = head;
 			}
-			closest.fixangle = true;
-			closest.oldorigin = my_org;
-			closest.oldvelocity = my_vel;
-			player.velocity = their_vel;
-			player.angles = their_ang;
-			if (IS_BOT_CLIENT(player))
-			{
-				player.v_angle = player.angles;
-				bot_aim_reset(player);
-			}
-			player.fixangle = true;
-			player.oldorigin = their_org;
-			player.oldvelocity = their_vel;
-
-			// set pusher so player gets the kill if they fall into void
-			closest.pusher = player;
-			closest.pushltime = time + autocvar_g_maxpushtime;
-			closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
-
-			Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
-			Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
-
-			sound(player, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
-			sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
-
-			// TODO: add a counter to handle how many times one can teleport, and a delay to prevent spam
-			buff_RemoveAll(player, STATUSEFFECT_REMOVE_NORMAL);
-			return true;
 		}
+	if (closest == NULL)
+		return;
+
+	vector my_org = player.origin;
+	vector my_vel = player.velocity;
+	vector my_ang = player.angles;
+	vector their_org = closest.origin;
+	vector their_vel = closest.velocity;
+	vector their_ang = closest.angles;
+
+	Drop_Special_Items(closest);
+
+	MUTATOR_CALLHOOK(PortalTeleport, player); // initiate flag dropper
+
+	setorigin(player, their_org);
+	setorigin(closest, my_org);
+
+	closest.velocity = my_vel;
+	closest.angles = my_ang;
+	if (IS_BOT_CLIENT(closest))
+	{
+		closest.v_angle = closest.angles;
+		bot_aim_reset(closest);
 	}
+	closest.fixangle = true;
+	closest.oldorigin = my_org;
+	closest.oldvelocity = my_vel;
+	player.velocity = their_vel;
+	player.angles = their_ang;
+	if (IS_BOT_CLIENT(player))
+	{
+		player.v_angle = player.angles;
+		bot_aim_reset(player);
+	}
+	player.fixangle = true;
+	player.oldorigin = their_org;
+	player.oldvelocity = their_vel;
+
+	// set pusher so player gets the kill if they fall into void
+	closest.pusher = player;
+	closest.pushltime = time + autocvar_g_maxpushtime;
+	closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
+
+	Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
+
+	sound(player,  CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
+	sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
+
+	// TODO: add a counter to handle how many times one can teleport, and a delay to prevent spam
+	buff_RemoveAll(player, STATUSEFFECT_REMOVE_NORMAL);
+	return true;
 }
 #endif // SVQC
 #ifdef MENUQC
