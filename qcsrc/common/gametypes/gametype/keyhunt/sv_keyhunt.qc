@@ -1362,3 +1362,8 @@ MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 {
 	kh_WaitForPlayers(); // takes care of killing the "missing teams" message
 }
+
+MUTATOR_HOOKFUNCTION(kh, PreferPlayerScore_Clear)
+{
+	return true;
+}

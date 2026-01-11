@@ -315,9 +315,9 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 	race_SpeedAwardFrame(player);
 }
 
-MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
+MUTATOR_HOOKFUNCTION(rc, PreferPlayerScore_Clear)
 {
-	if(g_race_qualifying)
+	if(!g_race_qualifying)
 		return true; // in qualifying, you don't lose score by observing
 }
 
