@@ -2818,6 +2818,11 @@ void PlayerFrame (entity this)
 {
 	Physics_UpdateStats(this);
 
+	// Don't accumulate alivetime whilst afk as xonstat skill ratings are based on score per second.
+	// Time accumulated so far (including the 30s) is retained in the event of a move to spec, disconnect, etc.
+	if (this.alivetime_start && time - CS(this).parm_idlesince >= 30)
+		this.alivetime_start += frametime;
+
 // formerly PreThink code
 
 	if (this.score_frame_dmg)
