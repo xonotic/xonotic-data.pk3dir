@@ -6,57 +6,57 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht, entity p
 
 METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
 {
-    TC(BallStealer, thiswep);
-    if(fire & 1)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
-            if(autocvar_g_nexball_basketball_meter)
-            {
-                if(actor.ballcarried && !STAT(NB_METERSTART, actor))
-                    STAT(NB_METERSTART, actor) = time;
-                else
-                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-            }
-            else
-            {
-                W_Nexball_Attack(thiswep, actor, weaponentity, -1);
-                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-            }
-    if(fire & 2)
-        if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
-        {
-            W_Nexball_Attack2(thiswep, actor, weaponentity);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
-        }
+	TC(BallStealer, thiswep);
+	if(fire & 1)
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
+			if(autocvar_g_nexball_basketball_meter)
+			{
+				if(actor.ballcarried && !STAT(NB_METERSTART, actor))
+					STAT(NB_METERSTART, actor) = time;
+				else
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+			}
+			else
+			{
+				W_Nexball_Attack(thiswep, actor, weaponentity, -1);
+				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+			}
+	if(fire & 2)
+		if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
+		{
+			W_Nexball_Attack2(thiswep, actor, weaponentity);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
+		}
 
-    if(!(fire & 1) && STAT(NB_METERSTART, actor) && actor.ballcarried)
-    {
-        W_Nexball_Attack(thiswep, actor, weaponentity, time - STAT(NB_METERSTART, actor));
-        // DropBall or stealing will set metertime back to 0
-        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-    }
+	if(!(fire & 1) && STAT(NB_METERSTART, actor) && actor.ballcarried)
+	{
+		W_Nexball_Attack(thiswep, actor, weaponentity, time - STAT(NB_METERSTART, actor));
+		// DropBall or stealing will set metertime back to 0
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+	}
 }
 
 METHOD(BallStealer, wr_setup, void(BallStealer this, entity actor, .entity weaponentity))
 {
-    TC(BallStealer, this);
-    //weapon_setup(WEP_PORTO.m_id);
+	TC(BallStealer, this);
+	//weapon_setup(WEP_PORTO.m_id);
 }
 
 METHOD(BallStealer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    TC(BallStealer, thiswep);
+	TC(BallStealer, thiswep);
 }
 
 METHOD(BallStealer, wr_checkammo1, bool(BallStealer this, entity actor, .entity weaponentity))
 {
-    TC(BallStealer, this);
-    return true;
+	TC(BallStealer, this);
+	return true;
 }
 
 METHOD(BallStealer, wr_checkammo2, bool(BallStealer this, entity actor, .entity weaponentity))
 {
-    TC(BallStealer, this);
-    return true;
+	TC(BallStealer, this);
+	return true;
 }
 
 void W_Nexball_Think(entity this)

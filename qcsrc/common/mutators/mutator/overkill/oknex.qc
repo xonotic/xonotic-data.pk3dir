@@ -357,7 +357,7 @@ METHOD(OverkillNex, wr_zoom, bool(entity thiswep, entity actor))
 
 METHOD(OverkillNex, wr_zoomdir, bool(entity thiswep))
 {
-    return button_attack2 && !WEP_CVAR(WEP_OVERKILL_NEX, secondary);
+	return button_attack2 && !WEP_CVAR(WEP_OVERKILL_NEX, secondary);
 }
 
 #endif

@@ -12,7 +12,7 @@ SOUND(HAGEXP1, W_Sound("hagexp1"));
 SOUND(HAGEXP2, W_Sound("hagexp2"));
 SOUND(HAGEXP3, W_Sound("hagexp3"));
 Sound SND_HAGEXP_RANDOM(float rnd) {
-    return REGISTRY_GET(Sounds, SND_HAGEXP1.m_id + rint(rnd * 2));
+	return REGISTRY_GET(Sounds, SND_HAGEXP1.m_id + rint(rnd * 2));
 }
 #endif
 
