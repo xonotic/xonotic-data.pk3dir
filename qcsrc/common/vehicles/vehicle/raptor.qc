@@ -634,8 +634,7 @@ METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 
 	instance.velocity.z += 600;
 
-	instance.avelocity  = '0 0.5 1' * (random() * 400);
-	instance.avelocity -= '0 0.5 1' * (random() * 400);
+	instance.avelocity = '0 0.5 1' * 400 * (random() - random());
 
 	instance.colormod = '-0.5 -0.5 -0.5';
 	settouch(instance, raptor_blowup);

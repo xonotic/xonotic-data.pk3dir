@@ -21,10 +21,8 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
 		}
 		if (!isPlayer)
 		{
-			string tagname = (veh.cnt)
-				? (veh.cnt = 0, "tag_fire1")
-				: (veh.cnt = 1, "tag_fire2");
-			vector vshotorg = gettaginfo(veh, gettagindex(veh, tagname));
+			vector vshotorg = gettaginfo(veh, gettagindex(veh, (veh.cnt ? "tag_fire1" : "tag_fire2")));
+			veh.cnt = !veh.cnt;
 			w_shotorg = vshotorg;
 			w_shotdir = v_forward;
 

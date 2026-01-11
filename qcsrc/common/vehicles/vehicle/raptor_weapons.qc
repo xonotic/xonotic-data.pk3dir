@@ -21,9 +21,14 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
 		if (veh)
 		{
 			++veh.misc_bulletcounter;
-			org = (veh.misc_bulletcounter <= 2)
-				? gettaginfo(veh.gun1, gettagindex(veh.gun1, "fire1"))
-				: (((veh.misc_bulletcounter >= 4) ? veh.misc_bulletcounter = 0 : 0), gettaginfo(veh.gun2, gettagindex(veh.gun2, "fire1")));
+			if (veh.misc_bulletcounter <= 2)
+				org = gettaginfo(veh.gun1, gettagindex(veh.gun1, "fire1"));
+			else
+			{
+				org = gettaginfo(veh.gun2, gettagindex(veh.gun2, "fire1"));
+				if (veh.misc_bulletcounter >= 4)
+					veh.misc_bulletcounter = 0;
+			}
 			dir = v_forward;
 			veh.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
 			actor.cnt = time;
@@ -128,11 +133,12 @@ void raptor_bomblet_touch(entity this, entity toucher)
 
 void raptor_bomb_burst(entity this)
 {
+	vector norm_vel = normalize(this.velocity);
 	if (this.cnt > time
 	&& autocvar_g_vehicle_raptor_bomblet_alt)
 	{
 		this.nextthink = time;
-		traceline(this.origin, this.origin + (normalize(this.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, this);
+		traceline(this.origin, this.origin + (norm_vel * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, this);
 		if (trace_fraction == 1.0
 		|| vdist(this.origin - this.owner.origin, <, autocvar_g_vehicle_raptor_bomblet_radius))
 		{
@@ -144,6 +150,7 @@ void raptor_bomb_burst(entity this)
 	Damage_DamageInfo(this.origin, 0, 0, 0, '0 0 0', DEATH_VH_RAPT_FRAGMENT.m_id, 0, this);
 
 	entity bomblet;
+	float speed = vlen(this.velocity);
 	for (int i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
 	{
 		bomblet = new(raptor_bomb_bomblet);
@@ -155,7 +162,7 @@ void raptor_bomb_burst(entity this)
 		bomblet.nextthink  = time + 5;
 		bomblet.owner      = this.owner;
 		bomblet.realowner  = this.realowner;
-		bomblet.velocity   = normalize(normalize(this.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(this.velocity);
+		bomblet.velocity   = normalize(norm_vel + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * speed;
 
 		PROJECTILE_MAKETRIGGER(bomblet);
 		CSQCProjectile(bomblet, true, PROJECTILE_RAPTORBOMBLET, true);
