@@ -9360,3 +9360,15 @@ effect tr_laser
 effect tr_hlac
 	lightcolor 1 2 0.5
 	lightradius 100
+effect dom_capture
+	type spark
+	airfriction 4
+	alpha 224 256 100
+	bounce 1.500000
+	count 25
+	gravity -0.100000
+	originjitter 5 5 5
+	sizeincrease 2
+	size 8 12
+	tex 41 41
+	velocityjitter 200 200 50
