@@ -9626,4 +9626,23 @@ SUB(hmg_muzzleflash) {
 	MY(velocitymultiplier) = 3;
 }
 
+DEF(dom_capture);
+SUB(dom_capture) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 224;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 100;
+	MY(bounce) = 1.500000;
+	MY(count) = 25;
+	MY(gravity) = -0.100000;
+	MY(originjitter) = '5.0 5.0 5.0';
+	MY(sizeincrease) = 2;
+	MY(size_min) = 8;
+	MY(size_max) = 12;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 20.0';
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
