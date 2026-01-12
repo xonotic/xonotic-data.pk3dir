@@ -220,6 +220,8 @@ EFFECT(0, ONS_GENERATOR_EXPLODE2,   "onslaught_generator_finalexplosion")
 // FIXME: needs custom effect
 EFFECT(0, ONS_SHOCKWAVE,            "electro_combo")
 
+EFFECT(0, DOM_CAPTURE,              "dom_capture")
+
 
 EFFECT(0, LASER_DEADLY,             "laser_deadly")
 EFFECT(1, FLAC_TRAIL,               "TR_SEEKER")
