@@ -612,6 +612,11 @@ MUTATOR_HOOKFUNCTION(tka, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(tka, PreferPlayerScore_Clear)
+{
+	return true;
+}
+
 void tka_Initialize()
 {
 	tka_teams = autocvar_g_tka_teams_override;

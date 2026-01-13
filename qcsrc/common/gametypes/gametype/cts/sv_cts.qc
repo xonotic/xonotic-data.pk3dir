@@ -312,11 +312,6 @@ MUTATOR_HOOKFUNCTION(cts, Damage_Calculate)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(cts, ForbidPlayerScore_Clear)
-{
-	return true; // in CTS, you don't lose score by observing
-}
-
 MUTATOR_HOOKFUNCTION(cts, GetRecords)
 {
 	int record_page = M_ARGV(0, int);

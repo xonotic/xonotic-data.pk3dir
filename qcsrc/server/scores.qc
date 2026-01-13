@@ -25,6 +25,7 @@ int scores_flags_primary;
 int teamscores_flags_primary;
 var .int scores_secondary;
 int scores_flags_secondary;
+int autocvar_g_score_resetonjoin;
 
 // returns cmp value
 int ScoreField_Compare(entity t1, entity t2, .float field, int fieldflags, int previous)
@@ -284,15 +285,11 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 
 bool PlayerScore_Clear(entity player)
 {
-	entity sk;
-
-	if(teamscores_entities_count)
+	if (autocvar_g_score_resetonjoin == 0
+	|| (autocvar_g_score_resetonjoin == -1 && !MUTATOR_CALLHOOK(PreferPlayerScore_Clear)))
 		return false;
 
-	if(MUTATOR_CALLHOOK(ForbidPlayerScore_Clear))
-		return false;
-
-	sk = CS(player).scorekeeper;
+	entity sk = CS(player).scorekeeper;
 	FOREACH(Scores, true, {
 		if(sk.(scores(it)) != 0 && scores_label(it) != "")
 			sk.SendFlags |= BIT(i % 16);

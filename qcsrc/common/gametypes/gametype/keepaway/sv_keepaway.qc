@@ -573,3 +573,8 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 	while (frag_target.ballcarried)
 		ka_DropEvent(frag_target);
 }
+
+MUTATOR_HOOKFUNCTION(ka, PreferPlayerScore_Clear)
+{
+	return true;
+}

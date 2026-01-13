@@ -638,12 +638,6 @@ MUTATOR_HOOKFUNCTION(lms, SetStartItems)
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 }
 
-MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
-{
-	// don't clear player score
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 {
 	if (autocvar_g_lms_items || autocvar_g_pickup_items > 0)

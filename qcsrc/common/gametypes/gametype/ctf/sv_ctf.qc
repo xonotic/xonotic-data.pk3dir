@@ -2709,6 +2709,11 @@ MUTATOR_HOOKFUNCTION(ctf, LogDeath_AppendItemCodes)
 		M_ARGV(1, string) = strcat(M_ARGV(1, string), "F"); // item codes
 }
 
+MUTATOR_HOOKFUNCTION(ctf, PreferPlayerScore_Clear)
+{
+	return true;
+}
+
 
 // ==========
 // Spawnfuncs
