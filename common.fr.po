@@ -16,14 +16,14 @@
 # RedGuff <domsau2@yahoo.fr>, 2014
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2013
 # Hugo Locurcio, 2013
-# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2025
+# Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -2248,6 +2248,10 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically progress across the map to reach the enemy generator."
 msgstr ""
+"Comme votre équipe ne peut capturer un point de contrôle que s'il est relié "
+"à un autre point de contrôle actuellement détenu par votre équipe, vous "
+"devez systématiquement progresser à travers la carte pour atteindre le "
+"générateur ennemi."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2256,6 +2260,10 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"Un point de contrôle est capturé en y passant à travers, ce qui déclenche sa "
+"construction automatique. Les points de contrôle de l'équipe adverse sont "
+"détruits en attaquant le « robot d'information » qui les survole, ce qui "
+"rend le point de contrôle neutre une fois qu'il est détruit."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
@@ -2344,6 +2352,11 @@ msgid ""
 "all hunters or survive until time runs out. The trick lies in the fact that "
 "survivors don't know who else is a survivor."
 msgstr ""
+"%s est un type de partie chasseur-survivant impliquant deux équipes, où "
+"l'objectif des chasseurs est d'éliminer tous les survivants, et celui des "
+"survivants est d'éliminer tous les chasseurs ou de survivre jusqu'à la fin "
+"du temps imparti. La difficulté réside dans le fait que les survivants ne "
+"savent pas qui sont les autres survivants."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2477,6 +2490,8 @@ msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
 msgstr ""
+"Concourez avec votre équipe pour infliger le plus de dégâts et remporter le "
+"plus de frags possibles dans ce combat chaotique"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -10008,7 +10023,7 @@ msgstr "Autoriser les spectateurs"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even in warmup"
-msgstr ""
+msgstr "Activer même en échauffement"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
@@ -12629,7 +12644,7 @@ msgstr "Apparence des joueurs semblable à la mienne"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Force player colors to mine:"
-msgstr ""
+msgstr "Couleur des joueurs identique à la mienne :"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""

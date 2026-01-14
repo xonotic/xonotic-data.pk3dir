@@ -9,7 +9,7 @@
 # NotThatPrivate Yes <henriqueferreira2009@gmail.com>, 2015
 # Ricardo Manuel da Cruz Coelho da Silva <ricardo.mccs@gmail.com>, 2015
 # Rui <xymarior@yandex.com>, 2018
-# yy0zz, 2021-2025
+# yy0zz, 2021-2026
 # yy0zz, 2021
 # zerowhy . <anymailz@tutanota.com>, 2021
 msgid ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2026\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -2219,6 +2219,9 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically progress across the map to reach the enemy generator."
 msgstr ""
+"Como sua equipe só pode capturar um ponto de controle se estiver conectado a "
+"um outro ponto de controle atualmente possuído por sua equipe, você tem que "
+"sistematicamente varrer o mapa para chegar ao gerador inimigo."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2227,6 +2230,10 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"Um ponto de controle é capturado ao andar nele, desencadeando sua construção "
+"automática. Um ponto de controle da equipe adversária é destruído ao atacar "
+"o \"robô info\" que o sobrevoa, convertendo-o em um ponto neutro assim que "
+"for destruído."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
@@ -2312,6 +2319,11 @@ msgid ""
 "all hunters or survive until time runs out. The trick lies in the fact that "
 "survivors don't know who else is a survivor."
 msgstr ""
+"%s é um tipo de jogo de duas equipes, a de caçadores e a de sobreviventes, "
+"no qual o objetivo dos caçadores é executar todos os sobreviventes, e o "
+"objetivo dos sobreviventes é executar todos os caçadores ou sobreviver até "
+"que o tempo acabe. Porém, os sobreviventes não sabem quais são os outros "
+"sobreviventes."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2441,6 +2453,7 @@ msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
 msgstr ""
+"Compita com sua equipe pelo máximo de dano e execuções neste alvoroço caótico"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -9850,7 +9863,7 @@ msgstr "Ativar observação"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even in warmup"
-msgstr ""
+msgstr "Ativar inclusive no aquecimento"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
@@ -9919,7 +9932,7 @@ msgstr "Ativar"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
 msgid "Enable even observing"
-msgstr "Ativar observação equilibrada"
+msgstr "Ativar inclusive ao observar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:20
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:35
@@ -12474,7 +12487,7 @@ msgstr "Forçar modelos dos jogadores para ficarem iguais ao meu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Force player colors to mine:"
-msgstr ""
+msgstr "Forçar cores de jogadores a ficarem iguais às minhas:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""
@@ -13021,7 +13034,7 @@ msgstr "Somente cvars modificadas"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:46
 msgid "Search in cvar descriptions too"
-msgstr "Pesquisar nas descrições das cvars também"
+msgstr "Pesquisar também nas descrições das cvars"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Setting:"
