@@ -80,8 +80,7 @@ void door_rotating_go_up(entity this, entity oth)
 	this.state = STATE_UP;
 	SUB_CalcAngleMove (this, this.pos2, TSPEED_LINEAR, this.speed, door_rotating_hit_top);
 
-	string oldmessage;
-	oldmessage = this.message;
+	string oldmessage = this.message;
 	this.message = "";
 	SUB_UseTargets(this, NULL, oth); // TODO: is oth needed here?
 	this.message = oldmessage;
@@ -120,7 +119,7 @@ spawnfunc(func_door_rotating)
 
 	if (this.angles_y==0) this.angles_y = 90;
 
-	this.movedir = this.movedir * this.angles_y;
+	this.movedir *= this.angles_y;
 	this.angles = '0 0 0';
 
 	this.avelocity = this.movedir;

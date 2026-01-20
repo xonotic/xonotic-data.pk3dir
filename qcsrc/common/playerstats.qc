@@ -908,11 +908,9 @@ void PlayerInfo_AddPlayer(entity e)
 	if(playerinfo_db < 0)
 		return;
 
-	string key;
-	key = sprintf("#%d:*", e.playerid); // TODO: use hashkey instead?
+	string key = sprintf("#%d:*", e.playerid); // TODO: use hashkey instead?
 
-	string p;
-	p = db_get(playerinfo_db, key);
+	string p = db_get(playerinfo_db, key);
 	if(p == "")
 	{
 		if(playerinfo_last)
@@ -932,11 +930,9 @@ void PlayerInfo_AddItem(entity e, string item_id, string val)
 	if(playerinfo_db < 0)
 		return;
 
-	string key;
-	key = sprintf("*:%s", item_id);
+	string key = sprintf("*:%s", item_id);
 
-	string p;
-	p = db_get(playerinfo_db, key);
+	string p = db_get(playerinfo_db, key);
 	if(p == "")
 	{
 		if(playerinfo_events_last)
@@ -959,16 +955,15 @@ string PlayerInfo_GetItem(entity e, string item_id)
 	if(playerinfo_db < 0)
 		return "";
 
-	string key;
-	key = sprintf("#%d:%s",  e.playerid, item_id);
+	string key = sprintf("#%d:%s",  e.playerid, item_id);
 	return db_get(playerinfo_db, key);
 }
 
 string PlayerInfo_GetItemLocal(string item_id)
 {
-        entity p = spawn();
-        p.playerid = 0;
-        return PlayerInfo_GetItem(p, item_id);
+	entity p = spawn();
+	p.playerid = 0;
+	return PlayerInfo_GetItem(p, item_id);
 }
 
 void PlayerInfo_ready(entity fh, entity p, float status)
@@ -976,26 +971,26 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 	float n;
 	string s;
 
-        PlayerInfo_AddPlayer(p);
+	PlayerInfo_AddPlayer(p);
 
 	switch(status)
 	{
-                case URL_READY_CANWRITE:
-                        print("-- Sending data to player stats server\n");
+		case URL_READY_CANWRITE:
+			print("-- Sending data to player stats server\n");
 			url_fputs(fh, "V 1\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
 #ifdef MENUQC
-                        url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
-                        url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
-                        url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
-                        url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
+			url_fputs(fh, sprintf("l %s\n", cvar_string("_menu_prvm_language"))); // language
+			url_fputs(fh, sprintf("c %s\n", cvar_string("_menu_prvm_country"))); // country
+			url_fputs(fh, sprintf("n %s\n", cvar_string("_cl_name"))); // name
+			url_fputs(fh, sprintf("m %s %s\n", cvar_string("_cl_playermodel"), cvar_string("_cl_playerskin"))); // model/skin
 #endif
 			url_fputs(fh, "\n");
 			url_fclose(fh);
-                        break;
-                case URL_READY_CANREAD:
+			break;
+		case URL_READY_CANREAD:
 			print("-- Got response from player stats server:\n");
 			string gametype = string_null;
 			while((s = url_fgets(fh)))
@@ -1006,7 +1001,7 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 
 				n = tokenizebyseparator(s, " "); // key (value) data
 				if (n == 1)
-                                        continue;
+					continue;
 				else if (n == 2)
 				{
 					key = argv(0);
@@ -1014,9 +1009,9 @@ void PlayerInfo_ready(entity fh, entity p, float status)
 				}
 				else if (n >= 3)
 				{
-                                        key = argv(0);
-                                        value = argv(1);
-                                        data = argv(2);
+					key = argv(0);
+					value = argv(1);
+					data = argv(2);
 				}
 
 				if (data == "")
@@ -1072,13 +1067,12 @@ void PlayerInfo_Init()
 #ifdef SVQC
 void PlayerInfo_Basic(entity p)
 {
-        print("-- Getting basic PlayerInfo for player ",ftos(p.playerid)," (SVQC)\n");
+	print("-- Getting basic PlayerInfo for player ",ftos(p.playerid)," (SVQC)\n");
 
 	if(playerinfo_db < 0)
 		return;
 
-        string uri;
-        uri = autocvar_g_playerinfo_uri;
+	string uri = autocvar_g_playerinfo_uri;
 	if(uri != "" && p.crypto_idfp != "")
 	{
 		uri = strcat(uri, "/elo/", uri_escape(p.crypto_idfp));
@@ -1091,17 +1085,16 @@ void PlayerInfo_Basic(entity p)
 #ifdef MENUQC
 void PlayerInfo_Details()
 {
-        print("-- Getting detailed PlayerInfo for local player (MENUQC)\n");
+	print("-- Getting detailed PlayerInfo for local player (MENUQC)\n");
 
 	if(playerinfo_db < 0)
 		return;
 
-        string uri;
-        uri = autocvar_g_playerinfo_uri; // FIXME
+	string uri = autocvar_g_playerinfo_uri; // FIXME
 	if(uri != "" && crypto_getmyidstatus(0) > 0)
 	{
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
-                uri = strcat(uri, "/player/me");
+		uri = strcat(uri, "/player/me");
 		print("Retrieving playerstats from URL: ", uri, "\n");
 		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, NULL);
 	}
@@ -1112,13 +1105,12 @@ void PlayerInfo_Details()
 // FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qh:885)
 void PlayerInfo_Details()
 {
-        print("-- Getting detailed PlayerInfo for local player (CSQC)\n");
+	print("-- Getting detailed PlayerInfo for local player (CSQC)\n");
 
 	if(playerinfo_db < 0)
 		return;
 
-        string uri;
-        uri = autocvar_g_playerinfo_uri; // FIXME
+	string uri = autocvar_g_playerinfo_uri; // FIXME
 	if(uri != "" && crypto_getmyidstatus(0) > 0)
 	{
 		uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));

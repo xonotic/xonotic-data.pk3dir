@@ -3,14 +3,16 @@
 #include "bumblebee_weapons.qh"
 
 CLASS(Bumblebee, Vehicle)
+#ifdef SVQC
 /* spawnflags */ ATTRIB(Bumblebee, spawnflags, int, VHF_DMGSHAKE);
 /* mins       */ ATTRIB(Bumblebee, m_mins, vector, '-245 -130 -130');
 /* maxs       */ ATTRIB(Bumblebee, m_maxs, vector, '230 130 130');
+#endif
+#ifdef GAMEQC
 /* view offset*/ ATTRIB(Bumblebee, view_ofs, vector, '0 0 300');
 /* view dist  */ ATTRIB(Bumblebee, height, float, 450);
-#ifdef GAMEQC
-/* model	  */ ATTRIB(Bumblebee, mdl, string, "models/vehicles/bumblebee_body.dpm");
-/* model	  */ ATTRIB(Bumblebee, model, string, "models/vehicles/bumblebee_body.dpm");
+/* model      */ ATTRIB(Bumblebee, mdl, string, "models/vehicles/bumblebee_body.dpm");
+/* model      */ ATTRIB(Bumblebee, model, string, "models/vehicles/bumblebee_body.dpm");
 /* head_model */ ATTRIB(Bumblebee, head_model, string, "");
 /* hud_model  */ ATTRIB(Bumblebee, hud_model, string, "models/vehicles/spiderbot_cockpit.dpm");
 /* tags       */ ATTRIB(Bumblebee, tag_head, string, "");
@@ -21,6 +23,7 @@ CLASS(Bumblebee, Vehicle)
 /* fullname   */ ATTRIB(Bumblebee, m_name, string, _("Bumblebee"));
 /* icon       */ ATTRIB(Bumblebee, m_icon, string, "vehicle_bumble");
 ENDCLASS(Bumblebee)
+
 REGISTER_VEHICLE(BUMBLEBEE, NEW(Bumblebee));
 
 #ifdef GAMEQC

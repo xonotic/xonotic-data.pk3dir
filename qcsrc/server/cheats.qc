@@ -106,8 +106,7 @@ float CheatsAllowed(entity this, float imp, int argc, float cheatframe, bool log
 float num_autoscreenshot;
 void info_autoscreenshot_findtarget(entity this)
 {
-	entity e;
-	e = find(NULL, targetname, this.target);
+	entity e = find(NULL, targetname, this.target);
 	if(!e)
 	{
 		objerror(this, "Missing target. FAIL!");
@@ -170,16 +169,16 @@ float CheatImpulse(entity this, int imp)
 		case CHIMPULSE_CLONE_MOVING.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			makevectors (this.v_angle);
-			this.velocity = this.velocity + v_forward * 300;
+			this.velocity += v_forward * 300;
 			CopyBody(this, 1);
-			this.lip += 1;
-			this.velocity = this.velocity - v_forward * 300;
+			++this.lip;
+			this.velocity -= v_forward * 300;
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_CLONE_STANDING.impulse:
 			IS_CHEAT(this, imp, 0, 0);
 			CopyBody(this, 0);
-			this.lip += 1;
+			++this.lip;
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_GIVE_ALL.impulse:
@@ -291,8 +290,7 @@ float drag_lastcnt;
 float CheatCommand(entity this, int argc)
 {
 	BEGIN_CHEAT_FUNCTION();
-	string cmd;
-	cmd = argv(0);
+	string cmd = argv(0);
 	switch(cmd)
 	{
 		float effectnum, f;
@@ -555,7 +553,7 @@ float CheatCommand(entity this, int argc)
 					{
 						if((e.cnt <= 0 && ent.cnt == 0) || e.cnt == ent.cnt)
 						{
-							start = start + ent.origin;
+							start += ent.origin;
 							++effectnum;
 						}
 					}
@@ -859,7 +857,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 
 	dragger.dragdistance = vlen(touchpoint - dragger.origin - dragger.view_ofs);
 	dragger.draglocalangle = draggee.angles.y - dragger.v_angle.y;
-	touchpoint = touchpoint - gettaginfo(draggee, 0);
+	touchpoint -= gettaginfo(draggee, 0);
 	tagscale = (vlen(v_forward) ** -2);
 	dragger.draglocalvector_x = touchpoint * v_forward * tagscale;
 	dragger.draglocalvector_y = touchpoint * v_right * tagscale;
@@ -870,8 +868,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 
 void Drag_Finish(entity dragger)
 {
-	entity draggee;
-	draggee = dragger.dragentity;
+	entity draggee = dragger.dragentity;
 	if(dragger)
 		dragger.dragentity = NULL;
 	draggee.draggedby = NULL;
@@ -945,25 +942,21 @@ void Drag_MoveBackward(entity dragger)
 
 void Drag_Update(entity dragger)
 {
-	vector curorigin, neworigin, goodvelocity;
-	float f;
-	entity draggee;
-
-	draggee = dragger.dragentity;
+	entity draggee = dragger.dragentity;
 	UNSET_ONGROUND(draggee);
 
-	curorigin = gettaginfo(draggee, 0);
-	curorigin = curorigin + v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
+	vector curorigin = gettaginfo(draggee, 0);
+	curorigin += v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
 	makevectors(dragger.v_angle);
-	neworigin = dragger.origin + dragger.view_ofs + v_forward * dragger.dragdistance;
-	goodvelocity = (neworigin - curorigin) * (1 / frametime);
+	vector neworigin = dragger.origin + dragger.view_ofs + v_forward * dragger.dragdistance;
+	vector goodvelocity = (neworigin - curorigin) * (1 / frametime);
 
 	while(draggee.angles.y - dragger.v_angle.y - dragger.draglocalangle > 180)
 		dragger.draglocalangle += 360;
 	while(draggee.angles.y - dragger.v_angle.y - dragger.draglocalangle <= -180)
 		dragger.draglocalangle -= 360;
 
-	f = min(frametime * 10, 1);
+	float f = min(frametime * 10, 1);
 	draggee.velocity = draggee.velocity * (1 - f) + goodvelocity * f;
 
 	if(Drag_MayChangeAngles(draggee))

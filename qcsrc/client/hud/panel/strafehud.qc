@@ -778,12 +778,10 @@ void HUD_StrafeHUD()
 		line_height_offset = (line_height_offset - panel_size.y) / 2;
 
 		// further offset the top text offset if the top arrow is drawn
-		float angle_offset_top;
-		angle_offset_top = line_height_offset + max_top_arrow_size;
+		float angle_offset_top = line_height_offset + max_top_arrow_size;
 
 		// further offset the bottom text offset if the bottom arrow is drawn
-		float angle_offset_bottom;
-		angle_offset_bottom = line_height_offset + max_bottom_arrow_size;
+		float angle_offset_bottom = line_height_offset + max_bottom_arrow_size;
 
 		// make sure text does not draw inside the strafehud bar
 		text_offset_top = max(angle_offset_top, text_offset_top);

@@ -4,8 +4,7 @@
 
 entity makeXonoticPicker()
 {
-	entity me;
-	me = NEW(XonoticPicker);
+	entity me = NEW(XonoticPicker);
 	me.configureXonoticPicker(me);
 	return me;
 }

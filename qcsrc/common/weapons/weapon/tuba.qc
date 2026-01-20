@@ -12,87 +12,82 @@
 
 bool W_Tuba_HasPlayed(entity pl, .entity weaponentity, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
-	float i, j, mmin, mmax, nolength;
 	float n = tokenize_console(melody);
-	if(n > pl.(weaponentity).tuba_lastnotes_cnt)
+	if (n > pl.(weaponentity).tuba_lastnotes_cnt)
 		return false;
 	float pitchshift = 0;
 
-	if(instrument >= 0)
-		if(pl.(weaponentity).tuba_instrument != instrument)
-			return false;
+	if (instrument >= 0 && pl.(weaponentity).tuba_instrument != instrument)
+		return false;
 
 	// verify notes...
-	nolength = false;
-	for(i = 0; i < n; ++i)
+	int i;
+	bool nolength = false;
+	for (i = 0; i < n; ++i)
 	{
 		vector v = pl.(weaponentity).(tuba_lastnotes[(pl.(weaponentity).tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
 		float ai = stof(argv(n - i - 1));
 		float np = floor(ai);
-		if(ai == np)
+		if (ai == np)
 			nolength = true;
 		// n counts the last played notes BACKWARDS
-		// _x is start
-		// _y is end
-		// _z is note pitch
-		if(ignorepitch && i == 0)
-		{
+		// .x is start
+		// .y is end
+		// .z is note pitch
+		if (ignorepitch && i == 0)
 			pitchshift = np - v.z;
-		}
-		else
-		{
-			if(v.z + pitchshift != np)
-				return false;
-		}
+		else if (v.z + pitchshift != np)
+			return false;
 	}
 
 	// now we know the right NOTES were played
-	if(!nolength)
+	if (!nolength)
 	{
 		// verify rhythm...
-		float ti = 0;
-		if(maxtempo > 0)
+		float mmin, mmax;
+		if (maxtempo > 0)
 			mmin = 240 / maxtempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
 		else
 			mmin = 0;
-		if(mintempo > 0)
+		if (mintempo > 0)
 			mmax = 240 / mintempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
 		else
 			mmax = 240; // you won't try THAT hard... (tempo 1)
 		//printf("initial tempo rules: %f %f\n", mmin, mmax);
 
-		for(i = 0; i < n; ++i)
+		float ti = 0;
+		for (i = 0; i < n; ++i)
 		{
 			vector vi = pl.(weaponentity).(tuba_lastnotes[(pl.(weaponentity).tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
 			float ai = stof(argv(n - i - 1));
 			ti -= 1 / (ai - floor(ai));
 			float tj = ti;
-			for(j = i+1; j < n; ++j)
+			for (int j = i + 1; j < n; ++j)
 			{
 				vector vj = pl.(weaponentity).(tuba_lastnotes[(pl.(weaponentity).tuba_lastnotes_last - j + MAX_TUBANOTES) % MAX_TUBANOTES]);
 				float aj = stof(argv(n - j - 1));
-				tj -= (aj - floor(aj));
+				tj -= aj - floor(aj);
 
 				// note i should be at m*ti+b
 				// note j should be at m*tj+b
 				// so:
 				// we have a LINE l, so that
-				// vi_x <= l(ti) <= vi_y
-				// vj_x <= l(tj) <= vj_y
+				// vi.x <= l(ti) <= vi.y
+				// vj.x <= l(tj) <= vj.y
 				// what is m?
 
-				// vi_x <= vi_y <= vj_x <= vj_y
+				// vi.x <= vi.y <= vj.x <= vj.y
 				// ti <= tj
-				//printf("first note: %f to %f, should be %f\n", vi_x, vi_y, ti);
-				//printf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj);
-				//printf("m1 = %f\n", (vi_x - vj_y) / (ti - tj));
-				//printf("m2 = %f\n", (vi_y - vj_x) / (ti - tj));
+				//printf("first note: %f to %f, should be %f\n", vi.x, vi.y, ti);
+				//printf("second note: %f to %f, should be %f\n", vj.x, vj.y, tj);
+				//printf("m1 = %f\n", (vi.x - vj.y) / (ti - tj));
+				//printf("m2 = %f\n", (vi.y - vj.x) / (ti - tj));
 				mmin = max(mmin, (vi.x - vj.y) / (ti - tj)); // lower bound
 				mmax = min(mmax, (vi.y - vj.x) / (ti - tj)); // upper bound
 			}
 		}
 
-		if(mmin > mmax) // rhythm fail
+		if (mmin > mmax) // rhythm fail
 			return false;
 	}
 
@@ -141,10 +136,10 @@ void W_Tuba_NoteOff(entity this)
 int W_Tuba_GetNote(entity pl, int hittype)
 {
 	float movestate = 5;
-	if (CS(pl).movement.x < 0)		movestate -= 3;
-	else if (CS(pl).movement.x > 0)	movestate += 3;
-	if (CS(pl).movement.y < 0)		movestate -= 1;
-	else if (CS(pl).movement.y > 0)	movestate += 1;
+	if (CS(pl).movement.x < 0)       movestate -= 3;
+	else if (CS(pl).movement.x > 0)  movestate += 3;
+	if (CS(pl).movement.y < 0)       movestate -= 1;
+	else if (CS(pl).movement.y > 0)  movestate += 1;
 
 	int note = 0;
 	switch (movestate)
@@ -169,25 +164,26 @@ int W_Tuba_GetNote(entity pl, int hittype)
 		case 8: note = +4; break; // e
 		case 9: note = -1; break; // B
 	}
-	if(PHYS_INPUT_BUTTON_CROUCH(pl))
+	if (PHYS_INPUT_BUTTON_CROUCH(pl))
 		note -= 12;
-	if(PHYS_INPUT_BUTTON_JUMP(pl))
+	if (PHYS_INPUT_BUTTON_JUMP(pl))
 		note += 12;
-	if(hittype & HITTYPE_SECONDARY)
+	if (hittype & HITTYPE_SECONDARY)
 		note += 7;
 
 	// we support two kinds of tubas, those tuned in Eb and those tuned in C
 	// kind of tuba currently is player slot number, or team number if in
 	// teamplay
 	// that way, holes in the range of notes are "plugged"
-	if(teamplay)
+	if (teamplay)
 	{
-		if(pl.team == NUM_TEAM_2 || pl.team == NUM_TEAM_4)
+		if (pl.team == NUM_TEAM_2
+		||  pl.team == NUM_TEAM_4)
 			note += 3;
 	}
 	else
 	{
-		if(pl.clientcolors & 1)
+		if (pl.clientcolors & 1)
 			note += 3;
 	}
 
@@ -209,7 +205,8 @@ int W_Tuba_GetNote(entity pl, int hittype)
 bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 {
 	msg_entity = to;
-	if (!sound_allowed(MSG_ONE, this.realowner)) return false;
+	if (!sound_allowed(MSG_ONE, this.realowner))
+		return false;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
 	WriteByte(MSG_ENTITY, sf);
@@ -222,39 +219,38 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 		WriteByte(MSG_ENTITY, f);
 	}
 	if (sf & 2)
-	{
 		WriteVector(MSG_ENTITY, this.origin);
-	}
 	return true;
 }
 
 void W_Tuba_NoteThink(entity this)
 {
-	float dist_mult;
-	float vol0, vol1;
-	vector dir0, dir1;
-	vector v;
-	if(time > this.teleport_time)
+	if (time > this.teleport_time)
 	{
 		W_Tuba_NoteOff(this);
 		return;
 	}
 	this.nextthink = time;
-	dist_mult = WEP_CVAR(WEP_TUBA, attenuation) / autocvar_snd_soundradius;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this.realowner, {
+
+	float vol0, vol1;
+	vector dir0, dir1;
+	vector v;
+	float dist_mult = WEP_CVAR(WEP_TUBA, attenuation) / autocvar_snd_soundradius;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this.realowner,
+	{
 		v = this.origin - (it.origin + it.view_ofs);
 		vol0 = max(0, 1 - vlen(v) * dist_mult);
 		dir0 = normalize(v);
 		v = this.realowner.origin - (it.origin + it.view_ofs);
 		vol1 = max(0, 1 - vlen(v) * dist_mult);
 		dir1 = normalize(v);
-		if(fabs(vol0 - vol1) > 0.005) // 0.5 percent change in volume
+		if (fabs(vol0 - vol1) > 0.005) // 0.5 percent change in volume
 		{
 			setorigin(this, this.realowner.origin);
 			this.SendFlags |= 2;
 			break;
 		}
-		if(dir0 * dir1 < 0.9994) // 2 degrees change in angle
+		if (dir0 * dir1 < 0.9994) // 2 degrees change in angle
 		{
 			setorigin(this, this.realowner.origin);
 			this.SendFlags |= 2;
@@ -268,22 +264,18 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	float n = W_Tuba_GetNote(actor, hittype);
 
 	hittype = HITTYPE_SOUND;
-	if(actor.(weaponentity).tuba_instrument & 1)
+	if (actor.(weaponentity).tuba_instrument & 1)
 		hittype |= HITTYPE_SECONDARY;
-	if(actor.(weaponentity).tuba_instrument & 2)
+	if (actor.(weaponentity).tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
 
 	W_SetupShot(actor, weaponentity, false, 2, SND_Null, 0, WEP_CVAR(WEP_TUBA, damage), hittype | WEP_TUBA.m_id);
 
-	if(actor.(weaponentity).tuba_note)
-	{
-		if(actor.(weaponentity).tuba_note.cnt != n || actor.(weaponentity).tuba_note.tuba_instrument != actor.(weaponentity).tuba_instrument)
-		{
-			W_Tuba_NoteOff(actor.(weaponentity).tuba_note);
-		}
-	}
+	if (actor.(weaponentity).tuba_note
+	&& (actor.(weaponentity).tuba_note.cnt != n || actor.(weaponentity).tuba_note.tuba_instrument != actor.(weaponentity).tuba_instrument))
+		W_Tuba_NoteOff(actor.(weaponentity).tuba_note);
 
-	if(!actor.(weaponentity).tuba_note)
+	if (!actor.(weaponentity).tuba_note)
 	{
 		entity note = new(tuba_note);
 		note.weaponentity_fld = weaponentity;
@@ -300,24 +292,32 @@ void W_Tuba_NoteOn(entity actor, .entity weaponentity, float hittype)
 	actor.(weaponentity).tuba_note.teleport_time = time + WEP_CVAR(WEP_TUBA, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
 	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * autocvar_cl_tuba_volume, 1), autocvar_cl_tuba_attenuation);
-	RadiusDamage(actor, actor, WEP_CVAR(WEP_TUBA, damage), WEP_CVAR(WEP_TUBA, edgedamage), WEP_CVAR(WEP_TUBA, radius), NULL, NULL, WEP_CVAR(WEP_TUBA, force), hittype | WEP_TUBA.m_id, weaponentity, NULL);
+	RadiusDamage(actor, actor,
+		WEP_CVAR(WEP_TUBA, damage), 
+		WEP_CVAR(WEP_TUBA, edgedamage),
+		WEP_CVAR(WEP_TUBA, radius),
+		NULL,
+		NULL,
+		WEP_CVAR(WEP_TUBA, force),
+		hittype | WEP_TUBA.m_id,
+		weaponentity,
+		NULL
+	);
 
-	if(time > actor.(weaponentity).tuba_smoketime)
+	if (time > actor.(weaponentity).tuba_smoketime)
 	{
 		// FIXME gettaginfo(actor.(weaponentity), 0) doesn't return the real origin of the weapon
 		vector org = gettaginfo(actor.(weaponentity), 0);
-		if(actor.(weaponentity).tuba_instrument == 1)
+		if (actor.(weaponentity).tuba_instrument == 1)
 			Send_Effect(EFFECT_SMOKE_RING, org + v_up * 25 + v_right * 10 + v_forward * 14, v_up * 100, 1);
-		else if(actor.(weaponentity).tuba_instrument == 2)
+		else if (actor.(weaponentity).tuba_instrument == 2)
 			Send_Effect(EFFECT_SMOKE_RING, org + v_up * 50 + v_right * 10 + v_forward * 45, v_up * 100, 1);
 		else
 			Send_Effect(EFFECT_SMOKE_RING, org + v_up * 40 + v_right * 10 + v_forward * 14, v_up * 100, 1);
 		actor.(weaponentity).tuba_smoketime = time + 0.25;
 	}
 }
-#endif
 
-#ifdef SVQC
 METHOD(Tuba, wr_aim, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// bots cannot play the Tuba well yet
@@ -325,7 +325,7 @@ METHOD(Tuba, wr_aim, void(Tuba this, entity actor, .entity weaponentity))
 	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(WEP_TUBA, radius)))
 	{
 		if (random() > 0.5)
-			PHYS_INPUT_BUTTON_ATCK(actor) = true;
+			PHYS_INPUT_BUTTON_ATCK(actor)  = true;
 		else
 			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 	}
@@ -346,11 +346,9 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(WEP_TUBA, animtime), w_ready);
 	}
 	if (actor.(weaponentity).tuba_note)
+	if (!(fire & (1 | 2)))
 	{
-		if (!(fire & (1 | 2)))
-		{
-			W_Tuba_NoteOff(actor.(weaponentity).tuba_note);
-		}
+		W_Tuba_NoteOff(actor.(weaponentity).tuba_note);
 	}
 }
 
@@ -362,41 +360,43 @@ METHOD(Tuba, wr_setup, void(Tuba this, entity actor, .entity weaponentity))
 METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 {
 	// switch to alternate instruments :)
-	if (actor.(weaponentity).state == WS_READY)
+	if (actor.(weaponentity).state != WS_READY)
+		return;
+
+	switch (actor.(weaponentity).tuba_instrument)
 	{
-		switch (actor.(weaponentity).tuba_instrument)
-		{
-			case 0:
-				actor.(weaponentity).tuba_instrument = 1;
-				actor.(weaponentity).weaponname = "akordeon";
-				break;
-			case 1:
-				actor.(weaponentity).tuba_instrument = 2;
-				actor.(weaponentity).weaponname = "kleinbottle";
-				break;
-			case 2:
-				actor.(weaponentity).tuba_instrument = 0;
-				actor.(weaponentity).weaponname = "tuba";
-				break;
-		}
-		int hittype = 0;
-		if(actor.(weaponentity).tuba_instrument & 1)
-			hittype |= HITTYPE_SECONDARY;
-		if(actor.(weaponentity).tuba_instrument & 2)
-			hittype |= HITTYPE_BOUNCE;
-		W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0, hittype | WEP_TUBA.m_id);
-		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
-		actor.(weaponentity).state = WS_INUSE;
-		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
+		case 0:
+			actor.(weaponentity).tuba_instrument = 1;
+			actor.(weaponentity).weaponname = "akordeon";
+			break;
+		case 1:
+			actor.(weaponentity).tuba_instrument = 2;
+			actor.(weaponentity).weaponname = "kleinbottle";
+			break;
+		case 2:
+			actor.(weaponentity).tuba_instrument = 0;
+			actor.(weaponentity).weaponname = "tuba";
+			break;
 	}
+	int hittype = 0;
+	if (actor.(weaponentity).tuba_instrument & 1)
+		hittype |= HITTYPE_SECONDARY;
+	if (actor.(weaponentity).tuba_instrument & 2)
+		hittype |= HITTYPE_BOUNCE;
+	W_SetupShot(actor, weaponentity, false, 0, SND_Null, 0, 0, hittype | WEP_TUBA.m_id);
+	Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
+	actor.(weaponentity).state = WS_INUSE;
+	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
 }
-#endif
 
-#ifdef SVQC
-
-// infinite ammo
-METHOD(Tuba, wr_checkammo1, bool(Tuba this, entity actor, .entity weaponentity)) { return true; }
-METHOD(Tuba, wr_checkammo2, bool(Tuba this, entity actor, .entity weaponentity)) { return true; }
+METHOD(Tuba, wr_checkammo1, bool(Tuba this, entity actor, .entity weaponentity))
+{
+	return true; // tuba has infinite ammo
+}
+METHOD(Tuba, wr_checkammo2, bool(Tuba this, entity actor, .entity weaponentity))
+{
+	return true; // tuba has infinite ammo
+}
 
 METHOD(Tuba, wr_suicidemessage, Notification(Tuba this))
 {
@@ -417,7 +417,8 @@ METHOD(Tuba, wr_killmessage, Notification(Tuba this))
 		return WEAPON_TUBA_MURDER;
 }
 
-#elif defined(CSQC)
+#endif // SVQC
+#ifdef CSQC
 
 METHOD(Tuba, wr_viewmodel, string(Tuba this, entity wep))
 {
@@ -425,10 +426,6 @@ METHOD(Tuba, wr_viewmodel, string(Tuba this, entity wep))
 	       (wep.tuba_instrument == 1) ? "akordeon" :
 	                                    "kleinbottle";
 }
-
-#endif
-
-#ifdef CSQC
 
 #define TUBA_STARTNOTE(i, n) _Sound_fixpath(W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n))))
 
@@ -441,49 +438,52 @@ int Tuba_PitchStep;
 void tubasound(entity e, bool restart)
 {
 	string snd1 = string_null;
-	if (Tuba_PitchStep) {
+	if (Tuba_PitchStep)
+	{
+		string snd2 = string_null;
 		float vol1 = 1;
 		float speed1 = 1;
-		string snd2 = string_null;
 		float vol2 = 0;
 		float speed2 = 1;
 
 		int m = pymod(e.note, Tuba_PitchStep);
-		if (m) {
-			if (e.note - m < TUBA_MIN) {
-				if (restart) {
+		if (m)
+		{
+			if (e.note - m < TUBA_MIN)
+			{
+				if (restart)
 					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m + Tuba_PitchStep);
-				}
-				speed1 = (2.0 ** ((m - Tuba_PitchStep) / 12.0));
-			} else if (e.note - m + Tuba_PitchStep > TUBA_MAX) {
-				if (restart) {
-					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m);
-				}
-				speed1 = (2.0 ** (m / 12.0));
-			} else {
-				if (restart) {
-					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m);
-				}
-				vol1 = cos(M_PI_2 * m / Tuba_PitchStep);
-				speed1 = (2.0 ** (m / 12.0));
-				if (restart) {
-					snd2 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m + Tuba_PitchStep);
-				}
-				vol2 = sin(M_PI_2 * m / Tuba_PitchStep);
-				speed2 = (2.0 ** ((m - Tuba_PitchStep) / 12.0));
+				speed1 = 2.0 ** ((m - Tuba_PitchStep) / 12.0);
 			}
-		} else if (restart) {
-			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
+			else if (e.note - m + Tuba_PitchStep > TUBA_MAX)
+			{
+				if (restart)
+					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m);
+				speed1 = 2.0 ** (m / 12.0);
+			}
+			else
+			{
+				if (restart)
+					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m);
+				vol1 = cos(M_PI_2 * m / Tuba_PitchStep);
+				speed1 = 2.0 ** (m / 12.0);
+				if (restart)
+					snd2 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m + Tuba_PitchStep);
+				vol2 = sin(M_PI_2 * m / Tuba_PitchStep);
+				speed2 = 2.0 ** ((m - Tuba_PitchStep) / 12.0);
+			}
 		}
+		else if (restart)
+			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 
 		sound7(e, CH_TUBA_SINGLE, snd1, e.tuba_volume * vol1, e.tuba_attenuate * autocvar_cl_tuba_attenuation, 100 * speed1, 0);
-		if (vol2) {
+		if (vol2)
 			sound7(e.enemy, CH_TUBA_SINGLE, snd2, e.tuba_volume * vol2, e.tuba_attenuate * autocvar_cl_tuba_attenuation, 100 * speed2, 0);
-		}
-	} else {
-		if (restart) {
+	}
+	else
+	{
+		if (restart)
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
-		}
 		_sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_cl_tuba_attenuation);
 	}
 }
@@ -491,22 +491,23 @@ void tubasound(entity e, bool restart)
 void Ent_TubaNote_Think(entity this)
 {
 	float f = autocvar_cl_tuba_fadetime;
-	if (f > 0) {
+	if (f > 0)
 		this.tuba_volume -= frametime * this.tuba_volume_initial / f;
-	} else {
+	else
 		this.tuba_volume = 0;
-	}
 	this.nextthink = time;
-	if (this.tuba_volume <= 0) {
+	if (this.tuba_volume <= 0)
+	{
 		sound(this, CH_TUBA_SINGLE, SND_Null, 0, 0);
-		if (this.enemy) {
+		if (this.enemy)
+		{
 			sound(this.enemy, CH_TUBA_SINGLE, SND_Null, 0, 0);
 			delete(this.enemy);
 		}
 		delete(this);
-	} else {
-		tubasound(this, 0);
 	}
+	else
+		tubasound(this, 0);
 }
 
 void Ent_TubaNote_UpdateSound(entity this)
@@ -528,39 +529,42 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 {
 	bool upd = false;
 	int f = ReadByte();
-	if (f & 1) {
+	if (f & 1)
+	{
 		int n = ReadChar();
 		int i = ReadByte();
-		bool att = (i & 1);
+		bool att = i & 1;
 		i >>= 1;
 
-		if (this.enemy) {
-			if (n != this.note || i != this.tuba_instrument || isNew) {
+		if (this.enemy)
+		{
+			if (n != this.note || i != this.tuba_instrument || isNew)
 				Ent_TubaNote_StopSound(this);
-			}
-		} else {
+		}
+		else
+		{
 			this.enemy = new(tuba_note);
-			if (Tuba_PitchStep) {
+			if (Tuba_PitchStep)
 				this.enemy.enemy = new(tuba_note_2);
-			}
 			isNew = true;
 		}
 
 		this.enemy.tuba_attenuate = att;
 
-		if (isNew) {
+		if (isNew)
+		{
 			this.note = n;
 			this.tuba_instrument = i;
 			upd = true;
 		}
 	}
 
-	if (f & 2) {
+	if (f & 2)
+	{
 		this.enemy.origin = ReadVector();
 		setorigin(this.enemy, this.enemy.origin);
-		if (this.enemy.enemy) {
+		if (this.enemy.enemy)
 			setorigin(this.enemy.enemy, this.enemy.origin);
-		}
 	}
 
 	setthink(this, Ent_TubaNote_StopSound);
@@ -568,31 +572,29 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 	setthink(this.enemy, Ent_TubaNote_Think);
 	this.enemy.nextthink = time + 10;
 
-	if (upd) {
+	if (upd)
 		Ent_TubaNote_UpdateSound(this);
-	}
 	return true;
 }
 
 PRECACHE(Tuba)
 {
 	Tuba_PitchStep = autocvar_cl_tuba_pitchstep;
-	if (Tuba_PitchStep) {
-		if (!checkextension("DP_SND_SOUND7_WIP2") && !checkextension("DP_SND_SOUND7")) {
+	if (Tuba_PitchStep)
+	{
+		if (!checkextension("DP_SND_SOUND7_WIP2") && !checkextension("DP_SND_SOUND7"))
+		{
 			LOG_WARN("requested pitch shifting, but not supported by this engine build");
 			Tuba_PitchStep = 0;
 		}
 	}
-	for (int n = TUBA_MIN; n <= TUBA_MAX; ++n) {
-		if (!Tuba_PitchStep || pymod(n, Tuba_PitchStep) == 0) {
-			for (int i = 0; i < TUBA_INSTRUMENTS; ++i) {
+	for (int i, n = TUBA_MIN; n <= TUBA_MAX; ++n)
+		if (!Tuba_PitchStep || pymod(n, Tuba_PitchStep) == 0)
+			for (i = 0; i < TUBA_INSTRUMENTS; ++i)
 				precache_sound(TUBA_STARTNOTE(i, n));
-			}
-		}
-	}
 }
 
-#endif
+#endif // CSQC
 #ifdef MENUQC
 
 METHOD(Tuba, describe, string(Tuba this))
@@ -609,4 +611,4 @@ METHOD(Tuba, describe, string(Tuba this))
 	return PAGE_TEXT;
 }
 
-#endif
+#endif // MENUQC

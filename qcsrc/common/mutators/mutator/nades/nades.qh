@@ -12,63 +12,67 @@ REGISTRY_CHECK(Nades)
 #define REGISTER_NADE(id, inst) REGISTER(Nades, NADE_TYPE, id, m_id, inst)
 
 CLASS(Nade, Object)
-    ATTRIB(Nade, m_id, int, 0);
-    ATTRIB(Nade, m_color, vector, '0 0 0');
-    ATTRIB(Nade, m_name, string, _("Grenade"));
-    ATTRIB(Nade, m_icon, string, "nade_normal");
-    ATTRIB(Nade, m_alpha, float, 1);
-    ATTRIB(Nade, netname, string, "random");
-    ATTRIB(Nade, impulse, int, 0); // legacy number for selection, do not add to new nade types
-    ATTRIBARRAY(Nade, m_projectile, int, 2);
-    ATTRIBARRAY(Nade, m_trail, entity, 2);
+	ATTRIB(Nade, m_id, int, 0);
+	ATTRIB(Nade, m_color, vector, '0 0 0');
+	ATTRIB(Nade, m_name, string, _("Grenade"));
+#ifdef GAMEQC
+	ATTRIB(Nade, m_alpha, float, 1);
+#endif
+	ATTRIB(Nade, netname, string, "random");
+#ifdef SVQC
+	ATTRIB(Nade, impulse, int, 0); // XONRELEASE TODO v0.9 post-release: legacy number for selection, do not add to new nade types, remove these
+#endif
 #ifdef MENUQC
-    METHOD(Nade, describe, string(Nade this))
-    {
-        TC(Nade, this);
-        return SUPER(Nade).describe(this);
-    }
+	METHOD(Nade, describe, string(Nade this))
+	{
+		TC(Nade, this);
+		return SUPER(Nade).describe(this);
+	}
 #endif
 #ifndef SVQC
-    METHOD(Nade, display, void(Nade this, void(string name, string icon) returns))
-    {
-        TC(Nade, this);
-        returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
-    }
+	ATTRIB(Nade, m_icon, string, "nade_normal");
+	METHOD(Nade, display, void(Nade this, void(string name, string icon) returns))
+	{
+		TC(Nade, this);
+		returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
+	}
+#endif
+#ifdef GAMEQC
+	ATTRIBARRAY(Nade, m_projectile, int, 2);
+	ATTRIBARRAY(Nade, m_trail, entity, 2);
 #endif
 ENDCLASS(Nade)
 
 CLASS(NullNade, Nade)
-    ATTRIB(NullNade, m_hidden, bool, true);
+	ATTRIB(NullNade, m_hidden, bool, true);
 ENDCLASS(NullNade)
 REGISTER(Nades, NADE_TYPE, Null, m_id, NEW(NullNade));
 REGISTRY_DEFINE_GET(Nades, NADE_TYPE_Null)
 
+#ifdef GAMEQC
 // use slots 70-100
 const int PROJECTILE_NADE = 71;
 const int PROJECTILE_NADE_BURN = 72;
 // the rest of these are defined in their individual files like nade/napalm.qh
 
-#ifdef GAMEQC
 #include "effects.inc"
 
 #define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN \
-    this.m_projectile[i] = projectile; \
-    this.m_trail[i] = trail; \
+	this.m_projectile[i] = projectile; \
+	this.m_trail[i] = trail; \
 MACRO_END
-#endif // GAMEQC
 
 Nade Nade_FromProjectile(int proj)
 {
-    FOREACH(Nades, true, {
-        if (it.m_projectile[0] == proj || it.m_projectile[1] == proj) return it;
-    });
-    return NADE_TYPE_Null;
+	FOREACH(Nades, it.m_projectile[0] == proj || it.m_projectile[1] == proj, return it);
+	return NADE_TYPE_Null;
 }
-
-#include "all.inc"
 
 .float orb_lifetime;
 .float orb_radius;
+#endif // GAMEQC
+
+#include "all.inc"
 
 #ifdef GAMEQC
 REPLICATE_INIT(string, cvar_cl_nade_type);

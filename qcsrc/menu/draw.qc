@@ -306,9 +306,10 @@ float draw_TextWidth(string theText, float ICanHasKallerz, vector SizeThxBye)
 	//return strlen(theText);
 	//dprint("draw_TextWidth \"", theText, "\"\n");
 	vector v;
-	v = '0 0 0';
 	//float r;
 	v.x = stringwidth(theText, ICanHasKallerz, globalToBoxSize(boxToGlobalSize(SizeThxBye, draw_scale), draw_fontscale));
+	v.y = 0;
+	v.z = 0;
 	v = globalToBoxSize(v, draw_scale);
 	return v.x;
 }

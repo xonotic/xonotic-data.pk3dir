@@ -2,8 +2,7 @@
 
 entity makeXonoticNexposee()
 {
-	entity me;
-	me = NEW(XonoticNexposee);
+	entity me = NEW(XonoticNexposee);
 	return me;
 }
 

@@ -78,7 +78,7 @@ void PingPLReport_Think(entity this)
 		if(time > (CS(e).latency_time + LATENCY_THINKRATE))
 		{
 			CS(e).latency_sum += CS(e).ping;
-			CS(e).latency_cnt += 1;
+			++CS(e).latency_cnt;
 			CS(e).latency_time = time;
 			//print("sum: ", ftos(CS(e).latency_sum), ", cnt: ", ftos(CS(e).latency_cnt), ", avg: ", ftos(CS(e).latency_sum / CS(e).latency_cnt), ".\n");
 		}
@@ -1166,18 +1166,21 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
 			continue;
 
-		// rule 4: we must "see" some spawnpoint or item
+		// rule 4: we must "be seen" by some spawnpoint or item
+		// Note that checkpvs from mstart to item can detect visibility if mstart is behind
+		// patch brushes (curved walls) that don't block visibility from the outside, however
+		// the next traceline from item to mstart correctly detects invisibility in this case
 		entity sp = NULL;
 		if(frompos)
 		{
-			if((traceline(mstart, e.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+			if((traceline(e.origin, mstart, MOVE_NORMAL, e), trace_fraction) >= 1)
 				sp = e;
 		}
 		if(!sp)
 		{
 			IL_EACH(g_spawnpoints, checkpvs(mstart, it),
 			{
-				if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				if((traceline(it.origin, mstart, MOVE_NORMAL, e), trace_fraction) >= 1)
 				{
 					sp = it;
 					break;
@@ -1189,7 +1192,7 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 			int items_checked = 0;
 			IL_EACH(g_items, checkpvs(mstart, it),
 			{
-				if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
+				if((traceline(it.origin + (it.mins + it.maxs) * 0.5, mstart, MOVE_NORMAL, e), trace_fraction) >= 1)
 				{
 					sp = it;
 					break;
@@ -1204,17 +1207,18 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 				continue;
 		}
 
+		float vlen_delta = vlen(delta);
 		// find a random vector to "look at"
 		end.x = org.x + random() * delta.x;
 		end.y = org.y + random() * delta.y;
 		end.z = org.z + random() * delta.z;
-		end = start + normalize(end - start) * vlen(delta);
+		end = start + normalize(end - start) * vlen_delta;
 
 		// rule 4: start TO end must not be too short
 		tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
 		if(trace_startsolid)
 			continue;
-		if(trace_fraction < minviewdistance / vlen(delta))
+		if(trace_fraction < minviewdistance / vlen_delta)
 			continue;
 
 		// rule 5: don't want to look at sky

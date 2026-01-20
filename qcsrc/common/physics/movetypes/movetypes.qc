@@ -68,7 +68,7 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 			// we hit something... let's move out of it
 			vector move = trace_endpos - testorigin;
 			float nudge = (trace_plane_normal * move) + 0.03125; // FIXME cvar this constant
-			stuckorigin = stuckorigin + nudge * trace_plane_normal;
+			stuckorigin += nudge * trace_plane_normal;
 		}
 
 		if(dir)
@@ -260,7 +260,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		}
 
 		planes[numplanes] = my_trace_plane_normal;
-		numplanes++;
+		++numplanes;
 
 		// modify original_velocity so it parallels all of the clip planes
 		vector new_velocity = '0 0 0';
@@ -711,8 +711,8 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater(this);
-			this.origin = this.origin + movedt * this.velocity;
-			this.angles = this.angles + movedt * this.avelocity;
+			this.origin += movedt * this.velocity;
+			this.angles += movedt * this.avelocity;
 			_Movetype_LinkEdict(this, false);
 			break;
 		case MOVETYPE_STEP:
@@ -750,8 +750,8 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater(this);
-			this.origin = this.origin + movedt * this.velocity;
-			this.angles = this.angles + movedt * this.avelocity;
+			this.origin += movedt * this.velocity;
+			this.angles += movedt * this.avelocity;
 			break;
 		case MOVETYPE_STEP:
 			_Movetype_Physics_Step(this, movedt);

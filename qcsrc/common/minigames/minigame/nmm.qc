@@ -211,7 +211,7 @@ int nmm_count_pieces(entity minigame, int teamn, int pieceflags)
 	int n = 0;
 	entity e = NULL;
 	while (( e = nmm_find_piece(e,minigame, teamn, pieceflags) ))
-		n++;
+		++n;
 	return n;
 }
 
@@ -244,7 +244,7 @@ int nmm_server_event(entity minigame, string event, ...)
 		int n = 0;
 		entity e;
 		for ( e = minigame.minigame_players; e; e = e.list_next )
-			n++;
+			++n;
 		if ( n >= 2 )
 			return NMM_SPECTATOR_TEAM;
 		if ( minigame.minigame_players && minigame.minigame_players.team == 1 )
@@ -484,8 +484,7 @@ void nmm_hud_board(vector pos, vector mySize)
 				pname = entcs_GetName(e.minigame_playerslot-1);
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
-		vector win_sz;
-		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
+		vector win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			sprintf(_("%s^7 won the game!"), pname),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
@@ -503,8 +502,7 @@ void nmm_hud_board(vector pos, vector mySize)
 void nmm_hud_status(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg();
-	vector ts;
-	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
+	vector ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
 	pos_y += ts_y;
 	mySize_y -= ts_y;

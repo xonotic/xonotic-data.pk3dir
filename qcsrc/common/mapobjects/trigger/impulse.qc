@@ -46,7 +46,7 @@ void trigger_impulse_touch_directional(entity this, entity toucher)
 		}
 	}
 	else
-		toucher.velocity = toucher.velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
+		toucher.velocity += normalize(targ.origin - this.origin) * str * pushdeltatime;
 
 	UNSET_ONGROUND(toucher);
 
@@ -80,7 +80,7 @@ void trigger_impulse_touch_accel(entity this, entity toucher)
 	}
 
 	// div0: ticrate independent, 1 = identity (not 20)
-	toucher.velocity = toucher.velocity * (this.strength ** pushdeltatime);
+	toucher.velocity *= this.strength ** pushdeltatime;
 
 #ifdef SVQC
 	UpdateCSQCProjectile(toucher);
@@ -123,7 +123,7 @@ void trigger_impulse_touch_radial(entity this, entity toucher)
 	else
 		str = this.strength;
 
-	toucher.velocity = toucher.velocity + normalize(toucher.origin - this.origin) * str * pushdeltatime;
+	toucher.velocity += normalize(toucher.origin - this.origin) * str * pushdeltatime;
 
 #ifdef SVQC
 	UpdateCSQCProjectile(toucher);

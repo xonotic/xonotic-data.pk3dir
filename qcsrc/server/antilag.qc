@@ -26,7 +26,7 @@ void antilag_record(entity e, entity store, float t)
 	}
 
 	if (time < store.antilag_times[store.antilag_index]) return;
-	store.antilag_index += 1;
+	++store.antilag_index;
 	if (store.antilag_index >= ANTILAG_MAX_ORIGINS)
 		store.antilag_index = 0;
 	store.antilag_times[store.antilag_index] = t;

@@ -93,7 +93,7 @@
 		}
 
 		if (me.zoomMax > 0 && me.zoomFactor > me.zoomMax) me.zoomFactor = me.zoomMax;
-		if (me.zoomFactor) me.imgSize = me.imgSize * me.zoomFactor;
+		if (me.zoomFactor) me.imgSize *= me.zoomFactor;
 
 		if (me.imgSize.x > 1 || me.imgSize.y > 1)
 		{
@@ -140,8 +140,7 @@
 	}
 	void Image_setZoom(entity me, float newzoom, float atMousePosition)
 	{
-		float prev_zoomFactor;
-		prev_zoomFactor = me.zoomFactor;
+		float prev_zoomFactor = me.zoomFactor;
 		if (newzoom < 0)  // multiply by the current zoomFactor (but can also snap to real dimensions or to box)
 		{
 			me.zoomFactor *= -newzoom;

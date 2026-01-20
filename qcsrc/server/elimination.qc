@@ -6,9 +6,8 @@
 .float(entity) isEliminated;
 bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
-	Stream out = MSG_ENTITY;
-	WriteHeader(out, ENT_CLIENT_ELIMINATEDPLAYERS);
-	serialize(byte, out, sendflags);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteByte(MSG_ENTITY, sendflags);
 	if (sendflags & 1) {
 		for (int i = 1; i <= maxclients; i += 8) {
 			int f = 0;
@@ -18,7 +17,7 @@ bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 					f |= BIT(b);
 				}
 			}
-			serialize(byte, out, f);
+			WriteByte(MSG_ENTITY, f);
 		}
 	}
 	return true;

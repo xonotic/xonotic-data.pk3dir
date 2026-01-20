@@ -12,13 +12,13 @@ void ref_init(entity this, int init, void(entity this) finalize)
 // todo: rename to `ref`
 entity REF(entity this)
 {
-    this._ref_count += 1;
+    ++this._ref_count;
     return this;
 }
 
 entity unref(Promise this)
 {
-    this._ref_count -= 1;
+    --this._ref_count;
     if (!this._ref_count) {
         LOG_DEBUGF("Finalize entity %i (from %s)", this, this.sourceLoc);
         this._ref_finalize(this);

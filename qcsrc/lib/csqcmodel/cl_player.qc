@@ -385,8 +385,8 @@ vector CSQCPlayer_ApplyBobbing(entity this, vector v)
 		// now get the speed based on those angles. The bounds should match the same value as xyspeed's
 		float side = bound(-autocvar_cl_bob_velocity_limit, (this.velocity * v_right) * bob2_smooth, autocvar_cl_bob_velocity_limit);
 		float front = bound(-autocvar_cl_bob_velocity_limit, (this.velocity * v_forward) * bob2_smooth, autocvar_cl_bob_velocity_limit);
-		v_forward = v_forward * bob;
-		v_right = v_right * bob;
+		v_forward *= bob;
+		v_right *= bob;
 		// we use side with forward and front with right, so the bobbing goes
 		// to the side when we walk forward and to the front when we strafe
 		vector bob2vel;
@@ -432,7 +432,7 @@ float CSQCPlayer_CalcRoll(entity this)
 	side = fabs(side);
 
 	if(side < autocvar_cl_rollspeed)
-		side = side * autocvar_cl_rollangle / autocvar_cl_rollspeed;
+		side *= autocvar_cl_rollangle / autocvar_cl_rollspeed;
 	else
 		side = autocvar_cl_rollangle;
 
@@ -513,7 +513,7 @@ vector CSQCPlayer_ApplyChase(entity this, vector v)
 		{
 			// now flip the view so the player is looking at themselves
 			vector newang = vectoangles(forward);
-			view_angles.x = view_angles.x * -1; // inverse up-down looking direction
+			view_angles.x = -view_angles.x; // inverse up-down looking direction
 			view_angles.y = newang.y;
 		}
 	}
@@ -556,11 +556,11 @@ void CSQCPlayer_CalcRefdef(entity this)
 		{
 			// angles
 			CSQCPlayer_ApplyDeathTilt(this);
-			view_angles = view_angles + view_punchangle;
+			view_angles += view_punchangle;
 			view_angles.z += CSQCPlayer_CalcRoll(this);
 			// TODO? we don't have damage time accessible here
 			// origin
-			vieworg = vieworg + view_punchvector;
+			vieworg += view_punchvector;
 			vieworg = CSQCPlayer_ApplyBobbing(this, vieworg);
 		}
 		CSQCPlayer_ApplyIdleScaling(this);

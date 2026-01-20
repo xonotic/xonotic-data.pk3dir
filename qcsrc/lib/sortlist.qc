@@ -11,8 +11,7 @@ entity Sort_Spawn()
 /*
 entity Sort_New(float(entity,entity) cmp)
 {
-    entity sort;
-    sort = spawn();
+    entity sort = spawn();
     sort.sort_cmp = cmp;
     sort.sort_next = NULL;
     sort.chain = sort;
@@ -62,8 +61,7 @@ float Sort_HasNext(entity sort)
 
 entity Sort_Next(entity sort)
 {
-    entity next;
-    next = sort.chain.sort_next;
+    entity next = sort.chain.sort_next;
     if(!next) {
         next = spawn();
         sort.chain.sort_next = next;
@@ -76,8 +74,7 @@ entity Sort_Next(entity sort)
 
 void Sort_Finish(entity sort)
 {
-    entity next;
-    next = sort.chain;
+    entity next = sort.chain;
     if(!next)
         return;
 

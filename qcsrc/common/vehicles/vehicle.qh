@@ -1,100 +1,110 @@
 #pragma once
 
 #ifndef SVQC
-#include <common/util.qh> // for icon_path_from_HUDskin
+	#include <common/util.qh> // for icon_path_from_HUDskin
 #endif
 
 CLASS(Vehicle, Object)
-    ATTRIB(Vehicle, vehicleid, int, 0);
-    /** hud icon */
-    ATTRIB(Vehicle, m_icon, string);
-    /** short name */
-    ATTRIB(Vehicle, netname, string, "");
-    /** human readable name */
-    ATTRIB(Vehicle, m_name, string, _("Vehicle"));
-    /** color */
-    ATTRIB(Vehicle, m_color, vector, '1 1 1');
-    /** full name of model */
-    ATTRIB(Vehicle, model, string, "");
-    /** currently a copy of the model */
-    ATTRIB(Vehicle, mdl, string, "");
-    /** full name of tur_head model */
-    ATTRIB(Vehicle, head_model, string, "");
-    /** cockpit model */
-    ATTRIB(Vehicle, hud_model, string, "");
-    /** tur_head model tag */
-    ATTRIB(Vehicle, tag_head, string);
-    /** hud model tag */
-    ATTRIB(Vehicle, tag_hud, string);
-    /** cockpit model tag */
-    ATTRIB(Vehicle, tag_view, string);
-    /** player physics mod */
-    ATTRIB(Vehicle, PlayerPhysplug, bool(entity,float));
-    /**  */
-    ATTRIB(Vehicle, spawnflags, int, 0);
-    /** vehicle hitbox size */
-    ATTRIB(Vehicle, m_mins, vector, '-0 -0 -0');
-    /** vehicle hitbox size */
-    ATTRIB(Vehicle, m_maxs, vector, '0 0 0');
-    /** vehicle 3rd person view offset */
-    ATTRIB(Vehicle, view_ofs, vector, '0 0 0');
-    /** vehicle 3rd person view distance */
-    ATTRIB(Vehicle, height, float, 0);
+	ATTRIB(Vehicle, vehicleid, int, 0);
+	/** hud icon */
+	ATTRIB(Vehicle, m_icon, string);
+	/** short name */
+	ATTRIB(Vehicle, netname, string, "");
+	/** human readable name */
+	ATTRIB(Vehicle, m_name, string, _("Vehicle"));
+	/** color */
+	ATTRIB(Vehicle, m_color, vector, '1 1 1');
+	/** full name of model */
+#ifdef GAMEQC
+	ATTRIB(Vehicle, model, string, "");
+	/** currently a copy of the model */
+	ATTRIB(Vehicle, mdl, string, "");
+	/** full name of tur_head model */
+	ATTRIB(Vehicle, head_model, string, "");
+	/** cockpit model */
+	ATTRIB(Vehicle, hud_model, string, "");
+	/** tur_head model tag */
+	ATTRIB(Vehicle, tag_head, string);
+	/** hud model tag */
+	ATTRIB(Vehicle, tag_hud, string);
+	/** cockpit model tag */
+	ATTRIB(Vehicle, tag_view, string);
+	/** vehicle 3rd person view offset */
+	ATTRIB(Vehicle, view_ofs, vector, '0 0 0');
+	/** vehicle 3rd person view distance */
+	ATTRIB(Vehicle, height, float, 0);
+#endif
+#ifdef SVQC
+	/** player physics mod */
+	ATTRIB(Vehicle, PlayerPhysplug, bool(entity, float));
+	/** spawnflags */
+	ATTRIB(Vehicle, spawnflags, int, 0);
+	/** vehicle hitbox size */
+	ATTRIB(Vehicle, m_mins, vector, '-0 -0 -0');
+	/** vehicle hitbox size */
+	ATTRIB(Vehicle, m_maxs, vector, '0 0 0');
+#endif
 
 #ifdef MENUQC
-    METHOD(Vehicle, describe, string(Vehicle this))
-    {
-        TC(Vehicle, this);
-        return SUPER(Vehicle).describe(this);
-    }
+	METHOD(Vehicle, describe, string(Vehicle this))
+	{
+		TC(Vehicle, this);
+		return SUPER(Vehicle).describe(this);
+	}
 #endif
 #ifndef SVQC
-    METHOD(Vehicle, display, void(Vehicle this, void(string name, string icon) returns))
-    {
-        TC(Vehicle, this);
-        returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
-    }
+	METHOD(Vehicle, display, void(Vehicle this, void(string name, string icon) returns))
+	{
+		TC(Vehicle, this);
+		returns(this.m_name, icon_path_from_HUDskin(this.m_icon));
+	}
 #endif
 
-    /** (BOTH) setup vehicle data */
-    METHOD(Vehicle, vr_setup, void(Vehicle this, entity instance)) { }
-    /** (SERVER) logic to run every frame */
-    METHOD(Vehicle, vr_think, void(Vehicle this, entity instance)) { }
-    /** (SERVER) called when vehicle dies */
-    METHOD(Vehicle, vr_death, void(Vehicle this, entity instance)) { }
-    /** (BOTH) precaches models/sounds used by this vehicle */
-    METHOD(Vehicle, vr_precache, void(Vehicle this)) { }
-    /** (SERVER) called when a player enters this vehicle */
-    METHOD(Vehicle, vr_enter, void(Vehicle this, entity instance)) { }
-    /** (SERVER) called when a player enters this vehicle while occupied */
-    METHOD(Vehicle, vr_gunner_enter, void(Vehicle this, entity instance, entity actor)) { }
-    /** (SERVER) called when the vehicle re-spawns */
-    METHOD(Vehicle, vr_spawn, void(Vehicle this, entity instance)) { }
-    /** (SERVER) called when a vehicle hits something */
-    METHOD(Vehicle, vr_impact, void(Vehicle this, entity instance)) { }
-    /** (SERVER) called when a vehicle's colors are being reset, so modules can be updated */
-    METHOD(Vehicle, vr_setcolors, void(Vehicle this, entity instance)) { }
-    /** (CLIENT) logic to run every frame */
-    METHOD(Vehicle, vr_hud, void(Vehicle this)) { }
-    /** (CLIENT) logic to run every frame */
-    METHOD(Vehicle, vr_crosshair, void(Vehicle thisveh, entity player)) { }
+#ifdef GAMEQC
+	/** (BOTH) setup vehicle data */
+	METHOD(Vehicle, vr_setup, void(Vehicle this, entity instance)) { }
+	/** (BOTH) precaches models/sounds used by this vehicle */
+	METHOD(Vehicle, vr_precache, void(Vehicle this)) { }
+#endif
+#ifdef SVQC
+	/** (SERVER) logic to run every frame */
+	METHOD(Vehicle, vr_think, void(Vehicle this, entity instance)) { }
+	/** (SERVER) called when vehicle dies */
+	METHOD(Vehicle, vr_death, void(Vehicle this, entity instance)) { }
+	/** (SERVER) called when a player enters this vehicle */
+	METHOD(Vehicle, vr_enter, void(Vehicle this, entity instance)) { }
+	/** (SERVER) called when a player enters this vehicle while occupied */
+	METHOD(Vehicle, vr_gunner_enter, void(Vehicle this, entity instance, entity actor)) { }
+	/** (SERVER) called when the vehicle re-spawns */
+	METHOD(Vehicle, vr_spawn, void(Vehicle this, entity instance)) { }
+	/** (SERVER) called when a vehicle hits something */
+	METHOD(Vehicle, vr_impact, void(Vehicle this, entity instance)) { }
+	/** (SERVER) called when a vehicle's colors are being reset, so modules can be updated */
+	METHOD(Vehicle, vr_setcolors, void(Vehicle this, entity instance)) { }
+#endif
+#ifdef CSQC
+	/** (CLIENT) logic to run every frame */
+	METHOD(Vehicle, vr_hud, void(Vehicle this)) { }
+	/** (CLIENT) logic to run every frame */
+	METHOD(Vehicle, vr_crosshair, void(Vehicle thisveh, entity player)) { }
+#endif
 ENDCLASS(Vehicle)
 
 // vehicle spawn flags (need them here for common registrations)
-const int VHF_ISVEHICLE			= BIT(1); /// Indicates vehicle
-const int VHF_HASSHIELD			= BIT(2); /// Vehicle has shileding
-const int VHF_SHIELDREGEN		= BIT(3); /// Vehicles shield regenerates
-const int VHF_HEALTHREGEN		= BIT(4); /// Vehicles health regenerates
-const int VHF_ENERGYREGEN		= BIT(5); /// Vehicles energy regenerates
-const int VHF_DEATHEJECT		= BIT(6); /// Vehicle ejects pilot upon fatal damage
-const int VHF_MOVE_GROUND		= BIT(7); /// Vehicle moves on gound
-const int VHF_MOVE_HOVER		= BIT(8); /// Vehicle hover close to gound
-const int VHF_MOVE_FLY			= BIT(9); /// Vehicle is airborn
-const int VHF_DMGSHAKE			= BIT(10); /// Add random velocity each frame if health < 50%
-const int VHF_DMGROLL			= BIT(11); /// Add random angles each frame if health < 50%
-const int VHF_DMGHEADROLL		= BIT(12); /// Add random head angles each frame if health < 50%
-const int VHF_MULTISLOT			= BIT(13); /// Vehicle has multiple player slots
-const int VHF_PLAYERSLOT		= BIT(14); /// This ent is a player slot on a multi-person vehicle
+const int VHF_ISVEHICLE    = BIT(1);   ///< Indicates vehicle
+const int VHF_HASSHIELD    = BIT(2);   ///< Vehicle has shileding
+const int VHF_SHIELDREGEN  = BIT(3);   ///< Vehicles shield regenerates
+const int VHF_HEALTHREGEN  = BIT(4);   ///< Vehicles health regenerates
+const int VHF_ENERGYREGEN  = BIT(5);   ///< Vehicles energy regenerates
+const int VHF_DEATHEJECT   = BIT(6);   ///< Vehicle ejects pilot upon fatal damage
+const int VHF_MOVE_GROUND  = BIT(7);   ///< Vehicle moves on gound
+const int VHF_MOVE_HOVER   = BIT(8);   ///< Vehicle hover close to gound
+const int VHF_MOVE_FLY     = BIT(9);   ///< Vehicle is airborn
+const int VHF_DMGSHAKE     = BIT(10);  ///< Add random velocity each frame if health < 50%
+const int VHF_DMGROLL      = BIT(11);  ///< Add random angles each frame if health < 50%
+const int VHF_DMGHEADROLL  = BIT(12);  ///< Add random head angles each frame if health < 50%
+const int VHF_MULTISLOT    = BIT(13);  ///< Vehicle has multiple player slots
+const int VHF_PLAYERSLOT   = BIT(14);  ///< This ent is a player slot on a multi-person vehicle
 
 // fields:
 .entity tur_head;

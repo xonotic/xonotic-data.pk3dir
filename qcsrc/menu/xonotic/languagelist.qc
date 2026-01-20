@@ -13,8 +13,7 @@ const string PERCENTAGE_FULL_ICON = "/gfx/scoreboard/player_ready";
 
 entity makeXonoticLanguageList()
 {
-	entity me;
-	me = NEW(XonoticLanguageList);
+	entity me = NEW(XonoticLanguageList);
 	me.configureXonoticLanguageList(me);
 	return me;
 }

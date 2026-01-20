@@ -126,7 +126,7 @@ spawnfunc(dynlight)
 	this.solid = SOLID_NOT;
 	//this.blocked = func_null;
 	//if (this.spawnflags & DNOSHADOW)
-	//	this.pflags = this.pflags + PFLAGS_NOSHADOW;
+	//	this.pflags |= PFLAGS_NOSHADOW;
 	//if (this.spawnflags & START_OFF)
 	//	this.light_lev = 0;
 

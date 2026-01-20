@@ -74,7 +74,7 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:")));
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider("hud_panel_bg"));
-				e.setValueSpace(e, e.valueSpace * 1.25);
+				e.setValueSpace(e, e.valueSpace * (4/3));
 				e.addValue(e, _("Disable"), "0");
 				e.addValue(e, "border_default", "border_default"); // this is a file name!
 				e.configureXonoticTextSliderValues(e);

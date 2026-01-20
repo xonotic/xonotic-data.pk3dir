@@ -4,16 +4,14 @@
 
 void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	float okmachinegun_spread;
-
-	if(!(fire & 1))
+	if (!(fire & 1))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 
-	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-	if(!(actor.items & IT_UNLIMITED_AMMO))
+	if (!thiswep.wr_checkammo1(thiswep, actor, weaponentity)
+	&& !(actor.items & IT_UNLIMITED_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -23,30 +21,37 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 	W_DecreaseAmmo(WEP_OVERKILL_MACHINEGUN, actor, WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, ammo), weaponentity);
 
 	W_SetupShot(actor, weaponentity, true, 0, SND_OK_MG_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, damage), WEP_OVERKILL_MACHINEGUN.m_id);
-	if(!autocvar_g_norecoil)
+	if (!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	okmachinegun_spread = bound(WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, spread_min), WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, spread_min) + (WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, spread_max));
+	float okmachinegun_spread = bound(
+		WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, spread_min),
+		WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, spread_min) + (WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, spread_add) * actor.(weaponentity).misc_bulletcounter),
+		WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, spread_max)
+	);
 
 	fireBullet_falloff(actor, weaponentity, w_shotorg, w_shotdir, okmachinegun_spread,
-	                   WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, solidpenetration),
-	                   WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, damage),
-	                   WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_halflife),
-	                   WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_mindist),
-	                   WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_maxdist),
-	                   0,
-	                   WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, force),
-	                   WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_forcehalflife),
-	                   WEP_OVERKILL_MACHINEGUN.m_id, EFFECT_RIFLE, true);
+		WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, solidpenetration),
+		WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, damage),
+		WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_halflife),
+		WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_mindist),
+		WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_maxdist),
+		0,
+		WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, force),
+		WEP_CVAR(WEP_OVERKILL_MACHINEGUN, damagefalloff_forcehalflife),
+		WEP_OVERKILL_MACHINEGUN.m_id,
+		EFFECT_RIFLE,
+		true
+	);
 
-	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
+	++actor.(weaponentity).misc_bulletcounter;
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-	if(autocvar_g_casings >= 2) // casing code
+	if (autocvar_g_casings >= 2) // casing code
 	{
 		makevectors(actor.v_angle); // for some reason, this is lost
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), vectoangles(v_forward), 3, actor, weaponentity);
@@ -58,54 +63,49 @@ void W_OverkillMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weap
 
 METHOD(OverkillMachineGun, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	if(vdist(actor.origin - actor.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
+	if (vdist(actor.origin - actor.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
 		PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true);
 }
 
 METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if ((WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, refire_type) == 1) && (fire & 2) && (time >= actor.jump_interval))
+	if (WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, refire_type) == 1 && (fire & 2)
+	&& time >= actor.jump_interval)
 	{
 		// Secondary uses it's own refire timer if refire_type is 1.
 		actor.jump_interval = time + WEP_CVAR_PRI(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 		makevectors(actor.v_angle);
 		W_Blaster_Attack(actor, weaponentity);
-		if ((actor.(weaponentity).wframe == WFRAME_IDLE) ||
-			(actor.(weaponentity).wframe == WFRAME_FIRE2))
+		if (actor.(weaponentity).wframe == WFRAME_IDLE
+		||  actor.(weaponentity).wframe == WFRAME_FIRE2)
 		{
 			// Set secondary fire animation.
 			actor.(weaponentity).wframe = WFRAME_FIRE2;
 			FOREACH_CLIENT(true, LAMBDA(
 				if (it == actor || (IS_SPEC(it) && it.enemy == actor))
-				{
 					wframe_send(it, actor.(weaponentity), WFRAME_FIRE2, autocvar_g_weaponratefactor, true);
-				}
 			));
 			animdecide_setaction(actor, ANIMACTION_SHOOT, true);
 		}
 	}
 	if (WEP_CVAR(WEP_OVERKILL_MACHINEGUN, reload_ammo) && actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, ammo))
-	{
-		// Forced reload
+	{ // forced reload
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 		return;
 	}
+
 	if (fire & 1) // Primary attack
 	{
 		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
-		{
 			return;
-		}
 		actor.(weaponentity).misc_bulletcounter = 0;
 		W_OverkillMachineGun_Attack_Auto(thiswep, actor, weaponentity, fire);
 		return;
 	}
-	if ((fire & 2) && (WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, refire_type) == 0)) // Secondary attack
+	if ((fire & 2) && WEP_CVAR_SEC(WEP_OVERKILL_MACHINEGUN, refire_type) == 0) // Secondary attack
 	{
 		if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_PRI(WEP_BLASTER, refire)))
-		{
 			return;
-		}
 		makevectors(actor.v_angle);
 		W_Blaster_Attack(actor, weaponentity);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
@@ -114,12 +114,9 @@ METHOD(OverkillMachineGun, wr_think, void(entity thiswep, entity actor, .entity 
 
 METHOD(OverkillMachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	float ammo_amount;
-	ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, ammo);
+	float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, ammo);
 	if (WEP_CVAR(WEP_OVERKILL_MACHINEGUN, reload_ammo))
-	{
 		ammo_amount += actor.(weaponentity).(weapon_load[WEP_OVERKILL_MACHINEGUN.m_id]) >= WEP_CVAR_PRI(WEP_OVERKILL_MACHINEGUN, ammo);
-	}
 	return ammo_amount;
 }
 
@@ -143,18 +140,18 @@ METHOD(OverkillMachineGun, wr_killmessage, Notification(entity thiswep))
 	return WEAPON_OVERKILL_MACHINEGUN_MURDER;
 }
 
-#endif
+#endif // SVQC
 #ifdef CSQC
 
 METHOD(OverkillMachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
-	if(!w_issilent)
+	if (!w_issilent)
 		sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
 }
 
-#endif
+#endif // CSQC
 #ifdef MENUQC
 #include <common/items/item/ammo.qh>
 #include <common/mutators/mutator/overkill/overkill.qh>
@@ -173,4 +170,4 @@ METHOD(OverkillMachineGun, describe, string(OverkillMachineGun this))
 	return PAGE_TEXT;
 }
 
-#endif
+#endif // MENUQC

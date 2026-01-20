@@ -102,8 +102,7 @@ vector pathlib_walknode(entity this, vector start, vector end, float doedge)
     traceline(start + movenode_stepup, start - movenode_maxdrop, MOVE_WORLDONLY, this);
     if(trace_fraction == 1.0)
     {
-        entity a;
-        a = spawn();
+        entity a = spawn();
         setthink(a, a_think);
         a.nextthink = time;
         setorigin(a, start + movenode_stepup);

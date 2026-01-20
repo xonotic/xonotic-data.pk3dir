@@ -77,7 +77,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 		}
 		test_dir.z += 0.1; // aim up a little more
 		test_dir_normalized = normalize(test_dir);
-		c = c + 1;
+		++c;
 	}
 	targ.solid = savesolid;
 
@@ -203,7 +203,7 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	desiredang = vectoangles(v) + this.bot_badaimoffset * enemy_factor;
 	//dprint(" desired:", vtos(desiredang));
 	if (desiredang.x >= 180)
-		desiredang.x = desiredang.x - 360;
+		desiredang.x -= 360;
 	desiredang.x = bound(-90, 0 - desiredang.x, 90);
 	desiredang.z = this.v_angle.z;
 	//dprint(" / ", vtos(desiredang));
@@ -212,15 +212,15 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	//if (this.bot_painintensity)
 	//{
 	//	// shake from pain
-	//	desiredang = desiredang + randomvec() * this.bot_painintensity * 0.2;
+	//	desiredang += randomvec() * this.bot_painintensity * 0.2;
 	//}
 
 	// calculate turn angles
 	diffang = (desiredang - this.bot_olddesiredang);
 	// wrap yaw turn
-	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
+	diffang.y -= floor(diffang.y / 360) * 360;
 	if (diffang.y >= 180)
-		diffang.y = diffang.y - 360;
+		diffang.y -= 360;
 	this.bot_olddesiredang = desiredang;
 	//dprint(" diff:", vtos(diffang));
 
@@ -240,7 +240,7 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 
 	//blend = (bound(0,skill,10)*0.1)*((1-bound(0,skill,10)*0.05) ** 2.5)*5.656854249; //Plot formule before changing !
 	blend = bound(0,skill+this.bot_aimskill,10)*0.1;
-	desiredang = desiredang + blend *
+	desiredang += blend *
 	(
 		  this.bot_1st_order_aimfilter * autocvar_bot_ai_aimskill_order_mix_1st
 		+ this.bot_2nd_order_aimfilter * autocvar_bot_ai_aimskill_order_mix_2nd
@@ -253,44 +253,44 @@ void bot_aimdir(entity this, vector v, float maxfiredeviation)
 	// calculate turn angles
 	diffang = desiredang - this.bot_mouseaim;
 	// wrap yaw turn
-	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
+	diffang.y -= floor(diffang.y / 360) * 360;
 	if (diffang.y >= 180)
-		diffang.y = diffang.y - 360;
+		diffang.y -= 360;
 	//dprint(" diff:", vtos(diffang));
 
 	if (time >= this.bot_aimthinktime)
 	{
 		this.bot_aimthinktime = max(this.bot_aimthinktime + 0.5 - 0.05*(skill+this.bot_thinkskill), time);
-		this.bot_mouseaim = this.bot_mouseaim + diffang * (1-random()*0.1*bound(1,10-(skill+this.bot_thinkskill),10));
+		this.bot_mouseaim += diffang * (1-random()*0.1*bound(1,10-(skill+this.bot_thinkskill),10));
 	}
 
-	//this.v_angle = this.v_angle + diffang * bound(0, r * frametime * (skill * 0.5 + 2), 1);
+	//this.v_angle += diffang * bound(0, r * frametime * (skill * 0.5 + 2), 1);
 
 	diffang = this.bot_mouseaim - desiredang;
 	// wrap yaw turn
-	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
+	diffang.y -= floor(diffang.y / 360) * 360;
 	if (diffang.y >= 180)
-		diffang.y = diffang.y - 360;
-	desiredang = desiredang + diffang * bound(0,autocvar_bot_ai_aimskill_think,1);
+		diffang.y -= 360;
+	desiredang += diffang * bound(0,autocvar_bot_ai_aimskill_think,1);
 
 	// calculate turn angles
 	diffang = desiredang - this.v_angle;
 	// wrap yaw turn
-	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
+	diffang.y -= floor(diffang.y / 360) * 360;
 	if (diffang.y >= 180)
-		diffang.y = diffang.y - 360;
+		diffang.y -= 360;
 	//dprint(" diff:", vtos(diffang));
 
 	// jitter tracking
 	dist = vlen(diffang);
-	//diffang = diffang + randomvec() * (dist * 0.05 * (3.5 - bound(0, skill, 3)));
+	//diffang += randomvec() * (dist * 0.05 * (3.5 - bound(0, skill, 3)));
 
 	// turn
 	float r, fixedrate, blendrate;
 	fixedrate = autocvar_bot_ai_aimskill_fixedrate / bound(1,dist,1000);
 	blendrate = autocvar_bot_ai_aimskill_blendrate;
 	r = max(fixedrate, blendrate);
-	//this.v_angle = this.v_angle + diffang * bound(frametime, r * frametime * (2+skill*skill*0.05-random()*0.05*(10-skill)), 1);
+	//this.v_angle += diffang * bound(frametime, r * frametime * (2+skill*skill*0.05-random()*0.05*(10-skill)), 1);
 	r = bound(delta_t, r * delta_t * (2 + ((skill + this.bot_mouseskill) ** 3) * 0.005 - random()), 1);
 	this.v_angle += diffang * (r + (1 - r) * bound(0, 1 - autocvar_bot_ai_aimskill_mouse, 1));
 	this.v_angle_z = 0;

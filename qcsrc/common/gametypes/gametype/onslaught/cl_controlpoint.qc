@@ -22,7 +22,7 @@ void cpicon_draw(entity this)
 	if(time < this.move_time) { return; }
 
 	if(this.cp_bob_dmg_z > 0)
-		this.cp_bob_dmg_z = this.cp_bob_dmg_z - 3 * frametime;
+		this.cp_bob_dmg_z -= 3 * frametime;
 	else
 		this.cp_bob_dmg_z = 0;
 	this.cp_bob_origin_z = 9 * (1 - cos(1.875 * time));
@@ -34,47 +34,47 @@ void cpicon_draw(entity this)
 	{
 		if (this.punchangle_x > 0)
 		{
-			this.punchangle_x = this.punchangle_x - 60 * frametime;
+			this.punchangle_x -= 60 * frametime;
 			if (this.punchangle_x < 0)
 				this.punchangle_x = 0;
 		}
 		else if (this.punchangle_x < 0)
 		{
-			this.punchangle_x = this.punchangle_x + 60 * frametime;
+			this.punchangle_x += 60 * frametime;
 			if (this.punchangle_x > 0)
 				this.punchangle_x = 0;
 		}
 
 		if (this.punchangle_y > 0)
 		{
-			this.punchangle_y = this.punchangle_y - 60 * frametime;
+			this.punchangle_y -= 60 * frametime;
 			if (this.punchangle_y < 0)
 				this.punchangle_y = 0;
 		}
 		else if (this.punchangle_y < 0)
 		{
-			this.punchangle_y = this.punchangle_y + 60 * frametime;
+			this.punchangle_y += 60 * frametime;
 			if (this.punchangle_y > 0)
 				this.punchangle_y = 0;
 		}
 
 		if (this.punchangle_z > 0)
 		{
-			this.punchangle_z = this.punchangle_z - 60 * frametime;
+			this.punchangle_z -= 60 * frametime;
 			if (this.punchangle_z < 0)
 				this.punchangle_z = 0;
 		}
 		else if (this.punchangle_z < 0)
 		{
-			this.punchangle_z = this.punchangle_z + 60 * frametime;
+			this.punchangle_z += 60 * frametime;
 			if (this.punchangle_z > 0)
 				this.punchangle_z = 0;
 		}
 
 		this.angles_x = this.punchangle_x;
-		this.angles_y = this.punchangle_y + this.angles_y;
+		this.angles_y += this.punchangle_y;
 		this.angles_z = this.punchangle_z;
-		this.angles_y = this.angles_y + 45 * frametime;
+		this.angles_y += 45 * frametime;
 	}
 
 	setorigin(this, this.cp_origin + this.cp_bob_origin + eZ * this.cp_bob_dmg_z);

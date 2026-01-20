@@ -1037,7 +1037,7 @@ void ctf_FlagThink(entity this)
 				vector midpoint = ((this.absmin + this.absmax) * 0.5);
 				if(pointcontents(midpoint) == CONTENT_WATER)
 				{
-					this.velocity = this.velocity * 0.5;
+					this.velocity *= 0.5;
 
 					if (pointcontents(midpoint + eZ * FLAG_FLOAT_OFFSET_Z) == CONTENT_WATER)
 						{ this.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater; }
@@ -1570,8 +1570,7 @@ int havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 #if 0
 void havocbot_goalrating_ctf_ourflag(entity this, float ratingscale)
 {
-	entity head;
-	head = ctf_worldflaglist;
+	entity head = ctf_worldflaglist;
 	while (head)
 	{
 		if (CTF_SAMETEAM(this, head))
@@ -1656,9 +1655,7 @@ void havocbot_goalrating_ctf_enemybase(entity this, float ratingscale)
 		return;
 	}
 	*/
-	entity head;
-
-	head = havocbot_ctf_find_enemy_flag(this);
+	entity head = havocbot_ctf_find_enemy_flag(this);
 
 	if (!head)
 		return;
@@ -1668,9 +1665,7 @@ void havocbot_goalrating_ctf_enemybase(entity this, float ratingscale)
 
 void havocbot_goalrating_ctf_ourstolenflag(entity this, float ratingscale)
 {
-	entity mf;
-
-	mf = havocbot_ctf_find_flag(this);
+	entity mf = havocbot_ctf_find_flag(this);
 
 	if(mf.ctf_status == FLAG_BASE)
 		return;
@@ -2080,9 +2075,7 @@ void havocbot_role_ctf_middle(entity this)
 
 	if (navigation_goalrating_timeout(this))
 	{
-		vector org;
-
-		org = havocbot_middlepoint;
+		vector org = havocbot_middlepoint;
 		org.z = this.origin.z;
 
 		navigation_goalrating_start(this);
@@ -2511,7 +2504,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 			else
 			{
 				if(time > player.throw_prevtime + autocvar_g_ctf_throw_punish_time) { player.throw_count = 1; }
-				else { player.throw_count += 1; }
+				else { ++player.throw_count; }
 				if(player.throw_count >= autocvar_g_ctf_throw_punish_count) { player.throw_count = -1; }
 
 				player.throw_prevtime = time;
@@ -2714,6 +2707,11 @@ MUTATOR_HOOKFUNCTION(ctf, LogDeath_AppendItemCodes)
 	entity player = M_ARGV(0, entity);
 	if(player.flagcarried)
 		M_ARGV(1, string) = strcat(M_ARGV(1, string), "F"); // item codes
+}
+
+MUTATOR_HOOKFUNCTION(ctf, PreferPlayerScore_Clear)
+{
+	return true;
 }
 
 

@@ -865,7 +865,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	REGISTER(Notifications, name, m_id, new_pure(msg_choice_notification)) { \
 		this.nent_choice_idx = nent_choice_count; \
 		if (!teamnum || teamnum == NUM_TEAM_4) \
-			nent_choice_count++; \
+			++nent_choice_count; \
 		Create_Notification_Entity       (this, defaultvalue, ACVNN(cvarname), MSG_CHOICE, strtoupper(#name), teamnum); \
 		Create_Notification_Entity_Choice(this, ACVNN(cvarname), strtoupper(#name), \
 			challow,                                 /* challow_def */ \

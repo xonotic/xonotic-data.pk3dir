@@ -16,7 +16,7 @@ void XonoticHUDItemsTimeDialog_fill(entity me)
 			e.setValueSpace(e, e.valueSpace * 1.5);
 			e.addText(e, _("Disable"), 0);
 			e.addText(e, _("Enable spectating"), 1);
-			e.addText(e, _("Enable even playing in warmup"), 2);
+			e.addText(e, _("Enable even in warmup"), 2);
 			e.configureXonoticMixedSliderValues(e);
 
 	dialog_hudpanel_main_settings(me, panelname);

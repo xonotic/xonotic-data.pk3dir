@@ -1,5 +1,6 @@
 #include "all.qh"
 
+#ifdef GAMEQC
 string M_Model(string m_mdl)
 {
 	string output = strcat("models/monsters/", m_mdl);
@@ -10,3 +11,4 @@ string M_Model(string m_mdl)
 	return output;
 #endif
 }
+#endif

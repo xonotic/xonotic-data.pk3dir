@@ -253,9 +253,7 @@ void pathlib_close_node(entity node,vector goal)
 
     if(vdist(node.origin - goal, <=, pathlib_gridsize))
     {
-        vector goalmove;
-
-        goalmove = pathlib_walknode(node, node.origin, goal, 1);
+        pathlib_walknode(node, node.origin, goal, 1);
         if(pathlib_movenode_goodnode)
         {
             goal_node         = node;

@@ -12,10 +12,6 @@ REGISTER_WEAPON(RACER, NEW(RacerAttack));
 
 // TODO: move into implementation
 #ifdef SVQC
-void racer_fire_rocket(entity this, entity player, vector org, vector dir, entity trg);
-#endif
-
-#ifdef SVQC
 float autocvar_g_vehicle_racer_cannon_cost = 1.5;
 float autocvar_g_vehicle_racer_cannon_damage = 15;
 float autocvar_g_vehicle_racer_cannon_radius = 100;
@@ -34,4 +30,6 @@ float autocvar_g_vehicle_racer_rocket_refire = 3;
 
 float autocvar_g_vehicle_racer_rocket_climbspeed = 1600;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle = 1.8;
-#endif
+
+void racer_fire_rocket(entity this, entity player, vector org, vector dir, entity targ);
+#endif // SVQC

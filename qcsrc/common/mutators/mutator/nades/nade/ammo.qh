@@ -13,13 +13,19 @@ float autocvar_g_nades_ammo_clip_empty_rate;
 void nade_ammo_boom(entity this);
 #endif // SVQC
 
+#ifdef GAMEQC
 const int PROJECTILE_NADE_AMMO = 88;
 const int PROJECTILE_NADE_AMMO_BURN = 89;
+#endif
 
 CLASS(AmmoNade, Nade)
 	ATTRIB(AmmoNade, m_color, vector, '0.33 0.33 1');
 	ATTRIB(AmmoNade, m_name, string, _("Ammo grenade"));
+#ifndef SVQC
 	ATTRIB(AmmoNade, m_icon, string, "nade_ammo");
+#endif
 	ATTRIB(AmmoNade, netname, string, "ammo");
+#ifdef SVQC
 	ATTRIB(AmmoNade, impulse, int, 10);
+#endif
 ENDCLASS(AmmoNade)

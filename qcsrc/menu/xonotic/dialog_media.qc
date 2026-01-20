@@ -7,8 +7,7 @@
 
 void XonoticMediaDialog_fill(entity me)
 {
-	entity mc;
-	mc = makeXonoticTabController(me.rows - 1);
+	entity mc = makeXonoticTabController(me.rows - 1);
 	me.TR(me);
 		me.TD(me, 1, 6/4, mc.makeTabButton(mc, _("Guide"),        makeXonoticGuideTab()));
 		me.TD(me, 1, 6/4, mc.makeTabButton(mc, _("Demos"),        makeXonoticDemoBrowserTab()));

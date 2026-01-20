@@ -2,12 +2,9 @@
 #ifdef SVQC
 void multivibrator_send(entity this)
 {
-	float newstate;
-	float cyclestart;
+	float cyclestart = floor((time + this.phase) / (this.wait + this.respawntime)) * (this.wait + this.respawntime) - this.phase;
 
-	cyclestart = floor((time + this.phase) / (this.wait + this.respawntime)) * (this.wait + this.respawntime) - this.phase;
-
-	newstate = (time < cyclestart + this.wait);
+	float newstate = (time < cyclestart + this.wait);
 
 	if(this.state != newstate)
 		SUB_UseTargets(this, this, NULL);

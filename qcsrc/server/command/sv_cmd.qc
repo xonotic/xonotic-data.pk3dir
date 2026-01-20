@@ -434,7 +434,7 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 					int bot_num = 0;
 					FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 						bot_queuecommand(it, substring(command, argv_start_index(2), -1));
-						bot_num++;
+						++bot_num;
 					});
 					if(bot_num)
 						LOG_INFO("Command '", substring(command, argv_start_index(2), -1), "' sent to all bots (", ftos(bot_num), ")");
@@ -904,7 +904,7 @@ void GameCommand_animbench(int request, int argc)
 					t0 = gettime(GETTIME_HIRES);
 					getsurfacepoint(tmp_entity, 0, 0);
 					t2 += gettime(GETTIME_HIRES) - t0;
-					n += 1;
+					++n;
 				}
 				LOG_INFO("model ", tmp_entity.model, " frame ", ftos(f1), " animtime ", ftos(n / t1), "/s");
 				LOG_INFO("model ", tmp_entity.model, " frame ", ftos(f2), " animtime ", ftos(n / t2), "/s");
@@ -997,9 +997,7 @@ void GameCommand_make_mapinfo(int request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity tmp_entity;
-
-			tmp_entity = new(make_mapinfo);
+			entity tmp_entity = new(make_mapinfo);
 			setthink(tmp_entity, make_mapinfo_Think);
 			tmp_entity.nextthink = time;
 			MapInfo_Enumerate();

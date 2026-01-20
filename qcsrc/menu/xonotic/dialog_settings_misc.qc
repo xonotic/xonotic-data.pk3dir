@@ -11,8 +11,7 @@
 
 entity makeXonoticMiscSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticMiscSettingsTab);
+	entity me = NEW(XonoticMiscSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

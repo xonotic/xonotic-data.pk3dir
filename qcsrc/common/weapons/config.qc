@@ -1,8 +1,6 @@
 #include "config.qh"
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
+#ifdef SVQC
 	#include <common/util.qh>
 	#include <common/weapons/all.qh>
 #endif
@@ -31,9 +29,10 @@ float W_Config_Queue_Compare(int root, int child, entity pass)
 
 void Dump_Weapon_Settings()
 {
-	int totalweapons = 0, totalsettings = 0;
-	int wepcount = 1;
-	#define WEP_CONFIG_WRITETOFILE(str) write_String_To_File(wep_config_file, str, wep_config_alsoprint)
+	int totalsettings = 0;
+	int totalweapons = 0;
+	#define WEP_CONFIG_WRITETOFILE(str) \
+		write_String_To_File(wep_config_file, str, wep_config_alsoprint)
 
 	WEP_CONFIG_WRITETOFILE(
 		"// ************************************************************************************ //\n"
@@ -61,12 +60,14 @@ void Dump_Weapon_Settings()
 		"// ************************************************************************************ //\n"
 		"\n");
 
-	FOREACH(Weapons, it != WEP_Null, {
-		if(it.spawnflags & WEP_FLAG_SPECIALATTACK)
+	int x;
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		if (it.spawnflags & WEP_FLAG_SPECIALATTACK)
 			continue; // never include the attacks
 		// step 1: clear the queue
 		WEP_CONFIG_COUNT = 0;
-		for (int x = 0; x < MAX_CONFIG_SETTINGS; ++x)
+		for (x = 0; x < MAX_CONFIG_SETTINGS; ++x)
 			config_queue[x] = string_null;
 
 		// step 2: build new queue
@@ -84,19 +85,18 @@ void Dump_Weapon_Settings()
 		// step 4: write queue
 		WEP_CONFIG_WRITETOFILE(sprintf(
 			"// {{{ #%d: %s%s\n",
-			wepcount,
+			totalweapons + 1,
 			it.m_name,
 			((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) ? " (MUTATOR WEAPON)" : "")
 		));
-		for (int x = 0; x < WEP_CONFIG_COUNT; ++x)
+		for (x = 0; x < WEP_CONFIG_COUNT; ++x)
 			WEP_CONFIG_WRITETOFILE(config_queue[x]);
 		WEP_CONFIG_WRITETOFILE("// }}}\n");
 
 		// step 5: debug info
 		LOG_INFOF("#%d: %s: %d settings...", i, it.m_name, WEP_CONFIG_COUNT);
-		totalweapons += 1;
+		++totalweapons;
 		totalsettings += WEP_CONFIG_COUNT;
-		wepcount += 1;
 	});
 	#undef WEP_CONFIG_WRITETOFILE
 
@@ -106,6 +106,6 @@ void Dump_Weapon_Settings()
 
 	// clear queue now that we're finished
 	WEP_CONFIG_COUNT = 0;
-	for (int x = 0; x < MAX_CONFIG_SETTINGS; ++x)
+	for (x = 0; x < MAX_CONFIG_SETTINGS; ++x)
 		config_queue[x] = string_null;
 }

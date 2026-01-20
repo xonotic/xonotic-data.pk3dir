@@ -100,8 +100,7 @@ float WinningCondition_Race(float fraglimit)
 
 float WinningCondition_QualifyingThenRace(float limit)
 {
-	float wc;
-	wc = WinningCondition_Scores(limit, 0);
+	float wc = WinningCondition_Scores(limit, 0);
 
 	// NEVER initiate overtime
 	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
@@ -316,9 +315,9 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 	race_SpeedAwardFrame(player);
 }
 
-MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
+MUTATOR_HOOKFUNCTION(rc, PreferPlayerScore_Clear)
 {
-	if(g_race_qualifying)
+	if(!g_race_qualifying)
 		return true; // in qualifying, you don't lose score by observing
 }
 

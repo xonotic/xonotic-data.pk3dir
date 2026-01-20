@@ -108,11 +108,19 @@ int autocvar_g_player_damageplayercenter;
 // NOTE: the .weaponentity parameter can be set to DMG_NOWEP if the attack wasn't caused by a weapon or player
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force);
 
-float RadiusDamage_running;
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, vector forcexyzscale, int deathtype, .entity weaponentity, entity directhitentity);
+bool RadiusDamage_running;
+float RadiusDamageForSource(
+	entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker,
+	float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
+	bool inflictorselfdamage, float forceintensity, vector forcexyzscale,
+	int deathtype, .entity weaponentity, entity directhitentity);
 	// Returns total damage applies to creatures
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, .entity weaponentity, entity directhitentity);
+float RadiusDamage(
+	entity inflictor, entity attacker,
+	float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
+	float forceintensity,
+	int deathtype, .entity weaponentity, entity directhitentity);
 
 .float damageforcescale;
 const float MIN_DAMAGEEXTRARADIUS = 0.1;
@@ -133,4 +141,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
 void Fire_ApplyDamage(entity e);
 
 IntrusiveList g_damagedbycontents;
-STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
+STATIC_INIT(g_damagedbycontents)
+{
+	g_damagedbycontents = IL_NEW();
+}

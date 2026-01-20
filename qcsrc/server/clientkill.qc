@@ -86,7 +86,7 @@ void KillIndicator_Think(entity this)
 		}
 	}
 	this.nextthink = time + 1;
-	this.cnt -= 1;
+	--this.cnt;
 }
 
 .float lip;

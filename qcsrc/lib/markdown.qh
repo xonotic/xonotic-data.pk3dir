@@ -20,10 +20,10 @@ string markdown(string s)
 				buf = strcat(buf, chr2str(it));
 				break;
 			case ' ':
-				spaces += 1;
+				++spaces;
 				break;
 			case '\n':
-				lines += 1;
+				++lines;
 				if (lines > 1) {
 					lines = 0;
 					spaces = 0;

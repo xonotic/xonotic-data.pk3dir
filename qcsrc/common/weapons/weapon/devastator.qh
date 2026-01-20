@@ -13,20 +13,24 @@ SOUND(DEVASTATOR_MODE, W_Sound("rocket_mode"));
 #endif
 
 CLASS(Devastator, Weapon)
+#ifdef GAMEQC
 /* spawnfunc */ ATTRIB(Devastator, m_canonical_spawnfunc, string, "weapon_devastator");
+/* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);
+#endif
 /* ammotype  */ ATTRIB(Devastator, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Devastator, impulse, int, 9);
 /* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(Devastator, m_color, vector, '0.914 0.745 0.341');
-/* modelname */ ATTRIB(Devastator, mdl, string, "rl");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(Devastator, mdl, string, "rl");
 /* model     */ ATTRIB(Devastator, m_model, Model, MDL_DEVASTATOR_ITEM);
 /* flash mdl */ ATTRIB(Devastator, m_muzzlemodel, Model, MDL_DEVASTATOR_MUZZLEFLASH);
 /* flash eff */ ATTRIB(Devastator, m_muzzleeffect, entity, EFFECT_ROCKET_MUZZLEFLASH);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(Devastator, w_crosshair, string, "gfx/crosshairrocketlauncher");
 /* crosshair */ ATTRIB(Devastator, w_crosshair_size, float, 0.7);
+#endif
 /* wepimg    */ ATTRIB(Devastator, model2, string, "weaponrocketlauncher");
 /* refname   */ ATTRIB(Devastator, netname, string, "devastator");
 /* wepname   */ ATTRIB(Devastator, m_name, string, _("Devastator"));
@@ -70,7 +74,7 @@ CLASS(Devastator, Weapon)
 		P(class, prefix, speed, float, NONE) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \

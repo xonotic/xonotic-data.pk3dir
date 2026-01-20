@@ -15,20 +15,24 @@ SOUND(FIREBALL_PREFIRE2, W_Sound("fireball_prefire2"));
 #endif
 
 CLASS(Fireball, Weapon)
+#ifdef SVQC
 /* spawnfunc */ ATTRIB(Fireball, m_canonical_spawnfunc, string, "weapon_fireball");
+/* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, 5000);
+#endif
 /* ammotype  */ //ATTRIB(Fireball, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Fireball, impulse, int, 9);
 /* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
-/* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, 5000);
 /* color     */ ATTRIB(Fireball, m_color, vector, '0.941 0.522 0.373');
-/* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
 /* model     */ ATTRIB(Fireball, m_model, Model, MDL_FIREBALL_ITEM);
 /* flash mdl */ ATTRIB(Fireball, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Fireball, m_muzzleeffect, entity, EFFECT_FIREBALL_MUZZLEFLASH);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(Fireball, w_crosshair, string, "gfx/crosshairfireball");
 /* crosshair */ //ATTRIB(Fireball, w_crosshair_size, float, 0.65);
+#endif
 /* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
 /* refname   */ ATTRIB(Fireball, netname, string, "fireball");
 /* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
@@ -59,7 +63,7 @@ CLASS(Fireball, Weapon)
 		P(class, prefix, spread, float, BOTH) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
@@ -73,7 +77,6 @@ REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 SPAWNFUNC_WEAPON(weapon_fireball, WEP_FIREBALL)
 
 #ifdef SVQC
-.float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
 #endif

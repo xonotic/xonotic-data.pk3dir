@@ -266,7 +266,7 @@ void RadarMap_Think(entity this)
 			si = substring(doublehex, i * 2, 2);
 			fputs(this.cnt, strcat("\"", si, " c #", si, si, si, "\",\n"));
 		}
-		this.frame += 1;
+		++this.frame;
 		this.nextthink = time;
 		sharpen_init(this.size.x);
 	}
@@ -352,7 +352,7 @@ void RadarMap_Think(entity this)
 			}
 		}
 
-		this.frame += 1;
+		++this.frame;
 		this.nextthink = time;
 	}
 	else

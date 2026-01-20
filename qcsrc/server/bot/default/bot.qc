@@ -48,7 +48,7 @@ entity bot_spawn()
 	if (bot)
 	{
 		setItemGroupCount();
-		currentbots = currentbots + 1;
+		++currentbots;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
 		bot_setclientfields(bot);
@@ -219,7 +219,7 @@ void bot_setnameandstuff(entity this)
 				}
 			});
 			if (!conflict)
-				prio += 1;
+				++prio;
 			if (teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 			{
 				int forced_team = stof(argv(5));
@@ -268,7 +268,7 @@ void bot_setnameandstuff(entity this)
 			this.f = stof(argv(prio)) * w; \
 		else \
 			this.f = (!autocvar_g_campaign) * (2 * random() - 1) * r * w; \
-		prio++; \
+		++prio; \
 	MACRO_END
 	//print(bot_name, ": ping=", argv(9), "\n");
 
@@ -526,7 +526,7 @@ void bot_removefromlargestteam()
 	TeamBalance_Destroy(balance);
 	if(!bcount)
 		return; // no bots to remove
-	currentbots = currentbots - 1;
+	--currentbots;
 	dropclient(best);
 }
 
@@ -562,7 +562,7 @@ void bot_removenewest()
 	if(!bcount)
 		return; // no bots to remove
 
-	currentbots = currentbots - 1;
+	--currentbots;
 	dropclient(best);
 }
 
@@ -740,8 +740,7 @@ void bot_serverframe()
 
 	if(time > autoskill_nextthink)
 	{
-		float a;
-		a = autocvar_skill_auto;
+		float a = autocvar_skill_auto;
 		if(a)
 			autoskill(a);
 		autoskill_nextthink = time + 5;
@@ -815,11 +814,10 @@ void bot_serverframe()
 
 		if (botframe_nextdangertime < time)
 		{
-			float interval;
-			interval = autocvar_bot_ai_dangerdetectioninterval;
+			float interval = autocvar_bot_ai_dangerdetectioninterval;
 			if (botframe_nextdangertime < time - interval * 1.5)
 				botframe_nextdangertime = time;
-			botframe_nextdangertime = botframe_nextdangertime + interval;
+			botframe_nextdangertime += interval;
 			botframe_updatedangerousobjects(autocvar_bot_ai_dangerdetectionupdates);
 		}
 	}

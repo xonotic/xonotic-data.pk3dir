@@ -111,8 +111,7 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	string s;
 	do
 	{
-		float m;
-		m = floor(random() * MapInfo_count);
+		float m = floor(random() * MapInfo_count);
 		s = MapInfo_BSPName_ByID(m);
 	}
 	while(!fexists(sprintf("maps/%s.waypoints", s)));
@@ -127,10 +126,9 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 	MapInfo_LoadMap(s, 1);
 
 	// configure bots
-	float p;
 	pmin = pstep * ceil(pmin / pstep);
 	pmax = pstep * floor(pmax / pstep);
-	p = pmin + pstep * floor(random() * ((pmax - pmin) / pstep + 1));
+	float p = pmin + pstep * floor(random() * ((pmax - pmin) / pstep + 1));
 
 	// cvar_set doesn't always work starting an InstantAction game while playing the campaign
 	//cvar_set("bot_number", ftos(p - 1));

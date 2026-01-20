@@ -6,12 +6,9 @@
 void spawner_use(entity this, entity actor, entity trigger)
 {
 	int moncount = 0;
-	IL_EACH(g_monsters, it.realowner == this,
-	{
-		++moncount;
-	});
+	IL_EACH(g_monsters, it.realowner == this, ++moncount);
 
-	if(moncount >= this.count)
+	if (moncount >= this.count)
 		return;
 
 	entity e = spawn();
@@ -24,7 +21,11 @@ void spawner_use(entity this, entity actor, entity trigger)
 
 spawnfunc(monster_spawner)
 {
-	if(!autocvar_g_monsters || !this.spawnmob || this.spawnmob == "") { delete(this); return; }
+	if (!autocvar_g_monsters || !this.spawnmob || this.spawnmob == "")
+	{
+		delete(this);
+		return;
+	}
 
 	this.use = spawner_use;
 }

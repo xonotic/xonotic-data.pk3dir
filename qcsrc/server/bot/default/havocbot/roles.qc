@@ -105,7 +105,7 @@ bool havocbot_goalrating_item_pickable_check_players(entity this, vector org, en
 
 void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius)
 {
-	ratingscale = ratingscale * 0.0001;
+	ratingscale *= 0.0001;
 
 	IL_EACH(g_items, it.bot_pickup,
 	{
@@ -182,7 +182,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 	if(this.waterlevel > WATERLEVEL_WETFEET)
 		return;
 
-	ratingscale = ratingscale * 0.0001;
+	ratingscale *= 0.0001;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(this, it), {
 		// TODO: Merge this logic with the bot_shouldattack function

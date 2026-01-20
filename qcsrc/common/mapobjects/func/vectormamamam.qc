@@ -18,9 +18,9 @@ vector func_vectormamamam_origin(entity o, float timestep)
 	{
 		p = e.origin + timestep * e.velocity;
 		if(myflags & PROJECT_ON_TARGETNORMAL)
-			v = v + (p * o.targetnormal) * o.targetnormal * o.targetfactor;
+			v += (p * o.targetnormal) * o.targetnormal * o.targetfactor;
 		else
-			v = v + (p - (p * o.targetnormal) * o.targetnormal) * o.targetfactor;
+			v += (p - (p * o.targetnormal) * o.targetnormal) * o.targetfactor;
 	}
 
 	e = o.wp01;
@@ -28,9 +28,9 @@ vector func_vectormamamam_origin(entity o, float timestep)
 	{
 		p = e.origin + timestep * e.velocity;
 		if(myflags & PROJECT_ON_TARGET2NORMAL)
-			v = v + (p * o.target2normal) * o.target2normal * o.target2factor;
+			v += (p * o.target2normal) * o.target2normal * o.target2factor;
 		else
-			v = v + (p - (p * o.target2normal) * o.target2normal) * o.target2factor;
+			v += (p - (p * o.target2normal) * o.target2normal) * o.target2factor;
 	}
 
 	e = o.wp02;
@@ -38,9 +38,9 @@ vector func_vectormamamam_origin(entity o, float timestep)
 	{
 		p = e.origin + timestep * e.velocity;
 		if(myflags & PROJECT_ON_TARGET3NORMAL)
-			v = v + (p * o.target3normal) * o.target3normal * o.target3factor;
+			v += (p * o.target3normal) * o.target3normal * o.target3factor;
 		else
-			v = v + (p - (p * o.target3normal) * o.target3normal) * o.target3factor;
+			v += (p - (p * o.target3normal) * o.target3normal) * o.target3factor;
 	}
 
 	e = o.wp03;
@@ -48,9 +48,9 @@ vector func_vectormamamam_origin(entity o, float timestep)
 	{
 		p = e.origin + timestep * e.velocity;
 		if(myflags & PROJECT_ON_TARGET4NORMAL)
-			v = v + (p * o.target4normal) * o.target4normal * o.target4factor;
+			v += (p * o.target4normal) * o.target4normal * o.target4factor;
 		else
-			v = v + (p - (p * o.target4normal) * o.target4normal) * o.target4factor;
+			v += (p - (p * o.target4normal) * o.target4normal) * o.target4factor;
 	}
 
 	return v;

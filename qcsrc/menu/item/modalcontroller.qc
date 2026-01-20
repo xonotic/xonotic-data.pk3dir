@@ -53,8 +53,7 @@
 
 	void ModalController_switchState(entity me, entity other, float state, float skipAnimation)
 	{
-		float previousState;
-		previousState = other.ModalController_state;
+		float previousState = other.ModalController_state;
 		if (state == previousState && !skipAnimation) return;
 		other.ModalController_state = state;
 		switch (state)

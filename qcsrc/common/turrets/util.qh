@@ -6,13 +6,13 @@ float turret_tag_fire_update(entity this);
 void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax, float bforce, float f_dmg, float f_velfactor, float deathtype);
 
 #ifdef TURRET_DEBUG
-void mark_error(vector where,float lifetime);
-void mark_info(vector where,float lifetime);
-entity mark_misc(vector where,float lifetime);
+void mark_error(vector where, float lifetime);
+void mark_info(vector where, float lifetime);
+entity mark_misc(vector where, float lifetime);
 
 void paint_target(entity onwho, float f_size, vector v_color, float f_time);
 void paint_target2(entity onwho, float f_size, vector v_color, float f_time);
 void paint_target3(vector where, float f_size, vector v_color, float f_time);
-#endif
+#endif // TURRET_DEBUG
 
-#endif
+#endif // SVQC

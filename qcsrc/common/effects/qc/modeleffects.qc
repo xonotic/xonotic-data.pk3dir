@@ -87,7 +87,7 @@ classfield(ModelEffect) .float scale1, scale2;
 
 void ModelEffect_Draw(entity this)
 {
-	this.angles = this.angles + frametime * this.avelocity;
+	this.angles += frametime * this.avelocity;
 	setorigin(this, this.origin + frametime * this.velocity);
 	this.scale = this.scale1 + (this.scale2 - this.scale1) * (time - this.teleport_time) / (this.lifetime + this.fadetime - this.teleport_time);
 	this.alpha = this.cnt * bound(0, 1 - (time - this.lifetime) / this.fadetime, 1);

@@ -422,7 +422,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	}
 
 	#define X(out, in) MACRO_BEGIN \
-		if (in != 0) { out = out + (random() * 2 - 1) * in; } \
+		if (in != 0) { out += (random() * 2 - 1) * in; } \
 	MACRO_END
 	X(this.origin.x, this.originjitter.x); X(this.origin.y, this.originjitter.y); X(this.origin.z, this.originjitter.z);
 	X(this.angles.x, this.anglesjitter.x); X(this.angles.y, this.anglesjitter.y); X(this.angles.z, this.anglesjitter.z);

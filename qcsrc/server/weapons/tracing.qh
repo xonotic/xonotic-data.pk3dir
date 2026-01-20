@@ -57,8 +57,10 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wep, speed), WEP_CVAR_SEC(wep, speed_up), WEP_CVAR_SEC(wep, speed_z), WEP_CVAR_SEC(wep, spread), false)
 
 #define W_SetupProjVelocity_UP_BOTH(ent, wep, isprimary) \
-	if(isprimary) { W_SetupProjVelocity_UP_PRI(ent, wep); } \
-	else { W_SetupProjVelocity_UP_SEC(ent, wep); }
+	if (isprimary) \
+		W_SetupProjVelocity_UP_PRI(ent, wep); \
+	else \
+		W_SetupProjVelocity_UP_SEC(ent, wep);
 
 #define W_SetupProjVelocity_PRE(ent, wep, prefix) \
 	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wep, prefix##speed), 0, 0, WEP_CVAR(wep, prefix##spread), false)
@@ -68,8 +70,10 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wep, speed), 0, 0, WEP_CVAR_SEC(wep, spread), false)
 
 #define W_SetupProjVelocity_BOTH(ent, wep, isprimary) \
-	if(isprimary) { W_SetupProjVelocity_PRI(ent, wep); } \
-	else { W_SetupProjVelocity_SEC(ent, wep); }
+	if (isprimary) \
+		W_SetupProjVelocity_PRI(ent, wep); \
+	else \
+		W_SetupProjVelocity_SEC(ent, wep);
 
 // ====================
 //  Ballistics Tracing
@@ -83,11 +87,14 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 .vector railgunhitloc;
 
 IntrusiveList g_railgunhit;
-STATIC_INIT(g_railgunhit) { g_railgunhit = IL_NEW(); }
+STATIC_INIT(g_railgunhit)
+{
+	g_railgunhit = IL_NEW();
+}
 
 .float railgundistance;
 .vector railgunforce;
-void FireRailgunBullet (entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype);
+void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype);
 
 entity fireBullet_trace_callback_eff;
 entity fireBullet_last_hit;
@@ -101,11 +108,14 @@ void crosshair_trace_plusvisibletriggers(entity pl);
 void WarpZone_crosshair_trace_plusvisibletriggers(entity pl);
 void crosshair_trace_plusvisibletriggers__is_wz(entity pl, bool is_wz);
 
-void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void traceline_antilag(entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 
 void WarpZone_crosshair_trace(entity pl);
 
-void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+void WarpZone_traceline_antilag(entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 
 IntrusiveList g_ctrace_changed;
-STATIC_INIT(g_ctrace_changed) { g_ctrace_changed = IL_NEW(); }
+STATIC_INIT(g_ctrace_changed)
+{
+	g_ctrace_changed = IL_NEW();
+}

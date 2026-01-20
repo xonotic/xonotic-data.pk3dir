@@ -3,8 +3,7 @@
 
 entity makeXonoticTextBox()
 {
-	entity me;
-	me = NEW(XonoticTextBox);
+	entity me = NEW(XonoticTextBox);
 	me.configureXonoticListBox(me);
 	return me;
 }
@@ -45,7 +44,7 @@ void XonoticTextBox_setText(entity me, string txt)
 			t = getWrappedLine(1 - me.controlWidth, me.realFontSize,
 				(me.allowColors) ? draw_TextWidth_WithColors : draw_TextWidth_WithoutColors);
 			bufstr_set(buf, line, t);
-			line++;
+			++line;
 		}
 	}
 

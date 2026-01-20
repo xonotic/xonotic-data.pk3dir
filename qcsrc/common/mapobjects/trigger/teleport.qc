@@ -60,8 +60,7 @@ void Teleport_Touch(entity this, entity toucher)
 		RemoveGrapplingHooks(player);
 #endif
 
-	entity e;
-	e = Simple_TeleportPlayer(this, player);
+	noref entity e = Simple_TeleportPlayer(this, player);
 
 #ifdef SVQC
 	string s = this.target; this.target = string_null;

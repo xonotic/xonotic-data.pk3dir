@@ -137,8 +137,7 @@ void Gib_Touch(entity this, entity toucher)
 
 void Gib_Draw(entity this)
 {
-	vector oldorg;
-	oldorg = this.origin;
+	vector oldorg = this.origin;
 
 	Movetype_Physics_MatchTicrate(this, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 	if(wasfreed(this))
@@ -256,7 +255,7 @@ NET_HANDLE(net_gibsplash, bool isNew)
 
 	int specnum = (type & 0x78) / 8; // blood/gibmodel type: using four bits (0..7, bit indexes 3,4,5)
 	bool issilent = (type & 0x40);
-	type = type & 0x87; // remove the species bits: bit 7 = gentle, bit 0,1,2 = kind of gib
+	type &= 0x87; // remove the species bits: bit 7 = gentle, bit 0,1,2 = kind of gib
 	string specstr = species_prefix(specnum);
 
 	switch(type)

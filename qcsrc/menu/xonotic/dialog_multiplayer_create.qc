@@ -58,8 +58,7 @@ void GameType_ConfigureSliders_for_CurrentGametype(entity me)
 
 entity makeXonoticServerCreateTab()
 {
-	entity me;
-	me = NEW(XonoticServerCreateTab);
+	entity me = NEW(XonoticServerCreateTab);
 	me.configureDialog(me);
 	return me;
 }

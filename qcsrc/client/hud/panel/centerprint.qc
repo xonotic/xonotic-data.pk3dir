@@ -230,7 +230,7 @@ void HUD_CenterPrint()
 		vector target_pos = vec2(0.5 * (vid_conwidth - panel_size.x), scoreboard_bottom);
 		if (target_pos.y > panel_pos.y)
 		{
-			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
+			panel_pos += (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
 			panel_size.y = min(panel_size.y, vid_conheight - scoreboard_bottom);
 		}
 

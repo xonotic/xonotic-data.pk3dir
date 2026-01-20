@@ -91,8 +91,7 @@
 
 		if (me.isTabRoot && me.closable && me.borderLines > 0)
 		{
-			entity closebutton;
-			closebutton = me.closeButton = me.frame.closeButton = NEW(Button);
+			entity closebutton = me.closeButton = me.frame.closeButton = NEW(Button);
 			closebutton.configureButton(closebutton, "", 0, me.closeButtonImage);
 			closebutton.onClick = Dialog_Close;
 			closebutton.onClickEntity = me;

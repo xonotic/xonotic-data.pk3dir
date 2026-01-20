@@ -89,7 +89,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		{
 			// match at start
 			s = substring(ear.message, 1, -1);
-			l -= 1;
+			--l;
 			if(substring(msg, -l, l) == s)
 				matchstart = strlen(msg) - l;
 		}
@@ -100,7 +100,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		{
 			// match at end
 			s = substring(ear.message, 0, -2);
-			l -= 1;
+			--l;
 			if(substring(msg, 0, l) == s)
 				matchstart = 0;
 		}
@@ -195,6 +195,6 @@ spawnfunc(trigger_magicear)
 	// movedir:
 	//   for spawnflags 256, defines 'instrument+1 mintempo maxtempo' (zero component doesn't matter)
 
-	this.movedir_x -= 1; // map to tuba instrument numbers
+	--this.movedir_x; // map to tuba instrument numbers
 }
 #endif

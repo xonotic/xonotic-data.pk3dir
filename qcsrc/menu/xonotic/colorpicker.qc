@@ -4,8 +4,7 @@
 
 entity makeXonoticColorpicker(entity theTextbox)
 {
-	entity me;
-	me = NEW(XonoticColorpicker);
+	entity me = NEW(XonoticColorpicker);
 	me.configureXonoticColorpicker(me, theTextbox);
 	return me;
 }
@@ -81,8 +80,7 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 			me.controlledTextbox.enterText(me.controlledTextbox, "^"); // escape previous caret
 	}
 
-	vector margin;
-	margin = me.imagemargin;
+	vector margin = me.imagemargin;
 	if(coords.x >= margin.x)
 	if(coords.y >= margin.y)
 	if(coords.x <= 1 - margin.x)

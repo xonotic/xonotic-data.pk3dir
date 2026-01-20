@@ -51,9 +51,9 @@ float autocvar_g_vehicle_raptor_flare_refire = 5;
 float autocvar_g_vehicle_raptor_flare_lifetime = 10;
 float autocvar_g_vehicle_raptor_flare_chase = 0.9;
 float autocvar_g_vehicle_raptor_flare_range = 2000;
-#endif
+#endif // SVQC
 
 #ifdef CSQC
 void RaptorCBShellfragDraw(entity this);
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
-#endif
+#endif // CSQC

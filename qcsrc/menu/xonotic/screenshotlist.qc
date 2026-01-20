@@ -7,8 +7,7 @@
 
 entity makeXonoticScreenshotList()
 {
-	entity me;
-	me = NEW(XonoticScreenshotList);
+	entity me = NEW(XonoticScreenshotList);
 	me.configureXonoticScreenshotList(me);
 	return me;
 }
@@ -21,8 +20,7 @@ void XonoticScreenshotList_configureXonoticScreenshotList(entity me)
 
 string XonoticScreenshotList_screenshotName(entity me, float i)
 {
-	string s;
-	s = bufstr_get(me.listScreenshot, i);
+	string s = bufstr_get(me.listScreenshot, i);
 
 	if(substring(s, 0, 1) == "/")
 		s = substring(s, 1, strlen(s) - 1);  // remove the first forward slash

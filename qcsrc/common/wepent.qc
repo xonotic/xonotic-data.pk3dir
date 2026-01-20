@@ -90,7 +90,7 @@ MACRO_END
 			if (public) { \
 				WEPENT_PUBLICMASK |= BIT(i); \
 			} \
-			i += 1; \
+			++i; \
 		}
 		WEPENT_NETPROPS(X);
 	#undef X
@@ -113,7 +113,7 @@ MACRO_END
 			if (sf & BIT(i)) { \
 				sv; \
 			} \
-			i += 1; \
+			++i; \
 		}
 		WEPENT_NETPROPS(X);
 	#undef X
@@ -143,7 +143,7 @@ MACRO_END
 				set(this.fld, o.fld); \
 				this.SendFlags |= BIT(i); \
 			} \
-			i += 1; \
+			++i; \
 		}
 		WEPENT_NETPROPS(X);
 	#undef X
@@ -182,7 +182,7 @@ MACRO_END
 			if (sf & BIT(i)) { \
 				cl; \
 			} \
-			i += 1; \
+			++i; \
 		}
 		WEPENT_NETPROPS(X);
 	#undef X

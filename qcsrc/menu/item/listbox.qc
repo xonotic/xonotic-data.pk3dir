@@ -189,8 +189,7 @@
 			if (hit)
 			{
 				// calculate new pos to v
-				float d;
-				d = (pos.y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.getTotalHeight(me) - 1);
+				float d = (pos.y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.getTotalHeight(me) - 1);
 				me.scrollPosTarget = me.previousValue + d;
 			}
 			else

@@ -3,14 +3,16 @@
 #include "racer_weapon.qh"
 
 CLASS(Racer, Vehicle)
+#ifdef SVQC
 /* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
 /* mins       */ ATTRIB(Racer, m_mins, vector, '-120 -120 -40' * 0.5);
 /* maxs       */ ATTRIB(Racer, m_maxs, vector, '120 120 40' * 0.5);
+#endif
+#ifdef GAMEQC
 /* view offset*/ ATTRIB(Racer, view_ofs, vector, '0 0 50');
 /* view dist  */ ATTRIB(Racer, height, float, 200);
-#ifdef GAMEQC
-/* model	  */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
-/* model	  */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
+/* model      */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
+/* model      */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
 /* head_model */ ATTRIB(Racer, head_model, string, "null");
 /* hud_model  */ ATTRIB(Racer, hud_model, string, "models/vehicles/wakizashi_cockpit.dpm");
 /* tags       */ ATTRIB(Racer, tag_head, string, "");
@@ -21,4 +23,5 @@ CLASS(Racer, Vehicle)
 /* fullname   */ ATTRIB(Racer, m_name, string, _("Racer"));
 /* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");
 ENDCLASS(Racer)
+
 REGISTER_VEHICLE(RACER, NEW(Racer));

@@ -53,43 +53,47 @@
 WepSet _WepSet_FromWeapon(int a)
 {
 	a -= WEP_FIRST;
-	if (REGISTRY_MAX(Weapons) > 24)
-		if (a >= 24)
+	if (REGISTRY_MAX(Weapons) > 24 && a >= 24)
+	{
+		a -= 24;
+		if (REGISTRY_MAX(Weapons) > 48 && a >= 24)
 		{
 			a -= 24;
-			if (REGISTRY_MAX(Weapons) > 48)
-				if (a >= 24)
-				{
-					a -= 24;
-					return '0 0 1' * BIT(a);
-				}
-			return '0 1 0' * BIT(a);
+			return '0 0 1' * BIT(a);
 		}
+		return '0 1 0' * BIT(a);
+	}
 	return '1 0 0' * BIT(a);
 }
 #ifdef SVQC
-	void WriteWepSet(float dst, WepSet w)
-	{
-		if (REGISTRY_MAX(Weapons) > 48) WriteInt72_t(dst, w);
-		else if (REGISTRY_MAX(Weapons) > 24) WriteInt48_t(dst, w);
-		else WriteInt24_t(dst, w.x);
-	}
+void WriteWepSet(float dst, WepSet w)
+{
+	if (REGISTRY_MAX(Weapons) > 48)
+		WriteInt72_t(dst, w);
+	else if (REGISTRY_MAX(Weapons) > 24)
+		WriteInt48_t(dst, w);
+	else
+		WriteInt24_t(dst, w.x);
+}
 #endif
 #ifdef CSQC
-	WepSet WepSet_GetFromStat()
-	{
-		return STAT(WEAPONS);
-	}
-	WepSet WepSet_GetFromStat_InMap()
-	{
-		return STAT(WEAPONSINMAP);
-	}
-	WepSet ReadWepSet()
-	{
-		if (REGISTRY_MAX(Weapons) > 48) return ReadInt72_t();
-		if (REGISTRY_MAX(Weapons) > 24) return ReadInt48_t();
-		return ReadInt24_t() * '1 0 0';
-	}
+WepSet WepSet_GetFromStat()
+{
+	return STAT(WEAPONS);
+}
+WepSet WepSet_GetFromStat_InMap()
+{
+	return STAT(WEAPONSINMAP);
+}
+WepSet ReadWepSet()
+{
+	if (REGISTRY_MAX(Weapons) > 48)
+		return ReadInt72_t();
+	if (REGISTRY_MAX(Weapons) > 24)
+		return ReadInt48_t();
+	return
+		ReadInt24_t() * '1 0 0';
+}
 #endif
 
 string W_FixWeaponOrder(string order, float complete)
@@ -102,7 +106,8 @@ string W_NameWeaponOrder_MapFunc(string s)
 	if (s == "0" || i)
 	{
 		entity wi = REGISTRY_GET(Weapons, i);
-		if (wi != WEP_Null) return wi.netname;
+		if (wi != WEP_Null)
+			return wi.netname;
 	}
 	return s;
 }
@@ -113,7 +118,8 @@ string W_NameWeaponOrder(string order)
 }
 string W_NumberWeaponOrder_MapFunc(string s)
 {
-	if (s == "0" || stof(s)) return s;
+	if (s == "0" || stof(s))
+		return s;
 	FOREACH(Weapons, it != WEP_Null && (it.netname == s || it.m_deprecated_netname == s), return ftos(i));
 	return s;
 }
@@ -126,8 +132,7 @@ float W_FixWeaponOrder_BuildImpulseList_buf[REGISTRY_MAX(Weapons)];
 string W_FixWeaponOrder_BuildImpulseList_order;
 void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 {
-	float h;
-	h = W_FixWeaponOrder_BuildImpulseList_buf[i];
+	float h = W_FixWeaponOrder_BuildImpulseList_buf[i];
 	W_FixWeaponOrder_BuildImpulseList_buf[i] = W_FixWeaponOrder_BuildImpulseList_buf[j];
 	W_FixWeaponOrder_BuildImpulseList_buf[j] = h;
 }
@@ -138,7 +143,8 @@ float W_FixWeaponOrder_BuildImpulseList_cmp(int i, int j, entity pass)
 	int sj = W_FixWeaponOrder_BuildImpulseList_buf[j];
 	Weapon e2 = REGISTRY_GET(Weapons, sj);
 	int d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
-	if (d != 0) return -d;  // high impulse first!
+	if (d)
+		return -d; // high impulse first!
 	string s = strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " ");
 	return strstrofs(s, sprintf(" %d ", si), 0)
 		- strstrofs(s, sprintf(" %d ", sj), 0); // low char index first!
@@ -149,8 +155,7 @@ string W_FixWeaponOrder_BuildImpulseList(string o)
 	W_FixWeaponOrder_BuildImpulseList_order = o;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		W_FixWeaponOrder_BuildImpulseList_buf[i - WEP_FIRST] = i;
-	heapsort(WEP_LAST - WEP_FIRST + 1, W_FixWeaponOrder_BuildImpulseList_swap, W_FixWeaponOrder_BuildImpulseList_cmp,
-		NULL);
+	heapsort(WEP_LAST - WEP_FIRST + 1, W_FixWeaponOrder_BuildImpulseList_swap, W_FixWeaponOrder_BuildImpulseList_cmp, NULL);
 	o = "";
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		o = strcat(o, " ", ftos(W_FixWeaponOrder_BuildImpulseList_buf[i - WEP_FIRST]));
@@ -165,7 +170,8 @@ string W_FixWeaponOrder_AllowIncomplete(entity this, string order)
 
 string W_FixWeaponOrder_ForceComplete(string order)
 {
-	if (order == "") order = W_NumberWeaponOrder(cvar_defstring("cl_weaponpriority"));
+	if (order == "")
+		order = W_NumberWeaponOrder(cvar_defstring("cl_weaponpriority"));
 	return W_FixWeaponOrder(order, 1);
 }
 
@@ -175,7 +181,8 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 	for (int j = 0; j < n; ++j)
 	{
 		RandomSelection_Init();
-		FOREACH(Weapons, it != WEP_Null, {
+		FOREACH(Weapons, it != WEP_Null,
+		{
 			if (remaining & (it.m_wepset))
 				RandomSelection_AddEnt(it, 1, 1);
 		});
@@ -188,20 +195,14 @@ WepSet W_RandomWeapons(entity e, WepSet remaining, int n)
 
 entity GetAmmoItem(Resource ammotype)
 {
-	FOREACH(Items, it.netname == ammotype.netname,
-	{
-		return it;
-	});
+	FOREACH(Items, it.netname == ammotype.netname, return it);
 	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
 	return NULL;
 }
 
 entity GetAmmoResource(Ammo ammotype)
 {
-	FOREACH(Resources, it.netname == ammotype.netname,
-	{
-		return it;
-	});
+	FOREACH(Resources, it.netname == ammotype.netname, return it);
 	LOG_WARNF("Invalid ammo type %d ", ammotype.m_id);
 	return NULL;
 }
@@ -212,12 +213,12 @@ int GetAmmoStat(Resource ammotype)
 	// TODO: handle networking via resources
 	switch (ammotype)
 	{
-		case RES_SHELLS: return STAT_SHELLS;
-		case RES_BULLETS: return STAT_NAILS;
-		case RES_ROCKETS: return STAT_ROCKETS;
-		case RES_CELLS: return STAT_CELLS;
-		case RES_FUEL: return STAT_FUEL.m_id;
-		default: return -1;
+		case RES_SHELLS:   return STAT_SHELLS;
+		case RES_BULLETS:  return STAT_NAILS;
+		case RES_ROCKETS:  return STAT_ROCKETS;
+		case RES_CELLS:    return STAT_CELLS;
+		case RES_FUEL:     return STAT_FUEL.m_id;
+		default:           return -1;
 	}
 }
 #endif
@@ -242,16 +243,13 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 	switch (algn)
 	{
 		default:
-		case 3:
-			// right alignment
+		case 3: // right alignment
 			break;
-		case 4:
-			// left
+		case 4: // left
 			vecs.y = -vecs.y;
 			break;
-		case 1:
-		case 2:
-			// center
+		case 1: // center
+		case 2: // center
 			vecs.y = 0;
 			vecs.z -= 2;
 			break;
@@ -263,13 +261,9 @@ vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn)
 {
 	string s;
 	if (visual)
-	{
 		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
-	}
 	else if (STAT(SHOOTFROMEYE))
-	{
 		vecs.y = vecs.z = 0;
-	}
 	else if (STAT(SHOOTFROMCENTER))
 	{
 		vecs.y = 0;
@@ -278,15 +272,15 @@ vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn)
 	else if ((s = G_SHOOTFROMFIXEDORIGIN) != "")
 	{
 		vector v = stov(s);
-		if (y_is_right) v.y = -v.y;
-		if (v.x != 0) vecs.x = v.x;
+		if (y_is_right)
+			v.y = -v.y;
+		if (v.x != 0)
+			vecs.x = v.x;
 		vecs.y = v.y;
 		vecs.z = v.z;
 	}
 	else  // just do the same as top
-	{
 		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
-	}
 
 	return vecs;
 }
@@ -348,10 +342,12 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 {
 	if (name == "")
 	{
-		vector oldmin = this.mins, oldmax = this.maxs;
+		vector oldmin = this.mins;
+		vector oldmax = this.maxs;
 		setmodel(this, MDL_Null);
 		setsize(this, oldmin, oldmax);
-		if (this.weaponchild) delete(this.weaponchild);
+		if (this.weaponchild)
+			delete(this.weaponchild);
 		this.weaponchild = NULL;
 		this.movedir = '0 0 0';
 #ifdef SVQC
@@ -366,9 +362,10 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 	else
 	{
 		// if there is a child entity, hide it until we're sure we use it
-		if (this.weaponchild) this.weaponchild.model = "";
+		if (this.weaponchild)
+			this.weaponchild.model = "";
 		_setmodel(this, W_Model(strcat("v_", name, ".md3")));
-		int v_shot_idx;  // used later
+		int v_shot_idx;
 		(v_shot_idx = gettagindex(this, "shot")) || (v_shot_idx = gettagindex(this, "tag_shot"));
 
 		_setmodel(this, W_Model(strcat("h_", name, ".iqm")));
@@ -397,7 +394,8 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		}
 		else
 		{
-			if (this.weaponchild) delete(this.weaponchild);
+			if (this.weaponchild)
+				delete(this.weaponchild);
 			this.weaponchild = NULL;
 		}
 
@@ -411,16 +409,12 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		this.renderflags &= ~RF_VIEWMODEL;
 #endif
 		if (v_shot_idx)  // v_ model attached to invisible h_ model
-		{
 			this.movedir = gettaginfo(this.weaponchild, v_shot_idx);
-		}
 		else
 		{
 			int idx;
 			if ((idx = gettagindex(this, "shot")) || (idx = gettagindex(this, "tag_shot")))
-			{
 				this.movedir = gettaginfo(this, idx);
-			}
 			else
 			{
 				LOG_WARNF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong",
@@ -433,14 +427,10 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			int idx = 0;
 			// v_ model attached to invisible h_ model
 			if (this.weaponchild
-				&& ((idx = gettagindex(this.weaponchild, "shell")) || (idx = gettagindex(this.weaponchild, "tag_shell"))))
-			{
+			&& ((idx = gettagindex(this.weaponchild, "shell")) || (idx = gettagindex(this.weaponchild, "tag_shell"))))
 				this.spawnorigin = gettaginfo(this.weaponchild, idx);
-			}
 			else if ((idx = gettagindex(this, "shell")) || (idx = gettagindex(this, "tag_shell")))
-			{
 				this.spawnorigin = gettaginfo(this, idx);
-			}
 			else
 			{
 				LOG_WARNF("weapon model %s does not support the 'shell' tag, will display casings wrong",
@@ -450,9 +440,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		}
 #endif
 		if (v_shot_idx)
-		{
 			this.oldorigin = '0 0 0';  // use regular attachment
-		}
 		else
 		{
 			int idx;
@@ -461,9 +449,7 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 			else
 				(idx = gettagindex(this, "handle")) || (idx = gettagindex(this, "tag_handle"));
 			if (idx)
-			{
 				this.oldorigin = this.movedir - gettaginfo(this, idx);
-			}
 			else
 			{
 				LOG_WARNF(
@@ -506,7 +492,8 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 		// make them match perfectly
 	#ifdef SVQC
 		// null during init
-		if (this.owner) STAT(SHOTORG, this.owner) = compressed_shotorg;
+		if (this.owner)
+			STAT(SHOTORG, this.owner) = compressed_shotorg;
 	#endif
 		this.movedir = decompressShotOrigin(compressed_shotorg);
 	}
@@ -522,7 +509,8 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 
 	#ifdef SVQC
 		// null during init
-		if (this.owner) STAT(SHOTORG, this.owner) = 0;
+		if (this.owner)
+			STAT(SHOTORG, this.owner) = 0;
 	#endif
 	}
 
@@ -532,7 +520,8 @@ void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 
 	// check if an instant weapon switch occurred
 	setorigin(this, this.view_ofs);
-	if (!_anim) return;
+	if (!_anim)
+		return;
 	// reset animstate now
 	this.wframe = WFRAME_IDLE;
 	setanim(this, this.anim_idle, true, false, true);
@@ -550,18 +539,18 @@ NET_HANDLE(wframe, bool isNew)
 	int slot = ReadByte();
 	bool restartanim = ReadByte();
 	entity wepent = viewmodels[slot];
-	if(fr == WFRAME_IDLE)
+	if (fr == WFRAME_IDLE)
 		wepent.animstate_looping = false; // we don't need to enforce idle animation
 	else
 	{
 		vector a = '0 0 0';
-		switch(fr)
+		switch (fr)
 		{
 			default:
-			case WFRAME_IDLE: a = wepent.anim_idle; break;
-			case WFRAME_FIRE1: a = wepent.anim_fire1; break;
-			case WFRAME_FIRE2: a = wepent.anim_fire2; break;
-			case WFRAME_RELOAD: a = wepent.anim_reload; break;
+			case WFRAME_IDLE:    a = wepent.anim_idle;    break;
+			case WFRAME_FIRE1:   a = wepent.anim_fire1;   break;
+			case WFRAME_FIRE2:   a = wepent.anim_fire2;   break;
+			case WFRAME_RELOAD:  a = wepent.anim_reload;  break;
 		}
 		a.z *= t;
 		anim_set(wepent, a, !restartanim, restartanim, restartanim);
@@ -587,7 +576,8 @@ NET_HANDLE(wframe, bool isNew)
 #ifdef SVQC
 void wframe_send(entity actor, entity weaponentity, int wepframe, float attackrate, bool restartanim)
 {
-	if (!IS_REAL_CLIENT(actor)) return;
+	if (!IS_REAL_CLIENT(actor))
+		return;
 	int channel = MSG_ONE;
 	msg_entity = actor;
 	WriteHeader(channel, wframe);
@@ -606,7 +596,8 @@ void Weapon_whereis(Weapon this, entity cl);
 NET_HANDLE(w_whereis, bool)
 {
 	Weapon wpn = ReadRegistered(Weapons);
-	if (wpn != WEP_Null) Weapon_whereis(wpn, sender);
+	if (wpn != WEP_Null)
+		Weapon_whereis(wpn, sender);
 	return true;
 }
 #else
@@ -642,11 +633,9 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 		default:
 			LOG_INFOF("Incorrect parameters for ^2%s^7", argv(0));
 		case CMD_REQUEST_USAGE:
-		{
 			LOG_HELP("Usage:^3 cl_cmd weapon_find <weapon>");
 			LOG_HELP("  Where <weapon> is the lowercase weapon name, 'all' or 'unowned'.");
 			return;
-		}
 	}
 }
 #endif
@@ -655,7 +644,7 @@ CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
 void W_MuzzleFlash_Model_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset)
 {
 	flash.owner = actor;
-	flash.angles_z = random() * 360;
+	flash.angles.z = random() * 360;
 
 	entity view = actor.(weaponentity);
 	entity exterior = actor.exteriorweaponentity;
@@ -667,8 +656,7 @@ void W_MuzzleFlash_Model_AttachToShotorg(entity actor, .entity weaponentity, ent
 	}
 	else
 	{
-		if (gettagindex(exterior, "shot")) setattachment(flash, exterior, "shot");
-		else setattachment(flash, exterior, "tag_shot");
+		setattachment(flash, exterior, (gettagindex(exterior, "shot") ? "shot" : "tag_shot"));
 		setorigin(flash, offset);
 	}
 }
@@ -676,10 +664,9 @@ void W_MuzzleFlash_Model_AttachToShotorg(entity actor, .entity weaponentity, ent
 void W_MuzzleFlash_Model_AttachToShotorg(entity wepent, entity flash, vector offset)
 {
 	flash.owner = wepent;
-	flash.angles_z = random() * 360;
+	flash.angles.z = random() * 360;
 
-	if (gettagindex(wepent, "shot")) setattachment(flash, wepent, "shot");
-	else setattachment(flash, wepent, "tag_shot");
+	setattachment(flash, wepent, (gettagindex(wepent, "shot")) ? "shot" : "tag_shot");
 	setorigin(flash, offset);
 }
 #endif
@@ -691,7 +678,7 @@ void W_MuzzleFlash_Model_Think(entity this)
 	this.alpha -= 0.25;
 	this.nextthink = time + 0.05;
 
-	if(this.alpha <= 0)
+	if (this.alpha <= 0)
 	{
 		setthink(this, SUB_Remove);
 		this.nextthink = time;
@@ -702,7 +689,7 @@ void W_MuzzleFlash_Model_Think(entity this)
 
 void W_MuzzleFlash_Model(entity wepent, entity muzzlemodel)
 {
-	if(wepent.muzzle_flash == NULL)
+	if (wepent.muzzle_flash == NULL)
 		wepent.muzzle_flash = spawn();
 
 	entity flash = wepent.muzzle_flash;
@@ -713,7 +700,7 @@ void W_MuzzleFlash_Model(entity wepent, entity muzzlemodel)
 	flash.nextthink = time + 0.02;
 	flash.frame = 2;
 	flash.alpha = 0.75;
-	flash.angles_z = random() * 180;
+	flash.angles.z = random() * 180;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
 	flash.owner = flash.realowner = wepent;
 
@@ -728,11 +715,11 @@ REGISTER_NET_TEMP(w_muzzleflash)
 void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector shotorg, vector shotdir)
 {
 	// don't show an exterior muzzle effect for the off-hand
-	if(weaponslot(weaponentity) == 0)
+	if (weaponslot(weaponentity) == 0)
 	{
 		Send_Effect_Except(thiswep.m_muzzleeffect, shotorg, shotdir * 1000, 1, '0 0 0', '0 0 0', actor);
 
-		if(thiswep.m_muzzlemodel != MDL_Null)
+		if (thiswep.m_muzzlemodel != MDL_Null)
 		{
 			W_MuzzleFlash_Model(actor.exteriorweaponentity, thiswep.m_muzzlemodel);
 			W_MuzzleFlash_Model_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '5 0 0');
@@ -741,7 +728,7 @@ void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector sh
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
-		if(!IS_REAL_CLIENT(it))
+		if (!IS_REAL_CLIENT(it))
 			continue;
 		int channel = MSG_ONE;
 		msg_entity = it;
@@ -764,19 +751,20 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 	vector forward, right, up;
 	MAKE_VECTORS(viewangles, forward, right, up);
 
-	if(autocvar_chase_active)
+	if (autocvar_chase_active)
 	{
 		// in third person mode, show the muzzle flash from the server side weapon position
 		// we don't have a view model to reference in this case
 		pointparticles(thiswep.m_muzzleeffect, sv_shotorg, forward * 1000, 1);
 		return;
 	}
-	if(!autocvar_r_drawviewmodel) return;
+	if (!autocvar_r_drawviewmodel)
+		return;
 
 	entity wepent = viewmodels[slot];
 	// get the local player entity to calculate shot origin
 	entity rlplayer = CSQCModel_server2csqc(player_localentnum - 1);
-	if(!rlplayer)
+	if (!rlplayer)
 		rlplayer = csqcplayer; // fall back to the global
 
 	vector md = wepent.movedir_aligned;
@@ -785,7 +773,7 @@ NET_HANDLE(w_muzzleflash, bool isNew)
 
 	pointparticles(thiswep.m_muzzleeffect, org, forward * 1000, 1);
 
-	if(thiswep.m_muzzlemodel != MDL_Null)
+	if (thiswep.m_muzzlemodel != MDL_Null)
 	{
 		W_MuzzleFlash_Model(wepent, thiswep.m_muzzlemodel);
 		W_MuzzleFlash_Model_AttachToShotorg(wepent, wepent.muzzle_flash, '5 0 0');

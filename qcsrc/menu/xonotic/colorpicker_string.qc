@@ -4,8 +4,7 @@
 
 entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar)
 {
-	entity me;
-	me = NEW(XonoticColorpickerString);
+	entity me = NEW(XonoticColorpickerString);
 	me.configureXonoticColorpickerString(me, theCvar, theDefaultCvar);
 	return me;
 }
@@ -60,8 +59,7 @@ float XonoticColorpickerString_mouseDrag(entity me, vector coords)
 {
 	if(me.disabled)
 		return 0;
-	vector margin;
-	margin = me.imagemargin;
+	vector margin = me.imagemargin;
 	if(coords.x >= margin.x)
 	if(coords.y >= margin.y)
 	if(coords.x <= 1 - margin.x)
@@ -83,15 +81,13 @@ float XonoticColorpickerString_mouseRelease(entity me, vector coords)
 
 void XonoticColorpickerString_draw(entity me)
 {
-	float save;
-	save = draw_alpha;
+	float save = draw_alpha;
 	if(me.disabled)
 		draw_alpha *= me.disabledAlpha;
 
 	SUPER(XonoticColorpickerString).draw(me);
 
-	vector sz;
-	sz = draw_PictureSize(strcat(me.src, "_selected"));
+	vector sz = draw_PictureSize(strcat(me.src, "_selected"));
 	sz = globalToBoxSize(sz, draw_scale);
 
 	if(!me.disabled)

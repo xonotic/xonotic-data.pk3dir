@@ -2,8 +2,7 @@
 
 entity makeXonoticColorButton(float theGroup, float theColor, float theValue)
 {
-	entity me;
-	me = NEW(XonoticColorButton);
+	entity me = NEW(XonoticColorButton);
 	me.configureXonoticColorButton(me, theGroup, theColor, theValue);
 	return me;
 }

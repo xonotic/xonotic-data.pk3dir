@@ -12,13 +12,19 @@ float autocvar_g_nades_heal_foe;
 void nade_heal_boom(entity this);
 #endif // SVQC
 
+#ifdef GAMEQC
 const int PROJECTILE_NADE_HEAL = 80;
 const int PROJECTILE_NADE_HEAL_BURN = 81;
+#endif
 
 CLASS(HealNade, Nade)
 	ATTRIB(HealNade, m_color, vector, '1 0 0');
 	ATTRIB(HealNade, m_name, string, _("Heal grenade"));
+#ifndef SVQC
 	ATTRIB(HealNade, m_icon, string, "nade_heal");
+#endif
 	ATTRIB(HealNade, netname, string, "heal");
+#ifdef SVQC
 	ATTRIB(HealNade, impulse, int, 6);
+#endif
 ENDCLASS(HealNade)

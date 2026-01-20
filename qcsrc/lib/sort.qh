@@ -21,7 +21,7 @@ void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 			for (int root = (_start); root * 2 + 1 <= (_end); ) \
 			{ \
 				int child = root * 2 + 1; \
-				if (child < (_end) && cmp(child, child + 1, pass) < 0) child += 1; \
+				if (child < (_end) && cmp(child, child + 1, pass) < 0) ++child; \
 				if (cmp(root, child, pass) >= 0) break; \
 				swap(root, child, pass); \
 				root = child; \
@@ -33,7 +33,7 @@ void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 	while (end > 0)
 	{
 		swap(0, end, pass);
-		end -= 1;
+		--end;
 		siftdown(0, end);
 	}
 }

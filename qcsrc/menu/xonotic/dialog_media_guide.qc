@@ -7,8 +7,7 @@
 
 entity makeXonoticGuideTab()
 {
-	entity me;
-	me = NEW(XonoticGuideTab);
+	entity me = NEW(XonoticGuideTab);
 	me.configureDialog(me);
 	return me;
 }

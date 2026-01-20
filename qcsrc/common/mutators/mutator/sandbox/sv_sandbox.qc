@@ -51,8 +51,7 @@ void sandbox_ObjectFunction_Touch(entity this, entity toucher)
 	this.touch_timer = time + 0.1;
 
 	// make particle count and sound volume depend on impact speed
-	float intensity;
-	intensity = vlen(this.velocity) + vlen(toucher.velocity);
+	float intensity = vlen(this.velocity) + vlen(toucher.velocity);
 	if(intensity) // avoid divisions by 0
 		intensity /= 2; // average the two velocities
 	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))
@@ -206,7 +205,7 @@ entity sandbox_ObjectSpawn(entity this, float database)
 
 	CSQCMODEL_AUTOINIT(e);
 
-	object_count += 1;
+	++object_count;
 	return e;
 }
 
@@ -225,7 +224,7 @@ void sandbox_ObjectRemove(entity e)
 	delete(e);
 	e = NULL;
 
-	object_count -= 1;
+	--object_count;
 }
 
 string port_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't defined as a global
@@ -247,7 +246,7 @@ string sandbox_ObjectPort_Save(entity e, bool database)
 		}
 		else if(it.owner == e) // child object, list them in order
 		{
-			o += 1; // children start from 1
+			++o; // children start from 1
 			slot = o;
 			solidity = it.old_solid; // persisted solidity is normal solidity for children
 			physics = it.old_movetype; // persisted physics are normal physics for children
@@ -435,8 +434,7 @@ void sandbox_Database_Load()
 			if(substring(file_read, 0, 1) == "#")
 				continue;
 
-			entity e;
-			e = sandbox_ObjectPort_Load(NULL, file_read, true);
+			entity e = sandbox_ObjectPort_Load(NULL, file_read, true);
 
 			if(e.material)
 			{

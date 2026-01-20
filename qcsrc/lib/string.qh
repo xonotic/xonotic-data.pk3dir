@@ -131,7 +131,7 @@ string seconds_tostring(float seconds)
 		negative = true;
 		seconds = -seconds;
 		if (floor(seconds) != seconds)
-			seconds += 1; // make floor work in the other direction
+			++seconds; // make floor work in the other direction
 	}
 	int minutes = floor(seconds / 60);
 	seconds -= minutes * 60;
@@ -542,8 +542,7 @@ int vercmp_recursive(string v1, string v2)
 	string s1 = (dot1 == -1) ? v1 : substring(v1, 0, dot1);
 	string s2 = (dot2 == -1) ? v2 : substring(v2, 0, dot2);
 
-	float r;
-	r = stof(s1) - stof(s2);
+	float r = stof(s1) - stof(s2);
 	if (r != 0) return r;
 
 	r = strcasecmp(s1, s2);
@@ -618,7 +617,7 @@ vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_e
 
 	int ofs = cc_len;
 	if (!check_at_the_end)
-		ofs--;
+		--ofs;
 	for (; ofs >= 1; --ofs)
 	{
 		if (!(pos >= ofs && text_len >= pos + (cc_len - ofs)))

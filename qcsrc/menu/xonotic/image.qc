@@ -2,8 +2,7 @@
 
 entity makeXonoticImage(string theImage, float theAspect)
 {
-	entity me;
-	me = NEW(XonoticImage);
+	entity me = NEW(XonoticImage);
 	me.configureXonoticImage(me, theImage, theAspect);
 	return me;
 }

@@ -122,8 +122,7 @@ void relocate_spawnpoint(entity this)
     tracebox(this.origin, PL_MIN_CONST, PL_MAX_CONST, this.origin, true, this);
     if (trace_startsolid)
     {
-        vector o;
-        o = this.origin;
+        vector o = this.origin;
         this.mins = PL_MIN_CONST;
         this.maxs = PL_MAX_CONST;
         if (!move_out_of_solid(this))

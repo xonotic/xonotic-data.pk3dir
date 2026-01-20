@@ -167,11 +167,11 @@ void kh_Controller_Think(entity this)  // called a lot
 	if(this.cnt > 0)
 	{
 		if(getthink(this) != kh_WaitForPlayers)
-			this.cnt -= 1;
+			--this.cnt;
 	}
 	else if(this.cnt == 0)
 	{
-		this.cnt -= 1;
+		--this.cnt;
 		kh_Controller_Thinkfunc();
 	}
 	this.nextthink = time + 1;
@@ -1361,4 +1361,9 @@ MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 {
 	kh_WaitForPlayers(); // takes care of killing the "missing teams" message
+}
+
+MUTATOR_HOOKFUNCTION(kh, PreferPlayerScore_Clear)
+{
+	return true;
 }

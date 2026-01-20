@@ -81,7 +81,7 @@ bool turret_closetotarget(entity this, vector targ, float range);
 /// Function to use for target evaluation. usualy turret_targetscore_generic
 .float(entity _turret, entity _target) turret_score_target;
 
-.bool(entity this, entity e_target,entity e_sender) turret_addtarget;
+.bool(entity this, entity e_target, entity e_sender) turret_addtarget;
 
 .entity pathcurrent;
 
@@ -111,4 +111,7 @@ float tvt_thadf; // turret head angle diff float, updated by a successful call t
 float tvt_dist; // turret distance, updated by a successful call to turret_validate_target
 
 IntrusiveList g_turrets;
-STATIC_INIT(g_turrets) { g_turrets = IL_NEW(); }
+STATIC_INIT(g_turrets)
+{
+	g_turrets = IL_NEW();
+}

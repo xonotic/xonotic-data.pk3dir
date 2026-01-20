@@ -2,4 +2,4 @@
 
 #include <common/monsters/monster.qh>
 
-entity spawnmonster (entity e, string monster, Monster monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag);
+entity spawnmonster(entity e, string monster, Monster monster_id, entity spawnedby, entity own, vector orig, bool respwn, bool removeifinvalid, int moveflag);

@@ -141,8 +141,7 @@ void door_go_up(entity this, entity actor, entity trigger)
 	this.state = STATE_UP;
 	SUB_CalcMove (this, this.pos2, TSPEED_LINEAR, this.speed, door_hit_top);
 
-	string oldmessage;
-	oldmessage = this.message;
+	string oldmessage = this.message;
 	this.message = "";
 	SUB_UseTargets(this, actor, trigger);
 	this.message = oldmessage;

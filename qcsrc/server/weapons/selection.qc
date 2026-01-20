@@ -14,7 +14,7 @@
 #include <server/items/spawning.qh>
 #include <server/weapons/weaponsystem.qh>
 
-// switch between weapons
+/// Switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)
 {
 	msg_entity = e;
@@ -25,13 +25,12 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 
 void Weapon_whereis(Weapon this, entity cl)
 {
-	if (!autocvar_g_showweaponspawns || this.spawnflags & WEP_FLAG_HIDDEN) return;
+	if (!autocvar_g_showweaponspawns || this.spawnflags & WEP_FLAG_HIDDEN)
+		return;
 	IL_EACH(g_items, it.weapon == this.m_id && it.model,
 	{
-		if (ITEM_IS_LOOT(it) && (autocvar_g_showweaponspawns < 2))
-		{
+		if (ITEM_IS_LOOT(it) && autocvar_g_showweaponspawns < 2)
 			continue;
-		}
 		entity wp = WaypointSprite_Spawn(
 			WP_Weapon,
 			-2, 0,
@@ -47,15 +46,13 @@ void Weapon_whereis(Weapon this, entity cl)
 
 bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andammo, bool complain)
 {
-	float f = 0;
-
 	if (time < CS(this).hasweapon_complain_spam)
 		complain = 0;
 
 	// ignore hook button when using other offhand equipment
-	if (this.offhand != OFFHAND_HOOK)
-	if (wpn == WEP_HOOK && !((STAT(WEAPONS, this) | weaponsInMap) & WepSet_FromWeapon(wpn)))
-	    complain = 0;
+	if (this.offhand != OFFHAND_HOOK
+	&& wpn == WEP_HOOK && !((STAT(WEAPONS, this) | weaponsInMap) & WepSet_FromWeapon(wpn)))
+		complain = 0;
 
 	if (complain)
 		CS(this).hasweapon_complain_spam = time + 0.2;
@@ -66,22 +63,23 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 			sprint(this, "Invalid weapon\n");
 		return false;
 	}
-	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0 && !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(PS(this).dual_weapons & wpn.m_wepset))
+	if (autocvar_g_weaponswitch_debug == 2 && weaponslot(weaponentity) > 0
+	&& !(wpn.spawnflags & WEP_FLAG_DUALWIELD) && !(PS(this).dual_weapons & wpn.m_wepset))
 		return false; // no complaints needed
+
+	float f = 0;
 	if (STAT(WEAPONS, this) & WepSet_FromWeapon(wpn))
 	{
 		if (andammo)
 		{
-			if(this.items & IT_UNLIMITED_AMMO)
-			{
+			if (this.items & IT_UNLIMITED_AMMO)
 				f = 1;
-			}
 			else
 			{
 				f = wpn.wr_checkammo1(wpn, this, weaponentity) + wpn.wr_checkammo2(wpn, this, weaponentity);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
-				if(wpn == WEP_MINE_LAYER)
+				if (wpn == WEP_MINE_LAYER)
 					IL_EACH(g_mines, it.owner == this && it.weaponentity_fld == weaponentity,
 					{
 						f = 1;
@@ -90,8 +88,7 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 			}
 			if (!f)
 			{
-				if (complain)
-				if(IS_REAL_CLIENT(this))
+				if (complain && IS_REAL_CLIENT(this))
 				{
 					play2(this, SND(UNAVAILABLE));
 					Send_WeaponComplain (this, wpn.m_id, 0);
@@ -101,28 +98,21 @@ bool client_hasweapon(entity this, Weapon wpn, .entity weaponentity, float andam
 		}
 		return true;
 	}
-	if (complain)
-	if(IS_REAL_CLIENT(this))
+	if (complain
+	&& IS_REAL_CLIENT(this))
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
 		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(this, wpn.m_id, 1);
-			if(autocvar_g_showweaponspawns < 3)
+			if (autocvar_g_showweaponspawns < 3)
 				Weapon_whereis(wpn, this);
 			else
-			{
-				FOREACH(Weapons, it.impulse == wpn.impulse,
-				{
-					Weapon_whereis(it, this);
-				});
-			}
+				FOREACH(Weapons, it.impulse == wpn.impulse, Weapon_whereis(it, this));
 		}
 		else
-		{
-			Send_WeaponComplain (this, wpn.m_id, 2);
-		}
+			Send_WeaponComplain(this, wpn.m_id, 2);
 
 		play2(this, SND(UNAVAILABLE));
 	}
@@ -133,20 +123,20 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 {
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
-	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast;
-	switchtonext = switchtolast = 0;
-	first_valid = prev_valid = 0;
-	float weaponcur;
 	entity wep;
 	string rest;
+	float weaponwant;
+	float first_valid = 0, prev_valid = 0;
+	float weaponcur;
+	bool switchtonext = false, switchtolast = false;
 
-	if(skipmissing || this.(weaponentity).selectweapon == 0)
+	if (skipmissing || this.(weaponentity).selectweapon == 0)
 		weaponcur = this.(weaponentity).m_switchweapon.m_id;
 	else
 		weaponcur = this.(weaponentity).selectweapon;
 
-	if(dir == 0)
-		switchtonext = 1;
+	if (dir == 0)
+		switchtonext = true;
 
 	// complain-specific vars
 	int c = 0;
@@ -156,18 +146,20 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 
 	// see if we have or can locate (not hidden), some other weapon in the group
 	WepSet customgroup = '0 0 0';
-	if(imp < 0) // custom cl_weaponpriorityN group
+	if (imp < 0) // custom cl_weaponpriorityN group
 	{
 		// These groups are client-specific, and (imp == -1) here,
 		// so generate a weapon set bitmask to represent the group.
 		rest = weaponorder;
-		while(rest != "")
+		while (rest != "")
 		{
-			weaponwant = stof(car(rest)); rest = cdr(rest);
+			weaponwant = stof(car(rest));
+			rest = cdr(rest);
 			customgroup |= REGISTRY_GET(Weapons, weaponwant).m_wepset;
 		}
 	}
-	else {} // standard weapon_group, defined by impulse sharing
+	else
+	{} // standard weapon_group, defined by impulse sharing
 	FOREACH(Weapons, (imp >= 0 && it.impulse == imp) || (imp < 0 && (it.m_wepset & customgroup)),
 	{
 		if ((it.m_wepset & STAT(WEAPONS, this))
@@ -179,28 +171,27 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 	});
 
 	rest = weaponorder;
-	while(rest != "")
+	while (rest != "")
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
 		wep = REGISTRY_GET(Weapons, weaponwant);
-		if(imp >= 0)
-		if(wep.impulse != imp)
+		if (imp >= 0 && wep.impulse != imp)
 			continue;
 
 		// skip weapons we don't own that aren't normal and aren't in the map
-		if(!(STAT(WEAPONS, this) & wep.m_wepset))
+		if (!(STAT(WEAPONS, this) & wep.m_wepset))
 		{
-			if(wep.spawnflags & WEP_FLAG_HIDDEN)
+			if (wep.spawnflags & WEP_FLAG_HIDDEN)
 				continue;
 
-			if(!(weaponsInMap & wep.m_wepset))
-			if((wep.spawnflags & WEP_FLAG_MUTATORBLOCKED) || have_other)
+			if (!(weaponsInMap & wep.m_wepset)
+			&& ((wep.spawnflags & WEP_FLAG_MUTATORBLOCKED) || have_other))
 				continue;
 		}
 
-		if(complain)
+		if (complain)
 		{
-			if(!wepcomplain || this.weaponcomplainindex == c)
+			if (!wepcomplain || this.weaponcomplainindex == c)
 			{
 				wepcomplain = wep;
 				wepcomplainindex = c;
@@ -208,34 +199,34 @@ float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, bo
 			++c;
 		}
 
-		if(!skipmissing || client_hasweapon(this, wep, weaponentity, true, false))
+		if (!skipmissing || client_hasweapon(this, wep, weaponentity, true, false))
 		{
-			if(switchtonext)
+			if (switchtonext)
 				return weaponwant;
-			if(!first_valid)
+			if (!first_valid)
 				first_valid = weaponwant;
-			if(weaponwant == weaponcur)
+			if (weaponwant == weaponcur)
 			{
-				if(dir >= 0)
-					switchtonext = 1;
-				else if(prev_valid)
+				if (dir >= 0)
+					switchtonext = true;
+				else if (prev_valid)
 					return prev_valid;
 				else
-					switchtolast = 1;
+					switchtolast = true;
 			}
 			prev_valid = weaponwant;
 		}
 	}
-	if(first_valid)
+	if (first_valid)
 	{
-		if(switchtolast)
+		if (switchtolast)
 			return prev_valid;
 		else
 			return first_valid;
 	}
 
 	// complain (but only for one weapon on the button that has been pressed)
-	if(wepcomplain)
+	if (wepcomplain)
 	{
 		this.weaponcomplainindex = wepcomplainindex + 1;
 		client_hasweapon(this, wepcomplain, weaponentity, true, true);
@@ -252,7 +243,7 @@ void W_SwitchWeapon_Force(Player this, Weapon wep, .entity weaponentity)
 	w_ent.selectweapon = wep.m_id;
 }
 
-// perform weapon to attack (weaponstate and attack_finished check is here)
+/// Perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity this, .entity weaponentity)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
@@ -265,18 +256,17 @@ void W_SwitchToOtherWeapon(entity this, .entity weaponentity)
 		STAT(WEAPONS, this) |= set;
 	}
 	else
-	{
 		ww = w_getbestweapon(this, weaponentity);
-	}
-	if (ww == WEP_Null) return;
+	if (ww == WEP_Null)
+		return;
 	W_SwitchWeapon_Force(this, ww, weaponentity);
 }
 
 bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 {
-	if(this.(weaponentity).m_switchweapon != w)
+	if (this.(weaponentity).m_switchweapon != w)
 	{
-		if(client_hasweapon(this, w, weaponentity, true, true))
+		if (client_hasweapon(this, w, weaponentity, true, true))
 		{
 			W_SwitchWeapon_Force(this, w, weaponentity);
 			return true;
@@ -287,7 +277,7 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 			return false;
 		}
 	}
-	else if(!weaponLocked(this) && CS_CVAR(this).cvar_cl_weapon_switch_reload)
+	else if (!weaponLocked(this) && CS_CVAR(this).cvar_cl_weapon_switch_reload)
 	{
 		entity actor = this;
 		w.wr_reload(w, actor, weaponentity);
@@ -298,49 +288,47 @@ bool W_SwitchWeapon(entity this, Weapon w, .entity weaponentity)
 
 void W_SwitchWeapon_TryOthers(entity this, Weapon w, .entity weaponentity)
 {
-	if(!W_SwitchWeapon(this, w, weaponentity) && CS_CVAR(this).cvar_cl_weapon_switch_fallback_to_impulse)
+	if (!W_SwitchWeapon(this, w, weaponentity) && CS_CVAR(this).cvar_cl_weapon_switch_fallback_to_impulse)
 		W_NextWeaponOnImpulse(this, w.impulse, weaponentity);
 }
 
 void W_CycleWeapon(entity this, string weaponorder, float dir, .entity weaponentity)
 {
-	float w;
-	w = W_GetCycleWeapon(this, weaponorder, dir, -1, true, true, weaponentity);
-	if(w > 0)
+	float w = W_GetCycleWeapon(this, weaponorder, dir, -1, true, true, weaponentity);
+	if (w > 0)
 		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }
 
 void W_NextWeaponOnImpulse(entity this, float imp, .entity weaponentity)
 {
-	float w;
-	w = W_GetCycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, imp, true, (CS_CVAR(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
-	if(w > 0)
+	float w = W_GetCycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, imp, true, (CS_CVAR(this).cvar_cl_weaponimpulsemode == 0), weaponentity);
+	if (w > 0)
 		W_SwitchWeapon(this, REGISTRY_GET(Weapons, w), weaponentity);
 }
 
-// next weapon
+/// Goto next weapon
 void W_NextWeapon(entity this, int list, .entity weaponentity)
 {
-	if(list == 0)
+	if (list == 0)
 		W_CycleWeapon(this, weaponorder_byid, -1, weaponentity);
-	else if(list == 1)
-		W_CycleWeapon(this, CS_CVAR(this).weaponorder_byimpulse, -1, weaponentity);
-	else if(list == 2)
+	else if (list == 1)
+		W_CycleWeapon(this, CS_CVAR(this).weaponorder_byimpulse,  -1, weaponentity);
+	else if (list == 2)
 		W_CycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, -1, weaponentity);
 }
 
-// prev weapon
+/// Goto prev weapon
 void W_PreviousWeapon(entity this, float list, .entity weaponentity)
 {
-	if(list == 0)
+	if (list == 0)
 		W_CycleWeapon(this, weaponorder_byid, +1, weaponentity);
-	else if(list == 1)
-		W_CycleWeapon(this, CS_CVAR(this).weaponorder_byimpulse, +1, weaponentity);
-	else if(list == 2)
+	else if (list == 1)
+		W_CycleWeapon(this, CS_CVAR(this).weaponorder_byimpulse,  +1, weaponentity);
+	else if (list == 2)
 		W_CycleWeapon(this, CS_CVAR(this).cvar_cl_weaponpriority, +1, weaponentity);
 }
 
-// previously used if exists and has ammo, (second) best otherwise
+/// Goto previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon(entity this, .entity weaponentity)
 {
 	Weapon wep = REGISTRY_GET(Weapons, this.(weaponentity).cnt);
@@ -352,7 +340,7 @@ void W_LastWeapon(entity this, .entity weaponentity)
 
 // fix switchweapon (needed when spectating is disabled, as PutClientInServer comes too early)
 REPLICATE_APPLYCHANGE("cl_weaponpriority",
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		if (this.(weaponentity) && (this.(weaponentity).m_weapon != WEP_Null || slot == 0))

@@ -2,8 +2,7 @@
 
 entity makeXonoticWeaponarenaCheckBox(string theWeapon, string theText)
 {
-	entity me;
-	me = NEW(XonoticWeaponarenaCheckBox);
+	entity me = NEW(XonoticWeaponarenaCheckBox);
 	me.configureXonoticWeaponarenaCheckBox(me, theWeapon, theText);
 	return me;
 }

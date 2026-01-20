@@ -325,7 +325,7 @@ void Invasion_RoundStart()
 	});
 
 	if(inv_roundcnt < inv_maxrounds)
-		inv_roundcnt += 1; // a limiter to stop crazy counts
+		++inv_roundcnt; // a limiter to stop crazy counts
 
 	inv_monsterskill = inv_roundcnt + max(1, numplayers * 0.3);
 
@@ -345,8 +345,8 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 	{
 		if(autocvar_g_invasion_type == INV_TYPE_ROUND)
 		{
-			inv_numkilled += 1;
-			inv_maxcurrent -= 1;
+			++inv_numkilled;
+			--inv_maxcurrent;
 		}
 
 		if(IS_PLAYER(frag_attacker))
@@ -372,8 +372,8 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 
 	if(!(mon.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
-		inv_numspawned += 1;
-		inv_maxcurrent += 1;
+		++inv_numspawned;
+		++inv_maxcurrent;
 	}
 
 	mon.monster_skill = inv_monsterskill;

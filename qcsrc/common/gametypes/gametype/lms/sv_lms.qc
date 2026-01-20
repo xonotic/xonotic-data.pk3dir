@@ -176,7 +176,7 @@ void lms_UpdateLeaders()
 		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
 		if (lives > max_lives)
 			max_lives = lives;
-		pl_cnt++;
+		++pl_cnt;
 	});
 
 	int second_max_lives = 0;
@@ -184,7 +184,7 @@ void lms_UpdateLeaders()
 	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME, {
 		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
 		if (lives == max_lives)
-			pl_cnt_with_max_lives++;
+			++pl_cnt_with_max_lives;
 		else if (lives > second_max_lives)
 			second_max_lives = lives;
 	});
@@ -351,7 +351,7 @@ void lms_RemovePlayer(entity player)
 			player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			int pl_cnt = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && it.frags == FRAGS_PLAYER, {
-				pl_cnt++;
+				++pl_cnt;
 			});
 			GameRules_scoring_add(player, LMS_RANK, pl_cnt + 1);
 		}
@@ -461,7 +461,7 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 	lms_leaders = 0;
 	FOREACH_CLIENT(true, {
 		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME && it.lms_leader)
-			lms_leaders++;
+			++lms_leaders;
 	});
 
 	float leader_time = autocvar_g_lms_leader_wp_time;
@@ -585,7 +585,7 @@ MUTATOR_HOOKFUNCTION(lms, CalculateRespawnTime)
 		int lives = GameRules_scoring_add(it, LMS_LIVES, 0);
 		if (lives > max_lives)
 			max_lives = lives;
-		pl_cnt++;
+		++pl_cnt;
 	});
 
 	// min delay with only 2 players
@@ -612,7 +612,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		{
 			int pl_cnt = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && it.frags == FRAGS_PLAYER, {
-				pl_cnt++;
+				++pl_cnt;
 			});
 			frag_target.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			GameRules_scoring_add(frag_target, LMS_RANK, pl_cnt);
@@ -636,12 +636,6 @@ MUTATOR_HOOKFUNCTION(lms, SetStartItems)
 	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
-}
-
-MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
-{
-	// don't clear player score
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)

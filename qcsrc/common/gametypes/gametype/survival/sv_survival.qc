@@ -15,14 +15,12 @@ void SurvivalStatuses_Init();
 
 bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 {
-	Stream out = MSG_ENTITY;
-	WriteHeader(out, ENT_CLIENT_SURVIVALSTATUSES);
-
 	// always send hunters their own status and their allies
 	if (dest.survival_status == SURV_STATUS_HUNTER)
 		sendflags |= STATUS_SEND_HUNTERS;
 
-	serialize(byte, out, sendflags);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SURVIVALSTATUSES);
+	WriteByte(MSG_ENTITY, sendflags);
 	if (sendflags & STATUS_SEND_HUNTERS)
 	{
 		for (int i = 1; i <= maxclients; i += 8)
@@ -36,7 +34,7 @@ bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 				if (is_hunter)
 					f |= BIT(b);
 			}
-			serialize(byte, out, f);
+			WriteByte(MSG_ENTITY, f);
 		}
 	}
 	//print(sprintf("sent flags %f to %s\n", sendflags, dest.netname));
@@ -100,9 +98,9 @@ float Surv_CheckWinner()
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
 		if(it.survival_status == SURV_STATUS_PREY)
-			survivor_count++;
+			++survivor_count;
 		else if(it.survival_status == SURV_STATUS_HUNTER)
-			hunter_count++;
+			++hunter_count;
 	});
 	if(survivor_count > 0 && hunter_count > 0)
 	{
@@ -180,7 +178,7 @@ void Surv_RoundStart()
 	{
 		if(total_hunters >= hunter_count)
 			break;
-		total_hunters++;
+		++total_hunters;
 		it.survival_status = SURV_STATUS_HUNTER;
 	});
 	survivalStatuses.SendFlags = STATUS_SEND_RESET;

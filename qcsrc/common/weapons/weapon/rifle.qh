@@ -10,21 +10,25 @@ SOUND(RIFLE_FIRE, W_Sound("campingrifle_fire"));
 #endif
 
 CLASS(Rifle, Weapon)
+#ifdef SVQC
 /* spawnfunc */ ATTRIB(Rifle, m_canonical_spawnfunc, string, "weapon_rifle");
+/* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, 7000);
+#endif
 /* ammotype  */ ATTRIB(Rifle, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(Rifle, impulse, int, 7);
 /* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS);
-/* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(Rifle, m_color, vector, '0.886 0.620 0.353');
-/* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
 /* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);
 /* flash mdl */ ATTRIB(Rifle, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Rifle, m_muzzleeffect, entity, EFFECT_RIFLE_MUZZLEFLASH);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");
 /* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
 /* reticle   */ ATTRIB(Rifle, w_reticle, string, "gfx/reticle_nex");
+#endif
 /* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
 /* refname   */ ATTRIB(Rifle, netname, string, "rifle");
 /* wepname   */ ATTRIB(Rifle, m_name, string, _("Rifle"));

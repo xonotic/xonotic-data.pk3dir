@@ -895,7 +895,7 @@ int MapVote_MoveUp(int pos)
 			if (imp == -mv_columns) // pos == 0
 				imp = mv_columns * mv_rows - 1;
 			else
-				imp = imp + mv_columns * mv_rows - 1;
+				imp += mv_columns * mv_rows - 1;
 		}
 	}
 	if (!(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote)

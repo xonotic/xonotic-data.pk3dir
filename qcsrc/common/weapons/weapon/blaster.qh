@@ -9,20 +9,24 @@ SOUND(BLASTER_FIRE, W_Sound("lasergun_fire"));
 #endif
 
 CLASS(Blaster, Weapon)
+#ifdef SVQC
 /* spawnfunc */ ATTRIB(Blaster, m_canonical_spawnfunc, string, "weapon_blaster");
+/* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
+#endif
 /* ammotype  */ //ATTRIB(Blaster, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(Blaster, impulse, int, 1);
 /* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(Blaster, m_color, vector, '0.969 0.443 0.482');
-/* modelname */ ATTRIB(Blaster, mdl, string, "laser");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(Blaster, mdl, string, "laser");
 /* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
 /* flash mdl */ ATTRIB(Blaster, m_muzzlemodel, Model, MDL_Null);
 /* flash eff */ ATTRIB(Blaster, m_muzzleeffect, entity, EFFECT_BLASTER_MUZZLEFLASH);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");
 /* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
+#endif
 /* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
 /* refname   */ ATTRIB(Blaster, netname, string, "blaster");
 /* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
@@ -58,7 +62,12 @@ REGISTER_WEAPON(BLASTER, NEW(Blaster));
 SPAWNFUNC_WEAPON(weapon_blaster, WEP_BLASTER)
 SPAWNFUNC_WEAPON(weapon_laser, WEP_BLASTER) // Nexuiz compat
 
+#ifdef SVQC
 CLASS(OffhandBlaster, OffhandWeapon)
 ENDCLASS(OffhandBlaster)
 OffhandBlaster OFFHAND_BLASTER;
-STATIC_INIT(OFFHAND_BLASTER) { OFFHAND_BLASTER = NEW(OffhandBlaster); }
+STATIC_INIT(OFFHAND_BLASTER)
+{
+	OFFHAND_BLASTER = NEW(OffhandBlaster);
+}
+#endif

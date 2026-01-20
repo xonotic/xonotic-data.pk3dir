@@ -31,8 +31,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 
 	for(i = 0; i < GameType_GetTotalCount(); ++i)
 	{
-		entity e;
-		e = me.(typeLabels[i]);
+		entity e = me.(typeLabels[i]);
 		e.disabled = !(MapInfo_Map_supportedGametypes & GameType_GetID(i).gametype_flags);
 	}
 

@@ -165,8 +165,7 @@ bool QuickMenu_Open(string mode, string submenu, string file)
 		while ((s = fgets(fh)) && QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES)
 		{
 			// first skip invalid entries, so we don't check them anymore
-			int argc;
-			argc = tokenize_console(s);
+			int argc = tokenize_console(s);
 			if (argc == 0 || argv(0) == "")
 				continue;
 			if (argc == 1)

@@ -54,7 +54,7 @@ void DynamicHandicap_UpdateHandicap()
 		}
 		if (handicap >= 0)
 		{
-			handicap += 1;
+			++handicap;
 		}
 		else
 		{

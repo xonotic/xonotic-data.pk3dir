@@ -1,28 +1,27 @@
 #pragma once
 
-#ifndef SVQC
-#include <common/util.qh> // for icon_path_from_menuskin
-#endif
-
+#ifdef SVQC
 // special spawn flags
-const int MONSTER_RESPAWN_DEATHPOINT = BIT(4); // re-spawn where we died
-const int MONSTER_TYPE_FLY = BIT(5);
-const int MONSTER_TYPE_SWIM = BIT(6);
+const int MONSTER_RESPAWN_DEATHPOINT  = BIT(4);  ///< re-spawn where we died
+const int MONSTER_TYPE_FLY            = BIT(5);
+const int MONSTER_TYPE_SWIM           = BIT(6);
 // bit 7 now unused
-const int MON_FLAG_SUPERMONSTER = BIT(8); // incredibly powerful monster
-const int MON_FLAG_RANGED = BIT(9); // monster shoots projectiles
-const int MON_FLAG_MELEE = BIT(10);
-const int MON_FLAG_CRUSH = BIT(11); // monster can be stomped in special modes
-const int MON_FLAG_RIDE = BIT(12); // monster can be ridden in special modes
-const int MONSTER_SIZE_QUAKE = BIT(13);
-const int MONSTER_TYPE_PASSIVE = BIT(14); // doesn't target or chase enemies
-const int MONSTER_TYPE_UNDEAD = BIT(15); // monster is by most definitions a zombie (doesn't fully die unless gibbed)
-const int MON_FLAG_HIDDEN = BIT(16);
+const int MON_FLAG_SUPERMONSTER       = BIT(8);  ///< incredibly powerful monster
+const int MON_FLAG_RANGED             = BIT(9);  ///< monster shoots projectiles
+const int MON_FLAG_MELEE              = BIT(10);
+const int MON_FLAG_CRUSH              = BIT(11); ///< monster can be stomped in special modes
+const int MON_FLAG_RIDE               = BIT(12); ///< monster can be ridden in special modes
+const int MONSTER_SIZE_QUAKE          = BIT(13);
+const int MONSTER_TYPE_PASSIVE        = BIT(14); ///< doesn't target or chase enemies
+const int MONSTER_TYPE_UNDEAD         = BIT(15); ///< monster is by most definitions a zombie (doesn't fully die unless gibbed)
+const int MON_FLAG_HIDDEN             = BIT(16);
 
 // entity properties of monsterinfo:
 .bool(int, entity actor, entity targ, .entity weaponentity) monster_attackfunc;
 .entity monsterdef;
+#endif
 
+#ifdef GAMEQC
 // animations
 .vector anim_blockend;
 .vector anim_blockstart;
@@ -31,49 +30,80 @@ const int MON_FLAG_HIDDEN = BIT(16);
 .vector anim_melee3;
 .vector anim_walk;
 .vector anim_spawn;
+#endif
 
 CLASS(Monster, Object)
-    ATTRIB(Monster, monsterid, int, 0);
-    /** attributes */
-    ATTRIB(Monster, spawnflags, int, 0);
-    /** human readable name */
-    ATTRIB(Monster, m_name, string, _("Monster"));
-    /** short name */
-    ATTRIB(Monster, netname, string, "");
-    /** color */
-    ATTRIB(Monster, m_color, vector, '1 1 1');
-    /** icon */
-    ATTRIB(Monster, m_icon, string);
-    /** model */
-    ATTRIB(Monster, m_model, entity);
-    /** hitbox size */
-    ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
-    /** hitbox size */
-    ATTRIB(Monster, m_maxs, vector, '0 0 0');
+	ATTRIB(Monster, monsterid, int, 0);
+#ifdef SVQC
+	/** attributes */
+	ATTRIB(Monster, spawnflags, int, 0);
+#endif
+	/** human readable name */
+	ATTRIB(Monster, m_name, string, _("Monster"));
+	/** short name */
+	ATTRIB(Monster, netname, string, "");
+	/** color */
+	ATTRIB(Monster, m_color, vector, '1 1 1');
+#ifdef GAMEQC
+	/** model */
+	ATTRIB(Monster, m_model, entity);
+#endif
+#ifdef SVQC
+	/** hitbox size */
+	ATTRIB(Monster, m_mins, vector, '-0 -0 -0');
+	/** hitbox size */
+	ATTRIB(Monster, m_maxs, vector, '0 0 0');
 
-    /** (SERVER) setup monster data */
-    METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (SERVER) logic to run every frame */
-    METHOD(Monster, mr_think, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (SERVER) logic to run every frame after the monster has died */
-    METHOD(Monster, mr_deadthink, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (SERVER) called when monster dies */
-    METHOD(Monster, mr_death, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
-    /** (SERVER) called when monster is damaged */
-    METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
-    /** (BOTH?) sets animations for monster */
-    METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+	/** (SERVER) setup monster data */
+	METHOD(Monster, mr_setup, bool(Monster this, entity actor))
+	{
+		TC(Monster, this);
+		return false;
+	}
+	/** (SERVER) logic to run every frame */
+	METHOD(Monster, mr_think, bool(Monster this, entity actor))
+	{
+		TC(Monster, this);
+		return false;
+	}
+	/** (SERVER) logic to run every frame after the monster has died */
+	METHOD(Monster, mr_deadthink, bool(Monster this, entity actor))
+	{
+		TC(Monster, this);
+		return false;
+	}
+	/** (SERVER) called when monster dies */
+	METHOD(Monster, mr_death, bool(Monster this, entity actor))
+	{
+		TC(Monster, this);
+		return false;
+	}
+	/** (SERVER) called when monster is damaged */
+	METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype))
+	{
+		TC(Monster, this);
+		return damage_take;
+	}
+#endif
+#ifdef GAMEQC
+	/** (BOTH?) sets animations for monster */
+	METHOD(Monster, mr_anim, bool(Monster this, entity actor))
+	{
+		TC(Monster, this);
+		return false;
+	}
+#endif
 #ifdef MENUQC
-    METHOD(Monster, describe, string(Monster this))
-    {
-        TC(Monster, this);
-        return SUPER(Monster).describe(this);
-    }
-    METHOD(Monster, display, void(Monster this, void(string name, string icon) returns))
-    {
-        TC(Monster, this);
-        returns(this.m_name, icon_path_from_menuskin(this.m_icon));
-    }
+	METHOD(Monster, describe, string(Monster this))
+	{
+		TC(Monster, this);
+		return SUPER(Monster).describe(this);
+	}
+	METHOD(Monster, display, void(Monster this, void(string name, string icon) returns))
+	{
+		TC(Monster, this);
+		returns(this.m_name, icon_path_from_menuskin(this.m_icon));
+	}
 #endif
 ENDCLASS(Monster)
 
@@ -90,7 +120,7 @@ ENDCLASS(Monster)
 #endif
 
 #ifdef GAMEQC
-#include "../animdecide.qh"
-#include "../anim.qh"
+#include <common/animdecide.qh>
+#include <common/anim.qh>
 vector animfixfps(entity e, vector a, vector b);
 #endif

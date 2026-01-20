@@ -222,8 +222,8 @@ void havocbot_bunnyhop(entity this, vector dir)
 	{
 		vector vel_angles = vectoangles(this.velocity);
 		vector deviation = vel_angles - vectoangles(dir);
-		while (deviation.y < -180) deviation.y = deviation.y + 360;
-		while (deviation.y > 180) deviation.y = deviation.y - 360;
+		while (deviation.y < -180) deviation.y += 360;
+		while (deviation.y > 180) deviation.y -= 360;
 		if (fabs(deviation.y) < autocvar_bot_ai_bunnyhop_dir_deviation_max)
 		{
 			vector gco = get_closer_dest(this.goalcurrent, this.origin);
@@ -242,8 +242,8 @@ void havocbot_bunnyhop(entity this, vector dir)
 				vector gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
 				vector ang = vectoangles(gco - this.origin);
 				deviation = vectoangles(gno - gco) - vel_angles;
-				while (deviation.y < -180) deviation.y = deviation.y + 360;
-				while (deviation.y > 180) deviation.y = deviation.y - 360;
+				while (deviation.y < -180) deviation.y += 360;
+				while (deviation.y > 180) deviation.y -= 360;
 
 				float max_turn_angle = autocvar_bot_ai_bunnyhop_turn_angle_max;
 				max_turn_angle -= autocvar_bot_ai_bunnyhop_turn_angle_reduction * ((vel - autocvar_sv_maxspeed) / autocvar_sv_maxspeed);
@@ -337,7 +337,7 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 	keyboard = this.havocbot_keyboard;
 	float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
 	//dprint("movement ", vtos(CS(this).movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
-	CS(this).movement = CS(this).movement + (keyboard - CS(this).movement) * blend;
+	CS(this).movement += (keyboard - CS(this).movement) * blend;
 }
 
 // return true when bot isn't getting closer to the current goal
@@ -1630,8 +1630,7 @@ void havocbot_aim(entity this)
 bool havocbot_moveto_refresh_route(entity this)
 {
 	// Refresh path to goal if necessary
-	entity wp;
-	wp = this.havocbot_personal_waypoint;
+	entity wp = this.havocbot_personal_waypoint;
 	navigation_goalrating_start(this);
 	navigation_routerating(this, wp, 10000, 10000);
 	navigation_goalrating_end(this);
@@ -1664,7 +1663,7 @@ float havocbot_moveto(entity this, vector pos)
 			}
 			else
 			{
-				this.havocbot_personal_waypoint_failcounter += 1;
+				++this.havocbot_personal_waypoint_failcounter;
 				this.havocbot_personal_waypoint_searchtime = time + 2;
 				if(this.havocbot_personal_waypoint_failcounter >= 30)
 				{
@@ -1801,7 +1800,7 @@ vector havocbot_dodge(entity this)
 				{
 					// calculate direction and distance from the
 					// flight path by removing the forward axis
-					v = v - (n * (v * n));
+					v -= n * (v * n);
 					danger = head.bot_dodgerating - vlen(v);
 					if (bestdanger < danger)
 					{

@@ -2,8 +2,7 @@
 
 entity makeXonoticListBox()
 {
-	entity me;
-	me = NEW(XonoticListBox);
+	entity me = NEW(XonoticListBox);
 	me.configureXonoticListBox(me);
 	return me;
 }

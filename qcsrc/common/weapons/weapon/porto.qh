@@ -15,18 +15,22 @@ SOUND(PORTO_UNSUPPORTED, "porto/unsupported");
 #endif
 
 CLASS(PortoLaunch, Weapon)
+#ifdef SVQC
 /* spawnfunc */ ATTRIB(PortoLaunch, m_canonical_spawnfunc, string, "weapon_porto");
+/* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
+#endif
 /* ammotype  */ ATTRIB(PortoLaunch, ammo_type, Resource, RES_NONE);
 /* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0);
 /* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON | WEP_FLAG_NODUAL | WEP_FLAG_NOTRUEAIM);
-/* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(PortoLaunch, m_color, vector, '0.404 0.545 0.937');
-/* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
 /* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair, string, "gfx/crosshairporto");
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);
+#endif
 /* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");
 /* refname   */ ATTRIB(PortoLaunch, netname, string, "porto");
 /* wepname   */ ATTRIB(PortoLaunch, m_name, string, _("Port-O-Launch"));
@@ -40,7 +44,7 @@ CLASS(PortoLaunch, Weapon)
 		P(class, prefix, speed, float, BOTH) \
 		P(class, prefix, switchdelay_drop, float, NONE) \
 		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
 		P(class, prefix, weaponthrowable, float, NONE) \
@@ -64,6 +68,6 @@ void Porto_Draw(entity this);
 .vector right_vector;
 .float porto_forbidden;
 
-void W_Porto_Fail(entity this, float failhard);
+void W_Porto_Fail(entity this, bool failhard);
 void W_Porto_Remove (entity p);
 #endif
