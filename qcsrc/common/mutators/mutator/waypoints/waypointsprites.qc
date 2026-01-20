@@ -338,33 +338,36 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 }
 
 // returns location of sprite text
-vector drawspritearrow(vector o, float ang, vector rgb, float a, float t, bool no_border)
+vector drawspritearrow(vector o, float ang, vector rgb, float a, float scale, float base_scale, bool no_border)
 {
-    float size   = 9.0 * t;
-    float border = no_border ? 0 : 1.5 * t;
-    float margin = 4.0 * t;
+    float size   = 9 * scale;
+    float border = no_border ? 0 : 1.5 * scale;
+    float margin = 4 * scale;
 
     float borderDiag = border * M_SQRT2;
-    vector arrowX  = eX * size;
-    vector arrowY  = eY * (size+borderDiag);
-    vector borderX = eX * (size+borderDiag);
-    vector borderY = eY * (size+borderDiag+border);
+    vector arrowX  = eX * size * base_scale;
+    vector arrowY  = eY * (size + borderDiag);
+    vector borderX = eX * (size * base_scale + borderDiag);
+    vector borderY = eY * (size + borderDiag + border);
 
-    R_BeginPolygon("", DRAWFLAG_NORMAL, true);
-    R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + Rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
-    R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
-    R_EndPolygon();
+    if (border)
+    {
+        R_BeginPolygon("", DRAWFLAG_NORMAL, true);
+        R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
+        R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
+        R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
+        R_PolygonVertex(o + Rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
+        R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
+        R_EndPolygon();
+    }
 
-    R_BeginPolygon("", DRAWFLAG_ADDITIVE, true);
+    R_BeginPolygon("", (border ? DRAWFLAG_ADDITIVE : DRAWFLAG_NORMAL), true);
     R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
     R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
     R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
     R_EndPolygon();
 
-    return o + Rotate(eY * (borderDiag+size+margin), ang);
+    return o + Rotate(eY * (borderDiag + size + margin), ang);
 }
 
 // returns location of sprite healthbar
@@ -657,7 +660,7 @@ void Draw_WaypointSprite(entity this)
             SetResourceExplicit(this, RES_HEALTH, -1);
     }
 
-    o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t, false);
+    o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t, 1, false);
 
 	string pic = "";
 	bool is_text = true;

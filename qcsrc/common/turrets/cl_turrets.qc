@@ -174,7 +174,7 @@ void turret_draw2d(entity this)
 	bool draw_healthbar = ((this.helpme && time < this.helpme) || !autocvar_g_waypointsprite_turrets_onlyhurt || hud != HUD_NORMAL);
 
 	if (draw_healthbar || autocvar_g_waypointsprite_turrets_text) // make sure it's actually being drawn
-		o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t, false);
+		o = drawspritearrow(o, M_PI, rgb, a, SPRITE_ARROW_SCALE * t, 1, false);
 	if (autocvar_g_waypointsprite_turrets_text)
 		o = drawsprite_TextOrIcon(true, o, M_PI, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 	if (draw_healthbar)

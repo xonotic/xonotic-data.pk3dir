@@ -920,17 +920,15 @@ void HitIndicatorUpdate(float dmg, entity attacker)
 
 void HitIndicatorShow()
 {
-	if (STAT(HEALTH) <= 0 && HitIndicator_time[0] >= 0)
-	{
-		// if dead remove all indicators
-		for (int i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
-			HitIndicator_attacker[i] = NULL;
-		HitIndicator_time[0] = -1; // this is to avoid removing indicators every frame
-		return;
-	}
-
 	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_size <= 0 || autocvar_chase_active)
 		return;
+
+	float alpha_max = bound(0, autocvar_cl_hit_indicator_fade_alpha_max, 1);
+	if (alpha_max == 0)
+		return;
+
+	float alpha_min = bound(0, autocvar_cl_hit_indicator_fade_alpha_min, alpha_max);
+	vector scr_center = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 
 	for (int i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
 	{
@@ -944,13 +942,16 @@ void HitIndicatorShow()
 			continue;
 		}
 
+		float alpha = alpha_min + (alpha_max - alpha_min) * (1 - (time - HitIndicator_time[i]) / HitIndicator_fade_time);
+		if (alpha <= 0.5/255) // Guaranteed invisible - don't show.
+			continue;
+
 		// hide indicator if attacker is not visible (check ported from shownames.qc)
 		traceline(view_origin, attacker.origin, MOVE_NOMONSTERS, attacker);
 		if (trace_fraction < 1 && (trace_networkentity != attacker.sv_entnum && trace_ent.entnum != attacker.sv_entnum))
 			continue;
 
 		vector org = project_3d_to_2d(attacker.origin);
-		vector scr_center = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
 		float radius = bound(0.3, autocvar_cl_hit_indicator_radius, 1) * min(vid_conwidth, vid_conheight) * 0.5;
 		vector ofs = normalize(org - scr_center - org.z * eZ) * radius;
 		float ang = atan2(-ofs.x, -ofs.y);
@@ -960,13 +961,10 @@ void HitIndicatorShow()
 			ofs = -ofs;
 		}
 		org = scr_center + ofs;
-		float alpha_max = bound(0.1, autocvar_cl_hit_indicator_fade_alpha_max, 1);
-		float alpha_min = bound(0, autocvar_cl_hit_indicator_fade_alpha_min, alpha_max);
-		float alpha = alpha_min;
-		alpha += (alpha_max - alpha_min) * (1 - (time - HitIndicator_time[i]) / HitIndicator_fade_time);
 		float size = autocvar_cl_hit_indicator_size;
 		size = map_bound_ranges(HitIndicator_damage[i], 30, 90, size, size * 2);
-		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, size, true);
+		float base_scale = bound(1, autocvar_cl_hit_indicator_radius * 5, 3);
+		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, size, base_scale, true);
 
 		if (autocvar_cl_hit_indicator_text)
 		{
@@ -974,7 +972,8 @@ void HitIndicatorShow()
 			vector t_size = autocvar_cl_hit_indicator_text_size * '1 1 0';
 			org.x += map_ranges(ofs.x, -radius, radius, 0, -1) * stringwidth(text, false, t_size);
 			org.y -= t_size.y * 0.5;
-			drawstring_builtin(org, text, t_size, autocvar_cl_hit_indicator_text_color, alpha, DRAWFLAG_NORMAL);
+			drawstring_builtin(org, text, t_size, autocvar_cl_hit_indicator_text_color,
+				autocvar_cl_hit_indicator_text_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 }

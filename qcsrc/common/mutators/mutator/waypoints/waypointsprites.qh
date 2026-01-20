@@ -102,7 +102,7 @@ void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, f
 void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f);
 
 // returns location of sprite text
-vector drawspritearrow(vector o, float ang, vector rgb, float a, float t, bool no_border);
+vector drawspritearrow(vector o, float ang, vector rgb, float a, float scale, float base_scale, bool no_border);
 
 // returns location of sprite healthbar
 vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str);
