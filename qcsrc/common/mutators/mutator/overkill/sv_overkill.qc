@@ -280,6 +280,12 @@ MUTATOR_HOOKFUNCTION(ok, SetWeaponArena)
 	M_ARGV(0, string) = "off";
 }
 
+MUTATOR_HOOKFUNCTION(ok, SetWeaponStay)
+{
+	// turn weapon stay off
+	M_ARGV(0, int) = 0;
+}
+
 MUTATOR_HOOKFUNCTION(ok, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":OK");

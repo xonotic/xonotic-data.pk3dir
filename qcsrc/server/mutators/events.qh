@@ -1051,6 +1051,12 @@ MUTATOR_HOOKABLE(GetPlayerStatus, EV_GetPlayerStatus);
     /**/
 MUTATOR_HOOKABLE(SetWeaponArena, EV_SetWeaponArena);
 
+#define EV_SetWeaponStay(i, o) \
+    /** weapon_stay */  i(int, MUTATOR_ARGV_0_int) \
+    /**/                o(int, MUTATOR_ARGV_0_int) \
+    /**/
+MUTATOR_HOOKABLE(SetWeaponStay, EV_SetWeaponStay);
+
 #define EV_DropSpecialItems(i, o) \
     /** target */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
