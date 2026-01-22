@@ -6,6 +6,7 @@
 # 62197a8afd75a0a64478212fcb55f596, 2017
 # Contijn Buijs <contijn.buijs@gmail.com>, 2017
 # C. Righart, 2026
+# C. Righart, 2026
 # 62197a8afd75a0a64478212fcb55f596, 2017
 # Jonathan van der Steege <jonakeys@hotmail.com>, 2016
 # Jonathan van der Steege <jonakeys@hotmail.com>, 2016,2022
@@ -181,11 +182,11 @@ msgstr "spring"
 #: qcsrc/client/hud/panel/infomessages.qc:145
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2In de wachtrij voor team %s%s^2"
 
 #: qcsrc/client/hud/panel/infomessages.qc:148
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2In de wachtrij voor willekeurig beschikbaar team"
 
 #: qcsrc/client/hud/panel/infomessages.qc:154
 #, c-format
@@ -227,21 +228,21 @@ msgstr "^2Druk ^3%s^2 om warmup te beëindigen"
 #: qcsrc/client/hud/panel/infomessages.qc:203
 #, c-format
 msgid "%sNeed active players for: %s"
-msgstr ""
+msgstr "%sActieve spelers nodig voor: %s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:207
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%sWachten op 1 speler..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "%sWachten op %d spelers..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:221
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Teams zijn ongelijk!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:224
 #, c-format
@@ -346,19 +347,19 @@ msgstr "QMCMD^kracht binnenkort"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "QMCMD^gratis voorwerp %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 msgid "QMCMD^free item, icon"
-msgstr ""
+msgstr "QMCMD^gratis voorwerp, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^took item (l:%l^7)"
-msgstr ""
+msgstr "QMCMD^nam voorwerp (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^took item, icon"
-msgstr ""
+msgstr "QMCMD^nam voorwerp, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^negative"
@@ -402,11 +403,11 @@ msgstr "QMCMD^verdedigen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "QMCMD^zwerven (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^roaming, icon"
-msgstr ""
+msgstr "QMCMD^zwerven, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -414,7 +415,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^attacking, icon"
-msgstr ""
+msgstr "QMCMD^aanvallen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
@@ -422,7 +423,7 @@ msgstr "QMCMD^doodde vaandeldrager (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr ""
+msgstr "QMCMD^vaandeldrager gedood, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 #, c-format
@@ -431,11 +432,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^dropped flag, icon"
-msgstr ""
+msgstr "QMCMD^vlag laten vallen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^drop weapon, icon"
-msgstr ""
+msgstr "QMCMD^wapen neerleggen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
@@ -443,7 +444,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^drop flag/key, icon"
-msgstr ""
+msgstr "QMCMD^vlag/sleutel neerleggen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
@@ -477,7 +478,7 @@ msgstr "QMCMD^Namen boven spelers"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "QMCMD^Crosshair per weapon"
-msgstr "QMCMD^Draadkruis per wapen"
+msgstr "QMCMD^Dradenkruis naar wapen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^FPS"
@@ -746,7 +747,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "Aantal gedode sleuteldragers"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -1059,7 +1060,7 @@ msgstr "Nauwkeurigheidsstatistieken (gemiddeld %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2004
 msgid "Item stats"
-msgstr "Itemstatistieken"
+msgstr "Voorwerpstatistieken"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2120
 msgid "Map stats:"
@@ -3854,7 +3855,7 @@ msgstr "Herleven"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
-msgstr "Item"
+msgstr "Voorwerp"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 msgid "Checkpoint"
@@ -8380,7 +8381,7 @@ msgstr ""
 #: qcsrc/menu/item/listbox.qc:414
 #, c-format
 msgid "Item %d"
-msgstr "Item %d"
+msgstr "Voorwerp %d"
 
 #: qcsrc/menu/item/mixedslider.qc:6 qcsrc/menu/item/textslider.qc:11
 #: qcsrc/menu/item/textslider.qc:12
@@ -8809,7 +8810,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:37
 msgid "Align icon:"
-msgstr "Icoon uitlijning:"
+msgstr "Icoon uitlijnen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:58
@@ -9024,7 +9025,7 @@ msgstr "Verminderd"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:38
 msgid "Hide spawned items"
-msgstr ""
+msgstr "Verberg verschenen voorwerpen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:40
 msgid "Hide big armor and health"
@@ -9049,11 +9050,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
 msgid "Show icons"
-msgstr ""
+msgstr "Iconen weergeven"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
-msgstr "Speliconen Paneel"
+msgstr "Speliconen-paneel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:19
 msgid "Entry lifetime:"
@@ -9144,7 +9145,7 @@ msgstr "Fysicapaneel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:35
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Icoongrootte-schaal:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
@@ -10618,7 +10619,7 @@ msgstr "Info:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:58
 msgid "Items:"
-msgstr "Items:"
+msgstr "Voorwerpen:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:65
 msgid "Pain:"
@@ -10784,7 +10785,7 @@ msgstr "Menugeluiden"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:161
 msgid "Play sounds when clicking menu items"
-msgstr ""
+msgstr "Menu-klikgeluiden afspelen"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:162
 msgid "Focus sounds"
@@ -10792,7 +10793,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:163
 msgid "Play sounds when hovering over menu items too"
-msgstr ""
+msgstr "Ook menu-aanwijsgeluiden afspelen"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:167
 msgid "Time announcer:"
@@ -11193,17 +11194,19 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
 msgid "Crosshair"
-msgstr ""
+msgstr "Dradenkruis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:31
 msgid "No crosshair"
-msgstr "Geen crosshair:"
+msgstr "Geen dradenkruis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:34
 msgid ""
 "Set a different crosshair for each weapon, good if you play without weapon "
 "models"
 msgstr ""
+"Stel een ander dradenkruis in voor elk wapen, handig als zonder "
+"wapenmodellen wordt gespeeld"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:52
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:94
@@ -11221,7 +11224,7 @@ msgstr "Gebruiken ringen om wapenstatus weer te geven"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:113
 msgid "Enable center crosshair dot"
-msgstr "Schakel punt in het midden van de crosshair in"
+msgstr "Middenstip dradenkruis inschakelen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
 msgid "Use normal color"
@@ -11229,11 +11232,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:156
 msgid "Smooth effects of crosshairs"
-msgstr "Glad effect van crosshairs"
+msgstr "Dradenkruiseffecten versoepelen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:159
 msgid "Perform hit tests for the crosshair"
-msgstr ""
+msgstr "Dradenkruis-raaktesten uitvoeren"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:163
 msgid "Blur if obstructed by an obstacle"
@@ -11249,11 +11252,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:177
 msgid "Animate crosshair when hitting an enemy"
-msgstr ""
+msgstr "Dradenkruis animeren bij vijand raken"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:180
 msgid "Animate crosshair when picking up an item"
-msgstr ""
+msgstr "Dradenkruis animeren bij oppakken voorwerp"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
@@ -11304,11 +11307,11 @@ msgstr "Rand afstand:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:97
 msgid "Fade when near the crosshair"
-msgstr ""
+msgstr "Vervagen nabij dradenkruis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:102
 msgid "Display names instead of icons"
-msgstr ""
+msgstr "Namen weergeven in plaats van iconen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:108
 msgid "Damage"
@@ -11349,7 +11352,7 @@ msgstr "Teamspel"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:170
 msgid "Only when near crosshair"
-msgstr "Alleen wanneer in de buurt van crosshair"
+msgstr "Alleen nabij dradenkruis"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:175
 msgid "Display health and armor"
@@ -11512,7 +11515,7 @@ msgstr "Berichten"
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 #: qcsrc/menu/xonotic/guide/guide.qh:13
 msgid "Items"
-msgstr ""
+msgstr "Voorwerpen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:32
 msgid "Use simple 2D images instead of item models"
@@ -11528,11 +11531,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:41
 msgid "GHOITEMS^Black"
-msgstr ""
+msgstr "GHOITEMS^Zwart"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
 msgid "GHOITEMS^Dark"
-msgstr ""
+msgstr "GHOITEMS^Donker"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:43
 msgid "GHOITEMS^Tinted"
@@ -11544,7 +11547,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:45
 msgid "GHOITEMS^Blue"
-msgstr ""
+msgstr "GHOITEMS^Blauw"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:51
 #: qcsrc/menu/xonotic/serverlist.qc:757
@@ -11611,7 +11614,7 @@ msgstr "Modellen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
-msgstr "Configureer hoe spelers en items in het spel getoond worden"
+msgstr "Pas aan hoe spelers en voorwerpen in het spel worden weergegeven"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:25
 msgid "Perspective"

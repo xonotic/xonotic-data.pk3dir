@@ -6,14 +6,14 @@
 # k9er, 2024
 # k9 er, 2024
 # k9er, 2024
-# k9er, 2024-2025
+# k9er, 2024-2026
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024\n"
+"Last-Translator: k9er, 2024-2026\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -2188,6 +2188,9 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically progress across the map to reach the enemy generator."
 msgstr ""
+"Since your team can only capture a control point if it is connected to "
+"another control point currently owned by your team, you have to "
+"systematically progress across the map to reach the enemy generator."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2196,6 +2199,10 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"A control point is captured by walking into it, triggering its automatic "
+"construction. Control points of the opposing team are destroyed by attacking "
+"the \"info bot\" that hovers above them, converting the control point to "
+"neutral once it is destroyed."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
@@ -2279,6 +2286,10 @@ msgid ""
 "all hunters or survive until time runs out. The trick lies in the fact that "
 "survivors don't know who else is a survivor."
 msgstr ""
+"%s is a hunter-survivor gametype involving two teams where the goal of the "
+"hunters is to frag all survivors, and the goal of the survivors is to frag "
+"all hunters or survive until time runs out. The trick lies in the fact that "
+"survivors don't know who else is a survivor."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2403,6 +2414,8 @@ msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
 msgstr ""
+"Compete along with your team for the most damage dealt and frags in this "
+"chaotic mayhem"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -9756,7 +9769,7 @@ msgstr "Enable spectating"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even in warmup"
-msgstr ""
+msgstr "Enable even in warmup"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
@@ -12353,7 +12366,7 @@ msgstr "Force player models to mine"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Force player colors to mine:"
-msgstr ""
+msgstr "Force player colours to mine:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""

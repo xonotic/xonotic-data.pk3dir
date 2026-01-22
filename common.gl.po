@@ -6,14 +6,14 @@
 # Antonio <piuntn@gmail.com>, 2024
 # LegendGuard, 2020
 # LegendGuard, 2020-2021
-# nin hum <ninhum@gmx.com>, 2024-2025
+# nin hum <ninhum@gmx.com>, 2024-2026
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020\n"
+"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2026\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -2116,7 +2116,7 @@ msgstr ""
 "as mortes como o dano causado. Isto significa que, se case eliminas a un "
 "xogador, aínda así recibirás puntos, pero inflixir o golpe final sempre é "
 "mellor se é posible. Réstanse puntos cando chocas con perigos, pero non "
-"cando fas trucos de movemento como saltos con bláster, xa que o dano propio "
+"cando fas trucos de movemento como saltos con bláster, xa co dano propio "
 "está desactivado."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:15
@@ -2217,6 +2217,9 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically progress across the map to reach the enemy generator."
 msgstr ""
+"Xa co teu equipo só pode capturar un punto de control se está conectado a "
+"outro punto de control actualmente controlado polo teu equipo, tes que "
+"avanzar de forma sistemática polo mapa para chegar ao xerador inimigo."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2225,6 +2228,10 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"Un punto de control captúrase simplemente entrando nel, o cal activa a súa "
+"construción automática. Os puntos de control do equipo contrario destrúense "
+"atacando o “info bot” que está sobre eles, convertendo o punto de control en "
+"neutral unha vez destruído."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
@@ -2309,6 +2316,11 @@ msgid ""
 "all hunters or survive until time runs out. The trick lies in the fact that "
 "survivors don't know who else is a survivor."
 msgstr ""
+"%s e un modo de xogo tipo cazador-supervivente no que participan dous "
+"equipos, onde o obxectivo dos cazadores é eliminar a tódolos sobreviventes, "
+"e o obxectivo dos sobreviventes é eliminar a tódolos cazadores ou sobrevivir "
+"ata que o tempo se esgote. A clave está en cos sobreviventes non saben quen "
+"máis é sobrevivente."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2441,6 +2453,8 @@ msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
 msgstr ""
+"Compite xunto co teu equipo para causar máis dano e conseguir máis mortes "
+"nesta caótica batalla."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -8994,8 +9008,8 @@ msgid ""
 "slightly before it finishes completely reloading, albeit with the tradeoff "
 "of dealing slightly less damage."
 msgstr ""
-"Ao contrario que o %s, o %s non precisa recargarse manualmente, aínda que "
-"hai que esperar un par de segundos entre disparos. De xeito único, pode "
+"Ao contrario co %s, o %s non precisa recargarse manualmente, aínda que hai "
+"que esperar un par de segundos entre disparos. De xeito único, pode "
 "dispararse un pouco antes de que se recargue completamente, aínda que a "
 "cambio causará un pouco menos de dano."
 
@@ -9861,7 +9875,7 @@ msgstr "Activa a función de espectador"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even in warmup"
-msgstr ""
+msgstr "Activar mesmo no quecemento"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
@@ -12481,7 +12495,7 @@ msgstr "Forzar modelos de xogadores ao meu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Force player colors to mine:"
-msgstr ""
+msgstr "Forzar as cores dos xogadores iguais as miñas."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""
