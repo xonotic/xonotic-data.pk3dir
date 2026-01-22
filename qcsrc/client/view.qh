@@ -110,6 +110,8 @@ vector autocvar_cl_hit_indicator_text_color = '1 0.5 0.5';
 float autocvar_cl_hit_indicator_text_size = 11;
 const int HITINDICATOR_MAX_COUNT = 10;
 entity HitIndicator_attacker[HITINDICATOR_MAX_COUNT];
+vector HitIndicator_attacker_pos[HITINDICATOR_MAX_COUNT];
+bool HitIndicator_attacker_pos_exists[HITINDICATOR_MAX_COUNT];
 float HitIndicator_damage[HITINDICATOR_MAX_COUNT];
 int HitIndicator_time[HITINDICATOR_MAX_COUNT];
 float HitIndicator_fade_time;

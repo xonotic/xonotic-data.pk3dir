@@ -939,6 +939,7 @@ void HitIndicatorShow()
 		{
 			// if the attacker dies or disconnects remove the related hit indicator
 			HitIndicator_attacker[i] = NULL;
+			HitIndicator_attacker_pos_exists[i] = false;
 			continue;
 		}
 
@@ -946,16 +947,29 @@ void HitIndicatorShow()
 		if (alpha <= 0.5/255) // Guaranteed invisible - don't show.
 			continue;
 
-		// hide indicator if attacker is not visible (check ported from shownames.qc)
-		traceline(view_origin, attacker.origin, MOVE_NOMONSTERS, attacker);
-		if (trace_fraction < 1 && (trace_networkentity != attacker.sv_entnum && trace_ent.entnum != attacker.sv_entnum))
+		// indicator follows attacker if in front of us and visible (check ported from shownames.qc)
+		// otherwise points to the last position where the attacker was visible
+		if (view_forward * (attacker.origin - view_origin) >= 0) // in front of us
+		{
+			traceline(view_origin, attacker.origin, MOVE_NOMONSTERS, attacker);
+			if (!(trace_fraction < 1 && trace_networkentity != attacker.sv_entnum && trace_ent.entnum != attacker.sv_entnum))
+			{
+				HitIndicator_attacker_pos[i] = attacker.origin;
+				HitIndicator_attacker_pos_exists[i] = true;
+			}
+		}
+		if (!HitIndicator_attacker_pos_exists[i])
 			continue;
 
-		vector org = project_3d_to_2d(attacker.origin);
-		float radius = bound(0.3, autocvar_cl_hit_indicator_radius, 1) * min(vid_conwidth, vid_conheight) * 0.5;
-		vector ofs = normalize(org - scr_center - org.z * eZ) * radius;
+		vector org = project_3d_to_2d(HitIndicator_attacker_pos[i]);
+		bool attacker_infront = (org.z >= 0);
+		vector attacker_org = org - eZ * org.z;
+
+		float radius_percent = bound(0.2, autocvar_cl_hit_indicator_radius, 1);
+		float radius = radius_percent * 0.5 * min(vid_conwidth, vid_conheight);
+		vector ofs = normalize(attacker_org - scr_center) * radius;
 		float ang = atan2(-ofs.x, -ofs.y);
-		if (org.z < 0)
+		if (!attacker_infront)
 		{
 			ang += M_PI;
 			ofs = -ofs;
@@ -963,8 +977,10 @@ void HitIndicatorShow()
 		org = scr_center + ofs;
 		float size = autocvar_cl_hit_indicator_size;
 		size = map_bound_ranges(HitIndicator_damage[i], 30, 90, size, size * 2);
-		float base_scale = bound(1, autocvar_cl_hit_indicator_radius * 5, 3);
-		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, size, base_scale, true);
+		float base_scale = bound(1, radius_percent * 5, 3);
+		// if inverted is true drawspritearrow inverts the arrow without changing the returned position
+		bool inverted = (attacker_infront && vdist(scr_center - attacker_org, <, radius));
+		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, size, base_scale, inverted, true);
 
 		if (autocvar_cl_hit_indicator_text)
 		{
