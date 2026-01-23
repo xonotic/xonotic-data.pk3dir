@@ -947,14 +947,15 @@ void HitIndicatorShow()
 		if (alpha <= 0.5/255) // Guaranteed invisible - don't show.
 			continue;
 
+		vector attacker_org = attacker.origin + eZ * (STAT(PL_MIN).z + (-STAT(PL_MIN).z + STAT(PL_MAX).z) * 0.5);
 		// indicator follows attacker if in front of us and visible (check ported from shownames.qc)
 		// otherwise points to the last position where the attacker was visible
-		if (view_forward * (attacker.origin - view_origin) >= 0) // in front of us
+		if (view_forward * (attacker_org - view_origin) >= 0) // in front of us
 		{
-			traceline(view_origin, attacker.origin, MOVE_NOMONSTERS, attacker);
+			traceline(view_origin, attacker_org, MOVE_NOMONSTERS, attacker);
 			if (!(trace_fraction < 1 && trace_networkentity != attacker.sv_entnum && trace_ent.entnum != attacker.sv_entnum))
 			{
-				HitIndicator_attacker_pos[i] = attacker.origin;
+				HitIndicator_attacker_pos[i] = attacker_org;
 				HitIndicator_attacker_pos_exists[i] = true;
 			}
 		}
@@ -963,9 +964,9 @@ void HitIndicatorShow()
 
 		vector org = project_3d_to_2d(HitIndicator_attacker_pos[i]);
 		bool attacker_infront = (org.z >= 0);
-		vector attacker_org = org - eZ * org.z;
+		attacker_org = org - eZ * org.z;
 
-		float radius_percent = bound(0.2, autocvar_cl_hit_indicator_radius, 1);
+		float radius_percent = bound(0.1, autocvar_cl_hit_indicator_radius, 1);
 		float radius = radius_percent * 0.5 * min(vid_conwidth, vid_conheight);
 		vector ofs = normalize(attacker_org - scr_center) * radius;
 		float ang = atan2(-ofs.x, -ofs.y);
