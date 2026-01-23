@@ -90,6 +90,7 @@ void CampaignPreInit()
 	cvar_settemp("g_dm", "0");
 	cvar_settemp("skill", ftos(baseskill));
 	cvar_settemp("bot_number", ftos(campaign_bots[0]));
+	cvar_settemp("bot_vs_human", "0");
 
 	MapInfo_SwitchGameType(MapInfo_Type_FromString(campaign_gametype[0], false, false));
 
