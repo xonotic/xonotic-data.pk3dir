@@ -64,8 +64,10 @@ float HUD_Timer_TimeLeft(float curtime, float starttime, float timelimit)
 	return ceil(timeleft);
 }
 
-void HUD_Timer()
+void HUD_Timer(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure && !autocvar_hud_panel_timer)
 		return;
 

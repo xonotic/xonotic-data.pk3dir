@@ -1,10 +1,10 @@
 #pragma once
 
 #include <common/mapinfo.qh>
-
 #ifdef CSQC
-void HUD_Mod_KH(vector pos, vector mySize);
+	#include "cl_keyhunt.qh"
 #endif
+
 CLASS(KeyHunt, Gametype)
 	INIT(KeyHunt)
 	{
@@ -41,7 +41,7 @@ CLASS(KeyHunt, Gametype)
 		returns(menu, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The amount of points needed before the match will end"));
 	}
 #ifdef CSQC
-    ATTRIB(KeyHunt, m_modicons, void(vector pos, vector mySize), HUD_Mod_KH);
+    ATTRIB(KeyHunt, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_KH);
 #endif
     ATTRIB(KeyHunt, m_legacydefaults, string, "1000 20 3 0");
 ENDCLASS(KeyHunt)

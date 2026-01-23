@@ -89,8 +89,10 @@ vector Checkpoints_Draw(int end, vector pos, vector fontsize, vector rs_fontsize
 	return pos;
 }
 
-void HUD_Checkpoints()
+void HUD_Checkpoints(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure && !autocvar_hud_panel_checkpoints)
 		return;
 

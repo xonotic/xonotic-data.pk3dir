@@ -630,8 +630,10 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 		drawcolorcodedstring(pos, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 }
 
-void HUD_QuickMenu()
+void HUD_QuickMenu(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!hud_draw_maximized || !QuickMenu_IsOpened())

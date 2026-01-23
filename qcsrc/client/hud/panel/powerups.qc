@@ -72,8 +72,11 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 	return 2;
 }
 
-void HUD_Powerups()
+void HUD_Powerups(bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	// Initialize items
 	if (!autocvar__hud_configure)
 	{

@@ -30,10 +30,15 @@ float HUD_Pickup_Time(float t)
 		return ceil(timelimit + STAT(GAMESTARTTIME) - t);
 }
 
-void HUD_Pickup()
+void HUD_Pickup(bool should_draw)
 {
-	if (!autocvar_hud_panel_pickup)
+	if (!should_draw)
 		return;
+	if (!autocvar__hud_configure)
+	{
+		if (!autocvar_hud_panel_pickup)
+			return;
+	}
 
 	HUD_Panel_LoadCvars();
 	vector pos = panel_pos;

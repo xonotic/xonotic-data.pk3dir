@@ -10,8 +10,11 @@ float kaball_statuschange_time; // time when the status changed
 // we don't need to reset for keepaway since it immediately
 // autocorrects prevstatus as to if the player has the ball or not
 
-void HUD_Mod_Keepaway(vector pos, vector mySize)
+void HUD_Mod_Keepaway(vector pos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1; // keepaway should always show the mod HUD
 
 	float kaball_alpha = blink(0.85, 0.15, 5);

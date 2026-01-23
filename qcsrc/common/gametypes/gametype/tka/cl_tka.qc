@@ -10,8 +10,11 @@ float tkaball_statuschange_time; // time when the status changed
 // we don't need to reset for team keepaway since it immediately
 // autocorrects prevstatus as to if the player has the ball or not
 
-void HUD_Mod_TeamKeepaway(vector pos, vector mySize)
+void HUD_Mod_TeamKeepaway(vector pos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1; // team keepaway should always show the mod HUD
 
 	float tkaball_alpha = blink(0.85, 0.15, 5);

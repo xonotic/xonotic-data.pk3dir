@@ -1,11 +1,10 @@
 #pragma once
 
 #include <common/mapinfo.qh>
-
 #ifdef CSQC
-void HUD_Mod_CA(vector pos, vector mySize);
-void HUD_Mod_CA_Export(int fh);
+	#include "cl_clanarena.qh"
 #endif
+
 CLASS(ClanArena, Gametype)
 	INIT(ClanArena)
 	{
@@ -42,7 +41,7 @@ CLASS(ClanArena, Gametype)
 		returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of rounds won needed before the match will end"));
 	}
 #ifdef CSQC
-	ATTRIB(ClanArena, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
+	ATTRIB(ClanArena, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_CA);
 	ATTRIB(ClanArena, m_modicons_export, void(int fh), HUD_Mod_CA_Export);
 #endif
 	ATTRIB(ClanArena, m_legacydefaults, string, "10 20 0");

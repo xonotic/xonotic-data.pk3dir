@@ -5,8 +5,11 @@
 // Keyhunt HUD modicon section
 vector KH_SLOTS[4];
 
-void HUD_Mod_KH(vector pos, vector mySize)
+void HUD_Mod_KH(vector pos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1; // keyhunt should never hide the mod icons panel
 
 	// Read current state

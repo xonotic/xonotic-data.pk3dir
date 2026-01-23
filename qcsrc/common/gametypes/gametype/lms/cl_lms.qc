@@ -63,8 +63,11 @@ void HUD_Mod_LMS_Draw(vector myPos, vector mySize)
 	drawstring_aspect(pos + itemSize * (1 - scale) * 0.5, strcat("+", ftos(lives_diff)), itemSize * scale, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void HUD_Mod_LMS(vector myPos, vector mySize)
+void HUD_Mod_LMS(vector myPos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1;
 
 	HUD_Mod_LMS_Draw(myPos, mySize);

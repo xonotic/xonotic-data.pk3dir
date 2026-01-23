@@ -512,28 +512,28 @@ void HUD_Panel_Draw(entity panent)
 		if (!(panel.panel_configflags & PANEL_CONFIG_MAIN))
 			return;
 		panel_fade_alpha = 1;
-		Hud_Panel_GetPanelEnabled();
-		panel.panel_draw();
+		HUD_Panel_GetPanelEnabled();
+		panel.panel_draw(true);
 		return;
 	}
 
-	bool draw_allowed = false;
+	bool should_draw = false;
 	if (scoreboard_fade_alpha && panel.panel_showflags & PANEL_SHOW_WITH_SB)
-		draw_allowed = true;
+		should_draw = true;
 	else if (active_minigame && HUD_MinigameMenu_IsOpened())
 	{
 		if (panel.panel_showflags & PANEL_SHOW_MINIGAME)
-			draw_allowed = true;
+			should_draw = true;
 	}
 	else if (intermission == 2)
 	{
 		if (panel.panel_showflags & PANEL_SHOW_MAPVOTE)
-			draw_allowed = true;
+			should_draw = true;
 	}
 	else if (panel.panel_showflags & PANEL_SHOW_MAINGAME)
-		draw_allowed = true;
+		should_draw = true;
 
-	if (draw_allowed)
+	if (should_draw)
 	{
 		if (panel.panel_showflags & PANEL_SHOW_WITH_SB)
 		{
@@ -546,10 +546,10 @@ void HUD_Panel_Draw(entity panent)
 		{
 			panel_fade_alpha = 1 - scoreboard_fade_alpha;
 			if (!panel_fade_alpha)
-				return;
+				should_draw = false;
 		}
-		panel.panel_draw();
 	}
+	panel.panel_draw(should_draw);
 }
 
 void HUD_Reset()

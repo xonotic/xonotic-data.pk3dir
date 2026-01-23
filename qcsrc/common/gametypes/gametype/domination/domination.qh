@@ -1,11 +1,10 @@
 #pragma once
 
 #include <common/mapinfo.qh>
-
 #ifdef CSQC
-void HUD_Mod_Dom(vector pos, vector mySize);
-void HUD_Mod_Dom_Export(int fh);
+	#include "cl_domination.qh"
 #endif
+
 CLASS(Domination, Gametype)
 	INIT(Domination)
 	{
@@ -37,7 +36,7 @@ CLASS(Domination, Gametype)
 		returns(menu, _("Point limit:"),    50,  500, 10, "g_domination_point_limit",  "g_domination_teams_override",  _("The amount of points needed before the match will end"));
 	}
 #ifdef CSQC
-	ATTRIB(Domination, m_modicons, void(vector pos, vector mySize), HUD_Mod_Dom);
+	ATTRIB(Domination, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_Dom);
 	ATTRIB(Domination, m_modicons_export, void(int fh), HUD_Mod_Dom_Export);
 #endif
 	ATTRIB(Domination, m_legacydefaults, string, "200 20 0");

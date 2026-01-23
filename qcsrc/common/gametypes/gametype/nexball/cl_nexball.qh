@@ -2,6 +2,6 @@
 
 vector autocvar_hud_progressbar_nexball_color;
 
-void HUD_Mod_NexBall(vector pos, vector mySize);
+void HUD_Mod_NexBall(vector myPos, vector mySize, bool should_draw);
 
 float nb_pb_period;

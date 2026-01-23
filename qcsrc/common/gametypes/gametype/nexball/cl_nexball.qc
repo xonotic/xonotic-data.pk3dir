@@ -4,8 +4,11 @@
 #include <common/mutators/base.qh>
 
 // Nexball HUD mod icon
-void HUD_Mod_NexBall(vector pos, vector mySize)
+void HUD_Mod_NexBall(vector pos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	int stat_items = STAT(OBJECTIVE_STATUS);
 	float nb_pb_starttime = STAT(NB_METERSTART);
 

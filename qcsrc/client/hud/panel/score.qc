@@ -137,8 +137,10 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 	while (i < entries && team_count && (tm = tm.sort_next) && (tm.team != NUM_SPECTATOR || (tm = tm.sort_next)));
 }
 
-void HUD_Score()
+void HUD_Score(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_score)

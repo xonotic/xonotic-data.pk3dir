@@ -35,8 +35,10 @@ vector acc_prev_vel;
 float acc_prev_time, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time;
 float prev_vel_z = 0, prev_speed2d = 0;
 float physics_update_time, discrete_speed, discrete_top_speed, discrete_accel; // not done for jumpspeed
-void HUD_Physics()
+void HUD_Physics(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_physics)

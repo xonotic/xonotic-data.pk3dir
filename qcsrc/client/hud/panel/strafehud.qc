@@ -18,11 +18,13 @@ void HUD_StrafeHUD_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
-void HUD_StrafeHUD()
+void HUD_StrafeHUD(bool should_draw)
 {
 	static float hud_lasttime = 0;
 
 	// generic hud routines
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_strafehud

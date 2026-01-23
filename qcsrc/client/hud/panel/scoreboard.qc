@@ -2398,8 +2398,10 @@ string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
 		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label));
 }
 
-void Scoreboard_Draw()
+void Scoreboard_Draw(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!hud_draw_maximized)

@@ -44,8 +44,11 @@ NET_HANDLE(ENT_CLIENT_SURVIVALSTATUSES, bool isnew)
 	return true;
 }
 
-void HUD_Mod_Survival(vector pos, vector mySize)
+void HUD_Mod_Survival(vector pos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1; // survival should always show the mod HUD
 
 	int mystatus = playerslots[player_localnum].survival_status;

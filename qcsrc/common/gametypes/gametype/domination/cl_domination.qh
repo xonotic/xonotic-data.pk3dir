@@ -1,4 +1,4 @@
 #pragma once
 
-void HUD_Mod_Dom(vector myPos, vector mySize);
+void HUD_Mod_Dom(vector myPos, vector mySize, bool should_draw);
 void HUD_Mod_Dom_Export(int fh);
