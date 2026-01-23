@@ -2,10 +2,10 @@
 
 #include <common/gametypes/gametype/lms/lms.qh>
 #include <common/mapinfo.qh>
-
 #ifdef CSQC
-void HUD_Mod_Survival(vector pos, vector mySize);
+	#include "cl_survival.qh"
 #endif
+
 CLASS(Survival, Gametype)
 	INIT(Survival)
 	{
@@ -26,7 +26,7 @@ CLASS(Survival, Gametype)
 		return false;
 	}
 #ifdef CSQC
-	ATTRIB(Survival, m_modicons, void(vector pos, vector mySize), HUD_Mod_Survival);
+	ATTRIB(Survival, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_Survival);
 #endif
 ENDCLASS(Survival)
 REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));

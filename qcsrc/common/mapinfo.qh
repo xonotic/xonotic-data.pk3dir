@@ -59,7 +59,7 @@ CLASS(Gametype, Object)
     /** gametype priority in random selections */
     ATTRIB(Gametype, m_priority, int, 0);
 #ifdef CSQC
-    ATTRIB(Gametype, m_modicons, void(vector pos, vector mySize));
+    ATTRIB(Gametype, m_modicons, void(vector myPos, vector mySize, bool should_draw));
     ATTRIB(Gametype, m_modicons_reset, void());
     ATTRIB(Gametype, m_modicons_export, void(int fh));
 #endif

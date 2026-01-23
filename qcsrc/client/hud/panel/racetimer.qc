@@ -154,8 +154,10 @@ void StoreCheckpointSplits(float race_checkpoint, string forcetime, string s)
 	racetimer_have_stored_splits_player = current_player + 1;
 }
 
-void HUD_RaceTimer ()
+void HUD_RaceTimer(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_racetimer || spectatee_status == -1)

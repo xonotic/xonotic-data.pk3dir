@@ -1,11 +1,10 @@
 #pragma once
 
 #include <common/mapinfo.qh>
-
 #ifdef CSQC
-void HUD_Mod_CTF(vector pos, vector mySize);
-void HUD_Mod_CTF_Reset();
+	#include "cl_ctf.qh"
 #endif
+
 CLASS(CaptureTheFlag, Gametype)
 	INIT(CaptureTheFlag)
 	{
@@ -30,7 +29,7 @@ CLASS(CaptureTheFlag, Gametype)
 		returns(menu, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The amount of captures needed before the match will end"));
 	}
 #ifdef CSQC
-	ATTRIB(CaptureTheFlag, m_modicons, void(vector pos, vector mySize), HUD_Mod_CTF);
+	ATTRIB(CaptureTheFlag, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_CTF);
 	ATTRIB(CaptureTheFlag, m_modicons_reset, void(), HUD_Mod_CTF_Reset);
 #endif
 	ATTRIB(CaptureTheFlag, m_legacydefaults, string, "300 20 10 0");

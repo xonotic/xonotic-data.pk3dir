@@ -65,8 +65,10 @@ float HUD_Panel_Chat_InputEvent(float bInputType, float nPrimary, float nSeconda
 	return false;
 }
 
-void HUD_Chat()
+void HUD_Chat(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_chat && !autocvar__con_chat_maximized)

@@ -172,8 +172,10 @@ void centerprint_ClearTitle()
 }
 
 float hud_configure_cp_generation_time;
-void HUD_CenterPrint()
+void HUD_CenterPrint(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_centerprint)

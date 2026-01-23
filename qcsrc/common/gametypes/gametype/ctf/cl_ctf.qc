@@ -18,8 +18,11 @@ void HUD_Mod_CTF_Reset()
 }
 
 int autocvar__teams_available;
-void HUD_Mod_CTF(vector pos, vector mySize)
+void HUD_Mod_CTF(vector pos, vector mySize, bool should_draw)
 {
+    if (!should_draw)
+        return;
+
     vector redflag_pos, blueflag_pos, yellowflag_pos, pinkflag_pos, neutralflag_pos;
     vector flag_size;
     float f; // every function should have that

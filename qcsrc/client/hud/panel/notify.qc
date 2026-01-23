@@ -54,8 +54,10 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 	notify_times[notify_index] = time;
 }
 
-void HUD_Notify()
+void HUD_Notify(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure && !autocvar_hud_panel_notify)
 		return;
 

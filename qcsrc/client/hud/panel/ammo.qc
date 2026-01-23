@@ -105,8 +105,10 @@ int nade_prevstatus;
 int nade_prevframe;
 float nade_statuschange_time;
 
-void HUD_Ammo()
+void HUD_Ammo(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (hud != HUD_NORMAL)
 		return;
 	if (!autocvar__hud_configure)

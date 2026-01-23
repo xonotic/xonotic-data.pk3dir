@@ -114,7 +114,7 @@ MACRO_END
 
 string cl_weaponpriority_old;
 bool weapons_orderbyimpulse_old;
-void HUD_Weapons()
+void HUD_Weapons(bool should_draw)
 {
 	// check to see if we want to continue
 	if (hud != HUD_NORMAL)
@@ -138,6 +138,8 @@ void HUD_Weapons()
 			return;
 		}
 	}
+	if (!should_draw)
+		return;
 
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();

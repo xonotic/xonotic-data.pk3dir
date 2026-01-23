@@ -1,3 +1,3 @@
 #pragma once
 
-void HUD_Mod_Keepaway(vector pos, vector mySize);
+void HUD_Mod_Keepaway(vector myPos, vector mySize, bool should_draw);
