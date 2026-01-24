@@ -2393,9 +2393,9 @@ string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
 {
 	string s_label = (teamplay) ? teamscores_label(ts_primary) : scores_label(ps_primary);
 	int s_flags = (teamplay) ? teamscores_flags(ts_primary) : scores_flags(ps_primary);
-	return sprintf((is_leadlimit ? _("^2+%s %s") : _("^5%s %s")), ScoreString(s_flags, limit, 0),
+	return strcat("^5", sprintf((is_leadlimit ? _("+%s %s") : _("%s %s")), ScoreString(s_flags, limit, 0),
 		(s_label == "score") ? CTX(_("SCO^points")) :
-		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label));
+		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label)));
 }
 
 void Scoreboard_Draw(bool should_draw)
@@ -2544,7 +2544,6 @@ void Scoreboard_Draw(bool should_draw)
 		float tl = STAT(TIMELIMIT);
 		float fl = STAT(FRAGLIMIT);
 		float ll = STAT(LEADLIMIT);
-		float ll_and_fl = STAT(LEADLIMIT_AND_FRAGLIMIT);
 		str = "";
 		if (tl > 0)
 			str = strcat(str, "^3", count_minutes(floor(tl)));
@@ -2561,7 +2560,7 @@ void Scoreboard_Draw(bool should_draw)
 				if (tl > 0 || fl > 0)
 				{
 					// delimiter
-					if (ll_and_fl && fl > 0)
+					if (STAT(LEADLIMIT_AND_FRAGLIMIT) && fl > 0)
 						str = strcat(str, "^7 & ");
 					else
 						str = strcat(str, "^7 / ");
