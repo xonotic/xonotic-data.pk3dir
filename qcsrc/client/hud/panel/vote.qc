@@ -14,7 +14,7 @@ void HUD_Vote(bool should_draw)
 {
 	if (!should_draw)
 		return;
-	if (autocvar_cl_allow_uid2name == -1 && (MUTATOR_CALLHOOK(ShowRankings) || (serverflags & SERVERFLAG_PLAYERSTATS)))
+	if (autocvar_cl_allow_uid2name == -1 && (MUTATOR_CALLHOOK(ShowRankings, false) || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		// this dialog gets overriden by the uid2name menu dialog, if it exists
 		// TODO remove this client side uid2name dialog in the next release
