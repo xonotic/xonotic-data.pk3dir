@@ -972,47 +972,57 @@ string Scoreboard_AddPlayerId(string pl_name, entity pl)
 
 // MOVEUP::
 vector sbt_field_rgb;
-// these are drawn overlapping
-string sbt_field_icon_playercolor[3];
+// These are drawn overlapping
+const string sbt_field_icon_playercolor[3] = { "gfx/scoreboard/playercolor_base", "gfx/scoreboard/playercolor_shirt", "gfx/scoreboard/playercolor_pants" };
 vector sbt_field_icon_playercolor_rgb[3];
+int sbt_field_icon_playercolor_set;
 
-const int SBT_FIELD_ICON_EXTRA_COUNT = 3;
-// these are drawn side-by-side, next to playercolor (if present)
-// 0: player_ready, 1: player_handicap, 2: player_ignored
-string sbt_field_icon_extra[SBT_FIELD_ICON_EXTRA_COUNT];
-vector sbt_field_icon_extra_rgb[SBT_FIELD_ICON_EXTRA_COUNT];
+// These are drawn side-by-side, next to playercolor (if present),
+// filled in this order: player_ready, player_handicap, player_ignored
+const int SBT_FIELD_ICON_EXTRA_MAX = 3;
+string sbt_field_icon_extra[SBT_FIELD_ICON_EXTRA_MAX];
+vector sbt_field_icon_extra_rgb[SBT_FIELD_ICON_EXTRA_MAX];
+int sbt_field_icon_extra_set;
 string Scoreboard_GetName(entity pl)
 {
+	int i;
 	if (!teamplay)
 	{
 		// NOTE: always adding 1024 allows saving the colormap 0 as a value != 0
-		int f = (playerslots[pl.sv_entnum].colormap >= 1024)
+		i = (playerslots[pl.sv_entnum].colormap >= 1024)
 			? playerslots[pl.sv_entnum].colormap - 1024 // override server-side player colors
 			: entcs_GetClientColors(pl.sv_entnum);
 
-		sbt_field_icon_playercolor[0] = "gfx/scoreboard/playercolor_base";
-		sbt_field_icon_playercolor[1] = "gfx/scoreboard/playercolor_shirt";
-		sbt_field_icon_playercolor[2] = "gfx/scoreboard/playercolor_pants";
-		sbt_field_icon_playercolor_rgb[2] = colormapPaletteColor(f % 16, 1);
-		sbt_field_icon_playercolor_rgb[1] = colormapPaletteColor(floor(f / 16), 0);
+		sbt_field_icon_playercolor_rgb[2] = colormapPaletteColor(i & BITS(4), 1);
+		sbt_field_icon_playercolor_rgb[1] = colormapPaletteColor(i >> 4, 0);
 		sbt_field_icon_playercolor_rgb[0] = sbt_field_icon_playercolor_rgb[1];
+		sbt_field_icon_playercolor_set = 3;
 	}
+	else
+		sbt_field_icon_playercolor_set = 0;
+
+	float f;
+	sbt_field_icon_extra_set = 0;
 	if (ready_waiting && pl.ready)
 	{
-		sbt_field_icon_extra[0] = "gfx/scoreboard/player_ready";
-		sbt_field_icon_extra_rgb[0].y = 1;
-		sbt_field_icon_extra_rgb[0].x = sbt_field_icon_extra_rgb[0].z = min(1, 1 + sin(2*M_PI * time));
+		f = min(1, 1 + sin(2*M_PI * time));
+		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = vec3(f, 1, f); // pulses from white to green
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_ready";
+		++sbt_field_icon_extra_set;
 	}
-	int handicap_lvl = entcs_GetHandicapLevel(pl.sv_entnum);
-	if (handicap_lvl != 0)
+	if ((i = entcs_GetHandicapLevel(pl.sv_entnum)) != 0)
 	{
-		sbt_field_icon_extra[1] = "gfx/scoreboard/player_handicap";
-		sbt_field_icon_extra_rgb[1] = '1 0 0' + '0 1 1' * ((16 - handicap_lvl) / 15);
-		// goes from white to red over level 1 to 16
+		f = (16 - i) / 15;
+		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = vec3(1, f, f); // goes from white to red over level 1 to 16
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_handicap";
+		++sbt_field_icon_extra_set;
 	}
-
 	if (pl.ignored)
-		sbt_field_icon_extra[2] = "gfx/scoreboard/player_ignored";
+	{
+		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = '1 1 1';
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_ignored";
+		++sbt_field_icon_extra_set;
+	}
 
 	return entcs_GetName(pl.sv_entnum);
 }
@@ -1035,17 +1045,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 	int f;
 	string str;
 	sbt_field_rgb = '1 1 1';
-	sbt_field_icon_playercolor[0] = "";
-	sbt_field_icon_playercolor[1] = "";
-	sbt_field_icon_playercolor[2] = "";
-	sbt_field_icon_playercolor_rgb[0] = '1 1 1';
-	sbt_field_icon_playercolor_rgb[1] = '1 1 1';
-	sbt_field_icon_playercolor_rgb[2] = '1 1 1';
-	for (f = 0; f < SBT_FIELD_ICON_EXTRA_COUNT; ++f)
-	{
-		sbt_field_icon_extra[f] = "";
-		sbt_field_icon_extra_rgb[f] = '1 1 1';
-	}
+	sbt_field_icon_playercolor_set = 0;
+	sbt_field_icon_extra_set = 0;
 
 	int rounds_played = 0;
 	if (per_round)
@@ -1186,9 +1187,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 
 float sbt_fixcolumnwidth_len;
 float sbt_fixcolumnwidth_iconlen_playercolor;
-float sbt_fixcolumnwidth_iconlen_extra[2];
+float sbt_fixcolumnwidth_iconlen_extra[SBT_FIELD_ICON_EXTRA_MAX];
 float sbt_fixcolumnwidth_marginlen;
-
 string Scoreboard_FixColumnWidth(int i, string str, bool init)
 {
 	TC(int, i);
@@ -1197,46 +1197,46 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 	float f;
 
 	sbt_fixcolumnwidth_iconlen_playercolor = 0;
-	sbt_fixcolumnwidth_iconlen_extra[0] = 0;
-	sbt_fixcolumnwidth_iconlen_extra[1] = 0;
+	for (j = 0; j < sbt_field_icon_extra_set; ++j)
+		sbt_fixcolumnwidth_iconlen_extra[j] = 0;
 
-	for (j = 0; j < 3; ++j)
-		if (sbt_field_icon_playercolor[j] != "")
-		{
-			sz = draw_getimagesize(sbt_field_icon_playercolor[j]);
-			f = sz.x / sz.y;
-			if (sbt_fixcolumnwidth_iconlen_playercolor < f)
-				sbt_fixcolumnwidth_iconlen_playercolor = f;
-		}
+	for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
+	{
+		sz = draw_getimagesize(sbt_field_icon_playercolor[j]);
+		f = sz.x / sz.y;
+		if (sbt_fixcolumnwidth_iconlen_playercolor < f)
+			sbt_fixcolumnwidth_iconlen_playercolor = f;
+	}
 	// NOTE: extra icons (player_ready and player_handicap) are squares (32x32), so this may not be necessary
 	// simply setting sbt_fixcolumnwidth_iconlen_extra* = 1 would be equivalent
-	for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
-		if (sbt_field_icon_extra[j] != "")
-		{
-			sz = draw_getimagesize(sbt_field_icon_extra[j]);
-			// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
-			if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
-				sz = '1 1 0';
-			sbt_fixcolumnwidth_iconlen_extra[j] = sz.x / sz.y;
-		}
+	for (j = 0; j < sbt_field_icon_extra_set; ++j)
+	{
+		sz = draw_getimagesize(sbt_field_icon_extra[j]);
+		// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
+		if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
+			sz = '1 1 0';
+		sbt_fixcolumnwidth_iconlen_extra[j] = sz.x / sz.y;
+	}
 
 	if (sbt_fixcolumnwidth_iconlen_playercolor != 0)
 		sbt_fixcolumnwidth_iconlen_playercolor *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
-	for (j = 0; j < 2; ++j)
-		if (sbt_fixcolumnwidth_iconlen_extra[j] != 0)
-			sbt_fixcolumnwidth_iconlen_extra[j] *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
+	for (j = 0; j < sbt_field_icon_extra_set; ++j)
+		sbt_fixcolumnwidth_iconlen_extra[j] *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
 
 	if (sbt_fixcolumnwidth_iconlen_playercolor != 0
-	||  sbt_fixcolumnwidth_iconlen_extra[0] != 0
-	||  sbt_fixcolumnwidth_iconlen_extra[1] != 0)
-	{
+	||  sbt_field_icon_playercolor_set)
 		sbt_fixcolumnwidth_marginlen = stringwidth(" ", false, hud_fontsize);
-	}
 	else
 		sbt_fixcolumnwidth_marginlen = 0;
 
 	if (init)
 		sbt_field_title_width[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
+
+#define ADD_ICON_PADDING(val) \
+	val += sbt_fixcolumnwidth_marginlen; \
+	val += hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor; \
+	for (j = 0; j < sbt_field_icon_extra_set; ++j) \
+		val += hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
 
 	if (sbt_field[i] == SP_NAME) // name gets all remaining space
 	{
@@ -1246,10 +1246,7 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 				used_space += sbt_field_size[j] + hud_fontsize.x;
 		sbt_field_size[i] = max(sbt_field_title_width[i], panel_size.x - used_space);
 
-		used_space += sbt_fixcolumnwidth_marginlen
-			+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
-			+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
-			+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+		ADD_ICON_PADDING(used_space);
 		float namesize = max(sbt_field_title_width[i], panel_size.x - used_space);
 		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		sbt_fixcolumnwidth_len = stringwidth(str, true, hud_fontsize);
@@ -1268,10 +1265,10 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		sbt_fixcolumnwidth_len = stringwidth(str, false, hud_fontsize);
 	}
 
-	f = sbt_fixcolumnwidth_len + sbt_fixcolumnwidth_marginlen
-		+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
-		+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
-		+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+	f = sbt_fixcolumnwidth_len;
+	if (sbt_field[i] == SP_NAME)
+		ADD_ICON_PADDING(f);
+#undef ADD_ICON_PADDING
 	if (sbt_field_size[i] < f)
 		sbt_field_size[i] = f;
 
@@ -1439,9 +1436,9 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		if (field == SP_NAME)
 		{
 			tmp.x = sbt_field_size[i] - sbt_fixcolumnwidth_marginlen + hud_fontsize.x
-				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
-				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
-				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor;
+			for (j = 0; j < sbt_field_icon_extra_set; ++j)
+				tmp.x -= hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
 			if (teamplay)
 			{
 				int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
@@ -1462,16 +1459,14 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 		tmp.x = sbt_field_size[i] + hud_fontsize.x;
 		icon_sz = vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor, hud_fontsize.y);
-		for (j = 0; j < 3; ++j)
-			if (sbt_field_icon_playercolor[j] != "")
-				drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-		for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
-			if (sbt_field_icon_extra[j] != "")
-			{
-				tmp.x -= icon_sz.x;
-				icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
-				drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-			}
+		for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
+			drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+		for (j = 0; j < sbt_field_icon_extra_set; ++j)
+		{
+			tmp.x -= icon_sz.x;
+			icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
+			drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+		}
 	}
 
 	if (sbt_field[i] == SP_SEPARATOR)
@@ -1505,16 +1500,14 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 			tmp.x = sbt_field_size[i];
 			icon_sz = vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor, hud_fontsize.y);
-			for (j = 0; j < 3; ++j)
-				if (sbt_field_icon_playercolor[j] != "")
-					drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-			for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
-				if (sbt_field_icon_extra[j] != "")
-				{
-					tmp.x -= icon_sz.x;
-					icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
-					drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-				}
+			for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
+				drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+			for (j = 0; j < sbt_field_icon_extra_set; ++j)
+			{
+				tmp.x -= icon_sz.x;
+				icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
+				drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+			}
 			pos.x -= sbt_field_size[i] + hud_fontsize.x;
 		}
 	}
