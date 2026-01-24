@@ -2474,8 +2474,8 @@ string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
 	int s_flags = (teamplay) ? teamscores_flags(ts_primary) : scores_flags(ps_primary);
 
 	if (autocvar_hud_panel_scoreboard_minimal)
-		return sprintf((is_leadlimit ? "^2+%s" : "^5%s"), ScoreString(s_flags, limit, 0));
-	return sprintf((is_leadlimit ? _("^2+%s %s") : _("^5%s %s")), ScoreString(s_flags, limit, 0),
+		return sprintf((is_leadlimit ? "^5+%s" : "^5%s"), ScoreString(s_flags, limit, 0));
+	return sprintf((is_leadlimit ? strcat("^5", _("+%s %s")) : strcat("^5", _("%s %s"))), ScoreString(s_flags, limit, 0),
 		(s_label == "score") ? CTX(_("SCO^points")) :
 		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label));
 }
