@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <common/mutators/base.qh>
 
 .int ctf_status[NUM_TEAM_WORDS]; ///< Bitmask of NUM_TEAMS bits, of which teams' flag the player is carrying
@@ -226,4 +227,19 @@ MUTATOR_HOOKFUNCTION(cl_ctf, ShowRankings)
 		M_ARGV(1, string) = _("Capture time rankings");
 		return true;
 	}
+}
+
+MUTATOR_HOOKFUNCTION(cl_ctf, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(CTF))
+		return;
+
+	entity player = M_ARGV(0, entity);
+	if (!player)
+		return;
+
+	for (int flag_teambits, i, word_i = 0; word_i < NUM_TEAM_WORDS; ++word_i)
+		for (i = 0, flag_teambits = player.ctf_status[word_i]; flag_teambits; flag_teambits >>= 1, ++i)
+			if (flag_teambits & 1)
+				Scoreboard_AddGametypeIcon(HUD_Mod_CTF_GetPic(word_i * 24 + i, FLAG_STATUS_TAKEN));
 }
