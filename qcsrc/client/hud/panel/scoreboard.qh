@@ -36,6 +36,7 @@ void Scoreboard_UpdatePlayerPos(entity pl);
 void Scoreboard_UpdateTeamPos(entity Team);
 bool Scoreboard_WouldDraw();
 void Scoreboard_UI_Enable(int mode);
+void Scoreboard_AddGametypeIcon(string icon);
 
 int scoreboard_ui_enabled;
 bool autocvar__scoreboard_team_selection;

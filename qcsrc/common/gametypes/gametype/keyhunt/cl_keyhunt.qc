@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <common/mutators/base.qh>
 
 .int kh_status[NUM_TEAM_WORDS]; ///< Bitmask of NUM_TEAMS bits, of which teams' keys the player is carrying
@@ -199,4 +200,19 @@ MUTATOR_HOOKFUNCTION(cl_kh, ResetPlayerGametypeFields)
 	entity player = M_ARGV(0, entity);
 	for (int word_i = 0; word_i < NUM_TEAM_WORDS; ++word_i)
 		player.kh_status[word_i] = 0;
+}
+
+MUTATOR_HOOKFUNCTION(cl_kh, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(KEYHUNT))
+		return;
+
+	entity player = M_ARGV(0, entity);
+	if (!player)
+		return;
+
+	for (int key_teambits, i, word_i = 0; word_i < NUM_TEAM_WORDS; ++word_i)
+		for (i = 0, key_teambits = player.kh_status[word_i]; key_teambits; key_teambits >>= 1, ++i)
+			if (key_teambits & 1)
+				Scoreboard_AddGametypeIcon(HUD_Mod_KH_GetPic(word_i * 24 + i, false));
 }

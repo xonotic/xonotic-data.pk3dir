@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <common/mutators/base.qh>
 
 .int ka_status; ///< How many balls the player is carrying
@@ -140,4 +141,14 @@ MUTATOR_HOOKFUNCTION(cl_ka, ResetPlayerGametypeFields)
 {
 	entity player = M_ARGV(0, entity);
 	player.ka_status = 0;
+}
+
+MUTATOR_HOOKFUNCTION(cl_ka, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(KEEPAWAY))
+		return;
+
+	entity player = M_ARGV(0, entity);
+	if (player && player.ka_status)
+		Scoreboard_AddGametypeIcon("notify_ballpickedup");
 }

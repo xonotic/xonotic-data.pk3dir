@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
+#include <client/hud/panel/scoreboard.qh>
 #include <common/mutators/base.qh>
 
 .bool nb_status; ///< Whether the player is carrying a ball
@@ -92,4 +93,14 @@ MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardAccuracy)
 MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardItemStats)
 {
 	return ISGAMETYPE(NEXBALL); // hide the item stats panel
+}
+
+MUTATOR_HOOKFUNCTION(cl_nb, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(NEXBALL))
+		return;
+
+	entity player = M_ARGV(0, entity);
+	if (player && player.nb_status)
+		Scoreboard_AddGametypeIcon("nexball_carrying");
 }
