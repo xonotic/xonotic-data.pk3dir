@@ -9,6 +9,7 @@
 #include <client/hud/panel/weapons.qh>
 #include <common/constants.qh>
 #include <common/ent_cs.qh>
+#include <common/gametypes/gametype/duel/duel.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/net_linked.qh>
@@ -1869,8 +1870,10 @@ bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 	return true;
 }
 
+bool deathscoreboard; ///< Whether the scoreboard is displaying because we're dead - hide accuracy & item stats & rankings
 bool Scoreboard_WouldDraw()
 {
+	deathscoreboard = false;
 	if (scoreboard_ui_enabled)
 	{
 		if (scoreboard_ui_disabling)
@@ -1899,9 +1902,11 @@ bool Scoreboard_WouldDraw()
 	else if (intermission == 2)
 		return false;
 	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && !MUTATOR_CALLHOOK(DrawDeathScoreboard)
-		&& time - CSQCModel_server2csqc(player_localentnum - 1).death_time >= autocvar_cl_deathscoreboard_delay
-		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
+	&& time - CSQCModel_server2csqc(player_localentnum - 1).death_time >= autocvar_cl_deathscoreboard_delay
+	&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
 	{
+		if (gametype.m_1v1) // display all info if 1v1 even if dead - only 2 players, lots of room
+			deathscoreboard = true;
 		return true;
 	}
 	else if (scoreboard_showscores_force || MUTATOR_CALLHOOK(DrawScoreboard_Force))
@@ -2806,15 +2811,17 @@ void Scoreboard_Draw(bool should_draw)
 		pos = Scoreboard_Spectators_Draw(pos);
 
 	// draw accuracy and item stats
-	pos = Scoreboard_AccuracyAndItemStats_Draw(pos, panel_bg_color, bg_size);
+	if (!deathscoreboard)
+		pos = Scoreboard_AccuracyAndItemStats_Draw(pos, panel_bg_color, bg_size);
 
 	// draw scoreboard spectators after accuracy and item stats and before rankings
 	if (autocvar_hud_panel_scoreboard_spectators_position == 1)
 		pos = Scoreboard_Spectators_Draw(pos);
 
-	if (MUTATOR_CALLHOOK(ShowRankings))
+	// draw rankings
+	if (MUTATOR_CALLHOOK(ShowRankings, deathscoreboard))
 	{
-		string ranktitle = M_ARGV(0, string);
+		string ranktitle = M_ARGV(1, string);
 		string unit = GetSpeedUnit(autocvar_hud_speed_unit);
 		float conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		if (race_speedaward_alltimebest)

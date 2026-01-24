@@ -200,9 +200,11 @@ REGISTER_MUTATOR(cl_ctf, true);
 
 MUTATOR_HOOKFUNCTION(cl_ctf, ShowRankings)
 {
-    if(autocvar_hud_panel_scoreboard_ctf_leaderboard && ISGAMETYPE(CTF) && STAT(CTF_SHOWLEADERBOARD))
-    {
-        M_ARGV(0, string) = _("Capture time rankings");
-        return true;
-    }
+	if (autocvar_hud_panel_scoreboard_ctf_leaderboard && ISGAMETYPE(CTF) && STAT(CTF_SHOWLEADERBOARD))
+	{
+		if (M_ARGV(0, bool)) // death scoreboard
+			return false;
+		M_ARGV(1, string) = _("Capture time rankings");
+		return true;
+	}
 }
