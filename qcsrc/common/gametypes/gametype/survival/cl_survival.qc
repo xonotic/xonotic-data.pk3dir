@@ -138,3 +138,13 @@ MUTATOR_HOOKFUNCTION(cl_surv, DrawScoreboard_Force)
 	// show the scoreboard when the round ends, so players can see who the Hunters were
 	return STAT(GAME_STOPPED);
 }
+
+MUTATOR_HOOKFUNCTION(cl_surv, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(SURVIVAL))
+		return;
+
+	entity player = M_ARGV(0, entity);
+	if (player && player.survival_status == SURV_STATUS_HUNTER && HUD_Mod_Survival_ShowHunters())
+		Scoreboard_AddGametypeIcon("player_red"); // helps for colorblind people
+}
