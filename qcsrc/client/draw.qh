@@ -94,6 +94,8 @@ string _drawpic_picpath;
 		_drawpic_picpath = string_null;\
 	MACRO_END
 
+vector draw_getimagesize_skin(string pic);
+
 void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
 
 void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
