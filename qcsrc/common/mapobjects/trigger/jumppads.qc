@@ -712,6 +712,7 @@ bool trigger_push_test(entity this, entity item)
 			{
 				if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, best_target + PL_MIN_CONST, best_target + PL_MAX_CONST)))
 				{
+					e.velocity = best_vel;
 					float velxy = vlen(vec2(best_vel));
 					float cost = vlen(vec2(t.origin - best_org)) / velxy;
 					if(velxy < autocvar_sv_maxspeed)
