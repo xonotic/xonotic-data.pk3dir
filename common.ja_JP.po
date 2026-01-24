@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 07:22+0100\n"
+"POT-Creation-Date: 2026-01-24 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021,2024\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
@@ -40,16 +40,16 @@ msgstr "^2%s への書き出すに成功! (註: data/data/ に保存されまし
 msgid "^1Couldn't write to %s"
 msgstr "^1%sへの書き込みは失敗しました"
 
-#: qcsrc/client/hud/panel/centerprint.qc:198
+#: qcsrc/client/hud/panel/centerprint.qc:200
 msgid "Title"
 msgstr ""
 
-#: qcsrc/client/hud/panel/centerprint.qc:202
+#: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
 msgid "^3Countdown message at time %s, seconds left: ^COUNT"
 msgstr "^3時刻%s秒読みメッセージ, 残り秒: ^COUNT"
 
-#: qcsrc/client/hud/panel/centerprint.qc:204
+#: qcsrc/client/hud/panel/centerprint.qc:206
 #, c-format
 msgid ""
 "^1Multiline message at time %s that\n"
@@ -58,83 +58,83 @@ msgstr ""
 "^1%s 秒で複数行のメッセージが\n"
 "^BOLD通常より長くなります"
 
-#: qcsrc/client/hud/panel/centerprint.qc:206
+#: qcsrc/client/hud/panel/centerprint.qc:208
 #, c-format
 msgid "Message at time %s"
 msgstr "時刻 %s でメッセージ"
 
-#: qcsrc/client/hud/panel/centerprint.qc:211
+#: qcsrc/client/hud/panel/centerprint.qc:213
 msgid "Generic message"
 msgstr "一般的なメッセージ"
 
-#: qcsrc/client/hud/panel/centerprint.qc:291
-#: qcsrc/client/hud/panel/centerprint.qc:301
+#: qcsrc/client/hud/panel/centerprint.qc:293
+#: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
 msgstr "対"
 
-#: qcsrc/client/hud/panel/chat.qc:166
+#: qcsrc/client/hud/panel/chat.qc:168
 msgid "^3Player^7: This is the chat area."
 msgstr "^3プレイヤー^7: ここがチャットエリアです。"
 
-#: qcsrc/client/hud/panel/checkpoints.qc:144
-#: qcsrc/client/hud/panel/checkpoints.qc:147
+#: qcsrc/client/hud/panel/checkpoints.qc:146
+#: qcsrc/client/hud/panel/checkpoints.qc:149
 #: qcsrc/client/hud/panel/racetimer.qc:94
-#: qcsrc/client/hud/panel/racetimer.qc:214
+#: qcsrc/client/hud/panel/racetimer.qc:216
 #, c-format
 msgid "Checkpoint %d"
 msgstr ""
 
-#: qcsrc/client/hud/panel/engineinfo.qc:72
+#: qcsrc/client/hud/panel/engineinfo.qc:71
 #, c-format
 msgid "FPS: %.*f"
 msgstr "FPS: %.*f"
 
-#: qcsrc/client/hud/panel/infomessages.qc:102
+#: qcsrc/client/hud/panel/infomessages.qc:104
 msgid "^1Observing"
 msgstr "^1観察中"
 
-#: qcsrc/client/hud/panel/infomessages.qc:104
+#: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr "^1観戦中: ^7%s"
 
-#: qcsrc/client/hud/panel/infomessages.qc:115
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr "観戦するために ^3%s ^1を押して"
 
-#: qcsrc/client/hud/panel/infomessages.qc:115
+#: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/menu/xonotic/keybinder.qc:73
 msgid "primary fire"
 msgstr "メイン射撃"
 
-#: qcsrc/client/hud/panel/infomessages.qc:117
+#: qcsrc/client/hud/panel/infomessages.qc:119
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr "^3%s^1または^3%s^1を押すと次または前のプレイヤーが表示されます"
 
-#: qcsrc/client/hud/panel/infomessages.qc:117
-#: qcsrc/client/hud/panel/infomessages.qc:121
+#: qcsrc/client/hud/panel/infomessages.qc:119
+#: qcsrc/client/hud/panel/infomessages.qc:123
 msgid "next weapon"
 msgstr "次の武器"
 
-#: qcsrc/client/hud/panel/infomessages.qc:117
-#: qcsrc/client/hud/panel/infomessages.qc:121
+#: qcsrc/client/hud/panel/infomessages.qc:119
+#: qcsrc/client/hud/panel/infomessages.qc:123
 msgid "previous weapon"
 msgstr "前の武器"
 
-#: qcsrc/client/hud/panel/infomessages.qc:121
+#: qcsrc/client/hud/panel/infomessages.qc:123
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr "^3%s ^1または ^3%s ^1を使用してスピードを変更します"
 
-#: qcsrc/client/hud/panel/infomessages.qc:123
+#: qcsrc/client/hud/panel/infomessages.qc:125
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
 msgstr "^1^3%s^1で観戦、^3%s^1でカメラモードを変更"
 
-#: qcsrc/client/hud/panel/infomessages.qc:123
 #: qcsrc/client/hud/panel/infomessages.qc:125
+#: qcsrc/client/hud/panel/infomessages.qc:127
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:86
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
@@ -142,33 +142,33 @@ msgstr "^1^3%s^1で観戦、^3%s^1でカメラモードを変更"
 msgid "drop weapon"
 msgstr "武器を落とす"
 
-#: qcsrc/client/hud/panel/infomessages.qc:123
+#: qcsrc/client/hud/panel/infomessages.qc:125
 #: qcsrc/menu/xonotic/keybinder.qc:74
 msgid "secondary fire"
 msgstr "サブ射撃"
 
-#: qcsrc/client/hud/panel/infomessages.qc:125
+#: qcsrc/client/hud/panel/infomessages.qc:127
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
 msgstr "^1カメラモードを変更するには^3%s^1を押して"
 
-#: qcsrc/client/hud/panel/infomessages.qc:128
+#: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:128
+#: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/menu/xonotic/keybinder.qc:153
 msgid "server info"
 msgstr "サーバー情報"
 
-#: qcsrc/client/hud/panel/infomessages.qc:139
+#: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1参加するために ^3%s ^1を押して"
 
-#: qcsrc/client/hud/panel/infomessages.qc:139
-#: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1393
+#: qcsrc/client/hud/panel/infomessages.qc:141
+#: qcsrc/client/hud/panel/scoreboard.qc:2794 qcsrc/client/main.qc:1393
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:82
 #: qcsrc/common/notifications/all.qh:463
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
@@ -177,106 +177,106 @@ msgstr "^1参加するために ^3%s ^1を押して"
 msgid "jump"
 msgstr "ジャンプ"
 
-#: qcsrc/client/hud/panel/infomessages.qc:145
+#: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:148
+#: qcsrc/client/hud/panel/infomessages.qc:150
 msgid "^2You're queued to join any available team"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:154
+#: qcsrc/client/hud/panel/infomessages.qc:156
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1ゲームは ^3%d ^1秒で始まります"
 
-#: qcsrc/client/hud/panel/infomessages.qc:162
+#: qcsrc/client/hud/panel/infomessages.qc:164
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2現在、^1ウォームアップ^2の段階に入っています!"
 
-#: qcsrc/client/hud/panel/infomessages.qc:172
+#: qcsrc/client/hud/panel/infomessages.qc:174
 msgid "^31^2 more player is needed for the match to start."
 msgstr "^2試合を開始するには、もう^31^2人のプレイヤーが必要です。"
 
-#: qcsrc/client/hud/panel/infomessages.qc:174
+#: qcsrc/client/hud/panel/infomessages.qc:176
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
 msgstr "^2試合を開始するには、もう^3%d^2人のプレイヤーが必要です。"
 
-#: qcsrc/client/hud/panel/infomessages.qc:184
+#: qcsrc/client/hud/panel/infomessages.qc:186
 #: qcsrc/menu/xonotic/keybinder.qc:149
 msgid "ready"
 msgstr "準備"
 
-#: qcsrc/client/hud/panel/infomessages.qc:188
+#: qcsrc/client/hud/panel/infomessages.qc:190
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%s^3%s%sを押すとウォームアップを終了します"
 
-#: qcsrc/client/hud/panel/infomessages.qc:190
+#: qcsrc/client/hud/panel/infomessages.qc:192
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr "^2準備演習が終了する前に、全員の準備ができるまで待ち中..."
 
-#: qcsrc/client/hud/panel/infomessages.qc:193
+#: qcsrc/client/hud/panel/infomessages.qc:195
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^3%s ^2を押すとウォームアップを終了します"
 
-#: qcsrc/client/hud/panel/infomessages.qc:203
+#: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
 msgid "%sNeed active players for: %s"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:207
+#: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
 msgid "%sWaiting for 1 player to join..."
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:209
+#: qcsrc/client/hud/panel/infomessages.qc:211
 #, c-format
 msgid "%sWaiting for %d players to join..."
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:221
+#: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "Teams are unbalanced!"
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:224
+#: qcsrc/client/hud/panel/infomessages.qc:226
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr " 調整するために ^3%s%s を押して"
 
-#: qcsrc/client/hud/panel/infomessages.qc:224
+#: qcsrc/client/hud/panel/infomessages.qc:226
 #: qcsrc/menu/xonotic/keybinder.qc:164
 msgid "team selection"
 msgstr "チームの選択"
 
-#: qcsrc/client/hud/panel/infomessages.qc:237
+#: qcsrc/client/hud/panel/infomessages.qc:239
 msgid "^1Spectating this player:"
 msgstr "^1このプレイヤーを観戦中:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:237
+#: qcsrc/client/hud/panel/infomessages.qc:239
 msgid "^1Spectating you:"
 msgstr "^1あなたを観戦中:"
 
-#: qcsrc/client/hud/panel/infomessages.qc:254
+#: qcsrc/client/hud/panel/infomessages.qc:256
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7HUDオプションを表示するには ^3ESC ^7キーを押して下さい。"
 
-#: qcsrc/client/hud/panel/infomessages.qc:255
+#: qcsrc/client/hud/panel/infomessages.qc:257
 msgid "^3Double-click ^7a panel for panel-specific options."
 msgstr ""
 
-#: qcsrc/client/hud/panel/infomessages.qc:256
+#: qcsrc/client/hud/panel/infomessages.qc:258
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr "^3CTRL ^7で衝突テストを無効にし、^3SHIFT ^7と"
 
-#: qcsrc/client/hud/panel/infomessages.qc:257
+#: qcsrc/client/hud/panel/infomessages.qc:259
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3ARROW KEYS ^7で微調整する。"
 
-#: qcsrc/client/hud/panel/notify.qc:144 qcsrc/client/hud/panel/notify.qc:145
+#: qcsrc/client/hud/panel/notify.qc:146 qcsrc/client/hud/panel/notify.qc:147
 #: qcsrc/client/hud/panel/score.qc:64
 #, c-format
 msgid "Player %d"
@@ -286,286 +286,286 @@ msgstr "プレイヤー %d"
 msgid "Standard quick menu"
 msgstr "標準的なクイックメニュー"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:651
 #: qcsrc/client/hud/panel/quickmenu.qc:653
+#: qcsrc/client/hud/panel/quickmenu.qc:655
 #, c-format
 msgid "Submenu%d"
 msgstr "サブメニュー%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:658
+#: qcsrc/client/hud/panel/quickmenu.qc:660
 #, c-format
 msgid "Command%d"
 msgstr "コマンド%d"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:682
+#: qcsrc/client/hud/panel/quickmenu.qc:684
 msgid "Continue..."
 msgstr "続ける..."
 
-#: qcsrc/client/hud/panel/quickmenu.qc:838
-#: qcsrc/client/hud/panel/quickmenu.qc:845
+#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "Chat"
 msgstr "チャット"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:839
+#: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^Send public message to"
 msgstr "QMCMD^公開メッセージを送信する:"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^:-) / nice one"
 msgstr "QMCMD^ (^_^) / ナイス"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:840
+#: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^nice one"
 msgstr "QMCMD^ナイス"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:841
+#: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^good game"
 msgstr "よくやった"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:842
+#: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^hi / good luck"
 msgstr "QMCMD^やあ / グッドラック"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:842
+#: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^hi / good luck and have fun"
 msgstr "QMCMD^やあ / グッドラック、楽しんでね"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:844
+#: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^Send in English"
 msgstr "QMCMD^英語で送る"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:849
-#: qcsrc/client/hud/panel/quickmenu.qc:865
+#: qcsrc/client/hud/panel/quickmenu.qc:851
+#: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^Team chat"
 msgstr "QMCD^チームチャット"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:850
+#: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^strength soon"
 msgstr "QMCMD^間もなく力"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:851
+#: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^free item %x^7 (l:%y^7)"
 msgstr "QMCMD^無料アイテム %x^7 (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:851
+#: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "QMCMD^free item, icon"
 msgstr "QMCMD^無料アイテム、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:852
+#: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^took item (l:%l^7)"
 msgstr "QMCMD^アイテムを取った (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:852
+#: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "QMCMD^took item, icon"
 msgstr "QMCMD^アイテムを取った、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:853
+#: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "QMCMD^negative"
 msgstr "QMCMD^陰性"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:854
+#: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "QMCMD^positive"
 msgstr "QMCMD^陽性"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:855
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^助けが必要 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:855
+#: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "QMCMD^need help, icon"
 msgstr "QMCMD^助けが必要、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:856
+#: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^enemy seen (l:%y^7)"
 msgstr "QMCMD^敵が見えました (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:856
+#: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "QMCMD^enemy seen, icon"
 msgstr "QMCMD^敵が見えました、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:857
+#: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^flag seen (l:%y^7)"
 msgstr "QMCMD^旗が見えました (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:857
+#: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "QMCMD^flag seen, icon"
 msgstr "QMCMD^旗が見えました、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:858
+#: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^防衛中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:858
+#: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "QMCMD^defending, icon"
 msgstr "QMCMD^守り中、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:859
+#: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^動き中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:859
+#: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "QMCMD^roaming, icon"
 msgstr "QMCMD^動き中、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:860
+#: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 msgstr "QMCMD^攻撃中 (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:860
+#: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^attacking, icon"
 msgstr "QMCMD^攻撃中、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:861
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^killed flagcarrier (l:%y^7)"
 msgstr "QMCMD^殺された旗持ち (l:%y^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:861
+#: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^killed flagcarrier, icon"
 msgstr "QMCMD^殺された旗持ち、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:862
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 #, c-format
 msgid "QMCMD^dropped flag (l:%d^7)"
 msgstr "QMCMD^旗を落とした (l:%d^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:862
+#: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "QMCMD^dropped flag, icon"
 msgstr "QMCMD^旗を落とした、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:863
+#: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^drop weapon, icon"
 msgstr "QMCMD^武器を落とす、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:863
+#: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
 msgstr "QMCMD^武器を落とした、アイコン %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:864
+#: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "QMCMD^drop flag/key, icon"
 msgstr "QMCMD^旗/鍵を落とす、アイコン"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:864
+#: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
 msgstr "QMCMD^旗/鍵を落とした %w^7 (l:%l^7)"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:868
+#: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "QMCMD^Send private message to"
 msgstr "QMCMD^非公開のメッセージを送信する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:870
-#: qcsrc/client/hud/panel/quickmenu.qc:899
+#: qcsrc/client/hud/panel/quickmenu.qc:872
+#: qcsrc/client/hud/panel/quickmenu.qc:901
 msgid "QMCMD^Settings"
 msgstr "QMCMD^設定"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:871
-#: qcsrc/client/hud/panel/quickmenu.qc:878
+#: qcsrc/client/hud/panel/quickmenu.qc:873
+#: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "QMCMD^View/HUD settings"
 msgstr "QMCMD^ビュー / HUD設定"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:872
+#: qcsrc/client/hud/panel/quickmenu.qc:874
 msgid "QMCMD^3rd person view"
 msgstr "QMCMD^三人称視点"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:873
+#: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "QMCMD^Player models like mine"
 msgstr "QMCMD^私のような選手モデルを表示する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:874
+#: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Names above players"
 msgstr "QMCMD^上に選手の名前"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:875
+#: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "QMCMD^Crosshair per weapon"
 msgstr "QMCMD^武器ごとの十字線"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:876
+#: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "QMCMD^FPS"
 msgstr "QMCMD^FPS"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:877
+#: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Net graph"
 msgstr "QMCMD^ネットグラフ"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:880
-#: qcsrc/client/hud/panel/quickmenu.qc:883
+#: qcsrc/client/hud/panel/quickmenu.qc:882
+#: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "QMCMD^Sound settings"
 msgstr "QMCMD^サウンド設定"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:881
+#: qcsrc/client/hud/panel/quickmenu.qc:883
 msgid "QMCMD^Hit sound"
 msgstr "QMCMD^衝撃のサウンド"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:882
+#: qcsrc/client/hud/panel/quickmenu.qc:884
 msgid "QMCMD^Chat sound"
 msgstr "QMCMD^チャットのサウンド"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:887
+#: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "QMCMD^Change spectator camera"
 msgstr "QMCMD^観客のカメラを変更する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:891
-#: qcsrc/client/hud/panel/quickmenu.qc:895
+#: qcsrc/client/hud/panel/quickmenu.qc:893
+#: qcsrc/client/hud/panel/quickmenu.qc:897
 msgid "QMCMD^Observer camera"
 msgstr "QMCMD^観客のカメラ"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:892
+#: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "QMCMD^Increase speed"
 msgstr "QMCMD^速度を上げる"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:893
+#: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "QMCMD^Decrease speed"
 msgstr "QMCMD^速度を下げる"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:894
+#: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "QMCMD^Wall collision"
 msgstr "QMCMD^壁衝突"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:898
+#: qcsrc/client/hud/panel/quickmenu.qc:900
 msgid "QMCMD^Fullscreen"
 msgstr "QMCMD^全画面"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:901
-#: qcsrc/client/hud/panel/quickmenu.qc:911
+#: qcsrc/client/hud/panel/quickmenu.qc:903
+#: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "QMCMD^Call a vote"
 msgstr "QMCMD^投票を呼び出す"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:902
+#: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "QMCMD^Restart the map"
 msgstr "QMCMD^マップを再起動する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:903
+#: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "QMCMD^End match"
 msgstr "QMCMD^試合終了"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:906
+#: qcsrc/client/hud/panel/quickmenu.qc:908
 msgid "QMCMD^Reduce match time"
 msgstr "QMCMD^試合時刻を下げる"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:907
+#: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "QMCMD^Extend match time"
 msgstr "QMCMD^試合時刻を拡張する"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:910
+#: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "QMCMD^Shuffle teams"
 msgstr "QMCMD^チームをシャッフルする"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:915
+#: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "Server quick menu"
 msgstr "サーバークイックメニュー"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:917
+#: qcsrc/client/hud/panel/quickmenu.qc:919
 msgid "Waypoint editor menu"
 msgstr "ウェイポイント編集メニュー"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:920
+#: qcsrc/client/hud/panel/quickmenu.qc:922
 msgid "Waypoint editor menu as default"
 msgstr "デフォルトではウェイポイントエディタメニュー"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:922
+#: qcsrc/client/hud/panel/quickmenu.qc:924
 msgid "Server quick menu as default"
 msgstr "デフォルトとしてのサーバークイックメニュー"
 
-#: qcsrc/client/hud/panel/quickmenu.qc:928
+#: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "QMCMD^Spectate a player"
 msgstr "QMCMD^選手を観戦する"
 
@@ -588,22 +588,22 @@ msgstr "スタート"
 msgid "Finish line"
 msgstr "フィニッシュライン"
 
-#: qcsrc/client/hud/panel/racetimer.qc:217
-#: qcsrc/client/hud/panel/racetimer.qc:309
-#: qcsrc/client/hud/panel/racetimer.qc:373
+#: qcsrc/client/hud/panel/racetimer.qc:219
+#: qcsrc/client/hud/panel/racetimer.qc:311
+#: qcsrc/client/hud/panel/racetimer.qc:375
 #, c-format
 msgid "PENALTY: %.1f (%s)"
 msgstr "ペナルティ: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:217 qcsrc/client/main.qc:1230
+#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1230
 msgid "missing a checkpoint"
 msgstr "必要: 1通過点"
 
-#: qcsrc/client/hud/panel/radar.qc:334
+#: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select spawn location"
 msgstr "クリックして現れる場所を選択する"
 
-#: qcsrc/client/hud/panel/radar.qc:335
+#: qcsrc/client/hud/panel/radar.qc:340
 msgid "Click to select teleport destination"
 msgstr "クリックしてテレポートの宛先を選択する"
 
@@ -1093,61 +1093,61 @@ msgstr "^5%s %s"
 msgid "SCO^points"
 msgstr "点"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2512
+#: qcsrc/client/hud/panel/scoreboard.qc:2514
 msgid "Next map:"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2519
+#: qcsrc/client/hud/panel/scoreboard.qc:2521
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
 msgstr "チームの選択"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2533
+#: qcsrc/client/hud/panel/scoreboard.qc:2535
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
 msgstr "^7選択されたチームを参加するために ^3%s ^7を押して"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2535
+#: qcsrc/client/hud/panel/scoreboard.qc:2537
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
 msgstr "^7チームを自動選択して参加するために ^3%s ^7を押して"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2539
+#: qcsrc/client/hud/panel/scoreboard.qc:2541
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
 msgstr "^7固有のチームを参加するために ^3%s ^7を押して"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2577
+#: qcsrc/client/hud/panel/scoreboard.qc:2579
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7選手達"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1422
+#: qcsrc/client/hud/panel/scoreboard.qc:2580 qcsrc/client/main.qc:1422
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:42
 msgid "Map:"
 msgstr "マップ:"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2739
+#: qcsrc/client/hud/panel/scoreboard.qc:2741
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
 msgstr "速度の賞: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2743
+#: qcsrc/client/hud/panel/scoreboard.qc:2745
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
 msgstr "史上最速: %d%s ^7(%s^7)"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2775
+#: qcsrc/client/hud/panel/scoreboard.qc:2777
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
 msgstr "^3%s^1 後に再び現れ中..."
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2784
+#: qcsrc/client/hud/panel/scoreboard.qc:2786
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
 msgstr "死んだ、再び現れる前に ^3%s ^7待ってください"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2792
+#: qcsrc/client/hud/panel/scoreboard.qc:2794
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "死んだ、^2%s ^7を押して再び現れてください"
@@ -1179,60 +1179,60 @@ msgstr "mi"
 msgid "nmi"
 msgstr "nmi"
 
-#: qcsrc/client/hud/panel/timer.qc:153
+#: qcsrc/client/hud/panel/timer.qc:155
 msgid "Warmup"
 msgstr "ウォームアップ"
 
-#: qcsrc/client/hud/panel/timer.qc:158
+#: qcsrc/client/hud/panel/timer.qc:160
 msgid "Warmup: too few players!"
 msgstr ""
 
-#: qcsrc/client/hud/panel/timer.qc:160
+#: qcsrc/client/hud/panel/timer.qc:162
 msgid "Warmup: teams unbalanced!"
 msgstr ""
 
-#: qcsrc/client/hud/panel/timer.qc:162
+#: qcsrc/client/hud/panel/timer.qc:164
 msgid "Warmup: no time limit"
 msgstr "ウォームアップ：制限時間なし"
 
-#: qcsrc/client/hud/panel/timer.qc:166
+#: qcsrc/client/hud/panel/timer.qc:168
 msgid "Timeout"
 msgstr "タイムアウト"
 
-#: qcsrc/client/hud/panel/timer.qc:168
+#: qcsrc/client/hud/panel/timer.qc:170
 msgid "Sudden Death"
 msgstr "突然死"
 
-#: qcsrc/client/hud/panel/timer.qc:170
+#: qcsrc/client/hud/panel/timer.qc:172
 msgid "Overtime"
 msgstr "残業"
 
-#: qcsrc/client/hud/panel/timer.qc:172
+#: qcsrc/client/hud/panel/timer.qc:174
 #, c-format
 msgid "Overtime #%d"
 msgstr "残業 #%d"
 
-#: qcsrc/client/hud/panel/vote.qc:30
+#: qcsrc/client/hud/panel/vote.qc:32
 msgid "^1You must answer before entering HUD configure mode"
 msgstr ""
 
-#: qcsrc/client/hud/panel/vote.qc:33
+#: qcsrc/client/hud/panel/vote.qc:35
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
 msgstr "統計では \"^1Anonymous player^7\" ではなく ^2名前"
 
-#: qcsrc/client/hud/panel/vote.qc:126
+#: qcsrc/client/hud/panel/vote.qc:139
 msgid "Allow servers to store and display your name?"
 msgstr "サーバーにあなたの名前の保存と表示を許可しますか？"
 
-#: qcsrc/client/hud/panel/vote.qc:127
+#: qcsrc/client/hud/panel/vote.qc:140
 msgid "A vote has been called for:"
 msgstr "投票が求められた:"
 
-#: qcsrc/client/hud/panel/vote.qc:130
+#: qcsrc/client/hud/panel/vote.qc:144
 msgid "^1Configure the HUD"
 msgstr "^1HUDを構成する"
 
-#: qcsrc/client/hud/panel/vote.qc:136 qcsrc/menu/xonotic/dialog_firstrun.qc:88
+#: qcsrc/client/hud/panel/vote.qc:152 qcsrc/menu/xonotic/dialog_firstrun.qc:88
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:30
 #: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:18
 #: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:18
@@ -1244,7 +1244,7 @@ msgstr "^1HUDを構成する"
 msgid "Yes"
 msgstr "はい"
 
-#: qcsrc/client/hud/panel/vote.qc:138 qcsrc/menu/xonotic/dialog_firstrun.qc:89
+#: qcsrc/client/hud/panel/vote.qc:154 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
 #: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:21
 #: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:21
@@ -1256,15 +1256,15 @@ msgstr "はい"
 msgid "No"
 msgstr "いいえ"
 
-#: qcsrc/client/hud/panel/weapons.qc:645
+#: qcsrc/client/hud/panel/weapons.qc:647
 msgid "Out of ammo"
 msgstr "弾薬切れ"
 
-#: qcsrc/client/hud/panel/weapons.qc:650
+#: qcsrc/client/hud/panel/weapons.qc:652
 msgid "Don't have"
 msgstr "ない"
 
-#: qcsrc/client/hud/panel/weapons.qc:655
+#: qcsrc/client/hud/panel/weapons.qc:657
 msgid "Unavailable"
 msgstr "無利用"
 
@@ -1425,23 +1425,23 @@ msgstr "構わない"
 msgid "Suggested by: %s"
 msgstr ""
 
-#: qcsrc/client/mapvoting.qc:458
+#: qcsrc/client/mapvoting.qc:460
 msgid "Decide the gametype"
 msgstr "ゲームモードを決める"
 
-#: qcsrc/client/mapvoting.qc:458
+#: qcsrc/client/mapvoting.qc:460
 msgid "Vote for a map"
 msgstr "マップに投票する"
 
-#: qcsrc/client/mapvoting.qc:651
+#: qcsrc/client/mapvoting.qc:653
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr "mv_mapdownload: ^3このコマンドを自分で使用しないでください!"
 
-#: qcsrc/client/mapvoting.qc:663
+#: qcsrc/client/mapvoting.qc:665
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr "^1ERROR:^7 pak index が見つかりませんでした。"
 
-#: qcsrc/client/mapvoting.qc:674
+#: qcsrc/client/mapvoting.qc:676
 msgid "Requesting preview..."
 msgstr "プレビューをリクエスト中..."
 
@@ -1497,12 +1497,14 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:22
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:28
-#: qcsrc/common/gametypes/gametype/domination/domination.qh:37
+#: qcsrc/common/gametypes/gametype/domination/domination.qh:36
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qh:28
+#: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:20
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:41
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:31
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:18
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
+#: qcsrc/common/gametypes/gametype/tka/tka.qh:59
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:48
 msgid "Point limit:"
 msgstr "ポイント制限:"
@@ -1535,25 +1537,25 @@ msgid ""
 "coordination is key!"
 msgstr ""
 
-#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:12
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Clan Arena"
 msgstr "クランアリーナ (CA)"
 
-#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:12
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Kill all enemy teammates to win the round"
 msgstr "ラウンドに勝つために全ての敵チームメイトを殺して"
 
-#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:42
-#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:45
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:41
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:41
 msgid "Round limit:"
 msgstr "ラウンド制限:"
 
-#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:42
-#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:45
+#: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:41
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:41
 msgid "The amount of rounds won needed before the match will end"
 msgstr "試合が終了する前に必要な勝利ラウンド数"
 
-#: qcsrc/common/gametypes/gametype/ctf/cl_ctf.qc:202
+#: qcsrc/common/gametypes/gametype/ctf/cl_ctf.qc:205
 msgid "Capture time rankings"
 msgstr "取れ時刻ランキング"
 
@@ -1592,27 +1594,27 @@ msgid ""
 "carrier."
 msgstr ""
 
-#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:12
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:11
 msgid "Capture the Flag"
 msgstr "キャプチャー・ザ・フラッグ (CTF)"
 
-#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:12
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:11
 msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
 "敵の旗を見つけて基地に持ってきて、それを取れて、他のチームから基地を守って"
 
-#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:30
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:29
 msgid "Capture limit:"
 msgstr "取れ制限:"
 
-#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:30
+#: qcsrc/common/gametypes/gametype/ctf/ctf.qh:29
 msgid "The amount of captures needed before the match will end"
 msgstr "試合が終了する前に必要な取れの量"
 
 #: qcsrc/common/gametypes/gametype/cts/cl_cts.qc:41
-#: qcsrc/common/gametypes/gametype/race/cl_race.qc:184
+#: qcsrc/common/gametypes/gametype/race/cl_race.qc:192
 msgid "Rankings"
 msgstr "ランキング"
 
@@ -1700,17 +1702,19 @@ msgid ""
 "control points held by your team every few seconds."
 msgstr ""
 
-#: qcsrc/common/gametypes/gametype/domination/domination.qh:12
+#: qcsrc/common/gametypes/gametype/domination/domination.qh:11
 msgid "Capture and defend all the control points to win"
 msgstr "勝つために全てのコントロールポイントを取れて、防御して"
 
-#: qcsrc/common/gametypes/gametype/domination/domination.qh:12
+#: qcsrc/common/gametypes/gametype/domination/domination.qh:11
 msgid "Domination"
 msgstr "ドミネート (DOMINATION)"
 
-#: qcsrc/common/gametypes/gametype/domination/domination.qh:37
+#: qcsrc/common/gametypes/gametype/domination/domination.qh:36
+#: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:20
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:41
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
+#: qcsrc/common/gametypes/gametype/tka/tka.qh:59
 msgid "The amount of points needed before the match will end"
 msgstr "試合が終了する前に必要なポイントの量"
 
@@ -1789,11 +1793,11 @@ msgid ""
 "enemies are."
 msgstr ""
 
-#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:15
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:11
 msgid "Freeze Tag"
 msgstr "フリーズタグ (FT)"
 
-#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:15
+#: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:11
 msgid ""
 "Kill enemies to freeze them, stand next to frozen teammates to revive them; "
 "freeze all enemies to win"
@@ -2053,11 +2057,11 @@ msgstr "コントロールポイントを取れて、敵のジェネレーター
 msgid "Onslaught"
 msgstr "猛攻撃 (ONSLAUGHT)"
 
-#: qcsrc/common/gametypes/gametype/race/cl_race.qc:102
+#: qcsrc/common/gametypes/gametype/race/cl_race.qc:110
 msgid "Personal best"
 msgstr "自己最高"
 
-#: qcsrc/common/gametypes/gametype/race/cl_race.qc:112
+#: qcsrc/common/gametypes/gametype/race/cl_race.qc:120
 msgid "Server best"
 msgstr "最高のサーバー"
 
@@ -2095,11 +2099,11 @@ msgstr "フィニッシュラインに他の選手とのレース"
 msgid "Laps:"
 msgstr "ラップ数:"
 
-#: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:61
+#: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:64
 msgid "Hunter"
 msgstr "ハンター"
 
-#: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:67
+#: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:70
 msgid "Survivor"
 msgstr "サバイバー"
 
@@ -2361,7 +2365,7 @@ msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'nチューバ投げ"
 
 #: qcsrc/common/mapinfo.qh:94
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
 msgid "Frag limit:"
 msgstr "削除制限:"
 
@@ -2377,38 +2381,38 @@ msgstr "観戦者:"
 msgid "It's your turn"
 msgstr "あなたのターン"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:363
+#: qcsrc/common/minigames/cl_minigames_hud.qc:367
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:71 qcsrc/menu/xonotic/dialog_quit.qh:6
 msgid "Quit"
 msgstr "終了する"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:368
+#: qcsrc/common/minigames/cl_minigames_hud.qc:372
 msgid "Invite"
 msgstr "招待する"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:407
+#: qcsrc/common/minigames/cl_minigames_hud.qc:411
 msgid "Current Game"
 msgstr "現在のゲーム"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:431
+#: qcsrc/common/minigames/cl_minigames_hud.qc:435
 msgid "Exit Menu"
 msgstr "終了メニュー"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:442
+#: qcsrc/common/minigames/cl_minigames_hud.qc:446
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Create"
 msgstr "作成する"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:445
+#: qcsrc/common/minigames/cl_minigames_hud.qc:449
 #: qcsrc/menu/xonotic/dialog_welcome.qc:131
 msgid "Join"
 msgstr "参加する"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:521
+#: qcsrc/common/minigames/cl_minigames_hud.qc:527
 msgid "Minigames"
 msgstr "ミニゲーム"
 
-#: qcsrc/common/minigames/cl_minigames_hud.qc:581
+#: qcsrc/common/minigames/cl_minigames_hud.qc:589
 msgid "Minigame message"
 msgstr "ミニゲームメッセージ"
 
@@ -9566,7 +9570,7 @@ msgstr "HUDスキン"
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:34
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:24
 #: qcsrc/menu/xonotic/dialog_media_screenshot.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:160
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:167
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:35
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
 msgid "Filter:"
@@ -9746,7 +9750,7 @@ msgid "Timing a demo will disconnect you from the current match."
 msgstr "デモのタイミングをとると、現在の試合から切り離されます。"
 
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:33
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:162
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:169
 msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
@@ -9891,7 +9895,7 @@ msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:99
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
 #: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:740
 #: qcsrc/menu/xonotic/util.qc:752 qcsrc/menu/xonotic/util.qc:757
@@ -9905,165 +9909,174 @@ msgstr "デフォルト"
 msgid "Unlimited"
 msgstr "無制限"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:73
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
 msgid "Gametype"
 msgstr "ゲームモード"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:79
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
 msgid "Show all"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:80
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
 msgid "Show all available gametypes"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:82
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
 msgid "Time limit:"
 msgstr "制限時刻:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:98
 msgid "Time limit in minutes that when hit, will end the match"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
 msgid "TIMLIM^Default"
 msgstr "TIMLIM^デフォルト"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:90
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:104
 msgid "TIMLIM^Infinite"
 msgstr "無限"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:97
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
 msgid "Teams:"
 msgstr "チーム数:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "2 teams"
 msgstr "2チーム"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:101
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "3 teams"
 msgstr "3チーム"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:102
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
 msgid "4 teams"
 msgstr "4チーム"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:105
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "Player slots:"
 msgstr "選手スロット:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr "一度にサーバーに接続できる選手またはボットの最大数"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:109
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
 msgstr "ボット数:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:112
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
 msgid "Amount of bots on your server"
 msgstr "サーバーでボットの量"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "Bot skill:"
 msgstr "ボット技術:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Specify how experienced the bots will be"
 msgstr "ボットの経験値を指定する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:120
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Botlike"
 msgstr "ボット"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "Beginner"
 msgstr "ビギナー"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:122
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "You will win"
 msgstr "必ず勝つ"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "You can win"
 msgstr "勝てるかも"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:124
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "You might win"
 msgstr "勝つかもしれない"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:125
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "Advanced"
 msgstr "アドバンス"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
 msgid "Expert"
 msgstr "エキスパート"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
 msgid "Pro"
 msgstr "プロ"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:128
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
 msgid "Assassin"
 msgstr "アサシン"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
 msgid "Unhuman"
 msgstr "非人間"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:145
 msgid "Godlike"
 msgstr "神"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
-msgid "Mutators..."
-msgstr "ミューテーター..."
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
+msgid "Bots against humans"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
-msgid "Mutators and weapon arenas"
-msgstr "ミューテーターと武器アリーナ"
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
+msgid ""
+"Force humans to play on the same team against an equal-sized team of bots"
+msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:152
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Maplist"
 msgstr "マップリスト"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:171
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
 msgid "Add shown"
 msgstr "表示された者を追加する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:172
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:179
 msgid "Add the maps shown in the list to your selection"
 msgstr "リストに表示されているマップを選択に追加する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:175
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
 msgid "Remove shown"
 msgstr "表示された者を全て削除する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:176
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:183
 msgid "Remove the maps shown in the list from your selection"
 msgstr "リストに表示されているマップを選択から削除する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:181
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Add all"
 msgstr "全て追加する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
 msgid "Add every available map to your selection"
 msgstr "利用可能な全てのマップを選択に追加する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:185
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
 msgid "Remove all"
 msgstr "全て削除する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:186
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:193
 msgid "Remove all the maps from your selection"
 msgstr "利用可能な全てのマップを選択から削除する"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:194
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
+msgid "Mutators..."
+msgstr "ミューテーター..."
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:202
+msgid "Mutators and weapon arenas"
+msgstr "ミューテーターと武器アリーナ"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:212
 msgid "Start multiplayer!"
 msgstr "マルチプレイヤーを始め！"
 
