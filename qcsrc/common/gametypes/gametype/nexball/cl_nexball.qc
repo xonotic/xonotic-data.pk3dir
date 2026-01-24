@@ -87,3 +87,15 @@ MUTATOR_HOOKFUNCTION(cl_nb, DrawScoreboardItemStats)
 {
 	return ISGAMETYPE(NEXBALL); // hide the item stats panel
 }
+
+MUTATOR_HOOKFUNCTION(cl_nb, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(NEXBALL))
+		return;
+	entity player = M_ARGV(0, entity);
+	if (player && player.gametype_status)
+	{
+		sbt_field_icon_gametype[sbt_field_icon_gametype_set] = "nexball_carrying";
+		++sbt_field_icon_gametype_set;
+	}
+}

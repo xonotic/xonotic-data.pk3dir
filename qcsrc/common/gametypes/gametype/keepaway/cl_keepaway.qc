@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
+#include <common/mutators/base.qh>
 
 int kaballs, kaballs_carry, kaballs_taken, kaballs_dropped;
 
@@ -128,4 +129,18 @@ void HUD_Mod_Keepaway(vector myPos, vector mySize, bool should_draw)
 	}
 	else // >1 balls: layout showing the number of carrying, taken, and dropped
 		HUD_Mod_TableWithAR_Draw(myPos, mySize, 3, 2, HUD_Mod_Keepaway_DrawItem_Multiple); // 3 items to draw, aspect ratio 2 (icon & text)
+}
+
+REGISTER_MUTATOR(cl_ka, true);
+
+MUTATOR_HOOKFUNCTION(cl_ka, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(KEEPAWAY))
+		return;
+	entity player = M_ARGV(0, entity);
+	if (player && player.gametype_status)
+	{
+		sbt_field_icon_gametype[sbt_field_icon_gametype_set] = "notify_ballpickedup";
+		++sbt_field_icon_gametype_set;
+	}
 }

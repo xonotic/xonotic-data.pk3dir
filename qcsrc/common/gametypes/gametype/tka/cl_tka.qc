@@ -3,6 +3,7 @@
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
 #include <common/gametypes/gametype/keepaway/cl_keepaway.qh>
+#include <common/mutators/base.qh>
 
 int tkaballs, tkaballs_carry, tkaballs_dropped;
 int tkaballs_taken[NUM_TEAMS]; // taken doesn't include carrying -- taken by others
@@ -61,8 +62,11 @@ NET_HANDLE(ENT_CLIENT_TKA_BALLSTATUSES, bool isNew)
 	return true;
 }
 
-#define TKA_TAKEN_PIC(team_i) \
-	strcat("tka_taken_", Static_Team_ColorName_Lower(Team_IndexToTeam(team_i)))
+string HUD_Mod_TKA_GetPic(int team_i)
+{
+	return strcat("tka_taken_", Static_Team_ColorName_Lower(Team_IndexToTeam(team_i)));
+}
+
 void HUD_Mod_TKA_DrawItem_Multiple(vector itemPos, vector itemSize, float aspect_ratio, int i)
 {
 	float f;
@@ -85,7 +89,7 @@ void HUD_Mod_TKA_DrawItem_Multiple(vector itemPos, vector itemSize, float aspect
 	{
 		case 0:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "keepawayball_carrying", tkaballs_carry_change_time,        tkaballs_carry,        true,  itos(tkaballs_carry));         break;
 		case d:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "notify_balldropped",    0,                                 tkaballs_dropped,      false, itos(tkaballs_dropped));       break;
-		default: HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, TKA_TAKEN_PIC(i),        tkaballs_taken_change_time[i - 1], tkaballs_taken[i - 1], false, itos(tkaballs_taken[i - 1]));  break;
+		default: HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, HUD_Mod_TKA_GetPic(i),   tkaballs_taken_change_time[i - 1], tkaballs_taken[i - 1], false, itos(tkaballs_taken[i - 1]));  break;
 	}
 }
 
@@ -123,9 +127,22 @@ void HUD_Mod_TKA(vector myPos, vector mySize, bool should_draw)
 		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "keepawayball_carrying", tkaballs_carry_change_time, tkaballs_carry, true, "");
 		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "notify_balldropped", 0, tkaballs_dropped, false, "");
 		for (i = 0; i < team_count; ++i)
-			HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, TKA_TAKEN_PIC(i + 1), tkaballs_taken_change_time[i], tkaballs_taken[i], false, "");
+			HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, HUD_Mod_TKA_GetPic(i + 1), tkaballs_taken_change_time[i], tkaballs_taken[i], false, "");
 	}
 	else // >1 balls
 		HUD_Mod_TableWithAR_Draw(myPos, mySize, team_count + 2, 2, HUD_Mod_TKA_DrawItem_Multiple); // aspect ratio 2 (icon & text)
 }
-#undef TKA_TAKEN_PIC
+
+REGISTER_MUTATOR(cl_tka, true);
+
+MUTATOR_HOOKFUNCTION(cl_tka, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(TEAM_KEEPAWAY))
+		return;
+	entity player = M_ARGV(0, entity);
+	if (player && player.gametype_status)
+	{
+		sbt_field_icon_gametype[sbt_field_icon_gametype_set] = HUD_Mod_TKA_GetPic(Team_TeamToIndex(player.team));
+		++sbt_field_icon_gametype_set;
+	}
+}

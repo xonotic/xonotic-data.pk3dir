@@ -187,6 +187,12 @@ MUTATOR_HOOKABLE(DrawScoreboardAccuracy, EV_NO_ARGS);
 /** Return true to not show item pickup stats in the scoreboard */
 MUTATOR_HOOKABLE(DrawScoreboardItemStats, EV_NO_ARGS);
 
+/** Set gametype icons (sbt_field_icon_gametype, sbt_field_icon_gametype_set) */
+#define EV_SetScoreboardGamtypeIcons(i, o) \
+	/** player */		    i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(SetScoreboardGametypeIcons, EV_SetScoreboardGamtypeIcons);
+
 /** Called when drawing info messages, allows adding new info messages. Return true to hide the standard join message */
 #define EV_DrawInfoMessages(i, o) \
 	/** pos */ 			    i(vector, MUTATOR_ARGV_0_vector) \

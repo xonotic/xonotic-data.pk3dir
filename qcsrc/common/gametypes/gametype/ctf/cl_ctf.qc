@@ -214,3 +214,19 @@ MUTATOR_HOOKFUNCTION(cl_ctf, ShowRankings)
 		return true;
 	}
 }
+
+MUTATOR_HOOKFUNCTION(cl_ctf, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(CTF))
+		return;
+	entity player = M_ARGV(0, entity);
+	if (!player)
+		return;
+	int gt_status = player.gametype_status;
+	for (int team_i = 0; gt_status && team_i <= NUM_TEAMS; ++team_i, gt_status >>= 1)
+		if (gt_status & 1)
+		{
+			sbt_field_icon_gametype[sbt_field_icon_gametype_set] = HUD_Mod_CTF_GetPic(team_i, FLAG_STATUS_TAKEN);
+			++sbt_field_icon_gametype_set;
+		}
+}

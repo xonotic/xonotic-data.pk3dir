@@ -193,7 +193,11 @@ string GetSpeedUnit(int speed_unit);
 .int team;
 .int team_size;
 
+// Shared by modicons and scoreboard
 .int gametype_status;
+const int SBT_FIELD_ICON_GAMETYPE_MAX = NUM_TEAMS; ///< Maximum number of .gametype_status icons that can be drawn, for any gametype
+string sbt_field_icon_gametype[SBT_FIELD_ICON_GAMETYPE_MAX];
+int sbt_field_icon_gametype_set;
 
 int binddb;
 

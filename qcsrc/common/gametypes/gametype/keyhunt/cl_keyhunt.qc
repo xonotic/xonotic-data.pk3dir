@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
+#include <common/mutators/base.qh>
 
 int keys, keys_dropped, keys_carrying;
 int team_keys[NUM_TEAMS]; ///< Number of keys each team is holding, not including keys_carrying
@@ -182,4 +183,22 @@ void HUD_Mod_KH(vector myPos, vector mySize, bool should_draw)
 		if (carrying_i >= 0)
 			carrying_i = -1;
 	}
+}
+
+REGISTER_MUTATOR(cl_kh, true);
+
+MUTATOR_HOOKFUNCTION(cl_kh, SetScoreboardGametypeIcons)
+{
+	if (!ISGAMETYPE(KEYHUNT))
+		return;
+	entity player = M_ARGV(0, entity);
+	if (!player)
+		return;
+	int gt_status = player.gametype_status;
+	for (int team_i = 0; gt_status && team_i < NUM_TEAMS; ++team_i, gt_status >>= 1)
+		if (gt_status & 1)
+		{
+			sbt_field_icon_gametype[sbt_field_icon_gametype_set] = HUD_Mod_KH_GetPic(team_i, false);
+			++sbt_field_icon_gametype_set;
+		}
 }
