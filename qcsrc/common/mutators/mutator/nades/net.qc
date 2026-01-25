@@ -66,18 +66,16 @@ REGISTER_NET_LINKED(Nade_Orb)
 NET_HANDLE(Nade_Orb, bool isNew)
 {
 	Net_Accept(Nade_Orb);
-	int sf = ReadByte();
-	if (sf & 1)
-	{
-		this.origin = ReadVector();
-		setorigin(this, this.origin);
-		this.colormod = ReadVector();
-		this.orb_lifetime = ReadByte();
-		this.orb_radius = ReadShort();
-		this.ltime = time + ReadByte() / 10.0;
-		// this.ltime = time + this.orb_lifetime;
+
+	setorigin(this, ReadVector());
+	this.colormod = ReadVector();
+	this.orb_lifetime = ReadFloat();
+	this.orb_radius = ReadShort();
+	//this.ltime = time + ReadByte() / 10.0;
+	this.ltime = time + this.orb_lifetime;
+
+	if (isNew)
 		orb_setup(this);
-	}
 	return true;
 }
 #endif // CSQC
@@ -85,21 +83,12 @@ NET_HANDLE(Nade_Orb, bool isNew)
 #ifdef SVQC
 bool orb_send(entity this, entity to, int sf)
 {
-	int channel = MSG_ENTITY;
-	WriteHeader(channel, Nade_Orb);
-	WriteByte(channel, sf);
-	if (sf & 1)
-	{
-		WriteVector(channel, this.origin);
-
-		WriteVector(channel, this.colormod);
-
-		WriteByte(channel, this.orb_lifetime);
-		//WriteByte(MSG_ENTITY, this.ltime - time + 1);
-		WriteShort(channel, this.orb_radius);
-		// round time delta to a 1/10th of a second
-		WriteByte(channel, (this.ltime - time) * 10.0 + 0.5);
-	}
+	WriteHeader(MSG_ENTITY, Nade_Orb);
+	WriteVector(MSG_ENTITY, this.origin);
+	WriteVector(MSG_ENTITY, this.colormod);
+	WriteFloat(MSG_ENTITY, this.orb_lifetime);
+	WriteShort(MSG_ENTITY, this.orb_radius);
+	//WriteByte(MSG_ENTITY, (this.ltime - time) * 10.0 + 0.5); // round time delta to a 1/10th of a second
 	return true;
 }
 #endif // SVQC

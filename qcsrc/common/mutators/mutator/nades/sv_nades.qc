@@ -94,12 +94,12 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 
 	setmodel(orb, MDL_NADE_ORB);
 	orb.skin = 1;
-	orb.orb_radius = orb_rad; // required for fading
+	orb.orb_radius = bound(1, rint(orb_rad), BITS(16)); // required for fading
 	vector size = '0.5 0.5 0.5' * orb.orb_radius;
 	setsize(orb, -size, size);
 
 	Net_LinkEntity(orb, true, 0, orb_send);
-	orb.SendFlags |= 1;
+	orb.SendFlags = 0xFFFFFF;
 
 	setthink(orb, nades_orb_think);
 	orb.nextthink = time;
