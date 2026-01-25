@@ -545,6 +545,7 @@ METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 #include <common/gametypes/gametype/ctf/ctf.qh>
 #include <common/gametypes/gametype/onslaught/onslaught.qh>
 #include <common/items/item/ammo.qh>
+#include "devastator.qh"
 
 METHOD(MineLayer, describe, string(MineLayer this))
 {
@@ -552,7 +553,7 @@ METHOD(MineLayer, describe, string(MineLayer this))
 	PAGE_TEXT_INIT();
 	PAR(_("The %s places mines on the ground when fired, which detonate and damage enemies if stepped on. "
 	      "Only a couple mines can be placed at any time, and after several seconds they will self-detonate."), COLORED_NAME(this));
-	PAR(_("The secondary fire instantaneously detonates any mines fired by the primary fire, first waiting until you're far enough away."));
+	PAR(_("The secondary fire instantaneously detonates any mines placed by the primary fire, similar to the %s."), COLORED_NAME(WEP_DEVASTATOR));
 	PAR(_("It consumes %s ammo for each mine laid."), COLORED_NAME(ITEM_Rockets));
 	PAR(_("The mines are not launched very far before they hit the ground, so the %s isn't very effective at medium to long ranges. "
 	      "It is often used to protect important areas of the map such as the flag in %s, control points in %s, or checkpoints in %s."), COLORED_NAME(this), COLORED_NAME(MAPINFO_TYPE_CTF), COLORED_NAME(MAPINFO_TYPE_ONSLAUGHT), COLORED_NAME(MAPINFO_TYPE_ASSAULT));
