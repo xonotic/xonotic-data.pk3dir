@@ -7,7 +7,7 @@
 # afkpuz, 2025
 # Alex Talker <alextalker7@gmail.com>, 2014-2015
 # Andrei Stepanov, 2014
-# Andrei Stepanov, 2014-2025
+# Andrei Stepanov, 2014-2026
 # Andrey P <andrey.pyntikov@gmail.com>, 2016
 # Artem Vorotnikov <artem@vorotnikov.me>, 2015
 # berry, 2021,2023
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-24 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2026\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -647,7 +647,7 @@ msgstr "Общее время владения мячом в режиме «Пр
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
 msgstr ""
-"Как часто флаг (Захват флага) или ключ (Охота за ключами) были захвачены"
+"Как часто захватывались флаг (Захват флага) или ключ (Охота за ключами)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -1518,7 +1518,7 @@ msgid ""
 "teams switch roles and the new attacking team wins only if they destroy the "
 "main object within the time the other team took to do it."
 msgstr ""
-"Атакующая команда должна уничтожать объекты, размещённые на карте. Это "
+"Атакующая команда должна уничтожать объекты, размещённые на арене. Это "
 "открывает новые двери или проходы к следующим объектам до тех пор, пока не "
 "будет достигнут и уничтожен главный объект. Команда защиты должна охранять "
 "объекты. Она побеждает, если успешно препятствует атакующей команде в "
@@ -1837,8 +1837,8 @@ msgid ""
 "%s is a 1-vs-1 arena battle to decide the winner, essentially a 2-player "
 "version of %s, making it one of the most competitive gametypes."
 msgstr ""
-"%s — это сражение на арене формата «1 на 1» для определения победителя, по "
-"сути, версия %s для 2-х игроков, что делает этот режим игры одним из самых "
+"%s — это сражение на арене формата «1 на 1» для определения победителя. По "
+"сути, это версия %s для 2-х игроков, что делает этот режим одним из самых "
 "соревновательных."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:13
@@ -2238,6 +2238,10 @@ msgid ""
 "the enemy team core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s — это командный режим игры, похожий на %s, в котором конечной целью "
+"является уничтожение генератора ядра вражеской команды. Чтобы уничтожить "
+"генератор, сначала необходимо захватить контрольные точки на арене "
+"(аналогичные тем, что есть в %s)."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2245,6 +2249,10 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically progress across the map to reach the enemy generator."
 msgstr ""
+"Поскольку ваша команда может захватить контрольную точку только в том "
+"случае, если она соединена с другой контрольной точкой, которая в данный "
+"момент принадлежит вашей команде, вам необходимо систематически продвигаться "
+"по арене, чтобы добраться до генератора противника."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2253,12 +2261,18 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"Контрольная точка захватывается путём входа в неё, что запускает её "
+"автоматическое строительство. Контрольные точки противоположной команды "
+"уничтожаются путём атаки «инфо-бота», который парит над ними, превращая "
+"контрольную точку в нейтральную после её уничтожения."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
 "When in overtime, the enemy's generator will start to decay, at a faster "
 "rate the more control points your team has."
 msgstr ""
+"В дополнительное время генератор противника начнёт разрушаться, и чем больше "
+"контрольных точек у вашей команды, тем быстрее будет происходить разрушение."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -2282,6 +2296,8 @@ msgid ""
 "%s is a gametype similar to %s where players run on a track to be the first "
 "to cross the finish line after a certain number of laps."
 msgstr ""
+"%s — это режим игры, похожий на %s, в котором игроки бегут по трассе, чтобы "
+"первыми пересечь финишную черту после определённого количества кругов."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:11
 #, c-format
@@ -2291,12 +2307,19 @@ msgid ""
 "similar to %s since weapons can't be used to disturb other players but can "
 "still be used to run faster."
 msgstr ""
+"Перед началом настоящей гонки проводится квалификационный забег, по "
+"результатам которого определяется стартовая решётка на основе лучшего "
+"времени круга каждого игрока. Этот этап очень похож на %s, поскольку оружие "
+"нельзя использовать для помехи другим игрокам, но его всё же можно "
+"использовать для увеличения скорости."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:13
 msgid ""
 "During the real race it's possible to shoot other players in order to slow "
 "them down."
 msgstr ""
+"Во время реального забега можно стрелять в других игроков, чтобы замедлить "
+"их."
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race"
@@ -2326,6 +2349,10 @@ msgid ""
 "all hunters or survive until time runs out. The trick lies in the fact that "
 "survivors don't know who else is a survivor."
 msgstr ""
+"%s — это режим игры «охотник-выживший», в котором участвуют две команды. "
+"Цель охотников — уничтожить всех выживших, а цель выживших — уничтожить всех "
+"охотников или выжить до истечения времени. Хитрость заключается в том, что "
+"выжившие не знают, кто ещё является выжившим."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2333,6 +2360,9 @@ msgid ""
 "opposite team, it can be tricky for survivors to figure out their fellow "
 "teammates."
 msgstr ""
+"Поскольку цель обеих команд в основном состоит в том, чтобы уничтожить всех "
+"членов противоположной команды, выжившим может быть сложно определить своих "
+"товарищей по команде."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:14
 msgid ""
@@ -2340,6 +2370,10 @@ msgid ""
 "a bit smaller, and then the round starts with a brief warmup grace period in "
 "which items can be collected but weapons can't be fired."
 msgstr ""
+"Команды выбираются случайным образом в начале раунда, причём команда "
+"охотников немного меньше, а затем раунд начинается с короткого периода "
+"разминки, во время которого можно собирать предметы, но нельзя стрелять из "
+"оружия."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:16
 msgid ""
@@ -2348,6 +2382,10 @@ msgid ""
 "fragged. Extra points are also given to survivors who survive until the "
 "round timer expires."
 msgstr ""
+"Игроки получают по одному очку за каждого убитого игрока противоположной "
+"команды, только если они выживают в раунде, а очки вычитаются за каждого "
+"убитого товарища по команде. Дополнительные очки также начисляются выжившим "
+"игрокам, которые дожидаются окончания раунда."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
@@ -2361,18 +2399,25 @@ msgstr "Выживание"
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
 msgstr ""
+"%s — это командная версия игры %s, в которую играют командами, а не "
+"поодиночке."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:11
 msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
 msgstr ""
+"Подсчёт очков довольно прост: за каждый фраг добавляется одно очко, а за "
+"фраг себя или товарища по команде вычитается одно очко."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
 "Careful team coordination and map control is often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"Тщательная координация действий команды и контроль над ареной часто являются "
+"ключом к победе в матче, и иногда игроки делятся оружием со своими "
+"товарищами по команде."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2388,6 +2433,8 @@ msgid ""
 "%s is the team version of %s, where teams compete to maintain superior "
 "control over the ball."
 msgstr ""
+"%s — это командная версия %s, в которой команды соревнуются за превосходство "
+"в контроле над мячом."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
@@ -2395,6 +2442,8 @@ msgid ""
 "Scoring is similar to in %s, except that points are awarded for frags for "
 "all members of the team of the player holding the ball."
 msgstr ""
+"Подсчёт очков аналогичен %s, за исключением того, что очки начисляются за "
+"фраги всем членам команды игрока, владеющего мячом."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -2745,6 +2794,8 @@ msgstr "Девять людей Мориса"
 msgid ""
 "You can select one of your pieces to move it to one of the surrounding places"
 msgstr ""
+"Вы можете выбрать одну из своих фигур, чтобы переместить её на одно из "
+"соседних полей"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid "You can select one of your pieces to move it anywhere on the board"
@@ -2943,6 +2994,8 @@ msgid ""
 "The Wyvern is a flying reptilian monster that glides around hunting for "
 "fresh prey."
 msgstr ""
+"Виверна — это летающий монстр-рептилия, который парит вокруг в поисках "
+"свежей добычи."
 
 #: qcsrc/common/monsters/monster/wyvern.qc:197
 msgid ""
@@ -2964,6 +3017,8 @@ msgid ""
 "Zombies are the undead remains of deceased soldiers, risen with a ravenous "
 "hunger and no sense of self-preservation."
 msgstr ""
+"Зомби — это нежить, оставшаяся от погибших солдат, воскресшая с неистовым "
+"голодом и без чувства самосохранения."
 
 #: qcsrc/common/monsters/monster/zombie.qc:183
 msgid ""

@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-24 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -11003,12 +11003,14 @@ msgstr "Divin"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
 msgid "Bots against humans"
-msgstr ""
+msgstr "Bots contre humains"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr ""
+"Forcer les humains à jouer dans la même équipe contre une équipe de bots de "
+"taille similaire."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Maplist"
