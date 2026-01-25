@@ -66,40 +66,50 @@ REGISTER_NET_LINKED(Nade_Orb)
 NET_HANDLE(Nade_Orb, bool isNew)
 {
 	Net_Accept(Nade_Orb);
+
 	int sf = ReadByte();
-	if (sf & 1)
-	{
-		this.origin = ReadVector();
-		setorigin(this, this.origin);
-		this.colormod = ReadVector();
-		this.orb_lifetime = ReadByte();
-		this.orb_radius = ReadShort();
-		this.ltime = time + ReadByte() / 10.0;
-		// this.ltime = time + this.orb_lifetime;
+	setorigin(this, ReadVector());
+	this.colormod = ReadVector();
+	this.ltime = ReadFloat();
+	//this.ltime = time + ReadByte() / 10.0;
+	this.orb_lifetime = (sf & SF_NADEORB_LIFETIME_FLOAT)
+		? ReadFloat()
+		: (ReadByte() + 1) * 0.125;
+	this.orb_radius = (sf & SF_NADEORB_RADIUS_FLOAT)
+		? ReadFloat()
+		: (ReadByte() + 1) * 5;
+
+	if (isNew)
 		orb_setup(this);
-	}
 	return true;
 }
 #endif // CSQC
-
 #ifdef SVQC
 bool orb_send(entity this, entity to, int sf)
 {
-	int channel = MSG_ENTITY;
-	WriteHeader(channel, Nade_Orb);
-	WriteByte(channel, sf);
-	if (sf & 1)
-	{
-		WriteVector(channel, this.origin);
+	sf = 0;
+	float byte_lifetime = this.orb_lifetime * 8 - 1; // range: 0.125..32 in increments of 0.125
+	if (byte_lifetime < 0 || byte_lifetime >= BIT(8) || byte_lifetime != floor(byte_lifetime))
+		sf |= SF_NADEORB_LIFETIME_FLOAT;
+	float byte_radius = this.orb_radius * 0.2 - 1; // range: 5..1280 in increments of 5
+	if (byte_radius < 0 || byte_radius >= BIT(8) || byte_radius != floor(byte_radius))
+		sf |= SF_NADEORB_RADIUS_FLOAT;
 
-		WriteVector(channel, this.colormod);
+	WriteHeader(MSG_ENTITY, Nade_Orb);
+	WriteByte(MSG_ENTITY, sf);
+	WriteVector(MSG_ENTITY, this.origin);
+	WriteVector(MSG_ENTITY, this.colormod);
+	WriteFloat(MSG_ENTITY, this.ltime);
+	//WriteByte(MSG_ENTITY, (this.ltime - time) * 10.0 + 0.5); // round time delta to a 1/10th of a second
+	if (sf & SF_NADEORB_LIFETIME_FLOAT)
+		WriteFloat(MSG_ENTITY, this.orb_lifetime);
+	else
+		WriteByte(MSG_ENTITY, rint(byte_lifetime));
+	if (sf & SF_NADEORB_RADIUS_FLOAT)
+		WriteFloat(MSG_ENTITY, this.orb_radius);
+	else
+		WriteByte(MSG_ENTITY, rint(byte_radius));
 
-		WriteByte(channel, this.orb_lifetime);
-		//WriteByte(MSG_ENTITY, this.ltime - time + 1);
-		WriteShort(channel, this.orb_radius);
-		// round time delta to a 1/10th of a second
-		WriteByte(channel, (this.ltime - time) * 10.0 + 0.5);
-	}
 	return true;
 }
 #endif // SVQC

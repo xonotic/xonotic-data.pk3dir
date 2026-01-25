@@ -99,7 +99,6 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	setsize(orb, -size, size);
 
 	Net_LinkEntity(orb, true, 0, orb_send);
-	orb.SendFlags |= 1;
 
 	setthink(orb, nades_orb_think);
 	orb.nextthink = time;
