@@ -41,15 +41,11 @@ REGISTER_NET_LINKED(Electro_Orb)
 NET_HANDLE(Electro_Orb, bool isNew)
 {
 	Net_Accept(Electro_Orb);
-	int sf = ReadByte();
-	if (sf & 1)
-	{
-		this.origin = ReadVector();
-		setorigin(this, this.origin);
-		this.ltime = time + ReadByte() / 10.0;
-		// this.ltime = time + this.orb_lifetime;
-		electro_orb_setup(this);
-	}
+	this.origin = ReadVector();
+	setorigin(this, this.origin);
+	this.ltime = time + ReadByte() / 10.0;
+	// this.ltime = time + this.orb_lifetime;
+	electro_orb_setup(this);
 	return true;
 }
 #endif
@@ -59,14 +55,9 @@ bool electro_orb_send(entity this, entity to, int sf)
 {
 	int channel = MSG_ENTITY;
 	WriteHeader(channel, Electro_Orb);
-	WriteByte(channel, sf);
-	if (sf & 1)
-	{
-		WriteVector(channel, this.origin);
-
-		// round time delta to a 1/10th of a second
-		WriteByte(channel, (this.ltime - time) * 10 + 0.5);
-	}
+	WriteVector(channel, this.origin);
+	// round time delta to a 1/10th of a second
+	WriteByte(channel, (this.ltime - time) * 10 + 0.5);
 	return true;
 }
 #endif
@@ -161,7 +152,7 @@ void W_Electro_Orb_ExplodeOverTime(entity this)
 	set_movetype(newproj, MOVETYPE_NONE);
 
 	Net_LinkEntity(newproj, true, 0, electro_orb_send);
-	newproj.SendFlags |= 1;
+	newproj.SendFlags = 0xFFFFFF;
 
 	// fire the first damage tick immediately
 	getthink(newproj)(newproj);

@@ -7,18 +7,15 @@
 bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
-	WriteByte(MSG_ENTITY, sendflags);
-	if (sendflags & 1) {
-		for (int i = 1; i <= maxclients; i += 8) {
-			int f = 0;
-			entity e = edict_num(i);
-			for (int b = 0; b < 8; ++b, e = nextent(e)) {
-				if (eliminatedPlayers.isEliminated(e)) {
-					f |= BIT(b);
-				}
+	for (int i = 1; i <= maxclients; i += 8) {
+		int f = 0;
+		entity e = edict_num(i);
+		for (int b = 0; b < 8; ++b, e = nextent(e)) {
+			if (eliminatedPlayers.isEliminated(e)) {
+				f |= BIT(b);
 			}
-			WriteByte(MSG_ENTITY, f);
 		}
+		WriteByte(MSG_ENTITY, f);
 	}
 	return true;
 }

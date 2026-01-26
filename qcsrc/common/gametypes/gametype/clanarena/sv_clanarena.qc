@@ -277,7 +277,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 	if (time <= game_starttime) // reset on game restart, not on round start
 		player.float2int_decimal_fld = 0;
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ForbidSpawn)
@@ -307,7 +307,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 	}
 
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
@@ -386,7 +386,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 	return true;
 }
 
@@ -421,7 +421,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 		player.would_spectate = observe_blocked_if_eliminated; // if blocked from observing force to spectate now
 	}
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 	if (!INGAME(player))
 		return false;  // allow team reset
 	return true;  // prevent team reset

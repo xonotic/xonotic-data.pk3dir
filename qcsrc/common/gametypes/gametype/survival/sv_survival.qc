@@ -280,7 +280,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	player.survival_validkills = 0;
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 MUTATOR_HOOKFUNCTION(surv, ForbidSpawn)
@@ -310,7 +310,7 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 	}
 
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
@@ -383,7 +383,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
 	{
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 		if (IS_BOT_CLIENT(frag_target))
 			bot_clearqueue(frag_target);
 	}
@@ -418,7 +418,7 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 	if (INGAME(player))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 	if (!INGAME(player))
 	{
 		player.survival_validkills = 0;

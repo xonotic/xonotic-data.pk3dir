@@ -46,7 +46,7 @@ void freezetag_count_alive_players()
 		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
 
-	eliminatedPlayers.SendFlags |= 1;
+	eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 bool freezetag_CheckTeams()
@@ -556,7 +556,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
 {
-	eliminatedPlayers.SendFlags |= 1;
+	eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerAnim)
