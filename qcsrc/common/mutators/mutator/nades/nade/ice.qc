@@ -23,7 +23,7 @@ void nade_ice_think(entity this)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			Send_Effect_Except(EFFECT_NADE_EXPLODE, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
+			Send_Effect_Core(EFFECT_NADE_EXPLODE, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, -1, -1, -1, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			nade_normal_boom(this);
@@ -36,7 +36,7 @@ void nade_ice_think(entity this)
 
 	// gaussian
 	float randomr = random();
-	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
+	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_ice_radius;
 	float randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
@@ -46,7 +46,7 @@ void nade_ice_think(entity this)
 
 	if (time >= this.nade_special_time)
 	{
-		this.nade_special_time = time + 0.7;
+		this.nade_special_time = time + 0.3;
 
 		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 		Send_Effect(EFFECT_ICEFIELD, this.origin, '0 0 0', 1);
@@ -54,7 +54,7 @@ void nade_ice_think(entity this)
 
 	float current_freeze_time = this.ltime - time - 0.1;
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_ice_radius, it != this && it.takedamage
 	&& (IS_PLAYER(it) || IS_MONSTER(it)) && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
 	&& (!it.revival_time || ((time - it.revival_time) >= 1.5))
 	&& !STAT(FROZEN, it) && !StatusEffects_active(STATUSEFFECT_Frozen, it),
@@ -77,6 +77,8 @@ void nade_ice_boom(entity this)
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, nade_ice_think);
 	fountain.nextthink = time;

@@ -15,8 +15,13 @@ void orb_draw(entity this)
 	if (dt <= 0)
 		return;
 
-	this.alpha = (this.ltime - time) / this.orb_lifetime;
-	this.scale = min((1 - this.alpha) * this.orb_lifetime * 4, 1) * this.orb_radius;
+	float age = time - (this.ltime - this.orb_lifetime);
+	this.alpha = sqrt((this.ltime - time) / this.orb_lifetime);
+	if(this.scale > 0.01)
+		this.avelocity *= 24 ** (dt / this.orb_lifetime); // speed up, frametime independent
+	this.scale = (age >= 0.25)
+		? this.orb_radius
+		: this.orb_radius * (-16 * age * (age - 0.5)); // increases at decreasing pace up to this.orb_radius, as age -> 0.25
 	this.angles += dt * this.avelocity;
 }
 
@@ -29,7 +34,7 @@ void orb_draw2d(entity this)
 	if (boxesoverlap(view_origin - '1 1 1', view_origin + '1 1 1', this.absmin, this.absmax)) // nade orbs actually act as a cube
 	{
 		orb_drawtime = time; // prevent rendering more than one of these per frame!
-		float orb_alpha = 0.65 * (this.ltime - time) / this.orb_lifetime;
+		float orb_alpha = this.alpha * 0.6;
 		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), this.colormod, autocvar_hud_colorflash_alpha * orb_alpha, DRAWFLAG_ADDITIVE);
 	}
 }
@@ -55,7 +60,8 @@ void orb_setup(entity e)
 	e.solid = SOLID_NOT;
 	e.drawmask = MASK_NORMAL;
 	e.scale = 0.01;
-	e.avelocity = '7 0 11';
+	float spin_dir = (2 * M_PI) * random();
+	e.avelocity = '6 0 0' * sin(spin_dir) + '0 0 6' * cos(spin_dir);
 	e.renderflags |= RF_ADDITIVE;
 }
 #endif // CSQC

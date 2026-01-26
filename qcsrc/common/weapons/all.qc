@@ -717,7 +717,7 @@ void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector sh
 	// don't show an exterior muzzle effect for the off-hand
 	if (weaponslot(weaponentity) == 0)
 	{
-		Send_Effect_Except(thiswep.m_muzzleeffect, shotorg, shotdir * 1000, 1, '0 0 0', '0 0 0', actor);
+		Send_Effect_Core(thiswep.m_muzzleeffect, shotorg, shotdir * 1000, 1, '0 0 0', '0 0 0', -1, -1, -1, actor);
 
 		if (thiswep.m_muzzlemodel != MDL_Null)
 		{
