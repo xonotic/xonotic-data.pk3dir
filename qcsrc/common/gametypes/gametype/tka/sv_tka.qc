@@ -25,6 +25,29 @@ float autocvar_g_tkaball_respawntime;
 int autocvar_g_tkaball_trail_color;
 int autocvar_g_tkaball_tracking;
 
+bool tka_BallStatuses_SendEntity(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TKA_BALLSTATUSES);
+	WriteByte(MSG_ENTITY, sf);
+	if (sf & SF_TKA_BALLS)
+	{
+		WriteShort(MSG_ENTITY, max(1, autocvar_g_tkaball_count));
+		IL_EACH(g_tkaballs, true, WriteByte(MSG_ENTITY, (it.owner ? etof(it.owner) : 0)));
+	}
+	return true;
+}
+
+entity tkaballStatuses;
+void tka_BallStatuses_Init()
+{
+	if (tkaballStatuses)
+	{
+		backtrace("Can't spawn tkaballStatuses again!");
+		return;
+	}
+	Net_LinkEntity(tkaballStatuses = new_pure(tkaballStatuses), false, 0, tka_BallStatuses_SendEntity);
+}
+
 bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
 	if(view.ballcarried && IS_SPEC(player))
@@ -156,6 +179,7 @@ void tka_TouchEvent(entity this, entity toucher) // runs any time that the ball 
 	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, toucher.netname);
 	Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
 	sound(this.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
 
 	// scoring
 	GameRules_scoring_add(toucher, TKA_PICKUPS, 1);
@@ -244,6 +268,7 @@ void tka_RemoveBalls()
 			WaypointSprite_DetachCarrier(it);
 		delete(it);
 	});
+	tkaballStatuses.SendFlags = SF_TKA_RESET;
 }
 
 void tka_SpawnBalls()
@@ -276,6 +301,7 @@ void tka_SpawnBalls()
 		++i;
 	}
 	while (i < autocvar_g_tkaball_count);
+	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
 }
 
 void tka_Handler_CheckBall(entity this)
@@ -423,8 +449,12 @@ MUTATOR_HOOKFUNCTION(tka, PlayerDies)
 			GameRules_scoring_add_team(frag_attacker, SCORE, autocvar_g_tka_score_killac);
 	}
 
-	while (frag_target.ballcarried)
+	if (!frag_target.ballcarried)
+		return;
+	do
 		tka_DropEvent(frag_target); // a player with ball(s) has died, drop them
+	while (frag_target.ballcarried);
+	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
 }
 
 MUTATOR_HOOKFUNCTION(tka, GiveFragsForKill)
@@ -439,35 +469,6 @@ MUTATOR_HOOKFUNCTION(tka, Scores_CountFragsRemaining)
 	return !autocvar_g_tka_score_timepoints;
 }
 
-MUTATOR_HOOKFUNCTION(tka, PlayerPreThink)
-{
-	entity player = M_ARGV(0, entity);
-
-	// clear the item used for the ball in keepaway
-	STAT(TKA_BALLSTATUS, player) = 0;
-
-	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
-	if(player.ballcarried)
-		STAT(TKA_BALLSTATUS, player) |= TKA_BALL_CARRYING;
-
-	IL_EACH(g_tkaballs, true,
-	{
-		if(!it.owner)
-			STAT(TKA_BALLSTATUS, player) |= TKA_BALL_DROPPED;
-		else
-		{
-			// TODO: teamless carrier?
-			switch(it.owner.team)
-			{
-				case NUM_TEAM_1: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_RED; break;
-				case NUM_TEAM_2: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_BLUE; break;
-				case NUM_TEAM_3: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_YELLOW; break;
-				case NUM_TEAM_4: STAT(TKA_BALLSTATUS, player) |= TKA_BALL_TAKEN_PINK; break;
-			}
-		}
-	});
-}
-
 MUTATOR_HOOKFUNCTION(tka, PlayerUseKey)
 {
 	entity player = M_ARGV(0, entity);
@@ -476,6 +477,7 @@ MUTATOR_HOOKFUNCTION(tka, PlayerUseKey)
 	if(player.ballcarried)
 	{
 		tka_DropEvent(player);
+		tkaballStatuses.SendFlags |= SF_TKA_BALLS;
 		return true;
 	}
 }
@@ -531,16 +533,24 @@ MUTATOR_HOOKFUNCTION(tka, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	while (player.ballcarried)
+	if (!player.ballcarried)
+		return;
+	do
 		tka_DropEvent(player); // a player with ball(s) has left the match, drop them
+	while (player.ballcarried);
+	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
 }
 
 MUTATOR_HOOKFUNCTION(tka, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	while (player.ballcarried)
+	if (!player.ballcarried)
+		return;
+	do
 		tka_DropEvent(player); // a player with ball(s) has left the match, drop them
+	while (player.ballcarried);
+	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
 }
 
 MUTATOR_HOOKFUNCTION(tka, PlayerPowerups)
@@ -594,16 +604,12 @@ MUTATOR_HOOKFUNCTION(tka, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
 
-	while (frag_target.ballcarried)
+	if (!frag_target.ballcarried)
+		return;
+	do
 		tka_DropEvent(frag_target);
-}
-
-MUTATOR_HOOKFUNCTION(tka, SpectateCopy)
-{
-	entity spectatee = M_ARGV(0, entity);
-	entity client = M_ARGV(1, entity);
-
-	STAT(TKA_BALLSTATUS, client) = STAT(TKA_BALLSTATUS, spectatee);
+	while (frag_target.ballcarried);
+	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
 }
 
 MUTATOR_HOOKFUNCTION(tka, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
@@ -633,4 +639,6 @@ void tka_Initialize()
 	entity tka_Handler = new_pure(tka_Handler);
 	setthink(tka_Handler, tka_Handler_CheckBall);
 	InitializeEntity(tka_Handler, tka_Handler_CheckBall, INITPRIO_GAMETYPE);
+
+	tka_BallStatuses_Init();
 }

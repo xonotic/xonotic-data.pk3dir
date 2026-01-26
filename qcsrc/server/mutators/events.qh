@@ -213,6 +213,12 @@ MUTATOR_HOOKABLE(TeamBalance_GetPlayerForTeamSwitch,
     /**/
 MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
 
+/** calls after client's spectatee is updated, including when they become an observer */
+#define EV_SpectateUpdated(i, o) \
+    /** client      */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(SpectateUpdated, EV_SpectateUpdated);
+
 /** called when formatting a chat message to replace fancy functions */
 #define EV_FormatMessage(i, o) \
     /** player        */ i(entity, MUTATOR_ARGV_0_entity) \

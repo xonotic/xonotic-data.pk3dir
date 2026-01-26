@@ -232,7 +232,7 @@ vector CSQCPlayer_ApplySmoothing(entity this, vector v)
 			v.z = stairsmoothz = bound(v.z, stairsmoothz - smoothtime * autocvar_cl_stairsmoothspeed, v.z + PHYS_STEPHEIGHT(this));
 	}
 
-	float viewheight = bound(0, (time - smooth_prevtime) / max(0.0001, autocvar_cl_smoothviewheight), 1);
+	float viewheight = (autocvar_cl_smoothviewheight <= 0 ? 1 : bound(0, (time - smooth_prevtime) / autocvar_cl_smoothviewheight, 1));
 	viewheightavg = viewheightavg * (1 - viewheight) + this.view_ofs.z * viewheight;
 	v.z += viewheightavg;
 

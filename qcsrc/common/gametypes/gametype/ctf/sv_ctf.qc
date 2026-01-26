@@ -92,6 +92,67 @@ bool autocvar_g_ctf_reverse;
 float autocvar_g_ctf_dropped_capture_delay;
 float autocvar_g_ctf_dropped_capture_radius;
 
+bool ctf_FlagStatuses_SendEntity(entity this, entity to, int sf)
+{
+	entity pl = (IS_SPEC(to) ? to.enemy : to);
+	// these bits are just used to trigger networking, the real values are packed into sf
+	sf &= ~(SF_CTF_ONEFLAG | SF_CTF_STALEMATE | SF_CTF_SHIELDED);
+	sf &= ~SF_CTF_SPEC;
+	if (IS_SPEC(to))
+		sf |= SF_CTF_SPEC;
+	if (ctf_stalemate)
+		sf |= SF_CTF_STALEMATE;
+	if (pl.ctf_captureshielded)
+		sf |= SF_CTF_SHIELDED;
+	int flags_away = 0; // we network only flags away from base
+	IL_EACH(g_flags, true,
+	{
+		if (it.ctf_status != FLAG_BASE)
+			++flags_away;
+		if (!it.team) // neutral flag found
+			sf |= SF_CTF_ONEFLAG;
+	});
+
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_CTF_FLAGSTATUSES);
+	WriteByte(MSG_ENTITY, sf);
+	if (sf & SF_CTF_SPEC)
+		WriteByte(MSG_ENTITY, etof(pl));
+	if (sf & SF_CTF_FLAGS)
+	{
+		WriteShort(MSG_ENTITY, flags_away);
+		// for each away flag, network the ownership then the team index
+		IL_EACH(g_flags, it.ctf_status != FLAG_BASE,
+		{
+			switch (it.ctf_status)
+			{
+				default:
+				case FLAG_DROPPED:
+					WriteByte(MSG_ENTITY, 0);
+					break;
+				case FLAG_CARRY:
+					WriteByte(MSG_ENTITY, etof(it.owner));
+					break;
+				case FLAG_PASSING:
+					WriteByte(MSG_ENTITY, etof(it.pass_sender)); // it hasn't reached the target yet, the sender still owns it
+					break;
+			}
+			WriteByte(MSG_ENTITY, (it.team ? Team_TeamToIndex(it.team) : 0)); // will be 0 for neutral flags
+		});
+	}
+	return true;
+}
+
+entity flagStatuses;
+void ctf_FlagStatuses_Init()
+{
+	if (flagStatuses)
+	{
+		backtrace("Can't spawn flagStatuses again!");
+		return;
+	}
+	Net_LinkEntity(flagStatuses = new_pure(flagStatuses), false, 0, ctf_FlagStatuses_SendEntity);
+}
+
 void ctf_FakeTimeLimit(entity e, float t)
 {
 	msg_entity = e;
@@ -313,6 +374,7 @@ void ctf_CaptureShield_Update(entity player, bool wanted_status)
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((updated_status) ? CENTER_CTF_CAPTURESHIELD_SHIELDED : CENTER_CTF_CAPTURESHIELD_FREE));
 		player.ctf_captureshielded = updated_status;
+		flagStatuses.SendFlags |= SF_CTF_SHIELDED;
 	}
 }
 
@@ -422,6 +484,8 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 		flag.pass_sender = NULL;
 		flag.pass_target = NULL;
 	}
+
+	flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
 void ctf_Handle_Retrieve(entity flag, entity player)
@@ -473,6 +537,8 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.pass_distance = 0;
 	flag.pass_sender = NULL;
 	flag.pass_target = NULL;
+
+	flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
 void ctf_Handle_Throw(entity player, entity receiver, int droptype)
@@ -586,6 +652,8 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 	// captureshield
 	ctf_CaptureShield_Update(player, 0); // shield player from picking up flag
+
+	flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
 #if 0
@@ -841,6 +909,8 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
 	ctf_FlagcarrierWaypoints(player);
 	WaypointSprite_Ping(player.wps_flagcarrier);
+
+	flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
 
@@ -931,6 +1001,7 @@ void ctf_CheckStalemate()
 	else
 		stale_flags = (stale_red_flags >= 1) + (stale_blue_flags >= 1) + (stale_yellow_flags >= 1) + (stale_pink_flags >= 1);
 
+	bool ctf_stalemate_prev = ctf_stalemate;
 	if(ctf_oneflag && stale_flags == 1)
 		ctf_stalemate = true;
 	else if(stale_flags >= 2)
@@ -939,6 +1010,9 @@ void ctf_CheckStalemate()
 		{ ctf_stalemate = false; wpforenemy_announced = false; }
 	else if(stale_flags < 2 && autocvar_g_ctf_stalemate_endcondition == 1)
 		{ ctf_stalemate = false; wpforenemy_announced = false; }
+
+	if (ctf_stalemate != ctf_stalemate_prev)
+		flagStatuses.SendFlags |= SF_CTF_STALEMATE;
 
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
 	if(ctf_stalemate)
@@ -1292,6 +1366,8 @@ void ctf_RespawnFlag(entity flag)
 
 	if(flag.classname == "phantomflag")
 		delete(flag);
+
+	flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
 void ctf_Reset(entity this)
@@ -1467,6 +1543,8 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	}
 
 	InitializeEntity(flag, ctf_DelayedFlagSetup, INITPRIO_SETLOCATION);
+
+	flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
 
@@ -2224,83 +2302,6 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	// initially clear items so they can be set as necessary later.
-	STAT(OBJECTIVE_STATUS, player) &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
-						   | CTF_BLUE_FLAG_CARRYING		| CTF_BLUE_FLAG_TAKEN		| CTF_BLUE_FLAG_LOST
-						   | CTF_YELLOW_FLAG_CARRYING	| CTF_YELLOW_FLAG_TAKEN 	| CTF_YELLOW_FLAG_LOST
-						   | CTF_PINK_FLAG_CARRYING 	| CTF_PINK_FLAG_TAKEN		| CTF_PINK_FLAG_LOST
-						   | CTF_NEUTRAL_FLAG_CARRYING	| CTF_NEUTRAL_FLAG_TAKEN	| CTF_NEUTRAL_FLAG_LOST
-						   | CTF_FLAG_NEUTRAL | CTF_SHIELDED | CTF_STALEMATE);
-
-	// do an iteration for each team (plus neutral) and get the flag for that team
-	// this allows selection of the "best" flag for each team (e.g. the carried one)
-	for(int j = 0; j <= AVAILABLE_TEAMS; ++j)
-	{
-		int teamnumber = (j > 0) ? Team_IndexToTeam(j) : 0;
-		entity bestflag = NULL;
-		int bestprio = 0;
-
-		IL_EACH(g_flags, it.team == teamnumber,
-		{
-			// if there's a neutral flag in the map, enable oneflag display
-			if(it.team == 0)
-				STAT(OBJECTIVE_STATUS, player) |= CTF_FLAG_NEUTRAL;
-
-			// use a priority system to decide the preferred flag
-			int prio = 0;
-			if(it.owner == player || it.pass_sender == player)
-				prio = 3;
-			else if(it.ctf_status == FLAG_DROPPED)
-				prio = 2;
-			else if(it.ctf_status != FLAG_BASE)
-				prio = 1;
-
-			if(!bestflag || prio > bestprio)
-			{
-				bestflag = it;
-				bestprio = prio;
-			}
-		});
-
-		if(bestflag)
-		{
-			int t = 0, t2 = 0, t3 = 0;
-			switch(bestflag.team)
-			{
-				case NUM_TEAM_1:	t = CTF_RED_FLAG_CARRYING;		t2 = CTF_RED_FLAG_TAKEN;		t3 = CTF_RED_FLAG_LOST; break;
-				case NUM_TEAM_2:	t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; break;
-				case NUM_TEAM_3:	t = CTF_YELLOW_FLAG_CARRYING;	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; break;
-				case NUM_TEAM_4:	t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; break;
-				case 0:				t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; break;
-			}
-
-			switch(bestflag.ctf_status)
-			{
-				case FLAG_PASSING:
-				case FLAG_CARRY:
-				{
-					if((bestflag.owner == player) || (bestflag.pass_sender == player))
-						STAT(OBJECTIVE_STATUS, player) |= t; // carrying: player is currently carrying the flag
-					else
-						STAT(OBJECTIVE_STATUS, player) |= t2; // taken: someone else is carrying the flag
-					break;
-				}
-				case FLAG_DROPPED:
-				{
-					STAT(OBJECTIVE_STATUS, player) |= t3; // lost: the flag is dropped somewhere on the map
-					break;
-				}
-			}
-		}
-	}
-
-	// item for stopping players from capturing the flag too often
-	if(player.ctf_captureshielded)
-		STAT(OBJECTIVE_STATUS, player) |= CTF_SHIELDED;
-
-	if(ctf_stalemate)
-		STAT(OBJECTIVE_STATUS, player) |= CTF_STALEMATE;
-
 	ctf_CaptureShield_Update(player, 1);
 
 	// update the health of the flag carrier waypointsprite
@@ -2370,15 +2371,21 @@ MUTATOR_HOOKFUNCTION(ctf, GiveFragsForKill)
 
 void ctf_RemovePlayer(entity player)
 {
-	if(player.flagcarried)
-		{ ctf_Handle_Throw(player, NULL, DROP_NORMAL); }
+	bool resend = false;
+	if (player.flagcarried)
+	{
+		ctf_Handle_Throw(player, NULL, DROP_NORMAL);
+		resend = true;
+	}
 
 	IL_EACH(g_flags, true,
 	{
-		if(it.pass_sender == player) { it.pass_sender = NULL; }
-		if(it.pass_target == player) { it.pass_target = NULL; }
-		if(it.ctf_dropper == player) { it.ctf_dropper = NULL; }
+		if (it.pass_sender == player) { it.pass_sender = NULL; resend = true; }
+		if (it.pass_target == player) { it.pass_target = NULL; }
+		if (it.ctf_dropper == player) { it.ctf_dropper = NULL; }
 	});
+	if (resend)
+		flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, MakePlayerObserver)
@@ -2403,6 +2410,18 @@ MUTATOR_HOOKFUNCTION(ctf, ClientConnect)
 	entity player = M_ARGV(0, entity);
 
 	race_SendAll(player, true);
+}
+
+MUTATOR_HOOKFUNCTION(ctf, SpectateUpdated)
+{
+	entity player = M_ARGV(0, entity);
+
+	// No need to re-network every flag, but do need to re-network:
+	// SF_CTF_SPEC_CHANGED: the etof of who we're spectating, since player_currententnum (CSQC) is slow to update
+	// SF_CTF_SHIELDED: need to know if the player we're spectating is shielded
+	//   The client should only know if they (or the player they're spectating) are shielded
+	if (IS_REAL_CLIENT(player))
+		flagStatuses.SendFlags |= SF_CTF_SPEC_CHANGED | SF_CTF_SHIELDED;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, GetPressedKeys)
@@ -2931,4 +2950,5 @@ void ctf_Initialize()
 	ctf_captureshield_force = autocvar_g_ctf_shield_force;
 
 	InitializeEntity(NULL, ctf_DelayedInit, INITPRIO_GAMETYPE);
+	ctf_FlagStatuses_Init();
 }

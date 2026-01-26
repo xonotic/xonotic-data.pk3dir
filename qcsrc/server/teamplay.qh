@@ -1,5 +1,7 @@
 #pragma once
 
+#include <common/teams.qh>
+
 int autocvar_teamplay_mode;
 
 bool autocvar_teamplay_lockonrestart;
@@ -15,6 +17,12 @@ string autocvar_g_forced_team_otherwise;
 bool lockteams;
 
 .int team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+
+.float m_team_score; ///< The score of the team.
+.int m_num_players_alive; ///< Number of alive players in a team.
+.int m_num_owned_items; ///< Number of items owned by a team.
+
+entity g_team_entities[NUM_TEAMS]; ///< Holds global team entities.
 
 
 // ========================== Global teams API ================================
@@ -34,52 +42,14 @@ entity Team_GetTeam(int team_num);
 
 // ========================= Team specific API ================================
 
-/// \brief Returns the score of the team.
-/// \param[in] team_ent Team entity.
-/// \return Score of the team.
-float Team_GetTeamScore(entity team_ent);
-
-/// \brief Sets the score of the team.
-/// \param[in,out] team_ent Team entity.
-/// \param[in] score Score to set.
-void Team_SetTeamScore(entity team_ent, float score);
-
-/// \brief Returns the number of alive players in a team.
-/// \param[in] team_ent Team entity.
-/// \return Number of alive players in a team.
-int Team_GetNumberOfAlivePlayers(entity team_ent);
-
-/// \brief Sets the number of alive players in a team.
-/// \param[in,out] team_ent Team entity.
-/// \param[in] number Number of players to set.
-void Team_SetNumberOfAlivePlayers(entity team_ent, int number);
-
 /// \brief Returns the winner team.
 /// \return Winner team or 0 if 2 or more teams have alive players or -1 if no team has any alive players.
 int Team_GetWinnerAliveTeam();
-
-/// \brief Returns the number of alive teams.
-/// \return Number of alive teams.
-int Team_GetNumberOfAliveTeams();
 
 /// \brief Returns the winner team.
 /// \param[in] min_owned_items Minimum number of items the winner team must have.
 /// \return Winner team or 0 if 2 or more teams own items or -1 if no team own any items.
 int Team_GetWinnerTeam_WithOwnedItems(int min_owned_items);
-
-/// \brief Returns the number of items owned by a team.
-/// \param[in] team_ent Team entity.
-/// \return Number of items owned by a team.
-int Team_GetNumberOfOwnedItems(entity team_ent);
-
-/// \brief Sets the number of items owned by a team.
-/// \param[in,out] team_ent Team entity.
-/// \param[in] number Number of items to set.
-void Team_SetNumberOfOwnedItems(entity team_ent, int number);
-
-/// \brief Returns the number of teams that own items.
-/// \return Number of teams that own items.
-int Team_GetNumberOfTeamsWithOwnedItems();
 
 // ======================= Entity specific API ================================
 
