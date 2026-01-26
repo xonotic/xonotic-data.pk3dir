@@ -15,15 +15,15 @@ void orb_draw(entity this)
 
 	if (dt > 0)
 	{
-		this.avelocity *= 24 ** (dt / this.orb_lifetime); // speed up, frametime independent
+		this.avelocity *= 24 ** (dt / this.lifetime); // speed up, frametime independent
 		this.angles += dt * this.avelocity;
 	}
 	if (age > 0)
 	{
-		this.scale = this.orb_radius * (age >= this.animstate_endtime
+		this.scale = this.radius * (age >= this.animstate_endtime
 			? 1
-			: (this.height * age * (age - this.animstate_endtime * 2))); // increases at decreasing pace up to .orb_radius, as age -> .animstate_endtime
-		this.alpha = sqrt(1 - age / this.orb_lifetime); // slowly fade out
+			: (this.height * age * (age - this.animstate_endtime * 2))); // increases at decreasing pace up to .radius, as age -> .animstate_endtime
+		this.alpha = sqrt(1 - age / this.lifetime); // slowly fade out
 	}
 }
 
@@ -45,16 +45,16 @@ void orb_setup(entity e)
 {
 	e.spawntime = time;
 	e.update_time = time; // used to calculate dt
-	e.animstate_endtime = 0.25 * min(e.orb_lifetime, 1); // when the orb will stop expanding
+	e.animstate_endtime = 0.25 * min(e.lifetime, 1); // when the orb will stop expanding
 	e.height = -4 * (2 * e.animstate_endtime) ** -2; // amplitude used in scaling calculation
 
 	setmodel(e, MDL_NADE_ORB);
 	e.skin = 1;
 
 	float model_radius = e.maxs.x;
-	vector size = '0.5 0.5 0.5' * e.orb_radius;
+	vector size = '0.5 0.5 0.5' * e.radius;
 	setsize(e, -size, size);
-	e.orb_radius *= 0.6 / model_radius;
+	e.radius *= 0.6 / model_radius;
 
 	e.draw = orb_draw;
 	e.draw2d = orb_draw2d;
@@ -80,8 +80,8 @@ NET_HANDLE(Nade_Orb, bool isNew)
 
 	setorigin(this, ReadVector());
 	this.colormod = ReadVector();
-	this.orb_lifetime = ReadFloat();
-	this.orb_radius = ReadShort();
+	this.lifetime = ReadFloat();
+	this.radius = ReadShort();
 
 	if (isNew)
 		orb_setup(this);
@@ -95,8 +95,8 @@ bool orb_send(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, Nade_Orb);
 	WriteVector(MSG_ENTITY, this.origin);
 	WriteVector(MSG_ENTITY, this.colormod);
-	WriteFloat(MSG_ENTITY, this.orb_lifetime);
-	WriteShort(MSG_ENTITY, this.orb_radius);
+	WriteFloat(MSG_ENTITY, this.lifetime);
+	WriteShort(MSG_ENTITY, this.radius);
 	return true;
 }
 #endif // SVQC
