@@ -2461,10 +2461,13 @@ vector Scoreboard_Spectators_Draw(vector pos)
 	return pos;
 }
 
-string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
+string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit, bool is_last)
 {
 	string s_label = (teamplay) ? teamscores_label(ts_primary) : scores_label(ps_primary);
 	int s_flags = (teamplay) ? teamscores_flags(ts_primary) : scores_flags(ps_primary);
+
+	if (autocvar_hud_panel_scoreboard_minimal && !is_last) // only add the label at the end (is_last) if minimal
+		return strcat((is_leadlimit ? "^5+" : "^5"), ScoreString(s_flags, limit, 0));
 	return strcat("^5", sprintf((is_leadlimit ? _("+%s %s") : _("%s %s")), ScoreString(s_flags, limit, 0),
 		(s_label == "score") ? CTX(_("SCO^points")) :
 		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label)));
@@ -2624,13 +2627,14 @@ void Scoreboard_Draw(bool should_draw)
 			str = strcat(str, "^3", count_minutes(floor(tl)));
 		if (!gametype.m_hidelimits)
 		{
+			bool draw_ll = (ll > 0 && (ll < fl || fl <= 0));
 			if (fl > 0)
 			{
 				if (tl > 0)
 					str = strcat(str, "^7 / "); // delimiter
-				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
+				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false, !draw_ll));
 			}
-			if (ll > 0 && (ll < fl || fl <= 0))
+			if (draw_ll)
 			{
 				if (tl > 0 || fl > 0)
 				{
@@ -2640,7 +2644,7 @@ void Scoreboard_Draw(bool should_draw)
 					else
 						str = strcat(str, "^7 / ");
 				}
-				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true));
+				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true, true));
 			}
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
@@ -2649,7 +2653,10 @@ void Scoreboard_Draw(bool should_draw)
 			str = "";
 		else
 			str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
-		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
+		if (autocvar_hud_panel_scoreboard_minimal)
+			str = strcat("^2", mi_shortname, "    ", str);
+		else
+			str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
 	// End of Game Info Section
