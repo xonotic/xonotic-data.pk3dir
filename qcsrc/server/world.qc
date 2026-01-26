@@ -669,7 +669,7 @@ void GameplayMode_DelayedInit(entity this)
 	// at this stage team entities are spawned, teamplay contains the number of them
 
 	if(!scores_initialized)
-		ScoreRules_generic();
+		GameRules_scoring(teamplay_bitmask, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {});
 
 	if (warmup_stage >= 0 && autocvar_g_maxplayers >= 0)
 		return;
@@ -1565,7 +1565,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(teamplay)
 	{
-		for (int i = 1; i < 5; ++i)
+		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 		{
 			Team_SetTeamScore(Team_GetTeamFromIndex(i),
 				TeamScore_GetCompareValue(Team_IndexToTeam(i)));
@@ -1650,7 +1650,7 @@ float WinningCondition_RanOutOfSpawns()
 	if(!some_spawn_has_been_used)
 		return WINNING_NO;
 
-	for (int i = 1; i < 5; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetTeamScore(Team_GetTeamFromIndex(i), 0);
 	}
@@ -1695,7 +1695,7 @@ float WinningCondition_RanOutOfSpawns()
 		entity balance = TeamBalance_CheckAllowedTeams(NULL);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			for (int j = 1; j <= NUM_TEAMS; ++j)
+			for (int j = 1; j <= AVAILABLE_TEAMS; ++j)
 			{
 				if (t == j)
 				{
