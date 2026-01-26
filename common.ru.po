@@ -2462,6 +2462,10 @@ msgid ""
 "differences being that %s is a round-based gametype, and of course the "
 "scoring system differences."
 msgstr ""
+"%s — это командный режим с постоянным действием, основанный на %s, в котором "
+"используется та же система подсчёта очков. Он имеет много общего с %s, но "
+"одно из основных отличий заключается в том, что %s — это режим, основанный "
+"на раундах, и, конечно же, в системе подсчёта очков."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -2469,12 +2473,17 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "other team-based gametypes."
 msgstr ""
+"Поскольку в игре нет раундов, хаос не прекращается ни на минуту. Вследствие "
+"этой беспорядочной природы командная коммуникация менее важна в этом режиме "
+"игры, чем в других командных режимах."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
 msgstr ""
+"Сразитесь вместе со своей командой за максимальный нанесённый урон и фраги в "
+"этом хаотическом побоище"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -2483,17 +2492,17 @@ msgstr "Командный беспредел"
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr ""
+msgstr "Тип патронов %s предназначен для:"
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
 msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
-msgstr ""
+msgstr "По умолчанию подбор даёт вам %s патронов, но не больше чем %s."
 
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
 msgid "The %s ammo type is used by the %s."
-msgstr ""
+msgstr "Тип патронов %s предназначен для %s."
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
@@ -2518,7 +2527,7 @@ msgstr "Топливо"
 #: qcsrc/common/items/item/armor.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s armor."
-msgstr ""
+msgstr "По умолчанию подбор даёт вам %s брони."
 
 #: qcsrc/common/items/item/armor.qc:13
 #, c-format
@@ -2526,6 +2535,8 @@ msgid ""
 "The %s provides you a small amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"При поднятии %s даёт вам небольшую защиту, поглощая урон от попаданий, пока "
+"полностью не израсходуется."
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
@@ -2533,6 +2544,8 @@ msgid ""
 "The %s provides you a medium amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"При поднятии %s даёт вам среднюю защиту, поглощая урон от попаданий, пока "
+"полностью не израсходуется."
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
@@ -2540,6 +2553,8 @@ msgid ""
 "The %s provides you a large amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"При поднятии %s даёт вам большую защиту, поглощая урон от попаданий, пока "
+"полностью не израсходуется."
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
@@ -2547,6 +2562,8 @@ msgid ""
 "The %s provides you a huge amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"При поднятии %s даёт вам огромную защиту, поглощая урон от попаданий, пока "
+"полностью не израсходуется."
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
@@ -2554,6 +2571,8 @@ msgid ""
 "It tends to be one of the most highly contested items on a map, particularly "
 "in gametypes like %s."
 msgstr ""
+"Как правило, это один из самых востребованных объектов на арене, особенно в "
+"таких режимах игры, как %s."
 
 #: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
@@ -2574,7 +2593,7 @@ msgstr "Мега-броня"
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s health."
-msgstr ""
+msgstr "По умолчанию подбор даёт вам %s здоровья."
 
 #: qcsrc/common/items/item/health.qc:13
 #, c-format
