@@ -15,15 +15,15 @@ void orb_draw(entity this)
 
 	if (dt > 0)
 	{
-		this.avelocity *= 24 ** (dt / this.orb_lifetime); // speed up, frametime independent
+		this.avelocity *= 24 ** (dt / this.lifetime); // speed up, frametime independent
 		this.angles += dt * this.avelocity;
 	}
 	if (age > 0)
 	{
-		this.scale = this.orb_radius * (age >= this.animstate_endtime
+		this.scale = this.radius * (age >= this.animstate_endtime
 			? 1
-			: (this.height * age * (age - this.animstate_endtime * 2))); // increases at decreasing pace up to .orb_radius, as age -> .animstate_endtime
-		this.alpha = sqrt(1 - age / this.orb_lifetime); // slowly fade out
+			: (this.height * age * (age - this.animstate_endtime * 2))); // increases at decreasing pace up to .radius, as age -> .animstate_endtime
+		this.alpha = sqrt(1 - age / this.lifetime); // slowly fade out
 	}
 }
 
@@ -44,16 +44,16 @@ void orb_draw2d(entity this)
 void orb_setup(entity orb)
 {
 	orb.update_time = time; // used to calculate dt
-	orb.animstate_endtime = 0.25 * min(orb.orb_lifetime, 1); // when the orb will stop expanding
+	orb.animstate_endtime = 0.25 * min(orb.lifetime, 1); // when the orb will stop expanding
 	orb.height = -4 * (2 * orb.animstate_endtime) ** -2; // amplitude used in scaling calculation
 
 	setmodel(orb, MDL_NADE_ORB);
 	orb.skin = 1;
 
 	float model_radius = orb.maxs.x;
-	vector size = '0.5 0.5 0.5' * orb.orb_radius;
+	vector size = '0.5 0.5 0.5' * orb.radius;
 	setsize(orb, -size, size);
-	orb.orb_radius *= 0.6 / model_radius;
+	orb.radius *= 0.6 / model_radius;
 
 	orb.draw = orb_draw;
 	orb.draw2d = orb_draw2d;
@@ -86,10 +86,10 @@ NET_HANDLE(Nade_Orb, bool isNew)
 	this.colormod = ReadVector();
 	this.ltime = ReadFloat();
 	//this.ltime = time + ReadByte() / 10.0;
-	this.orb_lifetime = (sf & SF_NADEORB_LIFETIME_FLOAT)
+	this.lifetime = (sf & SF_NADEORB_LIFETIME_FLOAT)
 		? ReadFloat()
 		: (ReadByte() + 1) * 0.125;
-	this.orb_radius = (sf & SF_NADEORB_RADIUS_FLOAT)
+	this.radius = (sf & SF_NADEORB_RADIUS_FLOAT)
 		? ReadFloat()
 		: (ReadByte() + 1) * 5;
 
@@ -102,10 +102,10 @@ NET_HANDLE(Nade_Orb, bool isNew)
 bool orb_send(entity this, entity to, int sf)
 {
 	sf = 0;
-	float byte_lifetime = this.orb_lifetime * 8 - 1; // range: 0.125..32 in increments of 0.125
+	float byte_lifetime = this.lifetime * 8 - 1; // range: 0.125..32 in increments of 0.125
 	if (byte_lifetime < 0 || byte_lifetime >= BIT(8) || byte_lifetime != floor(byte_lifetime))
 		sf |= SF_NADEORB_LIFETIME_FLOAT;
-	float byte_radius = this.orb_radius * 0.2 - 1; // range: 5..1280 in increments of 5
+	float byte_radius = this.radius * 0.2 - 1; // range: 5..1280 in increments of 5
 	if (byte_radius < 0 || byte_radius >= BIT(8) || byte_radius != floor(byte_radius))
 		sf |= SF_NADEORB_RADIUS_FLOAT;
 
@@ -116,11 +116,11 @@ bool orb_send(entity this, entity to, int sf)
 	WriteFloat(MSG_ENTITY, this.ltime);
 	//WriteByte(MSG_ENTITY, (this.ltime - time) * 10.0 + 0.5); // round time delta to a 1/10th of a second
 	if (sf & SF_NADEORB_LIFETIME_FLOAT)
-		WriteFloat(MSG_ENTITY, this.orb_lifetime);
+		WriteFloat(MSG_ENTITY, this.lifetime);
 	else
 		WriteByte(MSG_ENTITY, rint(byte_lifetime));
 	if (sf & SF_NADEORB_RADIUS_FLOAT)
-		WriteFloat(MSG_ENTITY, this.orb_radius);
+		WriteFloat(MSG_ENTITY, this.radius);
 	else
 		WriteByte(MSG_ENTITY, rint(byte_radius));
 

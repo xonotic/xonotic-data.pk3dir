@@ -86,16 +86,16 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	orb.realowner = realown;
 	setorigin(orb, org);
 
-	orb.orb_lifetime = orb_ltime; // required for timers
-	orb.ltime = time + orb.orb_lifetime;
+	orb.lifetime = orb_ltime; // required for timers
+	orb.ltime = time + orb.lifetime;
 	orb.bot_dodge = false;
 	orb.team = realown.team;
 	orb.solid = SOLID_TRIGGER;
 
 	setmodel(orb, MDL_NADE_ORB);
 	orb.skin = 1;
-	orb.orb_radius = orb_rad; // required for fading
-	vector size = '0.5 0.5 0.5' * orb.orb_radius;
+	orb.radius = orb_rad; // required for fading
+	vector size = '0.5 0.5 0.5' * orb.radius;
 	setsize(orb, -size, size);
 
 	Net_LinkEntity(orb, true, 0, orb_send);
