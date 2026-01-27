@@ -920,7 +920,7 @@ void HitIndicatorUpdate(float dmg, entity attacker)
 
 void HitIndicatorShow()
 {
-	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_size <= 0 || autocvar_chase_active)
+	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_scale <= 0 || autocvar_chase_active)
 		return;
 
 	float alpha_max = bound(0, autocvar_cl_hit_indicator_fade_alpha_max, 1);
@@ -976,12 +976,13 @@ void HitIndicatorShow()
 			ofs = -ofs;
 		}
 		org = scr_center + ofs;
-		float size = autocvar_cl_hit_indicator_size;
+		float size = autocvar_cl_hit_indicator_scale;
 		size = map_bound_ranges(HitIndicator_damage[i], 30, 90, size, size * 2);
 		float base_scale = bound(1, radius_percent * 5, 3);
 		// if inverted is true drawspritearrow inverts the arrow without changing the returned position
 		bool inverted = (attacker_infront && vdist(scr_center - attacker_org, <, radius));
-		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, size, base_scale, inverted, true);
+		float base_alpha = alpha * autocvar_cl_hit_indicator_base_alpha;
+		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, base_alpha, size, base_scale, inverted, true);
 
 		if (autocvar_cl_hit_indicator_text)
 		{

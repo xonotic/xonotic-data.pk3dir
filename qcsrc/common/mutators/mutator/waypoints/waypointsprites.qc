@@ -338,7 +338,7 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 }
 
 // returns location of sprite text
-vector drawspritearrow(vector o, float ang, vector rgb, float a, float scale, float base_scale, bool inverted, bool no_border)
+vector drawspritearrow(vector o, float ang, vector rgb, float alpha, float base_alpha, float scale, float base_scale, bool inverted, bool no_border)
 {
     float size   = 9 * scale;
     float border = no_border ? 0 : 1.5 * scale;
@@ -356,18 +356,18 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float scale, fl
     if (border)
     {
         R_BeginPolygon("", DRAWFLAG_NORMAL, true);
-        R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
-        R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
-        R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
-        R_PolygonVertex(o + Rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
-        R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
+        R_PolygonVertex(o,                                  '0 0 0', '0 0 0', alpha);
+        R_PolygonVertex(o + Rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', base_alpha);
+        R_PolygonVertex(o + Rotate(borderY - borderX, ang), '0 0 0', '0 0 0', base_alpha);
+        R_PolygonVertex(o + Rotate(borderY + borderX, ang), '0 0 0', '0 0 0', base_alpha);
+        R_PolygonVertex(o + Rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', base_alpha);
         R_EndPolygon();
     }
 
     R_BeginPolygon("", (border ? DRAWFLAG_ADDITIVE : DRAWFLAG_NORMAL), true);
-    R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
-    R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
+    R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, alpha);
+    R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, base_alpha);
+    R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, base_alpha);
     R_EndPolygon();
 
     if (inverted)
@@ -665,7 +665,7 @@ void Draw_WaypointSprite(entity this)
             SetResourceExplicit(this, RES_HEALTH, -1);
     }
 
-    o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t, 1, false, false);
+    o = drawspritearrow(o, ang, rgb, a, a, SPRITE_ARROW_SCALE * t, 1, false, false);
 
 	string pic = "";
 	bool is_text = true;

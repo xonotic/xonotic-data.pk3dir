@@ -98,12 +98,13 @@ bool autocvar_r_drawviewmodel;
 vector autocvar_cl_gunoffset;
 
 bool autocvar_cl_hit_indicator = 1;
+float autocvar_cl_hit_indicator_base_alpha;
 vector autocvar_cl_hit_indicator_color = '1 0 0';
-float autocvar_cl_hit_indicator_fade_alpha_max = 0.3;
-float autocvar_cl_hit_indicator_fade_alpha_min = 0.1;
+float autocvar_cl_hit_indicator_fade_alpha_max = 0.6;
+float autocvar_cl_hit_indicator_fade_alpha_min = 0.2;
 float autocvar_cl_hit_indicator_fade_time = 1.5;
 float autocvar_cl_hit_indicator_radius = 0.6;
-float autocvar_cl_hit_indicator_size = 1.1;
+float autocvar_cl_hit_indicator_scale = 1.4;
 bool autocvar_cl_hit_indicator_text;
 float autocvar_cl_hit_indicator_text_alpha = 0.5;
 vector autocvar_cl_hit_indicator_text_color = '1 0.5 0.5';
