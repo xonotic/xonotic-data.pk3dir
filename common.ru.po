@@ -3080,18 +3080,26 @@ msgid ""
 "massive damage on contact. If it gets close, the Zombie will punch and bite "
 "repeatedly."
 msgstr ""
+"Когда Зомби чувствует приближение игрока, он начинает стремительно мчаться к "
+"своей цели. Во время бега зомби может прыгнуть на игрока, нанося ему "
+"огромный урон при столкновении. Если он приблизится, Зомби будет наносить "
+"удары кулаками и кусать."
 
 #: qcsrc/common/monsters/monster/zombie.qc:186
 msgid ""
 "When threatened the Zombie may hold up its hands to block incoming attacks "
 "briefly."
 msgstr ""
+"При угрозе зомби может поднять руки, чтобы на короткое время блокировать "
+"поступающие атаки."
 
 #: qcsrc/common/monsters/monster/zombie.qc:187
 msgid ""
 "It is no small task to kill that which is already dead. Once a Zombie is "
 "defeated, destroy its corpse to prevent it from rising again!"
 msgstr ""
+"Убить то, что уже мертво, — задача не из лёгких. После того как зомби "
+"побеждён, уничтожьте его труп, чтобы он не воскрес снова!"
 
 #: qcsrc/common/monsters/monster/zombie.qh:19
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
@@ -3104,6 +3112,8 @@ msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
 msgstr ""
+"%s — это мутатор, при котором игроки, здоровье которых ниже определённого "
+"порога (например, 25), будут терять кровь."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
 msgid ""
@@ -3111,6 +3121,9 @@ msgid ""
 "rapidly takes away health points until they either die or gain enough health "
 "to go above the health threshold."
 msgstr ""
+"Кровопотеря оглушает игроков, серьёзно ухудшает их передвижение и быстро "
+"отнимает очки здоровья, пока они не умрут или не наберут достаточно "
+"здоровья, чтобы превысить порог здоровья."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
 #: qcsrc/common/util.qc:309
@@ -3124,6 +3137,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"Бонус %s даёт вам бесконечные патроны до истечения своего времени действия, "
+"так что вам не нужно беспокоиться о том, что патроны закончатся."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -3131,6 +3146,8 @@ msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
 "the %s and %s."
 msgstr ""
+"Это также избавляет от необходимости перезаряжать любое оружие, требующее "
+"перезарядки, такое как %s и %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -3142,6 +3159,8 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"Бонус %s увеличивает силу отталкивания, которую вы наносите, и делает вас "
+"невосприимчивым к отталкиванию, пока он активен."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
@@ -3157,6 +3176,8 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
+"Бонус %s замедляет ваших врагов и монстров на несколько секунд, когда вы "
+"атакуете их, пока он активен."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format

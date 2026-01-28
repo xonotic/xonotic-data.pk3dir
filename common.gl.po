@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-24 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020\n"
+"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2026\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -10855,12 +10855,14 @@ msgstr "Divino"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
 msgid "Bots against humans"
-msgstr ""
+msgstr "Bots contra humanos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr ""
+"Obrigar aos humanos a xogar no mesmo equipo contra un equipo de bots do "
+"mesmo tamaño"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Maplist"
