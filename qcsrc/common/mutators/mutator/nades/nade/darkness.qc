@@ -32,7 +32,7 @@ void nade_darkness_think(entity this)
 
 	// gaussian
 	float randomr = random();
-	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
+	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_darkness_radius;
 	float randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
@@ -48,7 +48,7 @@ void nade_darkness_think(entity this)
 
 	float current_dark_time = this.ltime - time - 0.1;
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_darkness_radius, it != this && it.takedamage
 	&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0 && IS_REAL_CLIENT(it),
 	{
 		switch (autocvar_g_nades_darkness_teamcheck)
@@ -69,13 +69,15 @@ void nade_darkness_boom(entity this)
 	fountain.owner = this.owner;
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
+	fountain.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, fountain);
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, nade_darkness_think);
 	fountain.nextthink = time;
 	fountain.pushltime = fountain.wait = fountain.ltime = time + autocvar_g_nades_darkness_time;
 	fountain.team = this.team;
 	set_movetype(fountain, MOVETYPE_TOSS);
-	fountain.projectiledeathtype = DEATH_NADE.m_id;
+	fountain.projectiledeathtype = DEATH_NADE_DARKNESS.m_id;
 	fountain.bot_dodge = false;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	fountain.nade_special_time = time + 0.3;
