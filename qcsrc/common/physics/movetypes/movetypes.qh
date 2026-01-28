@@ -7,11 +7,16 @@ bool autocvar_physics_ode;
 bool use_engine_physics; // debug option for testing legacy engine code
 #endif
 
-// water levels
-const int WATERLEVEL_NONE = 0;
-const int WATERLEVEL_WETFEET = 1;
-const int WATERLEVEL_SWIMMING = 2;
-const int WATERLEVEL_SUBMERGED = 3;
+/// NB: water levels are also used as multipliers
+enum
+{
+	WATERLEVEL_NONE = 0,
+	WATERLEVEL_WETFEET = 1,
+	WATERLEVEL_SWIMMING = 2,
+	WATERLEVEL_SUBMERGED = 3
+};
+
+const int MIN_WALK_NORMAL = 0.7;
 
 #define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
 #define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
@@ -20,11 +25,9 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define SET_ONSLICK(s)                      ((s).flags |= FL_ONSLICK)
 #define UNSET_ONSLICK(s)                    ((s).flags &= ~FL_ONSLICK)
 
-#define GAMEPLAYFIX_DOWNTRACEONGROUND(s)    STAT(GAMEPLAYFIX_DOWNTRACEONGROUND)
 #define GAMEPLAYFIX_EASIERWATERJUMP(s)      STAT(GAMEPLAYFIX_EASIERWATERJUMP)
 #define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN, s)
 #define GAMEPLAYFIX_STEPDOWN_MAXSPEED(s)    STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED)
-#define GAMEPLAYFIX_STEPMULTIPLETIMES(s)    STAT(GAMEPLAYFIX_STEPMULTIPLETIMES)
 #define GAMEPLAYFIX_UNSTICKPLAYERS(s)       STAT(GAMEPLAYFIX_UNSTICKPLAYERS)
 #define GAMEPLAYFIX_WATERTRANSITION(s)      STAT(GAMEPLAYFIX_WATERTRANSITION)
 #define GAMEPLAYFIX_SLIDEMOVEPROJECTILES(s) STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES)
@@ -35,12 +38,9 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define GAMEPLAYFIX_DELAYPROJECTILES(s)     STAT(GAMEPLAYFIX_DELAYPROJECTILES)
 
 
-#define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT, s)
 #define PHYS_NOSTEP(s)                      STAT(NOSTEP)
 #define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP)
-#define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION)
 
-#define PHYS_WALLCLIP(s)                    STAT(MOVEVARS_WALLCLIP)
 
 #ifdef CSQC
 .float bouncestop;
@@ -71,7 +71,45 @@ const int WATERLEVEL_SUBMERGED = 3;
 
 void set_movetype(entity this, int mt);
 
+#ifdef CSQC // For CSQC prediction of timer-based physics features
+	#define CL_MAX_USERCMDS 128 // must be a power of 2 and == engine CL_MAX_USERCMDS
+	int csqcplayer_saved_moveflags[CL_MAX_USERCMDS];
+	int csqcplayer_current_moveflags; // tracks state changes during moves (because timers can start during a move)
+	#define PMF_DJING 16
+	#define PMF_SKIMMING 32
+	#define PMF_TIME_KNOCKBACK 64
+	#define PMF_TIME_WATERJUMP 128
+#endif
+
+// CPMA double jumps
+.float pm_dj_time;
+#ifdef CSQC
+	#define WOULD_DJ(s) (csqcplayer_current_moveflags & PMF_DJING)
+#elifdef SVQC
+	#define WOULD_DJ(s) ((s).pm_dj_time > 0)
+#endif
+
+// Q3 skimming
 .float pm_time;
+#ifdef CSQC
+	#define IS_SKIMMING(s) (csqcplayer_current_moveflags & PMF_SKIMMING)
+#elifdef SVQC
+	#define IS_SKIMMING(s) ((s).pm_time > 0)
+#endif
+
+// Q3 PMF_TIME_KNOCKBACK (.pm_time grants slick as well as skimming)
+#ifdef CSQC
+	#define HAS_KNOCKBACK(s) (csqcplayer_current_moveflags & PMF_TIME_KNOCKBACK)
+#elifdef SVQC
+	#define HAS_KNOCKBACK(s) ((s).pm_time > 0 && ((s).flags & FL_KNOCKBACK))
+#endif
+
+// Q3 water jumping (no acceleration or friction, just gravity and collisions with skimming)
+#ifdef CSQC
+	#define IS_WATERJUMPING(s) (csqcplayer_current_moveflags & PMF_TIME_WATERJUMP)
+#elifdef SVQC
+	#define IS_WATERJUMPING(s) ((s).pm_time > 0 && ((s).flags & FL_WATERJUMP))
+#endif
 
 .float move_movetype;
 .float move_time;
@@ -91,26 +129,23 @@ void set_movetype(entity this, int mt);
 .vector punchangle;
 
 .entity groundentity;  // FIXME add move_groundnetworkentity?
+.vector groundplane_normal;
 .float move_suspendedinair;
 .float move_didgravity;
 
-// unsticking
-const int UNSTICK_FINE = 0;
+// these must match DP_QC_NUDGEOUTOFSOLID return values
+const int UNSTICK_FINE = -1;
 const int UNSTICK_FIXED = 1;
-const int UNSTICK_STUCK = 2;
-
-// set by _Movetype_FlyMove
-vector move_stepnormal;
+const int UNSTICK_STUCK = 0;
 
 bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot);
-void _Movetype_WallFriction(entity this, vector stepnormal);
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, float stepheight);
 void _Movetype_CheckWaterTransition(entity ent);
 void _Movetype_CheckStuck(entity this);
 float _Movetype_CheckWater(entity ent);
 void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
-vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
+vector _Movetype_ClipVelocity(vector vel, vector norm, float ob);
 void _Movetype_PushEntityTrace(entity this, vector push);
 bool _Movetype_PushEntity(entity this, vector push, bool dolink);
 
@@ -123,7 +158,8 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 
 int _Movetype_UnstickEntity(entity this);
 
-const int MAX_CLIP_PLANES = 5;
+const int MAX_CLIP_PLANES = 5; ///< same as in Q3 and DOOM 3, should be enough for all cases that are worth the CPU time
+const float OVERCLIP = 1.001; ///< from Q3 and DOOM 3, used to fix wedging with velocity in corners above steep ramps
 
 #ifdef CSQC
 const int MOVETYPE_NONE             = 0;
