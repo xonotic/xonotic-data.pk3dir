@@ -175,6 +175,15 @@ const .float reloading_time = reload_time;
 #endif
 
 
+#ifdef CSQC
+	#define Read_int() ReadInt24_t()
+	#define Read_float() ReadFloat()
+	#define Read_string() ReadString()
+#else
+	#define Write_int(to, f) WriteInt24_t(to, f)
+	#define Write_float(to, f) WriteFloat(to, f)
+	#define Write_string(to, f) WriteString(to, f)
+#endif
 
 #define W_PROPS(L, class, prefix) \
 	L(W_PROP_BEGIN, W_PROP, W_PROP_END, class, prefix) \
@@ -269,22 +278,25 @@ const .float reloading_time = reload_time;
 		W_NET_SEC(class, fld, T, wepname)
 	#if defined(CSQC)
 		REGISTER_NET_TEMP(WeaponUpdate)
-		#define W_NET_BEGIN(class) METHOD(class, wr_net, void(class this, int i)) { int n = 0;
-			#define _W_NET(class, fld, T, wepname) \
+		#define W_NET_BEGIN(class) \
+			METHOD(class, wr_net, void(class this, int i)) \
 			{ \
-				if (++n == i) this.wepvar_##fld = Read_##T(); \
-			}
-			.void(Weapon this, int i) wr_net;
-			NET_HANDLE(WeaponUpdate, bool isnew)
-			{
-				Weapon w = REGISTRY_GET(Weapons, ReadByte());
-				for (int i; (i = ReadByte()); )
-				{
-					w.wr_net(w, i);
+				int n = 0;
+			#define _W_NET(class, fld, T, wepname) \
+				{ \
+					if (++n == i) \
+						this.wepvar_##fld = Read_##T(); \
 				}
-				return true;
+		#define W_NET_END() \
 			}
-		#define W_NET_END() }
+		.void(Weapon this, int i) wr_net;
+		NET_HANDLE(WeaponUpdate, bool isnew)
+		{
+			Weapon w = ReadRegistered(Weapons);
+			for (int i; (i = ReadByte()); )
+				w.wr_net(w, i);
+			return true;
+		}
 	#elif defined(SVQC)
 		REGISTER_NET_TEMP(WeaponUpdate)
 		#define W_NET_BEGIN(class) \
@@ -302,12 +314,16 @@ const .float reloading_time = reload_time;
 						{ \
 							commit = true; \
 							WriteHeader(chan, WeaponUpdate); \
-							WriteByte(chan, this.m_id); \
+							WriteRegistered(Weapons, chan, this); \
 						} \
-						WriteByte(chan, i); Write_##T(chan, it); \
+						WriteByte(chan, i); \
+						Write_##T(chan, it); \
 					} \
 				}
-		#define W_NET_END() if (commit) WriteByte(chan, 0); }
+		#define W_NET_END() \
+				if (commit) \
+					WriteByte(chan, 0); \
+			}
 	#else
 		#define W_NET_BEGIN(class)
 			#define _W_NET(class, fld, T, wepname)

@@ -37,7 +37,7 @@
 				return;
 			}
 			WriteHeader(channel, globalsound);
-			WriteByte(channel, gs.m_id);
+			WriteRegistered(GlobalSounds, channel, gs);
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
 			WriteByte(channel, chan);
@@ -80,7 +80,7 @@
 				return;
 			}
 			WriteHeader(channel, playersound);
-			WriteByte(channel, ps.m_id);
+			WriteRegistered(PlayerSounds, channel, ps);
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
 			WriteByte(channel, chan);
@@ -103,7 +103,7 @@
 
 		NET_HANDLE(globalsound, bool isnew)
 		{
-			entity gs = REGISTRY_GET(GlobalSounds, ReadByte());
+			entity gs = ReadRegistered(GlobalSounds);
 			float r = ReadByte() / 255;
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
@@ -134,7 +134,7 @@
 
 		NET_HANDLE(playersound, bool isnew)
 		{
-			entity ps = REGISTRY_GET(PlayerSounds, ReadByte());
+			entity ps = ReadRegistered(PlayerSounds);
 			float r = ReadByte() / 255;
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);

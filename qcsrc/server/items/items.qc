@@ -510,12 +510,12 @@ bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammoma
 	return true;
 }
 
-void Item_NotifyWeapon(entity player, int wep)
+void Item_NotifyWeapon(entity player, entity wep)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (it == player || (IS_SPEC(it) && it.enemy == player)), {
 		msg_entity = it;
 		WriteHeader(MSG_ONE, TE_CSQC_WEAPONPICKUP);
-		WriteByte(MSG_ONE, wep);
+		WriteRegistered(Weapons, MSG_ONE, wep);
 	});
 }
 
@@ -562,7 +562,7 @@ bool Item_GiveTo(entity item, entity player)
 			pickedup = true;
 			FOREACH(Weapons, it != WEP_Null, {
 				if(w & (it.m_wepset))
-					Item_NotifyWeapon(player, it.m_id);
+					Item_NotifyWeapon(player, it);
 
 				if(wp & (it.m_wepset))
 				{

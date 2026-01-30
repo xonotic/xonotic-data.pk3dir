@@ -357,10 +357,9 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isNew)
 
 	if (sf & TNSF_SETUP)
 	{
-		this.m_id = ReadByte();
+		this.m_id = ReadRegistered(Turrets).m_id;
 
-		this.origin = ReadVector();
-		setorigin(this, this.origin);
+		setorigin(this, ReadVector());
 
 		this.angles = ReadAngleVector2D();
 

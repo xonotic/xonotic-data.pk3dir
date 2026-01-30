@@ -733,7 +733,7 @@ void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector sh
 		int channel = MSG_ONE;
 		msg_entity = it;
 		WriteHeader(channel, w_muzzleflash);
-		WriteByte(channel, thiswep.m_id);
+		WriteRegistered(Weapons, channel, thiswep);
 		WriteByte(channel, weaponslot(weaponentity));
 		WriteVector(channel, shotorg);
 	});
@@ -742,7 +742,7 @@ void W_MuzzleFlash(Weapon thiswep, entity actor, .entity weaponentity, vector sh
 NET_HANDLE(w_muzzleflash, bool isNew)
 {
 	return = true;
-	int weapon_id = ReadByte();
+	int weapon_id = ReadRegistered(Weapons).m_id;
 	int slot = ReadByte();
 	vector sv_shotorg = ReadVector();
 

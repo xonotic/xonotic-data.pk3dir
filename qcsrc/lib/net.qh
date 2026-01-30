@@ -12,10 +12,12 @@
 
 .int m_id;
 .bool(entity this, entity sender, bool isNew) m_read;
-#define NET_HANDLE(id, param) bool Net_Handle_##id(entity this, entity sender, param)
+#define NET_HANDLE(id, param) bool \
+	Net_Handle_##id(entity this, entity sender, param)
 
 #define NET_GUARD(id) \
-	bool Net_Handle_##id##_guard(entity this, entity sender, bool isNew) { \
+	bool Net_Handle_##id##_guard(entity this, entity sender, bool isNew) \
+	{ \
 		bool valid = false; \
 		net_guard_marker(to, valid); \
 		if (!valid) \
@@ -29,7 +31,8 @@ string _net_prevmsgstr;
 	#define REGISTER_NET_TEMP(id) \
 		NET_HANDLE(id, bool); \
 		NET_GUARD(id); \
-		REGISTER(TempEntities, NET, id, m_id, new_pure(net_temp_packet)) { \
+		REGISTER(TempEntities, NET, id, m_id, new_pure(net_temp_packet)) \
+		{ \
 			this.netname = #id; \
 			this.m_read = Net_Handle_##id##_guard; \
 		}
@@ -43,7 +46,7 @@ string _net_prevmsgstr;
 #endif
 
 // k9er: why is this needed? this is the engine's job
-#if defined(CSQC)
+#ifdef CSQC
 	#define net_guard_marker(stream, this) MACRO_BEGIN \
 		if (NDEBUG) \
 			this = true; \
@@ -56,7 +59,7 @@ string _net_prevmsgstr;
 			this = (_de == 0xDE && _ad == 0xAD && _be == 0xBE && _ef == 0xEF); \
 		} \
 	MACRO_END
-#elif defined(SVQC)
+#else
 	#define net_guard_marker(stream, this) MACRO_BEGIN \
 		if (NDEBUG) \
 			this = true; \
@@ -77,17 +80,21 @@ REGISTRY_SORT(TempEntities)
 REGISTRY_CHECK(TempEntities)
 
 REGISTRY_DEFINE_GET(TempEntities, NULL)
-STATIC_INIT(TempEntities_renumber) { FOREACH(TempEntities, true, it.m_id = 80 + i); }
+STATIC_INIT(TempEntities_renumber)
+{
+	FOREACH(TempEntities, true, it.m_id = 80 + i);
+}
 
 
 
 #ifdef CSQC
 	#define REGISTER_NET_LINKED(id) \
-		ACCUMULATE NET_HANDLE(id, bool isnew) \
+		ACCUMULATE NET_HANDLE(id, bool isNew) \
 		{ \
 			this = __self; \
 			this.sourceLoc = __FILE__":"STR(__LINE__); \
-			if (!this) isnew = true; \
+			if (!this) \
+				isNew = true; \
 		} \
 		NET_GUARD(id); \
 		REGISTER(LinkedEntities, NET, id, m_id, new_pure(net_linked_packet)) \
@@ -110,7 +117,10 @@ REGISTRY_SORT(LinkedEntities)
 REGISTRY_CHECK(LinkedEntities)
 
 REGISTRY_DEFINE_GET(LinkedEntities, NULL)
-STATIC_INIT(LinkedEntities_renumber) { FOREACH(LinkedEntities, true, it.m_id = 1 + i); }
+STATIC_INIT(LinkedEntities_renumber)
+{
+	FOREACH(LinkedEntities, true, it.m_id = 1 + i);
+}
 
 
 
@@ -137,9 +147,10 @@ REGISTRY_SORT(C2S_Protocol)
 REGISTRY_CHECK(C2S_Protocol)
 
 REGISTRY_DEFINE_GET(C2S_Protocol, NULL)
-STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
-
-#endif // GAMEQC
+STATIC_INIT(C2S_Protocol_renumber)
+{
+	FOREACH(C2S_Protocol, true, it.m_id = i);
+}
 
 #ifdef SVQC
 	const int MSG_ENTITY = 5;
@@ -148,14 +159,17 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	.int SendFlags;
 
 	IntrusiveList g_uncustomizables;
-	STATIC_INIT(g_uncustomizables) { g_uncustomizables = IL_NEW(); }
+	STATIC_INIT(g_uncustomizables)
+	{
+		g_uncustomizables = IL_NEW();
+	}
 
 	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
 		if (e.classname == "")
 		{
-		    LOG_WARN("Net_LinkEntity called on an entity without a classname, assigning default");
-		    e.classname = "net_linked";
+			LOG_WARN("Net_LinkEntity called on an entity without a classname, assigning default");
+			e.classname = "net_linked";
 		}
 
 		if (e.modelindex == 0)
@@ -169,7 +183,8 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		setSendEntity(e, sendfunc);
 		e.SendFlags = 0xFFFFFF;
 
-		if (!docull) e.effects |= EF_NODEPTHTEST;
+		if (!docull)
+			e.effects |= EF_NODEPTHTEST;
 
 		if (dt)
 		{
@@ -208,12 +223,14 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	{
 		// command matches `c2s "(.+)"`
 		string buf = substring(command, argv_start_index(1) + 1, -2);
-		if (buf == "") return;
+		if (buf == "")
+			return;
 		STRING_ITERATOR_SET(g_buf, buf, 0);
 		for (int C2S; (C2S = ReadByte()) >= 0; )
 		{
 			entity reader = REGISTRY_GET(C2S_Protocol, C2S);
-			if (reader && reader.m_read && reader.m_read(NULL, sender, true)) continue;
+			if (reader && reader.m_read && reader.m_read(NULL, sender, true))
+				continue;
 			LOG_SEVEREF("Net_ClientCommand() with malformed C2S=%d", C2S);
 			return;
 		}
@@ -222,38 +239,36 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		if (g_buf_i > expected) LOG_WARNF("Underflow: %d", g_buf_i - expected);
 		if (g_buf_i < expected) LOG_WARNF("Overrflow: %d", expected - g_buf_i);
 	}
-
-#endif
-
-#ifdef CSQC
+#else
 	const int MSG_C2S = 0;
 
-	#define Net_Accept(classname) \
-		MACRO_BEGIN \
-			if (!this) this = new(classname); \
-		MACRO_END
-	#define Net_Reject() \
-		MACRO_BEGIN \
-			if (this) delete(this); \
-		MACRO_END
+	#define Net_Accept(classname) MACRO_BEGIN \
+		if (!this) \
+			this = new(classname); \
+	MACRO_END
+	#define Net_Reject() MACRO_BEGIN \
+		if (this) \
+			delete(this); \
+	MACRO_END
 
 	string g_buf;
-
 	void Net_Flush()
 	{
-		if (g_buf == "") return;
+		if (g_buf == "")
+			return;
 		localcmd("\ncmd c2s \"", strreplace("$", "$$", g_buf), "\"\n");
 		strfree(g_buf);
 	}
 #endif
 
-#if defined(CSQC)
+#ifdef CSQC
 	#define WriteHeader(to, id) \
 		WriteByte(to, NET_##id.m_id)
-#elif defined(SVQC)
+#else
 	#define WriteHeader(to, id) \
 		MACRO_BEGIN \
-			if (NET_##id##_istemp) WriteByte(to, SVC_TEMPENTITY); \
+			if (NET_##id##_istemp) \
+				WriteByte(to, SVC_TEMPENTITY); \
 			WriteByte(to, NET_##id.m_id); \
 			bool _net_valid = false; \
 			net_guard_marker(to, _net_valid); \
@@ -263,23 +278,22 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 // serialization: new style
 
 USING(Stream, int);
-#if defined(SVQC)
+#ifdef SVQC
 	#define stream_reading(stream) false
 	#define stream_writing(stream) true
-#elif defined(CSQC)
+#else
 	#define stream_reading(stream) true
 	#define stream_writing(stream) false
 #endif
 
 // serialization: old
 
-#define ReadRegistered(r) REGISTRY_GET(r, Read_byte())
-#define WriteRegistered(r, to, it) Write_byte(to, it.m_id)
+#define ReadRegistered(r) \
+	REGISTRY_GET(r, (REGISTRY_COUNT(r) >= 255 ? ReadShort() : ReadByte()))
+#define WriteRegistered(r, to, it) \
+	(REGISTRY_COUNT(r) >= 255 ? WriteShort(to, it.m_id) : WriteByte(to, it.m_id))
 
-#define Read_byte() ReadByte()
-#define Write_byte(to, f) WriteByte(to, f)
-
-#if defined(CSQC)
+#ifdef CSQC
 	int ReadByte();
 	void WriteByte(int to, int b)
 	{
@@ -294,7 +308,7 @@ USING(Stream, int);
 		WriteByte(to, (b >> 8) & 0xFF);
 		WriteByte(to, b & 0xFF);
 	}
-#elif defined(SVQC)
+#else
 	int ReadByte()
 	{
 		int ret = -1;
@@ -303,133 +317,138 @@ USING(Stream, int);
 	}
 	int ReadShort()
 	{
-		return (ReadByte() << 8) | (ReadByte());
+		return (ReadByte() << 8) | ReadByte();
 	}
 	void WriteByte(int to, int b);
 #endif
 
-#define Read_int() ReadInt24_t()
-#define Write_int(to, f) WriteInt24_t(to, f)
+const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
+#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 
-#define Read_float() ReadFloat()
-#define Write_float(to, f) WriteFloat(to, f)
+#ifdef CSQC
+	float servertime;
+	entity ReadCSQCEntity()
+	{
+		int f = ReadShort();
+		if (f == 0)
+			return NULL;
+		return findfloat(NULL, entnum, f);
+	}
+	int ReadInt24_t()
+	{
+		int v = ReadShort() << 8; // note: this is signed
+		v += ReadByte();          // note: this is unsigned
+		return v;
+	}
+	#define ReadInt48_t() vec2(ReadInt24_t(), ReadInt24_t())
+	#define ReadInt72_t() vec3(ReadInt24_t(), ReadInt24_t(), ReadInt24_t())
 
-#define Read_string() ReadString()
-#define Write_string(to, f) WriteString(to, f)
+	noref int _ReadSByte;
+	#define ReadSByte() (_ReadSByte = ReadByte(), (_ReadSByte & BIT(7) ? -128 : 0) + (_ReadSByte & BITS(7)))
+	#define ReadFloat() ReadCoord()
+	#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
+	#define ReadVector2D() vec2(ReadFloat(), ReadFloat())
+	#define ReadAngleVector() vec3(ReadAngle(), ReadAngle(), ReadAngle())
+	#define ReadAngleVector2D() vec2(ReadAngle(), ReadAngle())
 
-#ifdef GAMEQC
-	const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
-	#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
-	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+	int Readbits(int num)
+	{
+		if (num > 16)  return ReadInt24_t();
+		if (num > 8)   return ReadShort();
+		return ReadByte();
+	}
 
-	#ifdef CSQC
-		float servertime;
-		entity ReadCSQCEntity()
-		{
-			int f = ReadShort();
-			if (f == 0) return NULL;
-			return findfloat(NULL, entnum, f);
-		}
-		int ReadInt24_t()
-		{
-			int v = ReadShort() << 8; // note: this is signed
-			v += ReadByte();          // note: this is unsigned
-			return v;
-		}
-		#define ReadInt48_t() vec2(ReadInt24_t(), ReadInt24_t())
-		#define ReadInt72_t() vec3(ReadInt24_t(), ReadInt24_t(), ReadInt24_t())
+	float ReadApproxPastTime()
+	{
+		float dt = ReadByte();
+		// map from range...PPROXPASTTIME_MAX / 256
+		dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
 
-		noref int _ReadSByte;
-		#define ReadSByte() (_ReadSByte = ReadByte(), (_ReadSByte & BIT(7) ? -128 : 0) + (_ReadSByte & BITS(7)))
-		#define ReadFloat() ReadCoord()
-		#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
-		#define ReadVector2D() vec2(ReadFloat(), ReadFloat())
-		#define ReadAngleVector() vec3(ReadAngle(), ReadAngle(), ReadAngle())
-		#define ReadAngleVector2D() vec2(ReadAngle(), ReadAngle())
+		return servertime - dt;
+	}
+#else
+	void WriteInt24_t(float dst, float val)
+	{
+		float v;
+		WriteShort(dst, (v = floor(val >> 8)));
+		WriteByte(dst, val - (v << 8));  // 0..255
+	}
+	void WriteInt48_t(float dst, vector val)
+	{
+		WriteInt24_t(dst, val.x);
+		WriteInt24_t(dst, val.y);
+	}
+	void WriteInt72_t(float dst, vector val)
+	{
+		WriteInt24_t(dst, val.x);
+		WriteInt24_t(dst, val.y);
+		WriteInt24_t(dst, val.z);
+	}
 
-		int Readbits(int num)
-		{
-			if (num > 16) return ReadInt24_t();
-			if (num > 8) return ReadShort();
-			return ReadByte();
-		}
+	#define WriteFloat(to, f) \
+		WriteCoord(to, f)
+	#define WriteVector(to, v) MACRO_BEGIN \
+		WriteFloat(to, v.x); \
+		WriteFloat(to, v.y); \
+		WriteFloat(to, v.z); \
+	MACRO_END
+	#define WriteVector2D(to, v) MACRO_BEGIN \
+		WriteFloat(to, v.x); \
+		WriteFloat(to, v.y); \
+	MACRO_END
+	#define WriteAngleVector(to, v) MACRO_BEGIN \
+		WriteAngle(to, v.x); \
+		WriteAngle(to, v.y); \
+		WriteAngle(to, v.z); \
+	MACRO_END
+	#define WriteAngleVector2D(to, v) MACRO_BEGIN \
+		WriteAngle(to, v.x); \
+		WriteAngle(to, v.y); \
+	MACRO_END
 
-		float ReadApproxPastTime()
-		{
-			float dt = ReadByte();
+	void Writebits(float dst, float val, int num)
+	{
+		if (num > 16) { WriteInt24_t(dst, val);  return; }
+		if (num > 8)  { WriteShort(dst, val);    return; }
+		WriteByte(dst, val);
+	}
 
-			// map from range...PPROXPASTTIME_MAX / 256
-			dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
+	// this will use the value:
+	//   128
+	// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
+	// accuracy at x is 1/derivative, i.e.
+	//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
+	void WriteApproxPastTime(float dst, float t)
+	{
+		float dt = time - t;
+		// warning: this is approximate; do not resend when you don't have to!
+		// be careful with sendflags here!
+		// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
 
-			return servertime - dt;
-		}
+		// map to range...
+		dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
 
-	#else
-		void WriteInt24_t(float dst, float val)
-		{
-			float v;
-			WriteShort(dst, (v = floor(val >> 8)));
-			WriteByte(dst, val - (v << 8));  // 0..255
-		}
-		void WriteInt48_t(float dst, vector val)
-		{
-			WriteInt24_t(dst, val.x);
-			WriteInt24_t(dst, val.y);
-		}
-		void WriteInt72_t(float dst, vector val)
-		{
-			WriteInt24_t(dst, val.x);
-			WriteInt24_t(dst, val.y);
-			WriteInt24_t(dst, val.z);
-		}
+		// round...
+		dt = rint(bound(0, dt, 255));
 
-		#define WriteFloat(to, f) WriteCoord(to, f)
-		#define WriteVector(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); MACRO_END
-		#define WriteVector2D(to, v) MACRO_BEGIN WriteFloat(to, v.x); WriteFloat(to, v.y); MACRO_END
-		#define WriteAngleVector(to, v) MACRO_BEGIN WriteAngle(to, v.x); WriteAngle(to, v.y); WriteAngle(to, v.z); MACRO_END
-		#define WriteAngleVector2D(to, v) MACRO_BEGIN WriteAngle(to, v.x); WriteAngle(to, v.y); MACRO_END
+		WriteByte(dst, dt);
+	}
 
-		void Writebits(float dst, float val, int num)
-		{
-			if (num > 16) { WriteInt24_t(dst, val); return; }
-			if (num > 8) { WriteShort(dst, val); return; }
-			WriteByte(dst, val);
-		}
-
-		// this will use the value:
-		//   128
-		// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
-		// accuracy at x is 1/derivative, i.e.
-		//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
-		void WriteApproxPastTime(float dst, float t)
-		{
-			float dt = time - t;
-
-			// warning: this is approximate; do not resend when you don't have to!
-			// be careful with sendflags here!
-			// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
-
-			// map to range...
-			dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
-
-			// round...
-			dt = rint(bound(0, dt, 255));
-
-			WriteByte(dst, dt);
-		}
-
-		// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
-		#define WRITESPECTATABLE_MSG_ONE(to, statement) MACRO_BEGIN \
-			entity prev = msg_entity; \
-			entity dst = to; \
-			FOREACH_CLIENT(IS_REAL_CLIENT(it), { \
-				if (it == dst || (it.classname == STR_SPECTATOR && it.enemy == dst)) \
-				{ \
-					msg_entity = it; \
-					LAMBDA(statement); \
-				} \
-			}); \
-			msg_entity = prev; \
-		MACRO_END
-	#endif
+	// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
+	#define WRITESPECTATABLE_MSG_ONE(to, statement) MACRO_BEGIN \
+		entity prev = msg_entity; \
+		entity dst = to; \
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), \
+		{ \
+			if (it == dst || (it.classname == STR_SPECTATOR && it.enemy == dst)) \
+			{ \
+				msg_entity = it; \
+				LAMBDA(statement); \
+			} \
+		}); \
+		msg_entity = prev; \
+	MACRO_END
 #endif
+
+#endif // GAMEQC

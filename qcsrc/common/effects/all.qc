@@ -9,9 +9,7 @@ REGISTER_NET_TEMP(net_effect)
 #ifdef CSQC
 NET_HANDLE(net_effect, bool isNew)
 {
-	int net_name = (REGISTRY_COUNT(Effects) >= 255) ? ReadShort() : ReadByte();
-
-	entity eff = REGISTRY_GET(Effects, net_name);
+	entity eff = ReadRegistered(Effects);
 
 	vector vel = '0 0 0';
 	int eff_cnt = 1;
@@ -60,9 +58,7 @@ bool Net_Write_Effect(entity this, entity client, int sf)
 	int channel = MSG_ONE;
 	msg_entity = client;
 	WriteHeader(channel, net_effect);
-	(REGISTRY_COUNT(Effects) >= 255)
-	? WriteShort(channel, this.m_id)
-	: WriteByte(channel, this.m_id);
+	WriteRegistered(Effects, channel, this);
 	WriteVector(channel, this.eent_net_location);
 
 	int extraflags = 0;

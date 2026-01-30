@@ -317,7 +317,7 @@ bool turret_send(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & TNSF_SETUP)
 	{
-		WriteByte(MSG_ENTITY, this.m_id);
+		WriteRegistered(Turrets, MSG_ENTITY, this);
 
 		WriteVector(MSG_ENTITY, this.origin);
 
