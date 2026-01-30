@@ -3632,6 +3632,9 @@ msgid ""
 "orb they will recover ammo, and if enemies enter the sphere they will lose "
 "ammo."
 msgstr ""
+"%s взрывается через небольшую задержку, на несколько секунд создавая вокруг "
+"места взрыва сферу. Если члены вашей команды войдут в сферу, они восстановят "
+"патроны, а если в сферу войдут враги, они потеряют патроны."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:84
 #, c-format
@@ -3639,6 +3642,8 @@ msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
 "inside the orb, so you don't need to reload."
 msgstr ""
+"Подобно бонусу %s, ваши патроны остаются полными, пока вы находитесь внутри "
+"шара, поэтому вам не нужно перезаряжать оружие."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:23
 msgid "Ammo grenade"
@@ -3650,6 +3655,8 @@ msgid ""
 "The %s detonates after a short delay, creating a dark field which "
 "temporarily blinds enemies who enter it."
 msgstr ""
+"%s детонирует после небольшой задержки, создавая тёмное поле, которое "
+"временно ослепляет врагов, попавших в него."
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:141
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qc:57
@@ -3668,6 +3675,9 @@ msgid ""
 "point where it detonated for several seconds. Players and projectiles that "
 "enter the sphere will be slowed down, including yourself."
 msgstr ""
+"%s взрывается через небольшую задержку, на несколько секунд создавая вокруг "
+"места взрыва сферу. Игроки и снаряды, попавшие в эту сферу, включая вас "
+"самих, будут замедлены."
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:24
 msgid "Entrap grenade"
@@ -3681,6 +3691,9 @@ msgid ""
 "members enter the orb they will recover health, and if enemies enter the "
 "sphere they will be harmed."
 msgstr ""
+"%s взрывается через небольшую задержку, на несколько секунд создавая вокруг "
+"места взрыва исцеляющий шар. Если члены вашей команды войдут в шар, они "
+"восстановят здоровье, а если в него войдут враги, они получат урон."
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qh:22
 msgid "Heal grenade"
@@ -3694,6 +3707,10 @@ msgid ""
 "players can't move or shoot, leaving them vulnerable to damage, but if left "
 "too long they'll unfreeze and run away!"
 msgstr ""
+"%s взрывается через небольшую задержку, замораживая всех врагов, которые "
+"попадают в радиус взрыва, на несколько секунд после взрыва. Пока игроки "
+"заморожены, они не могут двигаться или стрелять, что делает их уязвимыми для "
+"урона, но если их оставить слишком долго, они разморозятся и убегут!"
 
 #: qcsrc/common/mutators/mutator/nades/nade/ice.qh:21
 msgid "Ice grenade"
@@ -3704,6 +3721,8 @@ msgstr "Ледяная граната"
 msgid ""
 "The %s detonates after a short delay, spawning one of the five monster types."
 msgstr ""
+"%s взрывается после небольшой задержки, порождая одного из пяти типов "
+"монстров."
 
 #: qcsrc/common/mutators/mutator/nades/nade/monster.qh:21
 msgid "Monster grenade"
@@ -3716,6 +3735,9 @@ msgid ""
 "a fountain. The napalm fire balls burn for a while, and damage players who "
 "get too close."
 msgstr ""
+"%s взрывается через небольшую задержку, разбрасывая вокруг фонтаном огненные "
+"шары напалма. Огненные шары напалма горят некоторое время и наносят урон "
+"игрокам, которые подойдут слишком близко."
 
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:32
 msgid "Napalm grenade"
@@ -3728,6 +3750,9 @@ msgid ""
 "players. If other nade types are destroyed before they detonate, they "
 "instead explode similar to this, without doing their special effects."
 msgstr ""
+"(Обычная) %s взрывается через небольшую задержку, нанося урон ближайшим "
+"игрокам. Если другие типы гранат уничтожаются до взрыва, они взрываются "
+"аналогичным образом, не производя своих специальных эффектов."
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #, c-format
@@ -3735,6 +3760,7 @@ msgid ""
 "Make sure you remember to throw it with %s, or else it will blow up in your "
 "hands!"
 msgstr ""
+"Не забудьте бросить её с помощью %s, иначе она взорвётся у вас в руках!"
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:17
@@ -3748,6 +3774,9 @@ msgid ""
 "where it detonated. It is useful for cases where you want to go back to some "
 "point on the map after you die."
 msgstr ""
+"%s взрывается через небольшую задержку, временно устанавливая вашу точку "
+"возрождения в месте взрыва. Это полезно в случаях, когда вы хотите вернуться "
+"в какую-то точку на арене после смерти."
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:19
 msgid "Spawn grenade"
@@ -3758,18 +3787,22 @@ msgstr "Граната возрождения"
 msgid ""
 "The %s detonates after a short delay, teleporting you to where it detonated."
 msgstr ""
+"%s взрывается через небольшую задержку, телепортируя вас в место взрыва."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:52
 msgid ""
 "A common use of this nade is saving yourself from the void in space maps, "
 "however mastering this is very tricky."
 msgstr ""
+"Часто эта граната используется для спасения от бездны на космических аренах, "
+"однако освоить эту технику очень сложно."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:53
 msgid ""
 "If this grenade is destroyed by an attacker, it will deal some damage to "
 "them."
 msgstr ""
+"Если эта граната будет уничтожена атакующим, она нанесёт ему некоторый урон."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qh:19
 msgid "Translocate grenade"
@@ -3782,6 +3815,9 @@ msgid ""
 "point where it detonated for several seconds. Players inside the orb will be "
 "invisible to those outside it."
 msgstr ""
+"%s взрывается через небольшую задержку, на несколько секунд создавая вокруг "
+"места взрыва сферу. Игроки, находящиеся внутри сферы, становятся невидимыми "
+"для тех, кто находится снаружи."
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:24
 msgid "Veil grenade"
@@ -3801,6 +3837,9 @@ msgid ""
 "configuration options for this mutator, so they may act a little differently "
 "depending on the server you play on."
 msgstr ""
+"Существует несколько типов гранат, которые можно выбрать, а также множество "
+"вариантов настройки этого мутатора, поэтому они могут действовать немного по-"
+"разному в зависимости от сервера, на котором вы играете."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:53
 #, c-format
@@ -3818,6 +3857,8 @@ msgid ""
 "The %s mutator, enabled by default, allows the spawning of new gimmicky "
 "weapons, sometimes replacing a core weapon."
 msgstr ""
+"Мутатор %s, включённый по умолчанию, позволяет появляться новым необычным "
+"видам оружия, иногда заменяющим основное оружие."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:30
 #, c-format
@@ -3825,6 +3866,8 @@ msgid ""
 "Since these weapons can't spawn in %s and %s, the %s mutator can't be "
 "enabled concurrently."
 msgstr ""
+"Поскольку эти оружия не могут появляться в %s и %s, мутатор %s нельзя "
+"включить параллельно."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
 #, c-format
@@ -3844,6 +3887,9 @@ msgid ""
 "After some time the weapon is reselected, and this repeats forever. Weapon "
 "and ammo pickups are also removed from the map."
 msgstr ""
+"%s — это мутатор, который дает всем игрокам одно и то же случайно выбранное "
+"оружие. Через некоторое время оружие выбирается заново, и этот процесс "
+"повторяется бесконечно. С арены также убираются подбираемые оружия и патроны."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:298
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
@@ -3869,11 +3915,16 @@ msgid ""
 "Since it's given as an offhand, you can fire it at the same time as the "
 "ordinary %s while laser jumping to achieve even more height."
 msgstr ""
+"Поскольку он выдаётся как дополнительный, вы можете стрелять из него "
+"одновременно с обычным %s во время лазерного прыжка, чтобы достичь ещё "
+"большей высоты."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:14
 #, c-format
 msgid "Note that it overrides the %s mutator, since they use the same bind."
 msgstr ""
+"Обратите внимание, что он переопределяет мутатор %s, поскольку они "
+"используют одну и ту же привязку."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
 #: qcsrc/common/util.qc:319
