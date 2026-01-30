@@ -82,8 +82,8 @@ NET_HANDLE(Nade_Orb, bool isNew)
 	Net_Accept(Nade_Orb);
 
 	int sf = ReadByte();
+	this.colormod = ReadRegistered(Nades).m_color;
 	setorigin(this, ReadVector());
-	this.colormod = ReadVector();
 	this.ltime = ReadFloat();
 	//this.ltime = time + ReadByte() / 10.0;
 	this.lifetime = (sf & SF_NADEORB_LIFETIME_FLOAT)
@@ -111,8 +111,8 @@ bool orb_send(entity this, entity to, int sf)
 
 	WriteHeader(MSG_ENTITY, Nade_Orb);
 	WriteByte(MSG_ENTITY, sf);
+	WriteRegistered(Nades, MSG_ENTITY, REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, this)));
 	WriteVector(MSG_ENTITY, this.origin);
-	WriteVector(MSG_ENTITY, this.colormod);
 	WriteFloat(MSG_ENTITY, this.ltime);
 	//WriteByte(MSG_ENTITY, (this.ltime - time) * 10.0 + 0.5); // round time delta to a 1/10th of a second
 	if (sf & SF_NADEORB_LIFETIME_FLOAT)

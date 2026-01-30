@@ -54,6 +54,9 @@ int autocvar_g_nades_bonus_score_spree;
 
 bool orb_send(entity this, entity to, int sf);
 
+/// Spawns an orb for some nade types
+entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad);
+
 /// Remove nades that are being thrown
 void nades_Clear(entity player);
 

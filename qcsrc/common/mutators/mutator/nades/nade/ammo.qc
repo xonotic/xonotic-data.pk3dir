@@ -66,10 +66,8 @@ void nade_ammo_touch(entity this, entity toucher)
 
 void nade_ammo_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_ammo_time, autocvar_g_nades_ammo_radius);
-
+	entity orb = nades_spawn_orb(this, autocvar_g_nades_ammo_time, autocvar_g_nades_ammo_radius);
 	settouch(orb, nade_ammo_touch);
-	orb.colormod = NADE_TYPE_AMMO.m_color;
 }
 #endif // SVQC
 #ifdef MENUQC
