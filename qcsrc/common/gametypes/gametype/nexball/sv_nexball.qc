@@ -55,6 +55,32 @@ const int NBM_FOOTBALL = 2;
 const int NBM_BASKETBALL = 4;
 float nexball_mode;
 
+bool nb_BallStatuses_SendEntity(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_NB_BALLSTATUSES);
+	// send ball statuses, in a bitset
+	for (int b, B, i = 1; i <= maxclients; )
+	{
+		B = 0;
+		for (b = BIT(0); b < BIT(8) && i <= maxclients; b <<= 1, ++i)
+			if (edict_num(i).ballcarried)
+				B |= b;
+		WriteByte(MSG_ENTITY, B);
+	}
+	return true;
+}
+
+entity nexballStatuses;
+void nb_BallStatuses_Init()
+{
+	if (nexballStatuses)
+	{
+		backtrace("Can't spawn nexballStatuses again!");
+		return;
+	}
+	Net_LinkEntity(nexballStatuses = new_pure(nexballStatuses), false, 0, nb_BallStatuses_SendEntity);
+}
+
 float OtherTeam(float t)  //works only if there are two teams on the map!
 {
 	entity e = find(NULL, classname, "nexball_team");
@@ -89,23 +115,6 @@ void ball_restart(entity this)
 	if(this.owner)
 		DropBall(this, this.owner.origin, '0 0 0');
 	ResetBall(this);
-}
-
-void nexball_setstatus(entity this)
-{
-	STAT(OBJECTIVE_STATUS, this) &= ~NB_CARRYING;
-	if(this.ballcarried)
-	{
-		if(this.ballcarried.lifetime && (this.ballcarried.lifetime < time))
-		{
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_NEXBALL_RETURN_HELD));
-			entity e = this.ballcarried;
-			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
-			ResetBall(e);
-		}
-		else
-			STAT(OBJECTIVE_STATUS, this) |= NB_CARRYING;
-	}
 }
 
 void relocate_nexball(entity this)
@@ -195,6 +204,8 @@ void GiveBall(entity plyr, entity ball)
 	w.wr_resetplayer(w, plyr);
 	plyr.(weaponentity).m_switchweapon = WEP_NEXBALL;
 	W_SwitchWeapon(plyr, WEP_NEXBALL, weaponentity);
+
+	nexballStatuses.SendFlags = 0xFFFFFF;
 }
 
 void DropBall(entity ball, vector org, vector vel)
@@ -228,6 +239,8 @@ void DropBall(entity ball, vector org, vector vel)
 	entity e = ball.owner; ball.owner = NULL;
 	e.ballcarried = NULL;
 	GameRules_scoring_vip(e, false);
+
+	nexballStatuses.SendFlags = 0xFFFFFF;
 }
 
 void InitBall(entity this)
@@ -334,7 +347,7 @@ void football_touch(entity this, entity toucher)
 
 void basketball_touch(entity this, entity toucher)
 {
-	if(toucher.ballcarried)
+	if(toucher.ballcarried) // can only hold 1 ball
 	{
 		football_touch(this, toucher);
 		return;
@@ -575,6 +588,9 @@ void SpawnBall(entity this)
 	this.reset = ball_restart;
 	setthink(this, InitBall);
 	this.nextthink = game_starttime + autocvar_g_nexball_delay_start;
+
+	IL_PUSH(g_balls, this);
+	nexballStatuses.SendFlags = 0xFFFFFF;
 }
 
 spawnfunc(nexball_basketball)
@@ -812,6 +828,14 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 
 				}
 			}
+
+			if (player.ballcarried.lifetime && player.ballcarried.lifetime < time)
+			{
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(player.team, INFO_NEXBALL_RETURN_HELD));
+				entity e = player.ballcarried;
+				DropBall(player.ballcarried, player.ballcarried.owner.origin, '0 0 0');
+				ResetBall(e);
+			}
 		}
 		else
 		{
@@ -831,10 +855,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				}
 			}
 		}
-
 	}
-
-	nexball_setstatus(player);
 }
 
 MUTATOR_HOOKFUNCTION(nb, SpectateCopy)
@@ -959,4 +980,5 @@ void nb_Initialize()
 	GameRules_limit_lead(autocvar_g_nexball_goalleadlimit);
 
 	InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
+	nb_BallStatuses_Init();
 }

@@ -32,12 +32,16 @@ ENDCLASS(Survival)
 REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));
 
 #ifdef GAMEQC
-// shared state signalling the player's survival status
-.int survival_status;
-const int SURV_STATUS_PREY = 1;
-const int SURV_STATUS_HUNTER = 2;
+REGISTER_NET_LINKED(ENT_CLIENT_SURV_STATUSES)
+const int SF_SURV_HUNTERS  = BIT(0);
+const int SF_SURV_SET      = BIT(1);
+const int SF_SURV_RESET    = BIT(2);
+const int SF_SURV_REVEAL   = BIT(3);
 
-// hardcoded player colors for survival
-const int SURV_COLOR_PREY = 51; // green
-const int SURV_COLOR_HUNTER = 68; // red
+// shared state signalling the player's Survival status
+enum
+{
+	SURV_STATUS_PREY = 1,
+	SURV_STATUS_HUNTER
+};
 #endif

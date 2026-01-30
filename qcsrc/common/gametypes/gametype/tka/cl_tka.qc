@@ -2,56 +2,130 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
+#include <common/gametypes/gametype/keepaway/cl_keepaway.qh>
 
-// Keepaway HUD mod icon
-int tkaball_prevstatus; // last remembered status
-float tkaball_statuschange_time; // time when the status changed
+int tkaballs, tkaballs_carry, tkaballs_dropped;
+int tkaballs_taken[NUM_TEAMS]; // taken doesn't include carrying -- taken by others
 
-// we don't need to reset for team keepaway since it immediately
-// autocorrects prevstatus as to if the player has the ball or not
+float tkaballs_carry_change_time; ///< Time when tkaballs_carry last changed
+float tkaballs_taken_change_time[NUM_TEAMS]; ///< Time when tkaballs_taken[...] last changed
 
-void HUD_Mod_TeamKeepaway(vector pos, vector mySize, bool should_draw)
+NET_HANDLE(ENT_CLIENT_TKA_BALLSTATUSES, bool isNew)
 {
+	int i, sf = ReadByte();
+	for (i = 0; i < maxclients; ++i)
+		if (playerslots[i])
+			playerslots[i].gametype_status = 0;
+	int tkaballs_carry_prev = tkaballs_carry;
+	int tkaballs_taken_prev[NUM_TEAMS];
+	for (i = 0; i < team_count; ++i)
+		tkaballs_taken_prev[i] = tkaballs_taken[i];
+
+	if (sf & SF_TKA_BALLS) // receive ball statuses
+	{
+		tkaballs = ReadShort();
+		tkaballs_dropped = 0;
+		for (i = 0; i < team_count; ++i)
+			tkaballs_taken[i] = 0;
+		int ball_owner;
+		for (i = 0; i < tkaballs; ++i)
+		{
+			ball_owner = ReadByte();
+			if (!ball_owner)
+				++tkaballs_dropped;
+			else
+			{
+				--ball_owner;
+				if (!playerslots[ball_owner])
+					playerslots[ball_owner] = new_pure(playerslot);
+				++playerslots[ball_owner].gametype_status;
+				++tkaballs_taken[Team_TeamToIndex(entcs_GetTeam(ball_owner)) - 1];
+			}
+		}
+		tkaballs_carry = (playerslots[player_currententnum - 1] ? playerslots[player_currententnum - 1].gametype_status : 0);
+		tkaballs_taken[Team_TeamToIndex(entcs_GetTeam(player_currententnum - 1)) - 1] -= tkaballs_carry;
+	}
+	else if (sf & SF_TKA_RESET) // reset - 0 balls
+	{
+		tkaballs = tkaballs_carry = tkaballs_dropped = 0;
+		for (i = 0; i < team_count; ++i)
+			tkaballs_taken[i] = 0;
+	}
+
+	// need to update the prevs regardless
+	if (tkaballs_carry != tkaballs_carry_prev)
+		tkaballs_carry_change_time = time;
+	for (i = 0; i < team_count; ++i)
+		if (tkaballs_taken[i] != tkaballs_taken_prev[i])
+			tkaballs_taken_change_time[i] = time;
+	return true;
+}
+
+#define TKA_TAKEN_PIC(team_i) \
+	strcat("tka_taken_", Static_Team_ColorName_Lower(Team_IndexToTeam(team_i)))
+void HUD_Mod_TKA_DrawItem_Multiple(vector itemPos, vector itemSize, float aspect_ratio, int i)
+{
+	float f;
+	if (itemSize.x / itemSize.y > aspect_ratio)
+	{
+		f = itemSize.y * aspect_ratio;
+		itemPos.x += (itemSize.x - f) * 0.5;
+		itemSize.x = f;
+	}
+	else
+	{
+		f = itemSize.x / aspect_ratio;
+		itemPos.y += (itemSize.y - f) * 0.5;
+		itemSize.y = f;
+	}
+
+	itemSize.x *= 0.5;
+	int d = team_count + 1;
+	switch (i)
+	{
+		case 0:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "keepawayball_carrying", tkaballs_carry_change_time,        tkaballs_carry,        true,  itos(tkaballs_carry));         break;
+		case d:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "notify_balldropped",    0,                                 tkaballs_dropped,      false, itos(tkaballs_dropped));       break;
+		default: HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, TKA_TAKEN_PIC(i),        tkaballs_taken_change_time[i - 1], tkaballs_taken[i - 1], false, itos(tkaballs_taken[i - 1]));  break;
+	}
+}
+
+void HUD_Mod_TKA(vector myPos, vector mySize, bool should_draw)
+{
+	int i;
+
+	if (spectatee_status != spectatee_status_prev) // changed spec, update caches
+	{
+		for (i = 0; i < team_count; ++i)
+			tkaballs_taken[i] = 0;
+		for (i = 0; i < maxclients; ++i)
+			if (playerslots[i])
+				tkaballs_taken[Team_TeamToIndex(entcs_GetTeam(i)) - 1] += playerslots[i].gametype_status;
+		tkaballs_carry = playerslots[player_currententnum - 1].gametype_status;
+		tkaballs_taken[Team_TeamToIndex(entcs_GetTeam(player_currententnum - 1)) - 1] -= tkaballs_carry;
+		spectatee_status_prev = spectatee_status;
+	}
+
 	if (!should_draw)
 		return;
 
-	mod_active = 1; // team keepaway should always show the mod HUD
+	mod_active = (tkaballs >= 1);
+	if (autocvar__hud_configure && !mod_active) // we'll make up something, so the panel isn't empty
+		mod_placeholder = mod_active = true;
+	else if (!mod_active)
+		return;
+	else
+		mod_placeholder = false;
 
-	float tkaball_alpha = blink(0.85, 0.15, 5);
-
-	int stat_items = STAT(TKA_BALLSTATUS);
-	int tkaball = (stat_items & TKA_BALL_CARRYING);
-
-	if(tkaball != tkaball_prevstatus)
+	// Draw icons
+	if (mod_placeholder || tkaballs == 1)
 	{
-		tkaball_statuschange_time = time;
-		tkaball_prevstatus = tkaball;
+		// TODO: unique team-based carrying icons
+		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "keepawayball_carrying", tkaballs_carry_change_time, tkaballs_carry, true, "");
+		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "notify_balldropped", 0, tkaballs_dropped, false, "");
+		for (i = 0; i < team_count; ++i)
+			HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, TKA_TAKEN_PIC(i + 1), tkaballs_taken_change_time[i], tkaballs_taken[i], false, "");
 	}
-
-	vector tkaball_pos, tkaball_size;
-
-	if(mySize.x > mySize.y) {
-		tkaball_pos = pos + eX * 0.25 * mySize.x;
-		tkaball_size = vec2(0.5 * mySize.x, mySize.y);
-	} else {
-		tkaball_pos = pos + eY * 0.25 * mySize.y;
-		tkaball_size = vec2(mySize.x, 0.5 * mySize.y);
-	}
-
-	float tkaball_statuschange_elapsedtime = time - tkaball_statuschange_time;
-	float f = bound(0, tkaball_statuschange_elapsedtime*2, 1);
-
-	if(tkaball_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(tkaball_pos, "keepawayball_carrying", tkaball_size, '1 1 1', panel_fg_alpha * tkaball_alpha, DRAWFLAG_NORMAL, f);
-
-	if(stat_items & TKA_BALL_CARRYING) // TODO: unique team based icon while carrying
-		drawpic_aspect_skin(pos, "keepawayball_carrying", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
-	else if(stat_items & TKA_BALL_TAKEN_RED)
-		drawpic_aspect_skin(pos, "tka_taken_red", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
-	else if(stat_items & TKA_BALL_TAKEN_BLUE)
-		drawpic_aspect_skin(pos, "tka_taken_blue", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
-	else if(stat_items & TKA_BALL_TAKEN_YELLOW)
-		drawpic_aspect_skin(pos, "tka_taken_yellow", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
-	else if(stat_items & TKA_BALL_TAKEN_PINK)
-		drawpic_aspect_skin(pos, "tka_taken_pink", vec2(mySize.x, mySize.y), '1 1 1', panel_fg_alpha * tkaball_alpha * f, DRAWFLAG_NORMAL);
+	else // >1 balls
+		HUD_Mod_TableWithAR_Draw(myPos, mySize, team_count + 2, 2, HUD_Mod_TKA_DrawItem_Multiple); // aspect ratio 2 (icon & text)
 }
+#undef TKA_TAKEN_PIC

@@ -7,48 +7,53 @@ bool autocvar_g_survival_punish_teamkill = true;
 bool autocvar_g_survival_reward_survival = true;
 float autocvar_g_survival_round_enddelay;
 
-entity survivalStatuses;
-void SurvivalStatuses_Init();
+.int survival_status;
 
-#define STATUS_SEND_RESET   1
-#define STATUS_SEND_HUNTERS 2
-
-bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
+int surv_state; // required for connecting clients
+enum
 {
-	// always send hunters their own status and their allies
-	if (dest.survival_status == SURV_STATUS_HUNTER)
-		sendflags |= STATUS_SEND_HUNTERS;
+	SURV_STATE_PLAYING, SURV_STATE_REVEAL, SURV_STATE_RESET
+};
 
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_SURVIVALSTATUSES);
-	WriteByte(MSG_ENTITY, sendflags);
-	if (sendflags & STATUS_SEND_HUNTERS)
-	{
-		for (int i = 1; i <= maxclients; i += 8)
+bool SurvStatuses_SendEntity(entity this, entity to, int sf)
+{
+	// SF_SURV_RESET makes everyone's .survival_status 0, SF_SURV_SET makes it 1 (PREY) in CSQC
+	if (sf == 0xFFFFFF) // set by the engine, need to fix this
+		switch (surv_state)
 		{
-			int f = 0;
-			entity e = edict_num(i);
-
-			for (int b = 0; b < 8; ++b, e = nextent(e))
-			{
-				bool is_hunter = (INGAME(e) && e.survival_status == SURV_STATUS_HUNTER);
-				if (is_hunter)
-					f |= BIT(b);
-			}
-			WriteByte(MSG_ENTITY, f);
+			default:
+			case SURV_STATE_PLAYING: sf = SF_SURV_SET;     break;
+			case SURV_STATE_REVEAL:  sf = SF_SURV_REVEAL;  break;
+			case SURV_STATE_RESET:   sf = SF_SURV_RESET;   break;
 		}
-	}
-	//print(sprintf("sent flags %f to %s\n", sendflags, dest.netname));
+
+	if (!(sf & (SF_SURV_RESET | SF_SURV_REVEAL)))
+	if (to.survival_status == SURV_STATUS_HUNTER || !INGAME(to)) // send Hunters and specs/observers the Hunter list
+		sf = SF_SURV_HUNTERS;
+
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SURV_STATUSES);
+	WriteByte(MSG_ENTITY, sf);
+	if (sf & (SF_SURV_HUNTERS | SF_SURV_REVEAL)) // send Hunter statuses, in a bitset
+		for (int b, B, i = 1; i <= maxclients; )
+		{
+			B = 0;
+			for (b = BIT(0); b < BIT(8) && i <= maxclients; b <<= 1, ++i)
+				if (INGAME(edict_num(i)) && edict_num(i).survival_status == SURV_STATUS_HUNTER)
+					B |= b; // they are a Hunter
+			WriteByte(MSG_ENTITY, B);
+		}
 	return true;
 }
 
-void SurvivalStatuses_Init()
+entity survStatuses;
+void SurvStatuses_Init()
 {
-	if(survivalStatuses)
+	if (survStatuses)
 	{
-		backtrace("Can't spawn survivalStatuses again!");
+		backtrace("Can't spawn survStatuses again!");
 		return;
 	}
-	Net_LinkEntity(survivalStatuses = new_pure(survivalStatuses), false, 0, SurvivalStatuses_SendEntity);
+	Net_LinkEntity(survStatuses = new_pure(survStatuses), false, 0, SurvStatuses_SendEntity);
 }
 
 void Surv_UpdateScores(bool timed_out)
@@ -90,7 +95,8 @@ float Surv_CheckWinner()
 		allowed_to_spawn = false;
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
-		survivalStatuses.SendFlags = STATUS_SEND_HUNTERS;
+		surv_state = SURV_STATE_REVEAL;
+		survStatuses.SendFlags |= SF_SURV_REVEAL;
 		return 1;
 	}
 
@@ -148,7 +154,8 @@ float Surv_CheckWinner()
 	allowed_to_spawn = false;
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
-	survivalStatuses.SendFlags = STATUS_SEND_HUNTERS;
+	surv_state = SURV_STATE_REVEAL;
+	survStatuses.SendFlags |= SF_SURV_REVEAL;
 
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		nades_RemovePlayer(it);
@@ -181,7 +188,8 @@ void Surv_RoundStart()
 		++total_hunters;
 		it.survival_status = SURV_STATUS_HUNTER;
 	});
-	survivalStatuses.SendFlags = STATUS_SEND_RESET;
+	surv_state = SURV_STATE_PLAYING;
+	survStatuses.SendFlags |= SF_SURV_SET;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -242,10 +250,11 @@ void surv_Initialize() // run at the start of a match, initiates gametype
 	});
 
 	allowed_to_spawn = true;
+	surv_state = SURV_STATE_RESET;
 	round_handler_Spawn(Surv_CheckPlayers, Surv_CheckWinner, Surv_RoundStart);
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 	EliminatedPlayers_Init(surv_isEliminated);
-	SurvivalStatuses_Init();
+	SurvStatuses_Init();
 }
 
 
@@ -280,7 +289,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	player.survival_validkills = 0;
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
 }
 
 MUTATOR_HOOKFUNCTION(surv, ForbidSpawn)
@@ -308,9 +317,6 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
-
-	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
@@ -326,7 +332,8 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 		}
 	});
 	bot_relinkplayerlist();
-	survivalStatuses.SendFlags = STATUS_SEND_RESET;
+	surv_state = SURV_STATE_RESET;
+	survStatuses.SendFlags |= SF_SURV_RESET;
 	return true;
 }
 
@@ -383,7 +390,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
 	{
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
 		if (IS_BOT_CLIENT(frag_target))
 			bot_clearqueue(frag_target);
 	}
@@ -418,7 +425,7 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 	if (INGAME(player))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
 	if (!INGAME(player))
 	{
 		player.survival_validkills = 0;

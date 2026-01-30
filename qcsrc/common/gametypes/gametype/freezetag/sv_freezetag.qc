@@ -19,55 +19,18 @@ float autocvar_g_ft_start_ammo_rockets = 160;
 float autocvar_g_ft_start_ammo_cells = 180;
 float autocvar_g_ft_start_ammo_fuel = 0;
 
-void freezetag_count_alive_players()
-{
-	total_players = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
-	}
-	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
-	{
-		++total_players;
-		if (GetResource(it, RES_HEALTH) < 1 || STAT(FROZEN, it))
-		{
-			continue;
-		}
-		entity team_ = Entity_GetTeam(it);
-		int num_alive = Team_GetNumberOfAlivePlayers(team_);
-		++num_alive;
-		Team_SetNumberOfAlivePlayers(team_, num_alive);
-	});
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
-	{
-		STAT(REDALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1));
-		STAT(BLUEALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(2));
-		STAT(YELLOWALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(3));
-		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
-	});
-
-	eliminatedPlayers.SendFlags |= 1;
-}
-
 bool freezetag_CheckTeams()
 {
-	static float prev_missing_teams_mask;
 	missing_teams_mask = 0;
-	if (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
-		return true;
-	if(total_players == 0)
+	if (total_alive_players == 0)
 		return false;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int b, i = 1; i <= NUM_TEAMS; ++i)
 	{
-		if ((freezetag_teams & Team_IndexToBit(i)) &&
-			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
-		{
-			missing_teams_mask |= Team_IndexToBit(i);
-		}
+		b = Team_IndexToBit(i);
+		if ((freezetag_teams & b) && !Team_GetTeamFromIndex(i).m_num_players_alive)
+			missing_teams_mask |= b;
 	}
-	if(prev_missing_teams_mask != missing_teams_mask)
-		prev_missing_teams_mask = missing_teams_mask;
-	return false;
+	return (missing_teams_mask == 0);
 }
 
 bool freezetag_CheckWinner()
@@ -242,7 +205,8 @@ void freezetag_Freeze(entity targ, entity attacker)
 
 	WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 
-	freezetag_count_alive_players();
+	EliminatedPlayers_RecountAlivePlayers();
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
 
 	freezetag_Add_Score(targ, attacker);
 }
@@ -287,7 +251,7 @@ void freezetag_Unfreeze(entity targ, bool reset_health)
 
 bool freezetag_isEliminated(entity e)
 {
-	if(IS_PLAYER(e) && (STAT(FROZEN, e) || IS_DEAD(e)))
+	if(IS_PLAYER(e) && (STAT(FROZEN, e) || IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
 	return false;
 }
@@ -407,8 +371,9 @@ void ft_RemovePlayer(entity this)
 		freezetag_LastPlayerForTeam_Notify(this);
 	freezetag_Unfreeze(this, false);
 
-	SetResourceExplicit(this, RES_HEALTH, 0); // neccessary to correctly count alive players
-	freezetag_count_alive_players();
+	this.frags = FRAGS_PLAYER_OUT_OF_GAME; // so freezetag_isEliminated will return true
+	EliminatedPlayers_RecountAlivePlayers();
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
 }
 
 MUTATOR_HOOKFUNCTION(ft, ClientDisconnect)
@@ -460,7 +425,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	{
 		if (STAT(FROZEN, frag_target))
 			freezetag_Unfreeze(frag_target, true);
-		freezetag_count_alive_players();
+		EliminatedPlayers_RecountAlivePlayers();
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
 		frag_target.respawn_time = time;
 		frag_target.respawn_flags |= RESPAWN_FORCE;
 		return true;
@@ -475,7 +441,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if (frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
 		freezetag_Add_Score(frag_target, frag_attacker);
-		freezetag_count_alive_players();
+		EliminatedPlayers_RecountAlivePlayers();
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
 		freezetag_LastPlayerForTeam_Notify(frag_target);
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return true;
@@ -542,7 +509,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 		return true;
 	}
 
-	freezetag_count_alive_players();
+	EliminatedPlayers_RecountAlivePlayers();
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
 
 	if(round_handler_IsActive())
 	if(round_handler_IsRoundStarted())
@@ -552,11 +520,6 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	}
 
 	return true;
-}
-
-MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
-{
-	eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerAnim)
@@ -583,7 +546,8 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 		PutClientInServer(it);
 		it.freezetag_frozen_timeout = 0;
 	});
-	freezetag_count_alive_players();
+	EliminatedPlayers_RecountAlivePlayers();
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
 	return true;
 }
 
@@ -826,7 +790,9 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			freezetag_Unfreeze(player, false);
 			SetResourceExplicit(player, RES_HEALTH, ((warmup_stage) ? warmup_start_health : start_health));
 			player.spawnshieldtime = time + autocvar_g_freezetag_revive_spawnshield;
-			freezetag_count_alive_players();
+
+			EliminatedPlayers_RecountAlivePlayers();
+			eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
 
 			if(n == -1)
 			{

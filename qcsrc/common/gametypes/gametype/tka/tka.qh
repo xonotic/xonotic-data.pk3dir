@@ -59,14 +59,13 @@ CLASS(TeamKeepaway, Gametype)
 		returns(menu, _("Point limit:"),     5,  100,  5, "g_tka_point_limit",         "g_tka_teams_override",         _("The amount of points needed before the match will end"));
 	}
 #ifdef CSQC
-	ATTRIB(TeamKeepaway, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_TeamKeepaway);
+	ATTRIB(TeamKeepaway, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_TKA);
 #endif
 ENDCLASS(TeamKeepaway)
 REGISTER_GAMETYPE(TEAM_KEEPAWAY, NEW(TeamKeepaway));
 
-const int TKA_BALL_TAKEN_RED            = BIT(0);
-const int TKA_BALL_TAKEN_BLUE           = BIT(1);
-const int TKA_BALL_TAKEN_YELLOW         = BIT(2);
-const int TKA_BALL_TAKEN_PINK           = BIT(3);
-const int TKA_BALL_CARRYING             = BIT(4);
-const int TKA_BALL_DROPPED              = BIT(5);
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_TKA_BALLSTATUSES)
+const int SF_TKA_RESET = BIT(0);
+const int SF_TKA_BALLS = BIT(1);
+#endif
