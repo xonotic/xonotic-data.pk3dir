@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-24 07:22+0100\n"
+"POT-Creation-Date: 2026-01-31 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2026\n"
+"Last-Translator: LegendGuard, 2020\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -164,7 +164,7 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Preme ^3%s^1 para unirte"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
-#: qcsrc/client/hud/panel/scoreboard.qc:2794 qcsrc/client/main.qc:1393
+#: qcsrc/client/hud/panel/scoreboard.qc:2794 qcsrc/client/main.qc:1390
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:82
 #: qcsrc/common/notifications/all.qh:463
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
@@ -591,7 +591,7 @@ msgstr "Liña de meta"
 msgid "PENALTY: %.1f (%s)"
 msgstr "PENALIZACIÓN: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1230
+#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1227
 msgid "missing a checkpoint"
 msgstr "Falta un punto de control"
 
@@ -1137,7 +1137,7 @@ msgstr "^7Preme ^3%s ^7para seleccionar un equipo específico"
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7xogadores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2580 qcsrc/client/main.qc:1422
+#: qcsrc/client/hud/panel/scoreboard.qc:2580 qcsrc/client/main.qc:1419
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:42
 msgid "Map:"
 msgstr "Mapa:"
@@ -1287,137 +1287,137 @@ msgstr "Non dispoñible"
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Tentando eliminar un equipo que non está na lista de equipos!"
 
-#: qcsrc/client/main.qc:1124 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:185
+#: qcsrc/client/main.qc:1121 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:185
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1125 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
+#: qcsrc/client/main.qc:1122 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1126 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
+#: qcsrc/client/main.qc:1123 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1127 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
+#: qcsrc/client/main.qc:1124 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1128 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
+#: qcsrc/client/main.qc:1125 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
 msgid "knots"
 msgstr "nós"
 
-#: qcsrc/client/main.qc:1341
+#: qcsrc/client/main.qc:1338
 msgid "All Weapons Arena"
 msgstr "Todalas Armas na Area"
 
-#: qcsrc/client/main.qc:1342
+#: qcsrc/client/main.qc:1339
 msgid "All Available Weapons Arena"
 msgstr "Dipoñibles Todalas Armas na Area"
 
-#: qcsrc/client/main.qc:1343
+#: qcsrc/client/main.qc:1340
 msgid "Most Weapons Arena"
 msgstr "Maioría de Armas na Area"
 
-#: qcsrc/client/main.qc:1344
+#: qcsrc/client/main.qc:1341
 msgid "Most Available Weapons Arena"
 msgstr "Maioría de Armas Dispoñibles na Area"
 
-#: qcsrc/client/main.qc:1347 qcsrc/client/main.qc:1361
+#: qcsrc/client/main.qc:1344 qcsrc/client/main.qc:1358
 msgid "No Weapons Arena"
 msgstr "Sen Armas na Area"
 
-#: qcsrc/client/main.qc:1359
+#: qcsrc/client/main.qc:1356
 #, c-format
 msgid "%s Arena"
 msgstr "%s Area"
 
-#: qcsrc/client/main.qc:1370 qcsrc/client/main.qc:1375
+#: qcsrc/client/main.qc:1367 qcsrc/client/main.qc:1372
 #, c-format
 msgid "This is %s"
 msgstr "Esta e a versión %s"
 
-#: qcsrc/client/main.qc:1371
+#: qcsrc/client/main.qc:1368
 msgid "Your client version is outdated."
 msgstr "A súa versión do cliente está desactualizada."
 
-#: qcsrc/client/main.qc:1372
+#: qcsrc/client/main.qc:1369
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### NON PODERÁS XOGAR NESTE SERVIDOR ###"
 
-#: qcsrc/client/main.qc:1373
+#: qcsrc/client/main.qc:1370
 msgid "Please update!"
 msgstr "Fai o favor actualiza!"
 
-#: qcsrc/client/main.qc:1376
+#: qcsrc/client/main.qc:1373
 msgid "This server is using an outdated Xonotic version."
 msgstr "Este servidor está a usar unha versión de Xonotic desactualizada."
 
-#: qcsrc/client/main.qc:1377
+#: qcsrc/client/main.qc:1374
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### ESTE SERVIDOR É INCOMPATIBLE E ASÍ NON PODES UNIRTE ###"
 
-#: qcsrc/client/main.qc:1379
+#: qcsrc/client/main.qc:1376
 #, c-format
 msgid "Welcome to %s"
 msgstr "Benvido a %s"
 
-#: qcsrc/client/main.qc:1395 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1392 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Nivel %d:"
 
-#: qcsrc/client/main.qc:1397
+#: qcsrc/client/main.qc:1394
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGPress ^F2%s^BG para entrar no xogo"
 
-#: qcsrc/client/main.qc:1420
+#: qcsrc/client/main.qc:1417
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:37
 msgid "Gametype:"
 msgstr "Modo do xogo:"
 
-#: qcsrc/client/main.qc:1424
+#: qcsrc/client/main.qc:1421
 msgid "by:"
 msgstr "por:"
 
-#: qcsrc/client/main.qc:1428
+#: qcsrc/client/main.qc:1425
 msgid "This match supports"
 msgstr "Esta partida soporta"
 
-#: qcsrc/client/main.qc:1430
+#: qcsrc/client/main.qc:1427
 #, c-format
 msgid "%d players"
 msgstr "%d xogadores"
 
-#: qcsrc/client/main.qc:1432
+#: qcsrc/client/main.qc:1429
 #, c-format
 msgid "%d to %d players"
 msgstr "%d a %d xogadores"
 
-#: qcsrc/client/main.qc:1434
+#: qcsrc/client/main.qc:1431
 #, c-format
 msgid "%d players maximum"
 msgstr "%d máximo de xogadores"
 
-#: qcsrc/client/main.qc:1436
+#: qcsrc/client/main.qc:1433
 #, c-format
 msgid "%d players minimum"
 msgstr "%d mínimo de xogadores"
 
-#: qcsrc/client/main.qc:1441
+#: qcsrc/client/main.qc:1438
 msgid "Active modifications:"
 msgstr "Modificacións activas:"
 
-#: qcsrc/client/main.qc:1444
+#: qcsrc/client/main.qc:1441
 msgid "Special gameplay tips:"
 msgstr "Consellos especiais de xogo:"
 
-#: qcsrc/client/main.qc:1451
+#: qcsrc/client/main.qc:1448
 msgid "Server's message"
 msgstr "Mensaxe do servidor"
 
-#: qcsrc/client/main.qc:1538
+#: qcsrc/client/main.qc:1535
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (non vinculado)"
@@ -8405,7 +8405,7 @@ msgstr ""
 msgid "Devastator"
 msgstr "Devastador"
 
-#: qcsrc/common/weapons/weapon/electro.qc:763
+#: qcsrc/common/weapons/weapon/electro.qc:754
 #, c-format
 msgid ""
 "The %s shoots electric balls forwards, dealing some splash damage when they "
@@ -8414,7 +8414,7 @@ msgstr ""
 "O %s dispara bolas eléctricas cara adiante, causando algo de dano en área "
 "cando explotan ao impactar."
 
-#: qcsrc/common/weapons/weapon/electro.qc:764
+#: qcsrc/common/weapons/weapon/electro.qc:755
 #, c-format
 msgid ""
 "The secondary fire launches orbs that are influenced by gravity, so they can "
@@ -8428,12 +8428,12 @@ msgstr ""
 "orbes explotan pasados uns segundos, e poden verse forzadas a explotar nun "
 "'combo' se unha bola do disparo primario estoura preto delas."
 
-#: qcsrc/common/weapons/weapon/electro.qc:767
+#: qcsrc/common/weapons/weapon/electro.qc:758
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
 msgstr "Consume algo de munición de %s por cada bola/orbe."
 
-#: qcsrc/common/weapons/weapon/electro.qc:768
+#: qcsrc/common/weapons/weapon/electro.qc:759
 #, c-format
 msgid ""
 "The %s is one of the best spam weapons to use in crowded areas, since combos "
@@ -8673,7 +8673,7 @@ msgstr ""
 msgid "MachineGun"
 msgstr "Metralladora"
 
-#: qcsrc/common/weapons/weapon/minelayer.qc:553
+#: qcsrc/common/weapons/weapon/minelayer.qc:554
 #, c-format
 msgid ""
 "The %s places mines on the ground when fired, which detonate and damage "
@@ -8684,20 +8684,19 @@ msgstr ""
 "inimigos se se pisan. Só se poden colocar un par de minas á vez e, pasados "
 "varios segundos, explótanse automaticamente."
 
-#: qcsrc/common/weapons/weapon/minelayer.qc:555
-msgid ""
-"The secondary fire instantaneously detonates any mines fired by the primary "
-"fire, first waiting until you're far enough away."
-msgstr ""
-"O disparo secundario detona instantaneamente calquera mina disparada polo "
-"disparo primario, agardando primeiro ata que teñas suficiente distancia."
-
 #: qcsrc/common/weapons/weapon/minelayer.qc:556
+#, c-format
+msgid ""
+"The secondary fire instantaneously detonates any mines placed by the primary "
+"fire, similar to the %s."
+msgstr ""
+
+#: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format
 msgid "It consumes %s ammo for each mine laid."
 msgstr "Consume munición de %s por cada mina colocada."
 
-#: qcsrc/common/weapons/weapon/minelayer.qc:557
+#: qcsrc/common/weapons/weapon/minelayer.qc:558
 #, c-format
 msgid ""
 "The mines are not launched very far before they hit the ground, so the %s "
