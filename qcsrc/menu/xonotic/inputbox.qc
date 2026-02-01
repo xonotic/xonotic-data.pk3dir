@@ -2,8 +2,7 @@
 
 entity makeXonoticInputBox_T(bool doEditColorCodes, string theCvar, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticInputBox);
+	entity me = NEW(XonoticInputBox);
 	me.configureXonoticInputBox(me, doEditColorCodes, theCvar, theTooltip);
 	return me;
 }
@@ -52,8 +51,7 @@ void XonoticInputBox_saveCvars(entity me)
 }
 float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 {
-	float r;
-	r = 0;
+	float r = 0;
 	if(key == K_ENTER || key == K_KP_ENTER)
 	{
 		if(me.controlledCvar)

@@ -46,27 +46,17 @@ void freezetag_count_alive_players()
 		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(4));
 	});
 
-	eliminatedPlayers.SendFlags |= 1;
+	eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 bool freezetag_CheckTeams()
 {
 	static float prev_missing_teams_mask;
+	missing_teams_mask = 0;
 	if (Team_GetNumberOfAliveTeams() == NumTeams(freezetag_teams))
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		return true;
-	}
 	if(total_players == 0)
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		return false;
-	}
-	int missing_teams_mask = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
 		if ((freezetag_teams & Team_IndexToBit(i)) &&
@@ -76,10 +66,7 @@ bool freezetag_CheckTeams()
 		}
 	}
 	if(prev_missing_teams_mask != missing_teams_mask)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
-	}
 	return false;
 }
 
@@ -355,7 +342,7 @@ void havocbot_role_ft_offense(entity this)
 	// Count how many players on team are unfrozen.
 	int unfrozen = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this) && !STAT(FROZEN, it), {
-		unfrozen++;
+		++unfrozen;
 	});
 
 	// If only one left on team or if role has timed out then start trying to free players.
@@ -569,7 +556,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ft, PutClientInServer)
 {
-	eliminatedPlayers.SendFlags |= 1;
+	eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerAnim)
@@ -776,7 +763,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			while (it.freezetag_revive_time > 1)
 			{
 				GameRules_scoring_add(it, SCORE, +1);
-				it.freezetag_revive_time -= 1;
+				--it.freezetag_revive_time;
 			}
 		}
 		if (revivers_last)
@@ -962,11 +949,11 @@ MUTATOR_HOOKFUNCTION(ft, TurretValidateTarget)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ft, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(ft, Bot_ForbidAttack)
 {
 	entity targ = M_ARGV(1, entity);
 
-	return !STAT(FROZEN, targ);
+	return STAT(FROZEN, targ);
 }
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)

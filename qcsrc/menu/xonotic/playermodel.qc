@@ -2,8 +2,7 @@
 
 entity makeXonoticPlayerModelSelector()
 {
-	entity me;
-	me = NEW(XonoticPlayerModelSelector);
+	entity me = NEW(XonoticPlayerModelSelector);
 	me.configureXonoticImage(me, string_null, -1);
 	return me;
 }

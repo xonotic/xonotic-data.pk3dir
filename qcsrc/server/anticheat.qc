@@ -177,8 +177,7 @@ void anticheat_prethink(entity this)
 
 string anticheat_display(float f, float t, float tmin, float mi, float ma)
 {
-	string s;
-	s = ftos(f);
+	string s = ftos(f);
 	if (t >= tmin) {
 		if(f <= mi)
 			return strcat(s, ":N");

@@ -10,8 +10,7 @@
 
 entity makeXonoticVideoSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticVideoSettingsTab);
+	entity me = NEW(XonoticVideoSettingsTab);
 	me.configureDialog(me);
 	return me;
 }
@@ -76,15 +75,17 @@ void XonoticVideoSettingsTab_fill(entity me)
 	}
 	else
 	{
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Resolution scaling:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.5, 2, 0.25, "r_viewscale",
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Resolution scaling:")));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider_T(0.5, 2, 0.25, "r_viewscale",
 			_("Screen or window size multiplier, above 1x does antialiasing, below 1x may help slow GPUs")));
+			e.setValueSpace(e, e.valueSpace * (10/9));
 			e.formatString = _("%sx");
 	}
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
-		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("gl_texture_anisotropy",
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Anisotropy:")));
+		me.TD(me, 1, 1.8, e = makeXonoticMixedSlider_T("gl_texture_anisotropy",
 			_("Anisotropic filtering quality")));
+			e.setValueSpace(e, e.valueSpace * (10/9));
 			e.formatString = _("%sx");
 			e.addText(e, ZCTX(_("ANISO^Disabled")), 1);
 			e.addRange(e, 2, 4, 2);

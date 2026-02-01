@@ -241,7 +241,7 @@ string getmaplist()
 	{
 		string col = (i % 2) ? "^2" : "^3";
 		maplist = cons(maplist, strcat(col, it));
-		mapcount += 1;
+		++mapcount;
 	});
 
 	MapInfo_ClearTemps();

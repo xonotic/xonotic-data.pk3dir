@@ -25,16 +25,17 @@ bool isinf(float e)
 bool isnan(float e)
 {
 	// The sane way to detect NaN is this:
-	// float f = e;
-	// return (e != f);
+	float f = e;
+	return (e != f);
 	// but darkplaces used to be compiled with -ffinite-math-only which broke it.
 	// DP is fixed now but until all clients update (so after 0.8.3) we have to use the following workaround
 	// or they'd have issues when connecting to newer servers.
+	// bones_was_here: fixed in 0.8.5 and later.
 
 	// Negative NaN ("-nan") is much more common but plain "nan" can be created by negating *some* -nans so we need to check both.
 	// DP's QCVM and GMQCC's QCVM behave differently - one needs ftos(-(0.0 / 0.0)), the other ftos(-sqrt(-1)).
-	string s = ftos(e);
-	return s == "nan" || s == "-nan";
+//	string s = ftos(e);
+//	return s == "nan" || s == "-nan";
 }
 bool isnormal(float e)
 {
@@ -141,8 +142,7 @@ float hypot(float e, float f)
 float erf(float e)
 {
 	// approximation taken from wikipedia
-	float f;
-	f = e*e;
+	float f = e*e;
 	return copysign(sqrt(1 - exp(-f * (1.273239544735163 + 0.14001228868667 * f) / (1 + 0.14001228868667 * f))), e);
 }
 float erfc(float e)
@@ -158,8 +158,7 @@ vector lgamma(float e)
 		return nan("gamma") * '1 1 1';
 	if(e < 0.1)
 	{
-		vector v;
-		v = lgamma(1.0 - e);
+		vector v = lgamma(1.0 - e);
 		// reflection formula:
 		// gamma(1-z) * gamma(z) = pi / sin(pi*z)
 		// lgamma(1-z) + lgamma(z) = log(pi) - log(sin(pi*z))
@@ -173,7 +172,7 @@ vector lgamma(float e)
 	}
 	if(e < 1.1)
 		return lgamma(e + 1) - log(e) * '1 0 0';
-	e -= 1;
+	--e;
 	return (0.5 * log(2 * M_PI * e) + e * (log(e) - 1)) * '1 0 0' + '0 1 0';
 }
 float tgamma(float e)

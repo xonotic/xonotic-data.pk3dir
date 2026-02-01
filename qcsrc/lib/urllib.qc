@@ -30,8 +30,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 	if (id < MIN_URL_ID) return 0;
 	id -= MIN_URL_ID;
 	if (id >= NUM_URL_ID) return 0;
-	entity e;
-	e = url_fromid[id];
+	entity e = url_fromid[id];
 	if (!e) return 0;
 	if (e.url_rbuf >= 0 || e.url_wbuf >= 0)
 	{
@@ -183,8 +182,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 	}
 	else
 	{
-		float fh;
-		fh = fopen(url, mode);
+		float fh = fopen(url, mode);
 		if (fh < 0)
 		{
 			rdy(NULL, pass, URL_READY_ERROR);
@@ -290,9 +288,8 @@ string url_fgets(entity e)
 	{
 		if (e.url_rbuf == -1) error("url_fgets: not readable in current state");
 		// curl
-		string s;
-		s = bufstr_get(e.url_rbuf, e.url_rbufpos);
-		e.url_rbufpos += 1;
+		string s = bufstr_get(e.url_rbuf, e.url_rbufpos);
+		++e.url_rbufpos;
 		return s;
 	}
 	else if (e.url_fh == URL_FH_STDOUT)
@@ -316,7 +313,7 @@ void url_fputs(entity e, string s)
 		if (e.url_wbuf == -1) error("url_fputs: not writable in current state");
 		// curl
 		bufstr_set(e.url_wbuf, e.url_wbufpos, s);
-		e.url_wbufpos += 1;
+		++e.url_wbufpos;
 	}
 	else if (e.url_fh == URL_FH_STDOUT)
 	{
@@ -345,7 +342,7 @@ void url_multi_ready(entity fh, entity me, float status)
 			delete(me);
 			return;
 		}
-		me.url_attempt += 1;
+		++me.url_attempt;
 		n = tokenize_console(me.url_url);
 		if (n <= me.url_attempt)
 		{
@@ -363,8 +360,7 @@ void url_multi_ready(entity fh, entity me, float status)
 ERASEABLE
 void url_multi_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
-	float n;
-	n = tokenize_console(url);
+	float n = tokenize_console(url);
 	if (n <= 0)
 	{
 		LOG_INFO("url_multi_fopen: need at least one URL");

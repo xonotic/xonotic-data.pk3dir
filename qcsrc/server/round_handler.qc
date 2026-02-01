@@ -47,11 +47,11 @@ void round_handler_Think(entity this)
 				this.cnt = 0;
 				this.round_endtime = (this.round_timelimit) ? time + this.round_timelimit : 0;
 				this.nextthink = time;
-				rounds_played++;
+				++rounds_played;
 				if (this.roundStart) this.roundStart();
 				return;
 			}
-			this.cnt = this.cnt - 1;
+			--this.cnt;
 		}
 		else
 		{

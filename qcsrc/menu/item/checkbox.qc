@@ -19,8 +19,7 @@
 	}
 	void CheckBox_draw(entity me)
 	{
-		float s;
-		s = me.pressed;
+		float s = me.pressed;
 		if (me.useDownAsChecked)
 		{
 			me.srcSuffix = string_null;

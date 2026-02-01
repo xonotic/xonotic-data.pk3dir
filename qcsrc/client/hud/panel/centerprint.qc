@@ -53,35 +53,35 @@ void centerprint_Add(int new_id, string strMessage, float duration, int countdow
 {
 	TC(int, new_id); TC(int, countdown_num);
 	//LOG_INFOF("centerprint_Add: ^2id: %d ^3dur: %d ^5countdown: %d\n'%s'", new_id, duration, countdown_num, strreplace("\n", "^7\\n^7", strMessage));
-	int i, j;
 
-	if(strMessage == "" && new_id == 0)
+	if (strMessage == "" && new_id == 0)
 		return;
 
 	// strip trailing newlines
-	j = strlen(strMessage) - 1;
-	while(substring(strMessage, j, 1) == "\n" && j >= 0)
+	int j = strlen(strMessage) - 1;
+	while (substring(strMessage, j, 1) == "\n" && j >= 0)
 		--j;
 	if (j < strlen(strMessage) - 1)
 		strMessage = substring(strMessage, 0, j + 1);
 
-	if(strMessage == "" && new_id == 0)
+	if (strMessage == "" && new_id == 0)
 		return;
 
 	// strip leading newlines
 	j = 0;
-	while(substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
+	while (substring(strMessage, j, 1) == "\n" && j < strlen(strMessage))
 		++j;
 	if (j > 0)
 		strMessage = substring(strMessage, j, strlen(strMessage) - j);
 
-	if(strMessage == "" && new_id == 0)
+	if (strMessage == "" && new_id == 0)
 		return;
 
 	if (!centerprint_showing)
 		centerprint_showing = true;
 
-	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
+	int i;
+	for (i = 0, j = cpm_index; i < CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
@@ -120,7 +120,7 @@ void centerprint_Add(int new_id, string strMessage, float duration, int countdow
 	}
 	else
 	{
-		if(duration == 0)
+		if (duration == 0)
 			duration = max(1, autocvar_hud_panel_centerprint_time);
 		centerprint_time[j] = duration;
 		centerprint_expire_time[j] = -1; // don't use the variable time here!
@@ -141,7 +141,7 @@ void centerprint_AddStandard(string strMessage)
 
 void centerprint_KillAll()
 {
-	for (int i=0; i<CENTERPRINT_MAX_MSGS; ++i)
+	for (int i = 0; i < CENTERPRINT_MAX_MSGS; ++i)
 	{
 		centerprint_start_time[i] = 0;
 		centerprint_expire_time[i] = 0;
@@ -160,7 +160,7 @@ void centerprint_SetDuelTitle(string left, string right)
 
 void centerprint_SetTitle(string title)
 {
-	if(title != centerprint_title)
+	if (title != centerprint_title)
 		strcpy(centerprint_title, CCR(title));
 }
 
@@ -172,20 +172,23 @@ void centerprint_ClearTitle()
 }
 
 float hud_configure_cp_generation_time;
-void HUD_CenterPrint()
+void HUD_CenterPrint(bool should_draw)
 {
-	if(!autocvar__hud_configure)
+	if (!should_draw)
+		return;
+	if (!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_centerprint) return;
-
-		if(hud_configure_prev) {
+		if (!autocvar_hud_panel_centerprint)
+			return;
+		if (hud_configure_prev)
+		{
 			centerprint_ClearTitle();
 			centerprint_KillAll();
 		}
 	}
 	else
 	{
-		if(!hud_configure_prev)
+		if (!hud_configure_prev)
 		{
 			centerprint_KillAll();
 			hud_configure_cp_generation_time = time; // show a message immediately
@@ -196,27 +199,26 @@ void HUD_CenterPrint()
 			{
 				centerprint_SetTitle(_("Title"));
 
-				float r;
-				r = random();
+				float r = random();
 				if (r > 0.8)
 					centerprint_Add(floor(r*1000), sprintf(_("^3Countdown message at time %s, seconds left: ^COUNT"), seconds_tostring(time)), 1, 10);
 				else if (r > 0.55)
 					centerprint_Add(0, sprintf(_("^1Multiline message at time %s that\n^BOLDlasts longer than normal"), seconds_tostring(time)), 20, 0);
 				else
 					centerprint_AddStandard(sprintf(_("Message at time %s"), seconds_tostring(time)));
-				hud_configure_cp_generation_time = time + 1 + random()*4;
+				hud_configure_cp_generation_time = time + 1 + random() * 4;
 			}
 			else
 			{
 				centerprint_Add(0, _("Generic message"), 10, 0);
-				hud_configure_cp_generation_time = time + 10 - random()*3;
+				hud_configure_cp_generation_time = time + 10 - random() * 3;
 			}
 		}
 	}
 
 	HUD_Panel_LoadCvars();
 
-	if ( HUD_Radar_Clickable() )
+	if (HUD_Radar_Clickable())
 	{
 		if (hud_panel_radar_bottom >= vid_conheight)
 			return;
@@ -225,12 +227,12 @@ void HUD_CenterPrint()
 		panel_pos.y = hud_panel_radar_bottom;
 		panel_size.y = min(panel_size.y, vid_conheight - hud_panel_radar_bottom);
 	}
-	else if(!autocvar__hud_configure && scoreboard_fade_alpha)
+	else if (!autocvar__hud_configure && scoreboard_fade_alpha)
 	{
 		vector target_pos = vec2(0.5 * (vid_conwidth - panel_size.x), scoreboard_bottom);
-		if(target_pos.y > panel_pos.y)
+		if (target_pos.y > panel_pos.y)
 		{
-			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
+			panel_pos += (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
 			panel_size.y = min(panel_size.y, vid_conheight - scoreboard_bottom);
 		}
 
@@ -248,26 +250,24 @@ void HUD_CenterPrint()
 	if (!centerprint_showing)
 		return;
 
-	if(panel_bg_padding)
+	if (panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	int i, j, k, n, g;
-	float a = 1, sz, align, current_msg_posY = 0, msg_size;
-	vector pos;
 	vector cp_fontsize = hud_fontsize * CENTERPRINT_BASE_SIZE;
-	string ts = "";
+	float current_msg_posY = 0; // k9er: this is unused?
 	bool all_messages_expired = true;
 
-	pos = panel_pos;
+	vector pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
 		pos.y += panel_size.y;
-	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
+	float align = bound(0, autocvar_hud_panel_centerprint_align, 1);
 
 	// Show title if available
-	if(centerprint_title != "" || centerprint_title_left != "") {
+	if (centerprint_title != "" || centerprint_title_left != "")
+	{
 		vector fontsize = cp_fontsize * autocvar_hud_panel_centerprint_fontscale_title;
 		float width = 0, right_width = 0, left_width = 0, max_rl_width = 0;
 		if (centerprint_title != "")
@@ -335,7 +335,7 @@ void HUD_CenterPrint()
 		all_messages_expired = false;
 	}
 
-	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
+	for (int g = 0, i = 0, j = cpm_index; i < CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
@@ -355,63 +355,68 @@ void HUD_CenterPrint()
 					continue;
 				centerprint_expire_time[j] = centerprint_expire_time[j] + centerprint_time[j];
 			}
-			else if(centerprint_time[j] != -1)
+			else if (centerprint_time[j] != -1)
 				continue;
 		}
 
 		all_messages_expired = false;
 
-		if (time < centerprint_start_time[j]) continue;
+		if (time < centerprint_start_time[j])
+			continue;
 
 		float fade_in_time = autocvar_hud_panel_centerprint_fade_in;
 		float fade_out_time = autocvar_hud_panel_centerprint_fade_out;
 
-		if (centerprint_countdown_num[j] && centerprint_start_time[j]) {
+		if (centerprint_countdown_num[j] && centerprint_start_time[j])
+		{
 			fade_in_time = 0;
 			fade_out_time = 0;
 		}
 
 		// fade
-		if(fade_in_time && centerprint_start_time[j] && time < centerprint_start_time[j] + fade_in_time) // Fade in
-			a = (time - centerprint_start_time[j]) / fade_in_time;
-		else if(time < centerprint_expire_time[j] - fade_out_time || centerprint_time[j] < 0) // Regularily printed or forced
-			a = 1;
-		else if(fade_out_time) // Expiring soon, so fade it out.
-			a = (centerprint_expire_time[j] - time) / fade_out_time;
-
-		if(centerprint_msgID[j] == ORDINAL(CPID_TIMEIN))
-			a = 1;
+		float a = 1;
+		if (centerprint_msgID[j] != ORDINAL(CPID_TIMEIN))
+		{
+			if (fade_in_time && centerprint_start_time[j] && time < centerprint_start_time[j] + fade_in_time) // Fade in
+				a = (time - centerprint_start_time[j]) / fade_in_time;
+			else if (time < centerprint_expire_time[j] - fade_out_time || centerprint_time[j] < 0) // Regularily printed or forced
+				a = 1;
+			else if (fade_out_time) // Expiring soon, so fade it out.
+				a = (centerprint_expire_time[j] - time) / fade_out_time;
+		}
 
 		// while counting down show it anyway in order to hold the current message position
-		if (a <= 0.5/255.0 && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
+		if (a <= (0.5/255.0) && centerprint_countdown_num[j] == 0)  // Guaranteed invisible - don't show.
 			continue;
 
 		// also fade it based on positioning
-		if(autocvar_hud_panel_centerprint_fade_subsequent)
+		if (autocvar_hud_panel_centerprint_fade_subsequent)
 		{
 			// pass one: all messages after the first have half alpha
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1);
+			a *= bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1);
 			// pass two: after that, gradually lower alpha even more for each message
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1);
+			a *= bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1);
 		}
 		a *= panel_fg_alpha;
 
 		// finally set the size based on the alpha
-		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
+		float sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize);
 		drawfontscale = hud_scale * sz;
 
+		int n, k;
 		if (centerprint_countdown_num[j])
 			n = tokenizebyseparator(strreplace("^COUNT", ftos(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
 		else
 			n = tokenizebyseparator(centerprint_messages[j], "\n");
 
+		string ts;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
 			// check if the message can be entirely shown
-			for(k = 0; k < n; ++k)
+			for (k = 0; k < n; ++k)
 			{
 				getWrappedLine_remaining = argv(k);
-				while(getWrappedLine_remaining)
+				while (getWrappedLine_remaining)
 				{
 					bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
 					vector fontsize = cp_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
@@ -420,14 +425,14 @@ void HUD_CenterPrint()
 					if (ts != "")
 						pos.y -= fontsize.y;
 					else
-						pos.y -= fontsize.y * CENTERPRINT_SPACING/2;
+						pos.y -= fontsize.y * CENTERPRINT_SPACING * 0.5;
 				}
 			}
 			current_msg_posY = pos.y; // save starting pos (first line) of the current message
 		}
 
-		msg_size = pos.y;
-		for(k = 0; k < n; ++k)
+		float msg_size = pos.y;
+		for (k = 0; k < n; ++k)
 		{
 			getWrappedLine_remaining = argv(k);
 
@@ -436,7 +441,7 @@ void HUD_CenterPrint()
 			if (is_bold)
 				getWrappedLine_remaining = substring(getWrappedLine_remaining, 5, -1);
 
-			while(getWrappedLine_remaining)
+			while (getWrappedLine_remaining)
 			{
 				ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 				if (ts != "")
@@ -444,13 +449,15 @@ void HUD_CenterPrint()
 					if (align)
 						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize) * sz) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
-						if (is_bold) draw_beginBoldFont();
+						if (is_bold)
+							draw_beginBoldFont();
 						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz * hud_scale.x) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
-						if (is_bold) draw_endBoldFont();
+						if (is_bold)
+							draw_endBoldFont();
 					pos.y += fontsize.y;
 				}
 				else
-					pos.y += fontsize.y * CENTERPRINT_SPACING/2;
+					pos.y += fontsize.y * CENTERPRINT_SPACING * 0.5;
 			}
 		}
 
@@ -476,7 +483,7 @@ void HUD_CenterPrint()
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos.y -= (1 - sqrt(a));
 
-			if(pos.y > panel_pos.y + panel_size.y - cp_fontsize.y) // check if the next message can be shown
+			if (pos.y > panel_pos.y + panel_size.y - cp_fontsize.y) // check if the next message can be shown
 			{
 				drawfontscale = hud_scale;
 				return;

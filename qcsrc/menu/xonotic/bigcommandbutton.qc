@@ -2,8 +2,7 @@
 
 entity makeXonoticBigCommandButton_T(string theText, vector theColor, string theCommand, int theFlags, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticBigCommandButton);
+	entity me = NEW(XonoticBigCommandButton);
 	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags, theTooltip);
 	return me;
 }

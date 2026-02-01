@@ -3,8 +3,8 @@
 #include <common/items/all.qh>
 #include <common/mutators/mutator/powerups/powerups.qh>
 #ifdef SVQC
-    #include <server/items/items.qh>
-    #include <common/resources/sv_resources.qh>
+	#include <server/items/items.qh>
+	#include <common/resources/sv_resources.qh>
 #endif
 
 #ifdef GAMEQC
@@ -16,11 +16,11 @@ bool autocvar_g_powerups_jetpack = true;
 int autocvar_g_pickup_fuel_jetpack;
 void powerup_jetpack_init(Pickup def, entity item)
 {
-    if(!autocvar_g_powerups || !autocvar_g_powerups_jetpack)
-        def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
+	if(!autocvar_g_powerups || !autocvar_g_powerups_jetpack)
+		def.spawnflags |= ITEM_FLAG_MUTATORBLOCKED;
 
-    if(!GetResource(item, RES_FUEL))
-        SetResourceExplicit(item, RES_FUEL, autocvar_g_pickup_fuel_jetpack);
+	if(!GetResource(item, RES_FUEL))
+		SetResourceExplicit(item, RES_FUEL, item.count > 0 ? item.count * autocvar_g_jetpack_fuel : autocvar_g_pickup_fuel_jetpack);
 }
 #endif
 

@@ -3,15 +3,19 @@
 #include "phaser_weapon.qh"
 
 CLASS(PhaserTurret, Turret)
+#ifdef GAMEQC
 /* spawnflags */ ATTRIB(PhaserTurret, spawnflags, int, TUR_FLAG_SNIPER | TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(PhaserTurret, m_mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(PhaserTurret, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(PhaserTurret, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(PhaserTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(PhaserTurret, head_model, string, strcat("models/turrets/", "phaser.md3"));
+#endif
 /* netname    */ ATTRIB(PhaserTurret, netname, string, "phaser");
 /* fullname   */ ATTRIB(PhaserTurret, m_name, string, _("Phaser Cannon"));
-    ATTRIB(PhaserTurret, m_weapon, Weapon, WEP_PHASER);
+#ifdef SVQC
+/* weapon     */ ATTRIB(PhaserTurret, m_weapon, Weapon, WEP_PHASER);
+#endif
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

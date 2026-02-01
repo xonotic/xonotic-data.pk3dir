@@ -4,21 +4,19 @@
 
 void nade_darkness_think(entity this)
 {
-	if(round_handler_IsActive())
-	if(!round_handler_IsRoundStarted())
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
 	{
 		delete(this);
 		return;
 	}
 
-	if(time >= this.ltime)
+	if (time >= this.ltime)
 	{
-		if ( autocvar_g_nades_darkness_explode )
+		if (autocvar_g_nades_darkness_explode)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			entity expef = EFFECT_NADE_EXPLODE;
-			Send_Effect_Except(expef, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
+			Send_Effect_Except(EFFECT_NADE_EXPLODE, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			nade_normal_boom(this);
@@ -33,36 +31,33 @@ void nade_darkness_think(entity this)
 	this.nextthink = time + 0.1;
 
 	// gaussian
-	float randomr;
-	randomr = random();
+	float randomr = random();
 	randomr = exp(-5 * randomr * randomr) * autocvar_g_nades_nade_radius;
-	float randomw;
-	randomw = random() * (2 * M_PI);
+	float randomw = random() * (2 * M_PI);
 	vector randomp;
 	randomp.x = randomr * cos(randomw);
 	randomp.y = randomr * sin(randomw);
 	randomp.z = 1;
 	Send_Effect(EFFECT_DARKFIELD, this.origin + randomp, '0 0 0', 1);
 
-	if(time >= this.nade_special_time)
+	if (time >= this.nade_special_time)
 	{
 		this.nade_special_time = time + 0.7;
 		Send_Effect(EFFECT_DARKFIELD, this.origin, '0 0 0', 1);
 	}
 
-
 	float current_dark_time = this.ltime - time - 0.1;
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage
-		&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0 && IS_REAL_CLIENT(it),
+	&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0 && IS_REAL_CLIENT(it),
 	{
 		switch (autocvar_g_nades_darkness_teamcheck)
 		{
 			case 0:  break; // affect everyone
 			default:
-			case 2:  if(SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
+			case 2:  if (SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
 			         // fall through (check case 1 condition too)
-			case 1:  if(it == this.realowner) continue; // don't affect the player who threw the nade
+			case 1:  if (it == this.realowner) continue; // don't affect the player who threw the nade
 		}
 		STAT(NADE_DARKNESS_TIME, it) = time + 0.1;
 	});
@@ -86,7 +81,7 @@ void nade_darkness_boom(entity this)
 	fountain.nade_special_time = time + 0.3;
 	fountain.angles = this.angles;
 
-	if ( autocvar_g_nades_darkness_explode )
+	if (autocvar_g_nades_darkness_explode)
 	{
 		setmodel(fountain, MDL_PROJECTILE_GRENADE);
 		entity timer = new(nade_timer);
@@ -112,8 +107,7 @@ bool darkness_fadealpha;
 
 void HUD_DarkBlinking()
 {
-	vector bottomright = vec2(vid_conwidth, vid_conheight);
-	drawfill('0 0 0', bottomright, NADE_TYPE_DARKNESS.m_color, darkness_fadealpha, DRAWFLAG_NORMAL);
+	drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), NADE_TYPE_DARKNESS.m_color, darkness_fadealpha, DRAWFLAG_NORMAL);
 }
 
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)

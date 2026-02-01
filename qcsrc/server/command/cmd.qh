@@ -5,8 +5,10 @@ int autocvar_sv_clientcommand_antispam_count;
 
 .float cmd_floodtime;
 .string ignore_list; // stores player id's, maybe can be upgraded to store net address for reconnect protection
+const int IGNORE_LIST_SEND_NOW = -1; // special value that should be set only by ignore_list_send
+.float ignore_list_send_time; // allow sending ignore_list with a small delay to reduce spam especially on map switch
 
-const int IGNORE_MAXPLAYERS = 16; // maximum players to be ignored in the personal chat
+const int IGNORE_MAXPLAYERS = 16; // maximum players that can be ignored permanently
 
 string MapVote_Suggest(entity this, string m);
 
@@ -14,8 +16,10 @@ string MapVote_Suggest(entity this, string m);
 void ClientCommand_macro_write_aliases(float fh);
 
 // functions for ignore command
-string ignore_removefromlist(entity list, entity ignore);
-
-bool ignore_playerinlist(entity sender, entity targ);
-
+void ignore_remove_player(entity this, entity ignore, bool from_db_too);
+int ignore_add_player(entity this, entity ignore, bool to_db_too);
+bool ignore_playerindb(entity this, entity pl); // permanent ignores
+bool ignore_playerinlist(entity this, entity pl); // all ignores
 void ignore_clearall(entity this);
+void ignore_list_update_on_connection(entity this);
+void ignore_list_send(entity this);

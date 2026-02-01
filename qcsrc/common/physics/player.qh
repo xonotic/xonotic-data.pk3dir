@@ -44,9 +44,9 @@ float autocvar_g_maxspeed;
 float autocvar_g_movement_highspeed = 1;
 bool autocvar_g_movement_highspeed_q3_compat = 0;
 bool autocvar_speedmeter;
-string autocvar_sv_jumpspeedcap_max;
-float autocvar_sv_jumpspeedcap_max_disable_on_ramps;
-string autocvar_sv_jumpspeedcap_min;
+float autocvar_sv_jumpspeedcap_max;
+bool autocvar_sv_jumpspeedcap_max_disable_on_ramps;
+float autocvar_sv_jumpspeedcap_min;
 float autocvar_sv_jumpvelocity;
 float autocvar_sv_jumpvelocity_crouch;
 float autocvar_sv_maxairspeed;
@@ -80,16 +80,16 @@ REPLICATE_INIT(bool, cvar_cl_jetpack_jump);
 REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #endif
 
-#define PHYS_PL_MAX(s)						STAT(PL_MAX, s)
-#define PHYS_PL_MIN(s)						STAT(PL_MIN, s)
-#define PHYS_PL_CROUCH_MAX(s)				STAT(PL_CROUCH_MAX, s)
-#define PHYS_PL_CROUCH_MIN(s)				STAT(PL_CROUCH_MIN, s)
+#define PHYS_PL_MAX(s)                      STAT(PL_MAX, s)
+#define PHYS_PL_MIN(s)                      STAT(PL_MIN, s)
+#define PHYS_PL_CROUCH_MAX(s)               STAT(PL_CROUCH_MAX, s)
+#define PHYS_PL_CROUCH_MIN(s)               STAT(PL_CROUCH_MIN, s)
 
-#define PHYS_PL_VIEWOFS(s)					STAT(PL_VIEW_OFS, s)
-#define PHYS_PL_CROUCH_VIEWOFS(s)			STAT(PL_CROUCH_VIEW_OFS, s)
+#define PHYS_PL_VIEWOFS(s)                  STAT(PL_VIEW_OFS, s)
+#define PHYS_PL_CROUCH_VIEWOFS(s)           STAT(PL_CROUCH_VIEW_OFS, s)
 
-#define PHYS_VIEWHEIGHT(s)					STAT(VIEWHEIGHT, s)
-#define PHYS_HEALTH(s)						STAT(HEALTH, s)
+#define PHYS_VIEWHEIGHT(s)                  STAT(VIEWHEIGHT, s)
+#define PHYS_HEALTH(s)                      STAT(HEALTH, s)
 
 #define PHYS_ACCELERATE(s)                  STAT(MOVEVARS_ACCELERATE, s)
 #define PHYS_AIRACCELERATE(s)               STAT(MOVEVARS_AIRACCELERATE, s)
@@ -125,9 +125,11 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_JETPACK_FUEL(s)                STAT(JETPACK_FUEL, s)
 #define PHYS_JETPACK_MAXSPEED_SIDE(s)       STAT(JETPACK_MAXSPEED_SIDE, s)
 #define PHYS_JETPACK_MAXSPEED_UP(s)         STAT(JETPACK_MAXSPEED_UP, s)
-#define PHYS_JETPACK_REVERSE_THRUST(s)		STAT(JETPACK_REVERSE_THRUST, s)
+#define PHYS_JETPACK_REVERSE_THRUST(s)      STAT(JETPACK_REVERSE_THRUST, s)
 
-#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
+#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(s) STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, s)
+#define PHYS_JUMPSPEEDCAP_MIN(s)            STAT(MOVEVARS_JUMPSPEEDCAP_MIN, s)
+#define PHYS_JUMPSPEEDCAP_MAX(s)            STAT(MOVEVARS_JUMPSPEEDCAP_MAX, s)
 #define PHYS_JUMPVELOCITY(s)                STAT(MOVEVARS_JUMPVELOCITY, s)
 #define PHYS_JUMPVELOCITY_CROUCH(s)         STAT(MOVEVARS_JUMPVELOCITY_CROUCH, s)
 
@@ -145,7 +147,7 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_WARSOWBUNNY_TOPSPEED(s)        STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, s)
 #define PHYS_WARSOWBUNNY_TURNACCEL(s)       STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, s)
 
-#define PHYS_SLICK_APPLYGRAVITY(s)  		STAT(SLICK_APPLYGRAVITY)
+#define PHYS_SLICK_APPLYGRAVITY(s)          STAT(SLICK_APPLYGRAVITY)
 
 #define PHYS_INPUT_BUTTON_ATCK(s)           PHYS_INPUT_BUTTON_BUTTON1(s)
 #define PHYS_INPUT_BUTTON_JUMP(s)           PHYS_INPUT_BUTTON_BUTTON2(s)
@@ -160,8 +162,8 @@ REPLICATE_INIT(bool, cvar_cl_movement_track_canjump);
 #define PHYS_INPUT_BUTTON_PRYDON(s)         PHYS_INPUT_BUTTON_BUTTON_PRYDON(s)
 #define PHYS_INPUT_BUTTON_ZOOMSCRIPT(s)     PHYS_INPUT_BUTTON_BUTTON9(s)
 #define PHYS_INPUT_BUTTON_JETPACK(s)        PHYS_INPUT_BUTTON_BUTTON10(s)
-#define PHYS_INPUT_BUTTON_DODGE(s)			PHYS_INPUT_BUTTON_BUTTON11(s)
-#define PHYS_INPUT_BUTTON_MINIGAME(s)		PHYS_INPUT_BUTTON_BUTTON12(s)
+#define PHYS_INPUT_BUTTON_DODGE(s)          PHYS_INPUT_BUTTON_BUTTON11(s)
+#define PHYS_INPUT_BUTTON_MINIGAME(s)       PHYS_INPUT_BUTTON_BUTTON12(s)
 
 #ifdef CSQC
 STATIC_INIT(PHYS_INPUT_BUTTON)
@@ -219,9 +221,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 
 	#define PHYS_FIXANGLE(s) ('0 0 0')
 
-	string autocvar_cl_jumpspeedcap_min;
-	string autocvar_cl_jumpspeedcap_max;
-
 	.float watertype;
 	.float waterlevel;
 	.int items;
@@ -277,10 +276,7 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define PHYS_INPUT_BUTTON_BUTTON15(s)       boolean(input_buttons & BIT(17))
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       boolean(input_buttons & BIT(18))
 
-	#define PHYS_INVEHICLE(s) 					(boolean(hud != HUD_NORMAL))
-
-	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_cl_jumpspeedcap_min
-	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_cl_jumpspeedcap_max
+	#define PHYS_INVEHICLE(s)                   (boolean(hud != HUD_NORMAL))
 
 	#define PHYS_CL_TRACK_CANJUMP(s)            STAT(MOVEVARS_CL_TRACK_CANJUMP, s)
 
@@ -293,10 +289,6 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	void Physics_UpdateStats(entity this);
 
 	void PM_UpdateButtons(entity this, entity store);
-
-	/** Not real stats */
-	.string jumpspeedcap_min;
-	.string jumpspeedcap_max;
 
 	// footstep interval
 	.float nextstep;
@@ -330,16 +322,13 @@ STATIC_INIT(PHYS_INPUT_BUTTON)
 	#define PHYS_INPUT_BUTTON_BUTTON15(s)       (CS(s).button15)
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       (CS(s).button16)
 
-	#define PHYS_INVEHICLE(s) 					(boolean((s).vehicle != NULL))
-
-	#define PHYS_JUMPSPEEDCAP_MIN               autocvar_sv_jumpspeedcap_min
-	#define PHYS_JUMPSPEEDCAP_MAX               autocvar_sv_jumpspeedcap_max
+	#define PHYS_INVEHICLE(s)                   (boolean((s).vehicle != NULL))
 
 	#define PHYS_CL_TRACK_CANJUMP(s)            (CS_CVAR(s).cvar_cl_movement_track_canjump)
 
 #endif
 
-#define PHYS_FRICTION_REPLICA_DT                0.00390625
+#define PHYS_FRICTION_REPLICA_DT                  0.00390625
 
 #ifdef SVQC
 // FIXME/EXPLAINME: why? Mario: because

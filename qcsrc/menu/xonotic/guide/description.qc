@@ -45,19 +45,19 @@ string wrapGuideText(string desc, float maxWidth, vector theFontSize)
 	return strcat(wrapped, "\n\n");
 }
 
-void XonoticGuideDescription_setDescription(entity me, string desc)
+void XonoticGuideDescription_wrapDescription(entity me)
 {
-	if (me.m_description && me.m_description != desc)
-		strunzone(me.m_description);
-	me.m_description = strzone(desc);
-
-	strfree(me.m_descriptionWrapped);
-
 	const float maxWidth = 1 - me.keepspaceLeft - me.keepspaceRight;
-	me.m_descriptionWrapped = strzone(wrapGuideText(me.m_description, maxWidth, me.realFontSize));
+	strcpy(me.m_descriptionWrapped, wrapGuideText(me.m_description, maxWidth, me.realFontSize));
 
 	me.nItems = tokenizebyseparator(me.m_descriptionWrapped, "\n");
 	me.setSelected(me, 0); // reset scrollbar position
+}
+
+void XonoticGuideDescription_setDescription(entity me, string desc)
+{
+	strcpy(me.m_description, desc);
+	me.wrapDescription(me);
 }
 
 void XonoticGuideDescription_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
@@ -69,5 +69,5 @@ void XonoticGuideDescription_resizeNotify(entity me, vector relOrigin, vector re
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.keepspaceLeft = me.keepspaceRight = me.realFontSize.x;
-	me.setDescription(me, me.m_description);
+	me.wrapDescription(me);
 }

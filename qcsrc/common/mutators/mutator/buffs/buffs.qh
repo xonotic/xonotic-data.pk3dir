@@ -51,9 +51,7 @@ ENDCLASS(Buff)
 
 STATIC_INIT(REGISTER_BUFFS)
 {
-	FOREACH(StatusEffects, it.instanceOfBuff, {
-		it.m_sprite = strzone(strcat("buff-", it.netname));
-	});
+	FOREACH(StatusEffects, it.instanceOfBuff, it.m_sprite = strzone(strcat("buff-", it.netname)));
 }
 
 #ifdef SVQC
@@ -70,11 +68,11 @@ STATIC_INIT(REGISTER_BUFFS)
 			buff_Init(this); \
 		}
 	#define BUFF_SPAWNFUNCS(e, b)                       \
-			BUFF_SPAWNFUNC(e,           b,  0)          \
-			BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
-			BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
-			BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
-			BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
+	        BUFF_SPAWNFUNC(e,           b,  0)          \
+	        BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
+	        BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
+	        BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
+	        BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
 	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r) \
 		spawnfunc(o) \
 		{ \

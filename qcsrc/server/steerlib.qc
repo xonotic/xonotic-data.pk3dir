@@ -74,8 +74,7 @@ vector steerlib_attract2(vector point, float maximal_distance,float min_influens
 
     // i_target = bound(min_influense,(1-(distance / maximal_distance)),max_influense);
 
-    string s;
-    s = ftos(i_target);
+    string s = ftos(i_target);
     bprint("IT: ",s,"\n");
     s = ftos(i_current);
     bprint("IC  : ",s,"\n");
@@ -132,7 +131,7 @@ vector steerlib_wander(entity this, float range, float threshold, vector oldpoin
     range = bound(0, range, 1);
 
     wander_point = this.origin + v_forward * 128;
-    wander_point = wander_point + randomvec() * (range * 128) - randomvec() * (range * 128);
+    wander_point += randomvec() * (range * 128) - randomvec() * (range * 128);
 
     return normalize(wander_point - this.origin);
 }
@@ -166,8 +165,8 @@ vector steerlib_flock(entity this, float _radius, float standoff, float separati
         if(flock_member.flock_id == this.flock_id)
         {
             ++ccount;
-            push = push + (steerlib_repel(this, flock_member.origin,standoff) * separation_force);
-            pull = pull + (steerlib_arrive(this, flock_member.origin + flock_member.velocity, _radius) * flock_force);
+            push += steerlib_repel(this, flock_member.origin,standoff) * separation_force;
+            pull += steerlib_arrive(this, flock_member.origin + flock_member.velocity, _radius) * flock_force;
         }
         flock_member = flock_member.chain;
     }
@@ -191,8 +190,8 @@ vector steerlib_flock2d(entity this, float _radius, float standoff, float separa
         if(flock_member.flock_id == this.flock_id)
         {
             ++ccount;
-            push = push + (steerlib_repel(this, flock_member.origin, standoff) * separation_force);
-            pull = pull + (steerlib_arrive(this, flock_member.origin + flock_member.velocity, _radius) * flock_force);
+            push += steerlib_repel(this, flock_member.origin, standoff) * separation_force;
+            pull += steerlib_arrive(this, flock_member.origin + flock_member.velocity, _radius) * flock_force;
         }
         flock_member = flock_member.chain;
     }
@@ -220,14 +219,14 @@ vector steerlib_swarm(entity this, float _radius, float standoff, float separati
         if(swarm_member.flock_id == this.flock_id)
         {
             ++ccount;
-            center = center + swarm_member.origin;
-            force = force + (steerlib_repel(this, swarm_member.origin,standoff) * separation_force);
+            center += swarm_member.origin;
+            force += steerlib_repel(this, swarm_member.origin,standoff) * separation_force;
         }
         swarm_member = swarm_member.chain;
     }
 
-    center = center * (1 / ccount);
-    force = force + (steerlib_arrive(this, center,_radius) * swarm_force);
+    center *= 1 / ccount;
+    force += steerlib_arrive(this, center,_radius) * swarm_force;
 
     return force;
 }
@@ -399,8 +398,8 @@ vector steerlib_beamsteer(entity this, vector dir, float length, float step, flo
     bm_right   *= bm_right;
     bm_left    *= bm_left;
 
-    vr = vr * bm_right;
-    vl = vl * bm_left;
+    vr *= bm_right;
+    vl *= bm_left;
 
     return normalize(vr + vl);
 }

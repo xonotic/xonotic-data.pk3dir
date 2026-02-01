@@ -11,8 +11,7 @@
 
 entity makeXonoticServerListTab()
 {
-	entity me;
-	me = NEW(XonoticServerListTab);
+	entity me = NEW(XonoticServerListTab);
 	me.configureDialog(me);
 	return me;
 }

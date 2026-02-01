@@ -13,6 +13,7 @@
 .float alpha;
 .float scale;
 .vector colormod;
+.vector glowmod;
 
 void SUB_Stop(entity this, entity toucher)
 {
@@ -36,7 +37,7 @@ void Projectile_DrawTrail(entity this, vector to)
 	// force the effect even for stationary firemine
 	if (this.cnt == PROJECTILE_FIREMINE)
 		if (from == to)
-			from.z += 1;
+			++from.z;
 
 	// Note: alpha value 0 actually means 1 on entities.
 	// This can be relevant when coming from CSQCModel_Effects_Apply.
@@ -435,6 +436,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_MINE:
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
+				this.glowmod = colormapPaletteColor(this.colormap & 0x0F, true);
 				break;
 			case PROJECTILE_PORTO_RED:
 				this.colormod = '2 1 1';

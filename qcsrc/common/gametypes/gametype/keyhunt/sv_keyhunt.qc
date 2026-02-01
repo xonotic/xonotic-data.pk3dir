@@ -167,11 +167,11 @@ void kh_Controller_Think(entity this)  // called a lot
 	if(this.cnt > 0)
 	{
 		if(getthink(this) != kh_WaitForPlayers)
-			this.cnt -= 1;
+			--this.cnt;
 	}
 	else if(this.cnt == 0)
 	{
-		this.cnt -= 1;
+		--this.cnt;
 		kh_Controller_Thinkfunc();
 	}
 	this.nextthink = time + 1;
@@ -874,39 +874,24 @@ int kh_GetMissingTeams()
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
 	static int prev_missing_teams_mask;
+	missing_teams_mask = kh_GetMissingTeams();
 	if(time < game_starttime)
 	{
-		if (prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		kh_Controller_SetThink(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
-	int missing_teams_mask = kh_GetMissingTeams();
 	if(!missing_teams_mask)
 	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 	}
 	else
 	{
-		if(player_count == 0)
-		{
-			if(prev_missing_teams_mask > 0)
-				Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-			prev_missing_teams_mask = -1;
-		}
-		else
+		if(player_count != 0)
 		{
 			if(prev_missing_teams_mask != missing_teams_mask)
-			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 				prev_missing_teams_mask = missing_teams_mask;
-			}
 		}
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
 	}
@@ -1376,4 +1361,9 @@ MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 {
 	kh_WaitForPlayers(); // takes care of killing the "missing teams" message
+}
+
+MUTATOR_HOOKFUNCTION(kh, PreferPlayerScore_Clear)
+{
+	return true;
 }

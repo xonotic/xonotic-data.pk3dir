@@ -4,8 +4,7 @@
 
 entity makeXonoticDemoList()
 {
-	entity me;
-	me = NEW(XonoticDemoList);
+	entity me = NEW(XonoticDemoList);
 	me.configureXonoticDemoList(me);
 	return me;
 }
@@ -18,8 +17,7 @@ void XonoticDemoList_configureXonoticDemoList(entity me)
 
 string XonoticDemoList_demoName(entity me, float i)
 {
-	string s;
-	s = bufstr_get(me.listDemo, i);
+	string s = bufstr_get(me.listDemo, i);
 
 	if(substring(s, 0, 1) == "/")
 		s = substring(s, 1, strlen(s) - 1);  // remove the first forward slash
@@ -148,8 +146,7 @@ void DemoList_Filter_Change(entity box, entity me)
 
 void XonoticDemoList_startDemo(entity me)
 {
-	string s;
-	s = me.demoName(me, me.selectedItem);
+	string s = me.demoName(me, me.selectedItem);
 	s = strdecolorize(s);
 
 	localcmd("togglemenu 0; playdemo \"demos/", s, ".dem\"\n");
@@ -157,8 +154,7 @@ void XonoticDemoList_startDemo(entity me)
 
 void XonoticDemoList_timeDemo(entity me)
 {
-	string s;
-	s = me.demoName(me, me.selectedItem);
+	string s = me.demoName(me, me.selectedItem);
 	s = strdecolorize(s);
 
 	localcmd("togglemenu 0; timedemo \"demos/", s, ".dem\"\n");

@@ -13,8 +13,7 @@ MODEL(EDGE,         "models/pathlib/edge.md3");
 
 void pathlib_showpath(entity start)
 {
-    entity e;
-    e = start;
+    entity e = start;
     while(e.path_next)
     {
         te_lightning1(e,e.origin,e.path_next.origin);

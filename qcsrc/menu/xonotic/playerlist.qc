@@ -10,8 +10,7 @@ const int PLAYERPARM_COUNT = 4;
 
 entity makeXonoticPlayerList()
 {
-	entity me;
-	me = NEW(XonoticPlayerList);
+	entity me = NEW(XonoticPlayerList);
 	me.configureXonoticListBox(me);
 	return me;
 }

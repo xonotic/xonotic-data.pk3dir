@@ -4,8 +4,7 @@
 
 entity makeXonoticTabController(float theRows)
 {
-	entity me;
-	me = NEW(XonoticTabController);
+	entity me = NEW(XonoticTabController);
 	me.configureXonoticTabController(me, theRows);
 	return me;
 }

@@ -4,21 +4,13 @@
 
 void W_Fireball_Explode(entity this, entity directhitentity)
 {
-	entity e;
-	float dist;
-	float points;
-	vector dir;
-	float d;
-
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
 	// 1. dist damage
-	d = (GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR));
+	float d = GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR);
 
-	RadiusDamage(
-		this,
-		this.realowner,
+	RadiusDamage(this, this.realowner,
 		WEP_CVAR_PRI(WEP_FIREBALL, damage),
 		WEP_CVAR_PRI(WEP_FIREBALL, edgedamage),
 		WEP_CVAR_PRI(WEP_FIREBALL, radius),
@@ -29,41 +21,41 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 		this.weaponentity_fld, directhitentity
 	);
 
-	if(GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR) >= d)
-	if(!this.cnt)
+	if (GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR) >= d
+	&& !this.cnt)
 	{
+		float dist;
+		float points;
+		vector dir;
+
 		modeleffect_spawn("models/sphere/sphere.md3", 0, 0, this.origin, '0 0 0', '0 0 0', '0 0 0', 0, WEP_CVAR_PRI(WEP_FIREBALL, bfgradius), 0.2, 0.05, 0.25);
 
 		// 2. bfg effect
 		// NOTE: this cannot be made warpzone aware by design. So, better intentionally ignore warpzones here.
-		for(e = findradius(this.origin, WEP_CVAR_PRI(WEP_FIREBALL, bfgradius)); e; e = e.chain)
-		{
-			if(e != this.realowner && e.takedamage == DAMAGE_AIM && !IS_INDEPENDENT_PLAYER(e))
-			if(!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
+		for (entity e = findradius(this.origin, WEP_CVAR_PRI(WEP_FIREBALL, bfgradius)); e; e = e.chain)
+			if (e != this.realowner && e.takedamage == DAMAGE_AIM && !IS_INDEPENDENT_PLAYER(e)
+			&& (!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this)))
 			{
 
 				// can we see fireball?
 				traceline(e.origin + e.view_ofs, this.origin, MOVE_NORMAL, e);
-				if(/* trace_startsolid || */ trace_fraction != 1) // startsolid should be never happening anyway
+				if (/* trace_startsolid || */ trace_fraction != 1) // startsolid should be never happening anyway
 					continue;
 				// can we see player who shot fireball?
 				traceline(e.origin + e.view_ofs, this.realowner.origin + this.realowner.view_ofs, MOVE_NORMAL, e);
-				if(trace_ent != this.realowner)
-				if(/* trace_startsolid || */ trace_fraction != 1)
+				if (trace_ent != this.realowner)
+				if (/* trace_startsolid || */ trace_fraction != 1)
 					continue;
 				dist = vlen(this.origin - e.origin - e.view_ofs);
-				points = (1 - sqrt(dist / WEP_CVAR_PRI(WEP_FIREBALL, bfgradius)));
-				if(points <= 0)
+				points = 1 - sqrt(dist / WEP_CVAR_PRI(WEP_FIREBALL, bfgradius));
+				if (points <= 0)
 					continue;
 				dir = normalize(e.origin + e.view_ofs - this.origin);
 
-				if(accuracy_isgooddamage(this.realowner, e))
+				if (accuracy_isgooddamage(this.realowner, e))
 					accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(WEP_FIREBALL, bfgdamage) * points, 0); // add to hit
 
-				Damage(
-					e,
-					this,
-					this.realowner,
+				Damage(e, this, this.realowner,
 					WEP_CVAR_PRI(WEP_FIREBALL, bfgdamage) * points,
 					this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH,
 					this.weaponentity_fld,
@@ -71,9 +63,8 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 					WEP_CVAR_PRI(WEP_FIREBALL, bfgforce) * dir
 				);
 
-				Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
+				Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -dir, 1);
 			}
-		}
 	}
 
 	delete(this);
@@ -97,34 +88,32 @@ void W_Fireball_TouchExplode(entity this, entity toucher)
 
 void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float edgedamage, float burntime)
 {
-	entity e;
-	float d;
-	vector p;
-
-	if(damage <= 0)
+	if (damage <= 0)
 		return;
 
 	RandomSelection_Init();
-	for(e = WarpZone_FindRadius(this.origin, dist, true); e; e = e.chain)
+	vector p;
+	float d;
+	for (entity e = WarpZone_FindRadius(this.origin, dist, true); e; e = e.chain)
 	{
-		if(STAT(FROZEN, e) || StatusEffects_active(STATUSEFFECT_Frozen, e)) continue;
-		if(e == this.realowner) continue;
-		if(IS_INDEPENDENT_PLAYER(e)) continue;
-		if(e.takedamage != DAMAGE_AIM) continue;
-		if(IS_PLAYER(e) && this.realowner && SAME_TEAM(e, this)) continue;
+		if (STAT(FROZEN, e) || StatusEffects_active(STATUSEFFECT_Frozen, e)
+		|| e == this.realowner || IS_INDEPENDENT_PLAYER(e)
+		|| e.takedamage != DAMAGE_AIM
+		|| (IS_PLAYER(e) && this.realowner && SAME_TEAM(e, this)))
+			continue;
 
 		p = e.origin;
 		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
 		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
 		p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
 		d = vlen(WarpZone_UnTransformOrigin(e, this.origin) - p);
-		if(d < dist)
+		if (d < dist)
 		{
 			e.fireball_impactvec = p;
 			RandomSelection_AddEnt(e, 1 / (1 + d), !StatusEffects_active(STATUSEFFECT_Burning, e));
 		}
 	}
-	if(RandomSelection_chosen_ent)
+	if (RandomSelection_chosen_ent)
 	{
 		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
 		d = damage + (edgedamage - damage) * (d / dist);
@@ -136,7 +125,7 @@ void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float
 
 void W_Fireball_Think(entity this)
 {
-	if(time > this.pushltime)
+	if (time > this.pushltime)
 	{
 		this.cnt = 1;
 		this.projectiledeathtype |= HITTYPE_SPLASH;
@@ -151,14 +140,13 @@ void W_Fireball_Think(entity this)
 
 void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResource(this, RES_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
-
-	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
 	TakeResource(this, RES_HEALTH, damage);
-	if(GetResource(this, RES_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		this.cnt = 1;
 		W_PrepareExplosionByDamage(this, attacker, W_Fireball_Explode_think);
@@ -244,19 +232,19 @@ void W_Fireball_Attack1_Frame0(Weapon thiswep, entity actor, .entity weaponentit
 
 void W_Fireball_Firemine_Think(entity this)
 {
-	if(time > this.pushltime)
+	if (time > this.pushltime)
 	{
 		delete(this);
 		return;
 	}
 
 	// make it "hot" once it leaves its owner
-	if(this.owner)
+	if (this.owner)
 	{
-		if(vdist(this.origin - this.owner.origin - this.owner.view_ofs, >, WEP_CVAR_SEC(WEP_FIREBALL, laserradius)))
+		if (vdist(this.origin - this.owner.origin - this.owner.view_ofs, >, WEP_CVAR_SEC(WEP_FIREBALL, laserradius)))
 		{
-			this.cnt += 1;
-			if(this.cnt == 3)
+			++this.cnt;
+			if (this.cnt == 3)
 				this.owner = NULL;
 		}
 		else
@@ -271,8 +259,8 @@ void W_Fireball_Firemine_Think(entity this)
 void W_Fireball_Firemine_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	if(toucher.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(toucher, this.realowner, WEP_CVAR_SEC(WEP_FIREBALL, damage), WEP_CVAR_SEC(WEP_FIREBALL, damagetime), this.projectiledeathtype) >= 0)
+	if (toucher.takedamage == DAMAGE_AIM
+	&& Fire_AddDamage(toucher, this.realowner, WEP_CVAR_SEC(WEP_FIREBALL, damage), WEP_CVAR_SEC(WEP_FIREBALL, damagetime), this.projectiledeathtype) >= 0)
 	{
 		delete(this);
 		return;
@@ -282,12 +270,10 @@ void W_Fireball_Firemine_Touch(entity this, entity toucher)
 
 void W_Fireball_Attack2(entity actor, .entity weaponentity)
 {
-	entity proj;
 	vector f_diff;
-	float c;
 
-	c = actor.(weaponentity).bulletcounter % 4;
-	switch(c)
+	float c = actor.(weaponentity).bulletcounter % 4;
+	switch (c)
 	{
 		case 0:
 			f_diff = '-1.25 -3.75 0';
@@ -304,12 +290,12 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 			break;
 	}
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_FIREBALL, damage), WEP_FIREBALL.m_id | HITTYPE_SECONDARY);
-	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, actor);
+	traceline(w_shotorg, w_shotorg + f_diff.x * v_up + f_diff.y * v_right, MOVE_NORMAL, actor);
 	w_shotorg = trace_endpos;
 
 	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
-	proj = new(grenade);
+	entity proj = new(grenade);
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(WEP_FIREBALL, damage);
@@ -336,42 +322,46 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
+.bool bot_primary_fireballmooth; // whatever a mooth is
+
 METHOD(Fireball, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	PHYS_INPUT_BUTTON_ATCK(actor) = false;
+	PHYS_INPUT_BUTTON_ATCK(actor)  = false;
 	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-	if(actor.bot_primary_fireballmooth == 0)
+	if (!actor.bot_primary_fireballmooth)
 	{
-		if(bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_FIREBALL, speed), 0, WEP_CVAR_PRI(WEP_FIREBALL, lifetime), false, false))
+		if (bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_FIREBALL, speed), 0, WEP_CVAR_PRI(WEP_FIREBALL, lifetime), false, false))
 		{
 			PHYS_INPUT_BUTTON_ATCK(actor) = true;
-			if(random() < 0.02) actor.bot_primary_fireballmooth = 1;
+			if (random() < 0.02)
+				actor.bot_primary_fireballmooth = true;
 		}
 	}
 	else
 	{
-		if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(WEP_FIREBALL, speed), WEP_CVAR_SEC(WEP_FIREBALL, speed_up), WEP_CVAR_SEC(WEP_FIREBALL, lifetime), true, false))
+		if (bot_aim(actor, weaponentity, WEP_CVAR_SEC(WEP_FIREBALL, speed), WEP_CVAR_SEC(WEP_FIREBALL, speed_up), WEP_CVAR_SEC(WEP_FIREBALL, lifetime), true, false))
 		{
 			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-			if(random() < 0.01) actor.bot_primary_fireballmooth = 0;
+			if (random() < 0.01)
+				actor.bot_primary_fireballmooth = false;
 		}
 	}
 }
 
 METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if(fire & 1)
+	if (fire & 1)
 	{
-		if(time >= actor.(weaponentity).fireball_primarytime)
-		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_FIREBALL, refire)))
+		if (time >= actor.(weaponentity).fireball_primarytime
+		&& weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_FIREBALL, refire)))
 		{
 			W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
 			actor.(weaponentity).fireball_primarytime = time + WEP_CVAR_PRI(WEP_FIREBALL, refire2) * W_WeaponRateFactor(actor);
 		}
 	}
-	else if(fire & 2)
+	else if (fire & 2)
 	{
-		if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_FIREBALL, refire)))
+		if (weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(WEP_FIREBALL, refire)))
 		{
 			W_Fireball_Attack2(actor, weaponentity);
 			weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_FIREBALL, animtime), w_ready);
@@ -381,7 +371,7 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 
 METHOD(Fireball, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	return true; // infinite ammo
+	return true; // fireball has infinite ammo
 }
 
 METHOD(Fireball, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -391,7 +381,7 @@ METHOD(Fireball, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapo
 
 METHOD(Fireball, wr_resetplayer, void(entity thiswep, entity actor))
 {
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
 		actor.(weaponentity).fireball_primarytime = time;
@@ -400,7 +390,7 @@ METHOD(Fireball, wr_resetplayer, void(entity thiswep, entity actor))
 
 METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
 {
-	if(w_deathtype & HITTYPE_SECONDARY)
+	if (w_deathtype & HITTYPE_SECONDARY)
 		return WEAPON_FIREBALL_SUICIDE_FIREMINE;
 	else
 		return WEAPON_FIREBALL_SUICIDE_BLAST;
@@ -408,18 +398,18 @@ METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
 
 METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 {
-	if(w_deathtype & HITTYPE_SECONDARY)
+	if (w_deathtype & HITTYPE_SECONDARY)
 		return WEAPON_FIREBALL_MURDER_FIREMINE;
 	else
 		return WEAPON_FIREBALL_MURDER_BLAST;
 }
 
-#endif
+#endif // SVQC
 #ifdef CSQC
 
 METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 {
-	if(w_deathtype & HITTYPE_SECONDARY)
+	if (w_deathtype & HITTYPE_SECONDARY)
 	{
 		// firemine goes out silently
 	}
@@ -427,12 +417,12 @@ METHOD(Fireball, wr_impacteffect, void(entity thiswep, entity actor))
 	{
 		vector org2 = w_org + w_backoff * 2;
 		pointparticles(EFFECT_FIREBALL_EXPLODE, org2, '0 0 0', 1);
-		if(!w_issilent)
+		if (!w_issilent)
 			sound(actor, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 	}
 }
 
-#endif
+#endif // CSQC
 #ifdef MENUQC
 
 METHOD(Fireball, describe, string(Fireball this))
@@ -450,4 +440,4 @@ METHOD(Fireball, describe, string(Fireball this))
 	return PAGE_TEXT;
 }
 
-#endif
+#endif // MENUQC

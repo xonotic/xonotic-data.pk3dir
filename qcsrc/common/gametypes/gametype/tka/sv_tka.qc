@@ -186,8 +186,7 @@ void tka_PlayerReset(entity player)
 
 void tka_DropEvent(entity player) // runs any time that a player is supposed to lose the ball
 {
-	entity ball;
-	ball = player.ballcarried;
+	entity ball = player.ballcarried;
 
 	if(!ball) { return; }
 
@@ -562,7 +561,7 @@ MUTATOR_HOOKFUNCTION(tka, PlayerPhysics_UpdateStats)
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_tka_ballcarrier_highspeed;
 }
 
-MUTATOR_HOOKFUNCTION(tka, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(tka, Bot_ForbidAttack)
 {
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
@@ -610,6 +609,11 @@ MUTATOR_HOOKFUNCTION(tka, SpectateCopy)
 MUTATOR_HOOKFUNCTION(tka, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = tka_teams;
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(tka, PreferPlayerScore_Clear)
+{
 	return true;
 }
 

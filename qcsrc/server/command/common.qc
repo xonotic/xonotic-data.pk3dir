@@ -205,8 +205,8 @@ void timeout_handler_think(entity this)
 				if (timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
 					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_PREPARE);
 
-				this.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
-				timeout_time -= 1;                                  // decrease the time counter
+				this.nextthink = time + TIMEOUT_SLOWMO_VALUE; // think again in one second
+				--timeout_time;                               // decrease the time counter
 			}
 			else  // time to end the timeout
 			{
@@ -234,7 +234,7 @@ void timeout_handler_think(entity this)
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 
 				this.nextthink = time + 1; // think again in one second
-				timeout_leadtime -= 1;     // decrease the time counter
+				--timeout_leadtime;        // decrease the time counter
 			}
 			else  // time to begin the timeout
 			{
@@ -381,7 +381,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					if (!found && arg_lower != "random" && arg_lower != "anyrandom") { print_to(caller, "Invalid monster"); return; }
 
-					totalspawned += 1;
+					++totalspawned;
 					WarpZone_TraceBox(CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, true, caller);
 					mon = spawnmonster(spawn(), arg_lower, MON_Null, caller, caller, trace_endpos, false, false, moveflag);
 					print_to(caller, strcat("Spawned ", mon.m_name));
@@ -730,7 +730,7 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 
 				else  // everything should be okay, proceed with starting the timeout
 				{
-					if (caller)   CS(caller).allowed_timeouts -= 1;
+					if (caller) --CS(caller).allowed_timeouts;
 					// write a bprint who started the timeout (and how many they have left)
 					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(CS(caller).allowed_timeouts), " timeout(s) left)") : ""), "!\n");
 

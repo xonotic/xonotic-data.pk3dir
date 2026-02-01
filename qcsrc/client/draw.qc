@@ -60,8 +60,7 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 
 void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
-	float sz;
-	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
+	float sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawpic_aspect_skin(position + expandingbox_resize_centered_box_offset(sz, theScale, 1), pic, theScale * sz, rgb, theAlpha * (1 - fadelerp), flag);
 }
@@ -120,8 +119,7 @@ void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAl
 
 void drawstring_expanding(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
-	float sz;
-	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
+	float sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = hud_scale * sz;
 	vector dfs = drawfontscale;
@@ -143,8 +141,7 @@ void drawstring_aspect_expanding(vector pos, string text, vector sz, vector colo
 
 void drawcolorcodedstring_expanding(vector position, string text, vector theScale, float theAlpha, float flag, float fadelerp)
 {
-	float sz;
-	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
+	float sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = hud_scale * sz;
 	// eventually replace with drawcolorcodedstring
@@ -160,15 +157,12 @@ void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, f
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
 float PolyDrawModelSurface(entity e, float i_s)
 {
-	float i_t;
-	float n_t;
-	vector tri;
-	string tex;
-	tex = getsurfacetexture(e, i_s);
+	string tex = getsurfacetexture(e, i_s);
 	if (!tex)
 		return 0; // this is beyond the last one
-	n_t = getsurfacenumtriangles(e, i_s);
-	for(i_t = 0; i_t < n_t; ++i_t)
+	vector tri;
+	float n_t = getsurfacenumtriangles(e, i_s);
+	for(int i_t = 0; i_t < n_t; ++i_t)
 	{
 		tri = getsurfacetriangle(e, i_s, i_t);
 		R_BeginPolygon(tex, 0, false);
@@ -181,8 +175,7 @@ float PolyDrawModelSurface(entity e, float i_s)
 }
 void PolyDrawModel(entity e)
 {
-	float i_s;
-	for(i_s = 0; ; ++i_s)
+	for(int i_s = 0; ; ++i_s)
 		if(!PolyDrawModelSurface(e, i_s))
 			break;
 }

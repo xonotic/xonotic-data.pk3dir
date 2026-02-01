@@ -148,7 +148,7 @@ void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector t
 {
     if (thisforce.z < 0)
         thisforce.z = 0;
-    this.velocity = this.velocity + thisforce + '0 0 100';
+    this.velocity += thisforce + '0 0 100';
     UNSET_ONGROUND(this);
 }
 

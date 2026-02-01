@@ -10,8 +10,7 @@
 
 entity makeXonoticAudioSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticAudioSettingsTab);
+	entity me = NEW(XonoticAudioSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

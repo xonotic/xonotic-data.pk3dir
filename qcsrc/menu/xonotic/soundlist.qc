@@ -5,8 +5,7 @@
 
 entity makeXonoticSoundList()
 {
-	entity me;
-	me = NEW(XonoticSoundList);
+	entity me = NEW(XonoticSoundList);
 	me.configureXonoticSoundList(me);
 	return me;
 }
@@ -19,8 +18,7 @@ void XonoticSoundList_configureXonoticSoundList(entity me)
 
 string XonoticSoundList_soundName(entity me, int i)
 {
-	string s;
-	s = search_getfilename(me.listSound, i);
+	string s = search_getfilename(me.listSound, i);
 	s = substring(s, 15, strlen(s) - 15 - 4);  // sound/cdtracks/, .ogg
 	return s;
 }

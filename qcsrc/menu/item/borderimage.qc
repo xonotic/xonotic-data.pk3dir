@@ -6,8 +6,7 @@
 	{
 		if (me.isNexposeeTitleBar)
 		{
-			vector scrs;
-			scrs = eX * conwidth + eY * conheight;
+			vector scrs = eX * conwidth + eY * conheight;
 			me.resizeNotify(me, me.saveRelOrigin, me.saveRelSize, boxToGlobal(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_smallSize, scrs));
 			SUPER(BorderImage).recalcPositionWithText(me, t);
 			me.realOrigin_y = me.realFontSize.y * me.zoomedOutTitleBarPosition;

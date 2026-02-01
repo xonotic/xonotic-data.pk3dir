@@ -4,8 +4,7 @@
 
 entity makeXonoticColorpicker(entity theTextbox)
 {
-	entity me;
-	me = NEW(XonoticColorpicker);
+	entity me = NEW(XonoticColorpicker);
 	me.configureXonoticColorpicker(me, theTextbox);
 	return me;
 }
@@ -22,19 +21,20 @@ METHOD(XonoticColorpicker, mousePress, bool(XonoticColorpicker this, vector pos)
 	return true;
 }
 
-// must match hslimage.c
 vector hslimage_color(vector v, vector margin)
 {
-    v_x = (v.x - margin.x) / (1 - 2 * margin.x);
-    v_y = (v.y - margin.y) / (1 - 2 * margin.y);
-    if(v.x < 0) v_x = 0;
-    if(v.y < 0) v_y = 0;
-    if(v.x > 1) v_x = 1;
-    if(v.y > 1) v_y = 1;
-    if(v.y > 0.875) // grey bar
-        return hsl_to_rgb(eZ * v.x);
-    else
-        return hsl_to_rgb(v.x * 6 * eX + eY + v.y / 0.875 * eZ);
+	v.x = (v.x - margin.x) / (1 - 2 * margin.x);
+	v.y = (v.y - margin.y) / (1 - 2 * margin.y);
+
+	if(v.x < 0) v.x = 0;
+	if(v.y < 0) v.y = 0;
+	if(v.x > 1) v.x = 1;
+	if(v.y > 1) v.y = 1;
+
+	if(v.y > 0.875) // grey bar
+		return hsl_to_rgb(eZ * v.x);
+	else
+		return hsl_to_rgb(v.x * 6 * eX + eY + v.y / 0.875 * eZ);
 }
 
 vector color_hslimage(vector v, vector margin)
@@ -43,16 +43,16 @@ vector color_hslimage(vector v, vector margin)
 	v = rgb_to_hsl(v);
 	if (v.y)
 	{
-		pos_x = v.x / 6;
-		pos_y = v.z * 0.875;
+		pos.x = v.x / 6;
+		pos.y = v.z * 0.875;
 	}
 	else // grey scale
 	{
-		pos_x = v.z;
-		pos_y = 0.875 + 0.07;
+		pos.x = v.z;
+		pos.y = 0.875 + 0.07;
 	}
-	pos_x = margin.x + pos.x * (1 - 2 * margin.x);
-	pos_y = margin.y + pos.y * (1 - 2 * margin.y);
+	pos.x = margin.x + pos.x * (1 - 2 * margin.x);
+	pos.y = margin.y + pos.y * (1 - 2 * margin.y);
 	return pos;
 }
 
@@ -80,8 +80,7 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 			me.controlledTextbox.enterText(me.controlledTextbox, "^"); // escape previous caret
 	}
 
-	vector margin;
-	margin = me.imagemargin;
+	vector margin = me.imagemargin;
 	if(coords.x >= margin.x)
 	if(coords.y >= margin.y)
 	if(coords.x <= 1 - margin.x)

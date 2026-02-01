@@ -208,8 +208,8 @@ bool PM_dodging_checkpressedkeys(entity this)
 	// normalize the dodging_direction vector.. (unlike UT99) XD
 	float length = sqrt(this.dodging_direction.x ** 2 + this.dodging_direction.y ** 2);
 
-	this.dodging_direction.x = this.dodging_direction.x / length;
-	this.dodging_direction.y = this.dodging_direction.y / length;
+	this.dodging_direction.x /= length;
+	this.dodging_direction.y /= length;
 
 	return true;
 }
@@ -257,7 +257,7 @@ void PM_dodging(entity this)
 
 #ifdef SVQC
 		if (autocvar_sv_dodging_sound)
-			PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
+			PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 
 		animdecide_setaction(this, ANIMACTION_JUMP, true);
 #endif

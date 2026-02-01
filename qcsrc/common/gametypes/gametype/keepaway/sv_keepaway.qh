@@ -2,6 +2,7 @@
 
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
+int autocvar_g_keepaway_point_limit;
 
 void ka_Handler_CheckBall(entity this);
 
@@ -17,6 +18,7 @@ REGISTER_MUTATOR(ka, false)
 			field(SP_KEEPAWAY_CARRIERKILLS, "bckills", 0);
 			field(SP_KEEPAWAY_BCTIME, "bctime", SFL_SORT_PRIO_SECONDARY);
 		});
+		GameRules_limit_score(autocvar_g_keepaway_point_limit);
 
 		g_kaballs = IL_NEW();
 		entity ka_Handler = new_pure(ka_Handler);

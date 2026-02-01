@@ -99,7 +99,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if (weaponLocked(it)) continue;
 			if (it == player) continue;
 
-			tested++; // i consider a teammate to be available when they pass the checks above
+			++tested; // i consider a teammate to be available when they pass the checks above
 
 			vector horiz_vel = vec2(it.velocity);
 			// when walking slowly sideways, we assume the player wants a clear shot ahead - spawn behind them according to where they're looking

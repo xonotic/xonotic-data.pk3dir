@@ -1,10 +1,10 @@
 #pragma once
 
 #include <common/mapinfo.qh>
-
 #ifdef CSQC
-void HUD_Mod_Keepaway(vector pos, vector mySize);
+	#include "cl_keepaway.qh"
 #endif
+
 CLASS(Keepaway, Gametype)
 	INIT(Keepaway)
 	{
@@ -14,8 +14,13 @@ CLASS(Keepaway, Gametype)
 	{
 		return true;
 	}
+	METHOD(Keepaway, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
+	{
+		TC(Gametype, this);
+		returns(menu, _("Point limit:"),     5,  100,  5, "g_keepaway_point_limit",         string_null,         _("The amount of points needed before the match will end"));
+	}
 #ifdef CSQC
-	ATTRIB(Keepaway, m_modicons, void(vector pos, vector mySize), HUD_Mod_Keepaway);
+	ATTRIB(Keepaway, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_Keepaway);
 #endif
 ENDCLASS(Keepaway)
 REGISTER_GAMETYPE(KEEPAWAY, NEW(Keepaway));

@@ -209,7 +209,7 @@ float doBGMScript(entity e)
 		}
 		else if(bgmtime >= stof(argv(1)))
 		{
-			e.bgmscriptline += 1;
+			++e.bgmscriptline;
 			e.bgmscripttime = stof(argv(1));
 
 			amp = GetCurrentAmplitude(e, e.bgmscripttime - e.bgmscriptstatetime);

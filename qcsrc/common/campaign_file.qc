@@ -73,12 +73,12 @@ float CampaignFile_Load(int offset, float n)
 				if(i > entlen)
 					error("syntax error in campaign file: line has not enough fields");
 
-				campaign_entries = campaign_entries + 1;
+				++campaign_entries;
 
 				if(campaign_entries >= n)
 					break;
 			}
-			lineno = lineno + 1;
+			++lineno;
 		}
 		fclose(fh);
 	}

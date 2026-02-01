@@ -10,8 +10,7 @@ void XonoticDamageTextSettings_showNotify(entity me)
 }
 entity makeXonoticDamageTextSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticDamageTextSettings);
+	entity me = NEW(XonoticDamageTextSettings);
 	me.configureDialog(me);
 	return me;
 }
@@ -64,7 +63,7 @@ void XonoticDamageTextSettings_fill(entity me)
 			e.formatString = "S";
 			setDependent(e, "cl_damagetext", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Accumulate:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Accumulate:")));
 			setDependent(e, "cl_damagetext", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -72,7 +71,7 @@ void XonoticDamageTextSettings_fill(entity me)
 			setDependent(e, "cl_damagetext", 1, 1);
 		me.TD(me, 1, 1.6, e = makeXonoticMixedSlider("cl_damagetext_accumulate_lifetime"));
 			e.formatString = "S";
-			e.setValueSpace(e, e.valueSpace * 1.2);
+			e.setValueSpace(e, e.valueSpace * 1.25);
 			e.addText(e, _("Never"), 0);
 			e.addRange(e, 0.5, 3, 0.5);
 			e.addText(e, _("Always"), -1);

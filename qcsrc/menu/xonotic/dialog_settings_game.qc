@@ -95,8 +95,7 @@ CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source) {
 
 entity makeXonoticGameSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticGameSettingsTab);
+	entity me = NEW(XonoticGameSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

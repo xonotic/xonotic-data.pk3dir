@@ -58,10 +58,23 @@ void GameType_ConfigureSliders_for_CurrentGametype(entity me)
 
 entity makeXonoticServerCreateTab()
 {
-	entity me;
-	me = NEW(XonoticServerCreateTab);
+	entity me = NEW(XonoticServerCreateTab);
 	me.configureDialog(me);
 	return me;
+}
+
+float allowBotVsHuman(entity e)
+{
+	if (cvar("g_campaign"))
+		return false;
+	return e.parent.sliderTeams.value < 2; // either default (2) or 2 teams
+}
+
+float allowBotSkill(entity e)
+{
+	// returns true if there will be bots
+	return ((allowBotVsHuman(e) && (cvar("bot_vs_human")))
+		|| (!cvar("g_campaign") && !cvar("bot_vs_human") && cvar("bot_number") > 0));
 }
 
 void XonoticServerCreateTab_fill(entity me)
@@ -73,13 +86,13 @@ void XonoticServerCreateTab_fill(entity me)
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 3, makeXonoticHeaderLabel(_("Gametype")));
 	me.TR(me);
-		me.TD(me, 10.5, 3, e = makeXonoticGametypeList());
+		me.TD(me, 11, 3, e = makeXonoticGametypeList());
 
-	me.gotoRC(me, 12, 0);
+	me.gotoRC(me, 12.5, 0);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "menu_create_show_all", _("Show all"),
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBox_T(0, "menu_create_show_all", _("Show all"),
 			_("Show all available gametypes")));
-	me.gotoRC(me, 13.5, 0);
+	me.gotoRC(me, 14, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("timelimit_override",
 			_("Time limit in minutes that when hit, will end the match")));
@@ -94,7 +107,7 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticMixedSlider("fraglimit_override"));
 
-	me.gotoRC(me, 16, 0);
+	me.gotoRC(me, 16.5, 0);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
 		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticMixedSlider(string_null));
 			e.addText(e, _("Default"), 0);
@@ -109,13 +122,14 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Number of bots:")));
 			setDependent(e, "g_campaign", 0, 0);
+			setDependentAND(e, "bot_vs_human", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 9, 1, "bot_number",
 			_("Amount of bots on your server")));
 			setDependent(e, "g_campaign", 0, 0);
+			setDependentAND(e, "bot_vs_human", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
-			setDependentNOT(e, "bot_number", 0);
-			setDependentAND(e, "g_campaign", 0, 0);
+			setDependentWeird(e, allowBotSkill);
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("skill",
 			_("Specify how experienced the bots will be")));
 			e.addText(e, _("Botlike"), 0);
@@ -130,33 +144,25 @@ void XonoticServerCreateTab_fill(entity me)
 			e.addText(e, _("Unhuman"), 9);
 			e.addText(e, _("Godlike"), 10);
 			e.configureXonoticMixedSliderValues(e);
-			setDependentNOT(e, "bot_number", 0);
-			setDependentAND(e, "g_campaign", 0, 0);
-
-	// mapListBox is in the right column but the ref is needed for mutators dialog here
-	me.mapListBox = makeXonoticMapList();
-	// here we use the following line instead of me.TR(me) for better visual spacing;
-	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
-	me.gotoRC(me, me.rows - 2.5, 0);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Mutators..."), '0 0 0',
-			_("Mutators and weapon arenas")));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.mutatorsDialog;
-			main.mutatorsDialog.refilterEntity = me.mapListBox;
-			setDependent(e, "g_campaign", 0, 0);
+			setDependentWeird(e, allowBotSkill);
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBox_T(0, "bot_vs_human", _("Bots against humans"),
+			_("Force humans to play on the same team against an equal-sized team of bots")));
+			setDependentWeird(e, allowBotVsHuman);
 
 	// The right half begins here
 
+	me.mapListBox = makeXonoticMapList();
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		// the maplistbox
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Maplist")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
-		// we use 5.8 here to visually match the bottom line of the component on the left (Bot Skill)
-		me.TD(me, me.rows - 6.8, 3, me.mapListBox);
+		// we use 7.8 here to visually match the component on the left
+		me.TD(me, me.rows - 7.8, 3, me.mapListBox);
 
-	me.gotoRC(me, me.rows - 4.5, me.firstColumn);
+	me.gotoRC(me, me.rows - 6, me.firstColumn);
 		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticInputBox_T(0, string_null,
@@ -166,7 +172,7 @@ void XonoticServerCreateTab_fill(entity me)
 			e.keyDown = MapList_StringFilterBox_keyDown;
 			e.onChangeEntity = me.mapListBox;
 
-	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
+	me.gotoRC(me, me.rows - 5, me.firstColumn);
 		// the selection buttons
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.3, e = makeXonoticButton_T(_("Add shown"), '0 0 0',
@@ -177,7 +183,7 @@ void XonoticServerCreateTab_fill(entity me)
 			_("Remove the maps shown in the list from your selection")));
 			e.onClick = MapList_Remove_Shown;
 			e.onClickEntity = me.mapListBox;
-	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
+	me.gotoRC(me, me.rows - 4, me.firstColumn);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.3, e = makeXonoticButton_T(_("Add all"), '0 0 0',
 			_("Add every available map to your selection")));
@@ -187,6 +193,17 @@ void XonoticServerCreateTab_fill(entity me)
 			_("Remove all the maps from your selection")));
 			e.onClick = MapList_Remove_All;
 			e.onClickEntity = me.mapListBox;
+
+	// here we use the following line instead of me.TR(me) for better visual spacing;
+	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
+	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Mutators..."), '0 0 0',
+			_("Mutators and weapon arenas")));
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.mutatorsDialog;
+			main.mutatorsDialog.refilterEntity = me.mapListBox;
+			setDependent(e, "g_campaign", 0, 0);
 
 	// bottom row
 	me.gotoRC(me, me.rows - 1, 0);

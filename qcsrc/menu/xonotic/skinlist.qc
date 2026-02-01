@@ -8,8 +8,7 @@ const float SKINPARM_COUNT = 4;
 
 entity makeXonoticSkinList()
 {
-	entity me;
-	me = NEW(XonoticSkinList);
+	entity me = NEW(XonoticSkinList);
 	me.configureXonoticSkinList(me);
 	return me;
 }

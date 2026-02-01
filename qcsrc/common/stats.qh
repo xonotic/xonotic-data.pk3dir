@@ -82,6 +82,7 @@ float game_stopped;
 float game_starttime; // point in time when the countdown to game start is over
 float round_starttime; // point in time when the countdown to round start is over
 int autocvar_leadlimit;
+int missing_teams_mask;
 int overtimes; // overtimes added (if set to the special value OVERTIME_SUDDENDEATH = sudden death)
 int timeout_status; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
 
@@ -94,6 +95,7 @@ int timeout_status; // (values: 0, 1, 2) contains whether a timeout is not activ
 REGISTER_STAT(WEAPONRATEFACTOR, FLOAT, W_WeaponRateFactor(this))
 REGISTER_STAT(GAME_STOPPED, INT, game_stopped)
 REGISTER_STAT(GAMESTARTTIME, FLOAT, game_starttime)
+REGISTER_STAT(MISSING_TEAMS_MASK, FLOAT, missing_teams_mask)
 /** arc heat in [0,1] */
 REGISTER_STAT(PRESSED_KEYS, INT)
 REGISTER_STAT(FUEL, INT)
@@ -163,7 +165,7 @@ REGISTER_STAT(MULTIJUMP_CLIENT, BOOL, autocvar_g_multijump_client)
 .int multijump_count;
 REGISTER_STAT(MULTIJUMP_COUNT, INT, this.multijump_count)
 REGISTER_STAT(MULTIJUMP, INT, autocvar_g_multijump)
-REGISTER_STAT(DOUBLEJUMP, INT, autocvar_sv_doublejump)
+REGISTER_STAT(DOUBLEJUMP, INT)
 
 #ifdef SVQC
 bool g_bugrigs;
@@ -217,7 +219,7 @@ bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag = true;
 #endif
 REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, INT, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, INT, autocvar_sv_gameplayfix_easierwaterjump)
-REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, INT, autocvar_sv_gameplayfix_stepdown)
+REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, INT)
 REGISTER_STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED, FLOAT, autocvar_sv_gameplayfix_stepdown_maxspeed)
 REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, INT, autocvar_sv_gameplayfix_stepmultipletimes)
 REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, INT, autocvar_sv_gameplayfix_unstickplayers)
@@ -237,10 +239,12 @@ float autocvar_sv_friction_on_land;
 var float autocvar_sv_friction_slick = 0.5;
 #endif
 REGISTER_STAT(MOVEVARS_FRICTION, FLOAT)
-REGISTER_STAT(MOVEVARS_FRICTION_SLICK, FLOAT, autocvar_sv_friction_slick)
+REGISTER_STAT(MOVEVARS_FRICTION_SLICK, FLOAT)
 REGISTER_STAT(MOVEVARS_FRICTION_ONLAND, FLOAT, autocvar_sv_friction_on_land)
 
-REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, INT, autocvar_sv_jumpspeedcap_max_disable_on_ramps)
+REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, BOOL)
+REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_MIN, FLOAT)
+REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_MAX, FLOAT)
 REGISTER_STAT(MOVEVARS_TRACK_CANJUMP, INT)
 /** cvar loopback */
 REGISTER_STAT(MOVEVARS_CL_TRACK_CANJUMP, INT)
@@ -426,7 +430,8 @@ float autocvar_sv_stepheight;
 REGISTER_STAT(MOVEVARS_WALLFRICTION, INT, autocvar_sv_wallfriction)
 REGISTER_STAT(MOVEVARS_TICRATE, FLOAT, autocvar_sys_ticrate)
 REGISTER_STAT(MOVEVARS_TIMESCALE, FLOAT, autocvar_slowmo)
-REGISTER_STAT(MOVEVARS_GRAVITY, FLOAT, autocvar_sv_gravity)
+REGISTER_STAT(MOVEVARS_GRAVITY, FLOAT) // CSQC player
+REGISTER_STAT(MOVEVARS_WORLDGRAVITY, FLOAT, autocvar_sv_gravity) // CSQC projectiles etc
 REGISTER_STAT(MOVEVARS_STOPSPEED, FLOAT)
 REGISTER_STAT(MOVEVARS_MAXSPEED, FLOAT)
 REGISTER_STAT(MOVEVARS_ACCELERATE, FLOAT)
@@ -438,7 +443,7 @@ REGISTER_STAT(MOVEVARS_ENTGRAVITY, FLOAT, (this.gravity) ? this.gravity : 1)
 REGISTER_STAT(MOVEVARS_JUMPVELOCITY, FLOAT)
 REGISTER_STAT(MOVEVARS_JUMPVELOCITY_CROUCH, FLOAT)
 REGISTER_STAT(MOVEVARS_MAXAIRSPEED, FLOAT)
-REGISTER_STAT(MOVEVARS_STEPHEIGHT, FLOAT, autocvar_sv_stepheight)
+REGISTER_STAT(MOVEVARS_STEPHEIGHT, FLOAT)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, FLOAT)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, FLOAT)
 #ifdef SVQC

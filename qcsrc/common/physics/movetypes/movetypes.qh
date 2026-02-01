@@ -16,31 +16,31 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
 #define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
 #define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
-#define IS_ONSLICK(s)						boolean((s).flags & FL_ONSLICK)
-#define SET_ONSLICK(s)						((s).flags |= FL_ONSLICK)
-#define UNSET_ONSLICK(s)					((s).flags &= ~FL_ONSLICK)
+#define IS_ONSLICK(s)                       boolean((s).flags & FL_ONSLICK)
+#define SET_ONSLICK(s)                      ((s).flags |= FL_ONSLICK)
+#define UNSET_ONSLICK(s)                    ((s).flags &= ~FL_ONSLICK)
 
 #define GAMEPLAYFIX_DOWNTRACEONGROUND(s)    STAT(GAMEPLAYFIX_DOWNTRACEONGROUND)
 #define GAMEPLAYFIX_EASIERWATERJUMP(s)      STAT(GAMEPLAYFIX_EASIERWATERJUMP)
-#define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN)
+#define GAMEPLAYFIX_STEPDOWN(s)             STAT(GAMEPLAYFIX_STEPDOWN, s)
 #define GAMEPLAYFIX_STEPDOWN_MAXSPEED(s)    STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED)
 #define GAMEPLAYFIX_STEPMULTIPLETIMES(s)    STAT(GAMEPLAYFIX_STEPMULTIPLETIMES)
 #define GAMEPLAYFIX_UNSTICKPLAYERS(s)       STAT(GAMEPLAYFIX_UNSTICKPLAYERS)
-#define GAMEPLAYFIX_WATERTRANSITION(s) 		STAT(GAMEPLAYFIX_WATERTRANSITION)
+#define GAMEPLAYFIX_WATERTRANSITION(s)      STAT(GAMEPLAYFIX_WATERTRANSITION)
 #define GAMEPLAYFIX_SLIDEMOVEPROJECTILES(s) STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES)
-#define GAMEPLAYFIX_GRENADEBOUNCESLOPES(s) 	STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES)
-#define GAMEPLAYFIX_NOAIRBORNCORPSE(s) 		STAT(GAMEPLAYFIX_NOAIRBORNCORPSE)
-#define NOAIRBORNCORPSE_ALLOWSUSPENDED(s) 	STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED)
+#define GAMEPLAYFIX_GRENADEBOUNCESLOPES(s)  STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES)
+#define GAMEPLAYFIX_NOAIRBORNCORPSE(s)      STAT(GAMEPLAYFIX_NOAIRBORNCORPSE)
+#define NOAIRBORNCORPSE_ALLOWSUSPENDED(s)   STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED)
 #define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
-#define GAMEPLAYFIX_DELAYPROJECTILES(s) 	STAT(GAMEPLAYFIX_DELAYPROJECTILES)
+#define GAMEPLAYFIX_DELAYPROJECTILES(s)     STAT(GAMEPLAYFIX_DELAYPROJECTILES)
 
 
-#define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT)
+#define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT, s)
 #define PHYS_NOSTEP(s)                      STAT(NOSTEP)
 #define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP)
 #define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION)
 
-#define PHYS_WALLCLIP(s)					STAT(MOVEVARS_WALLCLIP)
+#define PHYS_WALLCLIP(s)                    STAT(MOVEVARS_WALLCLIP)
 
 #ifdef CSQC
 .float bouncestop;
@@ -50,7 +50,7 @@ const int WATERLEVEL_SUBMERGED = 3;
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND           (boolean(moveflags & MOVEFLAG_NOGRAVITYONGROUND))
 	#define GAMEPLAYFIX_Q2AIRACCELERATE             (boolean(moveflags & MOVEFLAG_Q2AIRACCELERATE))
 
-	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
+	#define PHYS_GRAVITY(s)                     (s == csqcplayer ? STAT(MOVEVARS_GRAVITY) : STAT(MOVEVARS_WORLDGRAVITY))
 	// FIXME: 0 doesn't mean zero gravity
 	#define PHYS_ENTGRAVITY(s)                  STAT(MOVEVARS_ENTGRAVITY, s)
 
@@ -62,7 +62,7 @@ const int WATERLEVEL_SUBMERGED = 3;
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND           autocvar_sv_gameplayfix_nogravityonground
 	#define GAMEPLAYFIX_Q2AIRACCELERATE             autocvar_sv_gameplayfix_q2airaccelerate
 
-	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
+	#define PHYS_GRAVITY(s)                     (STAT(MOVEVARS_GRAVITY, s) ? STAT(MOVEVARS_GRAVITY, s) : autocvar_sv_gravity)
 	#define PHYS_ENTGRAVITY(s)                  ((s).gravity)
 
 	#define TICRATE sys_frametime
@@ -105,7 +105,6 @@ vector move_stepnormal;
 bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot);
 void _Movetype_WallFriction(entity this, vector stepnormal);
 int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight);
-void _Movetype_CheckVelocity(entity this);
 void _Movetype_CheckWaterTransition(entity ent);
 void _Movetype_CheckStuck(entity this);
 float _Movetype_CheckWater(entity ent);
@@ -148,8 +147,8 @@ const int MOVETYPE_ANGLENOCLIP      = 1;
 const int MOVETYPE_ANGLECLIP        = 2;
 #endif
 
-const int MOVETYPE_QCPLAYER = 150; // QC-driven player physics, no think functions!
-const int MOVETYPE_QCENTITY = 151; // QC-driven entity physics, some think functions!
+const int MOVETYPE_QCPLAYER         = 150; // QC-driven player physics, no think functions!
+const int MOVETYPE_QCENTITY         = 151; // QC-driven entity physics, some think functions!
 
 const int MOVETYPE_FAKEPUSH         = 13;
 

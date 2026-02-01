@@ -1042,7 +1042,7 @@ float navigation_markroutes_nearestwaypoints(entity this, float maxdist)
 				it.wpcost = waypoint_gettravelcost(this.origin, tracewalk_dest, this, it) + it.dmg;
 				it.wpfire = 1;
 				it.enemy = NULL;
-				c = c + 1;
+				++c;
 			}
 		}
 	});
@@ -1347,7 +1347,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 				cost *= 1.5;
 
 				// Compare against other goals
-				f = f * rangebias / (rangebias + cost);
+				f *= rangebias / (rangebias + cost);
 
 				if (navigation_bestrating < f)
 				{
@@ -1415,7 +1415,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 			nwptoitem_cost = waypoint_gettravelcost(nwp.wpnearestpoint, goal_org, nwp, e);
 		float cost = nwp.wpcost + nwptoitem_cost;
 		LOG_DEBUG("checking ^5", e.classname, "^7 with base rating ^xf04", ftos(f), "^7 and rangebias ^xf40", ftos(rangebias));
-		f = f * rangebias / (rangebias + cost);
+		f *= rangebias / (rangebias + cost);
 		LOG_DEBUG("         ^5", e.classname, "^7 with cost ^6", ftos(cost), "^7 and final rating ^2", ftos(f));
 		if (navigation_bestrating < f)
 		{
@@ -1895,11 +1895,11 @@ void botframe_updatedangerousobjects(float maxupdate)
 			{
 				traceline(o, v, true, NULL);
 				if (trace_fraction == 1)
-					danger = danger + d;
+					danger += d;
 			}
 		});
 		it.dmg = danger;
-		c = c + 1;
+		++c;
 		if (c >= maxupdate)
 			break;
 	});
@@ -2115,5 +2115,5 @@ void debuggoalstack(entity this)
 	te_lightning2(NULL, org, go);
 	this.lastposition = go;
 
-	this.goalcounter++;
+	++this.goalcounter;
 }

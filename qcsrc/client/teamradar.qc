@@ -16,56 +16,50 @@ vector teamradar_3dcoord_to_texcoord(vector in)
 
 vector teamradar_texcoord_to_2dcoord(vector in)
 {
-	vector out;
 	in -= teamradar_origin3d_in_texcoord;
 
-	out = Rotate(in, teamradar_angle * DEG2RAD);
-	out.y = - out.y; // screen space is reversed
+	vector out = Rotate(in, teamradar_angle);
+	out.y = -out.y; // screen space is reversed
 
-	out = out * teamradar_size;
+	out *= teamradar_size;
 	if(v_flipped)
 		out.x = -out.x;
 	out += teamradar_origin2d;
 	return out;
 }
 
-
 vector teamradar_2dcoord_to_texcoord(vector in)
 {
-	vector out;
-	out = in;
+	vector out = in;
 
 	out -= teamradar_origin2d;
 	if(v_flipped)
-		out_x = -out_x;
-	out = out / teamradar_size;
+		out.x = -out.x;
+	out /= teamradar_size;
 
-	out_y = - out_y; // screen space is reversed
-	out = Rotate(out, -teamradar_angle * DEG2RAD);
+	out.y = -out.y; // screen space is reversed
+	out = Rotate(out, -teamradar_angle);
 
 	out += teamradar_origin3d_in_texcoord;
 
 	return out;
 }
 
-vector teamradar_texcoord_to_3dcoord(vector in,float oz)
+vector teamradar_texcoord_to_3dcoord(vector in, float oz)
 {
 	vector out;
-	out_x = in_x * (mi_picmax_x - mi_picmin_x) + mi_picmin_x;
-	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
-	out_z = oz;
+	out.x = in.x * (mi_picmax.x - mi_picmin.x) + mi_picmin.x;
+	out.y = in.y * (mi_picmax.y - mi_picmin.y) + mi_picmin.y;
+	out.z = oz;
 	return out;
 }
 
 void draw_teamradar_background(float fg)
 {
-	float fga;
-	vector fgc;
-
 	if(fg > 0 && minimapname != "")
 	{
-		fga = 1;
-		fgc = '1 1 1' * fg;
+		vector fgc = '1 1 1' * fg;
+		float fga = 1;
 		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP, true);
 		if(v_flipped)
 		{
@@ -87,12 +81,10 @@ void draw_teamradar_background(float fg)
 
 void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 {
-	vector coord, rgb2;
-
-	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
+	vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord3d));
 
 	vector forward, right, up;
-	MAKE_VECTORS(pangles - '0 1 0' * teamradar_angle, forward, right, up);
+	MAKE_VECTORS(pangles - '0 1 0' * (teamradar_angle * RAD2DEG), forward, right, up);
 	if(v_flipped)
 	{
 		forward.x = -forward.x;
@@ -105,6 +97,7 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	right.x = -forward.y;
 	right.y = forward.x;
 
+	vector rgb2;
 	if(rgb == '1 1 1')
 		rgb2 = '0 0 0';
 	else
@@ -149,18 +142,17 @@ void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb,
 void draw_teamradar_link(vector start, vector end, int colors)
 {
 	TC(int, colors);
-	vector c0, c1, norm;
 
 	start = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(start));
 	end = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(end));
-	norm = normalize(start - end);
+	vector norm = normalize(start - end);
 	norm.z = norm.x;
 	norm.x = -norm.y;
 	norm.y = norm.z;
 	norm.z = 0;
 
-	c0 = colormapPaletteColor(colors & 0x0F, false);
-	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
+	vector c0 = colormapPaletteColor(colors & 0x0F, false);
+	vector c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
 
 	R_BeginPolygon("", 0, true);
 	R_PolygonVertex(start - norm, '0 0 0', c0, panel_fg_alpha);

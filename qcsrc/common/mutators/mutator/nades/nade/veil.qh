@@ -5,7 +5,7 @@
 #ifdef SVQC
 bool autocvar_g_nades_veil;
 float autocvar_g_nades_veil_time = 8;
-float autocvar_g_nades_veil_radius = 300;
+float autocvar_g_nades_veil_radius = 250;
 
 .float nade_veil_time;
 .float nade_veil_prevalpha;
@@ -14,14 +14,22 @@ void nade_veil_boom(entity this);
 void nade_veil_Apply(entity player);
 #endif // SVQC
 
+#ifdef GAMEQC
 const int PROJECTILE_NADE_VEIL = 86;
 const int PROJECTILE_NADE_VEIL_BURN = 87;
+#endif
 
 CLASS(VeilNade, Nade)
 	ATTRIB(VeilNade, m_color, vector, '0.65 0.85 0.65');
 	ATTRIB(VeilNade, m_name, string, _("Veil grenade"));
+#ifndef SVQC
 	ATTRIB(VeilNade, m_icon, string, "nade_veil");
+#endif
+#ifdef GAMEQC
 	ATTRIB(VeilNade, m_alpha, float, 0.45);
+#endif
 	ATTRIB(VeilNade, netname, string, "veil");
+#ifdef SVQC
 	ATTRIB(VeilNade, impulse, int, 9);
+#endif
 ENDCLASS(VeilNade)

@@ -539,7 +539,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPhysics_UpdateStats)
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_keepaway_ballcarrier_highspeed;
 }
 
-MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(ka, Bot_ForbidAttack)
 {
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
@@ -572,4 +572,9 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 
 	while (frag_target.ballcarried)
 		ka_DropEvent(frag_target);
+}
+
+MUTATOR_HOOKFUNCTION(ka, PreferPlayerScore_Clear)
+{
+	return true;
 }

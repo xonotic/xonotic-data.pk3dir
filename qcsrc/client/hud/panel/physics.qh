@@ -13,7 +13,7 @@ int autocvar_hud_panel_physics_progressbar;
 bool autocvar_hud_panel_physics_acceleration_vertical;
 int autocvar_hud_panel_physics_baralign;
 bool autocvar_hud_panel_physics_flip;
-bool autocvar_hud_panel_physics_dynamichud      = true;
+bool autocvar_hud_panel_physics_dynamichud = true;
 float autocvar_hud_panel_physics_speed_max;
 bool autocvar_hud_panel_physics_speed_unit_show;
 bool autocvar_hud_panel_physics_speed_vertical;
@@ -30,25 +30,25 @@ vector autocvar_hud_progressbar_acceleration_color;
 vector autocvar_hud_progressbar_acceleration_neg_color;
 vector autocvar_hud_progressbar_speed_color;
 
-const int PHYSICS_BARALIGN_LEFT = 0;
-const int PHYSICS_BARALIGN_RIGHT = 1;
-const int PHYSICS_BARALIGN_ONLY_LEFT = 2;
-const int PHYSICS_BARALIGN_ONLY_RIGHT = 3;
-const int PHYSICS_BARALIGN_CENTER = 4;
+const int PHYSICS_BARALIGN_LEFT        = 0;
+const int PHYSICS_BARALIGN_RIGHT       = 1;
+const int PHYSICS_BARALIGN_ONLY_LEFT   = 2;
+const int PHYSICS_BARALIGN_ONLY_RIGHT  = 3;
+const int PHYSICS_BARALIGN_CENTER      = 4;
 
-const int PHYSICS_PROGRESSBAR_NONE = 0;
-const int PHYSICS_PROGRESSBAR_BOTH = 1;
-const int PHYSICS_PROGRESSBAR_SPEED = 2;
-const int PHYSICS_PROGRESSBAR_ACCEL = 3;
+const int PHYSICS_PROGRESSBAR_NONE   = 0;
+const int PHYSICS_PROGRESSBAR_BOTH   = 1;
+const int PHYSICS_PROGRESSBAR_SPEED  = 2;
+const int PHYSICS_PROGRESSBAR_ACCEL  = 3;
 
-const int PHYSICS_TEXT_NONE = 0;
-const int PHYSICS_TEXT_BOTH = 1;
-const int PHYSICS_TEXT_SPEED = 2;
-const int PHYSICS_TEXT_ACCEL = 3;
+const int PHYSICS_TEXT_NONE   = 0;
+const int PHYSICS_TEXT_BOTH   = 1;
+const int PHYSICS_TEXT_SPEED  = 2;
+const int PHYSICS_TEXT_ACCEL  = 3;
 
-const int PHYSICS_LAYOUT_AUTOMATIC = 0;
-const int PHYSICS_LAYOUT_HORIZONTAL = 1;
-const int PHYSICS_LAYOUT_VERTICAL = 2;
+const int PHYSICS_LAYOUT_AUTOMATIC   = 0;
+const int PHYSICS_LAYOUT_HORIZONTAL  = 1;
+const int PHYSICS_LAYOUT_VERTICAL    = 2;
 
 // 1 m/s^2 = 0.0254 qu/s^2; 1 g = 9.80665 m/s^2
 const float ACCEL2GRAV = 0.00259007918096393775; // converts qu/s^2 acceleration to m/s^2, relative to real-world gravity

@@ -14,8 +14,7 @@
 
 entity makeXonoticProfileTab()
 {
-	entity me;
-	me = NEW(XonoticProfileTab);
+	entity me = NEW(XonoticProfileTab);
 	me.configureDialog(me);
 	return me;
 }

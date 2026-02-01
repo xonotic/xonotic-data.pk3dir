@@ -71,10 +71,10 @@ MUTATOR_HOOKABLE(reset_map_global, EV_reset_map_global);
     /**/
 MUTATOR_HOOKABLE(reset_map_players, EV_reset_map_players);
 
-/** returns 1 if clearing player score shall not be allowed */
-#define EV_ForbidPlayerScore_Clear(i, o) \
+/** returns 1 if player score shall be cleared with g_score_resetonjoin -1 */
+#define EV_PreferPlayerScore_Clear(i, o) \
     /**/
-MUTATOR_HOOKABLE(ForbidPlayerScore_Clear, EV_ForbidPlayerScore_Clear);
+MUTATOR_HOOKABLE(PreferPlayerScore_Clear, EV_PreferPlayerScore_Clear);
 
 /** called when a player disconnects */
 #define EV_ClientDisconnect(i, o) \
@@ -649,13 +649,13 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
 /**
  * called when a bot checks a target to attack
- * return false to allow the bot to attack the target (inverted logic)
+ * return true to forbid the bot from attacking the target
  */
-#define EV_BotShouldAttack(i, o) \
+#define EV_Bot_ForbidAttack(i, o) \
     /** bot */    i(entity, MUTATOR_ARGV_0_entity) \
     /** target */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
-MUTATOR_HOOKABLE(BotShouldAttack, EV_BotShouldAttack);
+MUTATOR_HOOKABLE(Bot_ForbidAttack, EV_Bot_ForbidAttack);
 
 /**
  * called whenever a player goes through a portal gun teleport

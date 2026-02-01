@@ -7,8 +7,7 @@
 
 entity makeXonoticCvarList()
 {
-	entity me;
-	me = NEW(XonoticCvarList);
+	entity me = NEW(XonoticCvarList);
 	me.configureXonoticCvarList(me);
 	return me;
 }
@@ -18,26 +17,73 @@ void XonoticCvarList_configureXonoticCvarList(entity me)
 	me.handle = buf_create();
 	me.nItems = 0;
 }
+void CvarList_UpdateResults(entity me)
+{
+	int c = me.nItems;
+	static string cvarlistResultCount = string_null;
+	strcpy(cvarlistResultCount, c == 1 ? _("1 result") : sprintf(_("%d results"), c));
+	me.cvarlistResultCountBox.setText(me.cvarlistResultCountBox, cvarlistResultCount);
+}
 void CvarList_Load(entity me, string filter)
 {
 	if(me.handle < 0)
 		return;
 
-	buf_cvarlist(me.handle, filter, "_"); // cvars starting with "_" are excluded
-	me.nItems = buf_getsize(me.handle);
-	if(autocvar_menu_cvarlist_onlymodified)
+	// buf_cvarlist and matchpattern(..., MATCH_AUTO) filtering works in this way:
+	//   *aa* finds aa anywhere in the cvar name
+	//   *aa finds aa in the end of the cvar name
+	//   aa* finds aa in the beginning of the cvar name
+	//   aa finds aa in the beginning of the cvar name (not anywhere!)
+	// The last case is not very intuitive so here we make it work like *aa*
+	// and make it behave like the apropos command
+	// Filter, cvar names and cvar descriptions are changed to lowercase to simulate a
+	// case insensitive search, like the apropos command
+	// Unlike the apropos command, hidden cvars starting with _ are  filtered out
+	if (filter == "*") // work around weird case where * doesn't list any cvar
+		filter = "";
+	else if (filter != "")
 	{
-		float newbuf = buf_create();
-		for (int i = 0; i < me.nItems; ++i)
-		{
-			string k = bufstr_get(me.handle, i);
-			if(cvar_string(k) != cvar_defstring(k))
-				bufstr_add(newbuf, k, false);
-		}
-		buf_del(me.handle);
-		me.handle = newbuf;
-		me.nItems = buf_getsize(me.handle);
+		bool ispattern = ((strstrofs(filter, "*", 0) >= 0) || (strstrofs(filter, "?", 0) >= 0));
+		filter = strtolower(filter);
+		if (!ispattern)
+			filter = strcat("*", filter, "*");
 	}
+
+	if (!autocvar_menu_cvarlist_onlymodified
+		&& (!autocvar_menu_cvarlist_descriptions || filter == ""))
+	{
+		// simplest case where we filter only cvar names (or no filter at all)
+		buf_cvarlist(me.handle, filter, "_"); // exclude hidden cvars starting with "_"
+		me.nItems = buf_getsize(me.handle);
+		CvarList_UpdateResults(me);
+		return;
+	}
+
+	// get the complete cvar list
+	buf_cvarlist(me.handle, "", "_"); // exclude hidden cvars starting with "_"
+	me.nItems = buf_getsize(me.handle);
+
+	// filter
+	float newbuf = buf_create();
+	for (int i = 0; i < me.nItems; ++i)
+	{
+		string cvar_name = bufstr_get(me.handle, i);
+		if (autocvar_menu_cvarlist_onlymodified && cvar_string(cvar_name) == cvar_defstring(cvar_name))
+		{
+			continue;
+		}
+		if (filter != "" && !matchpattern(strtolower(cvar_name), filter, MATCH_AUTO)
+			&& (!autocvar_menu_cvarlist_descriptions
+				|| !matchpattern(strtolower(cvar_description(cvar_name)), filter, MATCH_AUTO)))
+		{
+			continue;
+		}
+		bufstr_add(newbuf, cvar_name, false);
+	}
+	buf_del(me.handle);
+	me.handle = newbuf;
+	me.nItems = buf_getsize(me.handle);
+	CvarList_UpdateResults(me);
 }
 void XonoticCvarList_showNotify(entity me)
 {
@@ -64,8 +110,7 @@ string autocvar_menu_forced_saved_cvars;
 string autocvar_menu_reverted_nonsaved_cvars;
 bool XonoticCvarList_updateCvarType(entity me)
 {
-	float t;
-	t = cvar_type(me.cvarName);
+	float t = cvar_type(me.cvarName);
 	me.cvarType = "";
 	bool needsForcing;
 	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
@@ -144,6 +189,13 @@ void CvarList_Filter_ModifiedCvars(entity box, entity me)
 	CvarList_Load(me, me.controlledTextbox.text);
 	me.setSelected(me, 0);
 }
+void CvarList_Filter_Descriptions(entity box, entity me)
+{
+	cvar_set("menu_cvarlist_descriptions", ftos(!autocvar_menu_cvarlist_descriptions));
+	box.setChecked(box, autocvar_menu_cvarlist_descriptions);
+	CvarList_Load(me, me.controlledTextbox.text);
+	me.setSelected(me, 0);
+}
 void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticCvarList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -201,19 +253,19 @@ void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSe
 
 float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE))
+	if (!me.cvarValueBox.disabled && (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE)))
 	{
 		CvarList_Revert_Click(NULL, me);
 		return 1;
 	}
-	else if(scan == K_ENTER)
+	else if(!me.cvarValueBox.disabled && scan == K_ENTER)
 	{
 		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
 		return 1;
 	}
 	else if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
 		return 1;
-	else if(!me.controlledTextbox)
+	else if(!me.controlledTextbox || me.cvarValueBox.disabled)
 		return 0;
 	else
 		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
@@ -221,13 +273,15 @@ float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 
 float XonoticCvarList_mouseRelease(entity me, vector pos)
 {
-	if(me.pressed == 2)
+	if (!me.cvarValueBox.disabled && me.pressed == 2)
 		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
 	return SUPER(XonoticCvarList).mouseRelease(me, pos);
 }
 
 void CvarList_Value_Change(entity box, entity me)
 {
+	if (box.disabled)
+		return;
 	cvar_set(me.cvarNameBox.text, box.text);
 	if(me.cvarNeedsForcing)
 	{
@@ -259,5 +313,6 @@ void CvarList_Revert_Click(entity btn, entity me)
 
 void CvarList_End_Editing(entity box, entity me)
 {
-	box.parent.setFocus(box.parent, me);
+	if (!box.disabled)
+		box.parent.setFocus(box.parent, me);
 }

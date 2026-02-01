@@ -28,8 +28,7 @@ void trigger_hurt_touch(entity this, entity toucher)
 			EXACTTRIGGER_TOUCH(this, toucher);
 			toucher.triggerhurttime = time;
 
-			entity own;
-			own = this.enemy;
+			entity own = this.enemy;
 			if (!IS_PLAYER(own))
 			{
 				own = this;

@@ -2,8 +2,7 @@
 
 entity makeXonoticScoreboardFadeTimeSlider()
 {
-	entity me;
-	me = NEW(XonoticScoreboardFadeTimeSlider);
+	entity me = NEW(XonoticScoreboardFadeTimeSlider);
 	me.configureXonoticScoreboardFadeTimeSlider(me);
 	return me;
 }

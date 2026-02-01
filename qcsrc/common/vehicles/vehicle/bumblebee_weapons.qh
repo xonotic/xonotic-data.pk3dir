@@ -10,9 +10,7 @@ float autocvar_g_vehicle_bumblebee_cannon_refire = 0.2;
 float autocvar_g_vehicle_bumblebee_cannon_speed = 20000;
 float autocvar_g_vehicle_bumblebee_cannon_spread = 0;
 float autocvar_g_vehicle_bumblebee_cannon_force = -35;
-#endif
 
-#ifdef SVQC
 void bumblebee_fire_cannon(entity this, entity _gun, string _tagname, entity _owner);
 bool bumble_raygun_send(entity this, entity to, int sf);
-#endif
+#endif // SVQC

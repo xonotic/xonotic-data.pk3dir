@@ -54,24 +54,24 @@ int autocvar_g_nades_bonus_score_spree;
 
 bool orb_send(entity this, entity to, int sf);
 
-// Remove nades that are being thrown
+/// Remove nades that are being thrown
 void nades_Clear(entity player);
 
-// Remove nades and bonus nades from a player
+/// Remove nades and bonus nades from a player
 void nades_RemovePlayer(entity player);
 
-// Give a bonus grenade to a player
+/// Give a bonus grenade to a player
 void nades_GiveBonus(entity player, float score);
 
 /**
  * called to adjust nade damage and force on hit
  */
 #define EV_Nade_Damage(i, o) \
-    /** nade */   i(entity, MUTATOR_ARGV_0_entity) \
- 	/** weapon */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** force */  i(vector, MUTATOR_ARGV_2_vector) \
-    /**/          o(vector, MUTATOR_ARGV_2_vector) \
- 	/** damage */ i(float,  MUTATOR_ARGV_3_float) \
-    /**/          o(float,  MUTATOR_ARGV_3_float) \
-    /**/
+	/** nade */   i(entity, MUTATOR_ARGV_0_entity) \
+	/** weapon */ i(entity, MUTATOR_ARGV_1_entity) \
+	/** force */  i(vector, MUTATOR_ARGV_2_vector) \
+	/**/          o(vector, MUTATOR_ARGV_2_vector) \
+	/** damage */ i(float,  MUTATOR_ARGV_3_float) \
+	/**/          o(float,  MUTATOR_ARGV_3_float) \
+	/**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);

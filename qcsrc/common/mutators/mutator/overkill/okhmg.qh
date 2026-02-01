@@ -12,20 +12,24 @@ SOUND(HMG_FIRE, W_Sound("uzi_fire"));
 #endif
 
 CLASS(OverkillHeavyMachineGun, Weapon)
+#ifdef SVQC
 /* spawnfunc */ ATTRIB(OverkillHeavyMachineGun, m_canonical_spawnfunc, string, "weapon_okhmg");
+/* rating    */ ATTRIB(OverkillHeavyMachineGun, bot_pickupbasevalue, float, 10000);
+#endif
 /* ammotype  */ ATTRIB(OverkillHeavyMachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(OverkillHeavyMachineGun, impulse, int, 3);
 /* flags     */ ATTRIB(OverkillHeavyMachineGun, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON | WEP_FLAG_PENETRATEWALLS);
-/* rating    */ ATTRIB(OverkillHeavyMachineGun, bot_pickupbasevalue, float, 10000);
 /* color     */ ATTRIB(OverkillHeavyMachineGun, m_color, vector, '0.992 0.471 0.396');
-/* modelname */ ATTRIB(OverkillHeavyMachineGun, mdl, string, "ok_hmg");
 #ifdef GAMEQC
+/* modelname */ ATTRIB(OverkillHeavyMachineGun, mdl, string, "ok_hmg");
 /* model     */ ATTRIB(OverkillHeavyMachineGun, m_model, Model, MDL_HMG_ITEM);
 /* flash mdl */ ATTRIB(OverkillHeavyMachineGun, m_muzzlemodel, Model, MDL_HMG_MUZZLEFLASH);
 /* flash eff */ ATTRIB(OverkillHeavyMachineGun, m_muzzleeffect, entity, EFFECT_MACHINEGUN_MUZZLEFLASH);
 #endif
+#ifdef CSQC
 /* crosshair */ ATTRIB(OverkillHeavyMachineGun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(OverkillHeavyMachineGun, w_crosshair_size, float, 0.6);
+#endif
 /* wepimg    */ ATTRIB(OverkillHeavyMachineGun, model2, string, "weaponhmg");
 /* refname   */ ATTRIB(OverkillHeavyMachineGun, netname, string, "okhmg");
 /* wepname   */ ATTRIB(OverkillHeavyMachineGun, m_name, string, _("Overkill Heavy MachineGun"));

@@ -167,9 +167,8 @@ void ps_move(entity minigame, entity player, string thepiece, string pos )
 			int number = minigame_tile_number(thepiece);
 			int letter = minigame_tile_letter(thepiece);
 			bool done = false;
-			string try;
+			string try = minigame_tile_buildname(letter-1,number);
 
-			try = minigame_tile_buildname(letter-1,number);
 			if(ps_find_piece(minigame,try))
 			{
 				try = minigame_tile_buildname(letter-2,number);
@@ -420,8 +419,7 @@ void ps_hud_board(vector pos, vector mySize)
 			remaining_text = strcat(_("Remaining pieces:"), " ", ftos(remaining));
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
-		vector win_sz;
-		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
+		vector win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
 			strcat(_("Game over!"), " ", remaining_text),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 
@@ -440,8 +438,7 @@ void ps_hud_board(vector pos, vector mySize)
 void ps_hud_status(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg();
-	vector ts;
-	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
+	vector ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
 
 	pos_y += ts_y;

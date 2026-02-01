@@ -90,14 +90,21 @@ void m_init()
 	RegisterSLCategories();
 
 	float ddsload = cvar("r_texture_dds_load");
+	float ddsloadsw = cvar("r_texture_dds_swdecode");
 	float texcomp = cvar("gl_texturecompression");
 	updateCompression();
-	if (ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression")) localcmd("\nr_restart\n");
+	if (ddsload != cvar("r_texture_dds_load") || ddsloadsw != cvar("r_texture_dds_swdecode") || texcomp != cvar("gl_texturecompression"))
+		localcmd("\nr_restart\n");
 
 	if (!restarting)
 	{
-		if (cvar("_menu_initialized"))  // always show menu after menu_restart
+		if (cvar("_menu_initialized"))
+		{
+			// always show menu after menu_restart
 			m_display();
+			// exec font cfg again in case font depends on menu cvars like prvm_language
+			localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
+		}
 		else m_hide();
 		cvar_set("_menu_initialized", "1");
 	}

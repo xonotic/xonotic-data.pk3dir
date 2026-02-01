@@ -15,8 +15,7 @@
 
 entity makeXonoticEffectsSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticEffectsSettingsTab);
+	entity me = NEW(XonoticEffectsSettingsTab);
 	me.configureDialog(me);
 	return me;
 }
@@ -87,35 +86,26 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticMixedSliderValues(e);
 			setDependent(e, "r_showsurfaces", 0, 0);
 			e.applyButton = effectsApplyButton;
+	bool can_dds = GL_Have_TextureCompression();
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture compression:")));
+			if (can_dds)
+				setDependent(e, "r_showsurfaces", 0, 0);
+			else
+				e.disabled = true;
+		me.TD(me, 1, 2, e = makeXonoticMixedSlider("gl_texturecompression"));
+			e.addText(e, ZCTX(_("TCOMP^Fast")), 1);
+			e.addText(e, ZCTX(_("TCOMP^Good")), 2);
+			e.addText(e, ZCTX(_("TCOMP^None")), 0);
+			e.configureXonoticMixedSliderValues(e);
+			if (can_dds)
+				setDependent(e, "r_showsurfaces", 0, 0);
+			else
+				e.disabled = true;
+			e.applyButton = effectsApplyButton;
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		{
-			// detect texture compression method
-			float f;
-			f = updateCompression();
-			switch(f)
-			{
-				case 0:
-					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
-						e.disabled = 1; // just show the checkbox anyway, but with no ability to control it
-						e.applyButton = effectsApplyButton;
-					break;
-				case 1:
-					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
-						setDependent(e, "r_showsurfaces", 0, 0);
-						e.applyButton = effectsApplyButton;
-					break;
-				case 2:
-					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
-						setDependent(e, "r_showsurfaces", 0, 0);
-						makeMulti(e, "gl_texturecompression");
-						e.applyButton = effectsApplyButton;
-					break;
-			}
-		}
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show sky"), _("Disable sky for performance and visibility")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(1, 0, "r_sky", _("Show sky"), _("Disable sky for performance and visibility")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(1, "mod_q3bsp_nolightmaps", _("Use lightmaps"),
 			_("Use high resolution lightmaps, which will look pretty but use up some extra video memory")));
@@ -136,7 +126,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			_("Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface")));
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 				setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping"),
+		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping"),
 			_("Higher quality offset mapping, which also has a huge impact on performance")));
 				setDependent(e, "r_glsl_offsetmapping", 1, 1);
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)

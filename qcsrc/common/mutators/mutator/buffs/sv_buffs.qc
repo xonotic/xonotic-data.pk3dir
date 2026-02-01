@@ -62,7 +62,7 @@ void buffs_BuffModel_Think(entity this)
 
 	this.effects = player.effects;
 	this.effects |= EF_LOWPRECISION;
-	this.effects = this.effects & EFMASK_CHEAP; // eat performance
+	this.effects &= EFMASK_CHEAP; // eat performance
 
 	this.alpha = player.alpha;
 }
@@ -208,13 +208,11 @@ void buff_Touch(entity this, entity toucher)
 		return; // incase mutator changed toucher
 
 	if ((this.team_forced && toucher.team != this.team_forced)
-		|| toucher.vehicle
-		|| !this.buffdef // TODO: error out or maybe reset type if this occurs?
-		|| time < toucher.buff_shield)
-	{
+	|| toucher.vehicle
+	|| !this.buffdef // TODO: error out or maybe reset type if this occurs?
+	|| time < toucher.buff_shield)
 		// can't touch this
 		return;
-	}
 
 	entity heldbuff = buff_FirstFromFlags(toucher);
 	entity thebuff = this.buffdef;
@@ -249,8 +247,6 @@ void buff_Touch(entity this, entity toucher)
 	if (!bufftime)
 		bufftime = 999;
 	StatusEffects_apply(thebuff, toucher, time + bufftime, 0);
-
-	STAT(LAST_PICKUP, toucher) = time;
 }
 
 float buff_Available(entity buff)
@@ -269,7 +265,8 @@ float buff_Available(entity buff)
 void buff_NewType(entity ent)
 {
 	RandomSelection_Init();
-	FOREACH(StatusEffects, it.instanceOfBuff && buff_Available(it), {
+	FOREACH(StatusEffects, it.instanceOfBuff && buff_Available(it),
+	{
 		// if it's already been chosen, give it a lower priority
 		float myseencount = (it.buff_seencount > 0) ? it.buff_seencount : 1; // no division by zero please!
 		RandomSelection_AddEnt(it, max(0.2, 1 / myseencount), 1);
@@ -285,18 +282,14 @@ void buff_RemoveAll(entity actor, int removal_type)
 {
 	if (!actor.statuseffects)
 		return;
-	FOREACH(StatusEffects, it.instanceOfBuff, {
-		it.m_remove(it, actor, removal_type);
-	});
+	FOREACH(StatusEffects, it.instanceOfBuff, it.m_remove(it, actor, removal_type));
 }
 
 entity buff_FirstFromFlags(entity actor)
 {
 	if (!actor.statuseffects)
 		return NULL;
-	FOREACH(StatusEffects, it.instanceOfBuff && it.m_active(it, actor), {
-		return it;
-	});
+	FOREACH(StatusEffects, it.instanceOfBuff && it.m_active(it, actor), return it);
 	return NULL;
 }
 
@@ -327,18 +320,19 @@ void buff_Think(entity this)
 		this.oldbuffs = this.buffdef;
 	}
 
-	if (!game_stopped)
-	if ((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
-	if (!this.buff_activetime_updated)
+	if (!game_stopped
+	&& ((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
+	&& !this.buff_activetime_updated)
 	{
 		buff_SetCooldown(this, this.buff_activetime);
 		this.buff_activetime_updated = true;
 	}
 
 	if (!this.buff_active && !this.buff_activetime)
-	if (!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || this.owner.vehicle
-		|| this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway)
-		|| this.buffdef != buff_FirstFromFlags(this.owner))
+	if (!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner)
+	|| !this.owner.iscreature || this.owner.vehicle
+	|| this.pickup_anyway > 0 || (this.pickup_anyway >= 0 && autocvar_g_buffs_pickup_anyway)
+	|| this.buffdef != buff_FirstFromFlags(this.owner))
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
@@ -349,9 +343,9 @@ void buff_Think(entity this)
 			buff_Respawn(this);
 	}
 
-	if (this.buff_activetime)
-	if (!game_stopped)
-	if ((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime)
+	if (this.buff_activetime
+	&& !game_stopped
+	&& ((round_handler_IsActive() && round_handler_IsRoundStarted()) || time >= game_starttime))
 	{
 		this.buff_activetime = max(0, this.buff_activetime - frametime);
 
@@ -373,24 +367,30 @@ void buff_Think(entity this)
 	}
 
 	this.nextthink = time;
-	//this.angles_y = time * 110.1;
-}
-
-void buff_Waypoint_Reset(entity this)
-{
-	WaypointSprite_Kill(this.buff_waypoint);
-
-	if (this.buff_activetime)
-		buff_Waypoint_Spawn(this);
+	//this.angles.y = time * 110.1;
 }
 
 void buff_Reset(entity this)
 {
+	if (this.targetname != "" && !(this.spawnflags & 16)) // q3compat
+	{
+		// buffs have no equivalent of Item_Show(this, -1)
+		this.effects = EF_NODRAW;
+		this.solid = SOLID_NOT; // u can't touch this
+		setorigin(this, this.origin); // unlink from the area grid
+		this.nextthink = 0;
+		if (this.buff_waypoint)
+			WaypointSprite_Kill(this.buff_waypoint);
+		return;
+	}
+
 	if (autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
 		buff_NewType(this);
 	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
-	buff_Waypoint_Reset(this);
+	WaypointSprite_Kill(this.buff_waypoint);
+	if (this.buff_activetime)
+		buff_Waypoint_Spawn(this);
 	this.buff_activetime_updated = false;
 
 	if (autocvar_g_buffs_random_location || (this.spawnflags & 64))
@@ -485,8 +485,7 @@ void buff_Init(entity this)
 	if (this.noalign)
 		set_movetype(this, MOVETYPE_NONE); // reset by random location
 
-	if (autocvar_g_buffs_random_location || (this.spawnflags & 64))
-		buff_Respawn(this);
+	buff_Reset(this);
 }
 
 void buff_Init_Compat(entity ent, entity replacement)
@@ -555,18 +554,18 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if (StatusEffects_active(BUFF_RESISTANCE, frag_target))
 		frag_damage = buff_Resistance_CalculateDamage(frag_damage);
 
-	if (StatusEffects_active(BUFF_MEDIC, frag_target))
-	if (GetResource(frag_target, RES_HEALTH) - frag_damage <= 0)
-	if (!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-	if (frag_attacker)
+	if (StatusEffects_active(BUFF_MEDIC, frag_target)
+	&& GetResource(frag_target, RES_HEALTH) - frag_damage <= 0
+	&& !ITEM_DAMAGE_NEEDKILL(frag_deathtype)
+	&& frag_attacker)
 		frag_damage = buff_Medic_CalculateSurviveDamage(frag_damage, GetResource(frag_target, RES_HEALTH));
 
 	if (StatusEffects_active(BUFF_JUMP, frag_target))
 		frag_damage = buff_Jump_ChangeDamage(frag_damage, frag_deathtype);
 
-	if (StatusEffects_active(BUFF_VENGEANCE, frag_target))
-	if (frag_attacker && frag_attacker != frag_target)
-	if (!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	if (StatusEffects_active(BUFF_VENGEANCE, frag_target)
+	&& frag_attacker && frag_attacker != frag_target
+	&& !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
 		entity dmgent = new_pure(dmgent);
 

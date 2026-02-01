@@ -2,8 +2,7 @@
 
 entity makeXonoticButton_T(string theText, vector theColor, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticButton);
+	entity me = NEW(XonoticButton);
 	me.configureXonoticButton(me, theText, theColor, theTooltip);
 	return me;
 }

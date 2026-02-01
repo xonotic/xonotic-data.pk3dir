@@ -131,12 +131,10 @@ entity pathlib_wpp_bestopen()
 
 entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
 {
-    float ptime;
-
-    ptime 					= gettime(GETTIME_REALTIME);
-    pathlib_starttime 		= ptime;
-	pathlib_movecost 		= 300;
-	pathlib_movecost_diag  	= vlen('1 1 0' * pathlib_movecost);
+	float ptime            = gettime(GETTIME_REALTIME);
+	pathlib_starttime      = ptime;
+	pathlib_movecost       = 300;
+	pathlib_movecost_diag  = vlen('1 1 0' * pathlib_movecost);
 
 	if (!pathlib_wpp_waypointcallback)
 		callback = false;
@@ -191,9 +189,7 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
 
 entity pathlib_waypointpath_step()
 {
-    entity n;
-
-    n = pathlib_wpp_bestopen();
+    entity n = pathlib_wpp_bestopen();
     if(!n)
     {
         LOG_TRACE("Cannot find best open node, abort.");
@@ -237,8 +233,7 @@ void plas_think(entity this)
 
 void pathlib_waypointpath_autostep()
 {
-    entity n;
-    n = spawn();
+    entity n = spawn();
     setthink(n, plas_think);
     n.nextthink = time + 0.1;
 }

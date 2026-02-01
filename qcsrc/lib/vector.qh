@@ -49,7 +49,7 @@ ERASEABLE
 vector randompos(vector m1, vector m2)
 {
 	vector v;
-	m2 = m2 - m1;
+	m2 -= m1;
 	v_x = m2_x * random() + m1_x;
 	v_y = m2_y * random() + m1_y;
 	v_z = m2_z * random() + m1_z;
@@ -104,6 +104,9 @@ bool is_all_nans(vector v) {
 ERASEABLE
 vector Rotate(vector v, float a)
 {
+	if (a == 0) return v;
+	if (a == M_PI) return -v;
+
 	float a_sin = sin(a), a_cos = cos(a);
 	return vec2(v.x * a_cos + v.y * a_sin, -v.x * a_sin + v.y * a_cos);
 }

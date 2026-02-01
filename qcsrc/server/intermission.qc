@@ -195,7 +195,7 @@ int MaplistMethod_Iterate(void) // usual method
 		if(Map_Check(bufstr_get(maplist_buffer, mapindex), 1))
 			return mapindex;
 
-		attempts -= 1;
+		--attempts;
 		if(attempts <= 0)
 		{
 			LOG_DEBUG("MaplistMethod_Iterate: Couldn't find a suitable map, falling back to next valid");
@@ -227,8 +227,7 @@ int MaplistMethod_Random(void) // random map selection
 
 	for(i = 0; i <= imax; ++i)
 	{
-		int mapindex;
-		mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
+		int mapindex = (Map_Current + floor(random() * (Map_Count - 1) + 1)) % Map_Count; // any OTHER map
 		if(Map_Check(bufstr_get(maplist_buffer, mapindex), 1))
 			return mapindex;
 	}
@@ -268,7 +267,7 @@ int Maplist_Init(void)
 			{
 				if(!fexists(Map_Filename(it)))
 				{
-					trimmedmaps += 1;
+					++trimmedmaps;
 					continue;
 				}
 				newmaplist = cons(newmaplist, it);
@@ -282,7 +281,7 @@ int Maplist_Init(void)
 	{
 		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
 		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
-		if(!server_is_dedicated)
+		if(!autocvar_sv_dedicated)
 			localcmd("\nmenu_cmd sync\n");
 	}
 
@@ -373,8 +372,7 @@ float DoNextMapOverride(float reinit)
 	}
 	if(get_nextmap() != "")
 	{
-		string m;
-		m = GameTypeVote_MapInfo_FixName(get_nextmap());
+		string m = GameTypeVote_MapInfo_FixName(get_nextmap());
 		if (m != get_nextmap())
 			Set_NextMap(m);
 

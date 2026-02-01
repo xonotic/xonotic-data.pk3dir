@@ -32,7 +32,7 @@ void func_fourier_controller_think(entity this)
 	for(i = 0; i < n; ++i)
 	{
 		makevectors((t * stof(argv(i*5)) + stof(argv(i*5+1)) * 360) * '0 1 0');
-		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * this.owner.height * v_forward_y;
+		v += ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * this.owner.height * v_forward_y;
 	}
 
 	if(this.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed

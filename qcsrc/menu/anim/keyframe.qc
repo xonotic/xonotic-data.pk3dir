@@ -37,7 +37,7 @@
 	float getNewChildDuration(entity this, float durationTime)
 	{
 		float maxDura = this.duration;
-		if (this.lastChild) maxDura = maxDura - (this.lastChild.startTime + this.lastChild.duration);
+		if (this.lastChild) maxDura -= this.lastChild.startTime + this.lastChild.duration;
 		float dura = durationTime;
 		if (0 >= dura || dura > maxDura) dura = maxDura;
 		return dura;

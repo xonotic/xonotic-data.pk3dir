@@ -109,8 +109,7 @@ float race_readPos(string map, float t)
 
 void race_writeTime(string map, float t, string myuid)
 {
-	float newpos;
-	newpos = race_readPos(map, t);
+	float newpos = race_readPos(map, t);
 
 	float i, prevpos = 0;
 	for(i = 1; i <= RANKINGS_CNT; ++i)
@@ -572,7 +571,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					IL_REMOVE(g_bot_targets, e);
 				e.bot_attack = false;
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FINISHED, e.netname);
-				ClientData_Touch(e);
+				ClientData_Touch(e, true);
 			}
 		}
 	}
@@ -803,7 +802,7 @@ void checkpoint_passed(entity this, entity player)
 		int cp_amount = 0, largest_cp_id = 0;
 		IL_EACH(g_race_targets, it.classname == "target_checkpoint",
 		{
-			cp_amount += 1;
+			++cp_amount;
 			if(it.race_checkpoint > largest_cp_id) // update the finish id if someone hit a new checkpoint
 			{
 				if(!largest_cp_id)
@@ -1113,31 +1112,6 @@ void trigger_race_checkpoint_verify(entity this)
 			});
 		}
 	}
-
-	if (defrag_ents) { /* The following hack shall be removed when per-player trigger_multiple.wait is implemented for cts */
-		for (entity trigger = NULL; (trigger = find(trigger, classname, "trigger_multiple")); ) {
-			for (entity targ = NULL; (targ = find(targ, targetname, trigger.target)); ) {
-				if (targ.classname == "target_checkpoint" || targ.classname == "target_startTimer" || targ.classname == "target_stopTimer") {
-					trigger.wait = 0;
-					trigger.delay = 0;
-					targ.wait = 0;
-					targ.delay = 0;
-
-                    // These just make the game crash on some maps with oddly shaped triggers.
-                    // (on the other hand they used to fix the case when two players ran through a checkpoint at once,
-                    // and often one of them just passed through without being registered. Hope it's fixed  in a better way now.
-                    // (happened on item triggers too)
-                    //
-					//targ.wait = -2;
-					//targ.delay = 0;
-
-					//setsize(targ, trigger.mins, trigger.maxs);
-					//setorigin(targ, trigger.origin);
-					//remove(trigger);
-				}
-            }
-        }
-	}
 }
 
 vector trigger_race_checkpoint_spawn_evalfunc(entity this, entity player, entity spot, vector current)
@@ -1295,7 +1269,7 @@ void race_AbandonRaceCheck(entity p)
 		CS(p).race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
-		ClientData_Touch(p);
+		ClientData_Touch(p, true);
 	}
 }
 
@@ -1436,8 +1410,7 @@ float race_GetFractionalLapCount(entity e)
 	// also, this code is slow and would need optimization (i.e. "next CP"
 	// links on CP entities)
 
-	float l;
-	l = GameRules_scoring_add(e, RACE_LAPS, 0);
+	float l = GameRules_scoring_add(e, RACE_LAPS, 0);
 	if(CS(e).race_completed)
 		return l; // not fractional
 

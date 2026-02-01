@@ -2,8 +2,7 @@
 
 entity makeXonoticMixedSlider_T(string theCvar, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticMixedSlider);
+	entity me = NEW(XonoticMixedSlider);
 	me.configureXonoticMixedSlider(me, theCvar, theTooltip);
 	return me;
 }

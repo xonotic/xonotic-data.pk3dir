@@ -17,7 +17,7 @@ REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	return thecvar != "" && thecvar && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
+	return thecvar != "" && thecvar != "default" && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity this, string option, float defaultval)
@@ -31,7 +31,7 @@ float Physics_ClientOption(entity this, string option, float defaultval)
 		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
 			return cvar(s);
 	}
-	if(autocvar_g_physics_clientselect_default && autocvar_g_physics_clientselect_default != "" && autocvar_g_physics_clientselect_default != "default")
+	if(autocvar_g_physics_clientselect_default != "" && autocvar_g_physics_clientselect_default != "default")
 	{
 		// NOTE: not using Physics_Valid here, so the default can be forced to something normally unavailable
 		string s = strcat("g_physics_", autocvar_g_physics_clientselect_default, "_", option);
@@ -107,6 +107,8 @@ void Physics_UpdateStats(entity this)
 		STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_mapformat_is_quake2 ? '0 0 16'   : STAT(PL_VIEW_OFS, this);
 	}
 
+	STAT(MOVEVARS_GRAVITY, this) = Physics_ClientOption(this, "gravity", autocvar_sv_gravity);
+
 	// old stats
 	// fix some new settings
 	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor", autocvar_sv_airaccel_qw_stretchfactor);
@@ -128,15 +130,22 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_WARSOWBUNNY_ACCEL, this) = Physics_ClientOption(this, "warsowbunny_accel", autocvar_sv_warsowbunny_accel);
 	STAT(MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, this) = Physics_ClientOption(this, "warsowbunny_backtosideratio", autocvar_sv_warsowbunny_backtosideratio);
 	STAT(MOVEVARS_FRICTION, this) = Physics_ClientOption(this, "friction", autocvar_sv_friction);
+	STAT(MOVEVARS_FRICTION_SLICK, this) = Physics_ClientOption(this, "friction_slick", autocvar_sv_friction_slick);
+	STAT(MOVEVARS_STEPHEIGHT, this) = Physics_ClientOption(this, "stepheight", autocvar_sv_stepheight);
 	STAT(MOVEVARS_ACCELERATE, this) = Physics_ClientOption(this, "accelerate", autocvar_sv_accelerate);
 	STAT(MOVEVARS_STOPSPEED, this) = Physics_ClientOption(this, "stopspeed", autocvar_sv_stopspeed);
 	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate", autocvar_sv_airaccelerate);
 	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate", autocvar_sv_airstopaccelerate);
 	STAT(MOVEVARS_AIRSTOPACCELERATE_FULL, this) = Physics_ClientOption(this, "airstopaccelerate_full", autocvar_sv_airstopaccelerate_full);
 	STAT(MOVEVARS_SLICKACCELERATE, this) = Physics_ClientOption(this, "slickaccelerate", autocvar_sv_slickaccelerate);
+	STAT(DOUBLEJUMP, this) = Physics_ClientOption(this, "doublejump", autocvar_sv_doublejump);
 	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity", autocvar_sv_jumpvelocity);
 	STAT(MOVEVARS_JUMPVELOCITY_CROUCH, this) = Physics_ClientOption(this, "jumpvelocity_crouch", autocvar_sv_jumpvelocity_crouch);
+	STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, this) = Physics_ClientOption(this, "jumpspeedcap_max_disable_on_ramps", autocvar_sv_jumpspeedcap_max_disable_on_ramps);
+	STAT(MOVEVARS_JUMPSPEEDCAP_MIN, this) = Physics_ClientOption(this, "jumpspeedcap_min", autocvar_sv_jumpspeedcap_min);
+	STAT(MOVEVARS_JUMPSPEEDCAP_MAX, this) = Physics_ClientOption(this, "jumpspeedcap_max", autocvar_sv_jumpspeedcap_max);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
+	STAT(GAMEPLAYFIX_STEPDOWN, this) = Physics_ClientOption(this, "stepdown", autocvar_sv_gameplayfix_stepdown);
 
 	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
@@ -178,18 +187,18 @@ void PM_ClientMovement_UpdateStatus(entity this)
 			break;
 		}
 	}
+
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if(this.viewloc && !(this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && PHYS_CS(this).movement.x < 0)
 		do_crouch = true;
-	if (have_hook) {
+	if (have_hook)
 		do_crouch = false;
-	//} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		//do_crouch = false;
-	} else if (PHYS_INVEHICLE(this)) {
+//	else if (this.waterlevel >= WATERLEVEL_SWIMMING)
+//		do_crouch = false;
+	else if (PHYS_INVEHICLE(this))
 		do_crouch = false;
-	} else if (PHYS_FROZEN(this) || IS_DEAD(this)) {
+	else if (PHYS_FROZEN(this) || IS_DEAD(this))
 		do_crouch = false;
-	}
 
 	MUTATOR_CALLHOOK(PlayerCanCrouch, this, do_crouch);
 	do_crouch = M_ARGV(1, bool);
@@ -198,16 +207,21 @@ void PM_ClientMovement_UpdateStatus(entity this)
 	if (STAT(PL_CROUCH_MAX, this).z == STAT(PL_MAX, this).z)
 		do_crouch = false;
 
-	if (do_crouch) {
-		if (!IS_DUCKED(this)) {
+	if (do_crouch)
+	{
+		if (!IS_DUCKED(this))
+		{
 			SET_DUCKED(this);
 			this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
 			setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
 			// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 		}
-	} else if (IS_DUCKED(this)) {
+	}
+	else if (IS_DUCKED(this))
+	{
 		tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, MOVE_NORMAL, this);
-		if (!trace_startsolid) {
+		if (!trace_startsolid)
+		{
 			UNSET_DUCKED(this);
 			this.view_ofs = STAT(PL_VIEW_OFS, this);
 			setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
@@ -249,7 +263,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 		this.velocity = normalize(this.velocity * xyspeed + wishdir * k);
 	}
 
-	this.velocity = this.velocity * xyspeed;
+	this.velocity *= xyspeed;
 	this.velocity_z = zspeed;
 }
 
@@ -314,8 +328,7 @@ void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed, float
 
 	if (speedclamp >= 0)
 	{
-		float vel_xy_preclamp;
-		vel_xy_preclamp = vlen(vel_xy);
+		float vel_xy_preclamp = vlen(vel_xy);
 		if (vel_xy_preclamp > 0) // prevent division by zero
 		{
 			vel_xy_current += (vel_xy_forward - vel_xy_current) * speedclamp;
@@ -423,22 +436,22 @@ bool PlayerJump(entity this)
 	// velocity bounds.  Final velocity is bound between (jumpheight *
 	// min + jumpheight) and (jumpheight * max + jumpheight);
 
-	if(PHYS_JUMPSPEEDCAP_MIN != "")
+	if (!isnan(PHYS_JUMPSPEEDCAP_MIN(this)))
 	{
-		float minjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MIN);
+		float minjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MIN(this);
 
 		if (this.velocity_z < minjumpspeed)
 			mjumpheight += minjumpspeed - this.velocity_z;
 	}
 
-	if(PHYS_JUMPSPEEDCAP_MAX != "")
+	if (!isnan(PHYS_JUMPSPEEDCAP_MAX(this)))
 	{
 		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
 		tracebox(this.origin + '0 0 0.01', this.mins, this.maxs, this.origin - '0 0 0.01', MOVE_NORMAL, this);
 
 		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(this)))
 		{
-			float maxjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MAX);
+			float maxjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MAX(this);
 
 			if (this.velocity_z > maxjumpspeed)
 				mjumpheight -= this.velocity_z - maxjumpspeed;
@@ -471,11 +484,15 @@ bool PlayerJump(entity this)
 	UNSET_ONSLICK(this);
 	SET_JUMP_HELD(this);
 
+#ifdef CSQC
+	jumpheight_min = jumpheight_max = this.origin.z;
+#endif
+
 #ifdef SVQC
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
-		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
+		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 #endif
 	return true;
 }
@@ -551,6 +568,7 @@ void CheckPlayerJump(entity this)
 		this.jetpack_stopped = false;
 		ITEMS_STAT(this) &= ~IT_USING_JETPACK;
 	}
+
 	if (!PHYS_INPUT_BUTTON_JUMP(this))
 		UNSET_JUMP_HELD(this);
 
@@ -590,7 +608,7 @@ bool PM_check_specialcommand(entity this, int buttons)
 
 	if (c == substring(specialcommand, CS(this).specialcommand_pos, 1))
 	{
-		CS(this).specialcommand_pos += 1;
+		++CS(this).specialcommand_pos;
 		if (CS(this).specialcommand_pos >= strlen(specialcommand))
 		{
 			CS(this).specialcommand_pos = 0;
@@ -791,8 +809,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	else
 		fz = bound(0, 1 + this.velocity_z / PHYS_JETPACK_MAXSPEED_UP(this), 1);
 
-	float fvel;
-	fvel = vlen(wishvel);
+	float fvel = vlen(wishvel);
 	wishvel_x *= fxy;
 	wishvel_y *= fxy;
 	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);
@@ -807,7 +824,7 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 
 	if (f > 0 && wishvel != '0 0 0')
 	{
-		this.velocity = this.velocity + wishvel * f * dt;
+		this.velocity += wishvel * f * dt;
 		UNSET_ONGROUND(this);
 
 #ifdef SVQC
@@ -839,7 +856,7 @@ bool IsFlying(entity this)
 
 void sys_phys_update(entity this, float dt);
 #if defined(SVQC)
-void SV_PlayerPhysics(entity this)
+void SV_PlayerPhysics(entity this) // called by engine before it calls PlayerPreThink()
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif

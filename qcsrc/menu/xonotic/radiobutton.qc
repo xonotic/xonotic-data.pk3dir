@@ -2,8 +2,7 @@
 
 entity makeXonoticRadioButton_T(float theGroup, string theCvar, string theValue, string theText, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticRadioButton);
+	entity me = NEW(XonoticRadioButton);
 	me.configureXonoticRadioButton(me, theGroup, theCvar, theValue, theText, theTooltip);
 	return me;
 }

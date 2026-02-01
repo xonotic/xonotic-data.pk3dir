@@ -201,7 +201,7 @@ MUTATOR_HOOKFUNCTION(powerups, BuildMutatorsPrettyString)
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Powerups");
 }
 
-MUTATOR_HOOKFUNCTION(powerups, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(powerups, Bot_ForbidAttack)
 {
 	entity targ = M_ARGV(1, entity);
 

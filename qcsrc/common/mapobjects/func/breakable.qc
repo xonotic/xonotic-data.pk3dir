@@ -67,7 +67,7 @@ void LaunchDebris (entity this, string debrisname, vector force)
 	dbr.velocity_x = this.debrisvelocity.x + this.debrisvelocityjitter.x * crandom();
 	dbr.velocity_y = this.debrisvelocity.y + this.debrisvelocityjitter.y * crandom();
 	dbr.velocity_z = this.debrisvelocity.z + this.debrisvelocityjitter.z * crandom();
-	dbr.velocity = dbr.velocity + force * this.debrisdamageforcescale;
+	dbr.velocity += force * this.debrisdamageforcescale;
 	dbr.angles = this.angles;
 	dbr.avelocity_x = random()*this.debrisavelocityjitter.x;
 	dbr.avelocity_y = random()*this.debrisavelocityjitter.y;

@@ -12,18 +12,16 @@ void W_Blaster_Touch(entity this, entity toucher)
 	force_xyzscale.z = WEP_CVAR_PRI(WEP_BLASTER, force_zscale);
 
 	// slightly hacky but probably not worth adding a parameter for this special case
-	bool zero_damageforcescale = false;
+	bool zero_damageforcescale;
 	if (autocvar_g_projectiles_interact == 1 && (toucher.flags & FL_PROJECTILE) && !toucher.damageforcescale)
 	{
 		toucher.damageforcescale = 1;
 		zero_damageforcescale = true;
 	}
+	else
+		zero_damageforcescale = false;
 
-	RadiusDamageForSource(
-		this,
-		(this.origin + (this.mins + this.maxs) * 0.5),
-		this.velocity,
-		this.realowner,
+	RadiusDamageForSource(this, (this.origin + (this.mins + this.maxs) * 0.5), this.velocity, this.realowner,
 		WEP_CVAR_PRI(WEP_BLASTER, damage),
 		WEP_CVAR_PRI(WEP_BLASTER, edgedamage),
 		WEP_CVAR_PRI(WEP_BLASTER, radius),
@@ -92,42 +90,39 @@ void W_Blaster_Attack(entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
 	if (time >= missile.nextthink)
-	{
 		getthink(missile)(missile);
-	}
 }
 
 METHOD(Blaster, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	PHYS_INPUT_BUTTON_ATCK(actor) =
-		bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_BLASTER, speed), 0, WEP_CVAR_PRI(WEP_BLASTER, lifetime), false, true);
+	PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_BLASTER, speed), 0, WEP_CVAR_PRI(WEP_BLASTER, lifetime), false, true);
 }
 
 METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if(fire & 1)
+	if (fire & 1)
 	{
-		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_BLASTER, refire)))
+		if (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_BLASTER, refire)))
 		{
 			W_Blaster_Attack(actor, weaponentity);
 			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_BLASTER, animtime), w_ready);
 		}
 	}
-	else if(fire & 2)
+	else if (fire & 2)
 	{
-		if(actor.(weaponentity).m_switchweapon == WEP_BLASTER) // don't do this if already switching
+		if (actor.(weaponentity).m_switchweapon == WEP_BLASTER) // don't do this if already switching
 			W_LastWeapon(actor, weaponentity);
 	}
 }
 
 METHOD(Blaster, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	return true; // infinite ammo
+	return true; // Blaster has infinite ammo
 }
 
 METHOD(Blaster, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	return true; // blaster has infinite ammo
+	return true;
 }
 
 METHOD(Blaster, wr_suicidemessage, Notification(entity thiswep))
@@ -143,26 +138,26 @@ METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
 METHOD(OffhandBlaster, offhand_think, void(OffhandBlaster this, entity actor, bool key_pressed))
 {
 	if (!key_pressed || (time < actor.jump_interval))
-	{
 		return;
-	}
+
 	actor.jump_interval = time + WEP_CVAR_PRI(WEP_BLASTER, refire) * W_WeaponRateFactor(actor);
 	.entity weaponentity = weaponentities[1];
 	makevectors(actor.v_angle);
 	W_Blaster_Attack(actor, weaponentity);
 }
 
-#endif
+#endif // SVQC
 #ifdef CSQC
 
 METHOD(Blaster, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
-	if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
+	if (!w_issilent)
+		sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
 }
 
-#endif
+#endif // CSQC
 #ifdef MENUQC
 
 METHOD(Blaster, describe, string(Blaster this))
@@ -181,4 +176,4 @@ METHOD(Blaster, describe, string(Blaster this))
 	return PAGE_TEXT;
 }
 
-#endif
+#endif // MENUQC

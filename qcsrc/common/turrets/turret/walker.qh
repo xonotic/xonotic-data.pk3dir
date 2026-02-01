@@ -5,15 +5,19 @@
 #include "walker_weapon.qh"
 
 CLASS(WalkerTurret, Turret)
+#ifdef GAMEQC
 /* spawnflags */ ATTRIB(WalkerTurret, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE);
 /* mins       */ ATTRIB(WalkerTurret, m_mins, vector, '-70 -70 0');
 /* maxs       */ ATTRIB(WalkerTurret, m_maxs, vector, '70 70 95');
 /* modelname  */ ATTRIB(WalkerTurret, mdl, string, "walker_body.md3");
 /* model      */ ATTRIB_STRZONE(WalkerTurret, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(WalkerTurret, head_model, string, strcat("models/turrets/", "walker_head_minigun.md3"));
+#endif
 /* netname    */ ATTRIB(WalkerTurret, netname, string, "walker");
 /* fullname   */ ATTRIB(WalkerTurret, m_name, string, _("Walker Turret"));
-    ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);
+#ifdef SVQC
+/* weapon     */ ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);
+#endif
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \

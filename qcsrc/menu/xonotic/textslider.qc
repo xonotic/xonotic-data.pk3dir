@@ -2,8 +2,7 @@
 
 entity makeXonoticTextSlider_T(string theCvar, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticTextSlider);
+	entity me = NEW(XonoticTextSlider);
 	me.configureXonoticTextSlider(me, theCvar, theTooltip);
 	return me;
 }

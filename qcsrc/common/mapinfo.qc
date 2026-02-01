@@ -160,8 +160,7 @@ float MapInfo_FilterList_Lookup(float i)
 
 void _MapInfo_FilterList_swap(float i, float j, entity pass)
 {
-	string h;
-	h = bufstr_get(_MapInfo_filtered, i);
+	string h = bufstr_get(_MapInfo_filtered, i);
 	bufstr_set(_MapInfo_filtered, i, bufstr_get(_MapInfo_filtered, j));
 	bufstr_set(_MapInfo_filtered, j, h);
 }
@@ -756,12 +755,7 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 		if(type == 0) // server set
 		{
 			LOG_TRACE("Applying temporary setting ", t, " := ", s);
-		#if 0
-			if(cvar("g_campaign"))
-				cvar_set(t, s); // this is a wrapper and is always temporary anyway; no need to backup old values then
-			else
-		#endif
-				cvar_settemp(t, s);
+			cvar_settemp(t, s);
 		}
 		else
 		{
@@ -1045,9 +1039,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 	float fh;
 	int f, i;
 	float r, n;
-	string acl;
-
-	acl = MAPINFO_SETTEMP_ACL_USER;
+	string acl = MAPINFO_SETTEMP_ACL_USER;
 
 	if(strstrofs(pFilename, "/", 0) >= 0)
 	{
@@ -1509,8 +1501,7 @@ float _MapInfo_CheckMap(string s, bool gametype_only) // returns 0 if the map ca
 
 float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
 {
-	float r;
-	r = _MapInfo_CheckMap(s, false);
+	float r = _MapInfo_CheckMap(s, false);
 	MapInfo_ClearTemps();
 	return r;
 }

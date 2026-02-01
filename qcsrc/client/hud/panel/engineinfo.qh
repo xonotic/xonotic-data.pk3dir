@@ -2,6 +2,9 @@
 #include "../panel.qh"
 
 bool autocvar_hud_panel_engineinfo;
-bool autocvar_hud_panel_engineinfo_dynamichud   = true;
-float autocvar_hud_panel_engineinfo_framecounter_decimals;
-float autocvar_hud_panel_engineinfo_framecounter_time;
+bool autocvar_hud_panel_engineinfo_dynamichud = true;
+float autocvar_hud_panel_engineinfo_fps_decimals = 0;
+float autocvar_hud_panel_engineinfo_fps_time = 0.1;
+float autocvar_hud_panel_engineinfo_fps_movingaverage = 1;
+float autocvar_hud_panel_engineinfo_fps_movingaverage_weight = 0.1;
+float autocvar_hud_panel_engineinfo_fps_movingaverage_instantupdate_threshold = 0.5;

@@ -22,8 +22,8 @@ vector minigame_hud_denormalize(vector v, vector pos, vector mySize)
 // De-normalize (2D vector) v from relative size inside pos mySize
 vector minigame_hud_denormalize_size(vector v, vector pos, vector mySize)
 {
-	v_x = v_x * mySize_x;
-	v_y = v_y * mySize_y;
+	v_x *= mySize_x;
+	v_y *= mySize_y;
 	return v;
 }
 
@@ -263,8 +263,6 @@ void minigame_show_allspecs(vector boardpos, vector boardsize)
 			current_spec = textShortenToWidth(current_spec, max_current_spec_width, hud_fontsize, stringwidth_colors);
 			if (allspecs != "")
 				current_spec = strcat(", ", current_spec);
-			else
-				current_spec = current_spec;
 
 			allspecs_width = stringwidth(allspecs, true, hud_fontsize);
 
@@ -406,8 +404,7 @@ void minigame_drawpic_centered( vector pos, string texture, vector sz,
 // It could be a bug in the compiler or in darkplaces
 void minigame_cmd_workaround(float dummy, string...cmdargc)
 {
-	string cmd;
-	cmd = "cmd minigame ";
+	string cmd = "cmd minigame ";
 	float i;
 	for ( i = 0; i < cmdargc; ++i )
 		cmd = strcat(cmd,...(i,string));

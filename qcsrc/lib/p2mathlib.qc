@@ -75,7 +75,7 @@ float angle_snap_f(float f, float increment)
 	for (int j = 0; j <= 360; )
 	{
 		if (f <= j - increment) return j - increment;
-		j = j + increment;
+		j += increment;
 	}
 
 	return 0;

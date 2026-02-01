@@ -91,8 +91,7 @@ void g_clientmodel_think(entity this)
 
 void g_clientmodel_dropbyspawnflags(entity this)
 {
-	vector o0;
-	o0 = this.origin;
+	vector o0 = this.origin;
 	g_model_dropbyspawnflags(this);
 	if(this.origin != o0)
 		this.SendFlags |= BIT(1);
@@ -100,7 +99,7 @@ void g_clientmodel_dropbyspawnflags(entity this)
 
 bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 {
-	sf = sf & 0x0F;
+	sf &= 0x0F;
 	if(this.angles != '0 0 0')
 		sf |= 0x10;
 	if(this.mins != '0 0 0' || this.maxs != '0 0 0')

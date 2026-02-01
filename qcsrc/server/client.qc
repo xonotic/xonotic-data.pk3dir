@@ -105,7 +105,7 @@ int CountSpectators(entity player, entity to)
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_SPEC(it) && it != to && it.enemy == player,
 	{
-		spec_count++;
+		++spec_count;
 	});
 
 	return spec_count;
@@ -142,6 +142,8 @@ bool ClientData_Send(entity this, entity to, int sf)
 	                                sf |= BIT(4); // show spectators
 	if (autocvar_sv_teamnagger && teamplay && !(autocvar_bot_vs_human && AVAILABLE_TEAMS == 2))
 	                                sf |= (autocvar_sv_teamnagger & 0x03) << 5; // BIT(5) | BIT(6)
+	if (to.ignore_list && to.ignore_list_send_time == IGNORE_LIST_SEND_NOW && !IS_SPEC(to))
+	                                sf |= BIT(7); // ignore list (private, won't be sent to spectators)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -149,11 +151,19 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if (sf & BIT(1))
 		WriteByte(MSG_ENTITY, CS(to).spectatee_status);
 
+	// spectator list is cleared on the client if this flag is not set
 	if(sf & BIT(4))
 	{
 		float specs = CountSpectators(e, to);
 		WriteByte(MSG_ENTITY, specs);
 		WriteSpectators(e, to);
+	}
+
+	// ignore list is NOT cleared on the client if this flag is not set
+	if (sf & BIT(7))
+	{
+		to.ignore_list_send_time = 0;
+		WriteString(MSG_ENTITY, strcat(to.ignore_list));
 	}
 
 	return true;
@@ -172,17 +182,17 @@ void ClientData_Detach(entity this)
 	CS(this).clientdata = NULL;
 }
 
-void ClientData_Touch(entity e)
+void ClientData_Touch(entity e, bool to_spectators_too)
 {
 	entity cd = CS(e).clientdata;
 	if (cd) cd.SendFlags = 1;
 
-	// make it spectatable
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
-	{
-		entity cd = CS(it).clientdata;
-		if (cd) cd.SendFlags = 1;
-	});
+	if (to_spectators_too)
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e,
+		{
+			entity cd_spec = CS(it).clientdata;
+			if (cd_spec) cd_spec.SendFlags = cd.SendFlags;
+		});
 }
 
 
@@ -677,6 +687,8 @@ void PutPlayerInServer(entity this)
 	setthink(this, func_null); // players have no think function
 	this.nextthink = 0;
 	this.dmg_team = 0;
+	this.spawn_time = time;
+
 	PS(this).ballistics_density = autocvar_g_ballistics_density_player;
 
 	this.deadflag = DEAD_NO;
@@ -1189,6 +1201,8 @@ void ClientConnect(entity this)
 
 	if (IS_REAL_CLIENT(this))
 	{
+		ignore_list_update_on_connection(this);
+
 		if (g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 		// quickmenu file must be put in a subfolder with an unique name
@@ -1232,7 +1246,7 @@ void ClientConnect(entity this)
 
 	if (player_count == 1)
 	{
-		if (autocvar_sv_autopause && server_is_dedicated)
+		if (autocvar_sv_autopause && autocvar_sv_dedicated)
 			setpause(0);
 		localcmd("\nsv_hook_firstjoin\n");
 	}
@@ -1261,19 +1275,12 @@ void ClientDisconnect(entity this)
 {
 	assert(IS_CLIENT(this), return);
 
-	/* from "ignore" command */
 	strfree(this.ignore_list);
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		if(it.crypto_idfp && it.crypto_idfp != "")
-			continue;
-		string mylist = ignore_removefromlist(it, this);
-		if(it.ignore_list)
-			strunzone(it.ignore_list);
-
-		it.ignore_list = strzone(mylist);
+		// don't remove permanent ignores from db, only from list
+		ignore_remove_player(it, this, false);
 	});
-	/* from "ignore" command */
 
 	PlayerStats_GameReport_FinalizePlayer(this);
 	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -1469,15 +1476,14 @@ void calculate_player_respawn_time(entity this)
 		this.respawn_countdown = -1; // do not count down
 
 	if(autocvar_g_forced_respawn)
-		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
+		this.respawn_flags |= RESPAWN_FORCE;
 }
 
 // LordHavoc: this hack will be removed when proper _pants/_shirt layers are
 // added to the model skins
 /*void UpdateColorModHack()
 {
-	float c;
-	c = this.clientcolors & 15;
+	float c = this.clientcolors & 15;
 	// LordHavoc: only bothering to support white, green, red, yellow, blue
 	     if (!teamplay) this.colormod = '0 0 0';
 	else if (c ==  0) this.colormod = '1.00 1.00 1.00';
@@ -1748,7 +1754,7 @@ void SetZoomState(entity this, float newzoom)
 	if(newzoom != CS(this).zoomstate)
 	{
 		CS(this).zoomstate = newzoom;
-		ClientData_Touch(this);
+		ClientData_Touch(this, true);
 	}
 	zoomstate_set = true;
 }
@@ -1876,7 +1882,7 @@ bool SpectateSet(entity this)
 	if(!IS_PLAYER(this.enemy))
 		return false;
 
-	ClientData_Touch(this.enemy);
+	ClientData_Touch(this.enemy, true);
 
 	msg_entity = this;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
@@ -1903,7 +1909,7 @@ void SetSpectatee_status(entity this, int spectatee_num)
 			STAT(PRESSED_KEYS, this) = 0;
 		}
 
-		ClientData_Touch(this);
+		ClientData_Touch(this, true);
 
 		// init or clear race data
 		if ((g_race || g_cts) && g_race_qualifying && IS_REAL_CLIENT(this))
@@ -1959,7 +1965,8 @@ void SetSpectatee(entity this, entity spectatee)
 		SetSpectatee_status(this, etof(spectatee));
 
 	// needed to update spectator list
-	if(old_spectatee) { ClientData_Touch(old_spectatee); }
+	if(old_spectatee)
+		ClientData_Touch(old_spectatee, true);
 }
 
 bool Spectate(entity this, entity pl)
@@ -2707,14 +2714,14 @@ void PlayerPreThink (entity this)
 		entity e = CS(this).teamkill_soundsource;
 		entity oldpusher = e.pusher;
 		e.pusher = this;
-		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOL_BASEVOICE, VOICETYPE_LASTATTACKER_ONLY);
+		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOL_BASEVOICE, VOICETYPE_LASTATTACKER_ONLY, 1);
 		e.pusher = oldpusher;
 	}
 
 	if (CS(this).taunt_soundtime && time > CS(this).taunt_soundtime)
 	{
 		CS(this).taunt_soundtime = 0;
-		PlayerSound(this, playersound_taunt, CH_VOICE, VOL_BASEVOICE, VOICETYPE_AUTOTAUNT);
+		PlayerSound(this, playersound_taunt, CH_VOICE, VOL_BASEVOICE, VOICETYPE_AUTOTAUNT, 1);
 	}
 
 	target_voicescript_next(this);
@@ -2733,7 +2740,7 @@ void DrownPlayer(entity this)
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)
 	{
 		if(STAT(AIR_FINISHED, this) && STAT(AIR_FINISHED, this) < time)
-			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
+			PlayerSound(this, playersound_gasp, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
 		STAT(AIR_FINISHED, this) = 0;
 	}
 	else
@@ -2764,8 +2771,6 @@ void Player_Physics(entity this)
 		return;
 
 	Movetype_Physics_NoMatchTicrate(this, CS(this).pm_frametime, true);
-
-	CS(this).pm_frametime = 0;
 }
 
 /*
@@ -2789,11 +2794,6 @@ void PlayerPostThink (entity this)
 		if (CS(this).impulse)
 			ImpulseCommands(this);
 		GetPressedKeys(this);
-		if (game_stopped)
-		{
-			CSQCMODEL_AUTOUPDATE(this);
-			return;
-		}
 	}
 	else if (IS_OBSERVER(this) && STAT(PRESSED_KEYS, this))
 	{
@@ -2802,6 +2802,7 @@ void PlayerPostThink (entity this)
 	}
 
 	CSQCMODEL_AUTOUPDATE(this);
+	CS(this).pm_frametime = 0; // CSQCModel_CheckUpdate() and Player_Physics() both read it
 }
 
 /*
@@ -2815,6 +2816,13 @@ frametime is always set here.
 */
 void PlayerFrame (entity this)
 {
+	Physics_UpdateStats(this);
+
+	// Don't accumulate alivetime whilst afk as xonstat skill ratings are based on score per second.
+	// Time accumulated so far (including the 30s) is retained in the event of a move to spec, disconnect, etc.
+	if (this.alivetime_start && time - CS(this).parm_idlesince >= 30)
+		this.alivetime_start += frametime;
+
 // formerly PreThink code
 
 	if (this.score_frame_dmg)
@@ -2901,6 +2909,9 @@ void PlayerFrame (entity this)
 		}
 	}
 
+	if (this.ignore_list_send_time > 0 && time > this.ignore_list_send_time)
+		ignore_list_send(this);
+
 	// GOD MODE info
 	if (!(this.flags & FL_GODMODE) && this.max_armorvalue)
 	{
@@ -2942,7 +2953,7 @@ void PlayerFrame (entity this)
 		if(autocvar_sv_maxidle > 0 && autocvar_sv_maxidle_slots > 0)
 		{
 			// maxidle disabled in local matches by not counting clients (totalClients 0)
-			if (server_is_dedicated)
+			if (autocvar_sv_dedicated)
 			{
 				FOREACH_CLIENT(IS_REAL_CLIENT(it) || autocvar_sv_maxidle_slots_countbots,
 				{

@@ -34,13 +34,13 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 	if(mySize.x/mySize.y > aspect_ratio)
 	{
 		i = aspect_ratio * mySize.y;
-		myPos.x = myPos.x + (mySize.x - i) / 2;
+		myPos.x += (mySize.x - i) / 2;
 		mySize.x = i;
 	}
 	else
 	{
 		i = 1/aspect_ratio * mySize.x;
-		myPos.y = myPos.y + (mySize.y - i) / 2;
+		myPos.y += (mySize.y - i) / 2;
 		mySize.y = i;
 	}
 
@@ -56,8 +56,7 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 void HUD_Mod_CA_Draw(vector myPos, vector mySize, int layout)
 {
 	int rows, columns;
-	float aspect_ratio;
-	aspect_ratio = (layout) ? 2 : 1;
+	float aspect_ratio = (layout) ? 2 : 1;
 	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
 	columns = ceil(team_count/rows);
 
@@ -82,8 +81,11 @@ void HUD_Mod_CA_Draw(vector myPos, vector mySize, int layout)
 }
 
 // Clan Arena and Freeze Tag HUD modicons
-void HUD_Mod_CA(vector myPos, vector mySize)
+void HUD_Mod_CA(vector myPos, vector mySize, bool should_draw)
 {
+	if (!should_draw)
+		return;
+
 	mod_active = 1; // required in each mod function that always shows something
 
 	HUD_Mod_CA_Draw(myPos, mySize, autocvar_hud_panel_modicons_ca_layout);

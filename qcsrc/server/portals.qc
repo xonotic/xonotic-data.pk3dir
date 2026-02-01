@@ -51,8 +51,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 	vector new_forward, new_up;
 	vector new_yawforward;
 
-	vector ang;
-	ang = vangle;
+	vector ang = vangle;
 	/*
 	   ang_x = bound(-89, mod(-ang_x + 180, 360) - 180, 89);
 	   ang = AnglesTransform_ApplyToVAngles(transform, ang);
@@ -123,7 +122,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player, entity portal_owne
 	transform = teleporter.portal_transform;
 
 	to = teleporter.enemy.origin;
-	to = to + AnglesTransform_Apply(teleporter.portal_transform, player.origin - from);
+	to += AnglesTransform_Apply(teleporter.portal_transform, player.origin - from);
 	newvel = AnglesTransform_Apply(transform, player.velocity);
 	// this now is INSIDE the plane... can't use that
 
@@ -218,8 +217,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player, entity portal_owne
 
 float Portal_FindSafeOrigin(entity portal)
 {
-	vector o;
-	o = portal.origin;
+	vector o = portal.origin;
 	portal.mins = PL_MIN_CONST - SAFERNUDGE;
 	portal.maxs = PL_MAX_CONST + SAFERNUDGE;
 	fixedmakevectors(portal.mangle);
@@ -254,7 +252,7 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 	// we don't need this check with solid portals, them being SOLID_BSP should suffice
 	delta = dist / distpersec;
 	v = eorg - evel * delta - porg;
-	v = v - pnorm * (pnorm * v);
+	v -= pnorm * (pnorm * v);
 	return vlen(v) < psize;
 #else
 	return 1;
@@ -315,7 +313,7 @@ void Portal_Touch(entity this, entity toucher)
 			if(IS_INDEPENDENT_PLAYER(toucher.aiment) || IS_INDEPENDENT_PLAYER(this.aiment))
 				return; // cannot go through someone else's portal
 	fixedmakevectors(this.mangle);
-	g = frametime * '0 0 -1' * autocvar_sv_gravity;
+	g = frametime * '0 0 -1' * PHYS_GRAVITY(toucher);
 	if(!Portal_WillHitPlane(toucher.origin, toucher.mins, toucher.maxs, toucher.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
 
@@ -409,8 +407,7 @@ void Portal_Connect(entity teleporter, entity destination)
 
 void Portal_Remove(entity portal, float killed)
 {
-	entity e;
-	e = portal.enemy;
+	entity e = portal.enemy;
 
 	if(e)
 	{
@@ -481,24 +478,25 @@ void Portal_Think(entity this)
 	this.solid = SOLID_BBOX;
 	this.aiment = NULL;
 
-	g = frametime * '0 0 -1' * autocvar_sv_gravity;
-
 	fixedmakevectors(this.mangle);
 
-	FOREACH_CLIENT(IS_PLAYER(it), {
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
 		if(it != o)
 			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
+
+		g = frametime * '0 0 -1' * PHYS_GRAVITY(it);
 
 		if(it != o || time >= this.portal_activatetime)
 			Portal_Think_TryTeleportPlayer(this, it, g, o);
 
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-	    {
-	    	.entity weaponentity = weaponentities[slot];
-	    	if(it.(weaponentity).hook)
-	    		Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g, o);
-	    }
+		{
+			.entity weaponentity = weaponentities[slot];
+			if(it.(weaponentity).hook)
+				Portal_Think_TryTeleportPlayer(this, it.(weaponentity).hook, g, o);
+		}
 	});
 	this.solid = SOLID_TRIGGER;
 	this.aiment = o;
@@ -633,13 +631,11 @@ void Portal_ClearWithID(entity own, float id)
 
 entity Portal_Spawn(entity own, vector org, vector ang)
 {
-	entity portal;
-
 	fixedmakevectors(ang);
 	if(!CheckWireframeBox(own, org - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
 		return NULL;
 
-	portal = new(portal);
+	entity portal = new(portal);
 	portal.aiment = own;
 	setorigin(portal, org);
 	portal.mangle = ang;
@@ -670,15 +666,11 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 
 float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 {
-	entity portal;
-	vector ang;
-	vector org;
-
-	org = trace_endpos;
-	ang = fixedvectoangles2(trace_plane_normal, dir);
+	vector org = trace_endpos;
+	vector ang = fixedvectoangles2(trace_plane_normal, dir);
 	fixedmakevectors(ang);
 
-	portal = Portal_Spawn(own, org, ang);
+	entity portal = Portal_Spawn(own, org, ang);
 	if(!portal)
 		return 0;
 
@@ -690,15 +682,11 @@ float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 float Portal_SpawnOutPortalAtTrace(entity own, vector dir, float portal_id_val)
 {
-	entity portal;
-	vector ang;
-	vector org;
-
-	org = trace_endpos;
-	ang = fixedvectoangles2(trace_plane_normal, dir);
+	vector org = trace_endpos;
+	vector ang = fixedvectoangles2(trace_plane_normal, dir);
 	fixedmakevectors(ang);
 
-	portal = Portal_Spawn(own, org, ang);
+	entity portal = Portal_Spawn(own, org, ang);
 	if(!portal)
 		return 0;
 

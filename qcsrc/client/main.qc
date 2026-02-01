@@ -225,9 +225,7 @@ void Shutdown()
 void AuditLists()
 {
 	entity e;
-	entity prev;
-
-	prev = players;
+	entity prev = players;
 	for(e = prev.sort_next; e; prev = e, e = e.sort_next)
 	{
 		if(prev != e.sort_prev)
@@ -390,7 +388,7 @@ bool SetTeam(entity o, int Team)
 		if(o.has_team)
 		{
 			tm = GetTeam(o.team, false);
-			tm.team_size -= 1;
+			--tm.team_size;
 			o.has_team = 0;
 			return true;
 		}
@@ -401,17 +399,17 @@ bool SetTeam(entity o, int Team)
 		{
 			o.team = Team;
 			tm = GetTeam(Team, true);
-			tm.team_size += 1;
+			++tm.team_size;
 			o.has_team = 1;
 			return true;
 		}
 		else if(Team != o.team)
 		{
 			tm = GetTeam(o.team, false);
-			tm.team_size -= 1;
+			--tm.team_size;
 			o.team = Team;
 			tm = GetTeam(Team, true);
-			tm.team_size += 1;
+			++tm.team_size;
 			return true;
 		}
 	}
@@ -577,6 +575,7 @@ void Ent_RemovePlayerScore(entity this)
 		});
 		this.owner.ready = 0;
 		this.owner.eliminated = 0;
+		this.owner.ignored = false;
 		this.owner.colormap = 0;
 		// TODO add a hook to reset this Survival field
 		this.owner.survival_status = 0;
@@ -668,6 +667,38 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 	Scoreboard_UpdateTeamPos(o);
 }
 
+void ignore_list_apply()
+{
+	for (entity pl = players.sort_next; pl; pl = pl.sort_next)
+		pl.ignored = false;
+
+	ignore_list_apply_time = 0;
+
+	if (ignore_list == "")
+		return;
+
+	FOREACH_WORD(ignore_list, true,
+	{
+		bool found = false;
+		int ignore_id = stoi(it);
+		for (entity pl = players.sort_next; pl; pl = pl.sort_next)
+		{
+			if (ignore_id == pl.sv_entnum + 1)
+			{
+				pl.ignored = true;
+				found = true;
+				break;
+			}
+		}
+		// when an ignored player is not found, it means their playerslot is not initialized yet
+		if (!found)
+			ignore_list_apply_time = time + 0.5; // retry after a while
+	});
+
+	if (ignore_list_apply_time == 0) // ignore_list applied
+		strfree(ignore_list);
+}
+
 NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 {
 	make_pure(this);
@@ -733,6 +764,12 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
 
 	teamnagger = (f & 0x60) >> 5; // 0x60 = BIT(5) | BIT(6)
+
+	if (f & BIT(7))
+	{
+		strcpy(ignore_list, ReadString());
+		ignore_list_apply();
+	}
 }
 
 NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
@@ -782,23 +819,18 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 {
 	make_pure(this);
-	int sf = 0;
-	serialize(byte, 0, sf);
-	if (sf & 1) {
-		for (int j = 0; j < maxclients; ++j) {
-			if (playerslots[j]) {
-				playerslots[j].eliminated = true;
-			}
+	for (int j = 0; j < maxclients; ++j) {
+		if (playerslots[j]) {
+			playerslots[j].eliminated = true;
 		}
-		for (int i = 1; i <= maxclients; i += 8) {
-			int f = 0;
-			serialize(byte, 0, f);
-			for (int b = 0; b < 8; ++b) {
-				if (f & BIT(b)) continue;
-				int j = i - 1 + b;
-				if (playerslots[j]) {
-					playerslots[j].eliminated = false;
-				}
+	}
+	for (int i = 1; i <= maxclients; i += 8) {
+		int f = ReadByte();
+		for (int b = 0; b < 8; ++b) {
+			if (f & BIT(b)) continue;
+			int j = i - 1 + b;
+			if (playerslots[j]) {
+				playerslots[j].eliminated = false;
 			}
 		}
 	}

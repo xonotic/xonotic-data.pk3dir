@@ -33,8 +33,7 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 
 	pos = v1 + dir * nudge;
 
-	float c;
-	c = 0;
+	float c = 0;
 
 	for (;;)
 	{
@@ -121,7 +120,7 @@ vector findbetterlocation (vector org, float mindist)
 	while (c < 6)
 	{
 		traceline (org, org + vec, true, NULL);
-		vec = vec * -1;
+		vec = -vec;
 		if (trace_fraction < 1)
 		{
 			vector loc = trace_endpos;
@@ -136,7 +135,7 @@ vector findbetterlocation (vector org, float mindist)
 			vec.x = vec.z;
 			vec.z = h;
 		}
-		c = c + 1;
+		++c;
 	}
 
 	return org;
@@ -152,7 +151,7 @@ vector real_origin(entity ent)
 
 	while(e)
 	{
-		v = v + ((e.absmin + e.absmax) * 0.5);
+		v += (e.absmin + e.absmax) * 0.5;
 		e = e.tag_entity;
 	}
 
@@ -392,8 +391,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 
 void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
 {
-	entity e;
-	e = start;
+	entity e = start;
 	funcPre(pass, e);
 	while (e.(downleft))
 	{
@@ -642,9 +640,7 @@ string fixPriorityList(string order, float from, float to, float subtract, float
 string mapPriorityList(string order, string(string) mapfunc)
 {
 	string neworder;
-	float n;
-
-	n = tokenize_console(order);
+	float n = tokenize_console(order);
 	neworder = "";
 	for(float i = 0; i < n; ++i)
 		neworder = strcat(neworder, mapfunc(argv(i)), " ");
@@ -810,9 +806,7 @@ void get_mi_min_max_texcoords(float mode)
 
 float cvar_settemp(string tmp_cvar, string tmp_value)
 {
-	float created_saved_value;
-
-	created_saved_value = 0;
+	float created_saved_value = 0;
 
 	if (!(tmp_cvar || tmp_value))
 	{
@@ -977,14 +971,22 @@ string find_last_color_code(string s)
 		{
 			if(i+1 <= len)
 			if(IS_DIGIT(substring(s, i+1, 1)))
+			{
+				if(start == 0 && len == 1)
+					return "";
 				return substring(s, i, 2);
+			}
 
 			if(i+4 <= len)
 			if(substring(s, i+1, 1) == "x")
 			if(IS_HEXDIGIT(substring(s, i + 2, 1)))
 			if(IS_HEXDIGIT(substring(s, i + 3, 1)))
 			if(IS_HEXDIGIT(substring(s, i + 4, 1)))
+			{
+				if(start == 0 && len == 4)
+					return "";
 				return substring(s, i, 5);
+			}
 		}
 		i -= carets; // this also skips one char before the carets
 	}
@@ -992,80 +994,178 @@ string find_last_color_code(string s)
 	return "";
 }
 
+bool should_break_before(int c) {
+	switch (c)
+	{
+		case 0x3008: /* 〈 */
+		case 0x300a: /* 《 */
+		case 0x300c: /* 「 */
+		case 0x300e: /* 『 */
+		case 0x3010: /* 【 */
+		case 0xff08: /* （ */
+		/* rarely used */
+		// case 0x3014: /* 〔 */
+		// case 0x3016: /* 〖 */
+		// case 0x3018: /* 〘 */
+		// case 0x301a: /* 〚 */
+		// case 0x301d: /* 〝 */
+		// case 0xff3b: /* ［ */
+		// case 0xff5b: /* ｛ */
+		// case 0xff5f: /* ｟ */
+		// case 0xff62: /* ｢ */
+			return true;
+	}
+	return false;
+}
+
+bool should_break_after(int c) {
+	switch (c)
+	{
+		case 0x3001: /* 、 */
+		case 0x3002: /* 。 */
+		case 0x3009: /* 〉 */
+		case 0x300b: /* 》 */
+		case 0x300d: /* 」 */
+		case 0x300f: /* 』 */
+		case 0x3011: /* 】 */
+		case 0xff01: /* ！ */
+		case 0xff09: /* ） */
+		case 0xff0c: /* ， */
+		case 0xff1a: /* ： */
+		case 0xff1b: /* ； */
+		case 0xff1f: /* ？ */
+		/* rarely used */
+		// case 0x3015: /* 〕 */
+		// case 0x3017: /* 〗 */
+		// case 0x3019: /* 〙 */
+		// case 0x301b: /* 〛 */
+		// case 0x301e: /* 〞 */
+		// case 0x301f: /* 〟 */
+		// case 0x3099: /* ゙ */
+		// case 0x309a: /* ゚ */
+		// case 0x309b: /* ゛ */
+		// case 0x309c: /* ゜ */
+		// case 0xff0e: /* ． */
+		// case 0xff3d: /* ］ */
+		// case 0xff5d: /* ｝ */
+		// case 0xff60: /* ｠ */
+		// case 0xff63: /* ｣ */
+		// case 0xff61: /* ｡ */
+		// case 0xff64: /* ､ */
+		// case 0xff9e: /* ﾞ */
+		// case 0xff9f: /* ﾟ */
+			return true;
+	}
+	return false;
+}
+
+string take_wrapped_line_until(int take_until, float colorlen)
+{
+	string s = getWrappedLine_remaining;
+	int c = 0;
+	int i = take_until;
+	int skip = 0;
+	bool take_next_char = false;
+	while (i > 0)
+	{
+		--i;
+		c = str2chr(s, i);
+
+		// break at ascii space, and skip it
+		if (c == 0x20)
+		{
+			skip = 1;
+			break;
+		}
+
+		// optimize for many non-CJK languages
+		if (c < 0x3000)
+			continue;
+
+		if (should_break_before(c))
+			break;
+
+		if (should_break_after(c)
+			/* Unicode range that can break anywhere */
+			|| (c >= 0x3000 && c <= 0x9fff) // CJK Symbols and Ideographs
+			|| (c >= 0xac00 && c <= 0xd7af) // Hangul Syllables
+			/* CJK Unified Ideographs Extension, B to G, rarely used */
+			/*
+			|| (c >= 0x20000 && c <= 0x2a6df)
+			|| (c >= 0x2a700 && c <= 0x2b73f)
+			|| (c >= 0x2b740 && c <= 0x2b81f)
+			|| (c >= 0x2b820 && c <= 0x2ceaf)
+			|| (c >= 0x2ebf0 && c <= 0x2eeff)
+			|| (c >= 0x30000 && c <= 0x303ff)
+			*/
+		)
+		{
+			++i;
+			take_next_char = true;
+			break;
+		}
+	}
+
+	if (i != 0)
+	{
+		// If the next line starts with a punctuation,
+		// wrap before the last character instead.
+		if (take_next_char)
+		{
+			// str2chr is bound checked in darkplaces.
+			c = str2chr(s, i);
+			if (should_break_after(c))
+				--i;
+		}
+		take_until = i;
+	}
+
+	getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
+	if (getWrappedLine_remaining == "")
+		getWrappedLine_remaining = string_null;
+	else if (colorlen == 0)
+		getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+	return substring(s, 0, take_until);
+}
+
 string getWrappedLine(float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
-
-	if(maxWidth <= 0)
+	if (maxWidth <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
 	int take_until = textLengthUpToWidth(s, maxWidth, theFontSize, tw);
-	if(take_until > 0 && take_until < strlen(s))
-	{
-		int last_word = take_until - 1;
-		while(last_word > 0 && substring(s, last_word, 1) != " ")
-			--last_word;
 
-		int skip = 0;
-		if(last_word != 0)
-		{
-			take_until = last_word;
-			skip = 1;
-		}
-
-		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
-		if(getWrappedLine_remaining == "")
-			getWrappedLine_remaining = string_null;
-		else if (tw("^7", theFontSize) == 0)
-			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
-		return substring(s, 0, take_until);
-	}
-	else
-	{
+	if (take_until <= 0 || take_until >= strlen(s)) {
 		getWrappedLine_remaining = string_null;
-		return s;
+		return s; // remaining text fits the line
 	}
+
+	float colorlen = tw("^7", theFontSize);
+	return take_wrapped_line_until(take_until, colorlen);
 }
 
 string getWrappedLineLen(int maxLength, textLengthUpToLength_lenFunction_t tw)
 {
 	string s = getWrappedLine_remaining;
-
-	if(maxLength <= 0)
+	if (maxLength <= 0)
 	{
 		getWrappedLine_remaining = string_null;
 		return s; // the line has no size ANYWAY, nothing would be displayed.
 	}
 
 	int take_until = textLengthUpToLength(s, maxLength, tw);
-	if(take_until > 0 && take_until < strlen(s))
-	{
-		int last_word = take_until - 1;
-		while(last_word > 0 && substring(s, last_word, 1) != " ")
-			--last_word;
 
-		int skip = 0;
-		if(last_word != 0)
-		{
-			take_until = last_word;
-			skip = 1;
-		}
-
-		getWrappedLine_remaining = substring(s, take_until + skip, strlen(s) - take_until);
-		if(getWrappedLine_remaining == "")
-			getWrappedLine_remaining = string_null;
-		else if (tw("^7") == 0)
-			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
-		return substring(s, 0, take_until);
-	}
-	else
-	{
+	if (take_until <= 0 || take_until >= strlen(s)) {
 		getWrappedLine_remaining = string_null;
-		return s;
+		return s; // remaining text fits the line
 	}
+
+	float colorlen = tw("^7");
+	return take_wrapped_line_until(take_until, colorlen);
 }
 
 string textShortenToWidth(string theText, float maxWidth, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
@@ -1326,10 +1426,8 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 
 string getcurrentmod()
 {
-	float n;
-	string m;
-	m = cvar_string("fs_gamedir");
-	n = tokenize_console(m);
+	string m = cvar_string("fs_gamedir");
+	float n = tokenize_console(m);
 	if(n == 0)
 		return "data";
 	else
@@ -1736,8 +1834,7 @@ void Skeleton_SetBones(entity e)
 	if(e.skeleton_bones_index == e.modelindex)
 		return; // same model, nothing to update
 
-	float skelindex;
-	skelindex = skel_create(e.modelindex);
+	float skelindex = skel_create(e.modelindex);
 	e.skeleton_bones = skel_get_numbones(skelindex);
 	skel_delete(skelindex);
 	e.skeleton_bones_index = e.modelindex;
@@ -1999,8 +2096,7 @@ void attach_sameorigin(entity e, entity to, string tag)
 
 void detach_sameorigin(entity e)
 {
-    vector org;
-    org = gettaginfo(e, 0);
+    vector org = gettaginfo(e, 0);
     e.angles = fixedvectoangles2(v_forward, v_up);
     if (substring(e.model, 0, 1) == "*") // bmodels have their own rules
 		e.angles = AnglesTransform_ToVAngles(e.angles);

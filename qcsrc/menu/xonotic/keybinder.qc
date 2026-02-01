@@ -195,8 +195,7 @@ void KeyBinds_BuildList()
 
 entity makeXonoticKeyBinder()
 {
-	entity me;
-	me = NEW(XonoticKeyBinder);
+	entity me = NEW(XonoticKeyBinder);
 	me.configureXonoticKeyBinder(me);
 	return me;
 }

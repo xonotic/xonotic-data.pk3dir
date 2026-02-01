@@ -8,8 +8,7 @@
 
 entity makeXonoticUserSettingsTab()
 {
-	entity me;
-	me = NEW(XonoticUserSettingsTab);
+	entity me = NEW(XonoticUserSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

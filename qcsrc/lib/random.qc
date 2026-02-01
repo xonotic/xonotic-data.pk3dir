@@ -107,8 +107,7 @@ float gsl_ran_ugaussian()
 	/// Predictable random number generator (not seeded yet)
 	float prandom()
 	{
-		float c;
-		c = crc16(false, strcat(ftos(prandom_seed), ftos(prandom_seed + M_PI)));
+		float c = crc16(false, strcat(ftos(prandom_seed), ftos(prandom_seed + M_PI)));
 		prandom_seed = c;
 
 	#ifdef USE_PRANDOM_DEBUG

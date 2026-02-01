@@ -35,13 +35,18 @@ vector acc_prev_vel;
 float acc_prev_time, acc_avg, top_speed, top_speed_time, jump_speed, jump_speed_time;
 float prev_vel_z = 0, prev_speed2d = 0;
 float physics_update_time, discrete_speed, discrete_top_speed, discrete_accel; // not done for jumpspeed
-void HUD_Physics()
+void HUD_Physics(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
-		if (!autocvar_hud_panel_physics) return;
-		if (spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if (autocvar_hud_panel_physics == 3 && !MUTATOR_CALLHOOK(HUD_Physics_showoptional)) return;
+		if (!autocvar_hud_panel_physics)
+			return;
+		if (spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3))
+			return;
+		if (autocvar_hud_panel_physics == 3 && !MUTATOR_CALLHOOK(HUD_Physics_showoptional))
+			return;
 	}
 
 	HUD_Panel_LoadCvars();
@@ -72,11 +77,9 @@ void HUD_Physics()
 	if (autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
 		accel_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
 
-	float text_scale;
-	if (autocvar_hud_panel_physics_text_scale <= 0)
-		text_scale = 1;
-	else
-		text_scale = min(autocvar_hud_panel_physics_text_scale, 1);
+	float text_scale = (autocvar_hud_panel_physics_text_scale <= 0)
+		? 1
+		: min(autocvar_hud_panel_physics_text_scale, 1);
 
 	// compute speed
 	vector strafevelocity = csqcplayer.velocity;
@@ -105,9 +108,9 @@ void HUD_Physics()
 	{
 		float f = time - acc_prev_time;
 		if (autocvar_hud_panel_physics_acceleration_vertical)
-			accel = (vlen(strafevelocity) - vlen(acc_prev_vel));
+			accel = vlen(strafevelocity) - vlen(acc_prev_vel);
 		else
-			accel = (vlen(vec2(strafevelocity)) - vlen(vec2(acc_prev_vel)));
+			accel = vlen(vec2(strafevelocity)) - vlen(vec2(acc_prev_vel));
 
 		accel *= (1 / max(0.0001, f)) * ACCEL2GRAV; // now a fraction of gravity
 
@@ -170,8 +173,10 @@ void HUD_Physics()
 	if (speed > 0)
 	if (autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_BOTH
 	||  autocvar_hud_panel_physics_progressbar == PHYSICS_PROGRESSBAR_SPEED)
+	{
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed / max_speed, 0, speed_baralign,
 			autocvar_hud_progressbar_speed_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
 	float accel_max;
 	if (autocvar__hud_configure)
@@ -179,8 +184,7 @@ void HUD_Physics()
 	else
 	{
 		// NOTE: this code is similar to the logic in strafehud.qc
-		int keys = STAT(PRESSED_KEYS);
-		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
+		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, STAT(PRESSED_KEYS), is_local);
 		bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
 		bool onground = real_onground && !jumpheld;
 		bool real_onslick = onground && StrafeHUD_DetermineOnSlick(strafeplayer);

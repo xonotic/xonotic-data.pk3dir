@@ -30,8 +30,7 @@ float fromDecibelOfSquare(float f, float mi)
 
 entity makeXonoticDecibelsSlider_T(float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticDecibelsSlider);
+	entity me = NEW(XonoticDecibelsSlider);
 	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar, theTooltip);
 	return me;
 }
@@ -93,7 +92,7 @@ TEST(XonoticDecibelsSlider, SoundTest)
 		float dbv = toDecibelOfSquare(v, -40);
 		float d = dbv - db;
 		LOG_INFOF("%f -> %f -> %f (diff: %f)", db, v, dbv, d);
-		EXPECT_GT(fabs(d), 0.02);
+		EXPECT_LT(fabs(d), 0.02);
 	}
 	SUCCEED();
 }

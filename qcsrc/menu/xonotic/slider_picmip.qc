@@ -2,8 +2,7 @@
 
 entity makeXonoticPicmipSlider()
 {
-	entity me;
-	me = NEW(XonoticPicmipSlider);
+	entity me = NEW(XonoticPicmipSlider);
 	me.configureXonoticPicmipSlider(me);
 	return me;
 }

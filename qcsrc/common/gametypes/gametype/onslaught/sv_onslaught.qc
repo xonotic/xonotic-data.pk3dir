@@ -374,7 +374,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 			{
 				play2(attacker, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
 				this.pain_finished = time + 1;
-				attacker.typehitsound += 1; // play both sounds (shield is way too quiet)
+				++attacker.typehitsound; // play both sounds (shield is way too quiet)
 			}
 
 		return;
@@ -673,8 +673,7 @@ void ons_ControlPoint_UpdateSprite(entity e)
 	entity s1 = ons_ControlPoint_Waypoint(e);
 	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
-	bool sh;
-	sh = !(ons_ControlPoint_CanBeLinked(e, NUM_TEAM_1) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_2) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_3) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_4));
+	bool sh = !(ons_ControlPoint_CanBeLinked(e, NUM_TEAM_1) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_2) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_3) || ons_ControlPoint_CanBeLinked(e, NUM_TEAM_4));
 
 	if(e.lastteam != e.team + 2 || e.lastshielded != sh || e.iscaptured != e.lastcaptured)
 	{
@@ -932,7 +931,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 				if (IS_PLAYER(attacker))
 				{
 					play2(attacker, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
-					attacker.typehitsound += 1;
+					++attacker.typehitsound;
 					this.pain_finished = time + 1;
 				}
 			return;
@@ -1196,13 +1195,13 @@ bool Onslaught_CheckWinner()
 			{
 				if(DIFF_TEAM(e, tmp_entity))
 				if(e.islinked)
-					d = d + 1;
+					++d;
 			}
 
 			if(autocvar_g_campaign && autocvar__campaign_testrun)
-				d = d * tmp_entity.max_health;
+				d *= tmp_entity.max_health;
 			else
-				d = d * tmp_entity.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
+				d *= tmp_entity.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
 
 			Damage(tmp_entity, tmp_entity, tmp_entity, d, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, tmp_entity.origin, '0 0 0');
 
@@ -1373,7 +1372,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 		if(best)
 		{
 			navigation_routerating(this, best, ratingscale, 10000);
-			best.cnt += 1;
+			++best.cnt;
 
 			this.havocbot_attack_time = 0;
 			if(checkpvs(this.origin + this.view_ofs, cp))
@@ -1428,7 +1427,7 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 		{
 			LOG_DEBUG("waypoints found around generator");
 			navigation_routerating(this, bestwp, ratingscale, 10000);
-			bestwp.cnt += 1;
+			++bestwp.cnt;
 
 			this.havocbot_attack_time = 0;
 			if(checkpvs(this.origin + this.view_ofs, g))
@@ -1586,12 +1585,12 @@ int ons_Count_SelfControlPoints(entity this)
 	{
 		if(SAME_TEAM(cp, this))
 		if(cp.iscaptured)
-			n++;
+			++n;
 	}
 	for(entity gen = ons_worldgeneratorlist; gen; gen = gen.ons_worldgeneratornext)
 	{
 		if(SAME_TEAM(gen, this))
-			n++;
+			++n;
 	}
 	return n;
 }
@@ -1980,7 +1979,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 			if ( GetResource(player, RES_HEALTH) <= 0 )
 			{
 				player.ons_spawn_by = closest_target;
-				player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
+				player.respawn_flags |= RESPAWN_FORCE;
 			}
 			else
 			{

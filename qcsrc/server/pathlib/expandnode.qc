@@ -51,8 +51,7 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
 
     fc = plib_fvals[0];
     plib_points2[0] = plib_points[0];
-    vector bp;
-    bp = plib_points[0];
+    vector bp = plib_points[0];
     int fc2 = 0;
     for(int i = 0; i < 8; ++i)
     {

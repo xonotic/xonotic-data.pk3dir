@@ -9,12 +9,12 @@ void electro_orb_draw(entity this)
 {
 	float dt = time - this.move_time;
 	this.move_time = time;
-	if(dt <= 0)
+	if (dt <= 0)
 		return;
 
 	float myscale = bound(0, (this.ltime - time) * 4, 1);
 	this.scale = (WEP_CVAR(WEP_ELECTRO, combo_radius) * 0.05) * myscale;
-	this.angles = this.angles + dt * this.avelocity;
+	this.angles += dt * this.avelocity;
 }
 
 void electro_orb_setup(entity e)
@@ -41,14 +41,11 @@ REGISTER_NET_LINKED(Electro_Orb)
 NET_HANDLE(Electro_Orb, bool isNew)
 {
 	Net_Accept(Electro_Orb);
-	int sf = ReadByte();
-	if (sf & 1) {
-		this.origin = ReadVector();
-		setorigin(this, this.origin);
-		this.ltime = time + ReadByte()/10.0;
-		// this.ltime = time + this.orb_lifetime;
-		electro_orb_setup(this);
-	}
+	this.origin = ReadVector();
+	setorigin(this, this.origin);
+	this.ltime = time + ReadByte() / 10.0;
+	// this.ltime = time + this.orb_lifetime;
+	electro_orb_setup(this);
 	return true;
 }
 #endif
@@ -58,13 +55,9 @@ bool electro_orb_send(entity this, entity to, int sf)
 {
 	int channel = MSG_ENTITY;
 	WriteHeader(channel, Electro_Orb);
-	WriteByte(channel, sf);
-	if (sf & 1) {
-		WriteVector(channel, this.origin);
-
-		// round time delta to a 1/10th of a second
-		WriteByte(channel, (this.ltime - time)*10.0+0.5);
-	}
+	WriteVector(channel, this.origin);
+	// round time delta to a 1/10th of a second
+	WriteByte(channel, (this.ltime - time) * 10 + 0.5);
 	return true;
 }
 #endif
@@ -77,28 +70,24 @@ bool electro_orb_send(entity this, entity to, int sf)
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
 	entity e = WarpZone_FindRadius(org, rad, !WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall));
-	while(e)
-	{
-		if(e.classname == "electro_orb")
+	for (; e; e = e.chain)
+		if (e.classname == "electro_orb")
 		{
 			// check if the ball we are exploding is not owned by an
 			// independent player which is not the player who shot the ball
-			if(IS_INDEPENDENT_PLAYER(e.realowner) && own != e.realowner)
-			{
-				e = e.chain;
+			if (IS_INDEPENDENT_PLAYER(e.realowner) && own != e.realowner)
 				continue;
-			}
+
 			// do we allow thruwall triggering?
-			if(WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall))
+			if (WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall))
 			{
 				// if distance is greater than thruwall distance, check to make sure it's not through a wall
-				if(vdist(e.WarpZone_findradius_dist, >, WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall)))
+				if (vdist(e.WarpZone_findradius_dist, >, WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall)))
 				{
 					WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
-					if(trace_fraction != 1)
+					if (trace_fraction != 1)
 					{
 						// trigger is through a wall and outside of thruwall range, abort
-						e = e.chain;
 						continue;
 					}
 				}
@@ -113,18 +102,16 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 			setthink(e, W_Electro_ExplodeCombo);
 
 			// delay combo chains, looks cooler
-			float delay = 0;
-			if (WEP_CVAR(WEP_ELECTRO, combo_speed))
-				delay = vlen(e.WarpZone_findradius_dist) / WEP_CVAR(WEP_ELECTRO, combo_speed);
+			float delay = (WEP_CVAR(WEP_ELECTRO, combo_speed))
+				? vlen(e.WarpZone_findradius_dist) / WEP_CVAR(WEP_ELECTRO, combo_speed)
+				: 0;
 			e.nextthink = time + delay;
 		}
-		e = e.chain;
-	}
 }
 
 void W_Electro_ExplodeComboThink(entity this)
 {
-	if(time >= this.ltime)
+	if (time >= this.ltime)
 	{
 		delete(this);
 		return;
@@ -132,10 +119,17 @@ void W_Electro_ExplodeComboThink(entity this)
 
 	this.nextthink = time;
 
-	float damage = WEP_CVAR(WEP_ELECTRO, combo_damage) * PHYS_INPUT_TIMELENGTH;
-	float edgedamage = WEP_CVAR(WEP_ELECTRO, combo_edgedamage) * PHYS_INPUT_TIMELENGTH;
-
-	RadiusDamage(this, this.realowner, damage, edgedamage, WEP_CVAR(WEP_ELECTRO, combo_radius), NULL, NULL, 0, this.projectiledeathtype, this.weaponentity_fld, NULL);
+	RadiusDamage(this, this.realowner,
+		PHYS_INPUT_TIMELENGTH * WEP_CVAR(WEP_ELECTRO, combo_damage),
+		PHYS_INPUT_TIMELENGTH * WEP_CVAR(WEP_ELECTRO, combo_edgedamage),
+		WEP_CVAR(WEP_ELECTRO, combo_radius),
+		NULL,
+		NULL,
+		0,
+		this.projectiledeathtype,
+		this.weaponentity_fld,
+		NULL
+	);
 	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
 }
 
@@ -158,7 +152,7 @@ void W_Electro_Orb_ExplodeOverTime(entity this)
 	set_movetype(newproj, MOVETYPE_NONE);
 
 	Net_LinkEntity(newproj, true, 0, electro_orb_send);
-	newproj.SendFlags |= 1;
+	newproj.SendFlags = 0xFFFFFF;
 
 	// fire the first damage tick immediately
 	getthink(newproj)(newproj);
@@ -172,7 +166,7 @@ void W_Electro_ExplodeCombo(entity this)
 	if (!this.velocity)
 		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
-	if(WEP_CVAR(WEP_ELECTRO, combo_duration))
+	if (WEP_CVAR(WEP_ELECTRO, combo_duration))
 	{
 		W_Electro_Orb_ExplodeOverTime(this);
 
@@ -180,9 +174,7 @@ void W_Electro_ExplodeCombo(entity this)
 		return;
 	}
 
-	RadiusDamage(
-		this,
-		this.realowner,
+	RadiusDamage(this, this.realowner,
 		WEP_CVAR(WEP_ELECTRO, combo_damage),
 		WEP_CVAR(WEP_ELECTRO, combo_edgedamage),
 		WEP_CVAR(WEP_ELECTRO, combo_radius),
@@ -199,23 +191,18 @@ void W_Electro_ExplodeCombo(entity this)
 
 void W_Electro_Explode(entity this, entity directhitentity)
 {
-	if(directhitentity.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(directhitentity))
-			if(DIFF_TEAM(this.realowner, directhitentity))
-				if(!IS_DEAD(directhitentity))
-					if(IsFlying(directhitentity))
-						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
+	if (directhitentity.takedamage == DAMAGE_AIM
+	&& IS_PLAYER(directhitentity) && DIFF_TEAM(this.realowner, directhitentity) && !IS_DEAD(directhitentity)
+	&& IsFlying(directhitentity))
+		Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 	if (!this.velocity)
 		this.velocity = this.movedir; // .velocity must be != '0 0 0' for particle fx and decal to work
 
-	if(this.move_movetype == MOVETYPE_BOUNCE || this.classname == "electro_orb") // TODO: classname is more reliable anyway?
-	{
-		RadiusDamage(
-			this,
-			this.realowner,
+	if (this.move_movetype == MOVETYPE_BOUNCE || this.classname == "electro_orb") // TODO: classname is more reliable anyway?
+		RadiusDamage(this, this.realowner,
 			WEP_CVAR_SEC(WEP_ELECTRO, damage),
 			WEP_CVAR_SEC(WEP_ELECTRO, edgedamage),
 			WEP_CVAR_SEC(WEP_ELECTRO, radius),
@@ -226,13 +213,10 @@ void W_Electro_Explode(entity this, entity directhitentity)
 			this.weaponentity_fld,
 			directhitentity
 		);
-	}
 	else
 	{
 		W_Electro_TriggerCombo(this.origin, WEP_CVAR_PRI(WEP_ELECTRO, comboradius), this.realowner);
-		RadiusDamage(
-			this,
-			this.realowner,
+		RadiusDamage(this, this.realowner,
 			WEP_CVAR_PRI(WEP_ELECTRO, damage),
 			WEP_CVAR_PRI(WEP_ELECTRO, edgedamage),
 			WEP_CVAR_PRI(WEP_ELECTRO, radius),
@@ -265,42 +249,33 @@ void W_Electro_TouchExplode(entity this, entity toucher)
 void W_Electro_Bolt_Think(entity this)
 {
 	// sys_phys_update_single(this);
-	if(time >= this.ltime)
+	if (time >= this.ltime)
 	{
 		this.use(this, NULL, NULL);
 		return;
 	}
 
-	if(WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_radius))
+	if (WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_radius))
 	{
-		float found = 0;
+		int found = 0;
 		entity e = WarpZone_FindRadius(this.origin, WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_radius), true);
 
 		// loop through nearby orbs and trigger them
-		while(e)
-		{
-			if(e.classname == "electro_orb")
+		for (; e; e = e.chain)
+			if (e.classname == "electro_orb")
 			{
 				// check if the ball we are exploding is not owned by an
 				// independent player which is not the player who shot the ball
-				if(IS_INDEPENDENT_PLAYER(e.realowner) && this.realowner != e.realowner)
-				{
-					e = e.chain;
+				if (IS_INDEPENDENT_PLAYER(e.realowner) && this.realowner != e.realowner)
 					continue;
-				}
+
 				bool explode;
 				if (this.owner == e.owner)
-				{
 					explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_own);
-				}
 				else if (SAME_TEAM(this.owner, e.owner))
-				{
 					explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_teammate);
-				}
 				else
-				{
 					explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_enemy);
-				}
 
 				if (explode)
 				{
@@ -314,31 +289,28 @@ void W_Electro_Bolt_Think(entity this)
 					// (the bolt and orb should explode together because they interacted together)
 					// while keeping the chaining delay.
 					setthink(e, W_Electro_ExplodeCombo);
-					float delay = 0;
-					if (WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_speed))
-						delay = vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_speed);
+					float delay = (WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_speed))
+						? vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_speed)
+						: 0;
 					e.nextthink = time + delay;
 
 					++found;
 				}
 			}
-			e = e.chain;
-		}
 
 		// if we triggered an orb, should we explode? if not, lets try again next time
-		if(found && WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_explode))
-			{ this.use(this, NULL, NULL); }
+		if (found && WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_explode))
+			this.use(this, NULL, NULL);
 		else
-			{ this.nextthink = min(time + WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_interval), this.ltime); }
+			this.nextthink = min(time + WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_interval), this.ltime);
 	}
-	else { this.nextthink = this.ltime; }
+	else
+		this.nextthink = this.ltime;
 	// this.nextthink = time;
 }
 
 void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	entity proj;
-
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(WEP_ELECTRO, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(
@@ -356,7 +328,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-	proj = new(electro_bolt);
+	entity proj = new(electro_bolt);
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(WEP_ELECTRO, damage);
@@ -450,7 +422,7 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	newproj.weaponentity_fld = this.weaponentity_fld;
 
 	settouch(newproj, func_null);
-	if(WEP_CVAR_SEC(WEP_ELECTRO, stick_lifetime) > 0)
+	if (WEP_CVAR_SEC(WEP_ELECTRO, stick_lifetime) > 0)
 		newproj.death_time = time + WEP_CVAR_SEC(WEP_ELECTRO, stick_lifetime);
 	else
 		newproj.death_time = this.death_time;
@@ -460,14 +432,12 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	IL_PUSH(g_bot_dodge, newproj);
 
 	// check if limits are enabled (we can tell by checking if the original orb is listed) and push it to the list if so
-	if(LimitedElectroBallRubbleList && IL_CONTAINS(LimitedElectroBallRubbleList, this))
-	{
+	if (LimitedElectroBallRubbleList && IL_CONTAINS(LimitedElectroBallRubbleList, this))
 		ReplaceOldListedChildRubble(LimitedElectroBallRubbleList, newproj, this);
-	}
 
 	delete(this);
 
-	if(to)
+	if (to)
 	{
 		SetMovetypeFollow(newproj, to);
 
@@ -484,19 +454,17 @@ void W_Electro_Orb_Stick(entity this, entity to)
 void W_Electro_Orb_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	if(toucher.takedamage == DAMAGE_AIM && WEP_CVAR_SEC(WEP_ELECTRO, touchexplode))
-	{
+	if (toucher.takedamage == DAMAGE_AIM && WEP_CVAR_SEC(WEP_ELECTRO, touchexplode))
 		W_Electro_Explode(this, toucher);
-	}
-	else if(toucher.owner != this.owner && toucher.classname != this.classname) // don't stick to player's other projectiles!
+	else if (toucher.owner != this.owner && toucher.classname != this.classname) // don't stick to player's other projectiles!
 	{
 		//UpdateCSQCProjectile(this);
 		spamsound(this, CH_SHOTS, SND_ELECTRO_BOUNCE, VOL_BASE, ATTEN_NORM);
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 
-		if(WEP_CVAR_SEC(WEP_ELECTRO, stick))
+		if (WEP_CVAR_SEC(WEP_ELECTRO, stick))
 		{
-			if(WEP_CVAR_SEC(WEP_ELECTRO, stick_lifetime) == 0)
+			if (WEP_CVAR_SEC(WEP_ELECTRO, stick_lifetime) == 0)
 				W_Electro_Explode(this, toucher);
 			else
 				W_Electro_Orb_Stick(this, toucher);
@@ -506,21 +474,21 @@ void W_Electro_Orb_Touch(entity this, entity toucher)
 
 void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResource(this, RES_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	// note: combos are usually triggered by W_Electro_TriggerCombo, not damage
 	float is_combo = (inflictor.classname == "electro_orb_chain" || inflictor.classname == "electro_bolt");
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_combo ? 1 : -1)))
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_combo ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
 	TakeResource(this, RES_HEALTH, damage);
-	if(GetResource(this, RES_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		this.takedamage = DAMAGE_NO;
 		this.nextthink = time;
-		if(is_combo)
+		if (is_combo)
 		{
 			// change owner to whoever caused the combo explosion
 			this.realowner = inflictor.realowner;
@@ -588,14 +556,14 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
 	proj.damagedbycontents = (WEP_CVAR_SEC(WEP_ELECTRO, damagedbycontents));
-	if(proj.damagedbycontents)
+	if (proj.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, proj);
 
 	proj.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
 	proj.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
 
-	if(WEP_CVAR_SEC(WEP_ELECTRO, limit) > 0)
+	if (WEP_CVAR_SEC(WEP_ELECTRO, limit) > 0)
 	{
 		if (!LimitedElectroBallRubbleList)
 			LimitedElectroBallRubbleList = IL_NEW();
@@ -610,12 +578,12 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 
 void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(actor.(weaponentity).electro_count > 1)
-	if(PHYS_INPUT_BUTTON_ATCK2(actor))
-	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
+	if (actor.(weaponentity).electro_count > 1
+	&& PHYS_INPUT_BUTTON_ATCK2(actor)
+	&& weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
 		W_Electro_Attack_Orb(thiswep, actor, weaponentity);
-		actor.(weaponentity).electro_count -= 1;
+		--actor.(weaponentity).electro_count;
 		actor.(weaponentity).electro_secondarytime = time;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_ELECTRO, animtime), W_Electro_CheckAttack);
 		return;
@@ -623,67 +591,67 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 	w_ready(thiswep, actor, weaponentity, fire);
 }
 
-.float bot_secondary_electromooth;
+.bool bot_secondary_electromooth; // whatever a mooth is
 
 METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	PHYS_INPUT_BUTTON_ATCK(actor) = PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-	if(vdist(actor.origin - actor.enemy.origin, >, 1000)) { actor.bot_secondary_electromooth = 0; }
-	if(actor.bot_secondary_electromooth == 0)
+	if (vdist(actor.origin - actor.enemy.origin, >, 1000))
+		actor.bot_secondary_electromooth = false;
+	if (!actor.bot_secondary_electromooth)
 	{
-		float shoot;
+		float shoot = (WEP_CVAR_PRI(WEP_ELECTRO, speed))
+			? bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_ELECTRO, speed), 0, WEP_CVAR_PRI(WEP_ELECTRO, lifetime), false, true)
+			: bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true);
 
-		if(WEP_CVAR_PRI(WEP_ELECTRO, speed))
-			shoot = bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_ELECTRO, speed), 0, WEP_CVAR_PRI(WEP_ELECTRO, lifetime), false, true);
-		else
-			shoot = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true);
-
-		if(shoot)
+		if (shoot)
 		{
 			PHYS_INPUT_BUTTON_ATCK(actor) = true;
-			if(random() < 0.01) actor.bot_secondary_electromooth = 1;
+			if (random() < 0.01)
+				actor.bot_secondary_electromooth = true;
 		}
 	}
 	else
 	{
-		if(bot_aim(actor, weaponentity, WEP_CVAR_SEC(WEP_ELECTRO, speed), WEP_CVAR_SEC(WEP_ELECTRO, speed_up), WEP_CVAR_SEC(WEP_ELECTRO, lifetime), true, true))
+		if (bot_aim(actor, weaponentity, WEP_CVAR_SEC(WEP_ELECTRO, speed), WEP_CVAR_SEC(WEP_ELECTRO, speed_up), WEP_CVAR_SEC(WEP_ELECTRO, lifetime), true, true))
 		{
 			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-			if(random() < 0.03) actor.bot_secondary_electromooth = 0;
+			if (random() < 0.03)
+				actor.bot_secondary_electromooth = false;
 		}
 	}
 }
 
 METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
+	if (autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
 	{
 		float ammo_amount = 0;
-		if(actor.(weaponentity).clip_load >= WEP_CVAR_PRI(WEP_ELECTRO, ammo))
+		if (actor.(weaponentity).clip_load >= WEP_CVAR_PRI(WEP_ELECTRO, ammo))
 			ammo_amount = 1;
-		if(actor.(weaponentity).clip_load >= WEP_CVAR_SEC(WEP_ELECTRO, ammo))
-			ammo_amount += 1;
+		if (actor.(weaponentity).clip_load >= WEP_CVAR_SEC(WEP_ELECTRO, ammo))
+			++ammo_amount;
 
-		if(!ammo_amount)
+		if (!ammo_amount)
 		{
 			thiswep.wr_reload(thiswep, actor, weaponentity);
 			return;
 		}
 	}
 
-	if(fire & 1)
+	if (fire & 1)
 	{
-		if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(WEP_ELECTRO, refire2) * W_WeaponRateFactor(actor))
-		if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_ELECTRO, refire)))
+		if (time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(WEP_ELECTRO, refire2) * W_WeaponRateFactor(actor)
+		&& weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_ELECTRO, refire)))
 		{
 			W_Electro_Attack_Bolt(thiswep, actor, weaponentity);
 			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_ELECTRO, animtime), w_ready);
 		}
 	}
-	else if(fire & 2)
+	else if (fire & 2)
 	{
-		if(time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(WEP_ELECTRO, refire) * W_WeaponRateFactor(actor))
-		if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
+		if (time >= actor.(weaponentity).electro_secondarytime + WEP_CVAR_SEC(WEP_ELECTRO, refire) * W_WeaponRateFactor(actor)
+		&& weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 		{
 			W_Electro_Attack_Orb(thiswep, actor, weaponentity);
 			actor.(weaponentity).electro_count = WEP_CVAR_SEC(WEP_ELECTRO, count);
@@ -703,7 +671,7 @@ METHOD(Electro, wr_checkammo1, bool(entity thiswep, entity actor, .entity weapon
 METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
 	float ammo_amount;
-	if(WEP_CVAR(WEP_ELECTRO, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
+	if (WEP_CVAR(WEP_ELECTRO, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
 	{
 		ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR_SEC(WEP_ELECTRO, ammo) + WEP_CVAR_PRI(WEP_ELECTRO, ammo);
 		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR_SEC(WEP_ELECTRO, ammo) + WEP_CVAR_PRI(WEP_ELECTRO, ammo);
@@ -723,7 +691,7 @@ METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponenti
 
 METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
 {
-	if(w_deathtype & HITTYPE_SECONDARY)
+	if (w_deathtype & HITTYPE_SECONDARY)
 		return WEAPON_ELECTRO_SUICIDE_ORBS;
 	else
 		return WEAPON_ELECTRO_SUICIDE_BOLT;
@@ -731,50 +699,50 @@ METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
 
 METHOD(Electro, wr_killmessage, Notification(entity thiswep))
 {
-	if(w_deathtype & HITTYPE_SECONDARY)
+	if (w_deathtype & HITTYPE_SECONDARY)
 	{
 		return WEAPON_ELECTRO_MURDER_ORBS;
 	}
 	else
 	{
-		if(w_deathtype & HITTYPE_BOUNCE)
+		if (w_deathtype & HITTYPE_BOUNCE)
 			return WEAPON_ELECTRO_MURDER_COMBO;
 		else
 			return WEAPON_ELECTRO_MURDER_BOLT;
 	}
 }
 
-#endif
+#endif // GAMEQC
 #ifdef CSQC
 
 METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	vector org2 = w_org + w_backoff * 2;
-	if(w_deathtype & HITTYPE_SECONDARY)
+	if (w_deathtype & HITTYPE_SECONDARY)
 	{
 		pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);
-		if(!w_issilent)
+		if (!w_issilent)
 			sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 	else
 	{
-		if(w_deathtype & HITTYPE_BOUNCE)
+		if (w_deathtype & HITTYPE_BOUNCE)
 		{
 			// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
 			pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
-			if(!w_issilent)
+			if (!w_issilent)
 				sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
 		}
 		else
 		{
 			pointparticles(EFFECT_ELECTRO_IMPACT, org2, '0 0 0', 1);
-			if(!w_issilent)
+			if (!w_issilent)
 				sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 		}
 	}
 }
 
-#endif
+#endif // CSQC
 #ifdef MENUQC
 #include <common/gametypes/gametype/ctf/ctf.qh>
 #include <common/items/item/ammo.qh>
@@ -795,4 +763,4 @@ METHOD(Electro, describe, string(Electro this))
 	return PAGE_TEXT;
 }
 
-#endif
+#endif // MENUQC

@@ -284,8 +284,10 @@ float Item_ItemsTime_GetTime(int item)
 		return ItemsTime_time[item];
 }
 
-void HUD_ItemsTime()
+void HUD_ItemsTime(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	if (!autocvar__hud_configure)
 	{
 		if (!(
@@ -429,7 +431,7 @@ LABEL(iteration)
 		if (row >= rows)
 		{
 			row = 0;
-			column = column + 1;
+			++column;
 		}
 		if(id == REGISTRY_MAX(Items)) // can happen only in the last fake iteration
 			break;

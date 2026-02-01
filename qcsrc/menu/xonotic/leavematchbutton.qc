@@ -34,8 +34,7 @@ string leaveMatchButton_getTooltip(entity me)
 
 entity makeXonoticLeaveMatchButton(vector theColor, int theFlags)
 {
-	entity me;
-	me = NEW(XonoticLeaveMatchButton);
+	entity me = NEW(XonoticLeaveMatchButton);
 	me.configureXonoticLeaveMatchButton(me, theColor, theFlags);
 	return me;
 }

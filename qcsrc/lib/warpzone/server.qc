@@ -101,8 +101,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 		tracebox(o1 - player.view_ofs + v1 * frametime * f1, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f0, MOVE_WORLDONLY, player);
 		{
-			entity own;
-			own = player.owner;
+			entity own = player.owner;
 			player.owner = NULL;
 			tracebox(trace_endpos, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f1, MOVE_NORMAL, player); // this should get us through the warpzone
 			player.owner = own;
@@ -114,7 +113,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		d = WarpZone_TargetPlaneDist(wz, o1);
 		dv = WarpZone_TargetPlaneDist(wz, v1);
 		if(d < 0)
-			o1 = o1 - v1 * (d / dv);
+			o1 -= v1 * (d / dv);
 	}
 
 	// put them out of solid
@@ -209,8 +208,7 @@ void WarpZone_Touch(entity this, entity toucher)
 	// but max 0.25 sec = 0.25/frametime frames
 	//       24/(0.25/frametime)
 	//       96*frametime
-	float d;
-	d = 24 + max(vlen(toucher.mins), vlen(toucher.maxs));
+	float d = 24 + max(vlen(toucher.mins), vlen(toucher.maxs));
 	if(IS_NOT_A_CLIENT(toucher))
 		f = -d / bound(frametime * d * 1, frametime * vlen(toucher.velocity), d);
 	else
@@ -341,8 +339,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 		return 0;
 
 	// if player hit a warpzone, abort
-	entity wz;
-	wz = WarpZone_Find(o0 + player.mins, o0 + player.maxs);
+	entity wz = WarpZone_Find(o0 + player.mins, o0 + player.maxs);
 	if(!wz)
 		return 0;
 
@@ -560,15 +557,15 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 			b = getsurfacepoint(this, i_s, tri.y);
 			c = getsurfacepoint(this, i_s, tri.z);
 			n = cross(c - a, b - a);
-			area = area + vlen(n);
-			norm = norm + n;
-			point = point + vlen(n) * (a + b + c);
+			area += vlen(n);
+			norm += n;
+			point += vlen(n) * (a + b + c);
 		}
 	}
 	if(area > 0)
 	{
-		norm = norm * (1 / area);
-		point = point * (1 / (3 * area));
+		norm *= 1 / area;
+		point *= 1 / (3 * area);
 		if(vdist(norm, <, 0.99))
 		{
 			LOG_INFO("trigger_warpzone near ", vtos(this.aiment.origin), " is nonplanar. BEWARE.");
@@ -584,7 +581,7 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 		ang = this.aiment.angles;
 		if(area > 0)
 		{
-			org = org - ((org - point) * norm) * norm; // project to plane
+			org -= ((org - point) * norm) * norm; // project to plane
 			vector forward, right, up;
 			MAKE_VECTORS(ang, forward, right, up);
 			if(norm * forward < 0)

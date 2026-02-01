@@ -12,6 +12,7 @@ CLASS(XonoticGuideDescription, XonoticListBox)
 	ATTRIB(XonoticGuideDescription, m_descriptionWrapped, string, string_null);
 
 	METHOD(XonoticGuideDescription, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticGuideDescription, wrapDescription, void(entity));
 	METHOD(XonoticGuideDescription, setDescription, void(entity, string));
 	METHOD(XonoticGuideDescription, resizeNotify, void(entity, vector, vector, vector, vector));
 

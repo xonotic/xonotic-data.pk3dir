@@ -422,8 +422,10 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 }
 
 // draws map vote or gametype vote
-void MapVote_Draw()
+void MapVote_Draw(bool should_draw)
 {
+	if (!should_draw)
+		return;
 	//if (intermission != 2) return;
 	if (!mv_active)
 		return;
@@ -895,7 +897,7 @@ int MapVote_MoveUp(int pos)
 			if (imp == -mv_columns) // pos == 0
 				imp = mv_columns * mv_rows - 1;
 			else
-				imp = imp + mv_columns * mv_rows - 1;
+				imp += mv_columns * mv_rows - 1;
 		}
 	}
 	if (!(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote)

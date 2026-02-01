@@ -66,7 +66,7 @@ void bot_queuecommand(entity bot, string cmdstring)
 		}
 	}
 
-	bot.bot_cmdqueuebuf_end += 1;
+	++bot.bot_cmdqueuebuf_end;
 }
 
 void bot_dequeuecommand(entity bot, float idx)
@@ -79,7 +79,7 @@ void bot_dequeuecommand(entity bot, float idx)
 		error("dequeueing a command in the future");
 	bufstr_set(bot.bot_cmdqueuebuf, idx, "");
 	if(idx == bot.bot_cmdqueuebuf_start)
-		bot.bot_cmdqueuebuf_start += 1;
+		++bot.bot_cmdqueuebuf_start;
 	if(bot.bot_cmdqueuebuf_start >= bot.bot_cmdqueuebuf_end)
 		bot_clearqueue(bot);
 }
@@ -138,7 +138,7 @@ entity bot_getplace(entity this, string placename)
 		{
 			this.(bot_placenames[i]) = strzone(placename);
 			this.(bot_places[i]) = e;
-			this.bot_places_count += 1;
+			++this.bot_places_count;
 		}
 		return e;
 	}
@@ -732,9 +732,7 @@ float bot_cmd_aim(entity this)
 	// Current direction
 	if(this.bot_cmd_aim_endtime)
 	{
-		float progress;
-
-		progress = min(1 - (this.bot_cmd_aim_endtime - time) / (this.bot_cmd_aim_endtime - this.bot_cmd_aim_begintime),1);
+		float progress = min(1 - (this.bot_cmd_aim_endtime - time) / (this.bot_cmd_aim_endtime - this.bot_cmd_aim_begintime),1);
 		this.v_angle = this.bot_cmd_aim_begin + ((this.bot_cmd_aim_end - this.bot_cmd_aim_begin) * progress);
 
 		if(time>=this.bot_cmd_aim_endtime)
@@ -982,9 +980,7 @@ float bot_cmd_keypress_handler(entity this, string key, float enabled)
 
 float bot_cmd_presskey(entity this)
 {
-	string key;
-
-	key = bot_cmd.bot_cmd_parm_string;
+	string key = bot_cmd.bot_cmd_parm_string;
 
 	bot_cmd_keypress_handler(this, key,true);
 
@@ -993,9 +989,7 @@ float bot_cmd_presskey(entity this)
 
 float bot_cmd_releasekey(entity this)
 {
-	string key;
-
-	key = bot_cmd.bot_cmd_parm_string;
+	string key = bot_cmd.bot_cmd_parm_string;
 
 	return bot_cmd_keypress_handler(this, key,false);
 }
@@ -1031,8 +1025,7 @@ float bot_cmd_moveto(entity this)
 
 float bot_cmd_movetotarget(entity this)
 {
-	entity e;
-	e = bot_getplace(this, bot_cmd.bot_cmd_parm_string);
+	entity e = bot_getplace(this, bot_cmd.bot_cmd_parm_string);
 	if(!e)
 		return CMD_STATUS_ERROR;
 	return this.cmd_moveto(this, e.origin + (e.mins + e.maxs) * 0.5);
@@ -1046,8 +1039,7 @@ float bot_cmd_resetgoal(entity this)
 
 float bot_cmd_sound(entity this)
 {
-	string f;
-	f = bot_cmd.bot_cmd_parm_string;
+	string f = bot_cmd.bot_cmd_parm_string;
 
 	float n = tokenizebyseparator(f, " ");
 
@@ -1118,14 +1110,12 @@ float bot_cmd_debug_assert_canfire(entity this)
 
 void bot_command_executed(entity this, bool rm)
 {
-	entity cmd;
-
-	cmd = bot_cmd;
+	//entity cmd = bot_cmd;
 
 	if(rm)
 		bot_dequeuecommand(this, this.bot_cmd_execution_index);
 
-	this.bot_cmd_execution_index++;
+	++this.bot_cmd_execution_index;
 }
 
 void bot_setcurrentcommand(entity this)
@@ -1142,8 +1132,7 @@ void bot_setcurrentcommand(entity this)
 	{
 		if(bot_havecommand(this, this.bot_cmd_execution_index))
 		{
-			string cmdstring;
-			cmdstring = bot_readcommand(this, this.bot_cmd_execution_index);
+			string cmdstring = bot_readcommand(this, this.bot_cmd_execution_index);
 			if(bot_decodecommand(cmdstring))
 			{
 				bot_cmd.owner = this;
@@ -1154,7 +1143,7 @@ void bot_setcurrentcommand(entity this)
 				// Invalid command, remove from queue
 				bot_cmd = NULL;
 				bot_dequeuecommand(this, this.bot_cmd_execution_index);
-				this.bot_cmd_execution_index++;
+				++this.bot_cmd_execution_index;
 			}
 		}
 		else

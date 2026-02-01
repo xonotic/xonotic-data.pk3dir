@@ -176,6 +176,9 @@ void XonoticEntryList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 
 void XonoticEntryList_setSelected(entity me, int i)
 {
-	SUPER(XonoticEntryList).setSelected(me, i);
-	me.onChange(me, me.onChangeEntity);
+	if (i != me.selectedItem)
+	{
+		SUPER(XonoticEntryList).setSelected(me, i);
+		me.onChange(me, me.onChangeEntity);
+	}
 }

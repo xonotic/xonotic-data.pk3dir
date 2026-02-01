@@ -145,7 +145,7 @@ void AnimateDomPoint(entity this)
 	if(this.nextthink > this.pain_finished)
 		this.nextthink = this.pain_finished;
 
-	this.frame = this.frame + 1;
+	++this.frame;
 	if(this.frame > this.t_length)
 		this.frame = 0;
 }
@@ -156,7 +156,7 @@ void dompointthink(entity this)
 
 	this.nextthink = time + 0.1;
 
-	//this.frame = this.frame + 1;
+	//++this.frame;
 	//if(this.frame > 119)
 	//	this.frame = 0;
 	AnimateDomPoint(this);
@@ -482,7 +482,7 @@ spawnfunc(dom_controlpoint)
 	if(!this.scale)
 		this.scale = 0.6;
 
-	this.effects = this.effects | EF_LOWPRECISION;
+	this.effects |= EF_LOWPRECISION;
 	if (autocvar_g_domination_point_fullbright)
 		this.effects |= EF_FULLBRIGHT;
 

@@ -136,13 +136,11 @@
 
 	float Container_keyUp(entity me, float scan, float ascii, float shift)
 	{
-		entity f;
-		float r;
-		f = me.focusedChild;
+		entity f = me.focusedChild;
 		if (f)
 		{
 			me.enterSubitem(me, f);
-			r = f.keyUp(f, scan, ascii, shift);
+			float r = f.keyUp(f, scan, ascii, shift);
 			me.leaveSubitem(me);
 			return r;
 		}
@@ -151,13 +149,11 @@
 
 	float Container_keyDown(entity me, float scan, float ascii, float shift)
 	{
-		entity f;
-		float r;
-		f = me.focusedChild;
+		entity f = me.focusedChild;
 		if (f)
 		{
 			me.enterSubitem(me, f);
-			r = f.keyDown(f, scan, ascii, shift);
+			float r = f.keyDown(f, scan, ascii, shift);
 			me.leaveSubitem(me);
 			return r;
 		}
@@ -166,13 +162,11 @@
 
 	float Container_mouseMove(entity me, vector pos)
 	{
-		entity f;
-		float r;
-		f = me.focusedChild;
+		entity f = me.focusedChild;
 		if (f)
 		{
 			me.enterSubitem(me, f);
-			r = f.mouseMove(f, globalToBox(pos, f.Container_origin, f.Container_size));
+			float r = f.mouseMove(f, globalToBox(pos, f.Container_origin, f.Container_size));
 			me.leaveSubitem(me);
 			return r;
 		}
@@ -202,13 +196,11 @@
 	}
 	float Container_mouseDrag(entity me, vector pos)
 	{
-		entity f;
-		float r;
-		f = me.focusedChild;
+		entity f = me.focusedChild;
 		if (f)
 		{
 			me.enterSubitem(me, f);
-			r = f.mouseDrag(f, globalToBox(pos, f.Container_origin, f.Container_size));
+			float r = f.mouseDrag(f, globalToBox(pos, f.Container_origin, f.Container_size));
 			me.leaveSubitem(me);
 			return r;
 		}
@@ -216,13 +208,11 @@
 	}
 	float Container_mouseRelease(entity me, vector pos)
 	{
-		entity f;
-		float r;
-		f = me.focusedChild;
+		entity f = me.focusedChild;
 		if (f)
 		{
 			me.enterSubitem(me, f);
-			r = f.mouseRelease(f, globalToBox(pos, f.Container_origin, f.Container_size));
+			float r = f.mouseRelease(f, globalToBox(pos, f.Container_origin, f.Container_size));
 			me.leaveSubitem(me);
 			return r;
 		}
@@ -266,8 +256,7 @@
 		//me.setAlphaOf(me, other, theAlpha);
 		other.Container_alpha = theAlpha;
 
-		entity l;
-		l = me.lastChild;
+		entity l = me.lastChild;
 
 		if (l) l.nextSibling = other;
 		else me.firstChild = other;
@@ -368,9 +357,7 @@
 	entity Container_preferredFocusedGrandChild(entity me)
 	{
 		entity e, e2;
-		entity best;
-
-		best = NULL;
+		entity best = NULL;
 
 		for (e = me.firstChild; e; e = e.nextSibling)
 		{

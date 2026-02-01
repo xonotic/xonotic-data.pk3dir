@@ -60,7 +60,6 @@ ENUMCLASS(CPID)
 	CASE(CPID, KEYHUNT)
 	CASE(CPID, KEYHUNT_OTHER)
 	CASE(CPID, LMS)
-	CASE(CPID, MISSING_TEAMS)
 	CASE(CPID, MISSING_PLAYERS)
 	CASE(CPID, INSTAGIB_FINDAMMO)
 	CASE(CPID, NIX)
@@ -366,7 +365,6 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 	f3race_time: TIME_ENCODED_TOSTRING of f3
 	race_col: color of race time/position (i.e. good or bad)
 	race_diff: show time difference between f2 and f3
-	missing_teams: show which teams still need players
 	pass_key: find the keybind for "passing" or "dropping" in CTF gametype
 	nade_key: find the keybind for nade throwing
 	join_key: find the keybind for joining the game
@@ -460,7 +458,6 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   TIME_ENCODED_TOSTRING(f3, true)) \
 	ARG_CASE(ARG_CS_SV,     "race_col",      CCR((f1 == 1) ? "^F1" : "^F2")) \
 	ARG_CASE(ARG_CS_SV,     "race_diff",     ((TIME_ENCODED_TOSTRING(fabs(f2 - f3), true) == "0.00") ? "^3[+0.0]" : (f2 > f3) ? sprintf("^1[+%s]", TIME_ENCODED_TOSTRING(f2 - f3, true)) : sprintf("^2[-%s]", TIME_ENCODED_TOSTRING(f3 - f2, true)))) \
-	ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1)) \
 	ARG_CASE(ARG_CS,        "pass_key",      getcommandkey(_("drop flag"), "+use")) \
 	ARG_CASE(ARG_CS,        "nade_key",      getcommandkey(_("throw nade"), "dropweapon")) \
 	ARG_CASE(ARG_CS,        "join_key",      getcommandkey(_("jump"), "+jump")) \
@@ -517,16 +514,6 @@ string notif_arg_frag_stats(float fhealth, float farmor, float fping)
 		return sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), fhealth, farmor, s);
 	else
 		return sprintf(CCR(_("\n(^F4Dead^BG)%s")), s);
-}
-
-string notif_arg_missing_teams(float f1)
-{
-	return strcat(
-		((f1 & BIT(0)) ? strcat(Team_ColoredFullName(NUM_TEAM_1), (f1 >> 1) ? ", " : "") : ""),
-		((f1 & BIT(1)) ? strcat(Team_ColoredFullName(NUM_TEAM_2), (f1 >> 2) ? ", " : "") : ""),
-		((f1 & BIT(2)) ? strcat(Team_ColoredFullName(NUM_TEAM_3), (f1 >> 3) ? ", " : "") : ""),
-		((f1 & BIT(3)) ?        Team_ColoredFullName(NUM_TEAM_4)                         : "")
-	);
 }
 
 string notif_arg_spree_cen(float spree)
@@ -878,7 +865,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	REGISTER(Notifications, name, m_id, new_pure(msg_choice_notification)) { \
 		this.nent_choice_idx = nent_choice_count; \
 		if (!teamnum || teamnum == NUM_TEAM_4) \
-			nent_choice_count++; \
+			++nent_choice_count; \
 		Create_Notification_Entity       (this, defaultvalue, ACVNN(cvarname), MSG_CHOICE, strtoupper(#name), teamnum); \
 		Create_Notification_Entity_Choice(this, ACVNN(cvarname), strtoupper(#name), \
 			challow,                                 /* challow_def */ \

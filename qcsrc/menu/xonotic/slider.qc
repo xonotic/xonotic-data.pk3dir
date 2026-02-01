@@ -2,8 +2,7 @@
 
 entity makeXonoticSlider_T(float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
 {
-	entity me;
-	me = NEW(XonoticSlider);
+	entity me = NEW(XonoticSlider);
 	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar, theTooltip);
 	return me;
 }
@@ -13,8 +12,7 @@ entity makeXonoticSlider(float theValueMin, float theValueMax, float theValueSte
 }
 void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
 {
-	float vp;
-	vp = theValueStep * 10;
+	float vp = theValueStep * 10;
 	while(fabs(vp) < fabs(theValueMax - theValueMin) / 40)
 		vp *= 10;
 
@@ -51,7 +49,7 @@ void XonoticSlider_loadCvars(entity me)
 	if (!me.controlledCvar)
 		return;
 
-	me.setValue(me, cvar(me.controlledCvar), false);
+	SUPER(XonoticSlider).setValue(me, cvar(me.controlledCvar), false);
 }
 void XonoticSlider_saveCvars(entity me)
 {

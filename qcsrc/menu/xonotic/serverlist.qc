@@ -272,8 +272,7 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 
 entity makeXonoticServerList()
 {
-	entity me;
-	me = NEW(XonoticServerList);
+	entity me = NEW(XonoticServerList);
 	me.configureXonoticServerList(me);
 	return me;
 }
@@ -1166,7 +1165,7 @@ float XonoticServerList_getTotalHeight(entity me)
 }
 int XonoticServerList_getItemAtPos(entity me, float pos)
 {
-	pos = pos / me.itemHeight;
+	pos /= me.itemHeight;
 	for (int i = category_draw_count - 1; i >= 0; --i) {
 		int itemidx = category_item[i];
 		float itempos = i * me.categoriesHeight + itemidx * me.serversHeight;

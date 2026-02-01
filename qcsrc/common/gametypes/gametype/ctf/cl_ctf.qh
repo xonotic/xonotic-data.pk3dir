@@ -3,4 +3,4 @@
 #include "ctf.qh"
 
 void HUD_Mod_CTF_Reset();
-void HUD_Mod_CTF(vector pos, vector mySize);
+void HUD_Mod_CTF(vector myPos, vector mySize, bool should_draw);

@@ -78,7 +78,7 @@ void PingPLReport_Think(entity this)
 		if(time > (CS(e).latency_time + LATENCY_THINKRATE))
 		{
 			CS(e).latency_sum += CS(e).ping;
-			CS(e).latency_cnt += 1;
+			++CS(e).latency_cnt;
 			CS(e).latency_time = time;
 			//print("sum: ", ftos(CS(e).latency_sum), ", cnt: ", ftos(CS(e).latency_cnt), ", avg: ", ftos(CS(e).latency_sum / CS(e).latency_cnt), ".\n");
 		}
@@ -384,17 +384,21 @@ void cvar_changes_init()
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
 		BADCVAR("g_keepaway_ballcarrier_effects");
+		BADCVAR("g_keepaway_point_limit");
 		BADCVAR("g_keepawayball_effects");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_new_toys_autoreplace");
 		BADCVAR("g_new_toys_use_pickupsound");
+		BADCVAR("g_onslaught_point_limit");
 		BADCVAR("g_physics_predictall");
 		BADCVAR("g_piggyback");
 		BADCVAR("g_playerclip_collisions");
 		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
+		BADCVAR("g_tka_point_leadlimit");
+		BADCVAR("g_tka_point_limit");
 		BADCVAR("g_mayhem_point_limit");
 		BADCVAR("g_mayhem_point_leadlimit");
 		BADCVAR("g_tmayhem_point_limit");
@@ -495,6 +499,7 @@ void cvar_changes_init()
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
+		BADCVAR("g_tka_teams_override");
 		BADCVAR("g_tmayhem_teams_override");
 		BADCVAR("g_tmayhem_powerups");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
@@ -758,6 +763,22 @@ void InitGameplayMode()
 bool world_already_spawned;
 spawnfunc(worldspawn)
 {
+	// Must be checked first because we don't always error() and don't want to print this twice.
+	if (world_already_spawned)
+	{
+		string msg = "world already spawned - your map may have EXACTLY ONE worldspawn!";
+		if (q3compat) // must be set during (first) worldspawn
+		{
+			// Q3 ignores spurious/extra worldspawn entities, test map: q3dmz_carnage
+			LOG_WARN(msg);
+			delete(this);
+			return;
+		}
+		else
+			error(msg);
+	}
+	world_already_spawned = true;
+
 #ifdef WATERMARK
 	string watermark_start = cvar_string("sv_watermark_start");
 	if (watermark_start == "") // always true on Xonotic (re)start
@@ -774,7 +795,6 @@ spawnfunc(worldspawn)
 	CheckEngineExtensions();
 
 	cvar_set("_endmatch", "0");
-	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
 	if (autocvar_sv_termsofservice_url && autocvar_sv_termsofservice_url != "")
 	{
@@ -787,7 +807,7 @@ spawnfunc(worldspawn)
 
 	bool wantrestart = false;
 	{
-		if (!server_is_dedicated)
+		if (!autocvar_sv_dedicated)
 		{
 			// DP unloads dlcache pk3s before starting a listen server since https://gitlab.com/xonotic/darkplaces/-/merge_requests/134
 			// restore csqc_progname too
@@ -844,10 +864,6 @@ spawnfunc(worldspawn)
 			// let initialization continue, shutdown depends on it
 		}
 	}
-
-	if(world_already_spawned)
-		error("world already spawned - you may have EXACTLY ONE worldspawn!");
-	world_already_spawned = true;
 
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
@@ -1080,7 +1096,7 @@ spawnfunc(worldspawn)
 
 	WinningConditionHelper(this); // set worldstatus
 
-	if (autocvar_sv_autopause && server_is_dedicated && !wantrestart)
+	if (autocvar_sv_autopause && autocvar_sv_dedicated && !wantrestart)
 		// INITPRIO_LAST is too soon: bots either didn't join yet or didn't leave yet, see: bot_fixcount()
 		defer(this, 5, Pause_TryPause_Dedicated);
 
@@ -1155,18 +1171,21 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 		if (trace_fraction >= 1 || trace_dphittexturename == "common/caulk")
 			continue;
 
-		// rule 4: we must "see" some spawnpoint or item
+		// rule 4: we must "be seen" by some spawnpoint or item
+		// Note that checkpvs from mstart to item can detect visibility if mstart is behind
+		// patch brushes (curved walls) that don't block visibility from the outside, however
+		// the next traceline from item to mstart correctly detects invisibility in this case
 		entity sp = NULL;
 		if(frompos)
 		{
-			if((traceline(mstart, e.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+			if((traceline(e.origin, mstart, MOVE_NORMAL, e), trace_fraction) >= 1)
 				sp = e;
 		}
 		if(!sp)
 		{
 			IL_EACH(g_spawnpoints, checkpvs(mstart, it),
 			{
-				if((traceline(mstart, it.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
+				if((traceline(it.origin, mstart, MOVE_NORMAL, e), trace_fraction) >= 1)
 				{
 					sp = it;
 					break;
@@ -1178,7 +1197,7 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 			int items_checked = 0;
 			IL_EACH(g_items, checkpvs(mstart, it),
 			{
-				if((traceline(mstart, it.origin + (it.mins + it.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
+				if((traceline(it.origin + (it.mins + it.maxs) * 0.5, mstart, MOVE_NORMAL, e), trace_fraction) >= 1)
 				{
 					sp = it;
 					break;
@@ -1193,17 +1212,18 @@ bool MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax
 				continue;
 		}
 
+		float vlen_delta = vlen(delta);
 		// find a random vector to "look at"
 		end.x = org.x + random() * delta.x;
 		end.y = org.y + random() * delta.y;
 		end.z = org.z + random() * delta.z;
-		end = start + normalize(end - start) * vlen(delta);
+		end = start + normalize(end - start) * vlen_delta;
 
 		// rule 4: start TO end must not be too short
 		tracebox(start, e.mins, e.maxs, end, MOVE_NORMAL, e);
 		if(trace_startsolid)
 			continue;
-		if(trace_fraction < minviewdistance / vlen(delta))
+		if(trace_fraction < minviewdistance / vlen_delta)
 			continue;
 
 		// rule 5: don't want to look at sky

@@ -131,7 +131,7 @@
 			bSize = eY + eX * (1 - me.keepspaceLeft);
 
 			bOrigin += bSize * (0.5 - 0.5 * me.src2scale);
-			bSize = bSize * me.src2scale;
+			bSize *= me.src2scale;
 
 			draw_Picture(bOrigin, me.src2, bSize, me.color2, me.alpha2);
 		}

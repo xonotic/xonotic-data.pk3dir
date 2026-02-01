@@ -16,7 +16,7 @@
 		{
 			me.cb_width = absSize.y / absSize.x;
 			me.cb_offset = bound(-1, me.cb_offset, 0) * me.cb_width;  // bound to range -1, 0
-			me.keepspaceRight = me.keepspaceRight - me.cb_offset + me.cb_width;
+			me.keepspaceRight -= me.cb_offset - me.cb_width;
 		}
 	}
 
@@ -208,8 +208,7 @@
 
 		if (me.dragScrollTimer < time)
 		{
-			float save;
-			save = me.scrollPos;
+			float save = me.scrollPos;
 			me.scrollPos = bound(cursorPosInWidths - (0.875 - me.keepspaceLeft - me.keepspaceRight), me.scrollPos, cursorPosInWidths - 0.125);
 			if (me.scrollPos != save) me.dragScrollTimer = time + 0.2;
 		}

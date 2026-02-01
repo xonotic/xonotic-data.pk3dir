@@ -11,8 +11,7 @@
 
 entity makeXonoticServerInfoTab()
 {
-	entity me;
-	me = NEW(XonoticServerInfoTab);
+	entity me = NEW(XonoticServerInfoTab);
 	me.configureDialog(me);
 	return me;
 }

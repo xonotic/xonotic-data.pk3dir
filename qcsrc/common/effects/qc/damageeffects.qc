@@ -188,7 +188,7 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 	e.team = _particleeffectnum(effectname);
 	setthink(e, DamageEffect_Think);
 	e.nextthink = time;
-	this.total_damages += 1;
+	++this.total_damages;
 }
 
 NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
@@ -270,7 +270,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		if(it.damageforcescale)
 			if(vdist(thisforce, !=, 0))
 			{
-				it.velocity = it.velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, damagepush_speedfactor);
+				it.velocity += damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, damagepush_speedfactor);
 				UNSET_ONGROUND(it);
 			}
 

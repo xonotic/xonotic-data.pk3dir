@@ -9,7 +9,7 @@ classfield(TeamRadar) .float teamradar_times[MAX_TEAMRADAR_TIMES];
 classfield(TeamRadar) .int teamradar_time_index;
 classfield(TeamRadar) .vector teamradar_color;
 
-float teamradar_angle; // player yaw angle
+float teamradar_angle; // player yaw angle (in radians to optimize code)
 vector teamradar_origin3d_in_texcoord; // player origin
 vector teamradar_origin2d; // 2D origin
 vector teamradar_size2d; // 2D size

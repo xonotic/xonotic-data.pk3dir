@@ -15,14 +15,12 @@ void SurvivalStatuses_Init();
 
 bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 {
-	Stream out = MSG_ENTITY;
-	WriteHeader(out, ENT_CLIENT_SURVIVALSTATUSES);
-
 	// always send hunters their own status and their allies
 	if (dest.survival_status == SURV_STATUS_HUNTER)
 		sendflags |= STATUS_SEND_HUNTERS;
 
-	serialize(byte, out, sendflags);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SURVIVALSTATUSES);
+	WriteByte(MSG_ENTITY, sendflags);
 	if (sendflags & STATUS_SEND_HUNTERS)
 	{
 		for (int i = 1; i <= maxclients; i += 8)
@@ -36,7 +34,7 @@ bool SurvivalStatuses_SendEntity(entity this, entity dest, float sendflags)
 				if (is_hunter)
 					f |= BIT(b);
 			}
-			serialize(byte, out, f);
+			WriteByte(MSG_ENTITY, f);
 		}
 	}
 	//print(sprintf("sent flags %f to %s\n", sendflags, dest.netname));
@@ -100,9 +98,9 @@ float Surv_CheckWinner()
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
 		if(it.survival_status == SURV_STATUS_PREY)
-			survivor_count++;
+			++survivor_count;
 		else if(it.survival_status == SURV_STATUS_HUNTER)
-			hunter_count++;
+			++hunter_count;
 	});
 	if(survivor_count > 0 && hunter_count > 0)
 	{
@@ -180,7 +178,7 @@ void Surv_RoundStart()
 	{
 		if(total_hunters >= hunter_count)
 			break;
-		total_hunters++;
+		++total_hunters;
 		it.survival_status = SURV_STATUS_HUNTER;
 	});
 	survivalStatuses.SendFlags = STATUS_SEND_RESET;
@@ -203,24 +201,25 @@ bool Surv_CheckPlayers()
 	{
 		++playercount;
 	});
+	// NOTE missing_teams_mask stat is used for missing players in ffa games
 	if (playercount >= 2)
 	{
 		if(prev_missing_players > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_PLAYERS);
+			missing_teams_mask = 0;
 		prev_missing_players = -1;
 		return true;
 	}
 	if(playercount == 0)
 	{
 		if(prev_missing_players > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_PLAYERS);
+			missing_teams_mask = 0;
 		prev_missing_players = -1;
 		return false;
 	}
 	// if we get here, only 1 player is missing
 	if(prev_missing_players != 1)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_PLAYERS, 1);
+		missing_teams_mask = 1;
 		prev_missing_players = 1;
 	}
 	return false;
@@ -281,7 +280,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	player.survival_validkills = 0;
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 MUTATOR_HOOKFUNCTION(surv, ForbidSpawn)
@@ -311,7 +310,7 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 	}
 
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 }
 
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
@@ -384,7 +383,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
 	{
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 		if (IS_BOT_CLIENT(frag_target))
 			bot_clearqueue(frag_target);
 	}
@@ -419,7 +418,7 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 	if (INGAME(player))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= 1;
+		eliminatedPlayers.SendFlags = 0xFFFFFF;
 	if (!INGAME(player))
 	{
 		player.survival_validkills = 0;
@@ -482,7 +481,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(surv, BotShouldAttack)
+MUTATOR_HOOKFUNCTION(surv, Bot_ForbidAttack)
 {
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);

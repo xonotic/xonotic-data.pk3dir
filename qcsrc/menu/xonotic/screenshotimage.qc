@@ -2,8 +2,7 @@
 
 entity makeXonoticScreenshotImage()
 {
-	entity me;
-	me = NEW(XonoticScreenshotImage);
+	entity me = NEW(XonoticScreenshotImage);
 	me.configureXonoticScreenshotImage(me);
 	return me;
 }

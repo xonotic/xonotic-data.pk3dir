@@ -68,7 +68,7 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 			// we hit something... let's move out of it
 			vector move = trace_endpos - testorigin;
 			float nudge = (trace_plane_normal * move) + 0.03125; // FIXME cvar this constant
-			stuckorigin = stuckorigin + nudge * trace_plane_normal;
+			stuckorigin += nudge * trace_plane_normal;
 		}
 
 		if(dir)
@@ -260,7 +260,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		}
 
 		planes[numplanes] = my_trace_plane_normal;
-		numplanes++;
+		++numplanes;
 
 		// modify original_velocity so it parallels all of the clip planes
 		vector new_velocity = '0 0 0';
@@ -329,12 +329,6 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	}
 
 	return blockedflag;
-}
-
-void _Movetype_CheckVelocity(entity this)  // SV_CheckVelocity
-{
-	// if(vlen(this.velocity) < 0.0001)
-	// this.velocity = '0 0 0';
 }
 
 bool _Movetype_CheckWater(entity this)  // SV_CheckWater
@@ -560,7 +554,7 @@ int _Movetype_ContentsMask(entity this)  // SV_GenericHitSuperContentsMask
 entity _Movetype_TestEntityPosition_ent;
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
-    entity this = _Movetype_TestEntityPosition_ent;
+	entity this = _Movetype_TestEntityPosition_ent;
 	vector org = this.origin + ofs;
 
 	//int cont = this.dphitcontentsmask;
@@ -584,21 +578,21 @@ bool _Movetype_TestEntityPosition_Offset(int offset)
 	// NOTE: expects _Movetype_TestEntityPosition_ent to be set to the correct entity
 	// returns true if stuck
 
-    // start at 2, since the first position has already been checked
-    for(int j = 2; j <= offset; ++j)
-    {
-    	if(!_Movetype_TestEntityPosition('0 0 -1' * j))
-    		return false;
-    	if(!_Movetype_TestEntityPosition('0 0 1' * j))
-    		return false;
-    }
+	// start at 2, since the first position has already been checked
+	for(int j = 2; j <= offset; ++j)
+	{
+		if(!_Movetype_TestEntityPosition('0 0 -1' * j))
+			return false;
+		if(!_Movetype_TestEntityPosition('0 0 1' * j))
+			return false;
+	}
 
 	return true;
 }
 
 int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
-    _Movetype_TestEntityPosition_ent = this;
+	_Movetype_TestEntityPosition_ent = this;
 	if (!_Movetype_TestEntityPosition(' 0  0  0')) {
 	    return UNSTICK_FINE;
 	}
@@ -610,12 +604,12 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	X('-1  1  0') X(' 1  1  0')
 	#undef X
 	{
-        if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
-        {
-            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
-                etof(this), this.classname, vtos(this.origin));
-            return UNSTICK_STUCK;
-        }
+		if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
+		{
+			LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
+			etof(this), this.classname, vtos(this.origin));
+			return UNSTICK_STUCK;
+		}
 	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
 		etof(this), this.classname, vtos(this.origin));
@@ -717,8 +711,8 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater(this);
-			this.origin = this.origin + movedt * this.velocity;
-			this.angles = this.angles + movedt * this.avelocity;
+			this.origin += movedt * this.velocity;
+			this.angles += movedt * this.avelocity;
 			_Movetype_LinkEdict(this, false);
 			break;
 		case MOVETYPE_STEP:
@@ -756,8 +750,8 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater(this);
-			this.origin = this.origin + movedt * this.velocity;
-			this.angles = this.angles + movedt * this.avelocity;
+			this.origin += movedt * this.velocity;
+			this.angles += movedt * this.avelocity;
 			break;
 		case MOVETYPE_STEP:
 			_Movetype_Physics_Step(this, movedt);
@@ -779,11 +773,7 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			break;
 	}
 
-	//_Movetype_CheckVelocity(this);
-
 	_Movetype_LinkEdict(this, true);
-
-	//_Movetype_CheckVelocity(this);
 }
 
 void Movetype_Physics_NoMatchTicrate(entity this, float movedt, bool isclient)  // to be run every move frame

@@ -298,8 +298,8 @@ void RaceCarPhysics(entity this, float dt)
 	vf1 = v_forward * f;
 	vu1 = v_up * f;
 	makevectors(angles_save);
-	vf1 = vf1 + v_forward * (1 - f);
-	vu1 = vu1 + v_up * (1 - f);
+	vf1 += (1 - f) * v_forward;
+	vu1 += (1 - f) * v_up;
 	smoothangles = vectoangles2(vf1, vu1);
 	this.angles_x = -smoothangles.x;
 	this.angles_z =  smoothangles.z;

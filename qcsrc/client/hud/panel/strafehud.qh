@@ -112,43 +112,43 @@ AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_start, float, 0.9, "playback speed
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_range, float, 0.1, "dynamic playback speed range of the strafe sonar as you approach the optimal angle");
 AUTOCVAR_SAVE(hud_panel_strafehud_sonar_pitch_exponent, float, 1, "exponent of the dynamic playback speed range of the strafe sonar");
 
-const int STRAFEHUD_MODE_VIEW_CENTERED = 0;
-const int STRAFEHUD_MODE_VELOCITY_CENTERED = 1;
+const int STRAFEHUD_MODE_VIEW_CENTERED      = 0;
+const int STRAFEHUD_MODE_VELOCITY_CENTERED  = 1;
 
-const int STRAFEHUD_ONGROUND_OVERTURN = 0;
-const int STRAFEHUD_ONGROUND_GROUND = 1;
-const int STRAFEHUD_ONGROUND_AIR = 2;
+const int STRAFEHUD_ONGROUND_OVERTURN  = 0;
+const int STRAFEHUD_ONGROUND_GROUND    = 1;
+const int STRAFEHUD_ONGROUND_AIR       = 2;
 
-const int STRAFEHUD_DIRECTION_NONE = 0;
-const int STRAFEHUD_DIRECTION_LEFT = 1;
-const int STRAFEHUD_DIRECTION_RIGHT = 2;
+const int STRAFEHUD_DIRECTION_NONE   = 0;
+const int STRAFEHUD_DIRECTION_LEFT   = 1;
+const int STRAFEHUD_DIRECTION_RIGHT  = 2;
 
-const int STRAFEHUD_SWITCH_NONE = 0;
-const int STRAFEHUD_SWITCH_ACTUAL = 1;
-const int STRAFEHUD_SWITCH_NORMAL = 2;
-const int STRAFEHUD_SWITCH_SIDESTRAFE = 3;
+const int STRAFEHUD_SWITCH_NONE        = 0;
+const int STRAFEHUD_SWITCH_ACTUAL      = 1;
+const int STRAFEHUD_SWITCH_NORMAL      = 2;
+const int STRAFEHUD_SWITCH_SIDESTRAFE  = 3;
 
-const int STRAFEHUD_WTURN_NONE = 0;
-const int STRAFEHUD_WTURN_ONLY = 1;
-const int STRAFEHUD_WTURN_NORMAL = 2;
-const int STRAFEHUD_WTURN_SIDESTRAFE = 3;
+const int STRAFEHUD_WTURN_NONE        = 0;
+const int STRAFEHUD_WTURN_ONLY        = 1;
+const int STRAFEHUD_WTURN_NORMAL      = 2;
+const int STRAFEHUD_WTURN_SIDESTRAFE  = 3;
 
-const int STRAFEHUD_KEYS_NONE = 0;
-const int STRAFEHUD_KEYS_FORWARD = 1;
-const int STRAFEHUD_KEYS_BACKWARD = 2;
+const int STRAFEHUD_KEYS_NONE      = 0;
+const int STRAFEHUD_KEYS_FORWARD   = 1;
+const int STRAFEHUD_KEYS_BACKWARD  = 2;
 
-const int STRAFEHUD_STYLE_DRAWFILL = 0;
-const int STRAFEHUD_STYLE_PROGRESSBAR = 1;
-const int STRAFEHUD_STYLE_GRADIENT = 2;
-const int STRAFEHUD_STYLE_SOFT_GRADIENT = 3;
+const int STRAFEHUD_STYLE_DRAWFILL       = 0;
+const int STRAFEHUD_STYLE_PROGRESSBAR    = 1;
+const int STRAFEHUD_STYLE_GRADIENT       = 2;
+const int STRAFEHUD_STYLE_SOFT_GRADIENT  = 3;
 
-const int STRAFEHUD_GRADIENT_NONE = 0;
-const int STRAFEHUD_GRADIENT_LEFT = 1;
-const int STRAFEHUD_GRADIENT_RIGHT = 2;
-const int STRAFEHUD_GRADIENT_BOTH = 3;
+const int STRAFEHUD_GRADIENT_NONE   = 0;
+const int STRAFEHUD_GRADIENT_LEFT   = 1;
+const int STRAFEHUD_GRADIENT_RIGHT  = 2;
+const int STRAFEHUD_GRADIENT_BOTH   = 3;
 
-const int STRAFEHUD_PROJECTION_LINEAR = 0;
-const int STRAFEHUD_PROJECTION_PERSPECTIVE = 1;
-const int STRAFEHUD_PROJECTION_PANORAMIC = 2;
+const int STRAFEHUD_PROJECTION_LINEAR       = 0;
+const int STRAFEHUD_PROJECTION_PERSPECTIVE  = 1;
+const int STRAFEHUD_PROJECTION_PANORAMIC    = 2;
 
 const float ACOS_SQRT2_3_DEG = 35.2643896827546543153;  /* acos(sqrt(2/3)) * RAD2DEG */

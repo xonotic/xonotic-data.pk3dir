@@ -5,15 +5,19 @@
 #include "hk_weapon.qh"
 
 CLASS(HunterKiller, Turret)
+#ifdef GAMEQC
 /* spawnflags */ ATTRIB(HunterKiller, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS);
 /* mins       */ ATTRIB(HunterKiller, m_mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(HunterKiller, m_maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(HunterKiller, mdl, string, "base.md3");
 /* model      */ ATTRIB_STRZONE(HunterKiller, model, string, strcat("models/turrets/", this.mdl));
 /* head_model */ ATTRIB_STRZONE(HunterKiller, head_model, string, strcat("models/turrets/", "hk.md3"));
+#endif
 /* netname    */ ATTRIB(HunterKiller, netname, string, "hk");
 /* fullname   */ ATTRIB(HunterKiller, m_name, string, _("Hunter-Killer Turret"));
-    ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
+#ifdef SVQC
+/* weapon     */ ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
+#endif
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
