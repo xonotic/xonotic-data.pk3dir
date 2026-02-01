@@ -1760,7 +1760,7 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 			float hl_alpha = (scoreboard_ui_enabled == 2) ? 0.2 : 0.3 * max(0, (1 - (time - scoreboard_selected_panel_time) * 2));
 			hl_alpha *= panel_fg_alpha;
 			if (hl_alpha)
-				drawfill(scoreboard_selected_hl_pos, scoreboard_selected_hl_size, '1 1 1', hl_alpha, DRAWFLAG_NORMAL);
+				drawfill(scoreboard_selected_hl_pos, scoreboard_selected_hl_size, '0.8 0.8 0.8' + 0.2 * rgb, hl_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 
