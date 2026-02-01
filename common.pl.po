@@ -7,10 +7,12 @@
 # alex progger <tiprogrammierer.alex@gmail.com>, 2015
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
+# HappyGlitch, 2026
 # cbbd2834e4f65fe29be8a0db728247c5_37a907e, 2020
 # Cris Sus, 2021
 # Cris Sus, 2021
 # Happy Glitch, 2026
+# HappyGlitch, 2026
 # Jakub Niklas <Kuba.mpcs@gmail.com>, 2021
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
 # Jakub Pędziszewski <pedziszewski@gmail.com>, 2015
@@ -43,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-31 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Happy Glitch, 2026\n"
+"Last-Translator: HappyGlitch, 2026\n"
 "Language-Team: Polish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -4943,6 +4945,8 @@ msgstr ""
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
 msgstr ""
+"^BG%s^F3 został przeniesiony do^BG obserwujących, po %s sekundach "
+"bezczynności"
 
 #: qcsrc/common/notifications/all.inc:430
 #, c-format

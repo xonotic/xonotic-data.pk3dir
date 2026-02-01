@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-31 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2026\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -122,7 +122,7 @@ msgstr "^1Наблюдение: ^7%s"
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Нажмите ^3%s ^1для наблюдения"
+msgstr "^1Для наблюдения — ^3%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/menu/xonotic/keybinder.qc:73
@@ -3429,7 +3429,7 @@ msgstr "Накопление:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:70
 msgid "If younger than:"
-msgstr "Если младше чем:"
+msgstr "Если младше:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:75
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:46
@@ -3456,7 +3456,7 @@ msgstr "Всегда"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:82
 msgid "Or opacity greater than:"
-msgstr "Или непрозрачность больше, чем:"
+msgstr "Или непрозрачность больше:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
 msgid "Damage text"
@@ -3937,6 +3937,8 @@ msgid ""
 "The %s is a superweapon that rapidly fires harmful bullets with a small "
 "degree of spread."
 msgstr ""
+"%s — это супероружие, которое быстро стреляет поражающими пулями с небольшим "
+"разбросом."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:169
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:164
@@ -3981,6 +3983,8 @@ msgid ""
 "Since its bullets deal a lot more damage than the %s bullets, it is often "
 "heavily contested when it spawns in."
 msgstr ""
+"Поскольку его пули наносят гораздо больший урон, чем пули %s, его появление "
+"часто вызывает ожесточённую борьбу."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:35
 msgid "Overkill Heavy MachineGun"
@@ -4090,15 +4094,15 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:40
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
 msgid "Since it is a powerup, it will drop if you die while holding it."
-msgstr ""
+msgstr "Поскольку это усилитель, он выпадет, если вы умрёте, неся его с собой."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
 msgid "Fuel regenerator"
-msgstr "Топливный восстановитель"
+msgstr "Восполнитель топлива"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:36
 msgid "Fuel regen"
-msgstr "Топливный восстановитель"
+msgstr "Восполнение топлива"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:52
 #, c-format
@@ -4107,6 +4111,9 @@ msgid ""
 "making it more difficult for enemies to see you. This powerup is often "
 "present in %s."
 msgstr ""
+"Усилитель %s увеличивает вашу полупрозрачность, пока он активен, что "
+"затрудняет врагам возможность видеть вас. Этот усилитель часто встречается в "
+"%s."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
@@ -4121,6 +4128,9 @@ msgid ""
 "providing increased mobility, maneuverability, and the ability to reach "
 "higher ground."
 msgstr ""
+"Усилитель %s позволяет вам в течение короткого времени летать по карте, "
+"обеспечивая повышенную мобильность, манёвренность и возможность достигать "
+"более высоких точек."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qc:21
 #, c-format
@@ -4143,6 +4153,9 @@ msgid ""
 "expires, having a compounding effect with armor. It also makes you more "
 "resistant to knockback."
 msgstr ""
+"Усилитель %s значительно уменьшает получаемый урон до момента его истечения, "
+"усиливая действие брони. Оно также делает вас более устойчивым к "
+"отталкиванию."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -4157,6 +4170,9 @@ msgid ""
 "regeneration speed while the powerup is active. However, it also makes you a "
 "bit more vulnerable to incoming attacks."
 msgstr ""
+"Усилитель %s увеличивает скорость вашего движения, скорость атаки и скорость "
+"восстановления здоровья, пока он активен. Однако он также делает вас немного "
+"более уязвимым для атак противника."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -4171,12 +4187,17 @@ msgid ""
 "The %s powerup greatly increases the damage you deal, until the powerup "
 "expires. It also increases the knockback that your attacks deal."
 msgstr ""
+"Усилитель %s значительно увеличивает наносимый вами урон до тех пор, пока "
+"его действие не закончится. Оно также увеличивает отталкивание, которое "
+"наносят ваши атаки."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
 msgid ""
 "The damage and knockback you deal to yourself also increases but by a "
 "smaller amount."
 msgstr ""
+"Урон и отталкивание, которые вы наносите себе, также увеличиваются, но в "
+"меньшей степени."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:59
 #, c-format
@@ -4185,6 +4206,9 @@ msgid ""
 "allow you to easily dominate a map, so it's often highly contested when it "
 "spawns in."
 msgstr ""
+"%s — один из самых востребованных предметов на арене, поскольку он позволяет "
+"легко доминировать над картой, поэтому за него часто ведётся ожесточённая "
+"борьба, когда он появляется."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -4229,12 +4253,15 @@ msgstr "Суперпушки"
 msgid ""
 "The %s mutator causes an explosion when two players collide if it is enabled."
 msgstr ""
+"Если мутатор %s включён, он вызывает взрыв при столкновении двух игроков."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qc:9
 msgid ""
 "This is a nice way to add some silly fun to a server, but it also does allow "
 "for the use of new tactics in some gametypes."
 msgstr ""
+"Это хороший способ добавить немного веселья на сервер, но также позволяет "
+"использовать новые тактики в некоторых режимах игр."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
 #: qcsrc/common/util.qc:315
@@ -4263,12 +4290,16 @@ msgid ""
 "%s is a mutator that enables jumping off walls for added mobility. To do a "
 "wall jump, tap %s when against a wall."
 msgstr ""
+"%s — это мутатор, который позволяет прыгать от стен для большей мобильности. "
+"Чтобы выполнить прыжок со стены, нажмите %s, находясь вплотную к стене."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
 msgid ""
 "This mutator adds a bit of versatility, allowing for more dynamic and "
 "unpredictable movement."
 msgstr ""
+"Этот иутатор добавляет вариативности, делая передвижение динамичнее и "
+"непредсказуемее."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
 #: qcsrc/common/util.qc:316
@@ -4710,7 +4741,7 @@ msgstr "^BG%s%s^K1 не был вылечен Лечащей Гранатой ^B
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 был отправлен в открытый космос ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 отправлен в открытый космос ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
@@ -4725,7 +4756,7 @@ msgstr "^BG%s%s^K1 был мумифицирован ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
-msgstr "^BG%s%s^K1 оказался в точке выхода из телепорта ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 попытался занять выход из телепорта ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
@@ -5741,9 +5772,7 @@ msgstr "^BG%s^K1 забыл о своей мине%s%s"
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"
-msgstr ""
-"^BG%s%s^K1 оказался в зоне поражения гранаты, выпущенной из Мортиры "
-"^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 оказался в зоне поражения гранаты из Мортиры ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
@@ -5753,7 +5782,7 @@ msgstr "^BG%s%s^K1 отведал гранаты из Мортиры ^BG%s^K1%s%
 #: qcsrc/common/notifications/all.inc:509
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s"
-msgstr "^BG%s^K1 не уследил за гранатой, выпущенной из своего Мортиры %s%s"
+msgstr "^BG%s^K1 не уследил за гранатой из своей Мортиры %s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
@@ -6462,7 +6491,7 @@ msgstr "^K1A %s прибыл!"
 
 #: qcsrc/common/notifications/all.inc:716
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr "^BGУ вас есть ^F1Топливный восстановитель"
+msgstr "^BGУ вас есть ^F1Восполнитель топлива"
 
 #: qcsrc/common/notifications/all.inc:717
 msgid "^BGYou got the ^F1Jetpack"
@@ -7184,6 +7213,8 @@ msgid ""
 "The %s is a mobile turret that rolls around, attacking its targets when they "
 "enter its line of sight."
 msgstr ""
+"%s — мобильная турель, которая перемещается по местности и атакует цели, "
+"попадающие в поле её зрения."
 
 #: qcsrc/common/turrets/turret/ewheel.qc:253
 #, c-format
@@ -7191,6 +7222,8 @@ msgid ""
 "It attacks by shooting laser beams similar to those of the %s, from both of "
 "its two cannons."
 msgstr ""
+"Она атакует, стреляя лазерными лучами, похожими на лучи %s, из обеих своих "
+"пушек."
 
 #: qcsrc/common/turrets/turret/ewheel.qh:17
 msgid "eWheel Turret"
@@ -7206,6 +7239,8 @@ msgid ""
 "The %s is a turret similar to flak cannons, instead firing anti-projectile "
 "flak shells to take down projectiles fired by its targets."
 msgstr ""
+"%s — это турель, похожая на зенитные пушки, но стреляющая противоснарядными "
+"зенитными снарядами, чтобы сбивать снаряды, выпущенные её целями."
 
 #: qcsrc/common/turrets/turret/flac.qc:30
 #, c-format
@@ -7230,6 +7265,10 @@ msgid ""
 "instead works by generating power for nearby turrets, so that they can "
 "attack their shared targets more often."
 msgstr ""
+"%s — это немного необычная турель, которая помогает другим турелям, а не "
+"напрямую атакует свои цели. У неё нет собственного оружия, вместо этого она "
+"генерирует энергию для близлежащих турелей, чтобы те могли чаще атаковать "
+"общие цели."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qc:66
 msgid "This is the only turret that doesn't directly attack its targets."
@@ -7244,6 +7283,8 @@ msgstr "Термоядерный реактор"
 msgid ""
 "The %s fires homing missiles similar to those of the %s towards its targets."
 msgstr ""
+"%s запускает по своим целям ракеты с системой самонаведения, аналогичные "
+"ракетам %s."
 
 #: qcsrc/common/turrets/turret/hellion.qc:35
 #, c-format
@@ -7251,6 +7292,8 @@ msgid ""
 "Although the missiles usually deal less damage than a %s rocket, the %s has "
 "two cannons so it can dish out quite the punch."
 msgstr ""
+"Хотя снаряды обычно наносят меньший урон, чем ракеты %s, %s имеет две пушки, "
+"поэтому может наносить довольно сильные удары."
 
 #: qcsrc/common/turrets/turret/hellion.qh:15
 msgid "Hellion Missile Turret"
@@ -7267,6 +7310,8 @@ msgid ""
 "obstacles to find its target. The rocket it fires is similar to that of the "
 "%s."
 msgstr ""
+"%s выпускает одну мощную самонаводящуюся ракету, способную обходить "
+"препятствия и находить цель. Выпускаемая ракета похожа на снаряд %s."
 
 #: qcsrc/common/turrets/turret/hk.qh:17
 msgid "Hunter-Killer Turret"
@@ -7303,6 +7348,8 @@ msgid ""
 "Getting caught in the line of fire of this turret can be very deadly, but "
 "thankfully it doesn't shoot if you get too close, so as to not damage itself."
 msgstr ""
+"Попасть под обстрел этой турели может быть очень опасно, но, к счастью, она "
+"не стреляет, если подойти слишком близко, чтобы не повредить себя."
 
 #: qcsrc/common/turrets/turret/mlrs.qh:15
 msgid "MLRS Turret"
@@ -7864,12 +7911,16 @@ msgid ""
 "The second player to enter is the right gunner and the third player to enter "
 "is the left gunner."
 msgstr ""
+"Второй игрок, входящий в игру, является правым стрелком, а третий игрок — "
+"левым стрелком."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:1013
 msgid ""
 "When the pilot exits the vehicle, the players switch roles by moving up in "
 "position."
 msgstr ""
+"Когда пилот выходит из транспорта, игроки меняются ролями, перемещаясь вверх "
+"по позиции."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:23
 msgid "Bumblebee"
@@ -8041,6 +8092,8 @@ msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
+"Вторичный огонь быстро стреляет электрическими разрядами вперёд, взрываясь "
+"при ударе и нанося некоторый урон по площади."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1450
 #, c-format
@@ -8081,6 +8134,8 @@ msgid ""
 "It doesn't require ammo, meaning it is a great choice if you are running low "
 "on ammo and need to preserve some."
 msgstr ""
+"Не требует патронов, что делает его отличным выбором, если у вас "
+"заканчиваются боеприпасы и вам нужно сэкономить их."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:170
 #, c-format
@@ -8118,6 +8173,8 @@ msgid ""
 "Projectiles deal damage on collision but also when they bounce, so with good "
 "positioning they can sometimes deal double damage."
 msgstr ""
+"Снаряды наносят урон при столкновении, но также и при отскоке, поэтому при "
+"правильном расположении они иногда могут наносить двойной урон."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:617
 msgid ""
@@ -8365,6 +8422,9 @@ msgid ""
 "around the map at high speeds, making both surprise ambushes and miraculous "
 "escapes possible."
 msgstr ""
+"%s позволяет достигать ранее недоступных мест на аренах и быстро "
+"перемещаться по карте, что делает возможными как неожиданные засады, так и "
+"чудесные побеги."
 
 #: qcsrc/common/weapons/weapon/hook.qc:434
 #, c-format
@@ -8621,6 +8681,8 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 msgid "The only ammo it needs to operate is the breath from your lungs."
 msgstr ""
+"Единственное топливо, необходимое для его работы, — это воздух из ваших "
+"лёгких."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:607
 #, c-format
@@ -10197,7 +10259,7 @@ msgstr "Снимки экрана"
 
 #: qcsrc/menu/xonotic/dialog_media.qc:15
 msgid "Music Player"
-msgstr "Музыкальный проигрыватель"
+msgstr "Проигрыватель музыки"
 
 #: qcsrc/menu/xonotic/dialog_media.qh:6
 msgid "Media"
@@ -10208,6 +10270,8 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
+"Читать руководство, слушать музыкальные дорожки Xonotic и смотреть свои демо-"
+"записи и снимки."
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:47
 msgid "Auto record demos"
@@ -10268,7 +10332,7 @@ msgstr "Вернуть стандартный трек для меню"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:53
 msgid "Playlist:"
-msgstr "Плейлист:"
+msgstr "Список воспроизведения:"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:54
 msgid "Random order"
@@ -10528,6 +10592,7 @@ msgstr "Боты против людей"
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr ""
+"Заставить людей играть в одной команде против команды ботов равного размера"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Maplist"
@@ -12270,7 +12335,7 @@ msgstr "Проходить сквозь стены при наблюдении"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:79
 msgid "Zooming"
-msgstr "Масштабирование"
+msgstr "Увеличитель"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:81
 msgid "ZOOM^Zoom factor:"
@@ -12386,7 +12451,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
 msgid "Auto switch in CTS:"
-msgstr "Автоматически переключать в Этапах"
+msgstr "Автопереключение в Этапах"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:76
 msgid "Weapon Visuals"
@@ -12592,7 +12657,7 @@ msgstr "Показывать график размеров пакетов и д�
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:32
 msgid "Packet loss compensation"
-msgstr "Восполнять потери пакетов (п/п)"
+msgstr "Сглаживать потери пакетов (п/п)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:33
 msgid "Each packet includes a copy of the previous message"
@@ -13180,7 +13245,7 @@ msgstr "Моды"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
-msgstr "Об это руководстве"
+msgstr "Об этом руководстве"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
@@ -13259,6 +13324,8 @@ msgid ""
 "works will enable you to speed around the map and apply effective weapon "
 "combos in no time."
 msgstr ""
+"Игра сложна в освоении. Однако, как только вы поймёте её основы, вы очень "
+"скоро сможете носиться по арене и виртуозно комбинировать оружие."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:52
 msgid "XonStat"
@@ -13270,6 +13337,9 @@ msgid ""
 "stores vital stats like your kill-death ratio, weapon damage and accuracy, "
 "and scoreboards from past games."
 msgstr ""
+"XonStat — это интегрированное приложение для статистики игроков в Xonotic. "
+"Оно хранит важные статистические данные, такие как соотношение убийств и "
+"смертей, урон и точность оружия, а также таблицы результатов прошлых игр."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:57
 msgid "Tracking is completely opt-in, and no login is required."
@@ -13381,6 +13451,8 @@ msgid ""
 "Note that if you press the strafe key before releasing the forward key, you "
 "will suffer a speed penalty."
 msgstr ""
+"Обратите внимание, что если вы нажмёте клавишу движения в бок, не отпустив "
+"клавишу движения вперёд, ваша скорость снизится."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:97
 msgid ""
@@ -13411,7 +13483,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
-msgstr "Бластерный опрыжок от стены"
+msgstr "Бластерный прыжок от стены"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:114
 #, c-format
@@ -13577,6 +13649,8 @@ msgid ""
 "As for movement tricks, %s is enabled by default in %s, allowing for rapidly "
 "changing your movement direction."
 msgstr ""
+"Что касается трюков движения, %s включён по умолчанию в %s, что позволяет "
+"быстро менять направление движения."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:186
 #, c-format
@@ -13584,6 +13658,9 @@ msgid ""
 "%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for "
 "competitive play, particularly in %s."
 msgstr ""
+"%s («Профессиональный режим Xonotic») — это набор настроек игрового "
+"процесса, часто используемый для соревновательных игр, в частности в режиме "
+"%s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:187
 #, c-format
@@ -13804,6 +13881,8 @@ msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Что? Не удаётся проиграть (неверный режим игры). Перефильтровка, чтобы "
+"такого больше не случалось."
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
