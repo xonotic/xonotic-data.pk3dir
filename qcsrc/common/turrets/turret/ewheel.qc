@@ -184,7 +184,7 @@ METHOD(EWheel, tr_death, void(EWheel this, entity it))
 
 METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 {
-	if (it.move_movetype == MOVETYPE_WALK)
+	if (it.move_movetype == MOVETYPE_STEP)
 	{
 		it.velocity = '0 0 0';
 		it.enemy = NULL;
@@ -200,7 +200,8 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
 	if (!it.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, it);
 	it.damagedbycontents      = true;
-	set_movetype(it, MOVETYPE_WALK);
+	set_movetype(it, MOVETYPE_STEP);
+	_Movetype_Physics_Step_UpdateStats(it);
 	it.solid                  = SOLID_SLIDEBOX;
 	it.takedamage             = DAMAGE_AIM;
 	it.idle_aim               = '0 0 0';

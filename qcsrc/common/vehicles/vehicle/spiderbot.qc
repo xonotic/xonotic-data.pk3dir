@@ -333,7 +333,7 @@ void spiderbot_exit(entity this, int eject)
 	setthink(this, vehicles_think);
 	this.nextthink = time;
 	this.frame = 5;
-	set_movetype(this, MOVETYPE_WALK);
+	set_movetype(this, MOVETYPE_STEP);
 
 	if (!player)
 	{
@@ -544,7 +544,7 @@ METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
 METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 {
 	STAT(VEHICLESTAT_W2MODE, instance) = SBRM_GUIDE;
-	set_movetype(instance, MOVETYPE_WALK);
+	set_movetype(instance, MOVETYPE_STEP);
 	CSQCVehicleSetup(instance.owner, 0);
 	instance.owner.vehicle_health = (GetResource(instance, RES_HEALTH) / autocvar_g_vehicle_spiderbot_health) * 100;
 	instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
@@ -595,7 +595,8 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 
 	instance.frame = 5;
 	instance.tur_head.frame = 1;
-	set_movetype(instance, MOVETYPE_WALK);
+	set_movetype(instance, MOVETYPE_STEP);
+	_Movetype_Physics_Step_UpdateStats(instance);
 	instance.solid = SOLID_SLIDEBOX;
 	instance.alpha = instance.tur_head.alpha = instance.gun1.alpha = instance.gun2.alpha = 1;
 	instance.tur_head.angles = '0 0 0';
