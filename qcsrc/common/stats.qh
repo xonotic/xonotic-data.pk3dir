@@ -9,7 +9,6 @@
 #include <common/gametypes/sv_rules.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/trigger/secret.qh>
-#include <common/mutators/mutator/doublejump/doublejump.qh>
 #include <common/mutators/mutator/itemstime/itemstime.qh>
 #include <common/physics/player.qh>
 #endif
@@ -203,11 +202,9 @@ REGISTER_STAT(BUGRIGS_STEER, FLOAT, g_bugrigs_steer)
 #endif
 
 #ifdef SVQC
-int autocvar_sv_gameplayfix_downtracesupportsongroundflag = 1;
 int autocvar_sv_gameplayfix_easierwaterjump = 1;
 int autocvar_sv_gameplayfix_stepdown = 2;
 float autocvar_sv_gameplayfix_stepdown_maxspeed = 0;
-int autocvar_sv_gameplayfix_stepmultipletimes = 1;
 int autocvar_sv_gameplayfix_unstickplayers;
 int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
 int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
@@ -217,11 +214,9 @@ int autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems = 1;
 int autocvar_sv_gameplayfix_delayprojectiles = 0;
 bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag = true;
 #endif
-REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, INT, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, INT, autocvar_sv_gameplayfix_easierwaterjump)
 REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, INT)
 REGISTER_STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED, FLOAT, autocvar_sv_gameplayfix_stepdown_maxspeed)
-REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, INT, autocvar_sv_gameplayfix_stepmultipletimes)
 REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, INT, autocvar_sv_gameplayfix_unstickplayers)
 REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, INT, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, INT, autocvar_sv_gameplayfix_fixedcheckwatertransition)
@@ -237,10 +232,12 @@ REGISTER_STAT(NOSTEP, INT, cvar("sv_nostep"))
 #ifdef SVQC
 float autocvar_sv_friction_on_land;
 var float autocvar_sv_friction_slick = 0.5;
+float autocvar_sv_waterfriction;
 #endif
 REGISTER_STAT(MOVEVARS_FRICTION, FLOAT)
 REGISTER_STAT(MOVEVARS_FRICTION_SLICK, FLOAT)
 REGISTER_STAT(MOVEVARS_FRICTION_ONLAND, FLOAT, autocvar_sv_friction_on_land)
+REGISTER_STAT(MOVEVARS_WATERFRICTION, FLOAT)
 
 REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, BOOL)
 REGISTER_STAT(MOVEVARS_JUMPSPEEDCAP_MIN, FLOAT)
@@ -423,11 +420,13 @@ REGISTER_STAT(WARMUP_TIMELIMIT, FLOAT, warmup_limit)
 REGISTER_STAT(ROUNDS_PLAYED, INT, rounds_played)
 REGISTER_STAT(ROUND_TIMELIMIT, FLOAT, round_limit)
 #ifdef SVQC
-float autocvar_sv_wallfriction;
 #define autocvar_sv_gravity cvar("sv_gravity")
 float autocvar_sv_stepheight;
+int autocvar_sv_steptype;
+float autocvar_sv_swimscale;
+float autocvar_sv_waterflags;
+float autocvar_sv_wateraccelerate;
 #endif
-REGISTER_STAT(MOVEVARS_WALLFRICTION, INT, autocvar_sv_wallfriction)
 REGISTER_STAT(MOVEVARS_TICRATE, FLOAT, autocvar_sys_ticrate)
 REGISTER_STAT(MOVEVARS_TIMESCALE, FLOAT, autocvar_slowmo)
 REGISTER_STAT(MOVEVARS_GRAVITY, FLOAT) // CSQC player
@@ -437,6 +436,9 @@ REGISTER_STAT(MOVEVARS_MAXSPEED, FLOAT)
 REGISTER_STAT(MOVEVARS_ACCELERATE, FLOAT)
 REGISTER_STAT(MOVEVARS_AIRACCELERATE, FLOAT)
 REGISTER_STAT(MOVEVARS_SLICKACCELERATE, FLOAT)
+REGISTER_STAT(MOVEVARS_WATERACCELERATE, FLOAT)
+REGISTER_STAT(MOVEVARS_WATERFLAGS, FLOAT)
+REGISTER_STAT(MOVEVARS_SWIMSCALE, FLOAT)
 .float gravity;
 // FIXME: Was 0 on server, 1 on client. Still want that?
 REGISTER_STAT(MOVEVARS_ENTGRAVITY, FLOAT, (this.gravity) ? this.gravity : 1)
@@ -444,12 +446,17 @@ REGISTER_STAT(MOVEVARS_JUMPVELOCITY, FLOAT)
 REGISTER_STAT(MOVEVARS_JUMPVELOCITY_CROUCH, FLOAT)
 REGISTER_STAT(MOVEVARS_MAXAIRSPEED, FLOAT)
 REGISTER_STAT(MOVEVARS_STEPHEIGHT, FLOAT)
+REGISTER_STAT(MOVEVARS_STEPTYPE, INT)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, FLOAT)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, FLOAT)
 #ifdef SVQC
-int autocvar_sv_wallclip;
+bool autocvar_sv_skimming;
+bool autocvar_sv_crouchjump;
+float autocvar_sv_crouchspeedscale;
 #endif
-REGISTER_STAT(MOVEVARS_WALLCLIP, INT, autocvar_sv_wallclip)
+REGISTER_STAT(MOVEVARS_SKIMMING, INT)
+REGISTER_STAT(MOVEVARS_CROUCHJUMP, BOOL)
+REGISTER_STAT(MOVEVARS_CROUCHSPEEDSCALE, FLOAT)
 
 REGISTER_STAT(GUNALIGN, INT)
 #ifdef SVQC

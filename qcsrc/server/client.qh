@@ -213,7 +213,7 @@ CLASS(Client, Object)
     ATTRIB(Client, cvar_cl_autoscreenshot, int, this.cvar_cl_autoscreenshot);
     ATTRIB(Client, cvar_cl_jetpack_jump, bool, this.cvar_cl_jetpack_jump);
     ATTRIB(Client, cvar_cl_noantilag, bool, this.cvar_cl_noantilag);
-    ATTRIB(Client, cvar_cl_movement_track_canjump, bool, this.cvar_cl_movement_track_canjump);
+    ATTRIB(Client, cvar_cl_movement_track_canjump, int, this.cvar_cl_movement_track_canjump);
     ATTRIB(Client, cvar_cl_weaponimpulsemode, int, this.cvar_cl_weaponimpulsemode);
     ATTRIB(Client, cvar_g_xonoticversion, string, this.cvar_g_xonoticversion);
     ATTRIB(Client, cvar_cl_autoswitch, bool, this.cvar_cl_autoswitch);
