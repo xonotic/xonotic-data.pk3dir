@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-31 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -8832,6 +8832,8 @@ msgid ""
 "The secondary fire instantaneously detonates any mines placed by the primary "
 "fire, similar to the %s."
 msgstr ""
+"Le tir secondaire fait exploser instantanément toutes les mines posées via "
+"le tir primaire, comme pour le %s."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format

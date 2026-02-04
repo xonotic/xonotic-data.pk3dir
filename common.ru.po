@@ -981,7 +981,7 @@ msgstr "Число тиков (Превосходство)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^ticks"
-msgstr "тиков"
+msgstr "тики"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^time"
@@ -2463,10 +2463,10 @@ msgid ""
 "differences being that %s is a round-based gametype, and of course the "
 "scoring system differences."
 msgstr ""
-"%s — это командный режим с постоянным действием, основанный на %s, в котором "
-"используется та же система подсчёта очков. Он имеет много общего с %s, но "
-"одно из основных отличий заключается в том, что %s — это режим, основанный "
-"на раундах, и, конечно же, в системе подсчёта очков."
+"%s — это командный режим с постоянным действием, основан на режиме %s, в "
+"котором используется та же система подсчёта очков. Он имеет много общего с "
+"режимом %s, но одно из основных отличий заключается в том, что %s — это "
+"режим, основанный на раундах, и, конечно же, в системе подсчёта очков."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -6954,7 +6954,7 @@ msgstr "основной"
 #: qcsrc/common/notifications/all.qh:450 qcsrc/common/notifications/all.qh:451
 #: qcsrc/common/weapons/all.qc:867
 msgid "secondary"
-msgstr "альтернативный"
+msgstr "вторичный"
 
 #: qcsrc/common/notifications/all.qh:453
 #, c-format
@@ -8108,7 +8108,7 @@ msgstr "Это оружие не было связано с клавишей н�
 #: qcsrc/common/weapons/all.qc:857
 #, c-format
 msgid "You have bound this weapon to: %s."
-msgstr "Вы привязали это оружие к: %s."
+msgstr "Вы назначили это оружие на: %s."
 
 #: qcsrc/common/weapons/all.qc:863 qcsrc/common/weapons/all.qc:864
 #: qcsrc/common/weapons/all.qc:895
@@ -8192,7 +8192,7 @@ msgid ""
 "It consumes %s ammo, steadily churning through your supply to maintain the "
 "stream."
 msgstr ""
-"Он потребляет патроны типа %s, постоянно расходуя ваш запас для поддержания "
+"Потребляет патроны типа %s, постоянно расходуя ваш запас для поддержания "
 "луча."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1451
@@ -8302,7 +8302,7 @@ msgstr ""
 msgid ""
 "It consumes %s ammo for each projectile, which is shared by several weapons."
 msgstr ""
-"Он потребляет патроны типа %s за каждый снаряд, которые используются также и "
+"Потребляет патроны типа %s за каждый снаряд, которые используются также и "
 "несколькими другими видами оружия."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:619
@@ -8362,7 +8362,7 @@ msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
-"Он потребляет много патронов типа %s за каждую ракету, которые могут быстро "
+"Потребляет много патронов типа %s за каждую ракету, которые могут быстро "
 "закончиться, поэтому игроки часто чередуют его с другим оружием, например, с "
 "%s."
 
@@ -8422,7 +8422,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/electro.qc:758
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
-msgstr "Потребляет %s патронов за каждый шар / сферу."
+msgstr "Потребляет патроны типа %s за каждый шар / сферу."
 
 #: qcsrc/common/weapons/weapon/electro.qc:759
 #, c-format
@@ -8505,7 +8505,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/hagar.qc:513
 #, c-format
 msgid "It consumes %s ammo for each rocket."
-msgstr "Потребляет %s патронов за каждую ракету."
+msgstr "Потребляет патроны типа %s за каждую ракету."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:514
 #, c-format
@@ -8686,7 +8686,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format
 msgid "It consumes %s ammo for each mine laid."
-msgstr "Потребляет %s патронов за каждую установленную мину."
+msgstr "Потребляет патроны типа %s за каждую установленную мину."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:558
 #, c-format
@@ -8725,7 +8725,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/mortar.qc:400
 #, c-format
 msgid "It consumes %s ammo for every grenade launched."
-msgstr "Потребляет %s патронов за каждую выпущенную гранату."
+msgstr "Потребляет патроны типа %s за каждую выпущенную гранату."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:401
 #, c-format
@@ -8802,7 +8802,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/rifle.qc:251
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr "Потребляет %s патронов за каждую выпущенную пулю."
+msgstr "Потребляет патроны типа %s за каждую выпущенную пулю."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:252
 #, c-format
@@ -8855,7 +8855,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/seeker.qc:682
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
-msgstr "Потребляет %s патронов, даже когда метка не попадает в цель."
+msgstr "Потребляет патроны типа %s, даже когда метка не попадает в цель."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:683
 #, c-format
@@ -8977,7 +8977,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/vaporizer.qc:444
 #, c-format
 msgid "It consumes some %s ammo with each shot."
-msgstr "Потребляет %s патронов за каждый выстрел."
+msgstr "Потребляет патроны типа %s за каждый выстрел."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:35
 msgid "Vaporizer"
@@ -8992,7 +8992,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/vortex.qc:369
 #, c-format
 msgid "It consumes %s ammo for each shot."
-msgstr "Потребляет %s патронов за каждый выстрел."
+msgstr "Потребляет патроны типа %s за каждый выстрел."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:370
 #, c-format
@@ -9558,7 +9558,7 @@ msgstr "Имя:"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:59
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:61
 msgid "Name under which you will appear in the game"
-msgstr "Имя, под которым вы появитесь в игре"
+msgstr "Ваше имя для отображения в игре"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:75
 msgid "Text language:"
@@ -14000,9 +14000,10 @@ msgid ""
 "These weapons are a lot more powerful than the regular weapons, so their "
 "time-to-kill is quite low."
 msgstr ""
-"Что касается вооружения, у игроков бесконечные боеприпасы, они появляются с "
-"%s, %s и %s, а на арене иногда можно подобрать супероружия %s и %s. Это "
-"оружие намного мощнее обычного, поэтому время до убийства довольно мало."
+"Что касается вооружения, у игроков бесконечные боеприпасы, они появляются, "
+"имея %s, %s и %s, а на арене иногда можно подобрать супероружие вида %s и "
+"%s. Это оружие намного мощнее обычного, поэтому время до убийства довольно "
+"мало."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:177
 #, c-format
