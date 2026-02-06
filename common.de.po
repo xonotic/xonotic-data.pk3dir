@@ -7,7 +7,7 @@
 # Wuzzy <Wuzzy@disroot.org>, 2016-2018
 # BL4NKY, 2023,2025
 # BL4NKY -, 2023
-# BL4NKY, 2025
+# BL4NKY, 2025-2026
 # BL4NKY, 2023
 # TheTrueBrot <noah.schluessel@gmail.com>, 2015
 # cvcxc <hans.andersen72@yahoo.com>, 2013
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-31 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: BL4NKY, 2025-2026\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -178,7 +178,7 @@ msgstr "^1Drücke ^3%s^1 um den Kameramodus zu wechseln"
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1Drücke ^3%s für Informationen zum Spiel Typ"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -250,12 +250,12 @@ msgstr "^2Drücke ^3%s^2, um die Aufwärmphase zu beenden"
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
 msgid "%sNeed active players for: %s"
-msgstr ""
+msgstr "%sAktive Spieler gesucht für: %s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%sWarten, bis 1 Spieler beitritt …"
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 #, c-format
