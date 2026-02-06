@@ -3906,7 +3906,7 @@ SUB(healing_fx) {
 	MY(bounce) = 1.500000;
 	MY(color_min) = "0xff0000";
 	MY(color_max) = "0xff0000";
-	MY(count) = 25;
+	MY(count) = 5;
 	MY(gravity) = -0.100000;
 	MY(originjitter) = '5.0 5.0 100.0';
 	MY(sizeincrease) = -0.050000;
@@ -3916,6 +3916,7 @@ SUB(healing_fx) {
 	MY(tex_max) = 40;
 	MY(type) = "spark";
 	MY(velocityjitter) = '50.0 50.0 0.0';
+	MY(velocitymultiplier) = 0.2;
 }
 
 DEF(armorrepair_fx);
@@ -3927,7 +3928,7 @@ SUB(armorrepair_fx) {
 	MY(bounce) = 1.500000;
 	MY(color_min) = "0x00ff00";
 	MY(color_max) = "0x00ff00";
-	MY(count) = 25;
+	MY(count) = 5;
 	MY(gravity) = -0.100000;
 	MY(originjitter) = '5.0 5.0 50.0';
 	MY(sizeincrease) = -0.050000;
@@ -3937,6 +3938,7 @@ SUB(armorrepair_fx) {
 	MY(tex_max) = 40;
 	MY(type) = "spark";
 	MY(velocityjitter) = '50.0 50.0 0.0';
+	MY(velocitymultiplier) = 0.2;
 }
 
 DEF(ammoregen_fx);
@@ -3948,8 +3950,8 @@ SUB(ammoregen_fx) {
 	MY(bounce) = 1.500000;
 	MY(color_min) = "0x0000ff";
 	MY(color_max) = "0x0000ff";
-	MY(count) = 25;
-	MY(gravity) = -0.100000;
+	MY(count) = 5;
+	MY(gravity) = 0.100000;
 	MY(originjitter) = '5.0 5.0 50.0';
 	MY(sizeincrease) = -0.050000;
 	MY(size_min) = 1;
@@ -3958,6 +3960,7 @@ SUB(ammoregen_fx) {
 	MY(tex_max) = 40;
 	MY(type) = "spark";
 	MY(velocityjitter) = '50.0 50.0 0.0';
+	MY(velocitymultiplier) = 0.2;
 }
 
 // red-yellow flame like fx
