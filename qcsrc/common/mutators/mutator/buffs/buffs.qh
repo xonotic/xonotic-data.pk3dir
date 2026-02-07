@@ -84,6 +84,10 @@ STATIC_INIT(REGISTER_BUFFS)
 	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r)
 #endif
 
+#ifdef GAMEQC
+string BUFF_NAME(int i);
+#endif
+
 #ifdef SVQC
 string Buff_CompatName(string buffname);
 #endif
