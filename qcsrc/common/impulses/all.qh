@@ -49,6 +49,7 @@ void _impCheck(string s, string alias)
 	} \
 	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
 
+// keep xonotic-client.cfg up to date
 #define X(slot, imp) \
 	REGISTER_IMPULSE(weapon_group_##slot, imp) \
 	LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse " #imp)
@@ -64,6 +65,7 @@ X(9, 9)
 X(0, 14)
 #undef X
 
+// keep xonotic-client.cfg up to date
 #define X(slot, dir, imp) \
 	REGISTER_IMPULSE(weapon_priority_##slot##_##dir, imp) \
 	LEGACY_IMPULSE(weapon_priority_##slot##_##dir, imp, "impulse " #imp)
@@ -102,7 +104,7 @@ X(9, next, 229)
 #undef X
 
 // direct weapons
-
+// keep xonotic-client.cfg up to date
 #define X(i, imp) \
 	REGISTER_IMPULSE(weapon_byid_##i, imp)
 X(0, 230)

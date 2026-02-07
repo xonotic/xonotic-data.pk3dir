@@ -372,9 +372,11 @@ STATIC_INIT(register_weapons_done)
 			continue;
 
 		it.m_unique_impulse = imp;
+#ifdef CSQC
 		if (imp <= WEP_IMPULSE_END)
-			localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
+			localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp)); // keep xonotic-client.cfg up to date
 		else
+#endif
 			inaccessible = strcat(inaccessible, "\n", it.netname);
 		++imp;
 	});
