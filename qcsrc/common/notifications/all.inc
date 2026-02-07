@@ -847,10 +847,10 @@ string multiteam_info_sprintf(string input, string teamname)
 #define N_ENABLE 1
 
 #define MULTITEAM_MULTI(prefix, defaultvalue, anncepre, infopre, centerpre) \
-    MSG_MULTI_NOTIF(prefix##_RED,    defaultvalue, anncepre##_RED,   infopre##_RED,   centerpre##_RED) \
-    MSG_MULTI_NOTIF(prefix##_BLUE,   defaultvalue, anncepre##_BLUE,  infopre##_BLUE,  centerpre##_BLUE) \
-    MSG_MULTI_NOTIF(prefix##_YELLOW, defaultvalue, anncepre##YELLOW, infopre##YELLOW, centerpre##YELLOW) \
-    MSG_MULTI_NOTIF(prefix##_PINK,   defaultvalue, anncepre##PINK,   infopre##PINK,   centerpre##PINK)
+    MSG_MULTI_NOTIF(prefix##_RED,    defaultvalue, anncepre##_RED,    infopre##_RED,    centerpre##_RED) \
+    MSG_MULTI_NOTIF(prefix##_BLUE,   defaultvalue, anncepre##_BLUE,   infopre##_BLUE,   centerpre##_BLUE) \
+    MSG_MULTI_NOTIF(prefix##_YELLOW, defaultvalue, anncepre##_YELLOW, infopre##_YELLOW, centerpre##_YELLOW) \
+    MSG_MULTI_NOTIF(prefix##_PINK,   defaultvalue, anncepre##_PINK,   infopre##_PINK,   centerpre##_PINK)
 
 // MSG_MULTI_NOTIFICATIONS
     MSG_MULTI_NOTIF(COUNTDOWN_BEGIN,                     N_ENABLE,  ANNCE_BEGIN,   NULL,                                     CENTER_COUNTDOWN_BEGIN)
