@@ -1742,3 +1742,10 @@ void Send_Notification_WOCOVA(
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
 }
 #endif // SVQC
+
+// from all.qh
+#undef EIGHT_VARS_TO_VARARGS_VARLIST
+#undef HASH_REPLACE
+#undef NOTIF_ARGUMENT_LIST
+#undef NOTIF_HIT_MAX
+#undef NOTIF_HIT_UNKNOWN

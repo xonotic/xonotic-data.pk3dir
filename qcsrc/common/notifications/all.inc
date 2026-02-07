@@ -1071,3 +1071,23 @@ string multiteam_info_sprintf(string input, string teamname)
 #undef A__NEVER
 #undef A_WARMUP
 #undef A_ALWAYS
+
+// from all.qh
+#undef ACVNN
+#undef NOTIF_ADD_AUTOCVAR
+#undef NULL_IN_SVQC
+#undef MSG_ANNCE_NOTIF_TEAM
+#undef MSG_ANNCE_NOTIF
+#undef MSG_ANNCE_NOTIF_
+#undef MSG_INFO_NOTIF_TEAM
+#undef MSG_INFO_NOTIF
+#undef MSG_INFO_NOTIF_
+#undef MULTIICON_INFO
+#undef MULTIICON_INFO_
+#undef MSG_CENTER_NOTIF_TEAM
+#undef MSG_CENTER_NOTIF
+#undef MSG_CENTER_NOTIF_
+#undef MSG_MULTI_NOTIF
+#undef MSG_CHOICE_NOTIF_TEAM
+#undef MSG_CHOICE_NOTIF
+#undef MSG_CHOICE_NOTIF_
