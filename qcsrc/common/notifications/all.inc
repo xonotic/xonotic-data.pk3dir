@@ -1023,7 +1023,7 @@ string multiteam_info_sprintf(string input, string teamname)
 
 #define MULTITEAM_CHOICE(prefix, defaultvalue, challow, chtype, optiona, optionb) \
     NOTIF_ADD_AUTOCVAR(CHOICE_##prefix, defaultvalue) \
-    NOTIF_ADD_AUTOCVAR(CHOICE_##prefix##_ALLOWED, challow) \
+    NOTIF_ADD_AUTOCVAR_ALLOWED(CHOICE_##prefix, challow) \
     MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_1, prefix##_RED,    prefix, defaultvalue, challow, chtype, optiona##_RED,    optionb##_RED) \
     MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_2, prefix##_BLUE,   prefix, defaultvalue, challow, chtype, optiona##_BLUE,   optionb##_BLUE) \
     MSG_CHOICE_NOTIF_TEAM(NUM_TEAM_3, prefix##_YELLOW, prefix, defaultvalue, challow, chtype, optiona##_YELLOW, optionb##_YELLOW) \
@@ -1074,8 +1074,9 @@ string multiteam_info_sprintf(string input, string teamname)
 
 // from all.qh
 #undef ACVNN
+#undef ACVNNA
 #undef NOTIF_ADD_AUTOCVAR
-#undef NULL_IN_SVQC
+#undef NOTIF_ADD_AUTOCVAR_ALLOWED
 #undef MSG_ANNCE_NOTIF_TEAM
 #undef MSG_ANNCE_NOTIF
 #undef MSG_ANNCE_NOTIF_

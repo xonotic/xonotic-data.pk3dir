@@ -341,8 +341,8 @@ string Process_Notif_Args(
 }
 
 void Create_Notification_Entity(entity notif,
-	float var_default,
-	float var_cvar,
+	int var_default,
+	int var_cvar,
 	MSG typeId,
 	string namestring,
 	int teamnum)
@@ -391,10 +391,10 @@ void Create_Notification_Entity(entity notif,
 #define AnnouncerFilename(snd) sprintf("announcer/%s/%s.wav", AnnouncerOption(), snd)
 
 void Create_Notification_Entity_Annce(entity notif,
-	float var_cvar,
+	int var_cvar,
 	string namestring,
 	/* MSG_ANNCE */
-	float channel,
+	int channel,
 	string snd,
 	float vol,
 	float position,
@@ -439,7 +439,7 @@ void Create_Notification_Entity_Annce(entity notif,
 }
 
 void Create_Notification_Entity_InfoCenter(entity notif,
-	float var_cvar,
+	int var_cvar,
 	string namestring,
 	int strnum,
 	int flnum,
@@ -597,7 +597,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 }
 
 void Create_Notification_Entity_Multi(entity notif,
-	float var_cvar,
+	int var_cvar,
 	string namestring,
 	/* MSG_MULTI */
 	Notification anncename,
@@ -625,8 +625,8 @@ void Create_Notification_Entity_Multi(entity notif,
 		if (anncename)
 			notif.nent_msgannce = anncename;
 
-		float infoname_stringcount = 0, infoname_floatcount = 0;
-		float centername_stringcount = 0, centername_floatcount = 0;
+		int infoname_stringcount = 0, infoname_floatcount = 0;
+		int centername_stringcount = 0, centername_floatcount = 0;
 
 		if (infoname)
 		{
@@ -649,11 +649,11 @@ void Create_Notification_Entity_Multi(entity notif,
 }
 
 void Create_Notification_Entity_Choice(entity notif,
-	float var_cvar,
+	int var_cvar,
 	string namestring,
 	/* MSG_CHOICE */
-	float challow_def,
-	float challow_var,
+	int challow_def,
+	int challow_var,
 	MSG chtype,
 	Notification optiona,
 	Notification optionb)
