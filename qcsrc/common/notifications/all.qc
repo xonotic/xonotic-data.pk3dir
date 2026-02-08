@@ -98,7 +98,6 @@ bool Notification_ShouldSend(NOTIF broadcast, entity to_client, entity other_cli
 /// Used by restartnotifs command to initialize notifications
 void Destroy_Notification_Entity(entity notif)
 {
-	if (notif.nent_name != "")     strunzone(notif.nent_name);
 	if (notif.nent_snd != "")      strunzone(notif.nent_snd);
 	if (notif.nent_args != "")     strunzone(notif.nent_args);
 	if (notif.nent_hudargs != "")  strunzone(notif.nent_hudargs);
@@ -344,7 +343,6 @@ void Create_Notification_Entity(entity notif,
 	int var_default,
 	int var_cvar,
 	MSG typeId,
-	string namestring,
 	int teamnum)
 {
 	// =====================
@@ -353,7 +351,6 @@ void Create_Notification_Entity(entity notif,
 	notif.nent_default = var_default;
 	notif.nent_enabled = (var_cvar >= 1);
 	notif.nent_type = typeId;
-	notif.nent_name = strzone(namestring);
 	notif.nent_teamnum = teamnum;
 
 	// Other pre-notif-setup requisites
@@ -374,7 +371,7 @@ void Create_Notification_Entity(entity notif,
 					"^7net_type = %d, net_name = %s."
 				),
 				typeId,
-				namestring
+				Get_Notif_Name(notif)
 			);
 			notif_error = true;
 			break;
@@ -392,7 +389,6 @@ void Create_Notification_Entity(entity notif,
 
 void Create_Notification_Entity_Annce(entity notif,
 	int var_cvar,
-	string namestring,
 	/* MSG_ANNCE */
 	int channel,
 	string snd,
@@ -419,14 +415,13 @@ void Create_Notification_Entity_Annce(entity notif,
 		}
 		else
 		{
-			string typestring = Get_Notif_TypeName(typeId);
 			LOG_INFOF(
 				(
 					"^1NOTIFICATION WITH NO SOUND: "
 					"^7net_type = %s, net_name = %s."
 				),
-				typestring,
-				namestring
+				Get_Notif_TypeName(typeId),
+				Get_Notif_Name(notif)
 			);
 			notif_error = true;
 		}
@@ -440,7 +435,6 @@ void Create_Notification_Entity_Annce(entity notif,
 
 void Create_Notification_Entity_InfoCenter(entity notif,
 	int var_cvar,
-	string namestring,
 	int strnum,
 	int flnum,
 	/* MSG_INFO & MSG_CENTER */
@@ -463,6 +457,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 #else
 	bool should_process_args = true;
 #endif
+	string namestring = Get_Notif_Name(notif);
 	string typestring = Get_Notif_TypeName(typeId);
 	if (should_process_args)
 	{
@@ -598,7 +593,6 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 
 void Create_Notification_Entity_Multi(entity notif,
 	int var_cvar,
-	string namestring,
 	/* MSG_MULTI */
 	Notification anncename,
 	Notification infoname,
@@ -608,14 +602,13 @@ void Create_Notification_Entity_Multi(entity notif,
 	// Set MSG_MULTI string/float counts
 	if (!anncename && !infoname && !centername)
 	{
-		string typestring = Get_Notif_TypeName(typeId);
 		LOG_INFOF(
 			(
 				"^1NOTIFICATION WITH NO SUBCALLS: "
 				"^7net_type = %s, net_name = %s."
 			),
-			typestring,
-			namestring
+			Get_Notif_TypeName(typeId),
+			Get_Notif_Name(notif)
 		);
 		notif_error = true;
 	}
@@ -650,7 +643,6 @@ void Create_Notification_Entity_Multi(entity notif,
 
 void Create_Notification_Entity_Choice(entity notif,
 	int var_cvar,
-	string namestring,
 	/* MSG_CHOICE */
 	int challow_def,
 	int challow_var,
@@ -661,14 +653,13 @@ void Create_Notification_Entity_Choice(entity notif,
 	MSG typeId = MSG_CHOICE;
 	if (chtype == MSG_Null || !optiona || !optionb)
 	{
-		string typestring = Get_Notif_TypeName(typeId);
 		LOG_INFOF(
 			(
 				"^1NOTIFICATION IS MISSING CHOICE PARAMS: "
 				"^7net_type = %s, net_name = %s."
 			),
-			typestring,
-			namestring
+			Get_Notif_TypeName(typeId),
+			Get_Notif_Name(notif)
 		);
 		notif_error = true;
 	}
@@ -685,18 +676,18 @@ void Create_Notification_Entity_Choice(entity notif,
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
 			"Create_Notification_Entity(...): MSG_CHOICE: %s\n%s\n%s\n",
-			notif.nent_name,
+			Get_Notif_Name(notif),
 			sprintf(
 				"^ optiona: %s %s : %d %d",
 				Get_Notif_TypeName(notif.nent_optiona.nent_type),
-				notif.nent_optiona.nent_name,
+				Get_Notif_Name(notif.nent_optiona),
 				notif.nent_optiona.nent_stringcount,
 				notif.nent_optiona.nent_floatcount
 			),
 			sprintf(
 				"^ optionb: %s %s : %d %d",
 				Get_Notif_TypeName(notif.nent_optionb.nent_type),
-				notif.nent_optionb.nent_name,
+				Get_Notif_Name(notif.nent_optionb),
 				notif.nent_optionb.nent_stringcount,
 				notif.nent_optionb.nent_floatcount
 			)
@@ -1205,7 +1196,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		Debug_Notification(sprintf(
 			"Local_Notification(%s, %s, ...): Entity was disabled...\n",
 			Get_Notif_TypeName(net_type),
-			notif.nent_name
+			Get_Notif_Name(notif)
 		));
 	#endif
 		return;
@@ -1224,7 +1215,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 	Debug_Notification(sprintf(
 		"Local_Notification(%s, %s, %s, %s);\n",
 		Get_Notif_TypeName(net_type),
-		notif.nent_name,
+		Get_Notif_Name(notif),
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
@@ -1239,7 +1230,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 				"Check the definition and function call for accuracy...?\n"
 			),
 			Get_Notif_TypeName(net_type),
-			notif.nent_name,
+			Get_Notif_Name(notif),
 			notif.nent_stringcount,
 			notif.nent_floatcount,
 			count
@@ -1465,7 +1456,7 @@ void Net_Notification_Remove(entity this)
 		time,
 		(this.nent_net_name == -1 ? "Killed" : "Removed"),
 		Get_Notif_TypeName(this.nent_net_type),
-		this.owner.nent_name
+		Get_Notif_Name(this.owner)
 	));
 	#endif
 	for (int i = 0; i < this.nent_stringcount; ++i)
@@ -1687,7 +1678,7 @@ void Send_Notification_WOVA(
 			Get_Notif_BroadcastName(broadcast),
 			client.classname,
 			Get_Notif_TypeName(net_type),
-			notif.nent_name
+			Get_Notif_Name(notif)
 		),
 		stringcount,
 		floatcount,
@@ -1724,7 +1715,7 @@ void Send_Notification_WOCOVA(
 			Get_Notif_BroadcastName(broadcast),
 			client.classname,
 			Get_Notif_TypeName(net_type),
-			notif.nent_name
+			Get_Notif_Name(notif)
 		),
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
