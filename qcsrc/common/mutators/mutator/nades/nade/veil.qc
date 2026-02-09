@@ -27,10 +27,8 @@ void nade_veil_touch(entity this, entity toucher)
 
 void nade_veil_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_veil_time, autocvar_g_nades_veil_radius);
-
+	entity orb = nades_spawn_orb(this, autocvar_g_nades_veil_time, autocvar_g_nades_veil_radius);
 	settouch(orb, nade_veil_touch);
-	orb.colormod = NADE_TYPE_VEIL.m_color;
 }
 
 void nade_veil_Apply(entity player)
