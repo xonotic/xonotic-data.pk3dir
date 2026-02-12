@@ -6,7 +6,7 @@
 #ifdef GAMEQC
 REPLICATE(cvar_cl_physics, string, "cl_physics");
 REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
-REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
+REPLICATE(cvar_cl_movement_track_canjump, int, "cl_movement_track_canjump");
 #endif
 
 #ifdef SVQC
@@ -102,7 +102,7 @@ void Physics_UpdateStats(entity this)
 		STAT(PL_MAX, this)             = '16 16 36';
 		STAT(PL_VIEW_OFS, this)        = '0 0 30';
 		STAT(PL_CROUCH_MIN, this)      = '-16 -16 -20';
-		// Q1BSP has no cliphull to support crouching so disable it there, see PM_ClientMovement_UpdateStatus().
+		// Q1BSP has no cliphull to support crouching so disable it there, see PM_CheckDuck().
 		STAT(PL_CROUCH_MAX, this)      = autocvar_sv_mapformat_is_quake2 ? '16 16 20' : STAT(PL_MAX, this);
 		STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_mapformat_is_quake2 ? '0 0 16'   : STAT(PL_VIEW_OFS, this);
 	}
@@ -132,6 +132,7 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_FRICTION, this) = Physics_ClientOption(this, "friction", autocvar_sv_friction);
 	STAT(MOVEVARS_FRICTION_SLICK, this) = Physics_ClientOption(this, "friction_slick", autocvar_sv_friction_slick);
 	STAT(MOVEVARS_STEPHEIGHT, this) = Physics_ClientOption(this, "stepheight", autocvar_sv_stepheight);
+	STAT(MOVEVARS_STEPTYPE, this) = Physics_ClientOption(this, "steptype", autocvar_sv_steptype);
 	STAT(MOVEVARS_ACCELERATE, this) = Physics_ClientOption(this, "accelerate", autocvar_sv_accelerate);
 	STAT(MOVEVARS_STOPSPEED, this) = Physics_ClientOption(this, "stopspeed", autocvar_sv_stopspeed);
 	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate", autocvar_sv_airaccelerate);
@@ -146,6 +147,13 @@ void Physics_UpdateStats(entity this)
 	STAT(MOVEVARS_JUMPSPEEDCAP_MAX, this) = Physics_ClientOption(this, "jumpspeedcap_max", autocvar_sv_jumpspeedcap_max);
 	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump", autocvar_sv_track_canjump);
 	STAT(GAMEPLAYFIX_STEPDOWN, this) = Physics_ClientOption(this, "stepdown", autocvar_sv_gameplayfix_stepdown);
+	STAT(MOVEVARS_SKIMMING, this) = Physics_ClientOption(this, "skimming", autocvar_sv_skimming);
+	STAT(MOVEVARS_CROUCHJUMP, this) = Physics_ClientOption(this, "crouchjump", autocvar_sv_crouchjump);
+	STAT(MOVEVARS_CROUCHSPEEDSCALE, this) = Physics_ClientOption(this, "crouchspeedscale", autocvar_sv_crouchspeedscale);
+	STAT(MOVEVARS_WATERACCELERATE, this) = Physics_ClientOption(this, "wateraccelerate", autocvar_sv_wateraccelerate);
+	STAT(MOVEVARS_WATERFRICTION, this) = Physics_ClientOption(this, "waterfriction", autocvar_sv_waterfriction);
+	STAT(MOVEVARS_WATERFLAGS, this) = Physics_ClientOption(this, "waterflags", autocvar_sv_waterflags);
+	STAT(MOVEVARS_SWIMSCALE, this) = Physics_ClientOption(this, "swimscale", autocvar_sv_swimscale);
 
 	MUTATOR_CALLHOOK(PlayerPhysics_PostUpdateStats, this, maxspd_mod);
 }
@@ -167,11 +175,8 @@ float GeomLerp(float a, float _lerp, float b)
 		: a * (fabs(b / a) ** _lerp);
 }
 
-void PM_ClientMovement_UpdateStatus(entity this)
+void PM_CheckDuck(entity this, bool do_crouch)
 {
-	if(!IS_PLAYER(this))
-		return;
-
 	bool have_hook = false;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -188,7 +193,6 @@ void PM_ClientMovement_UpdateStatus(entity this)
 		}
 	}
 
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
 	if(this.viewloc && !(this.viewloc.spawnflags & VIEWLOC_FREEMOVE) && PHYS_CS(this).movement.x < 0)
 		do_crouch = true;
 	if (have_hook)
@@ -227,8 +231,6 @@ void PM_ClientMovement_UpdateStatus(entity this)
 			setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
 		}
 	}
-
-	_Movetype_CheckWater(this); // needs to be run on the client, might as well use the latest on the server too!
 }
 
 void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
@@ -245,8 +247,7 @@ void CPM_PM_Aircontrol(entity this, float dt, vector wishdir, float wishspeed)
 	float k = 2 * movity - 1;
 	if (k <= 0)
 		return;
-	if (!(PHYS_AIRCONTROL_FLAGS(this) & BIT(2))) // crouching has an impact
-		k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
+	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(this), 1);
 
 	const float zspeed = this.velocity_z;
 	this.velocity_z = 0;
@@ -396,41 +397,43 @@ bool PlayerJump(entity this)
 		return true; // no jumping while blocked
 #endif
 
-	bool doublejump = false;
-	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
-	bool track_jump = PHYS_CL_TRACK_CANJUMP(this);
-
-	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
+	if (IS_WATERJUMPING(this))
 		return true;
 
+	float mjumpheight = ((PHYS_JUMPVELOCITY_CROUCH(this) && IS_DUCKED(this)) ? PHYS_JUMPVELOCITY_CROUCH(this) : PHYS_JUMPVELOCITY(this));
+	bool airjump = false;
+	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, airjump))
+		return true;
 	mjumpheight = M_ARGV(1, float);
-	doublejump = M_ARGV(2, bool);
+	airjump = M_ARGV(2, bool);
+
+	bool track_jump = PHYS_CL_TRACK_CANJUMP(this) || PHYS_TRACK_CANJUMP(this);
 
 	if (this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		if(this.viewloc)
 		{
-			doublejump = true;
+			airjump = true;
 			mjumpheight *= 0.7;
 			track_jump = true;
 		}
 		else
 		{
-			this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
+			// Q3 doesn't call PM_CheckJump in PM_WaterMove
 			return true;
 		}
 	}
 
-	if (!doublejump)
+	if (!airjump)
 		if (!IS_ONGROUND(this))
 			return IS_JUMP_HELD(this);
-
-	if(PHYS_TRACK_CANJUMP(this))
-		track_jump = true;
 
 	if (track_jump)
 		if (IS_JUMP_HELD(this))
 			return true;
+
+	if (!PHYS_CROUCHJUMP(this) && PHYS_INPUT_BUTTON_CROUCH(this))
+		return true; // can't jump while holding crouch, but can jump while ducked (like in Q3)
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
@@ -446,10 +449,7 @@ bool PlayerJump(entity this)
 
 	if (!isnan(PHYS_JUMPSPEEDCAP_MAX(this)))
 	{
-		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
-		tracebox(this.origin + '0 0 0.01', this.mins, this.maxs, this.origin - '0 0 0.01', MOVE_NORMAL, this);
-
-		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(this)))
+		if (!(this.groundplane_normal.z && this.groundplane_normal.z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(this)))
 		{
 			float maxjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MAX(this);
 
@@ -482,45 +482,99 @@ bool PlayerJump(entity this)
 
 	UNSET_ONGROUND(this);
 	UNSET_ONSLICK(this);
+	this.groundentity = NULL;
+	this.groundplane_normal = '0 0 0';
 	SET_JUMP_HELD(this);
 
 #ifdef CSQC
-	jumpheight_min = jumpheight_max = this.origin.z;
+	if (csqcplayer_moveframe == clientcommandframe)
+	{
+		jumpheight_min = jumpheight_max = this.origin.z;
+
+		// FIXME this has no effect in SVQC, CSQC just guesses other players' animations which fails in some cases,
+		// also jumps and other data need to be networked to CSQC HUD panels during demo playback and spectating.
+		animdecide_setaction(this, ANIMACTION_JUMP, true);
+	}
 #endif
 
 #ifdef SVQC
-	animdecide_setaction(this, ANIMACTION_JUMP, true);
-
 	if (autocvar_g_jump_grunt)
-		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, 1);
+		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND, PHYS_DOUBLEJUMP(this) == 2 && WOULD_DJ(this) ? 0.7 : 1);
 #endif
+
+	// CPMA double jumps (step up, ramp, headbang, teleport)
+	if (PHYS_DOUBLEJUMP(this) == 2 || PHYS_STEPTYPE(this) == 2)
+	{
+		if (PHYS_DOUBLEJUMP(this) == 2 && WOULD_DJ(this))
+			this.velocity_z += 100;
+#ifdef CSQC
+		csqcplayer_current_moveflags |= PMF_DJING;
+		if (csqcplayer_moveframe == clientcommandframe)
+#endif
+			this.pm_dj_time = 0.4;
+	}
+
 	return true;
 }
 
-void CheckWaterJump(entity this)
+bool PM_CheckWaterJump(entity this, vector wishvel, vector forward)
 {
+	// Any pm_time (skimming, knockback, water jump) prevents a Q3 water jump starting,
+	// and it should be unnecessary when climbing a ladder.
+	if (IS_SKIMMING(this) || this.ladder_entity)
+		return false;
+
 // check for a jump-out-of-water
-	makevectors(this.v_angle);
 	vector start = this.origin;
-	start_z += 8;
-	v_forward_z = 0;
-	normalize(v_forward);
-	vector end = start + v_forward*24;
-	traceline (start, end, true, this);
-	if (trace_fraction < 1)
-	{	// solid at waist
-		start_z = start_z + this.maxs_z - 8;
-		end = start + v_forward*24;
-		this.movedir = trace_plane_normal * -50;
-		traceline(start, end, true, this);
-		if (trace_fraction == 1)
-		{	// open at eye level
-			this.velocity_z = 225;
-			this.flags |= FL_WATERJUMP;
-			this.teleport_time = time + 2; // safety net
-			SET_JUMP_HELD(this);
-		}
+	// +8 is equivalent to Q3's +4 because sv_q3compat_changehitbox uses mins.z -20
+	// so the origin is 4u lower than in Q3.
+	start.z += 8;
+	vector dir;
+
+	if (PHYS_WATERFLAGS(this) & 4) // Q3 water jump
+	{
+		vector spot = start + normalize(vec3(forward.x, forward.y, 0)) * STAT(PL_MAX, this).x * 2; // 30 with Q3 bbox
+		if (pointcontents(spot) != CONTENT_SOLID)
+			return false;
+		// Q3 uses 24+4+16=44 above the bbox floor
+		spot.z += STAT(PL_MAX, this).z / 2.25; // 16 with Q3 bbox, unaffected by crouching
+		if (pointcontents(spot) != CONTENT_EMPTY)
+			return false;
+		dir = forward;
 	}
+	else // more intuitive and reliable version
+	{
+		if (!wishvel)
+			return false;
+		vector end = start + normalize(vec3(wishvel.x, wishvel.y, 0)) * this.maxs.x; // 16 with Xon bbox
+		// traceline and pointcontents can miss if there's a grating, thin wall, etc, so using this bbox:
+		vector bmins = vec3(this.mins.x, this.mins.y, -0.5);
+		vector bmaxs = vec3(this.maxs.x, this.maxs.y, 0.5);
+		tracebox(start, bmins, bmaxs, end, MOVE_NORMAL, this);
+		if (trace_fraction == 1)
+			return false;
+		start.z = end.z = this.origin.z + this.view_ofs.z; // Hopefully straightforward for players to understand.
+		tracebox(start, bmins, bmaxs, end, MOVE_NORMAL, this);
+		if (trace_fraction < 1)
+			return false;
+		dir = normalize(wishvel);
+	}
+	// solid at waist, open at eye level
+
+	// Q3: jump out of water
+	this.velocity = 200 * dir;
+	this.velocity.z = 350;
+
+	#ifdef CSQC
+	csqcplayer_current_moveflags |= PMF_TIME_WATERJUMP | PMF_SKIMMING;
+	if (csqcplayer_moveframe == clientcommandframe)
+	#endif
+	{
+		this.pm_time = 2;
+		this.flags |= FL_WATERJUMP;
+	}
+
+	return true;
 }
 
 
@@ -571,9 +625,6 @@ void CheckPlayerJump(entity this)
 
 	if (!PHYS_INPUT_BUTTON_JUMP(this))
 		UNSET_JUMP_HELD(this);
-
-	if (this.waterlevel == WATERLEVEL_SWIMMING)
-		CheckWaterJump(this);
 }
 
 #ifdef SVQC
@@ -675,12 +726,9 @@ void PM_check_hitground(entity this)
 			return;
 	}
 	this.nextstep = time + 0.3 + random() * 0.1;
-	trace_dphitq3surfaceflags = 0;
-	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
-	entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-		? GS_FALL_METAL
-		: GS_FALL;
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+		return;
+	entity gs = trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS ? GS_FALL_METAL : GS_FALL;
 	float vol = ((IS_DUCKED(this)) ? VOL_MUFFLED : VOL_BASE);
 	GlobalSound(this, gs, CH_PLAYER, vol, VOICETYPE_PLAYERSOUND);
 #endif
@@ -696,28 +744,12 @@ void PM_Footsteps(entity this)
 	if ((time > this.nextstep) || (time < (this.nextstep - 10.0)))
 	{
 		this.nextstep = time + 0.3 + random() * 0.1;
-		trace_dphitq3surfaceflags = 0;
-		tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
-		entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-			? GS_STEP_METAL
-			: GS_STEP;
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+			return;
+		entity gs = trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS ? GS_STEP_METAL : GS_STEP;
 		GlobalSound(this, gs, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 	}
 #endif
-}
-
-void PM_check_slick(entity this)
-{
-	if(!IS_ONGROUND(this))
-		return;
-
-	trace_dphitq3surfaceflags = 0;
-	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-		SET_ONSLICK(this);
-	else
-		UNSET_ONSLICK(this);
 }
 
 void PM_check_blocked(entity this)
@@ -730,6 +762,201 @@ void PM_check_blocked(entity this)
 	PHYS_CS(this).movement = '0 0 0';
 	this.disableclientprediction = 1;
 #endif
+}
+
+/// This uses several methods and assumes the player was already found to be stuck.
+int PM_CorrectStuck(entity this)
+{
+	if (!GAMEPLAYFIX_UNSTICKPLAYERS(this))
+		return false;
+
+	#ifdef SVQC
+	vector org = this.origin;
+	bool dospam = !autocvar_sv_dedicated && this.velocity;
+	#endif
+
+	// bones_was_here: some Q3 maps have teleporters that put players partially in the ground,
+	// they appear to work correctly in Q3 because it allows stepping up out of the ground!
+	// Not bothering with the PHYS_STEPTYPE conditions here for simplicity.
+	// Faster than other methods when it works and sometimes assists them when it doesn't.
+	_Movetype_PushEntityTrace(this, '0 0 18');
+	this.origin = trace_endpos;
+	_Movetype_PushEntityTrace(this, '0 0 -18');
+	this.origin = trace_endpos;
+	if (!trace_startsolid)
+	{
+		#ifdef SVQC
+		if (dospam && !Q3COMPAT_COMMON) // in Q3, this is fine
+			LOG_WARNF("fixed stuck %s '%s' by stepping up from '%v' to '%v'\n", this.classname, this.netname, org, this.origin);
+		#endif
+		return true;
+	}
+
+	// Try a smaller bbox as it may be less stuck, also this allows teleporting into crouch-only spaces.
+	if (!IS_DUCKED(this))
+		PM_CheckDuck(this, true);
+
+	switch (nudgeoutofsolid_OrFallback(this))
+	{
+		case UNSTICK_STUCK:
+			// FIXME nudgeoutofsolid() seems unable to unstick from bmodel movers that don't exist in CSQC,
+			// this is slower but can handle that case.
+			if (_Movetype_UnstickEntity(this) == UNSTICK_FIXED)
+			{
+				#ifdef SVQC
+				if (dospam)
+					LOG_WARNF("fixed stuck %s '%s' by unsticking from '%v' to '%v'\n", this.classname, this.netname, org, this.origin);
+				#endif
+				return true;
+			}
+			#ifdef SVQC
+			if (dospam)
+				LOG_WARNF("FAILED to fix stuck %s '%s' at '%v'\n", this.classname, this.netname, this.origin);
+			#endif
+			return false;
+		case UNSTICK_FIXED:
+			#ifdef SVQC
+			if (dospam)
+				LOG_WARNF("fixed stuck %s '%s' by nudging from '%v' to '%v'\n", this.classname, this.netname, org, this.origin);
+			#endif
+		case UNSTICK_FINE: // don't spam if ducking was sufficient
+	}
+	return true;
+}
+
+/// Timer and prediction updates for CPMA double jumping and Q3 skimming and water jumping
+void PM_DropTimers(entity this, float dt)
+{
+#ifdef CSQC
+	// when we've completed a CSQC frame, decrement timers by its frametime
+	static int csqcplayer_moveframe_latestcomplete = 0;
+	if (csqcplayer_moveframe == clientcommandframe - 1 && csqcplayer_moveframe > csqcplayer_moveframe_latestcomplete)
+	{
+		csqcplayer_moveframe_latestcomplete = csqcplayer_moveframe;
+#endif
+		// using counters instead of saved times so time sync jitter won't cause prediction errors
+		if (this.pm_dj_time > 0)
+			this.pm_dj_time -= dt;
+		if (this.pm_time > 0)
+			this.pm_time -= dt;
+		if (this.pm_time <= 0)
+			this.flags &= ~(FL_KNOCKBACK | FL_WATERJUMP);
+#ifdef CSQC
+	}
+
+	// when starting a new CSQC frame, save its initial flags
+	int i = csqcplayer_moveframe & CL_MAX_USERCMDS-1; // optimised for power of 2 modulus
+	static int csqcplayer_moveframe_latestwip = 0;
+	if (csqcplayer_moveframe == clientcommandframe && csqcplayer_moveframe > csqcplayer_moveframe_latestwip)
+	{
+		csqcplayer_moveframe_latestwip = csqcplayer_moveframe;
+
+		csqcplayer_current_moveflags = 0;
+		if (this.pm_dj_time > 0)
+			csqcplayer_current_moveflags |= PMF_DJING;
+		if (this.pm_time > 0)
+		{
+			csqcplayer_current_moveflags |= PMF_SKIMMING;
+			if (this.flags & FL_KNOCKBACK)
+				csqcplayer_current_moveflags |= PMF_TIME_KNOCKBACK;
+			if (this.flags & FL_WATERJUMP)
+				csqcplayer_current_moveflags |= PMF_TIME_WATERJUMP;
+		}
+		csqcplayer_saved_moveflags[i] = csqcplayer_current_moveflags;
+	}
+	else // when extending the newest CSQC frame or replaying a previous one, restore its initial flags
+		csqcplayer_current_moveflags = csqcplayer_saved_moveflags[i];
+#endif
+}
+
+int PM_GroundDetected(entity this, vector previous_velocity)
+{
+	this.groundplane_normal = trace_plane_normal;
+
+	// Q3: slopes that are too steep will not be considered onground
+	if (trace_plane_normal.z < MIN_WALK_NORMAL)
+		return 4;
+
+	// Q3: hitting solid ground will end a waterjump
+	if (IS_WATERJUMPING(this))
+	{
+		#ifdef CSQC
+		csqcplayer_current_moveflags &= ~(PMF_TIME_WATERJUMP | PMF_SKIMMING);
+		if (csqcplayer_moveframe == clientcommandframe)
+		#endif
+		{
+			this.pm_time = 0;
+			this.flags &= ~FL_WATERJUMP;
+		}
+	}
+
+	// Q3 skimming: set timer and first csqc moveframe
+	if (PHYS_SKIMMING(this) && !IS_ONGROUND(this))
+	if (previous_velocity.z < -200) // Q3: don't do landing time if we were just going down a slope
+	{
+		#ifdef CSQC
+		csqcplayer_current_moveflags |= PMF_SKIMMING;
+		if (csqcplayer_moveframe == clientcommandframe)
+		#endif
+			this.pm_time = 0.25;
+	}
+
+	SET_ONGROUND(this);
+	// set groundentity so we get carried when walking onto a mover
+	this.groundentity = trace_ent;
+
+	if (((trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK) && PHYS_FRICTION_SLICK(this) >= 0)
+	|| PHYS_FRICTION(this) <= PHYS_FRICTION_SLICK(this)) // for easier XDF mapping
+		SET_ONSLICK(this);
+	else
+		UNSET_ONSLICK(this);
+
+	PM_check_hitground(this);
+
+	return 1;
+}
+
+int PM_GroundTrace(entity this, vector previous_velocity, bool do_touch)
+{
+	int clip = 0;
+
+	_Movetype_PushEntityTrace(this, '0 0 -0.25'); // same distance as in Q3's PM_GroundTrace()
+
+	// Q3: do something corrective if the trace starts in a solid...
+	// bones_was_here: this works around https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/2745
+	if (trace_startsolid)
+	{
+		if (!PM_CorrectStuck(this))
+			return 0;
+		_Movetype_PushEntityTrace(this, '0 0 -0.25');
+	}
+
+	// Q3: if the trace didn't hit anything, we are in free fall
+	if (trace_fraction == 1
+	// Q3: check if getting thrown off the ground
+	|| (this.velocity.z > 0 && this.velocity * trace_plane_normal > 10))
+		this.groundplane_normal = '0 0 0';
+	else
+		clip = PM_GroundDetected(this, previous_velocity);
+
+	if (clip & 1)
+	{
+		if (do_touch)
+		{
+			// call any touch func so we press buttons when walking onto them
+			if (trace_ent && !wasfreed(trace_ent) && gettouch(trace_ent))
+				gettouch(trace_ent)(trace_ent, this);
+			this.velocity = _Movetype_ClipVelocity(this.velocity, this.groundplane_normal, 1);
+		}
+	}
+	else
+	{
+		UNSET_ONGROUND(this);
+		UNSET_ONSLICK(this);
+		this.groundentity = NULL;
+	}
+
+	return clip;
 }
 
 void PM_jetpack(entity this, float maxspd_mod, float dt)
@@ -839,10 +1066,12 @@ void PM_jetpack(entity this, float maxspd_mod, float dt)
 	}
 }
 
-// used for calculating airshots
+// used for calculating airshots and landing sounds
 bool IsFlying(entity this)
 {
 	if(IS_ONGROUND(this))
+		return false;
+	if(this.groundplane_normal.z) // non-walkable but would be hit by the trace below
 		return false;
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		return false;
