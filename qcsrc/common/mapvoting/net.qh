@@ -1,1 +1,21 @@
 #pragma once
+
+#ifdef GAMEQC
+REGISTER_NET_TEMP(TE_CSQC_PICTURE)
+REGISTER_NET_LINKED(ENT_CLIENT_MAPVOTE)
+
+#ifdef SVQC
+	#include "sv_mapvoting.qh"
+
+	void MapVote_Spawn();
+	void MapVote_TouchMask();
+	void MapVote_Winner(int mappos);
+	void MapVote_ReadChoice(entity voter);
+	void MapVote_SendPicture(entity to, int id);
+#elifdef CSQC
+	#include "cl_mapvoting.qh"
+
+	void MapVote_SendChoice(int index);
+	void Net_MapVote_Picture();
+#endif
+#endif // GAMEQC

@@ -1,5 +1,7 @@
 #include "cl_mapvoting.qh"
 
+#include "net.qh"
+
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/scoreboard.qh>
@@ -14,47 +16,9 @@ void MapVote_Draw_Export(int fh)
 	HUD_Write_Cvar("hud_panel_mapvote_highlight_border");
 }
 
-int mv_num_maps;
-
-// These are mostly the same as sv_mapvoting.qc, or otherwise intuitive
-string mv_entries[MAPVOTE_COUNT]; // map name or gametype name
-string mv_pics[MAPVOTE_COUNT];
-string mv_data[MAPVOTE_COUNT];    // map pk3 name or gametype human readable name
-string mv_suggester[MAPVOTE_COUNT];
-string mv_desc[MAPVOTE_COUNT];
-float mv_preview[MAPVOTE_COUNT];
-int mv_votes[MAPVOTE_COUNT];
-int mv_flags[MAPVOTE_COUNT];
-int mv_flags_start[MAPVOTE_COUNT];
-float mv_select_lasttime[MAPVOTE_COUNT];
-entity mv_pk3list;
-bool mv_abstain;
-int mv_detail;
-int mv_ownvote;
-int mv_tie_winner;
-float mv_timeout;
-float mv_top2_time;
-float mv_top2_alpha;
-float mv_winner_time;
-float mv_winner_alpha;
-string mv_suggester_cache;
-float mv_suggester_cachetime;
-
-int mv_selection;
-int mv_columns;
-int mv_mouse_selection;
-bool mv_selection_keyboard;
-
-bool gametypevote;
-string mapvote_chosenmap;
-vector gtv_text_size;
-vector gtv_text_size_small;
+float xmin, xmax, ymin, ymax;
 
 const float MV_FADETIME = 0.2;
-
-const int NUM_SSDIRS = 4;
-string ssdirs[NUM_SSDIRS];
-int n_ssdirs;
 
 bool PreviewExists(string name)
 {
@@ -710,154 +674,6 @@ void MapVote_CheckPic(string pic, string pk3, int id)
 	MapVote_CheckPK3(pic, pk3, id);
 }
 
-void MapVote_ReadMask()
-{
-	int i;
-	if (mv_num_maps < 24)
-	{
-		int mask;
-		if (mv_num_maps < 8)
-			mask = ReadByte();
-		else if (mv_num_maps < 16)
-			mask = ReadShort();
-		else
-			mask = ReadLong();
-
-		for (i = 0; i < mv_num_maps; ++i)
-		{
-			if (mask & BIT(i))
-				mv_flags[i] |= GTV_AVAILABLE;
-			else
-				mv_flags[i] &= ~GTV_AVAILABLE;
-		}
-	}
-	else
-	{
-		for (i = 0; i < mv_num_maps; ++i)
-			mv_flags[i] = ReadByte();
-	}
-}
-
-void MapVote_ReadOption(int i)
-{
-	TC(int, i);
-
-	mv_entries[i] = strzone(ReadString());
-	mv_data[i] = strzone(ReadString());
-	mv_suggester[i] = strzone(ReadString());
-	mv_flags[i] = GTV_AVAILABLE;
-	const int j = bound(0, ReadByte(), n_ssdirs - 1);
-
-	mv_pics[i] = strzone(strcat(ssdirs[j], "/", mv_entries[i]));
-	mv_preview[i] = false;
-	MapVote_CheckPic(mv_pics[i], mv_data[i], i);
-}
-
-void GameTypeVote_ReadOption(int i)
-{
-	TC(int, i);
-
-	mv_entries[i] = strzone(ReadString());
-	mv_flags[i] = ReadByte();
-	mv_suggester[i] = "";
-
-	string basetype = "";
-
-	if (mv_flags[i] & GTV_CUSTOM)
-	{
-		string name = ReadString();
-		if (strlen(name) < 1)
-			name = mv_entries[i];
-		mv_data[i] = strzone(name);
-		mv_desc[i] = strzone(ReadString());
-		basetype = strzone(ReadString());
-	}
-	else
-	{
-		const Gametype type = MapInfo_Type_FromString(mv_entries[i], false, false);
-		mv_data[i] = strzone(MapInfo_Type_ToText(type));
-		mv_desc[i] = MapInfo_Type_Description(type);
-	}
-
-	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, mv_entries[i]);
-	if (precache_pic(mv_picpath) == "")
-	{
-		mv_picpath = strcat("gfx/menu/wickedx/gametype_", mv_entries[i]);
-		if (precache_pic(mv_picpath) == "")
-		{
-			mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, basetype);
-			if (precache_pic(mv_picpath) == "")
-				mv_picpath = strcat("gfx/menu/wickedx/gametype_", basetype);
-		}
-	}
-	mv_pics[i] = strzone(mv_picpath);
-	mv_preview[i] = PreviewExists(mv_pics[i]);
-}
-
-void MapVote_Init()
-{
-	mv_active = true;
-	if (!autocvar_hud_cursormode)
-		mousepos = (eX * vid_conwidth + eY * vid_conheight) * 0.5;
-	mv_selection = -1;
-	mv_selection_keyboard = false;
-
-	string s;
-	for (n_ssdirs = 0; ; ++n_ssdirs)
-	{
-		s = ReadString();
-		if (s == "")
-			break;
-		if (n_ssdirs < NUM_SSDIRS)
-			ssdirs[n_ssdirs] = s;
-	}
-	n_ssdirs = min(n_ssdirs, NUM_SSDIRS);
-
-	mv_num_maps = min(MAPVOTE_COUNT, ReadByte());
-	mv_abstain = boolean(ReadByte());
-	mv_detail = ReadByte();
-
-	mv_suggester_cache = "";
-	mv_suggester_cachetime = 0;
-
-	mv_ownvote = -1;
-	mv_timeout = ReadCoord();
-
-	const int gametypevote_flags = ReadByte();
-	gametypevote = boolean(gametypevote_flags & BIT(0));
-	if (gametypevote_flags)
-		mapvote_chosenmap = strzone(ReadString());
-
-	MapVote_ReadMask();
-	int i;
-	for (i = 0; i < mv_num_maps; ++i)
-		mv_flags_start[i] = mv_flags[i];
-
-	// Assume mv_pk3list is NULL, there should only be 1 mapvote per round
-	mv_pk3list = NULL; // I'm still paranoid!
-
-	for (i = 0; i < mv_num_maps; ++i)
-	{
-		mv_votes[i] = 0;
-		mv_select_lasttime[i] = 0;
-
-		if (gametypevote)
-			GameTypeVote_ReadOption(i);
-		else
-			MapVote_ReadOption(i);
-	}
-
-	for (i = 0; i < n_ssdirs; ++i)
-		ssdirs[n_ssdirs] = string_null;
-	n_ssdirs = 0;
-}
-
-void MapVote_SendChoice(int index)
-{
-	TC(int, index);
-	localcmd("\nimpulse ", ftos(index + 1), "\n");
-}
-
 int MapVote_MoveLeft(int pos)
 {
 	TC(int, pos);
@@ -1051,65 +867,4 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	}
 
 	return false;
-}
-
-void MapVote_UpdateMask()
-{
-	MapVote_ReadMask();
-	mv_top2_time = time;
-}
-
-void MapVote_UpdateVotes()
-{
-	for (int i = 0; i < mv_num_maps; ++i)
-	{
-		if (mv_flags[i] & GTV_AVAILABLE)
-		{
-			if (mv_detail)
-				mv_votes[i] = ReadByte();
-			else
-				mv_votes[i] = 0;
-		}
-		else
-			mv_votes[i] = -1;
-	}
-	if (mv_detail)
-		mv_tie_winner = ReadChar();
-
-	mv_ownvote = ReadByte() - 1;
-}
-
-NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
-{
-	make_pure(this);
-	const int sf = ReadByte();
-	return = true;
-
-	if (sf & BIT(0))
-		MapVote_Init();
-
-	if (sf & BIT(1))
-		MapVote_UpdateMask();
-
-	if (sf & BIT(2))
-		MapVote_UpdateVotes();
-
-	if (sf & BIT(3))
-	{
-		mv_winner = ReadByte();
-		mv_winner_time = time;
-	}
-}
-
-NET_HANDLE(TE_CSQC_PICTURE, bool isNew)
-{
-	Net_MapVote_Picture();
-	return true;
-}
-
-void Net_MapVote_Picture()
-{
-	const int type = ReadByte();
-	mv_preview[type] = true;
-	mv_pics[type] = strzone(ReadPicture());
 }
