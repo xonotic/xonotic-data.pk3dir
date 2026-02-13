@@ -7,12 +7,10 @@ void MapVote_TouchMask()
 {
 	mapvote_ent.SendFlags |= BIT(1);
 }
-
 void MapVote_TouchVotes(entity voter)
 {
 	mapvote_ent.SendFlags |= BIT(2);
 }
-
 void MapVote_Winner(int mappos)
 {
 	mapvote_ent.SendFlags |= BIT(3);
@@ -25,7 +23,7 @@ void MapVote_Winner(int mappos)
 void MapVote_SendChoice(int index)
 {
 	TC(int, index);
-	localcmd("\nimpulse ", ftos(index + 1), "\n");
+	localcmd("\nimpulse ", itos(index + 1), "\n");
 }
 #endif
 
@@ -48,10 +46,8 @@ void MapVote_WriteMask()
 			WriteLong(MSG_ENTITY, mask);
 	}
 	else
-	{
 		for (i = 0; i < mv_count; ++i)
 			WriteByte(MSG_ENTITY, mv_flags[i]);
-	}
 }
 #elifdef CSQC
 void MapVote_ReadMask()
@@ -76,15 +72,13 @@ void MapVote_ReadMask()
 		}
 	}
 	else
-	{
 		for (i = 0; i < mv_count; ++i)
 			mv_flags[i] = ReadByte();
-	}
 }
 #endif
 
 #ifdef SVQC
-// Sends a single map vote option to the client
+/// Sends a single map vote option to the client
 void MapVote_SendOption(int i)
 {
 	// abstain
@@ -112,7 +106,7 @@ void MapVote_ReadOption(int i)
 	mv_data[i] = strzone(ReadString());
 	mv_suggester[i] = strzone(ReadString());
 	mv_flags[i] = GTV_AVAILABLE;
-	const int j = bound(0, ReadByte(), mv_ssdirs_count - 1);
+	int j = bound(0, ReadByte(), mv_ssdirs_count - 1);
 
 	mv_pics[i] = strzone(strcat(mv_ssdirs[j], "/", mv_entries[i]));
 	mv_preview[i] = false;
@@ -121,7 +115,7 @@ void MapVote_ReadOption(int i)
 #endif
 
 #ifdef SVQC
-// Sends a single gametype vote option to the client
+/// Sends a single gametype vote option to the client
 void GameTypeVote_SendOption(int i)
 {
 	// abstain
@@ -132,17 +126,14 @@ void GameTypeVote_SendOption(int i)
 	}
 	else
 	{
-		const string type_name = mv_entries[i];
+		string type_name = mv_entries[i];
 		WriteString(MSG_ENTITY, type_name);
 		WriteByte(MSG_ENTITY, mv_flags[i]);
 		if (mv_flags[i] & GTV_CUSTOM)
 		{
-			WriteString(MSG_ENTITY, cvar_string(
-				strcat("sv_vote_gametype_", type_name, "_name")));
-			WriteString(MSG_ENTITY, cvar_string(
-				strcat("sv_vote_gametype_", type_name, "_description")));
-			WriteString(MSG_ENTITY, cvar_string(
-				strcat("sv_vote_gametype_", type_name, "_type")));
+			WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_name")));
+			WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_description")));
+			WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_type")));
 		}
 	}
 }
@@ -168,7 +159,7 @@ void GameTypeVote_ReadOption(int i)
 	}
 	else
 	{
-		const Gametype type = MapInfo_Type_FromString(mv_entries[i], false, false);
+		Gametype type = MapInfo_Type_FromString(mv_entries[i], false, false);
 		mv_data[i] = strzone(MapInfo_Type_ToText(type));
 		mv_desc[i] = MapInfo_Type_Description(type);
 	}
@@ -221,7 +212,7 @@ void MapVote_Init()
 	mv_ownvote = -1;
 	mv_timeout = ReadCoord();
 
-	const int gametypevote_flags = ReadByte();
+	int gametypevote_flags = ReadByte();
 	gametypevote = boolean(gametypevote_flags & BIT(0));
 	if (gametypevote_flags)
 		mv_chosenmap = strzone(ReadString());
@@ -255,7 +246,6 @@ void MapVote_UpdateMask()
 	MapVote_ReadMask();
 	mv_reduce_time = time;
 }
-
 void MapVote_UpdateVotes()
 {
 	for (int i = 0; i < mv_count; ++i)
@@ -311,7 +301,7 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 		{
 			// map vote but gametype has been chosen via voting screen
 			WriteByte(MSG_ENTITY, BIT(1)); // gametypevote_flags
-			const string voted_gametype_name = (voted_gametype_string == MapInfo_Type_ToString(voted_gametype))
+			string voted_gametype_name = (voted_gametype_string == MapInfo_Type_ToString(voted_gametype))
 				? MapInfo_Type_ToText(voted_gametype)
 				: cvar_string(strcat("sv_vote_gametype_", voted_gametype_string, "_name"));
 			WriteString(MSG_ENTITY, voted_gametype_name);
@@ -364,10 +354,10 @@ void MapVote_Spawn()
 	Net_LinkEntity(mapvote_ent = new(mapvote_ent), false, 0, MapVote_SendEntity);
 }
 #elifdef CSQC
-NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
+NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isNew)
 {
 	make_pure(this);
-	const int sf = ReadByte();
+	int sf = ReadByte();
 	return = true;
 
 	if (sf & BIT(0))
@@ -401,7 +391,7 @@ NET_HANDLE(TE_CSQC_PICTURE, bool isNew)
 
 void Net_MapVote_Picture()
 {
-	const int type = ReadByte();
+	int type = ReadByte();
 	mv_preview[type] = true;
 	mv_pics[type] = strzone(ReadPicture());
 }

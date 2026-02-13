@@ -1,6 +1,8 @@
 #pragma once
 
 #ifdef GAMEQC
+#include <common/mapinfo.qh>
+
 const int MAPVOTE_COUNT = 20; ///< Max number of votable maps/gametypes
 
 const int MAPVOTE_SSDIRS_COUNT = 4;

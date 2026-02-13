@@ -2,7 +2,6 @@
 
 #include "net.qh"
 
-#include <common/mapinfo.qh>
 #include <common/net_linked.qh>
 #include <common/playerstats.qh>
 #include <common/state.qh>
@@ -15,11 +14,11 @@
 #include <server/gamelog.qh>
 #include <server/world.qh>
 
-// declarations
+// Declarations
 float mv_nextthink;
 int mv_reduce_count;
 
-// Returns the gamtype ID from its name, if type_name isn't a real gametype it checks for sv_vote_gametype_(type_name)_type
+/// Returns the gamtype ID from its name, if type_name isn't a real gametype it checks for sv_vote_gametype_(type_name)_type
 Gametype GameTypeVote_Type_FromString(string type_name)
 {
 	Gametype type = MapInfo_Type_FromString(type_name, false, false);
@@ -40,7 +39,6 @@ int GameTypeVote_AvailabilityStatus(string type_name)
 			strcat("sv_vote_gametype_", type_name, "_type")), false, false);
 		flag |= GTV_CUSTOM;
 	}
-
 	if (type == NULL)
 		return flag;
 
@@ -64,7 +62,7 @@ vector GameTypeVote_GetMask()
 		gametype_mask |= GameTypeVote_Type_FromString(argv(i)).gametype_flags;
 
 	if (gametype_mask == '0 0 0')
-		gametype_mask |= MapInfo_CurrentGametype().gametype_flags;
+		gametype_mask = MapInfo_CurrentGametype().gametype_flags;
 
 	return gametype_mask;
 }
@@ -81,9 +79,7 @@ string GameTypeVote_MapInfo_FixName(string m)
 
 void MapVote_ClearAllVotes()
 {
-	FOREACH_CLIENT(true, {
-		it.mapvote = 0;
-	});
+	FOREACH_CLIENT(true, it.mapvote = 0);
 }
 
 void MapVote_UnzoneStrings()
@@ -136,7 +132,7 @@ string MapVote_Suggest(entity this, string m)
 
 bool MapVote_AddVotable(int from_i)
 {
-	string next_map;
+	string next_map = "";
 	if (from_i == -1) // GetNextMap
 		next_map = GetNextMap();
 	else if (from_i == -2) // abstain
@@ -146,7 +142,7 @@ bool MapVote_AddVotable(int from_i)
 	if (next_map == "")
 		return false;
 
-	const string suggester = (from_i >= 0 ? mv_suggester[from_i] : "");
+	string suggester = (from_i >= 0 ? mv_suggester[from_i] : "");
 	int i;
 	if (suggester == "")
 	{
@@ -155,15 +151,13 @@ bool MapVote_AddVotable(int from_i)
 				return false;
 	}
 	else if (!MapInfo_CheckMap(next_map))
-	{
 		// suggestions might be no longer valid/allowed after gametype switch!
 		return false;
-	}
 
 	string pakfile = string_null;
 	for (i = 0; i < mv_ssdirs_count; ++i)
 	{
-		const string mapfile = strcat(mv_ssdirs[i], "/", next_map);
+		string mapfile = strcat(mv_ssdirs[i], "/", next_map);
 		pakfile = whichpack(strcat(mapfile, ".tga"));
 		if (pakfile == "")
 			pakfile = whichpack(strcat(mapfile, ".jpg"));
@@ -174,8 +168,8 @@ bool MapVote_AddVotable(int from_i)
 	}
 	if (i >= mv_ssdirs_count)
 		i = 0; // FIXME maybe network this error case, as that means there is no mapshot on th=e server?
-	for (int o = strstrofs(pakfile, "/", 0) + 1; o > 0; o = strstrofs(pakfile, "/", 0) + 1)
-		pakfile = substring(pakfile, o, -1);
+	for (int o = strstrofs(pakfile, "/", 0); o >= 0; o = strstrofs(pakfile, "/", 0))
+		pakfile = substring(pakfile, o + 1, -1);
 
 	mv_entries[mv_count] = strzone(next_map);
 	mv_rng[mv_count] = random();
@@ -197,8 +191,8 @@ bool MapVote_AddVotable(int from_i)
 
 void MapVote_AddVotableMaps(int nmax, int smax)
 {
-	const int available_maps = Maplist_Init();
-	const int max_attempts = available_maps < 2
+	int available_maps = Maplist_Init();
+	int max_attempts = (available_maps < 2)
 		? available_maps
 		: min(available_maps * 5, 100);
 
@@ -252,10 +246,10 @@ void MapVote_Init()
 	mv_show_suggester = autocvar_g_maplist_votable_show_suggester;
 	current_gametype_index = -1;
 
-	const int nmax = (mv_abstain)
+	int nmax = (mv_abstain)
 		? min(MAPVOTE_COUNT - 1, autocvar_g_maplist_votable)
 		: min(MAPVOTE_COUNT, autocvar_g_maplist_votable);
-	const int smax = min3(nmax, autocvar_g_maplist_votable_suggestions, mv_suggestion_ptr);
+	int smax = min3(nmax, autocvar_g_maplist_votable_suggestions, mv_suggestion_ptr);
 
 	// we need this for AddVotable, as that cycles through the screenshot dirs
 	mv_ssdirs_count = tokenize_console(autocvar_g_maplist_votable_screenshot_dir);
@@ -288,7 +282,7 @@ void MapVote_Init()
 	 */
 	if (match_gametype)
 	{
-		const string gametype_custom_string = (gametype_custom_enabled)
+		string gametype_custom_string = (gametype_custom_enabled)
 			? loaded_gametype_custom_string
 			: "";
 		GameTypeVote_SetGametype(match_gametype, gametype_custom_string, true);
@@ -320,9 +314,7 @@ bool MapVote_Finished(int mappos)
 			GameLogEcho(strcat(":vote:suggestion_accepted:", mv_entries[mappos]));
 	}
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		FixClientCvars(it);
-	});
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), FixClientCvars(it));
 
 	if (gametypevote)
 	{
@@ -352,17 +344,17 @@ bool MapVote_Finished(int mappos)
 void MapVote_ranked_swap(int i, int j, entity pass)
 {
 	TC(int, i); TC(int, j);
-	const int tmp = mv_ranked[i];
+	int tmp = mv_ranked[i];
 	mv_ranked[i] = mv_ranked[j];
 	mv_ranked[j] = tmp;
 }
 int MapVote_ranked_cmp(int i, int j, entity pass)
 {
 	TC(int, i); TC(int, j);
-	const int ri = mv_ranked[i];
-	const int rj = mv_ranked[j];
-	const bool avail_i = mv_flags[ri] & GTV_AVAILABLE;
-	const bool avail_j = mv_flags[rj] & GTV_AVAILABLE;
+	int ri = mv_ranked[i];
+	int rj = mv_ranked[j];
+	bool avail_i = (mv_flags[ri] & GTV_AVAILABLE);
+	bool avail_j = (mv_flags[rj] & GTV_AVAILABLE);
 	if (avail_j && !avail_i) // i isn't votable, just move it to the end
 		return 1;
 	if (avail_i && !avail_j) // j isn't votable, just move it to the end
@@ -370,8 +362,8 @@ int MapVote_ranked_cmp(int i, int j, entity pass)
 	if (!avail_i && !avail_j)
 		return 0;
 
-	const int votes_i = mv_votes[ri];
-	const int votes_j = mv_votes[rj];
+	int votes_i = mv_votes[ri];
+	int votes_j = mv_votes[rj];
 	if (votes_i <= 0 && rj == current_gametype_index) // j is the current and should be used
 		return 1;
 	if (votes_j <= 0 && ri == current_gametype_index) // i is the current and should be used
@@ -383,7 +375,7 @@ int MapVote_ranked_cmp(int i, int j, entity pass)
 
 void MapVote_CheckRules_count()
 {
-	int i;
+	int idx, i;
 	for (i = 0; i < mv_count; ++i) // reset all votes
 		if (mv_flags[i] & GTV_AVAILABLE)
 		{
@@ -392,11 +384,12 @@ void MapVote_CheckRules_count()
 		}
 
 	mv_voters = 0;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), { // add votes
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), // add votes
+	{
 		++mv_voters;
 		if (it.mapvote)
 		{
-			const int idx = it.mapvote - 1;
+			idx = it.mapvote - 1;
 			//dprint("Player ", it.netname, " vote = ", itos(idx), "\n");
 			++mv_votes[idx];
 		}
@@ -435,7 +428,7 @@ bool MapVote_CheckRules_decide()
 	// if mv_reduce_count is >= 2, we reduce to the top `reduce_count`, keeping exactly that many
 	// if it's < 2, we keep all maps that received at least 1 vote, as long as there's at least 2
 	int ri, i;
-	const bool keep_exactly = (mv_reduce_count >= 2);
+	bool keep_exactly = (mv_reduce_count >= 2);
 #define REDUCE_REMOVE_THIS(idx) (keep_exactly \
 	? (idx >= mv_reduce_count) \
 	: (mv_votes[mv_ranked[idx]] <= 0))
@@ -486,7 +479,8 @@ void MapVote_Tick()
 	if (MapVote_CheckRules_decide())
 		return;
 
-	FOREACH_CLIENT(true, {
+	FOREACH_CLIENT(true,
+	{
 		if (!IS_REAL_CLIENT(it))
 		{
 			// apply the same special health value to bots too for consistency's sake
@@ -506,15 +500,15 @@ void MapVote_Tick()
 		}
 
 		// clear possibly invalid votes
-		if (!(mv_flags[it.mapvote-1] & GTV_AVAILABLE))
+		if (!(mv_flags[it.mapvote - 1] & GTV_AVAILABLE))
 			it.mapvote = 0;
 		// use impulses as new vote
-		if (CS(it).impulse >= 1 && CS(it).impulse <= mv_count)
-			if (mv_flags[CS(it).impulse - 1] & GTV_AVAILABLE)
-			{
-				it.mapvote = CS(it).impulse;
-				MapVote_TouchVotes(it);
-			}
+		if (CS(it).impulse >= 1 && CS(it).impulse <= mv_count
+		&& (mv_flags[CS(it).impulse - 1] & GTV_AVAILABLE))
+		{
+			it.mapvote = CS(it).impulse;
+			MapVote_TouchVotes(it);
+		}
 		CS(it).impulse = 0;
 	});
 
@@ -580,9 +574,7 @@ void MapVote_Think()
 			return;
 		}
 		else if (autocvar_rescan_pending == 2)
-		{
 			return;
-		}
 		else if (autocvar_rescan_pending == 3)
 		{
 			// now build missing mapinfo files
@@ -618,10 +610,8 @@ bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_h
 	if (gametype_string == "")
 		gametype_string = MapInfo_Type_ToString(type);
 	if (!call_hooks)
-	{
 		// custom gametype is disabled because gametype hooks can't be executed
 		gametype_custom_enabled = false;
-	}
 	else
 	{
 		gametype_custom_enabled = (gametype_string != MapInfo_Type_ToString(type));
@@ -633,7 +623,7 @@ bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_h
 	if (MapInfo_CurrentGametype() == type)
 		return true;
 
-	const Gametype tsave = MapInfo_CurrentGametype();
+	Gametype tsave = MapInfo_CurrentGametype();
 
 	MapInfo_SwitchGameType(type);
 
@@ -658,7 +648,7 @@ bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_h
 	}
 
 	bool do_reset = autocvar_sv_vote_gametype_maplist_reset;
-	const string gvmaplist = strcat("sv_vote_gametype_", gametype_string, "_maplist");
+	string gvmaplist = strcat("sv_vote_gametype_", gametype_string, "_maplist");
 	if (cvar_type(gvmaplist) & CVAR_TYPEFLAG_EXISTS)
 	{
 		// force a reset if the provided list is empty
@@ -691,7 +681,6 @@ bool GameTypeVote_Finished(int pos)
 		cvar_set("_sv_vote_gametype_custom", voted_gametype_string);
 
 	gametypevote_finished = true;
-
 	return true;
 }
 
@@ -710,7 +699,6 @@ bool GameTypeVote_AddVotable(string nextMode)
 	mv_flags[mv_count] = GameTypeVote_AvailabilityStatus(nextMode);
 
 	++mv_count;
-
 	return true;
 }
 
@@ -731,14 +719,12 @@ bool GameTypeVote_Start()
 	int which_available = -1;
 	int i;
 	for (i = 0; i < n; ++i)
-	{
-		if (GameTypeVote_AddVotable(argv(i)))
-		if (mv_flags[i] & GTV_AVAILABLE)
+		if (GameTypeVote_AddVotable(argv(i))
+		&& (mv_flags[i] & GTV_AVAILABLE))
 		{
 			++really_available;
 			which_available = i;
 		}
-	}
 
 	mv_count_real = mv_count;
 
@@ -782,6 +768,5 @@ bool GameTypeVote_Start()
 		mv_reduce_time = 0;
 
 	MapVote_Spawn();
-
 	return true;
 }

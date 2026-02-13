@@ -5,7 +5,6 @@
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/scoreboard.qh>
-#include <common/mapinfo.qh>
 #include <common/util.qh>
 
 // MapVote (#21)
@@ -25,10 +24,11 @@ bool PreviewExists(string name)
 	if (autocvar_cl_readpicture_force)
 		return false;
 
-	if (fexists(strcat(name, ".tga"))) return true;
-	if (fexists(strcat(name, ".png"))) return true;
-	if (fexists(strcat(name, ".jpg"))) return true;
-	if (fexists(strcat(name, ".pcx"))) return true;
+	if (fexists(strcat(name, ".tga"))
+	||  fexists(strcat(name, ".png"))
+	||  fexists(strcat(name, ".jpg"))
+	||  fexists(strcat(name, ".pcx")))
+		return true;
 
 	return false;
 }
@@ -36,8 +36,7 @@ bool PreviewExists(string name)
 string MapVote_FormatMapItem(int id, string map, int _count, float maxwidth, vector fontsize, int most_votes)
 {
 	TC(int, id);
-	string post;
-	string pre = sprintf("%d. ", id + 1);
+	string post, pre = strcat(itos(id + 1), ". ");
 	if (mv_detail)
 	{
 		if (_count == 1)
@@ -52,6 +51,7 @@ string MapVote_FormatMapItem(int id, string map, int _count, float maxwidth, vec
 	}
 	else
 		post = "";
+
 	maxwidth -= stringwidth(pre, false, fontsize) + stringwidth(post, true, fontsize);
 	map = textShortenToWidth(map, maxwidth, fontsize, stringwidth_nocolors);
 	return strcat(pre, map, post);
@@ -70,16 +70,15 @@ vector MapVote_RGB(int id)
 		rgb = '1 1 0';
 	else
 	{
-		const float time_frac = (time - mv_select_lasttime[id]) / MV_FADETIME;
+		float time_frac = (time - mv_select_lasttime[id]) / MV_FADETIME;
 		rgb = '1 1 0' + eZ * (time_frac >= 1 ? 1 : sqrt(time_frac));
 	}
 	return rgb;
 }
 
-void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, int _count, int id, int most_votes)
+void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype /* unused */, string pic, int _count, int id, int most_votes)
 {
 	TC(int, id);
-	// gtype is unused
 
 	// Find the correct alpha
 	float alpha;
@@ -92,7 +91,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	alpha *= panel_fg_alpha;
 
 	// Bounding box details
-	const float rect_margin = hud_fontsize.y * 0.5;
+	float rect_margin = hud_fontsize.y * 0.5;
 
 	pos.x += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
 	pos.y += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
@@ -104,7 +103,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	rect_size.x = tsize + rect_margin;
 	rect_size.y = maxh + rect_margin;
 
-	const vector rgb = MapVote_RGB(id);
+	vector rgb = MapVote_RGB(id);
 	float time_frac;
 	if (id == mv_ownvote)
 	{
@@ -129,7 +128,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 
 	vector offset = pos;
 
-	const float title_gap = gtv_text_size.y * 1.4; // distance between the title and the description
+	float title_gap = gtv_text_size.y * 1.4; // distance between the title and the description
 	pos.y += title_gap;
 	maxh -= title_gap;
 
@@ -138,7 +137,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	if (maxh < image_size.y)
 		image_size = '1 1 0' * maxh;
 	image_size *= 0.8;
-	const float desc_padding = gtv_text_size.x * 0.6;
+	float desc_padding = gtv_text_size.x * 0.6;
 	pos.x += image_size.x + desc_padding;
 
 	// Split the description into lines
@@ -146,20 +145,19 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	title.message = strcat(rgb_to_hexcolor(rgb), MapVote_FormatMapItem(id, mv_data[id], _count, tsize, gtv_text_size, most_votes));
 	tsize -= image_size.x + desc_padding;
 
-	string thelabel = mv_desc[id], ts;
+	string the_label = mv_desc[id];
 	entity last = title;
 	entity next = NULL;
 	int nlines = 0;
-	if (thelabel != "")
+	if (the_label != "")
 	{
-		const int n = tokenizebyseparator(thelabel, "\n");
+		string ts;
+		int n = tokenizebyseparator(the_label, "\n");
 		for (int i = 0; i < n && maxh > (nlines + 1) * gtv_text_size_small.y; ++i)
 		{
 			getWrappedLine_remaining = argv(i);
 			while (getWrappedLine_remaining && maxh > (nlines + 1) * gtv_text_size_small.y)
-			{
-				ts = getWrappedLine(tsize, gtv_text_size_small, stringwidth_colors);
-				if (ts != "")
+				if ((ts = getWrappedLine(tsize, gtv_text_size_small, stringwidth_colors)) != "")
 				{
 					next = spawn();
 					next.message = ts;
@@ -169,7 +167,6 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 					pos.y += gtv_text_size_small.y;
 					++nlines;
 				}
-			}
 		}
 	}
 
@@ -187,8 +184,8 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		vector offset_padding;
 		if (time_frac >= 0 && time_frac < 1)
 		{
-			const float extra_padding = min(desc_padding, title_gap);
-			const float transition_progress = (1 - sqrt(time_frac));
+			float extra_padding = min(desc_padding, title_gap);
+			float transition_progress = (1 - sqrt(time_frac));
 			image_size *= transition_progress * (extra_padding / image_size.x) + 1;
 			offset_padding = transition_progress * extra_padding * '-0.5 -0.5 0';
 		}
@@ -228,7 +225,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 {
 	TC(int, id);
 
-	const float rect_margin = hud_fontsize.y * 0.5;
+	float rect_margin = hud_fontsize.y * 0.5;
 	pos.x += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
 	pos.y += rect_margin + autocvar_hud_panel_mapvote_highlight_border;
 	isize -= 2 * (rect_margin + autocvar_hud_panel_mapvote_highlight_border);
@@ -248,12 +245,12 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	pos.y += (isize - img_size.y - hud_fontsize.y) * 0.5;
 
-	const vector rgb = MapVote_RGB(id);
-	const string label = strcat(rgb_to_hexcolor(rgb), MapVote_FormatMapItem(id, map, _count, tsize, hud_fontsize, most_votes));
+	vector rgb = MapVote_RGB(id);
+	string label = strcat(rgb_to_hexcolor(rgb), MapVote_FormatMapItem(id, map, _count, tsize, hud_fontsize, most_votes));
 
-	const float text_size = stringwidth(label, true, hud_fontsize);
+	float text_size = stringwidth(label, true, hud_fontsize);
 
-	const float save_rect_sizex = rect_size.x;
+	float save_rect_sizex = rect_size.x;
 	rect_size.x = max(img_size.x, text_size) + rect_margin;
 	rect_pos.x += (save_rect_sizex - rect_size.x) * 0.5;
 
@@ -301,7 +298,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 void MapVote_DrawAbstain(vector pos, float tsize, int _count, int id)
 {
-	const string label = MapVote_FormatMapItem(id, _("Don't care"), _count, tsize, hud_fontsize, -1);
+	string label = MapVote_FormatMapItem(id, _("Don't care"), _count, tsize, hud_fontsize, -1);
 
 	float theAlpha = (mv_winner && mv_winner_alpha)
 		? mv_winner_alpha
@@ -313,7 +310,7 @@ void MapVote_DrawAbstain(vector pos, float tsize, int _count, int id)
 
 void MapVote_DrawSuggester(vector pos)
 {
-	const int id = mv_winner ? mv_winner - 1 : mv_selection;
+	int id = (mv_winner ? mv_winner - 1 : mv_selection);
 
 	float theAlpha = 0;
 	if (id != -1 && (mv_flags[id] & GTV_AVAILABLE)) // if the map is valid, update cache and time
@@ -329,7 +326,7 @@ void MapVote_DrawSuggester(vector pos)
 	}
 	if (mv_suggester_cache != "" && theAlpha != 1) // figure out alpha for cache if it's partly-faded
 	{
-		const float time_frac = (time - mv_suggester_cachetime) / MV_FADETIME;
+		float time_frac = (time - mv_suggester_cachetime) / MV_FADETIME;
 		if (time_frac >= 1) // finished fading out, delete cache
 		{
 			mv_suggester_cache = "";
@@ -340,7 +337,7 @@ void MapVote_DrawSuggester(vector pos)
 	if (!theAlpha)
 		return;
 
-	const string label = sprintf(_("Suggested by: %s"), ColorTranslateRGB(mv_suggester_cache));
+	string label = sprintf(_("Suggested by: %s"), ColorTranslateRGB(mv_suggester_cache));
 
 	theAlpha *= panel_fg_alpha;
 	pos.x -= 0.5 * stringwidth(label, true, hud_fontsize);
@@ -350,21 +347,21 @@ void MapVote_DrawSuggester(vector pos)
 vector MapVote_GridVec(vector gridspec, int i, int m)
 {
 	TC(int, i); TC(int, m);
-	const int r = i % m;
+	int r = i % m;
 	return
 		eX * (gridspec.x * r)
 		+
 		eY * (gridspec.y * (i - r) / m);
 }
 
-float MapVote_Selection(vector topleft, vector cellsize, float rows, float columns)
+int MapVote_Selection(vector topleft, vector cellsize, int rows, int columns)
 {
 	if (mv_winner)
 		return -1;
 
 	mv_mouse_selection = -1;
 
-	for (float c, r = 0; r < rows; ++r)
+	for (int c, r = 0; r < rows; ++r)
 		for (c = 0; c < columns; ++c)
 			if (mousepos.x >= topleft.x + cellsize.x *  c
 			&&  mousepos.x <= topleft.x + cellsize.x * (c + 1)
@@ -385,7 +382,7 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	return mv_mouse_selection;
 }
 
-// draws map vote or gametype vote
+/// Draws map vote or gametype vote
 void MapVote_Draw(bool should_draw)
 {
 	if (!should_draw)
@@ -396,7 +393,7 @@ void MapVote_Draw(bool should_draw)
 
 	HUD_Panel_LoadCvars();
 
-	const float center = (vid_conwidth - 1) * 0.5;
+	float center = (vid_conwidth - 1) * 0.5;
 	xmin = vid_conwidth * (gametypevote ? 0.08 : 0.1);
 	xmax = vid_conwidth - xmin;
 	ymin = 20;
@@ -457,24 +454,21 @@ void MapVote_Draw(bool should_draw)
 	pos.y += hud_fontsize.y;
 	pos.x = xmin;
 	ymin = pos.y;
-	const float abstain_spacing = panel_bg_border + hud_fontsize.y;
-	const float suggester_spacing = hud_fontsize.y * 1.5;
+	float abstain_spacing = panel_bg_border + hud_fontsize.y;
+	float suggester_spacing = hud_fontsize.y * 1.5;
 	if (mv_abstain)
 		ymax -= abstain_spacing;
-	const bool were_suggesters = (mv_suggester[0] != ""); // suggestions are placed at the start
+	bool were_suggesters = (mv_suggester[0] != ""); // suggestions are placed at the start
 	if (were_suggesters)
 		ymax -= suggester_spacing;
 
 	// higher than the image itself ratio for mapvote items to reserve space for long map names
-	const float item_aspect = (gametypevote) ? 3/1 : 5/3;
-	const vector table_size = HUD_GetTableSize_BestItemAR(mv_count_real, vec2(xmax - xmin, ymax - ymin), item_aspect);
+	float item_aspect = (gametypevote) ? 3/1 : 5/3;
+	vector table_size = HUD_GetTableSize_BestItemAR(mv_count_real, vec2(xmax - xmin, ymax - ymin), item_aspect);
 	mv_columns = table_size.x;
-	const float rows = table_size.y;
+	int rows = table_size.y;
 
-	vector dist;
-	dist.x = (xmax - xmin) / mv_columns;
-	dist.y = (ymax - pos.y) / rows;
-	dist.z = 0;
+	vector dist = vec2((xmax - xmin) / mv_columns, (ymax - pos.y) / rows);
 
 	// reduce size of too wide items
 	float tmp = vid_conwidth / 3; // max width
@@ -548,7 +542,7 @@ void MapVote_Draw(bool should_draw)
 	{
 		tmp = mv_votes[i]; // FTEQCC bug: too many array accesses in the function call screw it up
 		map = mv_entries[i];
-		const string pic = mv_preview[i] ? mv_pics[i] : "";
+		string pic = (mv_preview[i] ? mv_pics[i] : "");
 		DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, pic, tmp, i, most_votes);
 	}
 
@@ -568,7 +562,7 @@ void MapVote_Draw(bool should_draw)
 		startsize.z = 0;
 		startsize.y = vid_conheight * 0.1;
 		startsize.x = startsize.y * 4/3;
-		const vector startpos = panel_pos + (panel_size - startsize) * 0.5;
+		vector startpos = panel_pos + (panel_size - startsize) * 0.5;
 
 		vector endsize;
 		endsize.z = 0;
@@ -580,7 +574,7 @@ void MapVote_Draw(bool should_draw)
 		endpos.x = (vid_conwidth - endsize.x) * 0.5;
 
 		float f = bound(0, sqrt((time - mv_winner_time) * 2), 1);
-		const float theAlpha = f;
+		float theAlpha = f;
 		f = min(0.1 + f, 1);
 		vector img_size = endsize * f + startsize * (1 - f);
 		vector img_pos = endpos * f + startpos * (1 - f);
@@ -589,8 +583,8 @@ void MapVote_Draw(bool should_draw)
 
 		if (were_suggesters)
 		{
-			const float suggester_startposy = pos.y;
-			const float suggester_endposy = panel_pos.y + endsize.y + hud_fontsize.y;
+			float suggester_startposy = pos.y;
+			float suggester_endposy = panel_pos.y + endsize.y + hud_fontsize.y;
 			pos.y = suggester_endposy * f + suggester_startposy * (1 - f);
 		}
 	}
@@ -613,7 +607,7 @@ void Cmd_MapVote_MapDownload(int argc)
 	}
 
 	entity pak;
-	const int id = stof(argv(1));
+	int id = stoi(argv(1));
 	for (pak = mv_pk3list; pak; pak = pak.chain)
 		if (pak.sv_entnum == id)
 			break;
@@ -703,7 +697,7 @@ int MapVote_MoveUp(int pos)
 		imp = pos - mv_columns;
 		if (imp < 0)
 		{
-			const int mv_rows = ceil(mv_count / mv_columns);
+			int mv_rows = ceil(mv_count / mv_columns);
 			if (imp == -mv_columns) // pos == 0
 				imp = mv_columns * mv_rows - 1;
 			else
@@ -725,7 +719,7 @@ int MapVote_MoveDown(int pos)
 		imp = pos + mv_columns;
 		if (imp >= mv_count)
 		{
-			const int col = imp % mv_columns;
+			int col = imp % mv_columns;
 			if (col == mv_columns - 1)
 				imp = 0;
 			else
@@ -760,29 +754,31 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	}
 
 	// at this point bInputType can only be 0 or 1 (key pressed or released)
-	const bool key_pressed = (bInputType == 0);
+	bool key_pressed = (bInputType == 0);
 
 	if (key_pressed)
 	{
-		if (nPrimary == K_ALT)   hudShiftState |= S_ALT;
-		if (nPrimary == K_CTRL)  hudShiftState |= S_CTRL;
-		if (nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+		if (nPrimary == K_ALT)    hudShiftState |= S_ALT;
+		if (nPrimary == K_CTRL)   hudShiftState |= S_CTRL;
+		if (nPrimary == K_SHIFT)  hudShiftState |= S_SHIFT;
 	}
 	else
 	{
-		if (nPrimary == K_ALT)   hudShiftState &= ~S_ALT;
-		if (nPrimary == K_CTRL)  hudShiftState &= ~S_CTRL;
-		if (nPrimary == K_SHIFT) hudShiftState &= ~S_SHIFT;
+		if (nPrimary == K_ALT)    hudShiftState &= ~S_ALT;
+		if (nPrimary == K_CTRL)   hudShiftState &= ~S_CTRL;
+		if (nPrimary == K_SHIFT)  hudShiftState &= ~S_SHIFT;
 
 		if (nPrimary == K_CTRL)
 			first_digit = 0;
 	}
 
-	// Key release events must be handled by the engine otherwise the on-press command such as +jump
-	// executed by pressing SPACE before entering the map voting screen won't be followed by the
-	// on-release command (-jump) on key release once entered the map voting screen, causing +jump
-	// to stay active even on the next map and automatically forcing the player to join
-	if (!key_pressed) return false;
+	/* Key release events must be handled by the engine otherwise the on-press command such as +jump
+	 * executed by pressing SPACE before entering the map voting screen won't be followed by the
+	 * on-release command (-jump) on key release once entered the map voting screen, causing +jump
+	 * to stay active even on the next map and automatically forcing the player to join
+	 */
+	if (!key_pressed)
+		return false;
 
 	int imp = 0;
 	switch (nPrimary)
@@ -819,16 +815,16 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 			if (mv_selection_keyboard)
 				MapVote_SendChoice(mv_selection);
 			return true;
-		case '1': case K_KP_1: imp = 1; break;
-		case '2': case K_KP_2: imp = 2; break;
-		case '3': case K_KP_3: imp = 3; break;
-		case '4': case K_KP_4: imp = 4; break;
-		case '5': case K_KP_5: imp = 5; break;
-		case '6': case K_KP_6: imp = 6; break;
-		case '7': case K_KP_7: imp = 7; break;
-		case '8': case K_KP_8: imp = 8; break;
-		case '9': case K_KP_9: imp = 9; break;
-		case '0': case K_KP_0: imp = 10; break;
+		case '1': case K_KP_1:  imp = 1;   break;
+		case '2': case K_KP_2:  imp = 2;   break;
+		case '3': case K_KP_3:  imp = 3;   break;
+		case '4': case K_KP_4:  imp = 4;   break;
+		case '5': case K_KP_5:  imp = 5;   break;
+		case '6': case K_KP_6:  imp = 6;   break;
+		case '7': case K_KP_7:  imp = 7;   break;
+		case '8': case K_KP_8:  imp = 8;   break;
+		case '9': case K_KP_9:  imp = 9;   break;
+		case '0': case K_KP_0:  imp = 10;  break;
 	}
 
 	if (imp && hudShiftState & S_CTRL)
