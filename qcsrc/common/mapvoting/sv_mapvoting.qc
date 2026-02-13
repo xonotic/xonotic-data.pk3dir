@@ -335,7 +335,9 @@ bool MapVote_Finished(int mappos)
 		return false;
 	}
 
-	MapVote_Winner(mappos);
+	mv_winner = mappos;
+	mv_winner_time = time;
+	mapvote_ent.SendFlags |= SF_MV_WINNER;
 	alreadychangedlevel = true;
 
 	return true;
@@ -445,7 +447,7 @@ bool MapVote_CheckRules_decide()
 	if ((time > mv_reduce_time && (keep_exactly || ri >= 2))
 	|| (mv_voters_real - votes_running_total) < votes_recent)
 	{
-		MapVote_TouchMask();
+		mapvote_ent.SendFlags |= SF_MV_MASK;
 		mv_reduce_time = 0;
 		string result = ":vote:reduce";
 		int didnt_vote = mv_voters;
@@ -507,7 +509,7 @@ void MapVote_Tick()
 		&& (mv_flags[CS(it).impulse - 1] & GTV_AVAILABLE))
 		{
 			it.mapvote = CS(it).impulse;
-			MapVote_TouchVotes(it);
+			mapvote_ent.SendFlags |= SF_MV_VOTES;
 		}
 		CS(it).impulse = 0;
 	});

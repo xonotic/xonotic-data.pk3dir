@@ -3,19 +3,29 @@
 #ifdef GAMEQC
 REGISTER_NET_TEMP(TE_CSQC_PICTURE)
 REGISTER_NET_LINKED(ENT_CLIENT_MAPVOTE)
+const int SF_MV_INIT    = BIT(0);
+const int SF_MV_MASK    = BIT(1);
+const int SF_MV_VOTES   = BIT(2);
+const int SF_MV_WINNER  = BIT(3);
+
+const int SF_MV_ABSTAIN        = BIT(4); ///< mv_abstain is true if this is set
+const int SF_MV_DETAIL_COUNTS  = BIT(5); ///< mv_detail 1
+const int SF_MV_DETAIL_WINNER  = BIT(6); ///< mv_detail 2
+
+const int SF_MV_GTV_MAPS  = 0;
+const int SF_MV_GTV_NOW   = 1;
+const int SF_MV_GTV_DONE  = 2;
 
 #ifdef SVQC
 	#include "sv_mapvoting.qh"
 
+	entity mapvote_ent;
+
 	void MapVote_Spawn();
 	void MapVote_SendPicture(entity to, int id);
-	void MapVote_TouchMask();
-	void MapVote_TouchVotes(entity voter);
-	void MapVote_Winner(int mappos);
 #elifdef CSQC
 	#include "cl_mapvoting.qh"
 
-	void Net_MapVote_Picture();
 	void MapVote_SendChoice(int index);
 #endif
 #endif // GAMEQC

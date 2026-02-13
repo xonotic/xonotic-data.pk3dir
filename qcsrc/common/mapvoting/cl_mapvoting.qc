@@ -852,7 +852,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	if (imp)
 	{
 		if (!mv_winner && imp <= mv_count)
-			localcmd("\nimpulse ", ftos(imp), "\n");
+			MapVote_SendChoice(imp - 1);
 		return true;
 	}
 

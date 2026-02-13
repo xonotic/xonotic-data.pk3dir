@@ -1,24 +1,5 @@
 #include "net.qh"
 
-#ifdef SVQC
-entity mapvote_ent;
-
-void MapVote_TouchMask()
-{
-	mapvote_ent.SendFlags |= BIT(1);
-}
-void MapVote_TouchVotes(entity voter)
-{
-	mapvote_ent.SendFlags |= BIT(2);
-}
-void MapVote_Winner(int mappos)
-{
-	mapvote_ent.SendFlags |= BIT(3);
-	mv_winner_time = time;
-	mv_winner = mappos;
-}
-#endif
-
 #ifdef CSQC
 void MapVote_SendChoice(int index)
 {
@@ -30,85 +11,51 @@ void MapVote_SendChoice(int index)
 #ifdef SVQC
 void MapVote_WriteMask()
 {
-	int i;
-	if (mv_count < 24)
+	for (int b, B, i = 0; i < mv_count_real; )
 	{
-		int mask = 0;
-		for (i = 0; i < mv_count; ++i)
+		B = 0;
+		for (b = BIT(0); b < BIT(8) && i < mv_count_real; b <<= 1, ++i)
 			if (mv_flags[i] & GTV_AVAILABLE)
-				mask |= BIT(i);
-
-		if (mv_count < 8)
-			WriteByte(MSG_ENTITY, mask);
-		else if (mv_count < 16)
-			WriteShort(MSG_ENTITY,mask);
-		else
-			WriteLong(MSG_ENTITY, mask);
+				B |= b;
+		WriteByte(MSG_ENTITY, B);
 	}
-	else
-		for (i = 0; i < mv_count; ++i)
-			WriteByte(MSG_ENTITY, mv_flags[i]);
 }
 #elifdef CSQC
 void MapVote_ReadMask()
 {
-	int i;
-	if (mv_count < 24)
-	{
-		int mask;
-		if (mv_count < 8)
-			mask = ReadByte();
-		else if (mv_count < 16)
-			mask = ReadShort();
-		else
-			mask = ReadLong();
-
-		for (i = 0; i < mv_count; ++i)
+	int b, B, i;
+	for (i = 0; i < mv_count_real; )
+		for (B = ReadByte(), b = BIT(0); b < BIT(8) && i < mv_count_real; b <<= 1, ++i)
 		{
-			if (mask & BIT(i))
+			if (B & b)
 				mv_flags[i] |= GTV_AVAILABLE;
 			else
 				mv_flags[i] &= ~GTV_AVAILABLE;
 		}
-	}
-	else
-		for (i = 0; i < mv_count; ++i)
-			mv_flags[i] = ReadByte();
+	if (mv_abstain) // make abstain available
+		mv_flags[mv_count_real] |= GTV_AVAILABLE;
 }
 #endif
 
 #ifdef SVQC
 /// Sends a single map vote option to the client
-void MapVote_SendOption(int i)
+void MapVote_WriteOption(int i)
 {
-	// abstain
-	if (mv_abstain && i == mv_count - 1)
-	{
-		WriteString(MSG_ENTITY, ""); // abstain needs no text
-		WriteString(MSG_ENTITY, ""); // abstain needs no pack
-		WriteString(MSG_ENTITY, ""); // abstain has no suggester
-		WriteByte(MSG_ENTITY, 0); // abstain needs no screenshot dir
-	}
-	else
-	{
-		WriteString(MSG_ENTITY, mv_entries[i]);
-		WriteString(MSG_ENTITY, mv_pakfile[i]);
-		WriteString(MSG_ENTITY, mv_show_suggester ? mv_suggester[i] : "");
-		WriteByte(MSG_ENTITY, mv_ssdir_i[i]);
-	}
+	WriteString(MSG_ENTITY, mv_entries[i]);
+	WriteString(MSG_ENTITY, mv_pakfile[i]);
+	WriteString(MSG_ENTITY, mv_show_suggester ? mv_suggester[i] : "");
+	WriteByte(MSG_ENTITY, mv_ssdir_i[i]);
 }
 #elifdef CSQC
 void MapVote_ReadOption(int i)
 {
 	TC(int, i);
-
 	mv_entries[i] = strzone(ReadString());
 	mv_data[i] = strzone(ReadString());
 	mv_suggester[i] = strzone(ReadString());
 	mv_flags[i] = GTV_AVAILABLE;
-	int j = bound(0, ReadByte(), mv_ssdirs_count - 1);
 
-	mv_pics[i] = strzone(strcat(mv_ssdirs[j], "/", mv_entries[i]));
+	mv_pics[i] = strzone(strcat(mv_ssdirs[ReadByte()], "/", mv_entries[i]));
 	mv_preview[i] = false;
 	MapVote_CheckPic(mv_pics[i], mv_data[i], i);
 }
@@ -116,32 +63,22 @@ void MapVote_ReadOption(int i)
 
 #ifdef SVQC
 /// Sends a single gametype vote option to the client
-void GameTypeVote_SendOption(int i)
+void GameTypeVote_WriteOption(int i)
 {
-	// abstain
-	if (mv_abstain && i == mv_count - 1)
+	string type_name = mv_entries[i];
+	WriteString(MSG_ENTITY, type_name);
+	WriteByte(MSG_ENTITY, mv_flags[i]);
+	if (mv_flags[i] & GTV_CUSTOM)
 	{
-		WriteString(MSG_ENTITY, ""); // abstain needs no text
-		WriteByte(MSG_ENTITY, GTV_AVAILABLE);
-	}
-	else
-	{
-		string type_name = mv_entries[i];
-		WriteString(MSG_ENTITY, type_name);
-		WriteByte(MSG_ENTITY, mv_flags[i]);
-		if (mv_flags[i] & GTV_CUSTOM)
-		{
-			WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_name")));
-			WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_description")));
-			WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_type")));
-		}
+		WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_name")));
+		WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_description")));
+		WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", type_name, "_type")));
 	}
 }
 #elifdef CSQC
 void GameTypeVote_ReadOption(int i)
 {
 	TC(int, i);
-
 	mv_entries[i] = strzone(ReadString());
 	mv_flags[i] = ReadByte();
 	mv_suggester[i] = "";
@@ -180,8 +117,42 @@ void GameTypeVote_ReadOption(int i)
 }
 #endif
 
-#ifdef CSQC
-void MapVote_Init()
+#ifdef SVQC
+void MapVote_WriteInit()
+{
+	int i;
+
+	WriteByte(MSG_ENTITY, mv_ssdirs_count);
+	for (i = 0; i < mv_ssdirs_count; ++i)
+		WriteString(MSG_ENTITY, mv_ssdirs[i]);
+	WriteByte(MSG_ENTITY, mv_count);
+	WriteFloat(MSG_ENTITY, mv_timeout);
+
+	if (gametypevote)
+	{
+		WriteByte(MSG_ENTITY, SF_MV_GTV_NOW); // gametypevote_flags: gametype vote
+		WriteString(MSG_ENTITY, get_nextmap());
+	}
+	else if (autocvar_sv_vote_gametype)
+	{
+		WriteByte(MSG_ENTITY, SF_MV_GTV_DONE); // gametypevote_flags: map vote but gametype has been chosen via voting screen
+		string voted_gametype_name = (voted_gametype_string == MapInfo_Type_ToString(voted_gametype))
+			? MapInfo_Type_ToText(voted_gametype)
+			: cvar_string(strcat("sv_vote_gametype_", voted_gametype_string, "_name"));
+		WriteString(MSG_ENTITY, voted_gametype_name);
+	}
+	else
+		WriteByte(MSG_ENTITY, SF_MV_GTV_MAPS); // gametypevote_flags: map vote
+
+	MapVote_WriteMask();
+
+	// Send data for the vote options
+	void(int) WriteOption = (gametypevote ? GameTypeVote_WriteOption : MapVote_WriteOption);
+	for (i = 0; i < mv_count_real; ++i)
+		WriteOption(i);
+}
+#elifdef CSQC
+void MapVote_ReadInit(int sf)
 {
 	mv_active = true;
 	if (!autocvar_hud_cursormode)
@@ -190,160 +161,97 @@ void MapVote_Init()
 	mv_selection_keyboard = false;
 
 	string s;
-	for (mv_ssdirs_count = 0; ; ++mv_ssdirs_count)
-	{
-		s = ReadString();
-		if (s == "")
-			break;
-		if (mv_ssdirs_count < MAPVOTE_SSDIRS_COUNT)
-			mv_ssdirs[mv_ssdirs_count] = s;
-	}
-	mv_ssdirs_count = min(mv_ssdirs_count, MAPVOTE_SSDIRS_COUNT);
+	int i;
+	mv_ssdirs_count = ReadByte(); // will be < MAPVOTE_SSDIRS_COUNT
+	for (i = 0; i < mv_ssdirs_count; ++i)
+		mv_ssdirs[i] = ReadString();
 
-	mv_count_real = mv_count = min(MAPVOTE_COUNT, ReadByte());
-	mv_abstain = boolean(ReadByte());
+	mv_count_real = mv_count = ReadByte(); // will be < MAPVOTE_COUNT
+
+	mv_abstain = boolean(sf & SF_MV_ABSTAIN);
 	if (mv_abstain)
 		--mv_count_real;
-	mv_detail = ReadByte();
+	mv_detail = (sf & SF_MV_DETAIL_WINNER) ? 2 : ((sf & SF_MV_DETAIL_COUNTS) ? 1 : 0);
 
 	mv_suggester_cache = "";
 	mv_suggester_cachetime = 0;
 
 	mv_ownvote = -1;
-	mv_timeout = ReadCoord();
+	mv_timeout = ReadFloat();
 
 	int gametypevote_flags = ReadByte();
-	gametypevote = boolean(gametypevote_flags & BIT(0));
-	if (gametypevote_flags)
+	gametypevote = (gametypevote_flags == SF_MV_GTV_NOW);
+	if (gametypevote_flags != SF_MV_GTV_MAPS)
 		mv_chosenmap = strzone(ReadString());
 
 	MapVote_ReadMask();
-	int i;
 	for (i = 0; i < mv_count; ++i)
 		mv_flags_start[i] = mv_flags[i];
 
 	// Assume mv_pk3list is NULL, there should only be 1 mapvote per round
 	mv_pk3list = NULL; // I'm still paranoid!
 
-	for (i = 0; i < mv_count; ++i)
+	void(int) ReadOption = (gametypevote ? GameTypeVote_ReadOption : MapVote_ReadOption);
+	for (i = 0; i < mv_count_real; ++i)
 	{
 		mv_votes[i] = 0;
 		mv_select_lasttime[i] = 0;
-
-		if (gametypevote)
-			GameTypeVote_ReadOption(i);
-		else
-			MapVote_ReadOption(i);
+		ReadOption(i);
 	}
+	if (mv_abstain)
+		mv_entries[mv_count_real] = "";
 
 	for (i = 0; i < mv_ssdirs_count; ++i)
 		mv_ssdirs[mv_ssdirs_count] = string_null;
 	mv_ssdirs_count = 0;
 }
-
-void MapVote_UpdateMask()
-{
-	MapVote_ReadMask();
-	mv_reduce_time = time;
-}
-void MapVote_UpdateVotes()
-{
-	for (int i = 0; i < mv_count; ++i)
-	{
-		if (mv_flags[i] & GTV_AVAILABLE)
-		{
-			if (mv_detail)
-				mv_votes[i] = ReadByte();
-			else
-				mv_votes[i] = 0;
-		}
-		else
-			mv_votes[i] = -1;
-	}
-	if (mv_detail)
-		mv_tie_winner = ReadChar();
-
-	mv_ownvote = ReadByte() - 1;
-}
-#endif // CSQC
+#endif
 
 #ifdef SVQC
 bool MapVote_SendEntity(entity this, entity to, int sf)
 {
 	int i;
-
-	if (sf & BIT(0))
-		sf &= ~BIT(1); // if we send 1, we don't need to also send 2
 	if (!mv_winner_time)
-		sf &= ~BIT(3); // no winner yet
+		sf &= ~SF_MV_WINNER; // no winner yet
+
+	// Pack some extra data into sf
+	sf &= ~(SF_MV_ABSTAIN | SF_MV_DETAIL_COUNTS | SF_MV_DETAIL_WINNER);
+	if (mv_abstain)
+		sf |= SF_MV_ABSTAIN;
+	if (mv_detail == 1)
+		sf |= SF_MV_DETAIL_COUNTS;
+	else if (mv_detail == 2)
+		sf |= SF_MV_DETAIL_WINNER;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);
-
-	if (sf & BIT(0))
-	{
-		// flag 1 == initialization
-		for (i = 0; i < mv_ssdirs_count; ++i)
-			WriteString(MSG_ENTITY, mv_ssdirs[i]);
-		WriteString(MSG_ENTITY, "");
-		WriteByte(MSG_ENTITY, mv_count);
-		WriteByte(MSG_ENTITY, mv_abstain);
-		WriteByte(MSG_ENTITY, mv_detail);
-		WriteCoord(MSG_ENTITY, mv_timeout);
-
-		if (gametypevote)
-		{
-			// gametype vote
-			WriteByte(MSG_ENTITY, BIT(0)); // gametypevote_flags
-			WriteString(MSG_ENTITY, get_nextmap());
-		}
-		else if (autocvar_sv_vote_gametype)
-		{
-			// map vote but gametype has been chosen via voting screen
-			WriteByte(MSG_ENTITY, BIT(1)); // gametypevote_flags
-			string voted_gametype_name = (voted_gametype_string == MapInfo_Type_ToString(voted_gametype))
-				? MapInfo_Type_ToText(voted_gametype)
-				: cvar_string(strcat("sv_vote_gametype_", voted_gametype_string, "_name"));
-			WriteString(MSG_ENTITY, voted_gametype_name);
-		}
-		else
-			WriteByte(MSG_ENTITY, 0); // map vote
-
+	if (sf & SF_MV_INIT)
+		MapVote_WriteInit();
+	else if (sf & SF_MV_MASK) // else if, since init already writes the mask
 		MapVote_WriteMask();
 
-		// Send data for the vote options
-		for (i = 0; i < mv_count; ++i)
-		{
-			if (gametypevote)
-				GameTypeVote_SendOption(i);
-			else
-				MapVote_SendOption(i);
-		}
-	}
-
-	if (sf & BIT(1)) // flag 2 == update of mask
-		MapVote_WriteMask();
-
-	if (sf & BIT(2))
+	if (sf & SF_MV_VOTES)
 	{
 		if (mv_detail)
 		{
+			int i;
 			for (i = 0; i < mv_count; ++i)
 				if (mv_flags[i] & GTV_AVAILABLE)
 					WriteByte(MSG_ENTITY, mv_votes[i]);
 
-			if (mv_detail == 2) // tell the client who the tie winner will be
-				WriteChar(MSG_ENTITY, mv_ranked[0]);
+			if (mv_detail == 2) // tell the client what the tie winner will be
+				i = mv_ranked[0];
 			else if (mv_votes[mv_ranked[0]] == 0) // no votes yet, don't draw a winner (-1)
-				WriteChar(MSG_ENTITY, -1);
+				i = -1;
 			else // figure out winners yourself (-2)
-				WriteChar(MSG_ENTITY, -2);
+				i = -2;
+			WriteByte(MSG_ENTITY, i + 2);
 		}
 
 		WriteByte(MSG_ENTITY, to.mapvote);
 	}
 
-	if (sf & BIT(3))
+	if (sf & SF_MV_WINNER)
 		WriteByte(MSG_ENTITY, mv_winner + 1);
 
 	return true;
@@ -356,21 +264,43 @@ void MapVote_Spawn()
 #elifdef CSQC
 NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isNew)
 {
-	make_pure(this);
 	int sf = ReadByte();
-	return = true;
 
-	if (sf & BIT(0))
-		MapVote_Init();
-	if (sf & BIT(1))
-		MapVote_UpdateMask();
-	if (sf & BIT(2))
-		MapVote_UpdateVotes();
-	if (sf & BIT(3))
+	if (sf & SF_MV_INIT)
+		MapVote_ReadInit(sf);
+	else if (sf & SF_MV_MASK)
+	{
+		MapVote_ReadMask();
+		mv_reduce_time = time;
+	}
+
+	if (sf & SF_MV_VOTES)
+	{
+		for (int i = 0; i < mv_count; ++i)
+		{
+			if (mv_flags[i] & GTV_AVAILABLE)
+			{
+				if (mv_detail)
+					mv_votes[i] = ReadByte();
+				else
+					mv_votes[i] = 0;
+			}
+			else
+				mv_votes[i] = -1;
+		}
+		if (mv_detail)
+			mv_tie_winner = ReadByte() - 2;
+
+		mv_ownvote = ReadByte() - 1;
+	}
+
+	if (sf & SF_MV_WINNER)
 	{
 		mv_winner = ReadByte();
 		mv_winner_time = time;
 	}
+
+	return true;
 }
 #endif
 
@@ -385,14 +315,9 @@ void MapVote_SendPicture(entity to, int id)
 #elifdef CSQC
 NET_HANDLE(TE_CSQC_PICTURE, bool isNew)
 {
-	Net_MapVote_Picture();
-	return true;
-}
-
-void Net_MapVote_Picture()
-{
 	int type = ReadByte();
 	mv_preview[type] = true;
 	mv_pics[type] = strzone(ReadPicture());
+	return true;
 }
 #endif
