@@ -335,6 +335,8 @@ bool MapVote_Finished(int mappos)
 		return false;
 	}
 
+	mv_winner = mappos;
+	mv_winner_time = time;
 	MapVote_Winner(mappos);
 	alreadychangedlevel = true;
 
@@ -499,7 +501,7 @@ void MapVote_Tick()
 			WriteString(MSG_ONE, "");
 		}
 
-		MapVote_ReadChoice(it);
+		MapVote_ReadPlayerVote(it);
 	});
 
 	MapVote_CheckRules_count(); // just count

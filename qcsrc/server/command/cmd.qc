@@ -321,8 +321,8 @@ void ClientCommand_mv_getpicture(entity caller, int request, int argc)  // inter
 		{
 			if (argv(1) != "")
 			{
-				if (intermission_running) MapVote_SendPicture(caller, stof(argv(1)));
-
+				if (intermission_running)
+					MapVote_WritePicture(caller, stof(argv(1)));
 				return;
 			}
 		}

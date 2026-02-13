@@ -796,7 +796,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		case K_ENTER:
 		case K_SPACE:
 			if (!mv_winner && mv_selection_keyboard)
-				MapVote_SendChoice(mv_selection);
+				MapVote_WritePlayerVote(mv_selection);
 			return true;
 	#define IMPULSE_NUM_CASE(num, imp_num) \
 		case '0' + num: \
@@ -841,7 +841,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	if (imp)
 	{
 		if (!mv_winner && imp <= mv_count)
-			localcmd("\nimpulse ", ftos(imp), "\n");
+			MapVote_WritePlayerVote(imp - 1);
 		return true;
 	}
 
