@@ -1297,7 +1297,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		case MSG_MULTI:
 			if (notif.nent_msginfo && notif.nent_msginfo.nent_enabled)
 			{
-				Local_Notification_WOCOVA(
+				Local_Notification_Core(
 					MSG_INFO,
 					notif.nent_msginfo,
 					s1, s2, s3, s4,
@@ -1308,7 +1308,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 				Local_Notification(MSG_ANNCE, notif.nent_msgannce); // empty float and string args
 			if (notif.nent_msgcenter && notif.nent_msgcenter.nent_enabled)
 			{
-				Local_Notification_WOCOVA(
+				Local_Notification_Core(
 					MSG_CENTER,
 					notif.nent_msgcenter,
 					s1, s2, s3, s4,
@@ -1328,7 +1328,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 					default: return; // not enabled anyway
 				}
 
-			Local_Notification_WOCOVA(
+			Local_Notification_Core(
 				found_choice.nent_type,
 				found_choice,
 				s1, s2, s3, s4,
@@ -1338,8 +1338,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 	}
 }
 
-// WOVA = Without Counts Or Variable Arguments
-void Local_Notification_WOCOVA(
+void Local_Notification_Core(
 	MSG net_type, Notification net_name,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -1426,7 +1425,7 @@ NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool isNew)
 
 	if (!isNew)
 		return;
-	Local_Notification_WOCOVA(
+	Local_Notification_Core(
 		net_type, notif,
 		s1, s2, s3, s4,
 		f1, f2, f3, f4);
@@ -1570,7 +1569,7 @@ void Send_Notification(
 	if (autocvar_sv_dedicated
 	&& (broadcast == NOTIF_ALL || broadcast == NOTIF_ALL_EXCEPT)
 	&& !(net_type == MSG_ANNCE || net_type == MSG_CENTER))
-		Local_Notification_WOCOVA(
+		Local_Notification_Core(
 			net_type, net_name,
 			s1, s2, s3, s4,
 			f1, f2, f3, f4);
@@ -1594,7 +1593,7 @@ void Send_Notification(
 				} \
 			else \
 				found_choice = notif.nent_optiona; \
-			Send_Notification_WOCOVA( \
+			Send_Notification_Core( \
 				NOTIF_ONE_ONLY, \
 				ent, \
 				found_choice.nent_type, \
@@ -1643,8 +1642,7 @@ void Send_Notification(
 	}
 }
 
-// WOCOVA = Without Counts Or Variable Arguments
-void Send_Notification_WOCOVA(
+void Send_Notification_Core(
 	NOTIF broadcast, entity client,
 	MSG net_type, Notification net_name,
 	string s1, string s2, string s3, string s4,
@@ -1654,7 +1652,7 @@ void Send_Notification_WOCOVA(
 
 #ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Send_Notification_WOCOVA(%s, %s, %s);\n",
+		"Send_Notification_Core(%s, %s, %s);\n",
 		sprintf(
 			"%s, '%s', %s, %s",
 			Get_Notif_BroadcastName(broadcast),
