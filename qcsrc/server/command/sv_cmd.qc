@@ -4,6 +4,7 @@
 #include <common/effects/all.qh>
 #include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
@@ -21,7 +22,6 @@
 #include <server/command/radarmap.qh>
 #include <server/intermission.qh>
 #include <server/ipban.qh>
-#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
 #include <server/scores_rules.qh>

@@ -7,6 +7,7 @@
 #include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/minigames/sv_minigames.qh>
 #include <common/monsters/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
@@ -30,7 +31,6 @@
 #include <server/command/getreplies.qh>
 #include <server/command/vote.qh>
 #include <server/ipban.qh>
-#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
 #include <server/race.qh>
