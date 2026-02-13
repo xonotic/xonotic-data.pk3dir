@@ -6,7 +6,6 @@
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/scoreboard.qh>
-#include <client/mapvoting.qh>
 #include <client/mutators/_mod.qh>
 #include <client/shownames.qh>
 #include <common/anim.qh>
@@ -20,6 +19,7 @@
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>

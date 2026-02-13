@@ -1,5 +1,7 @@
 #pragma once
 
+#include "net.qh"
+
 #include <common/constants.qh>
 
 bool autocvar_cl_readpicture_force;

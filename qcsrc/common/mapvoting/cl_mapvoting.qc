@@ -1,4 +1,4 @@
-#include "mapvoting.qh"
+#include "cl_mapvoting.qh"
 
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
@@ -16,7 +16,7 @@ void MapVote_Draw_Export(int fh)
 
 int mv_num_maps;
 
-// These are mostly the same as server/mapvoting.qc, or otherwise intuitive
+// These are mostly the same as sv_mapvoting.qc, or otherwise intuitive
 string mv_entries[MAPVOTE_COUNT]; // map name or gametype name
 string mv_pics[MAPVOTE_COUNT];
 string mv_data[MAPVOTE_COUNT];    // map pk3 name or gametype human readable name

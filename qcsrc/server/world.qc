@@ -11,6 +11,7 @@
 #include <common/mapobjects/trigger/hurt.qh>
 #include <common/mapobjects/trigger/secret.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/monsters/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
@@ -41,7 +42,6 @@
 #include <server/ipban.qh>
 #include <server/items/items.qh>
 #include <server/main.qh>
-#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/race.qh>
 #include <server/scores.qh>

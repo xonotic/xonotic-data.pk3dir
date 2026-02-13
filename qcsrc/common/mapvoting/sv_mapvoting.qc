@@ -1,4 +1,4 @@
-#include "mapvoting.qh"
+#include "sv_mapvoting.qh"
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
