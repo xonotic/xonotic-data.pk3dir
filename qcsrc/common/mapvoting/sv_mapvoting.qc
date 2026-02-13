@@ -1,5 +1,7 @@
 #include "sv_mapvoting.qh"
 
+#include "net.qh"
+
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/net_linked.qh>
@@ -15,40 +17,10 @@
 #include <server/world.qh>
 
 // declarations
-
 float mapvote_nextthink;
 float mapvote_reduce_time;
 int mapvote_reduce_count;
 float mapvote_timeout;
-const int MAPVOTE_SCREENSHOT_DIRS_COUNT = 4;
-string mapvote_screenshot_dirs[MAPVOTE_SCREENSHOT_DIRS_COUNT];
-int mapvote_screenshot_dirs_count;
-
-int mapvote_count;                              // (shared) number of maps/gametypes
-int mapvote_count_real;                         // (shared) number of maps/gametypes, excluding abstain
-string mapvote_maps[MAPVOTE_COUNT];             // (shared) name of the map/gametype
-int mapvote_maps_screenshot_dir[MAPVOTE_COUNT]; // (shared) where to look for screenshots, set to 0 for gametype voting
-string mapvote_maps_pakfile[MAPVOTE_COUNT];     // (maps)   pk3
-string mapvote_maps_suggesters[MAPVOTE_COUNT];  // (maps)   netname of the person who suggested the map
-string mapvote_maps_suggestions[MAPVOTE_COUNT]; // (maps)   name of the suggested map, later copied into mapvote_maps
-int mapvote_suggestion_ptr;                     // (maps)   index of where the next suggestion should be (starts as 0)
-int mapvote_voters;                             // (shared) number of human voters present
-int mapvote_selections[MAPVOTE_COUNT];          // (shared) number of votes for the map/gametype
-int mapvote_maps_flags[MAPVOTE_COUNT];          // (shared) map/gametype flags
-int mapvote_ranked[MAPVOTE_COUNT];              // (shared) maps/gametypes ranked by most votes, first = most
-float mapvote_rng[MAPVOTE_COUNT];               // (shared) random() value for each map/gametype to determine tiebreakers
-// Suggestions need mapvote_maps_suggestions (can't use mapvote_maps, since it's shared by gametype voting so will be overridden)
-/* NOTE: mapvote_rng array can be replaced with a randomly selected index of the tie-winner.
- * If the tie-winner isn't included in the tie, choose the nearest index that is included.
- * This would use less storage but isn't truly random and can sometimes be predictable.
- */
-bool mapvote_run;
-int mapvote_detail;          // (shared)
-bool mapvote_abstain;        // (shared) set to false in gametype voting
-bool mapvote_show_suggester; // (maps)   not read in gametype voting
-.int mapvote;
-
-entity mapvote_ent;
 
 // Returns the gamtype ID from its name, if type_name isn't a real gametype it checks for sv_vote_gametype_(type_name)_type
 Gametype GameTypeVote_Type_FromString(string type_name)
@@ -271,9 +243,6 @@ void MapVote_AddVotableMaps(int nmax, int smax)
 	Maplist_Close();
 }
 
-string voted_gametype_string;
-Gametype voted_gametype;
-Gametype match_gametype;
 int current_gametype_index;
 void MapVote_Init()
 {
@@ -327,191 +296,6 @@ void MapVote_Init()
 			: "";
 		GameTypeVote_SetGametype(match_gametype, gametype_custom_string, true);
 	}
-}
-
-void MapVote_SendPicture(entity to, int id)
-{
-	msg_entity = to;
-	WriteHeader(MSG_ONE, TE_CSQC_PICTURE);
-	WriteByte(MSG_ONE, id);
-	WritePicture(MSG_ONE, strcat(mapvote_screenshot_dirs[mapvote_maps_screenshot_dir[id]], "/", mapvote_maps[id]), 3072);
-}
-
-
-void MapVote_WriteMask()
-{
-	int i;
-	if (mapvote_count < 24)
-	{
-		int mask = 0;
-		for (i = 0; i < mapvote_count; ++i)
-			if (mapvote_maps_flags[i] & GTV_AVAILABLE)
-				mask |= BIT(i);
-
-		if (mapvote_count < 8)
-			WriteByte(MSG_ENTITY, mask);
-		else if (mapvote_count < 16)
-			WriteShort(MSG_ENTITY,mask);
-		else
-			WriteLong(MSG_ENTITY, mask);
-	}
-	else
-	{
-		for (i = 0; i < mapvote_count; ++i)
-			WriteByte(MSG_ENTITY, mapvote_maps_flags[i]);
-	}
-}
-
-// Sends a single map vote option to the client
-void MapVote_SendOption(int i)
-{
-	// abstain
-	if (mapvote_abstain && i == mapvote_count - 1)
-	{
-		WriteString(MSG_ENTITY, ""); // abstain needs no text
-		WriteString(MSG_ENTITY, ""); // abstain needs no pack
-		WriteString(MSG_ENTITY, ""); // abstain has no suggester
-		WriteByte(MSG_ENTITY, 0); // abstain needs no screenshot dir
-	}
-	else
-	{
-		WriteString(MSG_ENTITY, mapvote_maps[i]);
-		WriteString(MSG_ENTITY, mapvote_maps_pakfile[i]);
-		WriteString(MSG_ENTITY, mapvote_show_suggester ? mapvote_maps_suggesters[i] : "");
-		WriteByte(MSG_ENTITY, mapvote_maps_screenshot_dir[i]);
-	}
-}
-
-// Sends a single gametype vote option to the client
-void GameTypeVote_SendOption(int i)
-{
-	// abstain
-	if (mapvote_abstain && i == mapvote_count - 1)
-	{
-		WriteString(MSG_ENTITY, ""); // abstain needs no text
-		WriteByte(MSG_ENTITY, GTV_AVAILABLE);
-	}
-	else
-	{
-		const string type_name = mapvote_maps[i];
-		WriteString(MSG_ENTITY, type_name);
-		WriteByte(MSG_ENTITY, mapvote_maps_flags[i]);
-		if (mapvote_maps_flags[i] & GTV_CUSTOM)
-		{
-			WriteString(MSG_ENTITY, cvar_string(
-				strcat("sv_vote_gametype_", type_name, "_name")));
-			WriteString(MSG_ENTITY, cvar_string(
-				strcat("sv_vote_gametype_", type_name, "_description")));
-			WriteString(MSG_ENTITY, cvar_string(
-				strcat("sv_vote_gametype_", type_name, "_type")));
-		}
-	}
-}
-
-int mapvote_winner;
-float mapvote_winner_time;
-bool MapVote_SendEntity(entity this, entity to, int sf)
-{
-	int i;
-
-	if (sf & BIT(0))
-		sf &= ~BIT(1); // if we send 1, we don't need to also send 2
-
-	if (!mapvote_winner_time)
-		sf &= ~BIT(3); // no winner yet
-
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
-	WriteByte(MSG_ENTITY, sf);
-
-	if (sf & BIT(0))
-	{
-		// flag 1 == initialization
-		for (i = 0; i < mapvote_screenshot_dirs_count; ++i)
-			WriteString(MSG_ENTITY, mapvote_screenshot_dirs[i]);
-		WriteString(MSG_ENTITY, "");
-		WriteByte(MSG_ENTITY, mapvote_count);
-		WriteByte(MSG_ENTITY, mapvote_abstain);
-		WriteByte(MSG_ENTITY, mapvote_detail);
-		WriteCoord(MSG_ENTITY, mapvote_timeout);
-
-		if (gametypevote)
-		{
-			// gametype vote
-			WriteByte(MSG_ENTITY, BIT(0)); // gametypevote_flags
-			WriteString(MSG_ENTITY, get_nextmap());
-		}
-		else if (autocvar_sv_vote_gametype)
-		{
-			// map vote but gametype has been chosen via voting screen
-			WriteByte(MSG_ENTITY, BIT(1)); // gametypevote_flags
-			const string voted_gametype_name = (voted_gametype_string == MapInfo_Type_ToString(voted_gametype))
-				? MapInfo_Type_ToText(voted_gametype)
-				: cvar_string(strcat("sv_vote_gametype_", voted_gametype_string, "_name"));
-			WriteString(MSG_ENTITY, voted_gametype_name);
-		}
-		else
-			WriteByte(MSG_ENTITY, 0); // map vote
-
-		MapVote_WriteMask();
-
-		// Send data for the vote options
-		for (i = 0; i < mapvote_count; ++i)
-		{
-			if (gametypevote)
-				GameTypeVote_SendOption(i);
-			else
-				MapVote_SendOption(i);
-		}
-	}
-
-	if (sf & BIT(1)) // flag 2 == update of mask
-		MapVote_WriteMask();
-
-	if (sf & BIT(2))
-	{
-		if (mapvote_detail)
-		{
-			for (i = 0; i < mapvote_count; ++i)
-				if (mapvote_maps_flags[i] & GTV_AVAILABLE)
-					WriteByte(MSG_ENTITY, mapvote_selections[i]);
-
-			if (mapvote_detail == 2) // tell the client who the tie winner will be
-				WriteChar(MSG_ENTITY, mapvote_ranked[0]);
-			else if (mapvote_selections[mapvote_ranked[0]] == 0) // no votes yet, don't draw a winner (-1)
-				WriteChar(MSG_ENTITY, -1);
-			else // figure out winners yourself (-2)
-				WriteChar(MSG_ENTITY, -2);
-		}
-
-		WriteByte(MSG_ENTITY, to.mapvote);
-	}
-
-	if (sf & BIT(3))
-		WriteByte(MSG_ENTITY, mapvote_winner + 1);
-
-	return true;
-}
-
-void MapVote_Spawn()
-{
-	Net_LinkEntity(mapvote_ent = new(mapvote_ent), false, 0, MapVote_SendEntity);
-}
-
-void MapVote_TouchMask()
-{
-	mapvote_ent.SendFlags |= BIT(1);
-}
-
-void MapVote_TouchVotes(entity voter)
-{
-	mapvote_ent.SendFlags |= BIT(2);
-}
-
-void MapVote_Winner(int mappos)
-{
-	mapvote_ent.SendFlags |= BIT(3);
-	mapvote_winner_time = time;
-	mapvote_winner = mappos;
 }
 
 bool MapVote_Finished(int mappos)
