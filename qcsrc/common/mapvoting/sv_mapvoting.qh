@@ -1,5 +1,7 @@
 #pragma once
 
+#include "mapvoting.qh"
+
 #define autocvar_g_maplist cvar_string("g_maplist")
 bool autocvar_g_maplist_check_waypoints;
 int autocvar_g_maplist_index;
@@ -30,7 +32,7 @@ int autocvar_sv_vote_gametype_detail;
 bool autocvar_sv_vote_gametype_default_current;
 bool autocvar_sv_vote_gametype_maplist_reset = true;
 
-// definitions for functions used outside sv_mapvoting.qc
+// Definitions for functions used outside sv_mapvoting.qc
 void MapVote_Start();
 void MapVote_Think();
 // FIXME can't use Gametype type because Gitlab compilation unit test fails
@@ -39,39 +41,27 @@ float GameTypeVote_Start();
 float GameTypeVote_Finished(int pos);
 string GameTypeVote_MapInfo_FixName(string m);
 
-const int MAPVOTE_SCREENSHOT_DIRS_COUNT = 4;
-string mapvote_screenshot_dirs[MAPVOTE_SCREENSHOT_DIRS_COUNT];
-int mapvote_screenshot_dirs_count;
-
-int mapvote_count;                              // (shared) number of maps/gametypes
-int mapvote_count_real;                         // (shared) number of maps/gametypes, excluding abstain
-string mapvote_maps[MAPVOTE_COUNT];             // (shared) name of the map/gametype
-int mapvote_maps_screenshot_dir[MAPVOTE_COUNT]; // (shared) where to look for screenshots, set to 0 for gametype voting
-string mapvote_maps_pakfile[MAPVOTE_COUNT];     // (maps)   pk3
-string mapvote_maps_suggesters[MAPVOTE_COUNT];  // (maps)   netname of the person who suggested the map
-string mapvote_maps_suggestions[MAPVOTE_COUNT]; // (maps)   name of the suggested map, later copied into mapvote_maps
-int mapvote_suggestion_ptr;                     // (maps)   index of where the next suggestion should be (starts as 0)
-int mapvote_voters;                             // (shared) number of human voters present
-int mapvote_selections[MAPVOTE_COUNT];          // (shared) number of votes for the map/gametype
-int mapvote_maps_flags[MAPVOTE_COUNT];          // (shared) map/gametype flags
-int mapvote_ranked[MAPVOTE_COUNT];              // (shared) maps/gametypes ranked by most votes, first = most
-float mapvote_rng[MAPVOTE_COUNT];               // (shared) random() value for each map/gametype to determine tiebreakers
-// Suggestions need mapvote_maps_suggestions (can't use mapvote_maps, since it's shared by gametype voting so will be overridden)
-/* NOTE: mapvote_rng array can be replaced with a randomly selected index of the tie-winner.
+// Globals, beyond those in mapvoting.qh
+int mv_ssdir_i[MAPVOTE_COUNT];         ///< (shared) where to look for screenshots (mv_ssdirs index), set to 0 for gametype voting
+string mv_pakfile[MAPVOTE_COUNT];      ///< (maps)   pk3 file location
+bool mv_show_suggester;                ///< (maps)   whether to show suggesters, only for maps since you can't suggest gametypes
+string mv_suggestions[MAPVOTE_COUNT];  ///< (maps)   name of the suggested map, later copied into mv_entries
+// Suggestions need mv_suggestions (can't use mv_entries, since it's shared by gametype voting so will be overridden)
+int mv_suggestion_ptr;                 ///< (maps)   index of where the next suggestion should be (starts as 0)
+int mv_voters;                         ///< (shared) number of human voters present
+int mv_ranked[MAPVOTE_COUNT];          ///< (shared) maps/gametypes ranked by most votes, first = most
+float mv_rng[MAPVOTE_COUNT];           ///< (shared) random() value for each map/gametype to determine tiebreakers
+/* NOTE: mv_rng array can be replaced with a randomly selected index of the tie-winner.
  * If the tie-winner isn't included in the tie, choose the nearest index that is included.
  * This would use less storage but isn't truly random and can sometimes be predictable.
  */
 bool mapvote_run;
-int mapvote_detail;          // (shared)
-bool mapvote_abstain;        // (shared) set to false in gametype voting
-bool mapvote_show_suggester; // (maps)   not read in gametype voting
 .int mapvote;
 
-int mapvote_winner;
-float mapvote_winner_time;
+float mv_winner_time;
 bool gametypevote;
 string getmapname_stored;
-float mapvote_initialized;
+bool mapvote_initialized;
 
 string voted_gametype_string;
 Gametype voted_gametype;

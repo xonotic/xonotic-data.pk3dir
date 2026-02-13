@@ -85,8 +85,8 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	float alpha;
 	if (!(mv_flags_start[id] & GTV_AVAILABLE))
 		alpha = 0.2; // The gametype isn't supported by the map
-	else if (!(mv_flags[id] & GTV_AVAILABLE) && mv_top2_alpha)
-		alpha = mv_top2_alpha; // Fade away if not one of the top 2 choice
+	else if (!(mv_flags[id] & GTV_AVAILABLE) && mv_reduce_alpha)
+		alpha = mv_reduce_alpha; // Fade away if not one of the top 2 choice
 	else
 		alpha = 1; // Normal, full alpha
 	alpha *= panel_fg_alpha;
@@ -265,8 +265,8 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	pos.x += (tsize - img_size.x) * 0.5;
 
 	float theAlpha;
-	if (!(mv_flags[id] & GTV_AVAILABLE) && mv_top2_alpha)
-		theAlpha = mv_top2_alpha;
+	if (!(mv_flags[id] & GTV_AVAILABLE) && mv_reduce_alpha)
+		theAlpha = mv_reduce_alpha;
 	else if (mv_winner && mv_winner_alpha)
 		theAlpha = mv_winner_alpha;
 	else
@@ -375,10 +375,10 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 				break;
 			}
 
-	if (mv_mouse_selection >= mv_num_maps)
+	if (mv_mouse_selection >= mv_count_real)
 		mv_mouse_selection = -1;
 	if (mv_abstain && mv_mouse_selection < 0)
-		mv_mouse_selection = mv_num_maps;
+		mv_mouse_selection = mv_count_real;
 
 	if (mv_selection_keyboard)
 		return mv_selection;
@@ -429,11 +429,11 @@ void MapVote_Draw(bool should_draw)
 	}
 	pos.y += hud_fontsize.y * 2;
 
-	if (mapvote_chosenmap != "")
+	if (mv_chosenmap != "")
 	{
 		pos.y += hud_fontsize.y * 0.25;
-		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize * 1.5) * 0.5;
-		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		pos.x = center - stringwidth(mv_chosenmap, false, hud_fontsize * 1.5) * 0.5;
+		drawstring(pos, mv_chosenmap, hud_fontsize * 1.5, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += hud_fontsize.y * 1.5;
 	}
 	pos.y += hud_fontsize.y * 0.5;
@@ -460,17 +460,14 @@ void MapVote_Draw(bool should_draw)
 	const float abstain_spacing = panel_bg_border + hud_fontsize.y;
 	const float suggester_spacing = hud_fontsize.y * 1.5;
 	if (mv_abstain)
-	{
-		--mv_num_maps;
 		ymax -= abstain_spacing;
-	}
 	const bool were_suggesters = (mv_suggester[0] != ""); // suggestions are placed at the start
 	if (were_suggesters)
 		ymax -= suggester_spacing;
 
 	// higher than the image itself ratio for mapvote items to reserve space for long map names
 	const float item_aspect = (gametypevote) ? 3/1 : 5/3;
-	const vector table_size = HUD_GetTableSize_BestItemAR(mv_num_maps, vec2(xmax - xmin, ymax - ymin), item_aspect);
+	const vector table_size = HUD_GetTableSize_BestItemAR(mv_count_real, vec2(xmax - xmin, ymax - ymin), item_aspect);
 	mv_columns = table_size.x;
 	const float rows = table_size.y;
 
@@ -529,15 +526,15 @@ void MapVote_Draw(bool should_draw)
 	if (mv_selection != -1)
 		mv_select_lasttime[mv_selection] = time;
 
-	if (mv_top2_time)
-		mv_top2_alpha = max(0.2, 1 - (time - mv_top2_time) ** 2);
+	if (mv_reduce_time)
+		mv_reduce_alpha = max(0.2, 1 - (time - mv_reduce_time) ** 2);
 
 	if (mv_winner_time)
 		mv_winner_alpha = max(0.2, 1 - sqrt(max(0, time - mv_winner_time)));
 
 	int most_votes = -1;
 	if (mv_tie_winner == -2)
-		for (i = 0; i < mv_num_maps; ++i)
+		for (i = 0; i < mv_count_real; ++i)
 			if (mv_votes[i] > most_votes)
 				most_votes = mv_votes[i];
 
@@ -547,7 +544,7 @@ void MapVote_Draw(bool should_draw)
 	else
 		DrawItem = MapVote_DrawMapItem;
 
-	for (i = 0; i < mv_num_maps; ++i)
+	for (i = 0; i < mv_count_real; ++i)
 	{
 		tmp = mv_votes[i]; // FTEQCC bug: too many array accesses in the function call screw it up
 		map = mv_entries[i];
@@ -555,11 +552,8 @@ void MapVote_Draw(bool should_draw)
 		DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, pic, tmp, i, most_votes);
 	}
 
-	if (mv_abstain)
-		++mv_num_maps;
-
 	pos.y = ymax + abstain_spacing;
-	if (mv_abstain && i < mv_num_maps)
+	if (mv_abstain)
 	{
 		tmp = mv_votes[i];
 		pos.x = center;
@@ -663,7 +657,7 @@ void MapVote_CheckPic(string pic, string pk3, int id)
 {
 	TC(int, id);
 	// never try to retrieve a pic for the "don't care" 'map'
-	if (mv_abstain && id == mv_num_maps - 1)
+	if (mv_abstain && id == mv_count - 1)
 		return;
 
 	if (PreviewExists(pic))
@@ -679,9 +673,9 @@ int MapVote_MoveLeft(int pos)
 	TC(int, pos);
 	int imp;
 	if (pos < 0)
-		imp = mv_num_maps - 1;
+		imp = mv_count - 1;
 	else
-		imp = pos < 1 ? mv_num_maps - 1 : pos - 1;
+		imp = pos < 1 ? mv_count - 1 : pos - 1;
 	if (!(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote)
 		imp = MapVote_MoveLeft(imp);
 	return imp;
@@ -693,7 +687,7 @@ int MapVote_MoveRight(int pos)
 	if (pos < 0)
 		imp = 0;
 	else
-		imp = pos >= mv_num_maps - 1 ? 0 : pos + 1;
+		imp = pos >= mv_count - 1 ? 0 : pos + 1;
 	if (!(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote)
 		imp = MapVote_MoveRight(imp);
 	return imp;
@@ -703,13 +697,13 @@ int MapVote_MoveUp(int pos)
 	TC(int, pos);
 	int imp;
 	if (pos < 0)
-		imp = mv_num_maps - 1;
+		imp = mv_count - 1;
 	else
 	{
 		imp = pos - mv_columns;
 		if (imp < 0)
 		{
-			const int mv_rows = ceil(mv_num_maps / mv_columns);
+			const int mv_rows = ceil(mv_count / mv_columns);
 			if (imp == -mv_columns) // pos == 0
 				imp = mv_columns * mv_rows - 1;
 			else
@@ -729,7 +723,7 @@ int MapVote_MoveDown(int pos)
 	else
 	{
 		imp = pos + mv_columns;
-		if (imp >= mv_num_maps)
+		if (imp >= mv_count)
 		{
 			const int col = imp % mv_columns;
 			if (col == mv_columns - 1)
@@ -853,7 +847,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 		mv_selection_keyboard = false;
 		mv_selection = mv_mouse_selection;
 		if (mv_selection >= 0)
-			imp = min(mv_selection + 1, mv_num_maps);
+			imp = min(mv_selection + 1, mv_count);
 	}
 
 	if (nPrimary == K_MOUSE2)
@@ -861,7 +855,7 @@ float MapVote_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 	if (imp)
 	{
-		if (!mv_winner && imp <= mv_num_maps)
+		if (!mv_winner && imp <= mv_count)
 			localcmd("\nimpulse ", ftos(imp), "\n");
 		return true;
 	}

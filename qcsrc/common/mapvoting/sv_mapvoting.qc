@@ -2,7 +2,6 @@
 
 #include "net.qh"
 
-#include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/net_linked.qh>
 #include <common/playerstats.qh>
@@ -17,10 +16,8 @@
 #include <server/world.qh>
 
 // declarations
-float mapvote_nextthink;
-float mapvote_reduce_time;
-int mapvote_reduce_count;
-float mapvote_timeout;
+float mv_nextthink;
+int mv_reduce_count;
 
 // Returns the gamtype ID from its name, if type_name isn't a real gametype it checks for sv_vote_gametype_(type_name)_type
 Gametype GameTypeVote_Type_FromString(string type_name)
@@ -91,11 +88,11 @@ void MapVote_ClearAllVotes()
 
 void MapVote_UnzoneStrings()
 {
-	for (int i = 0; i < mapvote_count; ++i)
+	for (int i = 0; i < mv_count; ++i)
 	{
-		strfree(mapvote_maps[i]);
-		strfree(mapvote_maps_pakfile[i]);
-		// mapvote_maps_suggesters is set to the netname of the suggester, so can't & doesn't need to be unzoned
+		strfree(mv_entries[i]);
+		strfree(mv_pakfile[i]);
+		// mv_suggester is set to the netname of the suggester, so can't & doesn't need to be unzoned
 	}
 }
 
@@ -116,21 +113,21 @@ string MapVote_Suggest(entity this, string m)
 	if (!autocvar_sv_vote_gametype && !MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current gametype.";
 	int i;
-	for (i = 0; i < mapvote_suggestion_ptr; ++i)
-		if (mapvote_maps_suggestions[i] == m)
+	for (i = 0; i < mv_suggestion_ptr; ++i)
+		if (mv_suggestions[i] == m)
 			return "This map was already suggested.";
-	if (mapvote_suggestion_ptr >= MAPVOTE_COUNT)
-		i = floor(random() * mapvote_suggestion_ptr);
+	if (mv_suggestion_ptr >= MAPVOTE_COUNT)
+		i = floor(random() * mv_suggestion_ptr);
 	else
 	{
-		i = mapvote_suggestion_ptr;
-		++mapvote_suggestion_ptr;
+		i = mv_suggestion_ptr;
+		++mv_suggestion_ptr;
 	}
 
-	if (mapvote_maps_suggestions[i] != "")
-		strunzone(mapvote_maps_suggestions[i]);
-	mapvote_maps_suggestions[i] = strzone(m);
-	mapvote_maps_suggesters[i] = this.netname;
+	if (mv_suggestions[i] != "")
+		strunzone(mv_suggestions[i]);
+	mv_suggestions[i] = strzone(m);
+	mv_suggester[i] = this.netname;
 
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":vote:suggested:", m, ":", itos(this.playerid)));
@@ -145,16 +142,16 @@ bool MapVote_AddVotable(int from_i)
 	else if (from_i == -2) // abstain
 		next_map = "don't care";
 	else
-		next_map = mapvote_maps_suggestions[from_i];
+		next_map = mv_suggestions[from_i];
 	if (next_map == "")
 		return false;
 
-	const string suggester = (from_i >= 0 ? mapvote_maps_suggesters[from_i] : "");
+	const string suggester = (from_i >= 0 ? mv_suggester[from_i] : "");
 	int i;
 	if (suggester == "")
 	{
-		for (i = 0; i < mapvote_count; ++i)
-			if (mapvote_maps[i] == next_map)
+		for (i = 0; i < mv_count; ++i)
+			if (mv_entries[i] == next_map)
 				return false;
 	}
 	else if (!MapInfo_CheckMap(next_map))
@@ -164,9 +161,9 @@ bool MapVote_AddVotable(int from_i)
 	}
 
 	string pakfile = string_null;
-	for (i = 0; i < mapvote_screenshot_dirs_count; ++i)
+	for (i = 0; i < mv_ssdirs_count; ++i)
 	{
-		const string mapfile = strcat(mapvote_screenshot_dirs[i], "/", next_map);
+		const string mapfile = strcat(mv_ssdirs[i], "/", next_map);
 		pakfile = whichpack(strcat(mapfile, ".tga"));
 		if (pakfile == "")
 			pakfile = whichpack(strcat(mapfile, ".jpg"));
@@ -175,26 +172,26 @@ bool MapVote_AddVotable(int from_i)
 		if (pakfile != "")
 			break;
 	}
-	if (i >= mapvote_screenshot_dirs_count)
+	if (i >= mv_ssdirs_count)
 		i = 0; // FIXME maybe network this error case, as that means there is no mapshot on th=e server?
 	for (int o = strstrofs(pakfile, "/", 0) + 1; o > 0; o = strstrofs(pakfile, "/", 0) + 1)
 		pakfile = substring(pakfile, o, -1);
 
-	mapvote_maps[mapvote_count] = strzone(next_map);
-	mapvote_rng[mapvote_count] = random();
-	mapvote_maps_screenshot_dir[mapvote_count] = i;
-	mapvote_maps_pakfile[mapvote_count] = strzone(pakfile);
-	mapvote_maps_flags[mapvote_count] = GTV_AVAILABLE;
-	if (suggester != "" && from_i != mapvote_count)
+	mv_entries[mv_count] = strzone(next_map);
+	mv_rng[mv_count] = random();
+	mv_ssdir_i[mv_count] = i;
+	mv_pakfile[mv_count] = strzone(pakfile);
+	mv_flags[mv_count] = GTV_AVAILABLE;
+	if (suggester != "" && from_i != mv_count)
 	{
 		// swap accepted suggestion with wherever it came from
-		mapvote_maps_suggestions[from_i] = mapvote_maps_suggestions[mapvote_count];
-		mapvote_maps_suggesters[from_i] = mapvote_maps_suggesters[mapvote_count];
-		mapvote_maps_suggestions[mapvote_count] = next_map;
-		mapvote_maps_suggesters[mapvote_count] = suggester;
+		mv_suggestions[from_i] = mv_suggestions[mv_count];
+		mv_suggester[from_i] = mv_suggester[mv_count];
+		mv_suggestions[mv_count] = next_map;
+		mv_suggester[mv_count] = suggester;
 	}
 
-	++mapvote_count;
+	++mv_count;
 	return true;
 }
 
@@ -207,38 +204,38 @@ void MapVote_AddVotableMaps(int nmax, int smax)
 
 	/**
 	 * Before mapvoting begins, players can trigger MapVote_Suggest (suggestmap),
-	 * which sets mapvote_maps_suggestions and mapvote_maps_suggesters from index 0 onwards.
-	 * When mapvoting begins, we store the other info (pakfile, flags, screenshot_dir, rng)
+	 * which sets mv_suggestions and mv_suggester from index 0 onwards.
+	 * When mapvoting begins, we store the other info (pakfile, flags, ssdir, rng)
 	 * with MapVote_AddVotable, for the suggested maps first to filter out the invalid ones,
 	 * then run MapVote_AddVotable with GetNextMap to fill in the rest of the maps.
 	 */
-	if (smax && mapvote_suggestion_ptr)
+	if (smax && mv_suggestion_ptr)
 	{
-		int i, last_i = mapvote_suggestion_ptr - 1;
-		while (mapvote_count < smax && last_i >= mapvote_count)
+		int i, last_i = mv_suggestion_ptr - 1;
+		while (mv_count < smax && last_i >= mv_count)
 		{
-			// mapvote_suggestion_ptr <= smax, so mapvote_count + fails < mapvote_suggestion_ptr
-			i = floor(random() * (last_i - mapvote_count + 1)) + mapvote_count;
+			// mv_suggestion_ptr <= smax, so mv_count + fails < mv_suggestion_ptr
+			i = floor(random() * (last_i - mv_count + 1)) + mv_count;
 			if (!MapVote_AddVotable(i))
 			{
 				// replace failed suggestion with the one at the end of the list, and shorten the list
-				mapvote_maps_suggestions[i] = mapvote_maps_suggestions[last_i];
-				mapvote_maps_suggesters[i] = mapvote_maps_suggesters[last_i];
-				mapvote_maps_suggestions[last_i] = "";
-				mapvote_maps_suggesters[last_i] = "";
+				mv_suggestions[i] = mv_suggestions[last_i];
+				mv_suggester[i] = mv_suggester[last_i];
+				mv_suggestions[last_i] = "";
+				mv_suggester[last_i] = "";
 				--last_i;
 			}
 		}
-		for (i = mapvote_count; i <= last_i; ++i) // may need to clear unused suggestions,
-		{                                         // if g_maplist_votable_suggestions < mapvote_suggestion_ptr
-			mapvote_maps_suggestions[i] = "";
-			mapvote_maps_suggesters[i] = "";
+		for (i = mv_count; i <= last_i; ++i) // may need to clear unused suggestions,
+		{                                         // if g_maplist_votable_suggestions < mv_suggestion_ptr
+			mv_suggestions[i] = "";
+			mv_suggester[i] = "";
 		}
 	}
-	for (int att = 0; att < max_attempts && mapvote_count < nmax; ++att)
+	for (int att = 0; att < max_attempts && mv_count < nmax; ++att)
 		MapVote_AddVotable(-1); // GetNextMap
 
-	mapvote_ranked[0] = 0;
+	mv_ranked[0] = 0;
 
 	Maplist_Close();
 }
@@ -249,38 +246,38 @@ void MapVote_Init()
 	MapVote_ClearAllVotes();
 	MapVote_UnzoneStrings();
 
-	mapvote_count = 0;
-	mapvote_detail = autocvar_g_maplist_votable_detail;
-	mapvote_abstain = autocvar_g_maplist_votable_abstain;
-	mapvote_show_suggester = autocvar_g_maplist_votable_show_suggester;
+	mv_count = 0;
+	mv_detail = autocvar_g_maplist_votable_detail;
+	mv_abstain = autocvar_g_maplist_votable_abstain;
+	mv_show_suggester = autocvar_g_maplist_votable_show_suggester;
 	current_gametype_index = -1;
 
-	const int nmax = (mapvote_abstain)
+	const int nmax = (mv_abstain)
 		? min(MAPVOTE_COUNT - 1, autocvar_g_maplist_votable)
 		: min(MAPVOTE_COUNT, autocvar_g_maplist_votable);
-	const int smax = min3(nmax, autocvar_g_maplist_votable_suggestions, mapvote_suggestion_ptr);
+	const int smax = min3(nmax, autocvar_g_maplist_votable_suggestions, mv_suggestion_ptr);
 
 	// we need this for AddVotable, as that cycles through the screenshot dirs
-	mapvote_screenshot_dirs_count = tokenize_console(autocvar_g_maplist_votable_screenshot_dir);
-	if (mapvote_screenshot_dirs_count == 0)
-		mapvote_screenshot_dirs_count = tokenize_console("maps levelshots");
-	mapvote_screenshot_dirs_count = min(mapvote_screenshot_dirs_count, MAPVOTE_SCREENSHOT_DIRS_COUNT);
-	for (int i = 0; i < mapvote_screenshot_dirs_count; ++i)
-		mapvote_screenshot_dirs[i] = strzone(argv(i));
+	mv_ssdirs_count = tokenize_console(autocvar_g_maplist_votable_screenshot_dir);
+	if (mv_ssdirs_count == 0)
+		mv_ssdirs_count = tokenize_console("maps levelshots");
+	mv_ssdirs_count = min(mv_ssdirs_count, MAPVOTE_SSDIRS_COUNT);
+	for (int i = 0; i < mv_ssdirs_count; ++i)
+		mv_ssdirs[i] = strzone(argv(i));
 
 	MapVote_AddVotableMaps(nmax, smax);
 
-	mapvote_count_real = mapvote_count;
-	if (mapvote_abstain)
+	mv_count_real = mv_count;
+	if (mv_abstain)
 		MapVote_AddVotable(-2); // abstain
 
-	//dprint("mapvote count is ", itos(mapvote_count), "\n");
+	//dprint("mapvote count is ", itos(mv_count), "\n");
 
-	mapvote_reduce_time = time + autocvar_g_maplist_votable_reduce_time;
-	mapvote_reduce_count = autocvar_g_maplist_votable_reduce_count;
-	mapvote_timeout = time + autocvar_g_maplist_votable_timeout;
-	if (mapvote_count_real < 3 || mapvote_reduce_time <= time)
-		mapvote_reduce_time = 0;
+	mv_reduce_time = time + autocvar_g_maplist_votable_reduce_time;
+	mv_reduce_count = autocvar_g_maplist_votable_reduce_count;
+	mv_timeout = time + autocvar_g_maplist_votable_timeout;
+	if (mv_count_real < 3 || mv_reduce_time <= time)
+		mv_reduce_time = 0;
 
 	MapVote_Spawn();
 
@@ -305,22 +302,22 @@ bool MapVote_Finished(int mappos)
 
 	if (autocvar_sv_eventlog)
 	{
-		string result = strcat(":vote:finished:", mapvote_maps[mappos],
-			":", itos(mapvote_selections[mappos]), "::");
-		int didnt_vote = mapvote_voters;
-		for (int i = 0; i < mapvote_count; ++i)
-			if (mapvote_maps_flags[i] & GTV_AVAILABLE)
+		string result = strcat(":vote:finished:", mv_entries[mappos],
+			":", itos(mv_votes[mappos]), "::");
+		int didnt_vote = mv_voters;
+		for (int i = 0; i < mv_count; ++i)
+			if (mv_flags[i] & GTV_AVAILABLE)
 			{
-				didnt_vote -= mapvote_selections[i];
+				didnt_vote -= mv_votes[i];
 				if (i != mappos)
-					result = strcat(result, ":", mapvote_maps[i],
-						":", itos(mapvote_selections[i]));
+					result = strcat(result, ":", mv_entries[i],
+						":", itos(mv_votes[i]));
 			}
 		result = strcat(result, ":didn't vote:", itos(didnt_vote));
 
 		GameLogEcho(result);
-		if (!gametypevote && mapvote_maps_suggesters[mappos] != "")
-			GameLogEcho(strcat(":vote:suggestion_accepted:", mapvote_maps[mappos]));
+		if (!gametypevote && mv_suggester[mappos] != "")
+			GameLogEcho(strcat(":vote:suggestion_accepted:", mv_entries[mappos]));
 	}
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
@@ -355,17 +352,17 @@ bool MapVote_Finished(int mappos)
 void MapVote_ranked_swap(int i, int j, entity pass)
 {
 	TC(int, i); TC(int, j);
-	const int tmp = mapvote_ranked[i];
-	mapvote_ranked[i] = mapvote_ranked[j];
-	mapvote_ranked[j] = tmp;
+	const int tmp = mv_ranked[i];
+	mv_ranked[i] = mv_ranked[j];
+	mv_ranked[j] = tmp;
 }
 int MapVote_ranked_cmp(int i, int j, entity pass)
 {
 	TC(int, i); TC(int, j);
-	const int ri = mapvote_ranked[i];
-	const int rj = mapvote_ranked[j];
-	const bool avail_i = mapvote_maps_flags[ri] & GTV_AVAILABLE;
-	const bool avail_j = mapvote_maps_flags[rj] & GTV_AVAILABLE;
+	const int ri = mv_ranked[i];
+	const int rj = mv_ranked[j];
+	const bool avail_i = mv_flags[ri] & GTV_AVAILABLE;
+	const bool avail_j = mv_flags[rj] & GTV_AVAILABLE;
 	if (avail_j && !avail_i) // i isn't votable, just move it to the end
 		return 1;
 	if (avail_i && !avail_j) // j isn't votable, just move it to the end
@@ -373,106 +370,106 @@ int MapVote_ranked_cmp(int i, int j, entity pass)
 	if (!avail_i && !avail_j)
 		return 0;
 
-	const int votes_i = mapvote_selections[ri];
-	const int votes_j = mapvote_selections[rj];
+	const int votes_i = mv_votes[ri];
+	const int votes_j = mv_votes[rj];
 	if (votes_i <= 0 && rj == current_gametype_index) // j is the current and should be used
 		return 1;
 	if (votes_j <= 0 && ri == current_gametype_index) // i is the current and should be used
 		return -1;
 	if (votes_i == votes_j) // randomly choose which goes first
-		return (mapvote_rng[rj] > mapvote_rng[ri]) ? 1 : -1;
+		return (mv_rng[rj] > mv_rng[ri]) ? 1 : -1;
 	return votes_j - votes_i; // descending order
 }
 
 void MapVote_CheckRules_count()
 {
 	int i;
-	for (i = 0; i < mapvote_count; ++i) // reset all votes
-		if (mapvote_maps_flags[i] & GTV_AVAILABLE)
+	for (i = 0; i < mv_count; ++i) // reset all votes
+		if (mv_flags[i] & GTV_AVAILABLE)
 		{
-			//dprint("Map ", itos(i), ": "); dprint(mapvote_maps[i], "\n");
-			mapvote_selections[i] = 0;
+			//dprint("Map ", itos(i), ": "); dprint(mv_entries[i], "\n");
+			mv_votes[i] = 0;
 		}
 
-	mapvote_voters = 0;
+	mv_voters = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), { // add votes
-		++mapvote_voters;
+		++mv_voters;
 		if (it.mapvote)
 		{
 			const int idx = it.mapvote - 1;
 			//dprint("Player ", it.netname, " vote = ", itos(idx), "\n");
-			++mapvote_selections[idx];
+			++mv_votes[idx];
 		}
 	});
 
-	for (i = 0; i < mapvote_count; ++i) // sort by most votes, for any ties choose randomly
-		mapvote_ranked[i] = i; // populate up to mapvote_count, only bother sorting up to mapvote_count_real
-	heapsort(mapvote_count_real, MapVote_ranked_swap, MapVote_ranked_cmp, NULL);
+	for (i = 0; i < mv_count; ++i) // sort by most votes, for any ties choose randomly
+		mv_ranked[i] = i; // populate up to mv_count, only bother sorting up to mv_count_real
+	heapsort(mv_count_real, MapVote_ranked_swap, MapVote_ranked_cmp, NULL);
 }
 
 bool MapVote_CheckRules_decide()
 {
-	if (mapvote_count_real == 1)
+	if (mv_count_real == 1)
 		return MapVote_Finished(0);
 
-	int mapvote_voters_real = mapvote_voters;
-	if (mapvote_abstain)
-		mapvote_voters_real -= mapvote_selections[mapvote_count - 1]; // excluding abstainers
+	int mv_voters_real = mv_voters;
+	if (mv_abstain)
+		mv_voters_real -= mv_votes[mv_count - 1]; // excluding abstainers
 
-	//dprint("1st place index: ", itos(mapvote_ranked[0]), "\n");
-	//dprint("1st place votes: ", itos(mapvote_selections[mapvote_ranked[0]]), "\n");
-	//dprint("2nd place index: ", itos(mapvote_ranked[1]), "\n");
-	//dprint("2nd place votes: ", itos(mapvote_selections[mapvote_ranked[1]]), "\n");
+	//dprint("1st place index: ", itos(mv_ranked[0]), "\n");
+	//dprint("1st place votes: ", itos(mv_votes[mv_ranked[0]]), "\n");
+	//dprint("2nd place index: ", itos(mv_ranked[1]), "\n");
+	//dprint("2nd place votes: ", itos(mv_votes[mv_ranked[1]]), "\n");
 
 	// these are used to check whether even if everyone else all voted for one map,
 	// ... it wouldn't be enough to push it into the top `reduce_count` maps
 	// i.e. reducing can start early
-	int votes_recent = mapvote_selections[mapvote_ranked[0]];
+	int votes_recent = mv_votes[mv_ranked[0]];
 	int votes_running_total = votes_recent;
 
-	if (time > mapvote_timeout
-	|| (mapvote_voters_real - votes_running_total) < votes_recent
-	||  mapvote_voters_real == 0) // all abstained
-		return MapVote_Finished(mapvote_ranked[0]); // choose best
+	if (time > mv_timeout
+	|| (mv_voters_real - votes_running_total) < votes_recent
+	||  mv_voters_real == 0) // all abstained
+		return MapVote_Finished(mv_ranked[0]); // choose best
 
-	// if mapvote_reduce_count is >= 2, we reduce to the top `reduce_count`, keeping exactly that many
+	// if mv_reduce_count is >= 2, we reduce to the top `reduce_count`, keeping exactly that many
 	// if it's < 2, we keep all maps that received at least 1 vote, as long as there's at least 2
 	int ri, i;
-	const bool keep_exactly = (mapvote_reduce_count >= 2);
+	const bool keep_exactly = (mv_reduce_count >= 2);
 #define REDUCE_REMOVE_THIS(idx) (keep_exactly \
-	? (idx >= mapvote_reduce_count) \
-	: (mapvote_selections[mapvote_ranked[idx]] <= 0))
-	for (ri = 1; ri < mapvote_count; ++ri)
+	? (idx >= mv_reduce_count) \
+	: (mv_votes[mv_ranked[idx]] <= 0))
+	for (ri = 1; ri < mv_count; ++ri)
 	{
-		i = mapvote_ranked[ri];
+		i = mv_ranked[ri];
 		if (REDUCE_REMOVE_THIS(ri))
 			break;
-		votes_recent = mapvote_selections[i];
+		votes_recent = mv_votes[i];
 		votes_running_total += votes_recent;
 	}
 
-	if (mapvote_reduce_time)
-	if ((time > mapvote_reduce_time && (keep_exactly || ri >= 2))
-	|| (mapvote_voters_real - votes_running_total) < votes_recent)
+	if (mv_reduce_time)
+	if ((time > mv_reduce_time && (keep_exactly || ri >= 2))
+	|| (mv_voters_real - votes_running_total) < votes_recent)
 	{
 		MapVote_TouchMask();
-		mapvote_reduce_time = 0;
+		mv_reduce_time = 0;
 		string result = ":vote:reduce";
-		int didnt_vote = mapvote_voters;
+		int didnt_vote = mv_voters;
 		bool remove = false;
-		for (ri = 0; ri < mapvote_count; ++ri)
+		for (ri = 0; ri < mv_count; ++ri)
 		{
-			i = mapvote_ranked[ri];
-			didnt_vote -= mapvote_selections[i];
-			result = strcat(result, ":", mapvote_maps[i],
-				":", itos(mapvote_selections[i]));
+			i = mv_ranked[ri];
+			didnt_vote -= mv_votes[i];
+			result = strcat(result, ":", mv_entries[i],
+				":", itos(mv_votes[i]));
 			if (!remove && REDUCE_REMOVE_THIS(ri))
 			{
 				result = strcat(result, "::"); // separator between maps kept and maps removed
 				remove = true;
 			}
-			if (remove && i < mapvote_count_real)
-				mapvote_maps_flags[i] &= ~GTV_AVAILABLE; // make it not votable
+			if (remove && i < mv_count_real)
+				mv_flags[i] &= ~GTV_AVAILABLE; // make it not votable
 		}
 		result = strcat(result, ":didn't vote:", itos(didnt_vote));
 		if (autocvar_sv_eventlog)
@@ -509,11 +506,11 @@ void MapVote_Tick()
 		}
 
 		// clear possibly invalid votes
-		if (!(mapvote_maps_flags[it.mapvote-1] & GTV_AVAILABLE))
+		if (!(mv_flags[it.mapvote-1] & GTV_AVAILABLE))
 			it.mapvote = 0;
 		// use impulses as new vote
-		if (CS(it).impulse >= 1 && CS(it).impulse <= mapvote_count)
-			if (mapvote_maps_flags[CS(it).impulse - 1] & GTV_AVAILABLE)
+		if (CS(it).impulse >= 1 && CS(it).impulse <= mv_count)
+			if (mv_flags[CS(it).impulse - 1] & GTV_AVAILABLE)
 			{
 				it.mapvote = CS(it).impulse;
 				MapVote_TouchVotes(it);
@@ -544,9 +541,9 @@ void MapVote_Think()
 	if (!mapvote_run)
 		return;
 
-	if (mapvote_winner_time)
+	if (mv_winner_time)
 	{
-		if (time > mapvote_winner_time + 1)
+		if (time > mv_winner_time + 1)
 		{
 			if (voted_gametype)
 			{
@@ -556,7 +553,7 @@ void MapVote_Think()
 				GameTypeVote_SetGametype(voted_gametype, voted_gametype_string, true);
 			}
 
-			Map_Goto_SetStr(mapvote_maps[mapvote_winner]);
+			Map_Goto_SetStr(mv_entries[mv_winner]);
 			Map_Goto(0);
 			strfree(voted_gametype_string);
 		}
@@ -566,13 +563,13 @@ void MapVote_Think()
 	if (alreadychangedlevel)
 		return;
 
-	if (time < mapvote_nextthink)
+	if (time < mv_nextthink)
 		return;
 	//dprint("tick\n");
 
-	mapvote_nextthink = time + 0.5;
-	if (mapvote_nextthink > mapvote_timeout - 0.1) // make sure there's no delay when map vote times out
-		mapvote_nextthink = mapvote_timeout + 0.001;
+	mv_nextthink = time + 0.5;
+	if (mv_nextthink > mv_timeout - 0.1) // make sure there's no delay when map vote times out
+		mv_nextthink = mv_timeout + 0.001;
 
 	if (!mapvote_initialized)
 	{
@@ -683,14 +680,14 @@ bool GameTypeVote_Finished(int pos)
 		return false;
 
 	match_gametype = MapInfo_CurrentGametype();
-	voted_gametype = GameTypeVote_Type_FromString(mapvote_maps[pos]);
-	strcpy(voted_gametype_string, mapvote_maps[pos]);
+	voted_gametype = GameTypeVote_Type_FromString(mv_entries[pos]);
+	strcpy(voted_gametype_string, mv_entries[pos]);
 
 	GameTypeVote_SetGametype(voted_gametype, voted_gametype_string, true);
 
 	// save to a cvar so it can be applied back when gametype is temporary
 	// changed on gametype vote end of the next game
-	if (mapvote_maps_flags[pos] & GTV_CUSTOM)
+	if (mv_flags[pos] & GTV_CUSTOM)
 		cvar_set("_sv_vote_gametype_custom", voted_gametype_string);
 
 	gametypevote_finished = true;
@@ -703,16 +700,16 @@ bool GameTypeVote_AddVotable(string nextMode)
 	if (nextMode == "" || GameTypeVote_Type_FromString(nextMode) == NULL)
 		return false;
 
-	for (int i = 0; i < mapvote_count; ++i)
-		if (mapvote_maps[i] == nextMode)
+	for (int i = 0; i < mv_count; ++i)
+		if (mv_entries[i] == nextMode)
 			return false;
 
-	mapvote_maps[mapvote_count] = strzone(nextMode);
-	mapvote_maps_screenshot_dir[mapvote_count] = 0;
+	mv_entries[mv_count] = strzone(nextMode);
+	mv_ssdir_i[mv_count] = 0;
 	// suggester will be uninitialized, but it's never read until map voting, before which it has been set
-	mapvote_maps_flags[mapvote_count] = GameTypeVote_AvailabilityStatus(nextMode);
+	mv_flags[mv_count] = GameTypeVote_AvailabilityStatus(nextMode);
 
-	++mapvote_count;
+	++mv_count;
 
 	return true;
 }
@@ -722,10 +719,10 @@ bool GameTypeVote_Start()
 	MapVote_ClearAllVotes();
 	MapVote_UnzoneStrings();
 
-	mapvote_count = 0;
-	mapvote_timeout = time + autocvar_sv_vote_gametype_timeout;
-	mapvote_abstain = false;
-	mapvote_detail = autocvar_sv_vote_gametype_detail;
+	mv_count = 0;
+	mv_timeout = time + autocvar_sv_vote_gametype_timeout;
+	mv_abstain = false;
+	mv_detail = autocvar_sv_vote_gametype_detail;
 
 	int n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 	n = min(MAPVOTE_COUNT, n);
@@ -736,14 +733,14 @@ bool GameTypeVote_Start()
 	for (i = 0; i < n; ++i)
 	{
 		if (GameTypeVote_AddVotable(argv(i)))
-		if (mapvote_maps_flags[i] & GTV_AVAILABLE)
+		if (mv_flags[i] & GTV_AVAILABLE)
 		{
 			++really_available;
 			which_available = i;
 		}
 	}
 
-	mapvote_count_real = mapvote_count;
+	mv_count_real = mv_count;
 
 	gametypevote = true;
 
@@ -753,9 +750,9 @@ bool GameTypeVote_Start()
 
 	if (really_available == 0)
 	{
-		if (mapvote_count > 0)
-			strunzone(mapvote_maps[0]);
-		mapvote_maps[0] = strzone(current_gametype_string);
+		if (mv_count > 0)
+			strunzone(mv_entries[0]);
+		mv_entries[0] = strzone(current_gametype_string);
 		current_gametype_index = 0;
 		//GameTypeVote_Finished(0);
 		MapVote_Finished(current_gametype_index);
@@ -770,19 +767,19 @@ bool GameTypeVote_Start()
 	}
 	current_gametype_index = -1;
 	if (autocvar_sv_vote_gametype_default_current) // find current gametype index
-		for (i = 0; i < mapvote_count_real; ++i)
-			if (mapvote_maps[i] == current_gametype_string)
+		for (i = 0; i < mv_count_real; ++i)
+			if (mv_entries[i] == current_gametype_string)
 			{
 				current_gametype_index = i;
 				break;
 			}
 
-	mapvote_count_real = mapvote_count;
+	mv_count_real = mv_count;
 
-	mapvote_reduce_time = time + autocvar_sv_vote_gametype_reduce_time;
-	mapvote_reduce_count = autocvar_sv_vote_gametype_reduce_count;
-	if (mapvote_count_real < 3 || mapvote_reduce_time <= time)
-		mapvote_reduce_time = 0;
+	mv_reduce_time = time + autocvar_sv_vote_gametype_reduce_time;
+	mv_reduce_count = autocvar_sv_vote_gametype_reduce_count;
+	if (mv_count_real < 3 || mv_reduce_time <= time)
+		mv_reduce_time = 0;
 
 	MapVote_Spawn();
 

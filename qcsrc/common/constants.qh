@@ -47,10 +47,6 @@ const int KEY_ATCK2    = BIT(7);
 const int HUD_NORMAL = 0;
 const int HUD_BUMBLEBEE_GUN = 25;
 
-// moved that here so the client knows the max.
-// # of maps, I'll use arrays for them :P
-const int MAPVOTE_COUNT = 20;
-
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';
 const vector PL_MIN_CONST = '-16 -16 -24';
@@ -58,11 +54,6 @@ const vector PL_CROUCH_MAX_CONST = '16 16 25';
 const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 const float PL_CORPSE_SCALE = 0.235; // average hitbox height is scaled by this when the player dies
-
-// gametype vote flags
-const int GTV_FORBIDDEN = 0; // Cannot be voted
-const int GTV_AVAILABLE = 1; // Can be voted
-const int GTV_CUSTOM    = 2; // Custom entry
 
 // generic entity flags
 // engine flags can't be redefined as they are used by the engine (unfortunately), they are listed here for posterity
