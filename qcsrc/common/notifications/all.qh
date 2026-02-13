@@ -217,9 +217,8 @@ void Debug_Notification(string input)
 
 void Local_Notification(MSG net_type, Notification net_name, ...count);
 /// glue for networking, forwards to `Local_Notification`
-void Local_Notification_WOVA(
+void Local_Notification_WOCOVA(
 	MSG net_type, Notification net_name,
-	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4);
 
@@ -274,12 +273,6 @@ void Send_Notification(
 	NOTIF broadcast, entity client,
 	MSG net_type, Notification net_name,
 	...count);
-void Send_Notification_WOVA(
-	NOTIF broadcast, entity client,
-	MSG net_type, Notification net_name,
-	float stringcount, float floatcount,
-	string s1, string s2, string s3, string s4,
-	float f1, float f2, float f3, float f4);
 void Send_Notification_WOCOVA(
 	NOTIF broadcast, entity client,
 	MSG net_type, Notification net_name,
