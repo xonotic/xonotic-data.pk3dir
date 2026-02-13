@@ -1343,15 +1343,12 @@ void Local_Notification_Core(
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
-	int stringcount = net_name.nent_stringcount;
-	int floatcount = net_name.nent_floatcount;
-	#define VARITEM(stringc, floatc, args) \
-		if (stringcount == stringc && floatcount == (floatc)) \
-		{ \
-			Local_Notification(net_type, net_name, args); \
-			return; \
-		}
-	EIGHT_VARS_TO_VARARGS_VARLIST
+	#define VARITEM(args) \
+	{ \
+		Local_Notification(net_type, net_name, args); \
+		return; \
+	}
+	EIGHT_VARS_TO_VARARGS_VARLIST(net_name.nent_stringcount, net_name.nent_floatcount)
 	#undef VARITEM
 	Local_Notification(net_type, net_name); // some notifications don't have any arguments at all
 }
@@ -1648,9 +1645,8 @@ void Send_Notification_Core(
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
-	entity notif = net_name;
-
 #ifdef NOTIFICATIONS_DEBUG
+	entity notif = net_name;
 	Debug_Notification(sprintf(
 		"Send_Notification_Core(%s, %s, %s);\n",
 		sprintf(
@@ -1665,13 +1661,12 @@ void Send_Notification_Core(
 	));
 #endif
 
-	#define VARITEM(stringc, floatc, args) \
-		if (notif.nent_stringcount == stringc && notif.nent_floatcount == (floatc)) \
-		{ \
-			Send_Notification(broadcast, client, net_type, net_name, args); \
-			return; \
-		}
-	EIGHT_VARS_TO_VARARGS_VARLIST
+	#define VARITEM(args) \
+	{ \
+		Send_Notification(broadcast, client, net_type, net_name, args); \
+		return; \
+	}
+	EIGHT_VARS_TO_VARARGS_VARLIST(net_name.nent_stringcount, net_name.nent_floatcount)
 	#undef VARITEM
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
 }

@@ -88,31 +88,35 @@ USING(Notification, entity);
 #define APP_TEAM_NUM(num, prefix) (((num) == NUM_TEAM_1) ? prefix##_RED : (((num) == NUM_TEAM_2) ? prefix##_BLUE : (((num) == NUM_TEAM_3) ? prefix##_YELLOW : prefix##_PINK)))
 #define APP_NUM(num, prefix) ((num) ? APP_TEAM_NUM(num, prefix) : prefix##_NEUTRAL)
 
-#define EIGHT_VARS_TO_VARARGS_VARLIST \
-	VARITEM(1, 0, s1) \
-	VARITEM(2, 0, XPD(s1, s2)) \
-	VARITEM(3, 0, XPD(s1, s2, s3)) \
-	VARITEM(4, 0, XPD(s1, s2, s3, s4)) \
-	VARITEM(0, 1, f1) \
-	VARITEM(1, 1, XPD(s1, f1)) \
-	VARITEM(2, 1, XPD(s1, s2, f1)) \
-	VARITEM(3, 1, XPD(s1, s2, s3, f1)) \
-	VARITEM(4, 1, XPD(s1, s2, s3, s4, f1)) \
-	VARITEM(0, 2, XPD(f1, f2)) \
-	VARITEM(1, 2, XPD(s1, f1, f2)) \
-	VARITEM(2, 2, XPD(s1, s2, f1, f2)) \
-	VARITEM(3, 2, XPD(s1, s2, s3, f1, f2)) \
-	VARITEM(4, 2, XPD(s1, s2, s3, s4, f1, f2)) \
-	VARITEM(0, 3, XPD(f1, f2, f3)) \
-	VARITEM(1, 3, XPD(s1, f1, f2, f3)) \
-	VARITEM(2, 3, XPD(s1, s2, f1, f2, f3)) \
-	VARITEM(3, 3, XPD(s1, s2, s3, f1, f2, f3)) \
-	VARITEM(4, 3, XPD(s1, s2, s3, s4, f1, f2, f3)) \
-	VARITEM(0, 4, XPD(f1, f2, f3, f4)) \
-	VARITEM(1, 4, XPD(s1, f1, f2, f3, f4)) \
-	VARITEM(2, 4, XPD(s1, s2, f1, f2, f3, f4)) \
-	VARITEM(3, 4, XPD(s1, s2, s3, f1, f2, f3, f4)) \
-	VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
+#define EIGHT_VARS_TO_VARARGS_VARLIST(stringcount, floatcount) \
+	if (stringcount >= 0 && stringcount <= 4 && floatcount >= 0 && floatcount <= 4) \
+		switch ((floatcount) * 10 + stringcount) \
+		{ /* tenths: number of floats, units: number of strings */ \
+			case  1: VARITEM(    s1) \
+			case  2: VARITEM(XPD(s1, s2)) \
+			case  3: VARITEM(XPD(s1, s2, s3)) \
+			case  4: VARITEM(XPD(s1, s2, s3, s4)) \
+			case 10: VARITEM(                    f1) \
+			case 11: VARITEM(XPD(s1,             f1)) \
+			case 12: VARITEM(XPD(s1, s2,         f1)) \
+			case 13: VARITEM(XPD(s1, s2, s3,     f1)) \
+			case 14: VARITEM(XPD(s1, s2, s3, s4, f1)) \
+			case 20: VARITEM(XPD(                f1, f2)) \
+			case 21: VARITEM(XPD(s1,             f1, f2)) \
+			case 22: VARITEM(XPD(s1, s2,         f1, f2)) \
+			case 23: VARITEM(XPD(s1, s2, s3,     f1, f2)) \
+			case 24: VARITEM(XPD(s1, s2, s3, s4, f1, f2)) \
+			case 30: VARITEM(XPD(                f1, f2, f3)) \
+			case 31: VARITEM(XPD(s1,             f1, f2, f3)) \
+			case 32: VARITEM(XPD(s1, s2,         f1, f2, f3)) \
+			case 33: VARITEM(XPD(s1, s2, s3,     f1, f2, f3)) \
+			case 34: VARITEM(XPD(s1, s2, s3, s4, f1, f2, f3)) \
+			case 40: VARITEM(XPD(                f1, f2, f3, f4)) \
+			case 41: VARITEM(XPD(s1,             f1, f2, f3, f4)) \
+			case 42: VARITEM(XPD(s1, s2,         f1, f2, f3, f4)) \
+			case 43: VARITEM(XPD(s1, s2, s3,     f1, f2, f3, f4)) \
+			case 44: VARITEM(XPD(s1, s2, s3, s4, f1, f2, f3, f4)) \
+		}
 
 void Destroy_All_Notifications();
 void Create_Notification_Entity(entity notif,
