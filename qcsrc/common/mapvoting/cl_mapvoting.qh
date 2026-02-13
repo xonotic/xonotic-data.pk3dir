@@ -1,6 +1,6 @@
 #pragma once
 
-#include <common/constants.qh>
+#include "mapvoting.qh"
 
 bool autocvar_cl_readpicture_force;
 float autocvar_hud_panel_mapvote_highlight_border = 1;
@@ -13,27 +13,17 @@ void Cmd_MapVote_MapDownload(int argc);
 
 float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary);
 
-int mv_num_maps;
-
-// These are mostly the same as sv_mapvoting.qc, or otherwise intuitive
-string mv_entries[MAPVOTE_COUNT]; // map name or gametype name
-string mv_pics[MAPVOTE_COUNT];
-string mv_data[MAPVOTE_COUNT];    // map pk3 name or gametype human readable name
-string mv_suggester[MAPVOTE_COUNT];
-string mv_desc[MAPVOTE_COUNT];
-float mv_preview[MAPVOTE_COUNT];
-int mv_votes[MAPVOTE_COUNT];
-int mv_flags[MAPVOTE_COUNT];
-int mv_flags_start[MAPVOTE_COUNT];
+// Globals, beyond those in mapvoting.qh
+string mv_data[MAPVOTE_COUNT];      ///< (shared) map pk3 name/gametype human readable name
+float mv_preview[MAPVOTE_COUNT];    ///< (shared) whether there is a pic
+string mv_pics[MAPVOTE_COUNT];      ///< (shared) pic file location
+string mv_desc[MAPVOTE_COUNT];      ///< (gt)     gametype description
+int mv_flags_start[MAPVOTE_COUNT];  ///< (gt)     mv_flags initially
 float mv_select_lasttime[MAPVOTE_COUNT];
 entity mv_pk3list;
-bool mv_abstain;
-int mv_detail;
 int mv_ownvote;
 int mv_tie_winner;
-float mv_timeout;
-float mv_top2_time;
-float mv_top2_alpha;
+float mv_reduce_alpha;
 float mv_winner_time;
 float mv_winner_alpha;
 string mv_suggester_cache;
@@ -45,12 +35,7 @@ int mv_mouse_selection;
 bool mv_selection_keyboard;
 
 bool mv_active;
-int mv_winner;
 bool gametypevote;
-string mapvote_chosenmap;
+string mv_chosenmap;
 vector gtv_text_size;
 vector gtv_text_size_small;
-
-const int NUM_SSDIRS = 4;
-string ssdirs[NUM_SSDIRS];
-int n_ssdirs;
