@@ -14,10 +14,6 @@
 #include <server/gamelog.qh>
 #include <server/world.qh>
 
-// Declarations
-float mv_nextthink;
-int mv_reduce_count;
-
 /// Returns the gamtype ID from its name, if type_name isn't a real gametype it checks for sv_vote_gametype_(type_name)_type
 Gametype GameTypeVote_Type_FromString(string type_name)
 {
@@ -505,8 +501,9 @@ void MapVote_Tick()
 		if (!(mv_flags[it.mapvote - 1] & GTV_AVAILABLE))
 			it.mapvote = 0;
 		// use impulses as new vote
-		if (CS(it).impulse >= 1 && CS(it).impulse <= mv_count
-		&& (mv_flags[CS(it).impulse - 1] & GTV_AVAILABLE))
+		if (CS(it).impulse >= 1 && CS(it).impulse <= mv_count // valid impulse
+		&& (mv_flags[CS(it).impulse - 1] & GTV_AVAILABLE) // map/gametype is available
+		&& !ClientCommand_antispam(it, strcat("impulse ", itos(CS(it).impulse)))) // not spamming
 		{
 			it.mapvote = CS(it).impulse;
 			mapvote_ent.SendFlags |= SF_MV_VOTES;
@@ -534,6 +531,8 @@ void MapVote_Start()
 
 void MapVote_Think()
 {
+	// no think delay, so that impulses (votes) are checked every frame
+
 	if (!mapvote_run)
 		return;
 
@@ -558,14 +557,6 @@ void MapVote_Think()
 
 	if (alreadychangedlevel)
 		return;
-
-	if (time < mv_nextthink)
-		return;
-	//dprint("tick\n");
-
-	mv_nextthink = time + 0.5;
-	if (mv_nextthink > mv_timeout - 0.1) // make sure there's no delay when map vote times out
-		mv_nextthink = mv_timeout + 0.001;
 
 	if (!mapvote_initialized)
 	{
