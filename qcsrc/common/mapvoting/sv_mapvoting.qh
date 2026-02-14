@@ -54,6 +54,7 @@ float mv_rng[MAPVOTE_COUNT];           ///< (shared) random() value for each map
  * If the tie-winner isn't included in the tie, choose the nearest index that is included.
  * This would use less storage but isn't truly random and can sometimes be predictable.
  */
+int mv_reduce_count;
 bool mapvote_run;
 .int mapvote;
 

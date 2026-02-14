@@ -1,6 +1,8 @@
 #include "net.qh"
 
 #ifdef SVQC
+#include <server/command/cmd.qh>
+
 bool MapVote_SendEntity(entity this, entity to, int sf);
 entity mapvote_ent;
 void MapVote_Spawn()
@@ -21,14 +23,16 @@ void MapVote_Winner(int mappos)
 #endif // SVQC
 
 #ifdef SVQC
+.float spamtime; // Reused here
 void MapVote_ReadPlayerVote(entity voter)
 {
 	// clear possibly invalid vote
 	if (!(mv_flags[voter.mapvote - 1] & GTV_AVAILABLE))
 		voter.mapvote = 0;
 	// use impulse as new vote
-	if (CS(voter).impulse >= 1 && CS(voter).impulse <= mv_count
-	&& (mv_flags[CS(voter).impulse - 1] & GTV_AVAILABLE))
+	if (CS(voter).impulse >= 1 && CS(voter).impulse <= mv_count // valid impulse
+	&& (mv_flags[CS(voter).impulse - 1] & GTV_AVAILABLE) // map/gametype is available
+	&& !ClientCommand_antispam(voter, strcat("impulse ", itos(CS(voter).impulse)), spamtime, 0.5, 2)) // not spamming
 	{
 		voter.mapvote = CS(voter).impulse;
 		mapvote_ent.SendFlags |= SF_MV_VOTES;
