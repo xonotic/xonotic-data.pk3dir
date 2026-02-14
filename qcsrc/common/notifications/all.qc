@@ -1400,7 +1400,7 @@ NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool isNew)
 		isNew,
 		time,
 		Get_Notif_TypeName(net_type),
-		notif.registered_id,
+		Get_Notif_Name(notif),
 		net_name
 	));
 #endif
@@ -1505,14 +1505,17 @@ void Send_Notification(
 	if (broadcast == NOTIF_ONE_ONLY && !IS_REAL_CLIENT(client))
 		return;
 	entity notif = net_name;
-	string parms = sprintf("%s, '%s', %s, %s",
-		Get_Notif_BroadcastName(broadcast),
-		client.classname,
-		Get_Notif_TypeName(net_type),
-		net_name.registered_id
-	);
+
+	// this is a macro to avoid defining a string that would never be used normally
+	// (only if NOTIFICATIONS_DEBUG is on or in a warning message)
+	#define NOTIF_INFO() sprintf("%s, '%s', %s, %s", \
+		Get_Notif_BroadcastName(broadcast), \
+		client.classname, \
+		Get_Notif_TypeName(net_type), \
+		Get_Notif_Name(net_name))
+
 #ifdef NOTIFICATIONS_DEBUG
-	Debug_Notification(sprintf("Send_Notification(%s, ...%d);\n", parms, count));
+	Debug_Notification(sprintf("Send_Notification(%s, ...%d);\n", NOTIF_INFO(), count));
 #endif
 
 	if (!notif)
@@ -1543,7 +1546,7 @@ void Send_Notification(
 #ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
 		"Send_Notification(%s, %s, %s);\n",
-		parms,
+		NOTIF_INFO(),
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
@@ -1555,7 +1558,7 @@ void Send_Notification(
 			"Argument mismatch for Send_Notification(%s, ...)! "
 			"stringcount(%d) + floatcount(%d) != count(%d)\n"
 			"Check the definition and function call for accuracy...?\n",
-			parms,
+			NOTIF_INFO(),
 			notif.nent_stringcount,
 			notif.nent_floatcount,
 			count
@@ -1637,6 +1640,7 @@ void Send_Notification(
 
 		Net_LinkEntity(net_notif, false, 0, Net_Write_Notification);
 	}
+	#undef NOTIF_INFO
 }
 
 void Send_Notification_Core(

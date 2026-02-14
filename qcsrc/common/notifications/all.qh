@@ -744,7 +744,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 	{
 		LOG_WARNF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!",
 			Get_Notif_TypeName(net_type), net_type,
-			it.registered_id, net_name,
+			Get_Notif_Name(it), net_name,
 			Get_Notif_TypeName(it.nent_type)
 		);
 		return NULL;
