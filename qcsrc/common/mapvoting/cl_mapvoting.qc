@@ -33,7 +33,7 @@ bool PreviewExists(string name)
 	return false;
 }
 
-string MapVote_FormatMapItem(int id, string map, int _count, float maxwidth, vector fontsize, int most_votes)
+string MapVote_FormatItem(int id, string map, int _count, float maxwidth, vector fontsize, int most_votes)
 {
 	TC(int, id);
 	string post, pre = strcat(itos(id + 1), ". ");
@@ -140,14 +140,9 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	float desc_padding = gtv_text_size.x * 0.6;
 	pos.x += image_size.x + desc_padding;
 
-	// Split the description into lines
-	entity title = spawn();
-	title.message = strcat(rgb_to_hexcolor(rgb), MapVote_FormatMapItem(id, mv_data[id], _count, tsize, gtv_text_size, most_votes));
+	// Split the description into lines, count lines
 	tsize -= image_size.x + desc_padding;
-
 	string the_label = mv_desc[id];
-	entity last = title;
-	entity next = NULL;
 	int nlines = 0;
 	if (the_label != "")
 	{
@@ -158,25 +153,20 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 			getWrappedLine_remaining = argv(i);
 			while (getWrappedLine_remaining && maxh > (nlines + 1) * gtv_text_size_small.y)
 				if ((ts = getWrappedLine(tsize, gtv_text_size_small, stringwidth_colors)) != "")
-				{
-					next = spawn();
-					next.message = ts;
-					next.origin = pos - offset;
-					last.chain = next;
-					last = next;
-					pos.y += gtv_text_size_small.y;
 					++nlines;
-				}
 		}
 	}
 
 	// Center the contents in the bounding box
+	vector old_offset = offset;
+	float old_maxh = maxh;
 	maxh -= max(nlines * gtv_text_size_small.y, image_size.y);
 	if (maxh > 0)
 		offset.y += maxh * 0.5;
 
 	// Draw the title
-	drawcolorcodedstring(offset, title.message, gtv_text_size, alpha, DRAWFLAG_NORMAL);
+	string title = strcat(rgb_to_hexcolor(rgb), MapVote_FormatItem(id, mv_data[id], _count, tsize, gtv_text_size, most_votes));
+	drawcolorcodedstring(offset, title, gtv_text_size, alpha, DRAWFLAG_NORMAL);
 
 	// Draw the icon
 	if (pic != "")
@@ -194,18 +184,26 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		drawpic(eY * title_gap + eX * 0.5 * desc_padding + offset + offset_padding, pic, image_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
 	}
 
-	// Draw the description
-	last = title.chain;
-	while (last)
-	{
-		drawstring(last.origin + offset, last.message, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
-		next = last;
-		last = last.chain;
-		delete(next);
-	}
+	// Draw the description, line by line
+	if (the_label == "")
+		return;
 
-	// Cleanup
-	delete(title);
+	string ts;
+	int n = tokenizebyseparator(the_label, "\n");
+	nlines = 0;
+	maxh = old_maxh;
+	offset -= old_offset;
+	for (int i = 0; i < n && maxh > (nlines + 1) * gtv_text_size_small.y; ++i)
+	{
+		getWrappedLine_remaining = argv(i);
+		while (getWrappedLine_remaining && maxh > (nlines + 1) * gtv_text_size_small.y)
+			if ((ts = getWrappedLine(tsize, gtv_text_size_small, stringwidth_colors)) != "")
+			{
+				drawstring(pos + offset, ts, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
+				pos.y += gtv_text_size_small.y;
+				++nlines;
+			}
+	}
 }
 
 void MapVote_DrawMapPicture(string pic, vector pos, vector img_size, float theAlpha)
@@ -246,7 +244,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	pos.y += (isize - img_size.y - hud_fontsize.y) * 0.5;
 
 	vector rgb = MapVote_RGB(id);
-	string label = strcat(rgb_to_hexcolor(rgb), MapVote_FormatMapItem(id, map, _count, tsize, hud_fontsize, most_votes));
+	string label = strcat(rgb_to_hexcolor(rgb), MapVote_FormatItem(id, map, _count, tsize, hud_fontsize, most_votes));
 
 	float text_size = stringwidth(label, true, hud_fontsize);
 
@@ -298,7 +296,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 void MapVote_DrawAbstain(vector pos, float tsize, int _count, int id)
 {
-	string label = MapVote_FormatMapItem(id, _("Don't care"), _count, tsize, hud_fontsize, -1);
+	string label = MapVote_FormatItem(id, _("Don't care"), _count, tsize, hud_fontsize, -1);
 
 	float theAlpha = (mv_winner && mv_winner_alpha)
 		? mv_winner_alpha
