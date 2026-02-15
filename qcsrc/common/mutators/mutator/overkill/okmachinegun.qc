@@ -151,6 +151,11 @@ METHOD(OverkillMachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 		sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
 }
 
+METHOD(OverkillMachineGun, wr_damageeffect_getname, string(entity thiswep))
+{
+	return "damage_machinegun";
+}
+
 #endif // CSQC
 #ifdef MENUQC
 #include <common/items/item/ammo.qh>

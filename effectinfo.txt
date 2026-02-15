@@ -6073,7 +6073,7 @@ effect damage_rifle
 	count 1
 	size 6 12
 	tex 0 8
-effect damage_rifle_alien
+effect alien_damage_rifle
 	type blood
 	airfriction 1
 	alpha 256 256 64
@@ -6087,14 +6087,14 @@ effect damage_rifle_alien
 	tex 24 32
 	velocityjitter 32 32 32
 	velocitymultiplier 5
-effect damage_rifle_alien
+effect alien_damage_rifle
 	type alphastatic
 	alpha 100 256 400
 	color 0x000000 0x204010
 	count 1
 	size 6 12
 	tex 0 8
-effect damage_rifle_robot
+effect robot_damage_rifle
 	type blood
 	airfriction 1
 	alpha 256 256 64
@@ -6108,7 +6108,7 @@ effect damage_rifle_robot
 	tex 24 32
 	velocityjitter 32 32 32
 	velocitymultiplier 5
-effect damage_rifle_robot
+effect robot_damage_rifle
 	type alphastatic
 	alpha 100 256 400
 	color 0x000000 0x301860

@@ -237,6 +237,11 @@ METHOD(OverkillRocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, en
 		sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 }
 
+METHOD(OverkillRocketPropelledChainsaw, wr_damageeffect_getname, string(entity thiswep))
+{
+	return "damage_devastator";
+}
+
 #endif // CSQC
 #ifdef MENUQC
 #include <common/items/item/ammo.qh>

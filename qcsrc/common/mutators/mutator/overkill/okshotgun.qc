@@ -112,6 +112,11 @@ METHOD(OverkillShotgun, wr_impacteffect, void(entity thiswep, entity actor))
 	}
 }
 
+METHOD(OverkillShotgun, wr_damageeffect_getname, string(entity thiswep))
+{
+	return "damage_shotgun";
+}
+
 #endif // CSQC
 #ifdef MENUQC
 #include <common/items/item/ammo.qh>

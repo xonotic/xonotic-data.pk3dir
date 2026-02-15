@@ -126,7 +126,6 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 
 	int nearestbone = 0;
 	float life;
-	string effectname;
 	entity e, wep;
 
 	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
@@ -168,7 +167,11 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 	life = bound(autocvar_cl_damageeffect_lifetime_min, thedamage * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
 	wep = DEATH_WEAPONOF(type);
-	effectname = strcat("damage_", wep.netname);
+	string effectname = "";
+	if (wep.wr_damageeffect_getname)
+		effectname = wep.wr_damageeffect_getname(wep);
+	else
+		effectname = strcat("damage_", wep.netname);
 	if((wep.spawnflags & WEP_FLAG_BLEED))
 	{
 		// if this weapon induces bleeding, use the effect name with the proper species prefix (blood type)
@@ -179,6 +182,10 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 		}
 		else { return; } // objects don't bleed
 	}
+
+	int effect = _particleeffectnum(effectname);
+	if (effect < 0)
+		return;
 
 	e = new(damage);
 	setmodel(e, MDL_Null); // necessary to attach and read origin
