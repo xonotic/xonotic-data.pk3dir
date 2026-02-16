@@ -143,7 +143,13 @@ void GenericCommand_rpn(int request, int argc, string command)
 							rpn_error = true;
 						}
 					} else if(rpncmd == "load") {
-						rpn_set(cvar_string(rpn_get()));
+						s = rpn_get();
+						if (s != "") {
+							rpn_set(cvar_string(s));
+						} else {
+							LOG_INFO("rpn: empty cvar name for 'load'");
+							rpn_error = true;
+						}
 					} else if(rpncmd == "exch") {
 						s = rpn_pop();
 						s2 = rpn_get();
