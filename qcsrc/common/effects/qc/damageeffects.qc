@@ -13,12 +13,20 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
-	// we can't send the force vector compressed with compressShortVector as it's too inaccurate
-	// it would break decals when hit angle on a surface is small
+
+	// we can't send the force vector compressed with compressShortVector to 1 byte since
+	// it's too inaccurate and would break decals when hitting a surface with a small angle
 	// (the traceline performed by the client to spawn a decal wouldn't hit the surface at all)
-	WriteShort(MSG_ENTITY, floor(this.velocity.x / 4));
-	WriteShort(MSG_ENTITY, floor(this.velocity.y / 4));
-	WriteShort(MSG_ENTITY, floor(this.velocity.z / 4));
+	// so we send force direction with 3 bytes and force length with 1 byte
+	// Since this.velocity is a normalized vector we map vector components
+	// from [-1, 1] to [-127, 127]
+	WriteChar(MSG_ENTITY, rint(this.velocity.x * 127));
+	WriteChar(MSG_ENTITY, rint(this.velocity.y * 127));
+	WriteChar(MSG_ENTITY, rint(this.velocity.z * 127));
+
+	// max 255 * 4 = 1020 force length, min 0 (discards negative values)
+	WriteByte(MSG_ENTITY, bound(0, this.dmg_force / 4, 255));
+
 	WriteByte(MSG_ENTITY, this.species);
 	WriteByte(MSG_ENTITY, this.colormap);
 	return true;
@@ -48,7 +56,7 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	}
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
-	e.velocity = force;
+	e.velocity = (e.dmg_force ? force / e.dmg_force : '0 0 0');
 
 	e.species = bloodtype & BITS(4); // it only uses bits from 0 to 3, see SPECIES_* constants
 	if(rad_negative)
@@ -203,7 +211,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
 	int species, forcemul;
-	vector force, thisforce;
+	vector force_dir, force, thisforce;
 
 	w_deathtype = ReadShort();
 	w_issilent = (w_deathtype & 0x8000);
@@ -214,12 +222,19 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	thedamage = ReadByte();
 	rad = ReadByte();
 	edge = ReadByte();
-	force.x = ReadShort() * 4 + 2;
-	force.y = ReadShort() * 4 + 2;
-	force.z = ReadShort() * 4 + 2;
+
+	// map [-127, 127] back to [-1, 1]
+	force_dir.x = ReadChar() / 127;
+	force_dir.y = ReadChar() / 127;
+	force_dir.z = ReadChar() / 127;
+	if (force_dir == '0 0 0')
+		force_dir = '0 0 -1';
+
+	int vlen_force = ReadByte() * 4 + 2; // + 2 rounds the value and makes it > 0 so that decals can always work
+	force = force_dir * vlen_force;
 
 	species = ReadByte();
-	bool rad_negative = (species & BIT(7));
+	bool rad_negative = boolean(species & BIT(7));
 	species = (species & BITS(4));
 
 	int dmg_colors = ReadByte();
@@ -257,12 +272,12 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 			if(thedamage)
 			{
 				thisdmg = thedamage + (edge - thedamage) * thisdmg;
-				thisforce = forcemul * vlen(force) * (thisdmg / thedamage) * normalize(it.origin - w_org);
+				thisforce = forcemul * vlen_force * (thisdmg / thedamage) * normalize(it.origin - w_org);
 			}
 			else
 			{
 				thisdmg = 0;
-				thisforce = forcemul * vlen(force) * normalize(it.origin - w_org);
+				thisforce = forcemul * vlen_force * normalize(it.origin - w_org);
 			}
 		}
 		else
@@ -295,7 +310,6 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{
-		vector force_dir = normalize(force);
 		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
@@ -370,7 +384,6 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISTURRET(w_deathtype))
 	{
-		vector force_dir = normalize(force);
 		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
@@ -433,7 +446,6 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		Weapon hitwep = DEATH_WEAPONOF(w_deathtype);
 		w_random = prandom();
 
-		vector force_dir = normalize(force);
 		// this traceline usually starts in solid when a hitscan shot hits a surface with a very small angle
 		// if so, try another traceline starting further back (may still start in solid but only with extremely small angles)
 		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
