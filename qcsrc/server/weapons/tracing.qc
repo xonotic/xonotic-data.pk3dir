@@ -255,8 +255,10 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 			continue;
 		}
 
-		if (trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
-			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, force, deathtype, trace_ent.species, this);
+		if (trace_ent.solid == SOLID_BSP)
+			Damage_DamageInfo(trace_endpos, bdamage, 0, 0,
+				WarpZone_TransformVelocity(WarpZone_trace_transform, force),
+				deathtype, trace_ent.species, this);
 
 		// if it is NULL we can't hurt it so stop now
 		if (trace_ent == NULL || trace_fraction == 1)
@@ -268,7 +270,7 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 		// make the entity non-solid so we can hit the next one
 		IL_PUSH(g_railgunhit, trace_ent);
 		trace_ent.railgunhit = true;
-		trace_ent.railgunhitloc = end;
+		trace_ent.railgunhitloc = trace_endpos;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
 		trace_ent.railgunforce = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
@@ -323,7 +325,12 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 
 		// apply the damage
 		if (it.takedamage)
+		{
 			Damage(it, this, this, bdamage * foff, deathtype, weaponentity, it.railgunhitloc, it.railgunforce * ffs);
+			if (it.solid == SOLID_SLIDEBOX)
+				Damage_DamageInfo(it.railgunhitloc, bdamage * foff, 0, 0,
+					bforce * ffs * normalize(it.railgunforce), deathtype, it.species, this);
+		}
 
 		it.railgunhitloc = '0 0 0';
 		it.railgunhitsolidbackup = SOLID_NOT;
