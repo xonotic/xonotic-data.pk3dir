@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Antonio <piuntn@gmail.com>, 2013-2025
+# Antonio <piuntn@gmail.com>, 2013-2026
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
 # Costa <yesbubu@hotmail.it>, 2014,2021
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-10 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Antonio <piuntn@gmail.com>, 2013-2025\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2013-2026\n"
 "Language-Team: Italian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -2234,6 +2234,10 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically progress across the map to reach the enemy generator."
 msgstr ""
+"Dato che la tua squadra può conquistare un punto di controllo solo se è "
+"collegato a un altro punto di controllo attualmente posseduto dalla tua "
+"squadra, devi avanzare sistematicamente attraverso la mappa per raggiungere "
+"il generatore nemico."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2242,6 +2246,10 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"Un punto di controllo viene conquistato camminandoci dentro, il che avvia la "
+"sua automatica costruzione. I punti di controllo della squadra avversaria "
+"vengono distrutti attaccando l'\"info bot\" che fluttua sopra, convertendo "
+"il punto di controllo in neutrale una volta che è stato distrutto."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
@@ -2329,6 +2337,11 @@ msgid ""
 "all hunters or survive until time runs out. The trick lies in the fact that "
 "survivors don't know who else is a survivor."
 msgstr ""
+"%s è un tipo di gioco cacciatore-sopravvissuto che coinvolge due squadre "
+"dove l'obiettivo dei cacciatori è eliminare tutti i sopravvissuti, e "
+"l'obiettivo dei sopravvissuti è eliminare tutti i cacciatori o sopravvivere "
+"fino allo scadere del tempo. Il trucco sta nel fatto che i sopravvissuti non "
+"sanno chi sono gli altri sopravvissuti."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2463,6 +2476,8 @@ msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
 msgstr ""
+"Competi con la tua squadra per il maggior danno inflitto e eliminazioni in "
+"questo caotico mayhem"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -4792,6 +4807,8 @@ msgstr "^BG%s%s^K1 non è stato curato dalla Granata Curante di ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 couldn't find the light in ^BG%s^K1's Darkness Nade%s%s"
 msgstr ""
+"^BG%s%s^K1 non è riuscito a trovare la luce nella ^K1Granata di oscurità "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
@@ -5472,7 +5489,7 @@ msgstr "^BG%s^F3 è stato cacciato perché inattivo per %s secondi"
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 after idling for %s seconds"
 msgstr ""
-"^BG%s^F3 è stato spostato tra gli ^BG spettatori ^F3 perché inattivo per %s "
+"^BG%s^F3 è stato spostato tra gli^BG spettatori^F3 poiché inattivo per %s "
 "secondi"
 
 #: qcsrc/common/notifications/all.inc:432
@@ -5484,7 +5501,7 @@ msgstr "^BG%s^F3 ha abbandonato la coda perché inattivo per %s secondi"
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"
 msgstr ""
-"^BG%s^F3 è stato spostato tra gli ^BG spettatori ^F3 per ragioni di "
+"^BG%s^F3 è stato spostato tra gli^BG spettatori^F3 per ragioni di "
 "bilanciamento"
 
 #: qcsrc/common/notifications/all.inc:434
@@ -5615,12 +5632,12 @@ msgstr "^BG%s^K1 ha preso una Superarma"
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:811
 msgid "^K1Hunters^BG win the round"
-msgstr "^BGI ^K1cacciatori ^BG hanno vinto il round"
+msgstr "^BGI ^K1cacciatori^BG vincono il round"
 
 #: qcsrc/common/notifications/all.inc:461
 #: qcsrc/common/notifications/all.inc:813
 msgid "^F1Survivors^BG win the round"
-msgstr "^BGI ^K1sopravvissuti ^BG hanno vinto il round"
+msgstr "^BGI ^K1sopravvissuti^BG vincono il round"
 
 #: qcsrc/common/notifications/all.inc:463
 #: qcsrc/common/notifications/all.inc:819
@@ -7649,7 +7666,7 @@ msgstr "Powerup"
 #: qcsrc/common/util.qc:317
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:223
 msgid "No start weapons"
-msgstr "Senza armi all'inizio"
+msgstr "Senza armi iniziali"
 
 #: qcsrc/common/util.qc:1567
 msgid "Male"
@@ -8763,6 +8780,8 @@ msgid ""
 "The secondary fire instantaneously detonates any mines placed by the primary "
 "fire, similar to the %s."
 msgstr ""
+"Il fuoco secondario detona istantaneamente tutte le mine sparate dal fuoco "
+"primario, similmente al %s."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format
@@ -9579,11 +9598,11 @@ msgstr "Passati contributori"
 #: qcsrc/menu/xonotic/cvarlist.qc:24
 #, c-format
 msgid "%d results"
-msgstr ""
+msgstr "%d risultati"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:24
 msgid "1 result"
-msgstr ""
+msgstr "1 risultato"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:118
 msgid "forced to be saved to config.cfg"
@@ -9952,7 +9971,7 @@ msgstr "Abilita da spettatore"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even in warmup"
-msgstr ""
+msgstr "Abilita anche nel warmup"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
@@ -10928,12 +10947,14 @@ msgstr "\"Come un Dio\""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
 msgid "Bots against humans"
-msgstr ""
+msgstr "Bot contro umani"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr ""
+"Forza umani a giocare nella stessa squadra contro una squadra di un uguale "
+"numero di bot"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Maplist"
@@ -11929,19 +11950,19 @@ msgstr "Ottima"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:91
 msgid "Texture compression:"
-msgstr ""
+msgstr "Compressione texture:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
 msgid "TCOMP^Fast"
-msgstr ""
+msgstr "Veloce"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:98
 msgid "TCOMP^Good"
-msgstr ""
+msgstr "Buona"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:99
 msgid "TCOMP^None"
-msgstr ""
+msgstr "Nessuna"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:108
 msgid "Disable sky for performance and visibility"
@@ -12571,7 +12592,7 @@ msgstr "Forza modelli dei giocatori come il mio"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Force player colors to mine:"
-msgstr ""
+msgstr "Forza colori dei giocatori come i miei:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""
@@ -13123,7 +13144,7 @@ msgstr "Solo cvar modificate"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:46
 msgid "Search in cvar descriptions too"
-msgstr ""
+msgstr "Cerca anche nelle descrizioni delle cvar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Setting:"
