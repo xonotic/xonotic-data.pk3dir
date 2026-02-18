@@ -46,7 +46,6 @@ float autocvar_g_nexball_meter_period;
 
 float balls;
 float ball_scale;
-float nb_teams;
 
 .entity nb_dropper;
 .float nb_droptime;

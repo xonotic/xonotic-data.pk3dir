@@ -149,7 +149,6 @@ float ctf_captimerecord; // record time for capturing the flag
 .entity ctf_dropper; // don't allow spam of dropping the flag
 .float next_take_time;
 .bool ctf_flagdamaged_byworld;
-int ctf_teams;
 .entity enemy; // when flag is back in the base, it remembers last player who carried/touched the flag, useful to bots
 
 // passing/throwing properties

@@ -22,16 +22,15 @@ void ClientKill_Now_TeamChange(entity this)
 		if (!autocvar_sv_spectate)
 			// shouldn't get here because of condition in ClientCommand_spectate()
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-
 		PutObserverInServer(this, false, true);
-		if (!TeamBalance_QueuedPlayersTagIn(this))
-		if (autocvar_g_balance_teams_remove)
-			TeamBalance_RemoveExcessPlayers(this);
 	}
 	else
 		SetPlayerTeam(this, Team_TeamToIndex(this.killindicator_teamchange), TEAM_CHANGE_MANUAL);
 
 	this.killindicator_teamchange = 0;
+	if (!TeamBalance_QueuedPlayersTagIn(NULL))
+	if (autocvar_g_balance_teams_remove)
+		TeamBalance_RemoveExcessPlayers(NULL);
 }
 
 void ClientKill_Now(entity this)

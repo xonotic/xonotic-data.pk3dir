@@ -2,8 +2,6 @@
 
 bool autocvar_g_allow_checkpoints;
 
-float race_teams;
-
 // scores
 const float ST_RACE_LAPS = 1;
 
