@@ -199,12 +199,12 @@ msgstr "^2Attualmente in ^1warmup^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:174
 msgid "^31^2 more player is needed for the match to start."
-msgstr "^2Manca ^31^2 giocatore per avviare la partita"
+msgstr "^2Manca ^31^2 giocatore per avviare la partita."
 
 #: qcsrc/client/hud/panel/infomessages.qc:176
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr "^2Mancano ^3%d^2 giocatori per avviare la partita"
+msgstr "^2Mancano ^3%d^2 giocatori per avviare la partita."
 
 #: qcsrc/client/hud/panel/infomessages.qc:186
 #: qcsrc/menu/xonotic/keybinder.qc:149
@@ -668,7 +668,7 @@ msgstr "Il danno inferto totale"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^damage taken"
-msgstr "Danno subito"
+msgstr "danno subito"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "The total damage taken"
@@ -4729,7 +4729,7 @@ msgstr "^F4Conto alla rovescia fermato!"
 #: qcsrc/common/notifications/all.inc:275
 #: qcsrc/common/notifications/all.inc:561
 msgid "Teams are too unbalanced."
-msgstr "Le squadre sono troppo sbilanciate!"
+msgstr "Le squadre sono troppo sbilanciate."
 
 #: qcsrc/common/notifications/all.inc:277
 #, c-format
@@ -5665,7 +5665,7 @@ msgstr "^K2Sei già in quella squadra!"
 
 #: qcsrc/common/notifications/all.inc:468
 msgid "^F4The teams are now locked."
-msgstr "^F4Le squadre sono bloccate ora!"
+msgstr "^F4Le squadre sono bloccate ora."
 
 #: qcsrc/common/notifications/all.inc:469
 msgid "^F1The teams are now unlocked."
@@ -8216,7 +8216,7 @@ msgstr "(DPS: %.2f)"
 #: qcsrc/common/weapons/all.qc:868
 #, c-format
 msgid "It does %s damage"
-msgstr "Infligge %s di danno "
+msgstr "Infligge %s di danno"
 
 #: qcsrc/common/weapons/all.qc:869
 #, c-format
@@ -8226,7 +8226,7 @@ msgstr "Spara %s spari infliggendo %s di danno ognuno"
 #: qcsrc/common/weapons/all.qc:870
 #, c-format
 msgid "The %s does %s damage"
-msgstr "Il %s infligge %s di danno "
+msgstr "Il %s infligge %s di danno"
 
 #: qcsrc/common/weapons/all.qc:871
 #, c-format
@@ -8254,7 +8254,7 @@ msgstr "Statistiche di danno di default:"
 #: qcsrc/common/weapons/all.qc:898
 #, c-format
 msgid "A direct hit does %s damage"
-msgstr "Un colpo diretto infligge %s di danno "
+msgstr "Un colpo diretto infligge %s di danno"
 
 #: qcsrc/common/weapons/all.qc:1020
 #, c-format
@@ -8264,7 +8264,7 @@ msgstr "(DPS totale: %.2f)"
 #: qcsrc/common/weapons/all.qc:1025
 #, c-format
 msgid "The combo adds an extra %s damage"
-msgstr "La combo aggiunge %s extra di danno "
+msgstr "La combo aggiunge %s extra di danno"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1448
 #, c-format
@@ -11356,7 +11356,7 @@ msgstr "Termini di servizio"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr "Informazioni server:"
+msgstr "Informazioni server"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:23
 msgid "Hostname:"
@@ -13047,7 +13047,7 @@ msgstr "Usa crittografia (AES) quando disponibile"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:42
 msgid "HTTP downloads"
-msgstr "Download HTTP:"
+msgstr "Download HTTP"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:44
 msgid "Simultaneous:"
@@ -14314,7 +14314,7 @@ msgstr "menu veloce"
 
 #: qcsrc/menu/xonotic/keybinder.qc:173
 msgid "scoreboard user interface"
-msgstr "Interfaccia utente tabella punteggi"
+msgstr "interfaccia utente tabella punteggi"
 
 #: qcsrc/menu/xonotic/keybinder.qc:176
 msgid "User defined"
