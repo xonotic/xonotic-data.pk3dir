@@ -730,9 +730,11 @@ void CommonCommand_timeout(int request, entity caller)  // DEAR GOD THIS COMMAND
 
 				else  // everything should be okay, proceed with starting the timeout
 				{
-					if (caller) --CS(caller).allowed_timeouts;
+					if (caller)
+						--CS(caller).allowed_timeouts;
 					// write a bprint who started the timeout (and how many they have left)
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(CS(caller).allowed_timeouts), " timeout(s) left)") : ""), "!\n");
+					string s = (caller ? strcat(" (", ftos(CS(caller).allowed_timeouts), " timeout(s) left)") : "");
+					bprint(GetCallerName(caller), " ^7called a timeout", s, "!\n");
 
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;

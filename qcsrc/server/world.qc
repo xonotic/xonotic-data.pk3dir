@@ -1377,7 +1377,7 @@ void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field)
 		{
 			INGAME_STATUS_CLEAR(it);
 			PutObserverInServer(it, true, false);
-			bprint(playername(it.netname, it.team, false), " has been moved back to spectator");
+			bprint(playername(it.netname, it.team, false), " has been moved back to spectator\n");
 			it.winning = false;
 		}
 		else if (fix_team && INGAME_JOINED(it) && it.(prev_team_field) && it.team != it.(prev_team_field))
@@ -1386,7 +1386,7 @@ void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field)
 			if (MoveToTeam(it, Team_TeamToIndex(it.(prev_team_field)), 6))
 			{
 				string pl_name = playername(it.netname, it.team, false);
-				bprint(pl_name, " has been moved back to the ", Team_ColoredFullName(it.team));
+				bprint(pl_name, " has been moved back to the ", Team_ColoredFullName(it.team), "\n");
 			}
 			it.winning = (it.team == WinningConditionHelper_winnerteam);
 		}

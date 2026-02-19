@@ -210,8 +210,11 @@ void GameCommand_allspec(int request, int argc)
 				PutObserverInServer(it, true, true);
 				++n;
 			});
-			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
-			else   LOG_INFO("No players found to spectate.");
+			if (n)
+				bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate",
+					(reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
+			else
+				LOG_INFO("No players found to spectate.");
 			return;
 		}
 
