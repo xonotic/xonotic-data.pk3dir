@@ -4,7 +4,6 @@
 
 #include "tab.qh"
 CLASS(XonoticGuideTab, XonoticTab)
-	ATTRIB(XonoticGuideTab, title, string, _("Guide"));
 	ATTRIB(XonoticGuideTab, name, string, "guide");
 	ATTRIB(XonoticGuideTab, rows, float, 17);
 	ATTRIB(XonoticGuideTab, columns, float, 6);

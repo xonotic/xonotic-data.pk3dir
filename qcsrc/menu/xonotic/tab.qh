@@ -3,6 +3,7 @@
 #include "../item/tab.qh"
 CLASS(XonoticTab, Tab)
 	// still to be customized by user
+	// Note that tab title is in the item (usually a button) that actives it
 	/*
 	ATTRIB(XonoticTab, intendedWidth, float, 0);
 	ATTRIB(XonoticTab, rows, float, 3);

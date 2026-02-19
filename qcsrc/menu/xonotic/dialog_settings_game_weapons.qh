@@ -4,7 +4,6 @@
 CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
 	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity));
 	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameWeaponsSettingsTab, title, string, _("Weapons"));
 	ATTRIB(XonoticGameWeaponsSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 15.5);
 	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6);
