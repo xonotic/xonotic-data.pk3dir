@@ -143,7 +143,7 @@ void Obituary_SpecialDeath(
 		: (murder ? deathent.death_msgmurder : deathent.death_msgself);
 	if (death_message)
 	{
-		Send_Notification_WOCOVA(
+		Send_Notification_Core(
 			NOTIF_ONE,
 			notif_target,
 			MSG_MULTI,
@@ -151,7 +151,7 @@ void Obituary_SpecialDeath(
 			s1, s2, s3, s4,
 			f1, f2, f3, 0
 		);
-		Send_Notification_WOCOVA(
+		Send_Notification_Core(
 			NOTIF_ALL_EXCEPT,
 			notif_target,
 			MSG_INFO,
@@ -179,7 +179,7 @@ float Obituary_WeaponDeath(
 
 	if (death_message)
 	{
-		Send_Notification_WOCOVA(
+		Send_Notification_Core(
 			NOTIF_ONE,
 			notif_target,
 			MSG_MULTI,
@@ -188,7 +188,7 @@ float Obituary_WeaponDeath(
 			f1, f2, 0, 0
 		);
 		// send the info part to everyone
-		Send_Notification_WOCOVA(
+		Send_Notification_Core(
 			NOTIF_ALL_EXCEPT,
 			notif_target,
 			MSG_INFO,
