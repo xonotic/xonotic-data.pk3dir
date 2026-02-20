@@ -1,11 +1,37 @@
 #pragma once
 
+#include "dialog_settings_game_hud.qh"
+#include "dialog_settings_game_crosshair.qh"
+#include "dialog_settings_game_messages.qh"
+#include "dialog_settings_game_model.qh"
+#include "dialog_settings_game_view.qh"
+#include "dialog_settings_game_weapons.qh"
+#include <common/mutators/mutator/damagetext/ui_damagetext.qh>
+
+REGISTRY(Settings, BITS(3))
+REGISTER_REGISTRY(Settings)
+
+REGISTRY_DEFINE_GET(Settings, NULL)
+#define REGISTER_SETTINGS(id, impl) \
+	LAZY_NEW(id, impl) \
+	REGISTER(Settings, MENU, id, m_id, NEW(Lazy, LAZY(id)))
+
+REGISTER_SETTINGS(View,       makeXonoticGameViewSettingsTab());
+REGISTER_SETTINGS(HUD,        makeXonoticGameHUDSettingsTab());
+REGISTER_SETTINGS(Crosshair,  makeXonoticGameCrosshairSettingsTab());
+REGISTER_SETTINGS(Weapons,    makeXonoticGameWeaponsSettingsTab());
+REGISTER_SETTINGS(Models,     makeXonoticGameModelSettingsTab());
+REGISTER_SETTINGS(Messages,   makeXonoticGameMessageSettingsTab());
+REGISTER_SETTINGS(damagetext, makeXonoticDamageTextSettingsTab());
+
+
 #include "datasource.qh"
 CLASS(SettingSource, DataSource)
 	METHOD(SettingSource, getEntry, entity(entity this, int i, void(string name, string icon) returns));
 	METHOD(SettingSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns));
 	METHOD(SettingSource, reload, int(entity this, string filter));
 ENDCLASS(SettingSource)
+
 
 #include "listbox.qh"
 CLASS(XonoticRegisteredSettingsList, XonoticListBox)
@@ -19,7 +45,7 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	ATTRIB(XonoticRegisteredSettingsList, stringFilter, string);
 	ATTRIB(XonoticRegisteredSettingsList, typeToSearchString, string);
 	ATTRIB(XonoticRegisteredSettingsList, typeToSearchTime, float, 0);
-	ATTRIB(XonoticRegisteredSettingsList, source, DataSource);
+	ATTRIB(XonoticRegisteredSettingsList, source, DataSource, NEW(SettingSource));
 	ATTRIB(XonoticRegisteredSettingsList, onChange, void(entity, entity));
 	ATTRIB(XonoticRegisteredSettingsList, onChangeEntity, entity);
 	METHOD(XonoticRegisteredSettingsList, drawListBoxItem, void(entity this, int i, vector absSize, bool isSelected, bool isFocused));
@@ -27,8 +53,13 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	METHOD(XonoticRegisteredSettingsList, refilter, void(entity this));
 	METHOD(XonoticRegisteredSettingsList, resizeNotify, void(entity this, vector relOrigin, vector relSize, vector absOrigin, vector absSize));
 	METHOD(XonoticRegisteredSettingsList, setSelected, void(entity this, int i));
-	CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source);
+	INIT(XonoticRegisteredSettingsList)
+	{
+		this.configureXonoticListBox(this);
+		this.refilter(this);
+	}
 ENDCLASS(XonoticRegisteredSettingsList)
+
 
 #include "tab.qh"
 #include "scrollpanel.qh"
@@ -36,8 +67,7 @@ CLASS(XonoticGameSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGameSettingsTab, rows, float, 15.5);
 	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5);
-	ATTRIB(XonoticGameSettingsTab, source, DataSource, NEW(SettingSource));
-	ATTRIB(XonoticGameSettingsTab, topicList, entity, NEW(XonoticRegisteredSettingsList, this.source));
+	ATTRIB(XonoticGameSettingsTab, topicList, entity, NEW(XonoticRegisteredSettingsList));
 	// XonoticScrollPanel disabled because it's broken, see https://gitlab.com/xonotic/xonotic-data.pk3dir/merge_requests/548
 	// It will probably require a different implementation since XonoticScrollPanel should be an instance of Container, not ListBox
 	//ATTRIB(XonoticGameSettingsTab, currentPanel, entity, NEW(XonoticScrollPanel));

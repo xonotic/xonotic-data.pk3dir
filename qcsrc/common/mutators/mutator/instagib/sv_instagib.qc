@@ -272,6 +272,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 	M_ARGV(0, string) = "off";
 }
 
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponStay)
+{
+	// turn weapon stay off
+	M_ARGV(0, int) = 0;
+}
+
 void instagib_replace_item_with(entity this, GameItem def)
 {
 	entity new_item = spawn();

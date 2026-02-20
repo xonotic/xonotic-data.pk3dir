@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorTouchExplodeTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorTouchExplodeTab, fill, void(entity));
+	ATTRIB(XonoticMutatorTouchExplodeTab, title, string, _("Touch explode"));
+	ATTRIB(XonoticMutatorTouchExplodeTab, message, string, "g_touchexplode");
+	METHOD(XonoticMutatorTouchExplodeTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorTouchExplodeTab)
+entity makeXonoticMutatorTouchExplodeTab();

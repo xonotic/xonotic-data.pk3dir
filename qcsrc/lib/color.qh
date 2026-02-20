@@ -189,7 +189,8 @@ string rgb_to_hexcolor(vector rgb)
 	);
 }
 
-// useful macro for the guide
+// Useful macros for the guide
 // prefer .message if available
 // TODO: use either .message or .m_name for everything. currently only Gametypes and Mutators use .message
 #define COLORED_NAME(this) strcat(rgb_to_hexcolor(this.m_color), (this.message ? this.message : this.m_name), "^7")
+#define UNCOLORED_NAME(this)                                     (this.message ? this.message : this.m_name)

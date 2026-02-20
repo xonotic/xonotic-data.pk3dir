@@ -2065,21 +2065,19 @@ void readplayerstartcvars()
 	else
 	{
 		g_weaponarena = 1;
-		float t = tokenize_console(s);
+		int t = tokenize_console(s);
 		g_weaponarena_list = "";
 		for (int j = 0; j < t; ++j)
 		{
 			s = argv(j);
 			Weapon wep = Weapon_from_name(s);
-			if(wep != WEP_Null)
+			if (wep != WEP_Null)
 			{
 				g_weaponarena_weapons |= (wep.m_wepset);
-				g_weaponarena_list = strcat(g_weaponarena_list, wep.netname, " & ");
+				g_weaponarena_list = cons_mid(g_weaponarena_list, " & ", wep.netname);
 			}
 		}
-		if (g_weaponarena_list != "") // remove trailing " & "
-			g_weaponarena_list = substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3);
-		else // no valid weapon found
+		if (g_weaponarena_list == "") // no valid weapon found
 			g_weaponarena_list = "No Weapons Arena";
 	}
 
@@ -2213,9 +2211,12 @@ void readlevelcvars()
 		}
 	}
 
-	g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
-	if(!g_weapon_stay)
-		g_weapon_stay = cvar("g_weapon_stay");
+	int i = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
+	if (!i)
+		i = cvar("g_weapon_stay");
+	MUTATOR_CALLHOOK(SetWeaponStay, i);
+	i = M_ARGV(0, int);
+	g_weapon_stay = i;
 
 	MUTATOR_CALLHOOK(ReadLevelCvars);
 
