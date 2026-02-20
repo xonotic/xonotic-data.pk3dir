@@ -13,46 +13,28 @@ REGISTRY_CHECK(IMPULSES)
 
 .void(entity this) impulse_handle;
 
-#if defined(CSQC)
+#ifdef CSQC
 void Impulse_Send(entity imp)
 {
 	localcmd(sprintf("\nimpulse %d\n", imp.impulse));
 }
 
-#define IMPULSE_ALIAS(alias, id) localcmd("\nalias " #alias " \"", id ,"\"\n")
+#define IMPULSE_ALIAS(alias, n) localcmd("\nalias " #alias " \"impulse " #n "\"\n")
 #else
-#define IMPULSE_ALIAS(alias, id)
+#define IMPULSE_ALIAS(alias, n)
 #endif
 
+// keep xonotic-client.cfg up to date
 #define REGISTER_IMPULSE(id, n) _REGISTER_IMPULSE(IMP_##id, id, n)
 #define _REGISTER_IMPULSE(id, alias, n) \
 	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) \
 	{ \
 		this.impulse = n; \
-		IMPULSE_ALIAS(alias, "impulse " #n); \
+		IMPULSE_ALIAS(alias, n); \
 	}
 
-#define LEGACY_IMPULSE_ID(alias, id) LEGACY_IMPULSE(alias, id, sprintf("impulse %d", IMP_##alias.impulse))
-
-void _impCheck(string s, string alias)
-{
-	// this is inside a function to avoid expanding it on compilation everytime
-	if (s == alias)
-		LOG_FATALF("LEGACY_IMPULSE: would define a recursive alias for '%s', use LEGACY_IMPULSE_ID instead", s);
-}
-
-#define LEGACY_IMPULSE(alias, id, new) \
-	STATIC_INIT(legacy_##alias) { \
-		string s = new; \
-		_impCheck(s, #alias); \
-		IMPULSE_ALIAS(alias, s); \
-	} \
-	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
-
-// keep xonotic-client.cfg up to date
 #define X(slot, imp) \
-	REGISTER_IMPULSE(weapon_group_##slot, imp) \
-	LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse " #imp)
+	REGISTER_IMPULSE(weapon_group_##slot, imp)
 X(1, 1)
 X(2, 2)
 X(3, 3)
@@ -65,10 +47,8 @@ X(9, 9)
 X(0, 14)
 #undef X
 
-// keep xonotic-client.cfg up to date
 #define X(slot, dir, imp) \
-	REGISTER_IMPULSE(weapon_priority_##slot##_##dir, imp) \
-	LEGACY_IMPULSE(weapon_priority_##slot##_##dir, imp, "impulse " #imp)
+	REGISTER_IMPULSE(weapon_priority_##slot##_##dir, imp)
 X(0, prev, 200)
 X(1, prev, 201)
 X(2, prev, 202)
@@ -104,7 +84,6 @@ X(9, next, 229)
 #undef X
 
 // direct weapons
-// keep xonotic-client.cfg up to date
 #define X(i, imp) \
 	REGISTER_IMPULSE(weapon_byid_##i, imp)
 X(0, 230)
@@ -134,75 +113,38 @@ X(23, 253)
 #undef X
 
 REGISTER_IMPULSE(weapon_next_byid, 10)
-LEGACY_IMPULSE(_weapnext_2, 10, "weapon_next_byid")
-
 REGISTER_IMPULSE(weapon_prev_byid, 12)
-LEGACY_IMPULSE(_weapprev_2, 12, "weapon_prev_byid")
-
 REGISTER_IMPULSE(weapon_next_bygroup, 18)
-LEGACY_IMPULSE(_weapnext_0, 18, "weapon_next_bygroup")
-
 REGISTER_IMPULSE(weapon_prev_bygroup, 19)
-LEGACY_IMPULSE(_weapprev_0, 19, "weapon_prev_bygroup")
-
 REGISTER_IMPULSE(weapon_next_bypriority, 15)
-LEGACY_IMPULSE(_weapnext_1, 15, "weapon_next_bypriority")
-
 REGISTER_IMPULSE(weapon_prev_bypriority, 16)
-LEGACY_IMPULSE(_weapprev_1, 16, "weapon_prev_bypriority")
 
 REGISTER_IMPULSE(weapon_last, 11)
-LEGACY_IMPULSE(weaplast, 11, "weapon_last")
-
 REGISTER_IMPULSE(weapon_best, 13)
-LEGACY_IMPULSE(weapbest, 13, "weapon_best")
-
 REGISTER_IMPULSE(weapon_drop, 17)
-LEGACY_IMPULSE(dropweapon, 17, "weapon_drop")
-
 REGISTER_IMPULSE(weapon_reload, 20)
-LEGACY_IMPULSE(reload, 20, "weapon_reload")
 
+// umm...
+#pragma push_macro("use")
+#undef use
 REGISTER_IMPULSE(use, 21)
-LEGACY_IMPULSE_ID(use, 21)
+#pragma pop_macro("use")
 
 REGISTER_IMPULSE(waypoint_personal_here, 30)
-LEGACY_IMPULSE(g_waypointsprite_personal, 30, "waypoint_personal_here")
-
 REGISTER_IMPULSE(waypoint_personal_crosshair, 31)
-LEGACY_IMPULSE(g_waypointsprite_personal_p, 31, "waypoint_personal_crosshair")
-
 REGISTER_IMPULSE(waypoint_personal_death, 32)
-LEGACY_IMPULSE(g_waypointsprite_personal_d, 32, "waypoint_personal_death")
-
 REGISTER_IMPULSE(waypoint_here_follow, 33)
-LEGACY_IMPULSE(g_waypointsprite_team_helpme, 33, "waypoint_here_follow")
-
 REGISTER_IMPULSE(waypoint_here_here, 34)
-LEGACY_IMPULSE(g_waypointsprite_team_here, 34, "waypoint_here_here")
-
 REGISTER_IMPULSE(waypoint_here_crosshair, 35)
-LEGACY_IMPULSE(g_waypointsprite_team_here_p, 35, "waypoint_here_crosshair")
-
 REGISTER_IMPULSE(waypoint_here_death, 36)
-LEGACY_IMPULSE(g_waypointsprite_team_here_d, 36, "waypoint_here_death")
-
 REGISTER_IMPULSE(waypoint_danger_here, 37)
-LEGACY_IMPULSE(g_waypointsprite_team_danger, 37, "waypoint_danger_here")
-
 REGISTER_IMPULSE(waypoint_danger_crosshair, 38)
-LEGACY_IMPULSE(g_waypointsprite_team_danger_p, 38, "waypoint_danger_crosshair")
-
 REGISTER_IMPULSE(waypoint_danger_death, 39)
-LEGACY_IMPULSE(g_waypointsprite_team_danger_d, 39, "waypoint_danger_death")
-
 REGISTER_IMPULSE(waypoint_clear_personal, 47)
-LEGACY_IMPULSE(g_waypointsprite_clear_personal, 47, "waypoint_clear_personal")
-
 REGISTER_IMPULSE(waypoint_clear, 48)
-LEGACY_IMPULSE(g_waypointsprite_clear, 48, "waypoint_clear")
 
 
+// cheat impulses
 #define CHIMPULSE(id, n) _CHIMPULSE(CHIMPULSE_##id, n)
 #define _CHIMPULSE(id, n) \
 	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) \
@@ -217,3 +159,10 @@ CHIMPULSE(SPEEDRUN, 141)
 CHIMPULSE(CLONE_STANDING, 142)
 CHIMPULSE(TELEPORT, 143)
 CHIMPULSE(R00T, 148)
+
+
+#undef IMPULSE_ALIAS
+#undef REGISTER_IMPULSE
+#undef _REGISTER_IMPULSE
+#undef CHIMPULSE
+#undef _CHIMPULSE
