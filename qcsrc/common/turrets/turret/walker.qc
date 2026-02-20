@@ -568,7 +568,7 @@ METHOD(WalkerTurret, tr_death, void(WalkerTurret this, entity it))
 METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 {
 	// Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
-	if (it.move_movetype == MOVETYPE_WALK)
+	if (it.move_movetype == MOVETYPE_STEP)
 	{
 		if (it.pos1)
 			setorigin(it, it.pos1);
@@ -589,7 +589,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 	it.damagedbycontents = true;
 	it.solid = SOLID_SLIDEBOX;
 	it.takedamage = DAMAGE_AIM;
-	if (it.move_movetype != MOVETYPE_WALK)
+	if (it.move_movetype != MOVETYPE_STEP)
 	{
 		setorigin(it, it.origin);
 		tracebox(it.origin + '0 0 128', it.mins, it.maxs, it.origin - '0 0 10000', MOVE_NORMAL, it);
@@ -597,7 +597,8 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 		it.pos1 = it.origin;
 		it.pos2 = it.angles;
 	}
-	set_movetype(it, MOVETYPE_WALK);
+	set_movetype(it, MOVETYPE_STEP);
+	_Movetype_Physics_Step_UpdateStats(it);
 	it.idle_aim = '0 0 0';
 	it.turret_firecheckfunc = walker_firecheck;
 

@@ -1119,7 +1119,8 @@ void vehicles_spawn(entity this)
 	this.iscreature         = true;
 	this.teleportable       = false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents  = true;
-	set_movetype(this, MOVETYPE_WALK);
+	set_movetype(this, MOVETYPE_STEP);
+	_Movetype_Physics_Step_UpdateStats(this);
 	this.solid       = SOLID_SLIDEBOX;
 	this.takedamage  = DAMAGE_AIM;
 	this.deadflag    = DEAD_NO;

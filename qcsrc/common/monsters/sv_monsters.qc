@@ -832,7 +832,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		else if (this.move_movetype == MOVETYPE_BOUNCE)
 		{
 			this.angles.x = 0;
-			set_movetype(this, MOVETYPE_WALK);
+			set_movetype(this, MOVETYPE_STEP);
 		}
 	}
 
@@ -1459,7 +1459,8 @@ bool Monster_Spawn(entity this, bool check_appear, Monster mon)
 	settouch(this, Monster_Touch);
 	this.use                 = Monster_Use;
 	this.solid               = SOLID_BBOX;
-	set_movetype(this, MOVETYPE_WALK);
+	set_movetype(this, MOVETYPE_STEP);
+	_Movetype_Physics_Step_UpdateStats(this);
 	StatusEffects_apply(STATUSEFFECT_SpawnShield, this, time + autocvar_g_monsters_spawnshieldtime, 0);
 	this.enemy               = NULL;
 	this.velocity            = '0 0 0';
