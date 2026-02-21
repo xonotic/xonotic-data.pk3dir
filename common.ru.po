@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2026\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -8676,12 +8676,18 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after some time they will self-detonate."
 msgstr ""
+"%s устанавливает мины на землю при выстреле, которые взрываются и наносят "
+"урон врагам, если на них наступить. В любой момент времени можно установить "
+"лишь несколько мин, и через несколько секунд они самоподорвуться."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:555
 msgid ""
 "Uniquely, the mines explode sooner the closer an enemy comes to them. The "
 "secondary fire can be used to detonate all mines placed by the primary fire."
 msgstr ""
+"Уникальность мин заключается в том, что чем ближе к ним подходит враг, тем "
+"раньше они взрываются. Вторичный огонь можно использовать для подрыва всех "
+"мин, установленных основным огнём."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format

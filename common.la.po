@@ -49,8 +49,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
-"^1Multi versus in %s\n"
-"^BOLDmanentes maiorem commune"
+"^1Multi versus in %s qui tempus\n"
+"^BOLDmaius quam commune manent"
 
 #: qcsrc/client/hud/panel/centerprint.qc:208
 #, c-format
@@ -2818,13 +2818,15 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"Cum firmamen %s a te habetur, missilia ad infinitum tua arma continent, ita "
+"noli timere ne ex eis exhaurias"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
 msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
 "the %s and %s."
-msgstr ""
+msgstr "Arma etiam replere omittere potes, quae arma sunt %s et %s et alia"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -2836,14 +2838,16 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"Cum firmamen %s a te habetur, inimicos magis impellis, et alii te impellere "
+"non possunt"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
-msgstr ""
+msgstr "Te etiam paulo magis impellis."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
-msgstr "Impactus"
+msgstr "Incutiens"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:50
 #, c-format
@@ -2851,11 +2855,14 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
+"Cum firmamen %s a te habetur, inimici beluaeque a te vulnerati aliquantum "
+"tempus retardantur."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
 msgid "This is particularly useful against speedy players, especially in %s."
 msgstr ""
+"Id firmamen maxime prodest ad celeres vulnerandos, maxime in ludi modo %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
 msgid "Disability"
@@ -2867,6 +2874,8 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
+"Cum firmamen %s a te habetur, in aëre subsidendo vim gravitatis invertis, id "
+"quod volare fere est."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
 msgid "Flight"
@@ -2878,6 +2887,8 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
+"Cum firmamen %s a te habetur, inimici beluaeque a te vulnerati aliquantum "
+"tempus inflammantur et continenter vulnerantur."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -2887,11 +2898,11 @@ msgstr "Infernus"
 #, c-format
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
-msgstr ""
+msgstr "Cum firmamen %s a te habetur, multo altius salis."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
-msgstr ""
+msgstr "Etiam si in solum decidis, non vulneraris."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qh:12
 msgid "Jump"
@@ -2903,6 +2914,7 @@ msgid ""
 "While you have the %s buff, each attack has a chance of being a critical hit "
 "with greatly increased damage."
 msgstr ""
+"Cum firmamen %s a te habetur, aliquando forte multo maius vulnus vulneras."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
 msgid "Luck"
@@ -2914,6 +2926,8 @@ msgid ""
 "The %s buff greatly increases your item pickup range, collecting nearby "
 "items for you while the buff is active."
 msgstr ""
+"Cum firmamen %s a te habetur, res colligendas paulo longius colligis, etiam "
+"si eas non tangas."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
 msgid "Magnet"
@@ -2926,12 +2940,16 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
+"Cum firmamen %s a te habetur, sanitas tua celerius reciperatur, sanitas "
+"maxima quae non putescit augetur, sanitas maior lentius putescit."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
 msgid ""
 "It also gives you a chance to survive a fatal hit, with a small amount of "
 "health left over."
 msgstr ""
+"Mortiferum etiam vulnus aliquando resistere potes, et si id accidit sanitas "
+"tua minima fit."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qh:16
 msgid "Medic"
@@ -2940,33 +2958,39 @@ msgstr "Medicus"
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
-msgstr ""
+msgstr "Cum firmamen %s a te habetur, ab aliis minus vulneraris."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
 msgid "This also impacts the damage you deal to yourself."
-msgstr ""
+msgstr "Id firmamen vulnus quod tibi infers quoque minuit."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qh:12
 msgid "Resistance"
-msgstr "Resistentia"
+msgstr "Resistens"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:86
 #, c-format
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
+"Cum firmamen %s a te habetur, per clavem %s cum inimico propinquo semel "
+"locos commutas."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:87
 msgid ""
 "A common usage of this buff is to jump over the map's void, then swap with "
 "an enemy, to cause them to fall into the void."
 msgstr ""
+"Per id firmamen facile in spatium vacuum insilire et locos commutare potes, "
+"ut inimicus in vacuum concidat."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
 msgid ""
 "The range that the buff works over is limited, so sometimes it may do "
 "nothing if there are no enemies nearby."
 msgstr ""
+"Id firmamen ad spatium parvum pertinet, propterea nonnumquam neminem tangit "
+"et nihil facit."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qh:10
 msgid "Swapper"
@@ -2978,18 +3002,20 @@ msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
+"Cum firmamen %s a te habetur, paulum vulneris quod inimicis beluisque infers "
+"in sanitatem mutatur."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:27
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr ""
+msgstr "Eius firmaminis fere contrarium firmamen %s est."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:306
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
 msgid "Vampire"
-msgstr "Striga"
+msgstr "Hirudo"
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
 #, c-format
@@ -2997,6 +3023,8 @@ msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
 msgstr ""
+"Cum firmamen %s a te habetur, paulum vulneris quod inimici tibi inferunt "
+"eosdem vulnerat."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -4248,7 +4276,7 @@ msgstr "^BG%s%s^K1, Granata ^BG%s^K1, ruptus est%s%s"
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 couldn't find the light in ^BG%s^K1's Darkness Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 ad ^BG%s^K1 Tenebrarum Granatam lucem non invenit%s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
@@ -7530,27 +7558,28 @@ msgstr "%s vulneris infert"
 #: qcsrc/common/weapons/all.qc:869
 #, c-format
 msgid "It shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "Emittit %s missilia, quodque missile %s vulneris infert"
 
 #: qcsrc/common/weapons/all.qc:870
 #, c-format
 msgid "The %s does %s damage"
-msgstr ""
+msgstr "%s infert %s vulneris"
 
 #: qcsrc/common/weapons/all.qc:871
 #, c-format
 msgid "The %s does %s damage per second"
-msgstr ""
+msgstr "%s infert %s vulneris in secundum"
 
 #: qcsrc/common/weapons/all.qc:872
 #, c-format
 msgid "The %s shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "%s emittit %s missilia, quodque missile %s vulneris infert"
 
 #: qcsrc/common/weapons/all.qc:873
 #, c-format
 msgid "The %s shoots up to %s shots doing %s damage each"
 msgstr ""
+"%s emittit non plura quam %s missilia, quodque missile %s vulneris infert"
 
 #: qcsrc/common/weapons/all.qc:896 qcsrc/common/weapons/all.qc:906
 #: qcsrc/common/weapons/all.qc:927 qcsrc/common/weapons/all.qc:941
@@ -9451,28 +9480,30 @@ msgstr "Ad inversionem:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:119
 msgid "Switch:"
-msgstr ""
+msgstr "Commutare:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:120
 msgid "Indicator on the angle to aim at when switching strafing direction"
-msgstr ""
+msgstr "Signum in mensura anguli ad quem te dirigas cum latus commutes"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 msgid "W-turn:"
-msgstr ""
+msgstr "Vertere progrediendo:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:125
 msgid ""
 "Indicator on the angle to aim at when W-turning to rotate as fast as possible"
 msgstr ""
+"Signum in mensura anguli ad quem te dirigas, cum clavis 'progredi' "
+"retinetur, ut celerrime vertas"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:129
 msgid "Best angle:"
-msgstr ""
+msgstr "Angulus optimus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 msgid "Indicator on the angle to aim at for maximal acceleration"
-msgstr ""
+msgstr "Signum in mensura anguli ad quem te dirigas ut maxime acceleres"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:165
 msgid "Demo mode"
@@ -12045,7 +12076,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:159
 msgid "Automatically repeat jumping if holding jump"
-msgstr "Saltus iterare cum clavis 'salire' pressa tenetur"
+msgstr "Saltus iterare cum clavis 'salire' retinetur"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:162
 msgid "Jetpack on jump:"

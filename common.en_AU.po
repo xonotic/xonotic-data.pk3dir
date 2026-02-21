@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2026\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -8596,12 +8596,17 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after some time they will self-detonate."
 msgstr ""
+"The %s places mines on the ground when fired, which detonate and damage "
+"enemies if stepped on. Only a couple mines can be placed at any time, and "
+"after some time they will self-detonate."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:555
 msgid ""
 "Uniquely, the mines explode sooner the closer an enemy comes to them. The "
 "secondary fire can be used to detonate all mines placed by the primary fire."
 msgstr ""
+"Uniquely, the mines explode sooner the closer an enemy comes to them. The "
+"secondary fire can be used to detonate all mines placed by the primary fire."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format
