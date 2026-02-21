@@ -7,6 +7,7 @@
 #include <common/gametypes/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/minigames/sv_minigames.qh>
 #include <common/monsters/_mod.qh>
 #include <common/monsters/sv_monsters.qh>
@@ -30,7 +31,6 @@
 #include <server/command/getreplies.qh>
 #include <server/command/vote.qh>
 #include <server/ipban.qh>
-#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/player.qh>
 #include <server/race.qh>
@@ -1158,6 +1158,25 @@ void ClientCommand_macro_write_aliases(float fh)
 	FOREACH(CLIENT_COMMANDS, true, { CMD_Write_Alias("qc_cmd_cmd", it.m_name, it.m_description); });
 }
 
+bool ClientCommand_antispam(entity this, string command)
+{
+	// this is basically the same as the chat flood control
+	entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
+	// NOTE: using mod_time instead of time here to avoid initializing both this.cmd_floodtime
+	// and CS(this).cmd_floodtime to -(antispam_count * antispam_time) (or -999999)
+	float mod_time = gettime(GETTIME_FRAMESTART) + autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time;
+	if (mod_time < store.cmd_floodtime)
+	{
+		sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - mod_time),
+			"^3 seconds, command was: ", command, "\n"));
+		return true;  // too much spam, halt
+	}
+	else
+		// micro-optimization: replaced mod_time - max_delay with time here as they are equal
+		store.cmd_floodtime = max(gettime(GETTIME_FRAMESTART), store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
+	return false;
+}
+
 // ======================================
 //  Main Function Called By Engine (cmd)
 // ======================================
@@ -1226,23 +1245,10 @@ void SV_ParseClientCommand(entity this, string command)
 			// else fall through to default: flood control
 		default:
 			LABEL(flood_control)
-			if(MUTATOR_CALLHOOK(ClientCommand_FloodControl, this, strtolower(argv(0)), argc, command))
+			if (MUTATOR_CALLHOOK(ClientCommand_FloodControl, this, strtolower(argv(0)), argc, command))
 				break; // a mutator has prevented flood control
-
-			// this is basically the same as the chat flood control
-			entity store = IS_CLIENT(this) ? CS(this) : this; // unfortunately, we need to store these on the client initially
-			// NOTE: using mod_time instead of time here to avoid initializing both this.cmd_floodtime
-			// and CS(this).cmd_floodtime to -(antispam_count * antispam_time) (or -999999)
-			float mod_time = gettime(GETTIME_FRAMESTART) + autocvar_sv_clientcommand_antispam_count * autocvar_sv_clientcommand_antispam_time;
-			if (mod_time < store.cmd_floodtime)
-			{
-				sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.cmd_floodtime - mod_time),
-					"^3 seconds, command was: ", command, "\n"));
-				return;  // too much spam, halt
-			}
-			else
-				// micro-optimization: replaced mod_time - max_delay with time here as they are equal
-				store.cmd_floodtime = max(gettime(GETTIME_FRAMESTART), store.cmd_floodtime) + autocvar_sv_clientcommand_antispam_time;
+			if (ClientCommand_antispam(this, command))
+				return; // the user is spamming commands
 			break;  // continue, as we're not flooding yet
 	}
 

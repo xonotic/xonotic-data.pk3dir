@@ -12,8 +12,11 @@ const int IGNORE_MAXPLAYERS = 16; // maximum players that can be ignored permane
 
 string MapVote_Suggest(entity this, string m);
 
-// used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
+/// Used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void ClientCommand_macro_write_aliases(float fh);
+
+/// Returns true if antispam should prevent the command
+bool ClientCommand_antispam(entity this, string command);
 
 // functions for ignore command
 void ignore_remove_player(entity this, entity ignore, bool from_db_too);
