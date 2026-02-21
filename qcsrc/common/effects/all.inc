@@ -99,6 +99,8 @@ EFFECT(0, FIREBALL_LASER,           "fireball_laser")
 EFFECT(0, FIREBALL_MUZZLEFLASH,     "fireball_muzzleflash")
 EFFECT(0, FIREBALL_PRE_MUZZLEFLASH, "fireball_preattack_muzzleflash")
 
+EFFECT(0, HMG_MUZZLEFLASH,          "hmg_muzzleflash")
+
 
 
 EFFECT(0, RAPTOR_CANNON_IMPACT,     "raptor_cannon_impact")
@@ -147,8 +149,11 @@ EFFECT(0, ICEORGLASS,               "iceorglass")
 EFFECT(0, ICEFIELD,                 "icefield")
 EFFECT(0, FIREFIELD,                "firefield")
 EFFECT(0, HEALING,                  "healing_fx")
+EFFECT(0, VAMPIRE,                  "vampire_fx")
+EFFECT(0, VENGEANCE,                "vengeance_fx")
 EFFECT(0, ARMOR_REPAIR,             "armorrepair_fx")
 EFFECT(0, AMMO_REGEN,               "ammoregen_fx")
+EFFECT(0, SWAPPER,                  "swapper")
 EFFECT(1, LASER_BEAM_FAST,          "nex242_misc_laser_beam_fast")
 EFFECT(0, RESPAWN_GHOST,            "respawn_ghost")
 
@@ -204,6 +209,7 @@ entity EFFECT_CAP(int teamid)
 EFFECT(0, ITEM_PICKUP,              "item_pickup")
 EFFECT(0, ITEM_RESPAWN,             "item_respawn")
 EFFECT(0, ITEM_DESPAWN,             "item_despawn")
+EFFECT(0, ITEM_TELEPORT,            "item_teleport")
 
 // FIXME: needs custom effect
 EFFECT(0, ONS_ELECTRICITY_EXPLODE,  "electro_ballexplode")
@@ -214,8 +220,7 @@ EFFECT(0, ONS_GENERATOR_EXPLODE2,   "onslaught_generator_finalexplosion")
 // FIXME: needs custom effect
 EFFECT(0, ONS_SHOCKWAVE,            "electro_combo")
 
-// FIXME: needs custom effect
-EFFECT(0, KA_BALL_RESPAWN,          "electro_combo")
+EFFECT(0, DOM_CAPTURE,              "dom_capture")
 
 
 EFFECT(0, LASER_DEADLY,             "laser_deadly")
@@ -232,6 +237,7 @@ EFFECT(0, JUMPPAD,                  "jumppad_activate")
 EFFECT(1, BULLET,                   "tr_bullet")
 EFFECT(1, BULLET_WEAK,              "tr_bullet_weak")
 EFFECT(0, EF_SHOCK,                 "EF_SHOCK")
+EFFECT(0, EF_SPEED,                 "EF_SPEED")
 EFFECT(0, EF_FLAME,                 "EF_FLAME")
 EFFECT(0, EF_STARDUST,              "EF_STARDUST")
 EFFECT(0, TE_EXPLOSION,             "TE_EXPLOSION")

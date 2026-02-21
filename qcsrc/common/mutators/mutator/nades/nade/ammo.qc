@@ -43,8 +43,8 @@ void nade_ammo_touch(entity this, entity toucher)
 		GIVE_AMMO_RESOURCE(RES_CELLS,   autocvar_g_pickup_cells_max);
 	#undef GIVE_AMMO_RESOURCE
 
-		if (gave && this.nade_show_particles)
-			Send_Effect(EFFECT_AMMO_REGEN, toucher.origin, vec2(toucher.velocity), 1);
+		if (gave)
+			nade_Effect(toucher, EFFECT_AMMO_REGEN, 1);
 	}
 	else if (ammo_factor < 0) // Foe drops ammo points
 	{

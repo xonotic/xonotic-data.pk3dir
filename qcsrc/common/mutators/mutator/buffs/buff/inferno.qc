@@ -14,6 +14,30 @@ float buff_Inferno_CalculateDamage(float frag_damage)
 {
 	return frag_damage * autocvar_g_buffs_inferno_damagemultiplier;
 }
+
+METHOD(InfernoBuff, m_tick, void(StatusEffect this, entity actor))
+{
+	if (time >= actor.buff_effect_delay && autocvar_g_buffs_effects) // prevent unnecessary calculations
+	{
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		entity e = actor.(weaponentity);
+		vector org;
+		if (e)
+		{
+			int idx;
+			if ((idx = gettagindex(e, "shot")) || (idx = gettagindex(e, "tag_shot")) || (idx = gettagindex(e, "weapon")) || (idx = gettagindex(e, "tag_weapon")))
+				org = gettaginfo(e, idx);
+			else
+				org = e.origin;
+		}
+		else
+			org = actor.origin;
+
+		buff_Effect(actor, EFFECT_RAGE, org, vec2(actor.velocity), 1, true); // particles block view so hide
+	}
+
+	SUPER(InfernoBuff).m_tick(this, actor);
+}
 #endif // SVQC
 #ifdef MENUQC
 METHOD(InfernoBuff, describe, string(InfernoBuff this))
