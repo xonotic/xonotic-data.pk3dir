@@ -62,17 +62,23 @@ void HUD_StrafeHUD(bool should_draw)
 
 	// draw strafehud
 
+	// ****** the physics panel code sets these variables in the same way, please keep in sync
 	int keys = STAT(PRESSED_KEYS);
 	bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
 
 	// does not get changed by ground timeout and is not affected by jump input
 	bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
 
-	// does not get changed by ground timeout
-	bool real_onslick = false;
-
 	// if jump is held assume we are in air, avoids flickering of the hud when hitting the ground
 	bool onground = real_onground && !jumpheld;
+
+	// does not get changed by ground timeout
+	bool real_onslick = onground ? StrafeHUD_DetermineOnSlick(strafeplayer) : false;
+
+	bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
+	bool slick_already_detected = (all_slick && real_onground) || real_onslick;
+	// ****** sync with the physics panel code until here
+
 	bool onslick = real_onslick;
 
 	// the hud will not work well while swimming
@@ -83,8 +89,6 @@ void HUD_StrafeHUD(bool should_draw)
 	static bool onslick_last = false;
 	if (onground)
 	{
-		real_onslick = onslick = StrafeHUD_DetermineOnSlick(strafeplayer);
-
 		onground_lasttime = time;
 		onslick_last = onslick;
 	}
@@ -572,8 +576,7 @@ void HUD_StrafeHUD(bool should_draw)
 
 	float text_offset_top;
 	float text_offset_bottom;
-	bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
-	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, (all_slick && real_onground) || real_onslick);
+	text_offset_top = text_offset_bottom = StrafeHUD_DrawSlickDetector(strafeplayer, slick_already_detected);
 
 	if (autocvar_hud_panel_strafehud_direction)
 		StrafeHUD_DrawDirectionIndicator(direction, opposite_direction, fwd);
