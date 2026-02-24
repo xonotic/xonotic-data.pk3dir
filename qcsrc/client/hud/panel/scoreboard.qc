@@ -2414,7 +2414,7 @@ void Scoreboard_Draw(bool should_draw)
 				scoreboard_time = time;
 			if (hud_configure_menu_open == 1)
 				scoreboard_fade_alpha = 1;
-			if (scoreboard_fade_alpha < 1 && autocvar_hud_panel_scoreboard_fadeoutspeed && frametime)
+			if (scoreboard_fade_alpha < 1 && autocvar_hud_panel_scoreboard_fadeinspeed && frametime)
 				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * autocvar_hud_panel_scoreboard_fadeinspeed);
 			else
 				scoreboard_fade_alpha = 1;
