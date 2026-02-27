@@ -455,17 +455,34 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	w.wpflags = f;
 	w.solid = SOLID_TRIGGER;
 	w.createdtime = time;
-	setorigin(w, (m1 + m2) * 0.5);
-	setsize(w, m1 - w.origin, m2 - w.origin);
+	if (m1 == m2)
+	{
+		// Since waypoint_saveall saves waypoint positions with one decimal place anyway, positions
+		// here are rounded to the nearest .0 or .5 (1/2), which is the only float that can be
+		// represented with exactly one decimal place, so that waypoints are in exactly the
+		// same position after save/load and the waypoint test always gives the same result
+		vector org = m1;
+		// same as org.x = rint(org.x * 2) / 2; but this formula should be safer for huge numbers
+		org.x = floor(org.x); if (m1.x - org.x >= 0.25) org.x += (m1.x - org.x < 0.75) ? 0.5 : 1;
+		org.y = floor(org.y); if (m1.y - org.y >= 0.25) org.y += (m1.y - org.y < 0.75) ? 0.5 : 1;
+		org.z = floor(org.z); if (m1.z - org.z >= 0.25) org.z += (m1.z - org.z < 0.75) ? 0.5 : 1;
+		setorigin(w, org);
+	}
+	else // box-shaped waypoint
+	{
+		setorigin(w, (m1 + m2) * 0.5);
+		setsize(w, m1 - w.origin, m2 - w.origin);
+	}
 	if (w.size)
 		w.wpisbox = true;
 
 	if(!w.wpisbox)
 	{
+		// test if there's room for a player in the waypoint position
 		if (f & WAYPOINTFLAG_CROUCH)
-			setsize(w, PL_CROUCH_MIN_CONST - '1 1 0', PL_CROUCH_MAX_CONST + '1 1 0');
+			setsize(w, PL_CROUCH_MIN_CONST, PL_CROUCH_MAX_CONST);
 		else
-			setsize(w, PL_MIN_CONST - '1 1 0', PL_MAX_CONST + '1 1 0');
+			setsize(w, PL_MIN_CONST, PL_MAX_CONST);
 		if(!move_out_of_solid(w))
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
