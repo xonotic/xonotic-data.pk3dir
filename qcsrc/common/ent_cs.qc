@@ -1,10 +1,9 @@
 #include "ent_cs.qh"
 
-#if defined(CSQC)
+#ifdef CSQC
 	#include <common/gametypes/_mod.qh>
 	#include <common/resources/resources.qh>
-#elif defined(MENUQC)
-#elif defined(SVQC)
+#elifdef SVQC
 	#include <common/gametypes/_mod.qh>
 	#include <common/resources/resources.qh>
 	#include <common/resources/sv_resources.qh>
@@ -16,7 +15,10 @@ REGISTRY_SORT(EntCSProps)
 REGISTRY_CHECK(EntCSProps)
 
 REGISTRY_DEFINE_GET(EntCSProps, NULL)
-STATIC_INIT(EntCSProps_renumber) { FOREACH(EntCSProps, true, it.m_id = i); }
+STATIC_INIT(EntCSProps_renumber)
+{
+	FOREACH(EntCSProps, true, it.m_id = i);
+}
 
 // these entcs_props ids need to be referenced directly
 int ENTCS_PROP_ENTNUM_id = 0;
@@ -24,10 +26,11 @@ int ENTCS_PROP_ORIGIN_id = 0;
 int ENTCS_PROP_HEALTH_id = 0;
 STATIC_INIT(EntCSProps_setglobalids)
 {
-	FOREACH(EntCSProps, true, {
-		if (it.registered_id == "ENTCS_PROP_ENTNUM") ENTCS_PROP_ENTNUM_id = it.m_id;
-		if (it.registered_id == "ENTCS_PROP_ORIGIN") ENTCS_PROP_ORIGIN_id = it.m_id;
-		if (it.registered_id == "ENTCS_PROP_HEALTH") ENTCS_PROP_HEALTH_id = it.m_id;
+	FOREACH(EntCSProps, true,
+	{
+		if (it.registered_id == "ENTCS_PROP_ENTNUM")  ENTCS_PROP_ENTNUM_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_ORIGIN")  ENTCS_PROP_ORIGIN_id = it.m_id;
+		if (it.registered_id == "ENTCS_PROP_HEALTH")  ENTCS_PROP_HEALTH_id = it.m_id;
 	});
 }
 
@@ -47,9 +50,16 @@ void entcs_force_origin(entity player)
 
 #ifdef SVQC
 #define _ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
-	void id##_set(entity ent, entity player) { setprop(ent.(checkprop), player.(checkprop_pl)); } \
-	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
-	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+	void id##_set(entity ent, entity player) \
+	{ \
+		setprop(ent.(checkprop), player.(checkprop_pl)); \
+	} \
+	void id##_send(int chan, entity ent) \
+	{ \
+		LAMBDA(svsend) \
+	} \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) \
+	{ \
 		this.m_public = ispublic; \
 		this.m_check = id##_check; \
 		this.m_set = id##_set; \
@@ -57,19 +67,27 @@ void entcs_force_origin(entity player)
 	}
 
 #define ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
-	bool id##_check(entity ent, entity player) { return (ent.(checkprop) != player.(checkprop_pl)); } \
+	bool id##_check(entity ent, entity player) \
+	{ \
+		return (ent.(checkprop) != player.(checkprop_pl)); \
+	} \
 	_ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive)
 
 #define ENTCS_PROP_CODED(id, ispublic, checkprop, checkprop_pl, setprop, decfactor, svsend, clreceive) \
-	bool id##_check(entity ent, entity player) { \
+	bool id##_check(entity ent, entity player) \
+	{ \
 		return (floor(ent.(checkprop)) / decfactor != floor(player.(checkprop_pl)) / decfactor); \
 	} \
 	_ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive)
 
-#elif defined(CSQC)
+#elifdef CSQC
 #define ENTCS_PROP(id, ispublic, checkprop, checkprop_pl, setprop, svsend, clreceive) \
-	void id##_receive(entity ent) { LAMBDA(clreceive); } \
-	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+	void id##_receive(entity ent) \
+	{ \
+		LAMBDA(clreceive) \
+	} \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) \
+	{ \
 		this.m_public = ispublic; \
 		this.m_receive = id##_receive; \
 	}
@@ -80,91 +98,98 @@ void entcs_force_origin(entity player)
 
 #ifdef SVQC
 #define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, decfactor, svsend, clreceive) \
-	bool id##_check(entity ent, entity player) { \
+	bool id##_check(entity ent, entity player) \
+	{ \
 		return (floor(GetResource(ent, checkprop) / decfactor) != floor(GetResource(player, checkprop) / decfactor)); \
 	} \
-	void id##_set(entity ent, entity player) { SetResourceExplicit(ent, checkprop, GetResource(player, checkprop)); } \
-	void id##_send(int chan, entity ent) { LAMBDA(svsend); } \
-	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+	void id##_set(entity ent, entity player) \
+	{ \
+		SetResourceExplicit(ent, checkprop, GetResource(player, checkprop)); \
+	} \
+	void id##_send(int chan, entity ent) \
+	{ \
+		LAMBDA(svsend) \
+	} \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) \
+	{ \
 		this.m_public = ispublic; \
 		this.m_check = id##_check; \
 		this.m_set = id##_set; \
 		this.m_send = id##_send; \
 	}
-#elif defined(CSQC)
+#elifdef CSQC
 #define ENTCS_PROP_RESOURCE(id, ispublic, checkprop, setprop, decfactor, svsend, clreceive) \
-	void id##_receive(entity ent) { LAMBDA(clreceive); } \
-	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) { \
+	void id##_receive(entity ent) \
+	{ \
+		LAMBDA(clreceive) \
+	} \
+	REGISTER(EntCSProps, ENTCS_PROP, id, m_id, new_pure(entcs_prop)) \
+	{ \
 		this.m_public = ispublic; \
 		this.m_receive = id##_receive; \
 	}
 #endif
 
-#define ENTCS_SET_NORMAL(var, x) MACRO_BEGIN \
-	var = x; \
-MACRO_END
-
+#define ENTCS_SET_NORMAL(var, x) var = x;
 /** the engine player name strings are mutable! */
-#define ENTCS_SET_MUTABLE_STRING(var, x) MACRO_BEGIN \
-	strcpy(var, x); \
-MACRO_END
+#define ENTCS_SET_MUTABLE_STRING(var, x) strcpy(var, x);
 
-ENTCS_PROP(ENTNUM, false, sv_entnum, sv_entnum, ENTCS_SET_NORMAL, {}, {}) /* sentinel */
+ENTCS_PROP(ENTNUM, false, sv_entnum, sv_entnum, ENTCS_SET_NORMAL, , ) /* sentinel */
 
 ENTCS_PROP(ORIGIN, false, origin, origin, ENTCS_SET_NORMAL,
-	{ WriteVector(chan, ent.origin); },
-	{ ent.has_sv_origin = true; vector v = ReadVector(); setorigin(ent, v); })
+	WriteVector(chan, ent.origin),
+	{ ent.has_sv_origin = true; setorigin(ent, ReadVector()); })
 
 #define DEC_FACTOR (360 / 64)
 ENTCS_PROP_CODED(ANGLES, false, angles_y, angles_y, ENTCS_SET_NORMAL, DEC_FACTOR,
-	{ WriteByte(chan, ent.angles.y / DEC_FACTOR); },
-	{ vector v = '0 0 0'; v.y = ReadByte() * DEC_FACTOR; ent.angles = v; })
+	WriteByte(chan, ent.angles.y / DEC_FACTOR),
+	{ vector v; v.y = ReadByte() * DEC_FACTOR; v.x = 0; v.z = 0; ent.angles = v; })
 #undef DEC_FACTOR
 
 // FIXME: use a better scale?
 #define DEC_FACTOR 10
 ENTCS_PROP_RESOURCE(HEALTH, false, RES_HEALTH, ENTCS_SET_NORMAL, DEC_FACTOR,
-	{ WriteByte(chan, bound(0, GetResource(ent, RES_HEALTH) / DEC_FACTOR, 255)); },
-	{ ent.healthvalue = ReadByte() * DEC_FACTOR; })
+	WriteByte(chan, bound(0, GetResource(ent, RES_HEALTH) / DEC_FACTOR, 255)),
+	ent.healthvalue = ReadByte() * DEC_FACTOR)
 
 ENTCS_PROP_RESOURCE(ARMOR, false, RES_ARMOR, ENTCS_SET_NORMAL, DEC_FACTOR,
-	{ WriteByte(chan, bound(0, GetResource(ent, RES_ARMOR) / DEC_FACTOR, 255)); },
-	{ SetResourceExplicit(ent, RES_ARMOR, ReadByte() * DEC_FACTOR); })
+	WriteByte(chan, bound(0, GetResource(ent, RES_ARMOR) / DEC_FACTOR, 255)),
+	SetResourceExplicit(ent, RES_ARMOR, ReadByte() * DEC_FACTOR))
 #undef DEC_FACTOR
 
 ENTCS_PROP(NAME, true, netname, netname, ENTCS_SET_MUTABLE_STRING,
-	{ WriteString(chan, ent.netname); },
-	{ strcpy(ent.netname, ReadString()); })
+	WriteString(chan, ent.netname),
+	strcpy(ent.netname, ReadString()))
 
 ENTCS_PROP(MODEL, true, model, model, ENTCS_SET_NORMAL,
-	{ WriteString(chan, ent.model); },
-	{ strcpy(ent.model, ReadString()); })
+	WriteString(chan, ent.model),
+	strcpy(ent.model, ReadString()))
 
 ENTCS_PROP(SKIN, true, skin, skin, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, ent.skin); },
-	{ ent.skin = ReadByte(); })
+	WriteByte(chan, ent.skin),
+	ent.skin = ReadByte())
 
 ENTCS_PROP(CLIENTCOLORS, true, clientcolors, clientcolors, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, ent.clientcolors); },
-	{ ent.colormap = ReadByte(); })
+	WriteByte(chan, ent.clientcolors),
+	ent.colormap = ReadByte())
 
 ENTCS_PROP(FRAGS, true, frags, frags, ENTCS_SET_NORMAL,
-	{ WriteShort(chan, ent.frags); },
-	{ ent.frags = ReadShort(); })
+	WriteShort(chan, ent.frags),
+	ent.frags = ReadShort())
 
 ENTCS_PROP(HANDICAP_LEVEL, true, handicap_level, handicap_level, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, ent.handicap_level); },
-	{ ent.handicap_level = ReadByte(); })
+	WriteByte(chan, ent.handicap_level),
+	ent.handicap_level = ReadByte())
 
 // index of join queue team selection, max 127 because -1 means any available team
 ENTCS_PROP(WANTSJOIN, true, wants_join, wants_join, ENTCS_SET_NORMAL,
-	{ WriteChar(chan, ent.wants_join); },
-	{ ent.wants_join = ReadChar(); })
+	WriteChar(chan, ent.wants_join),
+	ent.wants_join = ReadChar())
 
 // use sv_solid to avoid changing solidity state of entcs entities
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
-	{ WriteByte(chan, ent.sv_solid); },
-	{ ent.sv_solid = ReadByte(); })
+	WriteByte(chan, ent.sv_solid),
+	ent.sv_solid = ReadByte())
 
 #ifdef SVQC
 
@@ -182,25 +207,25 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 
 	void entcs_update_players(entity player)
 	{
-		FOREACH_CLIENT(it != player && IS_PLAYER(it),
-		{
-			CS(it).entcs.SendFlags |= ENTCS_PRIVATEMASK;
-		});
+		FOREACH_CLIENT(it != player && IS_PLAYER(it), CS(it).entcs.SendFlags |= ENTCS_PRIVATEMASK);
 	}
 
 	bool _entcs_send(entity this, entity to, int sf, int chan)
 	{
 		entity player = this.owner;
 		sf |= BIT(ENTCS_PROP_ENTNUM_id); // assume private
-		do {
+		do
+		{
 			if (IS_PLAYER(player))
 			{
-				if (radar_showenemies) break;
-				if (SAME_TEAM(to, player)) break;
-				if (!(IS_PLAYER(to) || INGAME(to))) break;
+				if (radar_showenemies
+				|| SAME_TEAM(to, player)
+				|| !(IS_PLAYER(to) || INGAME(to)))
+					break;
 			}
 			sf &= ENTCS_PUBLICMASK; // no private updates
-		} while (0);
+		}
+		while (0);
 
 		sf |= this.m_forceupdate;
 		this.m_forceupdate = 0;
@@ -210,10 +235,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 			WriteHeader(chan, CLIENT_ENTCS);
 		WriteByte(chan, etof(player) - 1);
 		WriteShort(chan, sf);
-		FOREACH(EntCSProps, sf & BIT(it.m_id),
-		{
-			it.m_send(chan, this);
-		});
+		FOREACH(EntCSProps, sf & BIT(it.m_id), it.m_send(chan, this));
 		return true;
 	}
 
@@ -233,10 +255,8 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		});
 
 		if (intermission_running)
-		{
 			// health is set to special values after the game ends, ignore any change
 			this.SendFlags &= ~BIT(ENTCS_PROP_HEALTH_id);
-		}
 
 		// always send origin of players even if they stand still otherwise
 		// if a teammate isn't in my pvs and their health (or view angle or name
@@ -258,7 +278,8 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		// NOTE: the following code block has been disabled as a workaround for https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/1824
 #if 0
 		if (!IS_REAL_CLIENT(player)) return;
-		FOREACH_CLIENT(true, {
+		FOREACH_CLIENT(true,
+		{
 			assert(CS(it).entcs);
 			_entcs_send(CS(it).entcs, msg_entity = player, BITS(23), MSG_ONE);
 		});
@@ -267,14 +288,13 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 
 	void entcs_detach(entity player)
 	{
-		if (!CS(player).entcs) return;
+		if (!CS(player).entcs)
+			return;
 		delete(CS(player).entcs);
 		CS(player).entcs = NULL;
 	}
 
-#endif
-
-#ifdef CSQC
+#elifdef CSQC
 
 	void Ent_RemoveEntCS(entity this)
 	{
@@ -283,7 +303,8 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		entcs_receiver(n, NULL);
 		strfree(e.netname);
 		strfree(e.model);
-		if (e != this) delete(e);
+		if (e != this)
+			delete(e);
 	}
 
 	void entcs_think(entity this)
@@ -304,9 +325,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		setorigin(this, this.origin);
 		// `cl_forceplayermodels 1` sounds will be wrong until the player has been in the PVS, but so be it
 		if (this.model != e.model)
-		{
 			strcpy(this.model, e.model);
-		}
 	}
 
 	bool ReadEntcs(entity this)
@@ -338,19 +357,16 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		int sf = ReadShort();
 		e.has_sv_origin = false;
 		e.m_entcs_private = boolean(sf & BIT(ENTCS_PROP_ENTNUM_id));
-		FOREACH(EntCSProps, sf & BIT(it.m_id),
-		{
-			it.m_receive(e);
-		});
+		FOREACH(EntCSProps, sf & BIT(it.m_id), it.m_receive(e));
 		e.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(e);
 		getthink(e)(e);
 		return true;
 	}
 
-	NET_HANDLE(ENT_CLIENT_ENTCS, bool isnew)
+	NET_HANDLE(ENT_CLIENT_ENTCS, bool isNew)
 	{
-		if (isnew)
+		if (isNew)
 		{
 			make_pure(this);
 			this.entremove = Ent_RemoveEntCS;
@@ -358,7 +374,7 @@ ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
 		return ReadEntcs(this);
 	}
 
-	NET_HANDLE(CLIENT_ENTCS, bool isnew)
+	NET_HANDLE(CLIENT_ENTCS, bool isNew)
 	{
 		return ReadEntcs(NULL);
 	}

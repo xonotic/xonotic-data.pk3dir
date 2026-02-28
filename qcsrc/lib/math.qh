@@ -5,18 +5,23 @@
 ERASEABLE
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
 {
-	if (weight == 0) return;
-	if (mean == 0) e.(a) *= (value ** weight);
-	else e.(a) += (value ** mean) * weight;
+	if (weight == 0)
+		return;
+	if (mean == 0)
+		e.(a) *= (value ** weight);
+	else
+		e.(a) += (value ** mean) * weight;
 	e.(c) += weight;
 }
 
 ERASEABLE
 float mean_evaluate(entity e, .float a, .float c, float mean)
 {
-	if (e.(c) == 0) return 0;
-	if (mean == 0) return (e.(a) ** (1.0 / e.(c)));
-	else return ((e.(a) / e.(c)) ** (1.0 / mean));
+	if (e.(c) == 0)
+		return 0;
+	if (mean == 0)
+		return (e.(a) ** (1.0 / e.(c)));
+	return ((e.(a) / e.(c)) ** (1.0 / mean));
 }
 
 #define MEAN_ACCUMULATE(s, prefix, v, w) mean_accumulate(s, prefix##_accumulator, prefix##_count, prefix##_mean, v, w)
@@ -60,11 +65,9 @@ ERASEABLE
 vector vsnap(vector point, float fsize)
 {
 	vector vret;
-
 	vret.x = rint(point.x / fsize) * fsize;
 	vret.y = rint(point.y / fsize) * fsize;
 	vret.z = ceil(point.z / fsize) * fsize;
-
 	return vret;
 }
 
@@ -134,18 +137,20 @@ float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float spd)
 ERASEABLE
 bool cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 {
-	if (startspeedfactor < 0 || endspeedfactor < 0) return false;
+	if (startspeedfactor < 0 || endspeedfactor < 0)
+		return false;
 
 	/*
 	// if this is the case, the possible zeros of the first derivative are outside
 	// 0..1
 	We can calculate this condition as condition
-	if(se <= 3)
-	    return true;
+	if (se <= 3)
+		return true;
 	*/
 
 	// better, see below:
-	if (startspeedfactor <= 3 && endspeedfactor <= 3) return true;
+	if (startspeedfactor <= 3 && endspeedfactor <= 3)
+		return true;
 
 	// if this is the case, the first derivative has no zeros at all
 	float se = startspeedfactor + endspeedfactor;
@@ -195,14 +200,14 @@ bool cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	*/
 }
 
-/** continuous function mapping all reals into -1..1 */
+/// Continuous function mapping all reals into -1..1
 ERASEABLE
 float float2range11(float f)
 {
 	return f / (fabs(f) + 1);
 }
 
-/** continuous function mapping all reals into 0..1 */
+/// Continuous function mapping all reals into 0..1
 ERASEABLE
 float float2range01(float f)
 {
@@ -233,16 +238,19 @@ ERASEABLE
 float almost_in_bounds(float a, float b, float c)
 {
 	float eps = (max(a, -a) + max(c, -c)) * 0.001;
-	if (a > c) eps = -eps;
+	if (a > c)
+		eps = -eps;
 	return b == median(a - eps, b, c + eps);
 }
 
 ERASEABLE
 float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)
 {
-	if (halflifedist > 0) return (0.5 ** ((bound(mindist, d, maxdist) - mindist) / halflifedist));
-	else if (halflifedist < 0) return (0.5 ** ((bound(mindist, d, maxdist) - maxdist) / halflifedist));
-	else return 1;
+	if (halflifedist > 0)
+		return (0.5 ** ((bound(mindist, d, maxdist) - mindist) / halflifedist));
+	else if (halflifedist < 0)
+		return (0.5 ** ((bound(mindist, d, maxdist) - maxdist) / halflifedist));
+	return 1;
 }
 
 #define power2of(e) (2 ** e)
@@ -299,13 +307,11 @@ float log2of(float e)
 					else return 0;
 }
 
-/** ax^2 + bx + c = 0 */
+/// ax^2 + bx + c = 0
 ERASEABLE
 vector solve_quadratic(float a, float b, float c)
 {
 	vector v;
-	float D;
-	v = '0 0 0';
 	if (a == 0)
 	{
 		if (b != 0)
@@ -313,18 +319,16 @@ vector solve_quadratic(float a, float b, float c)
 			v.x = v.y = -c / b;
 			v.z = 1;
 		}
+		else if (c == 0)
+			v.z = 1; // actually, every number solves the equation!
 		else
-		{
-			if (c == 0)
-			{
-				// actually, every number solves the equation!
-				v.z = 1;
-			}
-		}
+			v.z = 0;
+		v.x = 0;
+		v.y = 0;
 	}
 	else
 	{
-		D = b * b - 4 * a * c;
+		float D = b * b - 4 * a * c; // discriminant
 		if (D >= 0)
 		{
 			D = sqrt(D);
@@ -345,8 +349,10 @@ vector solve_quadratic(float a, float b, float c)
 			// complex solutions!
 			D = sqrt(-D);
 			v.x = -b / (2 * a);
-			if (a > 0) v.y =  D / (2 * a);
-			else v.y = -D / (2 * a);
+			if (a > 0)
+				v.y =  D / (2 * a);
+			else
+				v.y = -D / (2 * a);
 			v.z = 0;
 		}
 	}
@@ -355,12 +361,11 @@ vector solve_quadratic(float a, float b, float c)
 
 /// Maps values between the src and dest range: src_min to dest_min, src_max to dest_max, values between them
 /// to the corresponding values between and extrapolates for values outside the range.
-///
 /// src_min and src_max must not be the same or division by zero occurs.
-///
 /// dest_max can be smaller than dest_min if you want the resulting range to be inverted, all values can be negative.
 ERASEABLE
-float map_ranges(float value, float src_min, float src_max, float dest_min, float dest_max) {
+float map_ranges(float value, float src_min, float src_max, float dest_min, float dest_max)
+{
 	float src_diff = src_max - src_min;
 	float dest_diff = dest_max - dest_min;
 	float ratio = (value - src_min) / src_diff;
@@ -369,8 +374,9 @@ float map_ranges(float value, float src_min, float src_max, float dest_min, floa
 
 /// Same as `map_ranges` except that values outside the source range are clamped to min or max.
 ERASEABLE
-float map_bound_ranges(float value, float src_min, float src_max, float dest_min, float dest_max) {
-	if (value <= src_min) return dest_min;
-	if (value >= src_max) return dest_max;
+float map_bound_ranges(float value, float src_min, float src_max, float dest_min, float dest_max)
+{
+	if (value <= src_min)  return dest_min;
+	if (value >= src_max)  return dest_max;
 	return map_ranges(value, src_min, src_max, dest_min, dest_max);
 }

@@ -32,12 +32,12 @@ vector colormapPaletteColor_(int c, bool isPants, float t)
 		case 15:
 			if (isPants)
 				return '1 0 0' * (0.502 + 0.498 * sin(t / M_E + 0))
-					+ '0 1 0' * (0.502 + 0.498 * sin(t / M_E + M_PI * 2 / 3))
-					+ '0 0 1' * (0.502 + 0.498 * sin(t / M_E + M_PI * 4 / 3));
+				     + '0 1 0' * (0.502 + 0.498 * sin(t / M_E + M_PI * 2 / 3))
+				     + '0 0 1' * (0.502 + 0.498 * sin(t / M_E + M_PI * 4 / 3));
 			else
 				return '1 0 0' * (0.502 + 0.498 * sin(t / M_PI + M_PI * 5 / 3))
-					+ '0 1 0' * (0.502 + 0.498 * sin(t / M_PI + M_PI))
-					+ '0 0 1' * (0.502 + 0.498 * sin(t / M_PI + M_PI * 1 / 3));
+				     + '0 1 0' * (0.502 + 0.498 * sin(t / M_PI + M_PI))
+				     + '0 0 1' * (0.502 + 0.498 * sin(t / M_PI + M_PI * 1 / 3));
 		default: return '0.000 0.000 0.000';
 	}
 }
@@ -46,22 +46,18 @@ ERASEABLE
 float rgb_mi_ma_to_hue(vector rgb, float mi, float ma)
 {
 	if (mi == ma)
-	{
 		return 0;
-	}
 	else if (ma == rgb.x)
 	{
-		if (rgb.y >= rgb.z) return (rgb.y - rgb.z) / (ma - mi);
-		else return (rgb.y - rgb.z) / (ma - mi) + 6;
+		if (rgb.y >= rgb.z)
+			return (rgb.y - rgb.z) / (ma - mi);
+		else
+			return (rgb.y - rgb.z) / (ma - mi) + 6;
 	}
 	else if (ma == rgb.y)
-	{
 		return (rgb.z - rgb.x) / (ma - mi) + 2;
-	}
-	else  // if(ma == rgb_z)
-	{
+	else //if (ma == rgb_z)
 		return (rgb.x - rgb.y) / (ma - mi) + 4;
-	}
 }
 
 ERASEABLE
@@ -71,7 +67,7 @@ vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 
 	hue -= 6 * floor(hue / 6);
 
-	// else if(ma == rgb_x)
+	//else if (ma == rgb_x)
 	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
 	if (hue <= 1)
 	{
@@ -79,7 +75,7 @@ vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 		rgb.y = hue * (ma - mi) + mi;
 		rgb.z = mi;
 	}
-	// else if(ma == rgb_y)
+	//else if (ma == rgb_y)
 	//	hue = 60 * (rgb_z - rgb_x) / (ma - mi) + 120;
 	else if (hue <= 2)
 	{
@@ -93,7 +89,7 @@ vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 		rgb.y = ma;
 		rgb.z = (hue - 2) * (ma - mi) + mi;
 	}
-	// else // if(ma == rgb_z)
+	//else if (ma == rgb_z)
 	//	hue = 60 * (rgb_x - rgb_y) / (ma - mi) + 240;
 	else if (hue <= 4)
 	{
@@ -107,9 +103,9 @@ vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 		rgb.y = mi;
 		rgb.z = ma;
 	}
-	// else if(ma == rgb_x)
+	//else if (ma == rgb_x)
 	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
-	else  // if(hue <= 6)
+	else //if (hue <= 6)
 	{
 		rgb.x = ma;
 		rgb.y = mi;
@@ -122,17 +118,16 @@ vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
 ERASEABLE
 vector rgb_to_hsv(vector rgb)
 {
-	float mi, ma;
+	float mi = min(rgb.x, rgb.y, rgb.z);
+	float ma = max(rgb.x, rgb.y, rgb.z);
+
 	vector hsv;
-
-	mi = min(rgb.x, rgb.y, rgb.z);
-	ma = max(rgb.x, rgb.y, rgb.z);
-
 	hsv.x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	hsv.z = ma;
 
-	if (ma == 0) hsv.y = 0;
-	else hsv.y = 1 - mi / ma;
+	hsv.y = (ma == 0)
+		? 0
+		: 1 - mi / ma;
 
 	return hsv;
 }
@@ -146,18 +141,18 @@ vector hsv_to_rgb(vector hsv)
 ERASEABLE
 vector rgb_to_hsl(vector rgb)
 {
-	float mi, ma;
+	float mi = min(rgb.x, rgb.y, rgb.z);
+	float ma = max(rgb.x, rgb.y, rgb.z);
+
 	vector hsl;
-
-	mi = min(rgb.x, rgb.y, rgb.z);
-	ma = max(rgb.x, rgb.y, rgb.z);
-
 	hsl.x = rgb_mi_ma_to_hue(rgb, mi, ma);
-
 	hsl.z = 0.5 * (mi + ma);
-	if (mi == ma) hsl.y = 0;
-	else if (hsl.z <= 0.5) hsl.y = (ma - mi) / (2 * hsl.z);
-	else  // if(hsl_z > 0.5)
+
+	if (mi == ma)
+		hsl.y = 0;
+	else if (hsl.z <= 0.5)
+		hsl.y = (ma - mi) / (2 * hsl.z);
+	else //if (hsl_z > 0.5)
 		hsl.y = (ma - mi) / (2 - 2 * hsl.z);
 
 	return hsl;
@@ -166,15 +161,14 @@ vector rgb_to_hsl(vector rgb)
 ERASEABLE
 vector hsl_to_rgb(vector hsl)
 {
-	float mi, ma, maminusmi;
+	float maminusmi = (hsl.z <= 0.5)
+		? hsl.y * 2 * hsl.z
+		: hsl.y * (2 - 2 * hsl.z);
 
-	if (hsl.z <= 0.5) maminusmi = hsl.y * 2 * hsl.z;
-	else maminusmi = hsl.y * (2 - 2 * hsl.z);
-
-	// hsl_z     = 0.5 * mi + 0.5 * ma
+	// hsl.z     = 0.5 * mi + 0.5 * ma
 	// maminusmi =     - mi +       ma
-	mi = hsl.z - 0.5 * maminusmi;
-	ma = hsl.z + 0.5 * maminusmi;
+	float mi = hsl.z - 0.5 * maminusmi;
+	float ma = hsl.z + 0.5 * maminusmi;
 
 	return hue_mi_ma_to_rgb(hsl.x, mi, ma);
 }

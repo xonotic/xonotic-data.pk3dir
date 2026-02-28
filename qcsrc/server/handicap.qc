@@ -114,6 +114,6 @@ void Handicap_UpdateHandicapLevel(entity player)
 	player.handicap_level = floor(map_bound_ranges(handicap_total, 1, HANDICAP_MAX_LEVEL_EQUIVALENT, 0, 16));
 }
 
-REPLICATE_APPLYCHANGE("cl_handicap_damage_given", { Handicap_UpdateHandicapLevel(this); });
-REPLICATE_APPLYCHANGE("cl_handicap_damage_taken", { Handicap_UpdateHandicapLevel(this); });
+REPLICATE_APPLYCHANGE("cl_handicap_damage_given", Handicap_UpdateHandicapLevel(this));
+REPLICATE_APPLYCHANGE("cl_handicap_damage_taken", Handicap_UpdateHandicapLevel(this));
 

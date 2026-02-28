@@ -1,1 +1,15 @@
 #pragma once
+
+/// Parse a json object
+bool _json_parse_object();
+	bool _json_parse_members();
+		bool _json_parse_pair();
+bool _json_parse_array();
+bool _json_parse_value();
+	bool _json_parse_true();
+	bool _json_parse_false();
+	bool _json_parse_null();
+bool _json_parse_string(bool add);
+bool _json_parse_number();
+	bool _json_parse_float();
+	bool _json_parse_int();

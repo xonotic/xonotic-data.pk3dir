@@ -206,7 +206,7 @@ STATIC_INIT(C2S_Protocol_renumber)
 		setcefc(e, customizer);
 		e.uncustomizeentityforclient = uncustomizer;
 		e.uncustomizeentityforclient_set = !!uncustomizer;
-		if(uncustomizer)
+		if (uncustomizer)
 			IL_PUSH(g_uncustomizables, e);
 	}
 
@@ -265,14 +265,13 @@ STATIC_INIT(C2S_Protocol_renumber)
 	#define WriteHeader(to, id) \
 		WriteByte(to, NET_##id.m_id)
 #else
-	#define WriteHeader(to, id) \
-		MACRO_BEGIN \
-			if (NET_##id##_istemp) \
-				WriteByte(to, SVC_TEMPENTITY); \
-			WriteByte(to, NET_##id.m_id); \
-			bool _net_valid = false; \
-			net_guard_marker(to, _net_valid); \
-		MACRO_END
+	#define WriteHeader(to, id) MACRO_BEGIN \
+		if (NET_##id##_istemp) \
+			WriteByte(to, SVC_TEMPENTITY); \
+		WriteByte(to, NET_##id.m_id); \
+		bool _net_valid = false; \
+		net_guard_marker(to, _net_valid); \
+	MACRO_END
 #endif
 
 // serialization: new style
@@ -444,7 +443,7 @@ const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 			if (it == dst || (it.classname == STR_SPECTATOR && it.enemy == dst)) \
 			{ \
 				msg_entity = it; \
-				LAMBDA(statement); \
+				LAMBDA(statement) \
 			} \
 		}); \
 		msg_entity = prev; \

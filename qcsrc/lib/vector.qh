@@ -4,39 +4,38 @@ noref vector _vlen2;
 #define vlen2(v) (_vlen2 = (v), dotproduct(_vlen2, _vlen2))
 
 #if 1
-/** Vector distance comparison, avoids sqrt() */
-#define vdist(v, cmp, f) (vlen2(v) cmp ((f) ** 2))
+	/// Vector distance comparison, avoids sqrt()
+	#define vdist(v, cmp, f) (vlen2(v) cmp ((f) ** 2))
 #else
-#define vdist(v, cmp, f) (vlen(v) cmp (f))
+	#define vdist(v, cmp, f) (vlen(v) cmp (f))
 #endif
 
 #if 1
-#define dotproduct(a, b) ((a) * (b))
+	#define dotproduct(a, b) ((a) * (b))
 #else
-noref vector _dotproduct_a, _dotproduct_b;
-#define dotproduct(a, b) \
-	(_dotproduct_a = (a), _dotproduct_b = (b), \
-	  _dotproduct_a.x * _dotproduct_b.x \
-	+ _dotproduct_a.y * _dotproduct_b.y \
-	+ _dotproduct_a.z * _dotproduct_b.z)
+	noref vector _dotproduct_a, _dotproduct_b;
+	#define dotproduct(a, b) \
+		(_dotproduct_a = (a), _dotproduct_b = (b), \
+		  _dotproduct_a.x * _dotproduct_b.x \
+		+ _dotproduct_a.y * _dotproduct_b.y \
+		+ _dotproduct_a.z * _dotproduct_b.z)
 #endif
 
 #if 1
-#define cross(a, b) ((a) >< (b))
+	#define cross(a, b) ((a) >< (b))
 #else
-ERASEABLE
-vector cross(vector a, vector b)
-{
-	return
-		'1 0 0' * (a.y * b.z - a.z * b.y)
-	+	'0 1 0' * (a.z * b.x - a.x * b.z)
-	+	'0 0 1' * (a.x * b.y - a.y * b.x);
-}
+	ERASEABLE
+	vector cross(vector a, vector b)
+	{
+		return '1 0 0' * (a.y * b.z - a.z * b.y)
+		     + '0 1 0' * (a.z * b.x - a.x * b.z)
+		     + '0 0 1' * (a.x * b.y - a.y * b.x);
+	}
 #endif
 
 noref vector _vmul_a, _vmul_b;
 #define vmul(a, b) \
-    (_vmul_a = (a), _vmul_b = (b), \
+	(_vmul_a = (a), _vmul_b = (b), \
 	  '1 0 0' * (_vmul_a.x * _vmul_b.x) \
 	+ '0 1 0' * (_vmul_a.y * _vmul_b.y) \
 	+ '0 0 1' * (_vmul_a.z * _vmul_b.z))
@@ -50,9 +49,9 @@ vector randompos(vector m1, vector m2)
 {
 	vector v;
 	m2 -= m1;
-	v_x = m2_x * random() + m1_x;
-	v_y = m2_y * random() + m1_y;
-	v_z = m2_z * random() + m1_z;
+	v.x = m2.x * random() + m1.x;
+	v.y = m2.y * random() + m1.y;
+	v.z = m2.z * random() + m1.z;
 	return v;
 }
 
@@ -68,19 +67,25 @@ float vlen_minnorm2d(vector v)
 	return min(max(v.x, -v.x), max(v.y, -v.y));
 }
 
-/** requires that m2>m1 in all coordinates, and that m4>m3 */
+/// Requires that m2>m1 in all coordinates, and that m4>m3
 ERASEABLE
-float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z; }
+float boxesoverlap(vector m1, vector m2, vector m3, vector m4)
+{
+	return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;
+}
 
-/** requires the same as boxesoverlap, but is a stronger condition */
+/// Requires the same as boxesoverlap, but is a stronger condition
 ERASEABLE
-float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z; }
+float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs)
+{
+	return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z;
+}
 
 #define pointinsidebox(point, bmins, bmaxs) boxinsidebox(point, point, bmins, bmaxs)
 
 #define PITCH(v) ((v).x)
-#define YAW(v) ((v).y)
-#define ROLL(v) ((v).z)
+#define YAW(v)   ((v).y)
+#define ROLL(v)  ((v).z)
 
 //pseudo prototypes:
 // vector vec2(vector v); // returns a vector with just the x and y components of the given vector
@@ -97,15 +102,18 @@ noref vector _vec3;
 #define VEC_NAN vec3(FLOAT_NAN, FLOAT_NAN, FLOAT_NAN);
 
 ERASEABLE
-bool is_all_nans(vector v) {
+bool is_all_nans(vector v)
+{
 	return isnan(v.x) && isnan(v.y) && isnan(v.z);
 }
 
 ERASEABLE
 vector Rotate(vector v, float a)
 {
-	if (a == 0) return v;
-	if (a == M_PI) return -v;
+	if (a == 0)
+		return v;
+	if (a == M_PI)
+		return -v;
 
 	float a_sin = sin(a), a_cos = cos(a);
 	return vec2(v.x * a_cos + v.y * a_sin, -v.x * a_sin + v.y * a_cos);
@@ -138,9 +146,7 @@ vector reflect(vector dir, vector norm)
 	return dir - 2 * (dir * norm) * norm;
 }
 
-/**
- * clip vel along the plane defined by norm (assuming 0 distance away), bounciness determined by bounce 0..1
- */
+/// Clip vel along the plane defined by norm (assuming 0 distance away), bounciness determined by bounce 0..1
 ERASEABLE
 vector vec_reflect(vector vel, vector norm, float bounce)
 {
@@ -150,9 +156,9 @@ vector vec_reflect(vector vel, vector norm, float bounce)
 ERASEABLE
 vector vec_epsilon(vector this, float eps)
 {
-	if (this.x > -eps && this.x < eps) this.x = 0;
-	if (this.y > -eps && this.y < eps) this.y = 0;
-	if (this.z > -eps && this.z < eps) this.z = 0;
+	if (this.x > -eps && this.x < eps)  this.x = 0;
+	if (this.y > -eps && this.y < eps)  this.y = 0;
+	if (this.z > -eps && this.z < eps)  this.z = 0;
 	return this;
 }
 
@@ -165,14 +171,14 @@ vector vec_epsilon(vector this, float eps)
 	{
 		switch (corner)
 		{
-			case 1: return vec3(box.absmin.x, box.absmin.y, box.absmin.z);
-			case 2: return vec3(box.absmax.x, box.absmin.y, box.absmin.z);
-			case 3: return vec3(box.absmin.x, box.absmax.y, box.absmin.z);
-			case 4: return vec3(box.absmin.x, box.absmin.y, box.absmax.z);
-			case 5: return vec3(box.absmax.x, box.absmax.y, box.absmin.z);
-			case 6: return vec3(box.absmin.x, box.absmax.y, box.absmax.z);
-			case 7: return vec3(box.absmax.x, box.absmin.y, box.absmax.z);
-			case 8: return vec3(box.absmax.x, box.absmax.y, box.absmax.z);
+			case 1:  return box.absmin;
+			case 2:  return vec3(box.absmax.x, box.absmin.y, box.absmin.z);
+			case 3:  return vec3(box.absmin.x, box.absmax.y, box.absmin.z);
+			case 4:  return vec3(box.absmin.x, box.absmin.y, box.absmax.z);
+			case 5:  return vec3(box.absmax.x, box.absmax.y, box.absmin.z);
+			case 6:  return vec3(box.absmin.x, box.absmax.y, box.absmax.z);
+			case 7:  return vec3(box.absmax.x, box.absmin.y, box.absmax.z);
+			case 8:  return box.absmax;
 			default: return '0 0 0';
 		}
 	}
@@ -204,19 +210,23 @@ vector NearestPointOnBoundingBox(vector mi, vector ma, vector org)
 // FIXME: QC shouldn't need to work around tracebox potentially returning a tiny trace_fraction when the move should have been blocked.
 // Tiny values are valid in some situations and can't simply be ignored.
 #define PFLOAT (1/1024) // 1/32 1/64 etc also work
-#define RPFLOAT(a) (a=rint(a/PFLOAT)*PFLOAT)
+#define RPFLOAT(a) (a = rint(a / PFLOAT) * PFLOAT)
 ERASEABLE
 vector RoundPerfectVector(vector v)
 {
-	RPFLOAT(v.x); RPFLOAT(v.y); RPFLOAT(v.z);
+	RPFLOAT(v.x);
+	RPFLOAT(v.y);
+	RPFLOAT(v.z);
 	return v;
 }
 
 ERASEABLE
 vector vrint(vector v)
 {
-	v.x = rint(v.x); v.y = rint(v.y); v.z = rint(v.z);
+	v.x = rint(v.x);
+	v.y = rint(v.y);
+	v.z = rint(v.z);
 	return v;
 }
 
-#endif
+#endif // GAMEQC

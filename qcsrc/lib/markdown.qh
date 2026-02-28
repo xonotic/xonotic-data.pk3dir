@@ -1,22 +1,21 @@
 #include "test.qh"
 
-/**
- * handle string spacing as markdown:
- *   - two spaces escape a linebreak (otherwise text wraps)
- *   - two linebreaks become a paragraph (remain unchanged)
- */
+/// Handle string spacing as markdown:
+///   - two spaces escape a linebreak (otherwise text wraps)
+///   - two linebreaks become a paragraph (remain unchanged)
 ERASEABLE
 string markdown(string s)
 {
 	string buf = "";
 	int lines = 0;
 	int spaces = 0;
-	FOREACH_CHAR(s, true, {
-		switch (it) {
+	FOREACH_CHAR(s, true,
+	{
+		switch (it)
+		{
 			default:
-				for (; spaces > 0; --spaces) {
+				for (; spaces > 0; --spaces)
 					buf = strcat(buf, " ");
-				}
 				buf = strcat(buf, chr2str(it));
 				break;
 			case ' ':
@@ -24,15 +23,17 @@ string markdown(string s)
 				break;
 			case '\n':
 				++lines;
-				if (lines > 1) {
+				if (lines > 1)
+				{
 					lines = 0;
 					spaces = 0;
 					buf = strcat(buf, "\n\n");
 					break;
 				}
-				if (spaces < 2) {
+				if (spaces < 2)
 					spaces = 1;
-				} else {
+				else
+				{
 					spaces = 0;
 					buf = strcat(buf, "\n");
 				}

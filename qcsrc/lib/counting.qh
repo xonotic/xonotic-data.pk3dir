@@ -73,14 +73,12 @@ string count_ordinal(int interval)
 
 	// numbers ending with 11, 12 and 13 don't follow the standard pattern
 	if (last2digits < 4 || last2digits > 20)
-	{
 		switch (last2digits % 10)
 		{
 			case 1: return sprintf(_("%dst"), interval);
 			case 2: return sprintf(_("%dnd"), interval);
 			case 3: return sprintf(_("%drd"), interval);
 		}
-	}
 
 	return sprintf(_("%dth"), interval);
 }
@@ -104,11 +102,10 @@ string count_fill(float interval, string zeroth, string first, string second, st
 	{
 		case 0: return sprintf(CTX(zeroth), interval);
 		case 1:
-		{
-			if (interval == 1)  // EXACTLY value of 1
+			if (interval == 1) // EXACTLY value of 1
 				return sprintf(CTX(first), interval);
-			else return sprintf(CTX(multi), interval);
-		}
+			else
+				return sprintf(CTX(multi), interval);
 		case 2: return sprintf(CTX(second), interval);
 		case 3: return sprintf(CTX(third), interval);
 		default: return sprintf(CTX(multi), interval);
@@ -119,7 +116,7 @@ string count_fill(float interval, string zeroth, string first, string second, st
 ERASEABLE
 string process_time(float outputtype, int seconds)
 {
-	int tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
+	int tmp_hours = 0, tmp_minutes = 0, tmp_seconds;
 	int tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
 
 	tmp_seconds = floor(seconds);
@@ -130,22 +127,22 @@ string process_time(float outputtype, int seconds)
 
 		if (tmp_minutes)
 		{
-			tmp_seconds -= (tmp_minutes * 60);
+			tmp_seconds -= tmp_minutes * 60;
 			tmp_hours = floor(tmp_minutes / 60);
 
 			if (tmp_hours)
 			{
-				tmp_minutes -= (tmp_hours * 60);
+				tmp_minutes -= tmp_hours * 60;
 				tmp_days = floor(tmp_hours / 24);
 
 				if (tmp_days)
 				{
-					tmp_hours -= (tmp_days * 24);
+					tmp_hours -= tmp_days * 24;
 					tmp_weeks = floor(tmp_days / 7);
 
 					if (tmp_weeks)
 					{
-						tmp_days -= (tmp_weeks * 7);
+						tmp_days -= tmp_weeks * 7;
 						tmp_years = floor(tmp_weeks / 52);
 					}
 				}
@@ -160,7 +157,8 @@ string process_time(float outputtype, int seconds)
 		{
 			string output = "";
 			#define APPEND_TIME(unit) \
-				if (tmp_##unit) output = strcat(output, ((output != "") ? ", " : ""), count_##unit(tmp_##unit))
+				if (tmp_##unit) \
+					output = strcat(output, ((output != "") ? ", " : ""), count_##unit(tmp_##unit))
 			APPEND_TIME(years);
 			APPEND_TIME(weeks);
 			APPEND_TIME(days);
@@ -174,18 +172,17 @@ string process_time(float outputtype, int seconds)
 		}
 		case 3:
 		{
-			string output = "";
+			string output = count_hours(tmp_hours);
 
-			output = count_hours(tmp_hours);
-
-			if (tmp_weeks) tmp_days += (tmp_weeks * 7);
-			if (tmp_years) tmp_days += (tmp_years * 365);
+			if (tmp_weeks)
+				tmp_days += (tmp_weeks * 7);
+			if (tmp_years)
+				tmp_days += (tmp_years * 365);
 			if (tmp_days)
-			{
 				output = sprintf(
 					count_days(tmp_days),
-					((output != "") ? strcat(", ", output) : ""));
-			}
+					((output != "") ? strcat(", ", output) : "")
+				);
 
 			return output;
 		}

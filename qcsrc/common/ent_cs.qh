@@ -9,13 +9,13 @@ REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 #ifdef CSQC
-/** True when private information such as origin is available */
+// True when private information such as origin is available
 .bool m_entcs_private;
 
-/** True when origin is available */
+// True when origin is available
 .bool has_origin;
 
-/** True when a recent server sent origin has been received */
+/// True when a recent server sent origin has been received
 .bool has_sv_origin;
 #endif
 .int sv_solid;
@@ -34,22 +34,18 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	.entity entcs;
 
 	bool entcs_send(entity this, entity to, int sf);
-
 	void entcs_think(entity this);
-
 	void entcs_attach(entity player);
-
 	void entcs_detach(entity player);
 
 	.int m_forceupdate;
 
 	void entcs_force_origin(entity player);
-
 	void entcs_update_players(entity player);
 
 	bool radar_showenemies;
 
-#endif
+#endif // SVQC
 
 #ifdef CSQC
 
@@ -71,8 +67,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	.int frags;
 	.int handicap_level;
 	.int wants_join;
-	const int ENTCS_SPEC_PURE = 1; // real spectator
-	const int ENTCS_SPEC_IN_SCOREBOARD = 2; // spectator but still in game (can be in a team)
+	const int ENTCS_SPEC_PURE = 1; ///< real spectator
+	const int ENTCS_SPEC_IN_SCOREBOARD = 2; ///< spectator but still in game (can be in a team)
 	#define entcs_IsSpectating(i) boolean(entcs_GetSpecState(i))
 
 	/**
@@ -135,9 +131,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		return (entcs_GetSpecState(i) == ENTCS_SPEC_PURE) ? NUM_SPECTATOR : entcs_GetTeamColor(i);
 	}
 
-	/**
-	 * Same as `entcs_GetTeam`, but returns -1 for no team in teamplay
-	 */
+	/// Same as `entcs_GetTeam`, but returns -1 for no team in teamplay
 	int entcs_GetScoreTeam(int i)
 	{
 		int t = entcs_GetTeam(i);
@@ -146,8 +140,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	}
 
 	/**
-	* @param i zero indexed player
-	*/
+	 * @param i zero indexed player
+	 */
 	string entcs_GetName(int i)
 	{
 		entity e = entcs_receiver(i);
@@ -177,11 +171,10 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	{
 		entity e = CSQCModel_server2csqc(i);
 		return (!e || e.colormap <= 0)
-			   ? '1 1 1'
-			   : colormapPaletteColor(((e.colormap >= 1024)
-			? e.colormap
-			: entcs_GetClientColors(e.colormap - 1)) & 15, true)
-		;
+			? '1 1 1'
+			: colormapPaletteColor(((e.colormap >= 1024)
+				? e.colormap
+				: entcs_GetClientColors(e.colormap - 1)) & 15, true);
 	}
 
 	/**
@@ -193,4 +186,4 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 		return e ? e.csqcmodel_isdead : false;
 	}
 
-#endif
+#endif // CSQC

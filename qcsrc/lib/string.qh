@@ -36,8 +36,7 @@
 	{
 		return stringwidth_builtin(s, false, theSize);
 	}
-#endif
-#ifdef MENUQC
+#elifdef MENUQC
 	float stringwidth_colors(string s, vector theSize)
 	{
 		return stringwidth(s, true, theSize);
@@ -50,22 +49,20 @@
 #endif
 
 #define strcpy(this, s) MACRO_BEGIN \
-	if (this) { \
+	if (this) \
 		strunzone(this); \
-	} \
 	this = strzone(s); \
 MACRO_END
 
 #define strfree(this) MACRO_BEGIN \
-	if (this) { \
+	if (this) \
 		strunzone(this); \
-	} \
 	this = string_null; \
 MACRO_END
 
-// Returns the number of days since 0000-03-01 (March 1, year 0)
-// Starting counting from March, as the 1st month of the year, February becomes the 12th and last month,
-// so its variable duration does not affect, given that the 29th is the last day of the period
+/// Returns the number of days since 0000-03-01 (March 1, year 0).
+/// Starting counting from March, as the 1st month of the year, February becomes the 12th and last month,
+/// so its variable duration does not affect, given that the 29th is the last day of the period
 ERASEABLE
 int days_up_to_date(int Y, int M, int D)
 {
@@ -84,12 +81,12 @@ int days_up_to_date(int Y, int M, int D)
 
 #define DAYS_UP_TO_EPOCH 719469 // days_up_to_date(1970, 1, 1);
 
-// Returns the number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
-// This function exists only as a replacement for strftime(false, "%s") which doesn't work
-// on Windows (%s is not supported) and at least in some linux systems doesn't return the
-// correct result
-// NOTE: at the current date, the number (string) returned by both strftime(false, "%s") and
-// strftime_s() is so high that can't be converted to int (with ftos) without precision loss
+/// Returns the number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
+/// This function exists only as a replacement for strftime(false, "%s") which doesn't work
+/// on Windows (%s is not supported) and at least in some linux systems doesn't return the
+/// correct result.
+/// NOTE: at the current date, the number (string) returned by both strftime(false, "%s") and
+/// strftime_s() is so high that can't be converted to int (with ftos) without precision loss
 ERASEABLE
 string strftime_s()
 {
@@ -173,8 +170,8 @@ string clockedtime_tostring(int tm, bool hundredths, bool compact)
 
 }
 
-#define mmsst(tm, compact) clockedtime_tostring(tm, false, compact)
-#define mmssth(tm, compact) clockedtime_tostring(tm, true, compact)
+#define mmsst(tm, compact)  clockedtime_tostring(tm, false, compact)
+#define mmssth(tm, compact) clockedtime_tostring(tm, true,  compact)
 
 ERASEABLE
 string format_time(float seconds)
@@ -186,8 +183,9 @@ string format_time(float seconds)
 	seconds -= hours * 36000;
 	float minutes = floor(seconds / 600);
 	seconds -= minutes * 600;
-	if (days > 0) return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
-	else return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+	if (days > 0)
+		return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+	return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
 }
 
 int ColorTranslateMode;
@@ -201,18 +199,18 @@ string ColorTranslateRGB(string s)
 #ifdef GAMEQC
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
-string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
-string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
-string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
-string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
+string autocvar_hud_colorset_foreground_1 = "2"; ///< F1 - Green  :  primary priority (important names, etc)
+string autocvar_hud_colorset_foreground_2 = "3"; ///< F2 - Yellow :  secondary priority (items, locations, numbers, etc)
+string autocvar_hud_colorset_foreground_3 = "4"; ///< F3 - Blue   :  tertiary priority or relatively inconsequential text
+string autocvar_hud_colorset_foreground_4 = "1"; ///< F4 - Red    :  notice/attention grabbing texting
 // "kill" colors
-string autocvar_hud_colorset_kill_1 = "1";       // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-string autocvar_hud_colorset_kill_2 = "3";       // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
-string autocvar_hud_colorset_kill_3 = "4";       // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+string autocvar_hud_colorset_kill_1 = "1";       ///< K1 - Red    :  "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+string autocvar_hud_colorset_kill_2 = "3";       ///< K2 - Yellow :  similar to above, but less important... OR, a highlight out of above message type
+string autocvar_hud_colorset_kill_3 = "4";       ///< K3 - Blue   :  "good" or "beneficial" text (you fragging someone, etc)
 // background color
-string autocvar_hud_colorset_background = "7";   // BG - White // neutral/unimportant text
+string autocvar_hud_colorset_background = "7";   ///< BG - White  :  neutral/unimportant text
 
-/** color code replace, place inside of sprintf and parse the string */
+/// color code replace, place inside of sprintf and parse the string
 string CCR(string input)
 {
 	// foreground/normal colors
@@ -244,47 +242,50 @@ bool startsWithNocase(string haystack, string needle)
 noref string _endsWith_suffix;
 #define endsWith(this, suffix) (_endsWith_suffix = suffix, substring(this, -strlen(_endsWith_suffix), -1) == _endsWith_suffix)
 
-/** unzone the string, and return it as tempstring. Safe to be called on string_null */
+/// unzone the string, and return it as tempstring. Safe to be called on string_null
 ERASEABLE
 string fstrunzone(string s)
 {
-	if (!s) return s;
+	if (!s)
+		return s;
 	string sc = strcat(s, "");
 	strunzone(s);
 	return sc;
 }
 
-/** returns first word */
+/// Returns first word
 ERASEABLE
 string car(string s)
 {
 	int o = strstrofs(s, " ", 0);
-	if (o < 0) return s;
+	if (o < 0)
+		return s;
 	return substring(s, 0, o);
 }
 
-/** returns all but first word */
+/// Returns all but first word
 ERASEABLE
 string cdr(string s)
 {
 	int o = strstrofs(s, " ", 0);
-	if (o < 0) return string_null;
+	if (o < 0)
+		return string_null;
 	return substring(s, o + 1, strlen(s) - (o + 1));
 }
 
 ERASEABLE
 string cons(string a, string b)
 {
-	if (a == "") return b;
-	if (b == "") return a;
+	if (a == "")  return b;
+	if (b == "")  return a;
 	return strcat(a, " ", b);
 }
 
 ERASEABLE
 string cons_mid(string a, string mid, string b)
 {
-	if (a == "") return b;
-	if (b == "") return a;
+	if (a == "")  return b;
+	if (b == "")  return a;
 	return strcat(a, mid, b);
 }
 
@@ -345,9 +346,12 @@ string unescape(string in)
 		if (s == "\\")
 		{
 			s = substring(in, i + 1, 1);
-			if (s == "n") str = strcat(str, "\n");
-			else if (s == "\\") str = strcat(str, "\\");
-			else str = strcat(str, substring(in, i, 2));
+			if (s == "n")
+				str = strcat(str, "\n");
+			else if (s == "\\")
+				str = strcat(str, "\\");
+			else
+				str = strcat(str, substring(in, i, 2));
 			++i;
 			continue;
 		}
@@ -361,9 +365,10 @@ ERASEABLE
 string strwords(string s, int w)
 {
 	int endpos = 0;
-	for ( ; w && endpos >= 0; --w)
+	for (; w && endpos >= 0; --w)
 		endpos = strstrofs(s, " ", endpos + 1);
-	if (endpos < 0) return s;
+	if (endpos < 0)
+		return s;
 	return substring(s, 0, endpos);
 }
 
@@ -397,7 +402,8 @@ bool isInvisibleString(string s)
 			case 32:           // space
 				break;
 			case 192:          // charmap space
-				if (!utf8) break;
+				if (!utf8)
+					break;
 				return false;
 			case 0xE000: // invisible char of the utf8 quake charmap
 			case 0xE00A: // invisible char of the utf8 quake charmap
@@ -423,7 +429,8 @@ bool isInvisibleString(string s)
 			case 0xFEFF: // ZERO WIDTH NO-BREAK SPACE
 			case 0xFFA0: // Halfwidth Hangul Filler
 			case 0x3164: // Hangul Filler
-				if (utf8) break;
+				if (utf8)
+					break;
 			default:
 				return false;
 		}
@@ -437,7 +444,8 @@ ERASEABLE
 int buf_load(string pFilename)
 {
 	int buf = buf_create();
-	if (buf < 0) return -1;
+	if (buf < 0)
+		return -1;
 	int fh = fopen(pFilename, FILE_READ);
 	if (fh < 0)
 	{
@@ -455,16 +463,15 @@ ERASEABLE
 void buf_save(float buf, string pFilename)
 {
 	int fh = fopen(pFilename, FILE_WRITE);
-	if (fh < 0) error(strcat("Can't write buf to ", pFilename));
+	if (fh < 0)
+		error(strcat("Can't write buf to ", pFilename));
 	int n = buf_getsize(buf);
 	for (int i = 0; i < n; ++i)
 		fputs(fh, strcat(bufstr_get(buf, i), "\n"));
 	fclose(fh);
 }
 
-/**
- * converts a number to a string with the indicated number of decimals
- */
+/// Converts a number to a string with the indicated number of decimals
 ERASEABLE
 string ftos_decimals(float number, int decimals)
 {
@@ -473,14 +480,12 @@ string ftos_decimals(float number, int decimals)
 	return sprintf("%.*f", decimals, number);
 }
 
-/**
- * converts a percentage to a string with the indicated number of decimals
- */
+/// Converts a percentage to a string with the indicated number of decimals
 ERASEABLE
 string ftos_decimals_percentage(float number, int decimals)
 {
-	// inhibit stupid negative zero
-	if (number == 0) number = 0;
+	if (number == 0)
+		number = 0; // inhibit stupid negative zero
 	return sprintf(_("%.*f%%"), decimals, number * 100); // translatable percentage string
 }
 
@@ -514,7 +519,7 @@ string ftos_mindecimals(float number)
 	// count trailing zeros that will need to be removed
 	string ch = "";
 	int i = 0;
-	for ( ; i < 4; ++i)
+	for (; i < 4; ++i)
 	{
 		ch = substring(s, -1 - i, -1 - i);
 		if (ch != "0")
@@ -543,23 +548,26 @@ int vercmp_recursive(string v1, string v2)
 	string s2 = (dot2 == -1) ? v2 : substring(v2, 0, dot2);
 
 	float r = stof(s1) - stof(s2);
-	if (r != 0) return r;
-
+	if (r != 0)
+		return r;
 	r = strcasecmp(s1, s2);
-	if (r != 0) return r;
+	if (r != 0)
+		return r;
 
-	if (dot1 == -1) return (dot2 == -1) ? 0 : -1;
-	else return (dot2 == -1) ? 1 : vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
+	if (dot1 == -1)
+		return (dot2 == -1) ? 0 : -1;
+	return (dot2 == -1) ? 1 : vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
 }
 
 ERASEABLE
 int vercmp(string v1, string v2)
 {
-	if (strcasecmp(v1, v2) == 0) return 0;  // early out check
+	if (strcasecmp(v1, v2) == 0)
+		return 0; // early out check
 
 	// "git" beats all
-	if (v1 == "git") return 1;
-	if (v2 == "git") return -1;
+	if (v1 == "git")  return 1;
+	if (v2 == "git")  return -1;
 
 	return vercmp_recursive(v1, v2);
 }
@@ -574,13 +582,13 @@ const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
 const string DIGITS = "0123456789";
 #define IS_DIGIT(d) (strstrofs(DIGITS, (d), 0) >= 0)
 
-// returns true if the caret at position pos is escaped
+/// Returns true if the caret at position pos is escaped
 ERASEABLE
 bool isCaretEscaped(string theText, float pos)
 {
 	// count all the previous carets
 	int carets = 0;
-	while(pos - carets >= 1 && substring(theText, pos - carets - 1, 1) == "^")
+	while (pos - carets >= 1 && substring(theText, pos - carets - 1, 1) == "^")
 		++carets;
 	// if number of previous carets is odd then this carets is escaped
 	return (carets & 1);
@@ -593,17 +601,17 @@ bool isValidColorCodeValue(string theText, int cc_len, int tag_start)
 		return IS_DIGIT(substring(theText, tag_start + 1, 1));
 	if (cc_len == 5)
 		return (IS_HEXDIGIT(substring(theText, tag_start + 2, 1))
-			&& IS_HEXDIGIT(substring(theText, tag_start + 3, 1))
-			&& IS_HEXDIGIT(substring(theText, tag_start + 4, 1)));
+		     && IS_HEXDIGIT(substring(theText, tag_start + 3, 1))
+		     && IS_HEXDIGIT(substring(theText, tag_start + 4, 1)));
 	return false;
 }
 
-// it returns 0 if pos is NOT in the middle or at the end of a color code
-// otherwise it returns a vector with color code length as the first component
-// and the offset from '^' position to pos as the second component
-// e.g.:
-// "j^2kl" | returns 0 if pos == 0 or 1 or 4
-//    ^^   | returns '2 1' or '2 2' if pos == 2 or 3
+/// Returns 0 if pos is NOT in the middle or at the end of a color code
+/// otherwise it returns a vector with color code length as the first component
+/// and the offset from '^' position to pos as the second component
+/// e.g.:
+/// "j^2kl" | returns 0 if pos == 0 or 1 or 4
+///    ^^   | returns '2 1' or '2 2' if pos == 2 or 3
 ERASEABLE
 vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_end)
 {
@@ -622,7 +630,7 @@ vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_e
 	{
 		if (!(pos >= ofs && text_len >= pos + (cc_len - ofs)))
 			continue;
-		if(substring(theText, pos - ofs, tag_len) == tag_type)
+		if (substring(theText, pos - ofs, tag_len) == tag_type)
 		{
 			if (!isCaretEscaped(theText, pos - ofs) && isValidColorCodeValue(theText, cc_len, pos - ofs))
 				return eX * cc_len + eY * ofs;
@@ -637,6 +645,7 @@ vector checkColorCode(string theText, int text_len, int pos, bool check_at_the_e
 	}
 	return '0 0 0';
 }
+
 
 #define PAGE_TEXT_INIT() string _page_text = ""
 #define PAGE_TEXT _page_text

@@ -24,7 +24,7 @@
 			#define func __merge__##otherfunc \
 			#else \
 				#define func otherfunc \
-				#endif
+			#endif
 		#define CALL_ACCUMULATED_FUNCTION(func) \
 			func()
 	#else
@@ -32,14 +32,14 @@
 			.float _ACCUMULATE_##func##__##otherfunc;
 		void ACCUMULATE_call(string func)
 		{
-			float i;
-			float n = numentityfields();
-			string funcprefix = strcat("_ACCUMULATE_", func, "__");
+			int n = numentityfields();
+			string name, funcprefix = strcat("_ACCUMULATE_", func, "__");
 			float funcprefixlen = strlen(funcprefix);
-			for (i = 0; i < n; ++i)
+			for (int i = 0; i < n; ++i)
 			{
-				string name = entityfieldname(i);
-				if (substring(name, 0, funcprefixlen) == funcprefix) callfunction(substring(name, funcprefixlen, -1));
+				name = entityfieldname(i);
+				if (substring(name, 0, funcprefixlen) == funcprefix)
+					callfunction(substring(name, funcprefixlen, -1));
 			}
 		}
 		#define CALL_ACCUMULATED_FUNCTION(func) \
@@ -49,8 +49,14 @@
 
 // used for simplifying ACCUMULATE_FUNCTIONs
 #define SET_FIRST_OR_LAST(input, first, count) \
-	if (!input) { input = (first + count); }
+	if (!input) \
+		input = first + count;
 #define SET_FIELD_COUNT(field, first, count) \
-	if (!field) { field = (first + count); ++count; }
+	if (!field) \
+	{ \
+		field = first + count; \
+		++count; \
+	}
 #define CHECK_MAX_COUNT(name, max, count, type) \
-	if (count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
+	if (count > max) \
+		error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n"));

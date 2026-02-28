@@ -9,7 +9,7 @@
 .bool pure_data;
 
 #ifdef GAMEQC
-	/** direct use is @deprecated use new_pure or NEW(class) */
+	/// direct use is @deprecated use new_pure or NEW(class)
 	#define make_pure(e) \
 		(e).pure_data = true; \
 		(e).solid = SOLID_NOT;
@@ -23,7 +23,7 @@
 	(e).pure_data = false;
 
 .string classname;
-/** Location entity was spawned from in source */
+/// Location entity was spawned from in source
 .string sourceLoc;
 entity _spawn();
 
@@ -42,9 +42,8 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 	entity this = pure ? spawn_pure() : _spawn();
 	this.classname = _classname;
 	this.sourceLoc = _sourceLoc;
-	if (pure) {
+	if (pure)
 		make_pure(this);
-	}
 	return this;
 }
 
@@ -61,9 +60,9 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 	#define classfield(name) [[class(name)]]
 	#define _new(class, pure) ((class) __spawn(#class, __FILE__ ":" STR(__LINE__), pure))
 #endif
-/** entities you care about collisions with */
+/// entities you care about collisions with
 #define new(class) _new(class, false)
-/** purely logical entities (not linked to the area grid) */
+/// purely logical entities (not linked to the area grid)
 #define new_pure(class) _new(class, true)
 #define spawn() __spawn("entity", __FILE__ ":" STR(__LINE__), false)
 
@@ -75,11 +74,14 @@ ACCUMULATE void ONREMOVE(entity this) {}
 
 .void(entity this) dtor;
 #define delete(this) MACRO_BEGIN \
-    entity _this = (this); \
-    void(entity) _dtor = _this.dtor; \
-    ONREMOVE(this); \
-    if (_dtor) _dtor(_this); else delete_fn(_this); \
-    /* this = NULL; */  \
+	entity _this = (this); \
+	void(entity) _dtor = _this.dtor; \
+	ONREMOVE(this); \
+	if (_dtor) \
+		_dtor(_this); \
+	else \
+		delete_fn(_this); \
+	/* this = NULL; */  \
 MACRO_END
 
 void IL_REMOVE_RAW(entity it);
@@ -97,13 +99,14 @@ STATIC_INIT(clearentity)
 void clearentity(entity e)
 {
 #ifdef CSQC
-		int n = e.entnum;
+	int n = e.entnum;
 #endif
 	bool was_pure = is_pure(e);
 	copyentity_qc(_clearentity_ent, e);
-	if (!was_pure) make_impure(e);
+	if (!was_pure)
+		make_impure(e);
 #ifdef CSQC
-		e.entnum = n;
+	e.entnum = n;
 #endif
 }
 
@@ -117,8 +120,8 @@ void clearentity(entity e)
 	#define NEW(cname, ...) \
 		OVERLOAD_(spawn##cname, new_pure(cname) P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 
-    #define _TRANSMUTE(cname, this, ...) \
-        OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+	#define _TRANSMUTE(cname, this, ...) \
+		OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 
 	#define CONSTRUCT(cname, ...) \
 		OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
@@ -126,21 +129,22 @@ void clearentity(entity e)
 	#define NEW(cname, ...) \
 		OVERLOAD(spawn##cname, new_pure(cname),##__VA_ARGS__)
 
-    #define _TRANSMUTE(cname, this, ...) \
-        OVERLOAD(spawn##cname, this,##__VA_ARGS__)
+	#define _TRANSMUTE(cname, this, ...) \
+		OVERLOAD(spawn##cname, this,##__VA_ARGS__)
 
 	#define CONSTRUCT(cname, ...) \
 		OVERLOAD(spawn##cname, this,##__VA_ARGS__)
 #endif
 
 #define TRANSMUTE(cname, this, ...) MACRO_BEGIN \
-    entity _e = (this); \
-    if (_e.vtblbase != cname##_vtbl) { \
-        _e.transmute = true; \
-        _e.classname = #cname; \
-        _TRANSMUTE(cname, _e, __VA_ARGS__); \
-    } \
-    MACRO_END
+	entity _e = (this); \
+	if (_e.vtblbase != cname##_vtbl) \
+	{ \
+		_e.transmute = true; \
+		_e.classname = #cname; \
+		_TRANSMUTE(cname, _e, __VA_ARGS__); \
+	} \
+MACRO_END
 
 #define CLASS(...) EVAL_CLASS(OVERLOAD__(CLASS, __VA_ARGS__))
 #define EVAL_CLASS(...) __VA_ARGS__
@@ -219,13 +223,14 @@ void clearentity(entity e)
 
 #define DESTRUCTOR(cname)                                                                          \
 	STATIC_METHOD(cname, dtorimpl, void(cname this));                                              \
-    METHOD(cname, dtor, void(cname this))                                                          \
-    {                                                                                              \
-        METHOD_REFERENCE(cname, dtorimpl)(this);                                                   \
-        this.instanceOf##cname = false;                                                            \
-        entity super = SUPER(cname);                                                               \
-        if (super != cname##_vtbl) super.dtor(this);                                               \
-    }                                                                                              \
+	METHOD(cname, dtor, void(cname this))                                                          \
+	{                                                                                              \
+		METHOD_REFERENCE(cname, dtorimpl)(this);                                                   \
+		this.instanceOf##cname = false;                                                            \
+		entity super = SUPER(cname);                                                               \
+		if (super != cname##_vtbl)                                                                 \
+			super.dtor(this);                                                                      \
+	}                                                                                              \
 	STATIC_METHOD(cname, dtorimpl, void(cname this))
 
 #define SUPER(cname) (cname##_vtbl.vtblbase)
@@ -315,8 +320,14 @@ STATIC_INIT(RegisterClasses)
 	#define DEBUG_STUFF(cname)
 #else
 	#define DEBUG_STUFF(cname) \
-		ERASEABLE bool is_##cname(entity e) { return e.instanceOf##cname; } \
-		ERASEABLE void isnt_##cname(entity e) { eprint(e); }
+		ERASEABLE bool is_##cname(entity e) \
+		{ \
+			return e.instanceOf##cname; \
+		} \
+		ERASEABLE void isnt_##cname(entity e) \
+		{ \
+			eprint(e); \
+		}
 #endif
 
 #define METHOD_REFERENCE(cname, name) \
@@ -328,20 +339,22 @@ STATIC_INIT(RegisterClasses)
 #define spawn_1(this)
 #define _vtbl NULL
 CLASS(Object)
-    DESTRUCTOR(Object) { builtin_remove(this); }
-    #define remove(this) delete(this)
+	DESTRUCTOR(Object)
+	{
+		builtin_remove(this);
+	}
+	#define remove(this) delete(this)
 	METHOD(Object, describe, string(Object this))
 	{
 		TC(Object, this);
 		string s = _("No description");
 		if (autocvar_developer > 0)
-		{
 			for (int i = 0, n = numentityfields(); i < n; ++i)
 			{
 				string value = getentityfieldstring(i, this);
-				if (value != "") s = sprintf("%s\n%s = %s", s, entityfieldname(i), value);
+				if (value != "")
+					s = sprintf("%s\n%s = %s", s, entityfieldname(i), value);
 			}
-		}
 		return s;
 	}
 	METHOD(Object, display, void(Object this, void(string name, string icon) returns))

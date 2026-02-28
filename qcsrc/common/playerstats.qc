@@ -23,7 +23,7 @@ REPLICATE(cvar_cl_allow_uidtracking, int, "cl_allow_uidtracking");
 #endif
 
 #ifdef SVQC
-REPLICATE_APPLYCHANGE("cl_allow_uidtracking", { PlayerStats_GameReport_AddPlayer(this); });
+REPLICATE_APPLYCHANGE("cl_allow_uidtracking", PlayerStats_GameReport_AddPlayer(this));
 #endif
 
 #ifdef SVQC
