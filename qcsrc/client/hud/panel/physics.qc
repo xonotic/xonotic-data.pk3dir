@@ -183,15 +183,8 @@ void HUD_Physics(bool should_draw)
 		accel_max = autocvar_hud_panel_physics_acceleration_max;
 	else
 	{
-		// ****** the strafehud panel code sets these variables in the same way, please keep in sync
-		int keys = STAT(PRESSED_KEYS);
-		bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
-		bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
-		bool onground = real_onground && !jumpheld;
-		bool real_onslick = onground ? StrafeHUD_DetermineOnSlick(strafeplayer) : false;
-		bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
-		bool slick_already_detected = (all_slick && real_onground) || real_onslick;
-		// ****** sync with the strafehud panel code until here
+		// initializes keys, jumpheld, real_onground, onground, real_onslick, all_slick and slick_already_detected
+		STRAFEHUD_INIT_SOME_VARS()
 
 		accel_max = (autocvar_hud_panel_physics_acceleration_max_slick != -1
 			&& slick_already_detected

@@ -62,22 +62,8 @@ void HUD_StrafeHUD(bool should_draw)
 
 	// draw strafehud
 
-	// ****** the physics panel code sets these variables in the same way, please keep in sync
-	int keys = STAT(PRESSED_KEYS);
-	bool jumpheld = StrafeHUD_DetermineJumpHeld(strafeplayer, keys, is_local);
-
-	// does not get changed by ground timeout and is not affected by jump input
-	bool real_onground = StrafeHUD_DetermineOnGround(strafeplayer, is_local);
-
-	// if jump is held assume we are in air, avoids flickering of the hud when hitting the ground
-	bool onground = real_onground && !jumpheld;
-
-	// does not get changed by ground timeout
-	bool real_onslick = onground ? StrafeHUD_DetermineOnSlick(strafeplayer) : false;
-
-	bool all_slick = PHYS_FRICTION(strafeplayer) == 0;
-	bool slick_already_detected = (all_slick && real_onground) || real_onslick;
-	// ****** sync with the physics panel code until here
+	// initializes keys, jumpheld, real_onground, onground, real_onslick, all_slick and slick_already_detected
+	STRAFEHUD_INIT_SOME_VARS()
 
 	bool onslick = real_onslick;
 
