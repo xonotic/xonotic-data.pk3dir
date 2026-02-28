@@ -1,12 +1,12 @@
 #include "anglestransform.qh"
 
-// angles transforms
-// angles in fixedmakevectors/fixedvectoangles space
+/// angles transforms
+/// angles in fixedmakevectors/fixedvectoangles space
 vector AnglesTransform_Apply(vector transform, vector v)
 {
 	vector forward, right, up;
 	FIXED_MAKE_VECTORS(transform, forward, right, up);
-	return forward * v.x + right * (-v.y) + up * v.z;
+	return forward * v.x + right * -v.y + up * v.z;
 }
 
 vector AnglesTransform_Multiply(vector t1, vector t2)
@@ -80,15 +80,15 @@ vector AnglesTransform_Normalize(vector t, float minimize_roll)
 	t.x -= 360 * rint(t.x / 360);
 	t.y -= 360 * rint(t.y / 360);
 	t.z -= 360 * rint(t.z / 360);
-	if(minimize_roll)
+	if (minimize_roll)
 		need_flip = (t.z > 90 || t.z <= -90);
 	else
 		need_flip = (t.x > 90 || t.x < -90); // for pitch we prefer to allow exactly -90 degrees for looking straight down
-	if(need_flip)
+	if (need_flip)
 	{
-		if(t.x >= 0) t.x = 180 - t.x; else t.x = -180 - t.x;
-		if(t.y > 0) t.y -= 180; else t.y += 180;
-		if(t.z > 0) t.z -= 180; else t.z += 180;
+		if (t.x >= 0) t.x  = 180 - t.x;  else  t.x  = -180 - t.x;
+		if (t.y > 0)  t.y -= 180;        else  t.y +=  180;
+		if (t.z > 0)  t.z -= 180;        else  t.z +=  180;
 	}
 	return t;
 }
@@ -106,18 +106,18 @@ vector AnglesTransform_CancelRoll(vector t)
 	// FIXME find a better method
 
 	f = fabs(t.x - (-90)) / epsilon;
-	if(f < 1)
+	if (f < 1)
 	{
-		//t_x = -90;
+		//t.x = -90;
 		t.y += t.z;
 		t.z = 0;
 	}
 	else
 	{
 		f = fabs(t.x - 90) / epsilon;
-		if(f < 1)
+		if (f < 1)
 		{
-			//t_x = 90;
+			//t.x = 90;
 			t.y -= t.z;
 			t.z = 0;
 		}
