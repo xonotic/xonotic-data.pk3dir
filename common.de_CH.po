@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 07:22+0100\n"
+"POT-Creation-Date: 2026-03-01 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
@@ -11416,6 +11416,7 @@ msgstr ""
 "Partikel, die weiter weg sind als dieser Wert, werden nicht gezeichneet"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:27
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
 msgid "Crosshair"
 msgstr "Fadenkreuz"
 
@@ -11616,6 +11617,10 @@ msgstr "HUD wackelt bei Schaden"
 msgid "Enter HUD editor"
 msgstr "HUD-Editor starten"
 
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
+msgid "HUD"
+msgstr "HUD"
+
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
 msgstr "Um den HUD-Editor zu starten, muss ein Spiel gestartet werden."
@@ -11730,6 +11735,10 @@ msgstr "Amoklauf-Sounds"
 msgid "Achievement sounds"
 msgstr "Achievement-Sounds"
 
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qh:7
+msgid "Messages"
+msgstr "Nachrichten"
+
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 #: qcsrc/menu/xonotic/guide/guide.qh:13
 msgid "Items"
@@ -11829,6 +11838,10 @@ msgid "GIBS^Lots"
 msgstr "Viele"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:7
+msgid "Models"
+msgstr "Modelle"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
 msgstr "Stelle ein, wie Spieler und Gegenstände im Spiel angezeigt werden"
 
@@ -11949,6 +11962,11 @@ msgstr "Bei Tod Zoom beenden"
 msgid "Release zoom when you switch weapons"
 msgstr "Bei Waffenwechsel Zoom beenden"
 
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
+#: qcsrc/menu/xonotic/keybinder.qc:133
+msgid "View"
+msgstr "Ansicht"
+
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:32
 msgid "Weapon Priority List (* = mutator weapon)"
 msgstr "Waffenprioritätenliste (* = Mutator-Waffe)"
@@ -12045,6 +12063,11 @@ msgstr "Teamfarben auf Waffeneffekte anwenden:"
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:117
 msgid "In team games"
 msgstr "In Teamspielen"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
+#: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
+msgid "Weapons"
+msgstr "Waffen"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:69
 msgid "Key Bindings"
@@ -12773,10 +12796,6 @@ msgstr ""
 msgid "Gametypes"
 msgstr ""
 
-#: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
-msgid "Weapons"
-msgstr "Waffen"
-
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
 msgstr ""
@@ -13256,10 +13275,6 @@ msgstr "nachladen"
 #, c-format
 msgid "weapon group %d"
 msgstr "Waffengruppe %d"
-
-#: qcsrc/menu/xonotic/keybinder.qc:133
-msgid "View"
-msgstr "Ansicht"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "hold zoom"

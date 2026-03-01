@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 07:22+0100\n"
+"POT-Creation-Date: 2026-03-01 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: RYU N. <ryusho2523@yahoo.co.jp>, 2021,2024\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/team-xonotic/"
@@ -11280,6 +11280,7 @@ msgid "Particles further away than this will not be drawn"
 msgstr "これより遠いパーティクルは描画されません"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:27
+#: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
 msgid "Crosshair"
 msgstr "十字線"
 
@@ -11478,6 +11479,10 @@ msgstr "傷ついたときにHUDを揺らす"
 msgid "Enter HUD editor"
 msgstr "HUDの編集者に入る"
 
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qh:7
+msgid "HUD"
+msgstr "HUD"
+
 #: qcsrc/menu/xonotic/dialog_settings_game_hudconfirm.qc:21
 msgid "In order for the HUD editor to show, you must first be in game."
 msgstr "HUDエディターを表示するには、まずゲームに参加している必要があります。"
@@ -11592,6 +11597,10 @@ msgstr "連勝殺害のサウンド"
 msgid "Achievement sounds"
 msgstr "達成のサウンド"
 
+#: qcsrc/menu/xonotic/dialog_settings_game_messages.qh:7
+msgid "Messages"
+msgstr "メッセージ"
+
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 #: qcsrc/menu/xonotic/guide/guide.qh:13
 msgid "Items"
@@ -11691,6 +11700,10 @@ msgid "GIBS^Lots"
 msgstr "たくさん"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:7
+msgid "Models"
+msgstr "モデル"
+
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
 msgstr "ゲームでのプレーヤーとアイテムの表示方法をカスタマイズする"
 
@@ -11809,6 +11822,11 @@ msgstr "死んだりリスポーンしたときにズームを解放する"
 msgid "Release zoom when you switch weapons"
 msgstr "武器を切り替えるときにズームを解放する"
 
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
+#: qcsrc/menu/xonotic/keybinder.qc:133
+msgid "View"
+msgstr "ビュー"
+
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:32
 msgid "Weapon Priority List (* = mutator weapon)"
 msgstr "武器優先リスト (* = ミューテーター武器)"
@@ -11901,6 +11919,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:117
 msgid "In team games"
 msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
+#: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
+msgid "Weapons"
+msgstr "武器"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:69
 msgid "Key Bindings"
@@ -12614,10 +12637,6 @@ msgstr ""
 msgid "Gametypes"
 msgstr ""
 
-#: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
-msgid "Weapons"
-msgstr "武器"
-
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
 msgstr ""
@@ -13097,10 +13116,6 @@ msgstr "リロードする"
 #, c-format
 msgid "weapon group %d"
 msgstr ""
-
-#: qcsrc/menu/xonotic/keybinder.qc:133
-msgid "View"
-msgstr "ビュー"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "hold zoom"
