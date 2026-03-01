@@ -67,4 +67,6 @@ void(vector org, float radius, vector lightcolours, float style, string cubemapn
 void(vector dir) _vectorvectors_hidden = #432;
 vector(entity ent, float tagindex) _gettaginfo_hidden = #452;
 
+float() _ReadChar_hidden = #361;
+
 #pragma noref 0

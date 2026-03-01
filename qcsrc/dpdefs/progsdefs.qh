@@ -21,13 +21,16 @@
 #undef setmodel
 
 #define stuffcmd(cl, ...) MACRO_BEGIN \
-    entity _cl = (cl); \
-    if (IS_REAL_CLIENT(_cl)) stuffcmd(_cl, __VA_ARGS__); \
+	entity _cl = (cl); \
+	if (IS_REAL_CLIENT(_cl)) \
+		stuffcmd(_cl, __VA_ARGS__); \
 MACRO_END
 
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
 
 void(vector ang) _makevectors_hidden = #1;
+
+void(float to, float f) _WriteChar_hidden = #53;
 
 #pragma noref 0

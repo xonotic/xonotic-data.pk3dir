@@ -212,7 +212,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & 1)
 	{
-		WriteChar(MSG_ENTITY, this.cnt);
+		WriteSignedByte(MSG_ENTITY, this.cnt);
 		int f = 0;
 		f |= 1 * (this.realowner != to);
 		f |= 2 * this.tuba_instrument;
@@ -531,7 +531,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 	int f = ReadByte();
 	if (f & 1)
 	{
-		int n = ReadChar();
+		int n = ReadSignedByte();
 		int i = ReadByte();
 		bool att = i & 1;
 		i >>= 1;

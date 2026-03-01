@@ -39,4 +39,6 @@ int() _buf_create = #440;
 
 bool(entity ent) wasfreed = #353;
 
+void _WriteChar_hidden(float data, float dest, float desto) = #402;
+
 #pragma noref 0

@@ -476,11 +476,11 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 					WriteByte(MSG_ENTITY, mapvote_selections[i]);
 
 			if (mapvote_detail == 2) // tell the client who the tie winner will be
-				WriteChar(MSG_ENTITY, mapvote_ranked[0]);
+				WriteSignedByte(MSG_ENTITY, mapvote_ranked[0]);
 			else if (mapvote_selections[mapvote_ranked[0]] == 0) // no votes yet, don't draw a winner (-1)
-				WriteChar(MSG_ENTITY, -1);
+				WriteSignedByte(MSG_ENTITY, -1);
 			else // figure out winners yourself (-2)
-				WriteChar(MSG_ENTITY, -2);
+				WriteSignedByte(MSG_ENTITY, -2);
 		}
 
 		WriteByte(MSG_ENTITY, to.mapvote);

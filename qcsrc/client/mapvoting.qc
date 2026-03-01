@@ -1074,7 +1074,7 @@ void MapVote_UpdateVotes()
 			mv_votes[i] = -1;
 	}
 	if (mv_detail)
-		mv_tie_winner = ReadChar();
+		mv_tie_winner = ReadSignedByte();
 
 	mv_ownvote = ReadByte() - 1;
 }

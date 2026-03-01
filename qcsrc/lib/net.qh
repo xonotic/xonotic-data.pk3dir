@@ -304,10 +304,8 @@ USING(Stream, int);
 		string tmp = strcat(g_buf, s);
 		strcpy(g_buf, tmp);
 	}
-	/// It sends a signed byte [-128, 127]. Avoid using WriteChar (unclear name)
-	/// and WriteByte (inconsistent) even if they work too.
-	#define WriteSignedByte(to, b) WriteChar(to, b)
-	#define WriteChar(to, b) WriteByte(to, b + 128)
+	/// It sends a signed byte [-128, 127].
+	#define WriteSignedByte(to, b) WriteByte(to, b + 128)
 
 	void WriteShort(int to, int b)
 	{
@@ -321,13 +319,12 @@ USING(Stream, int);
 		ydec_single(g_buf, ret);
 		return ret;
 	}
-	int ReadChar()
+
+	/// It receives a signed byte [-128, 127].
+	int ReadSignedByte()
 	{
 		return ReadByte() - 128;
 	}
-	/// It receives a signed byte [-128, 127]. Avoid using WriteChar (unclear name)
-	/// even if it works too.
-	#define ReadSignedByte() ReadChar()
 
 	int ReadShort()
 	{
@@ -359,7 +356,7 @@ const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 	#define ReadInt48_t() vec2(ReadInt24_t(), ReadInt24_t())
 	#define ReadInt72_t() vec3(ReadInt24_t(), ReadInt24_t(), ReadInt24_t())
 
-	#define ReadSignedByte() ReadChar()
+	#define ReadSignedByte() _ReadChar_hidden()
 	#define ReadFloat() ReadCoord()
 
 	#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
@@ -401,7 +398,7 @@ const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 		WriteInt24_t(dst, val.z);
 	}
 
-	#define WriteSignedByte(to, b) WriteChar(to, b)
+	#define WriteSignedByte(to, b) _WriteChar_hidden(to, b)
 	#define WriteFloat(to, f) WriteCoord(to, f)
 
 	#define WriteVector(to, v) MACRO_BEGIN \

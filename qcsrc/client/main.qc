@@ -626,7 +626,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 			if (lf & p)
 				o.(scores(it)) = ReadInt24_t();
 			else
-				o.(scores(it)) = ReadChar();
+				o.(scores(it)) = ReadSignedByte();
 		}
 	});
 
@@ -659,7 +659,7 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 			if(lf & BIT(i))
 				o.(teamscores(i)) = ReadInt24_t();
 			else
-				o.(teamscores(i)) = ReadChar();
+				o.(teamscores(i)) = ReadSignedByte();
 		}
 
 	return = true;
@@ -793,7 +793,7 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 		vote_yescount = ReadByte();
 		vote_nocount = ReadByte();
 		vote_needed = ReadByte();
-		vote_highlighted = ReadChar();
+		vote_highlighted = ReadSignedByte();
 	}
 
 	if(nags & BIT(7))

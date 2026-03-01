@@ -32,3 +32,6 @@
 #define gettaginfo DO_NOT_USE_GLOBALS_PREFER_GET_TAG_INFO_MACRO_INSTEAD
 #define getentity DO_NOT_USE_GLOBALS
 #define getentityvec DO_NOT_USE_GLOBALS
+
+#define WriteChar DO_NOT_USE_WriteChar_PREFER_WriteSignedByte_INSTEAD
+#define ReadChar DO_NOT_USE_ReadChar_PREFER_ReadSignedByte_INSTEAD

@@ -72,10 +72,10 @@
 		CSQCMODEL_PROPERTY(BIT(7), int, ReadByte, WriteByte, anim_state) \
 		CSQCMODEL_PROPERTY(BIT(7), float, ReadApproxPastTime, WriteApproxPastTime, anim_time) \
 		CSQCMODEL_IF(!islocalplayer) \
-			CSQCMODEL_PROPERTY(BIT(8), float, ReadChar, WriteChar, anim_lower_action) \
+			CSQCMODEL_PROPERTY(BIT(8), float, ReadSignedByte, WriteSignedByte, anim_lower_action) \
 			CSQCMODEL_PROPERTY(BIT(8), float, ReadApproxPastTime, WriteApproxPastTime, anim_lower_time) \
 		CSQCMODEL_ENDIF \
-		CSQCMODEL_PROPERTY(BIT(9), float, ReadChar, WriteChar, anim_upper_action) \
+		CSQCMODEL_PROPERTY(BIT(9), float, ReadSignedByte, WriteSignedByte, anim_upper_action) \
 		CSQCMODEL_PROPERTY(BIT(9), float, ReadApproxPastTime, WriteApproxPastTime, anim_upper_time) \
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_PROPERTY(BIT(10), float, ReadAngle, WriteAngle, v_angle_x) \

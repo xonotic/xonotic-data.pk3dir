@@ -88,7 +88,7 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 			if(longflags & BIT(i))
 				WriteInt24_t(MSG_ENTITY, this.(teamscores(i)));
 			else
-				WriteChar(MSG_ENTITY, this.(teamscores(i)));
+				WriteSignedByte(MSG_ENTITY, this.(teamscores(i)));
 		}
 
 	return true;
@@ -276,7 +276,7 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 			if(longflags & p)
 				WriteInt24_t(MSG_ENTITY, this.(scores(it)));
 			else
-				WriteChar(MSG_ENTITY, this.(scores(it)));
+				WriteSignedByte(MSG_ENTITY, this.(scores(it)));
 		}
 	});
 

@@ -74,7 +74,7 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 		WriteByte(MSG_ENTITY, vote_accept_count);
 		WriteByte(MSG_ENTITY, vote_reject_count);
 		WriteByte(MSG_ENTITY, vote_needed_overall);
-		WriteChar(MSG_ENTITY, to.vote_selection);
+		WriteSignedByte(MSG_ENTITY, to.vote_selection);
 	}
 
 	if (nags & BIT(7)) WriteString(MSG_ENTITY, vote_called_display);

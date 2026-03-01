@@ -158,8 +158,8 @@ ENTCS_PROP(HANDICAP_LEVEL, true, handicap_level, handicap_level, ENTCS_SET_NORMA
 
 // index of join queue team selection, max 127 because -1 means any available team
 ENTCS_PROP(WANTSJOIN, true, wants_join, wants_join, ENTCS_SET_NORMAL,
-	{ WriteChar(chan, ent.wants_join); },
-	{ ent.wants_join = ReadChar(); })
+	{ WriteSignedByte(chan, ent.wants_join); },
+	{ ent.wants_join = ReadSignedByte(); })
 
 // use sv_solid to avoid changing solidity state of entcs entities
 ENTCS_PROP(SOLID, true, sv_solid, solid, ENTCS_SET_NORMAL,
