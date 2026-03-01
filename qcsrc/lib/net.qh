@@ -306,9 +306,8 @@ USING(Stream, int);
 	}
 	/// It sends a signed byte [-128, 127]. Avoid using WriteChar (unclear name)
 	/// and WriteByte (inconsistent) even if they work too.
-	/// It applies to both the server and client versions of this function.
 	#define WriteSignedByte(to, b) WriteChar(to, b)
-	#define WriteChar(to, b) WriteByte(to, b)
+	#define WriteChar(to, b) WriteByte(to, b + 128)
 
 	void WriteShort(int to, int b)
 	{
@@ -324,12 +323,10 @@ USING(Stream, int);
 	}
 	int ReadChar()
 	{
-		int ret = ReadByte();
-		return (ret & BIT(7) ? -128 : 0) + (ret & BITS(7));
+		return ReadByte() - 128;
 	}
 	/// It receives a signed byte [-128, 127]. Avoid using WriteChar (unclear name)
 	/// even if it works too.
-	/// It applies to both the server and client versions of this function.
 	#define ReadSignedByte() ReadChar()
 
 	int ReadShort()
