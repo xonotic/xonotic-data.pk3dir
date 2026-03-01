@@ -40,7 +40,7 @@
 			WriteRegistered(GlobalSounds, channel, gs);
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
-			WriteByte(channel, chan);
+			WriteSignedByte(channel, chan);
 			WriteByte(channel, floor(_vol * 255));
 			WriteByte(channel, floor(_atten * 64));
 			if(_pitch)
@@ -83,7 +83,7 @@
 			WriteRegistered(PlayerSounds, channel, ps);
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
-			WriteByte(channel, chan);
+			WriteSignedByte(channel, chan);
 			WriteByte(channel, floor(_vol * 255));
 			WriteByte(channel, floor(_atten * 64));
 			if(_pitch)
@@ -108,7 +108,7 @@
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);
-			int chan = ReadSByte();
+			int chan = ReadSignedByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			float pitch = ReadShort();
@@ -141,7 +141,7 @@
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
-			int chan = ReadSByte();
+			int chan = ReadSignedByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			float pitch = ReadShort();

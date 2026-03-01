@@ -295,6 +295,7 @@ USING(Stream, int);
 
 #ifdef CSQC
 	int ReadByte();
+
 	void WriteByte(int to, int b)
 	{
 		assert(to == MSG_C2S);
@@ -303,6 +304,12 @@ USING(Stream, int);
 		string tmp = strcat(g_buf, s);
 		strcpy(g_buf, tmp);
 	}
+	/// It sends a signed byte [-128, 127]. Avoid using WriteChar (unclear name)
+	/// and WriteByte (inconsistent) even if they work too.
+	/// It applies to both the server and client versions of this function.
+	#define WriteSignedByte(to, b) WriteChar(to, b)
+	#define WriteChar(to, b) WriteByte(to, b)
+
 	void WriteShort(int to, int b)
 	{
 		WriteByte(to, (b >> 8) & 0xFF);
@@ -315,10 +322,21 @@ USING(Stream, int);
 		ydec_single(g_buf, ret);
 		return ret;
 	}
+	int ReadChar()
+	{
+		int ret = ReadByte();
+		return (ret & BIT(7) ? -128 : 0) + (ret & BITS(7));
+	}
+	/// It receives a signed byte [-128, 127]. Avoid using WriteChar (unclear name)
+	/// even if it works too.
+	/// It applies to both the server and client versions of this function.
+	#define ReadSignedByte() ReadChar()
+
 	int ReadShort()
 	{
 		return (ReadByte() << 8) | ReadByte();
 	}
+
 	void WriteByte(int to, int b);
 #endif
 
@@ -344,9 +362,9 @@ const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 	#define ReadInt48_t() vec2(ReadInt24_t(), ReadInt24_t())
 	#define ReadInt72_t() vec3(ReadInt24_t(), ReadInt24_t(), ReadInt24_t())
 
-	noref int _ReadSByte;
-	#define ReadSByte() (_ReadSByte = ReadByte(), (_ReadSByte & BIT(7) ? -128 : 0) + (_ReadSByte & BITS(7)))
+	#define ReadSignedByte() ReadChar()
 	#define ReadFloat() ReadCoord()
+
 	#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
 	#define ReadVector2D() vec2(ReadFloat(), ReadFloat())
 	#define ReadAngleVector() vec3(ReadAngle(), ReadAngle(), ReadAngle())
@@ -386,8 +404,9 @@ const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 		WriteInt24_t(dst, val.z);
 	}
 
-	#define WriteFloat(to, f) \
-		WriteCoord(to, f)
+	#define WriteSignedByte(to, b) WriteChar(to, b)
+	#define WriteFloat(to, f) WriteCoord(to, f)
+
 	#define WriteVector(to, v) MACRO_BEGIN \
 		WriteFloat(to, v.x); \
 		WriteFloat(to, v.y); \
