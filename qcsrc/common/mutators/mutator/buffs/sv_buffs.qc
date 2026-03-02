@@ -548,8 +548,9 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
 
-	if (frag_deathtype == DEATH_BUFF.m_id)
-		return;
+	if (frag_deathtype == DEATH_BUFF_INFERNO.m_id
+	||  frag_deathtype == DEATH_BUFF_VENGEANCE.m_id)
+		return; // no recurrence
 
 	if (StatusEffects_active(BUFF_RESISTANCE, frag_target))
 		frag_damage = buff_Resistance_CalculateDamage(frag_damage);
@@ -601,7 +602,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		if (StatusEffects_active(BUFF_INFERNO, frag_attacker))
 		{
 			float btime = buff_Inferno_CalculateTime(frag_damage);
-			Fire_AddDamage(frag_target, frag_attacker, buff_Inferno_CalculateDamage(frag_damage), btime, DEATH_BUFF.m_id);
+			Fire_AddDamage(frag_target, frag_attacker, buff_Inferno_CalculateDamage(frag_damage), btime, DEATH_BUFF_INFERNO.m_id);
 		}
 	}
 
