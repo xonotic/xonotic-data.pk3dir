@@ -336,7 +336,7 @@ void buff_Think(entity this)
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
 		this.owner = NULL;
-		if (autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
+		if (autocvar_g_buffs_randomize & (teamplay ? 2 : 1))
 			buff_NewType(this);
 
 		if (autocvar_g_buffs_random_location || (this.spawnflags & 64))
@@ -384,7 +384,7 @@ void buff_Reset(entity this)
 		return;
 	}
 
-	if (autocvar_g_buffs_randomize && (!teamplay || autocvar_g_buffs_randomize_teamplay))
+	if (autocvar_g_buffs_randomize & (teamplay ? 2 : 1))
 		buff_NewType(this);
 	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
