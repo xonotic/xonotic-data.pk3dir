@@ -214,19 +214,20 @@ void buff_Touch(entity this, entity toucher)
 		// can't touch this
 		return;
 
-	entity heldbuff = buff_FirstFromFlags(toucher);
 	entity thebuff = this.buffdef;
+	entity heldbuff = buff_FirstFromFlags(toucher);
+	int removal_type = STATUSEFFECT_REMOVE_NORMAL;
 
 	if (heldbuff)
 	{
 		if (CS_CVAR(toucher).cvar_cl_buffs_autoreplace && heldbuff != thebuff)
 		{
-			// TODO: lost-gained notification for this case
 			int buffid = heldbuff.m_id;
 			Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
 			if (!IS_INDEPENDENT_PLAYER(toucher))
 				Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
 			//sound(toucher, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+			removal_type = STATUSEFFECT_REMOVE_CLEAR;
 		}
 		else
 			return; // do nothing
@@ -243,7 +244,7 @@ void buff_Touch(entity this, entity toucher)
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
 	float bufftime = (this.buffs_finished) ? this.buffs_finished : thebuff.m_time(thebuff);
 
-	buff_RemoveAll(toucher, STATUSEFFECT_REMOVE_NORMAL); // remove previous buffs so that a new one may be added
+	buff_RemoveAll(toucher, removal_type); // remove previous buffs so that a new one may be added
 	if (!bufftime)
 		bufftime = 999;
 	StatusEffects_apply(thebuff, toucher, time + bufftime, 0);
