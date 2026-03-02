@@ -533,12 +533,14 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 {
 	GameRules_scoring_add(joiningplayer, SKILL, -1);
 	// http://stats.xonotic.org/skill?hashkey=Cm5mzXa1Vn9VX0%2FySV4Pp8ca9CTZvklERDqrrNOUFZU%3D
-	if(autocvar_g_playerstats_playerbasic_uri != "")
+	if (autocvar_g_playerstats_playerbasic_uri != ""
+	&& (autocvar_g_balance_teams_skill || autocvar_sv_showskill))
 	{
 		string uri = autocvar_g_playerstats_playerbasic_uri;
-		if (joiningplayer.crypto_idfp == "") {
+		if (joiningplayer.crypto_idfp == "")
 			GameRules_scoring_add(joiningplayer, SKILL, -1);
-		} else {
+		else
+		{
 			// create the database if it doesn't already exist
 			if(PS_B_IN_DB < 0)
 				PS_B_IN_DB = db_create();
@@ -646,16 +648,14 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 			string gametype = PlayerStats_GetGametype();
 			if (json_get(buf, "0.game_type_cd") == gametype && gametype != "")
 			{
-				float mu = stof(json_get(buf, "0.mu"));
-				//float sigma = stof(json_get(buf, "0.sigma"));
-				float skill = max(0, mu);
+				p.m_skill_var = stof(json_get(buf, "0.sigma")) ** 2;
+				p.m_skill_mu = max(0, stof(json_get(buf, "0.mu"))); // can it be < 0 ?!
 				/* we display just the mean skill, since this most accurately represents how players will play on an average match.
 				 * displaying mu - 3 * sigma would display worst-case performance, but when applied to every player this becomes meaningless.
 				 * also we're not interested in the skill that we're confident players can operate above, rather where we expect them to operate.
 				 */
-				GameRules_scoring_add(p, SKILL, skill + 1);
+				GameRules_scoring_add(p, SKILL, p.m_skill_mu + 1);
 				return;
-
 			}
 			break;
 		}

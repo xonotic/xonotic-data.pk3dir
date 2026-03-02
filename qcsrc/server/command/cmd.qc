@@ -512,7 +512,9 @@ void ClientCommand_join(entity caller, int request)
 		{
 			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
 			{
-				if (joinAllowed(caller, caller.wants_join))
+				if (caller.team == -666) // because FIXME join and selectteam are separate commands
+					caller.team = -1;
+				else if (joinAllowed(caller, caller.wants_join))
 					Join(caller, teamplay);
 				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
 					CS(caller).autojoin_checked = -1;
@@ -741,14 +743,16 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 					TeamBalance_Destroy(balance);
 					return;
 				}
-				if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage)
+				if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage
+				&& (!autocvar_g_balance_teams_queue || caller.team > 0))
 				{
 					TeamBalance_GetTeamCounts(balance, caller);
-					if ((Team_IndexToBit(Team_TeamToIndex(team_num)) &
-					     TeamBalance_FindBestTeams(balance, caller, false)) == 0)
+					if ((Team_IndexToBit(Team_TeamToIndex(team_num)) & TeamBalance_FindBestTeams(balance, caller, true)) == 0)
 					{
-						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
-						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_LARGERTEAM);
+						if (caller.team <= 0)
+							caller.team = -666; // workaround: cancel the subsequent join command
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_STRONGERTEAM);
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_STRONGERTEAM);
 						TeamBalance_Destroy(balance);
 						return;
 					}
