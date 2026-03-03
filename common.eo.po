@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-01 07:22+0100\n"
+"POT-Creation-Date: 2026-03-03 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Voltinus <voltinusmail@gmail.com>, 2022\n"
 "Language-Team: Esperanto (http://app.transifex.com/team-xonotic/xonotic/"
@@ -5018,7 +5018,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:466
 #: qcsrc/common/notifications/all.inc:822
-msgid "^K2You're not allowed to join a larger team!"
+msgid "^K2You're not allowed to join a stronger team!"
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:467
@@ -8296,41 +8296,41 @@ msgstr ""
 msgid "CI_MUL^%d seconds"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:79
+#: qcsrc/lib/counting.qh:78
 #, c-format
 msgid "%dst"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:80
+#: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dnd"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:81
+#: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%drd"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:85
+#: qcsrc/lib/counting.qh:83
 #, c-format
 msgid "%dth"
 msgstr ""
 
-#: qcsrc/lib/oo.qh:336
+#: qcsrc/lib/oo.qh:350
 msgid "No description"
 msgstr ""
 
-#: qcsrc/lib/string.qh:189
+#: qcsrc/lib/string.qh:187
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
 msgstr ""
 
-#: qcsrc/lib/string.qh:190
+#: qcsrc/lib/string.qh:188
 #, c-format
 msgid "%02d:%02d:%02d"
 msgstr ""
 
-#: qcsrc/lib/string.qh:484
+#: qcsrc/lib/string.qh:489
 #, c-format
 msgid "%.*f%%"
 msgstr ""
