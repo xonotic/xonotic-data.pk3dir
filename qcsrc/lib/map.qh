@@ -42,8 +42,11 @@ int db_load(string filename)
 		return db;
 	string l = fgets(fh);
 	if (stoi(l) == DB_BUCKETS)
+	{
 		for (int i = 0; (l = fgets(fh)); ++i)
-			if (l != "") bufstr_set(db, i, l);
+			if (l != "")
+				bufstr_set(db, i, l);
+	}
 	else
 	{
 		// different count of buckets, or a dump?
