@@ -9,7 +9,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
 		_Movetype_CheckStuck(this);
 
-	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.flags & FL_WATERJUMP));
+	bool applygravity = !_Movetype_CheckWater(this) && (this.move_movetype == MOVETYPE_WALK || this.move_movetype == MOVETYPE_STEP) && !(this.flags & FL_WATERJUMP);
 
 	// do a regular slide move unless it looks like you ran into a step
 	bool oldonground = IS_ONGROUND(this);
