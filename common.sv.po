@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Antonio <piuntn@gmail.com>, 2026
 # Gustaf Alhäll, 2022
 # Gustaf Alhäll, 2022
 # Hanicef <gustaf@hanicef.me>, 2021
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Logan Zerfass, 2023\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2026\n"
 "Language-Team: Swedish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/sv/)\n"
 "Language: sv\n"
@@ -10130,7 +10131,7 @@ msgstr "Stäng"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:89
 msgid "MAP^Play"
-msgstr "MAP^Play"
+msgstr "Play"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qh:7
 msgid "Map Information"

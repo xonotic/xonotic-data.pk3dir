@@ -5642,7 +5642,7 @@ msgstr "^BGI ^K1sopravvissuti^BG vincono il round"
 #: qcsrc/common/notifications/all.inc:466
 #: qcsrc/common/notifications/all.inc:822
 msgid "^K2You're not allowed to join a stronger team!"
-msgstr ""
+msgstr "^K2Non ti è consentito unirti a una squadra più forte!"
 
 #: qcsrc/common/notifications/all.inc:467
 #: qcsrc/common/notifications/all.inc:823
@@ -8770,12 +8770,18 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after some time they will self-detonate."
 msgstr ""
+"Il %s piazza mine a terra quando spara, che detonano e danneggiano i nemici "
+"se ci camminano sopra. Possono essere piazzate solo un paio di mine alla "
+"volta, e dopo un pò di tempo detoneranno da sole."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:555
 msgid ""
 "Uniquely, the mines explode sooner the closer an enemy comes to them. The "
 "secondary fire can be used to detonate all mines placed by the primary fire."
 msgstr ""
+"Unicamente, le mine esplodono più presto più un nemico si avvicina a loro. "
+"Il fuoco secondario può essere usato per detonare tutte le mine piazzate dal "
+"fuoco primario."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format
@@ -9995,7 +10001,7 @@ msgstr "Pannello Tempo Oggetti"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr "GAMETYPE^%s:"
+msgstr "%s:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
@@ -14584,7 +14590,7 @@ msgstr "Dicembre"
 #: qcsrc/menu/xonotic/statslist.qc:45
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr "DATE^%d/%m/%Y"
+msgstr "%d/%m/%Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:96
 msgid "Joined:"
