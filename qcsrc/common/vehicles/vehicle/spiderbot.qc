@@ -504,7 +504,7 @@ bool spiderbot_impulse(entity this, int _imp)
 			//centerprint(this, strcat("Rocket mode is ", ftos(STAT(VEHICLESTAT_W2MODE, this.vehicle))));
 			CSQCVehicleSetup(this, 0);
 			return true;
-		case IMP_weapon_last.impulse:
+		case IMP_weaplast.impulse:
 		case IMP_weapon_prev_byid.impulse:
 		case IMP_weapon_prev_bypriority.impulse:
 		case IMP_weapon_prev_bygroup.impulse:
@@ -517,9 +517,9 @@ bool spiderbot_impulse(entity this, int _imp)
 			return true;
 
 		/*
-		case IMP_weapon_drop.impulse: // toss gun, could be used to exit?
+		case IMP_dropweapon.impulse: // toss gun, could be used to exit?
 			break;
-		case IMP_weapon_reload.impulse: // Manual minigun reload?
+		case IMP_reload.impulse: // Manual minigun reload?
 			break;
 		*/
 	}

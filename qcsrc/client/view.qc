@@ -666,7 +666,7 @@ bool View_SpectatorCamera()
 			{
 				if (!waiting_CAMERA_SPECTATOR_update)
 				{
-					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR 2
+					Impulse_Send(IMP_dropweapon); // switch to CAMERA_SPECTATOR 2
 					waiting_CAMERA_SPECTATOR_update = 1;
 				}
 			}
@@ -681,7 +681,7 @@ bool View_SpectatorCamera()
 			{
 				if (waiting_CAMERA_SPECTATOR_update != STAT(CAMERA_SPECTATOR))
 				{
-					Impulse_Send(IMP_weapon_drop); // switch to CAMERA_SPECTATOR (2 and) 0
+					Impulse_Send(IMP_dropweapon); // switch to CAMERA_SPECTATOR (2 and) 0
 					waiting_CAMERA_SPECTATOR_update = STAT(CAMERA_SPECTATOR);
 				}
 			}

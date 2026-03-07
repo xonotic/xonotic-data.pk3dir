@@ -303,7 +303,7 @@ IMPULSE(weapon_prev_bypriority)
 	}
 }
 
-IMPULSE(weapon_last)
+IMPULSE(weaplast)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
@@ -317,7 +317,7 @@ IMPULSE(weapon_last)
 	}
 }
 
-IMPULSE(weapon_best)
+IMPULSE(weapbest)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
@@ -331,7 +331,7 @@ IMPULSE(weapon_best)
 	}
 }
 
-IMPULSE(weapon_drop)
+IMPULSE(dropweapon)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
@@ -350,7 +350,7 @@ IMPULSE(weapon_drop)
 	}
 }
 
-IMPULSE(weapon_reload)
+IMPULSE(reload)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
@@ -386,8 +386,8 @@ void ImpulseCommands(entity this)
 		#define X(id) case IMP_##id.impulse:
 		switch (imp)
 		{
-			X(weapon_drop)
-			X(weapon_reload)
+			X(dropweapon)
+			X(reload)
 			X(use)
 				return;
 		}

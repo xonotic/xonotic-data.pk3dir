@@ -119,10 +119,10 @@ REGISTER_IMPULSE(weapon_prev_bygroup, 19)
 REGISTER_IMPULSE(weapon_next_bypriority, 15)
 REGISTER_IMPULSE(weapon_prev_bypriority, 16)
 
-REGISTER_IMPULSE(weapon_last, 11)
-REGISTER_IMPULSE(weapon_best, 13)
-REGISTER_IMPULSE(weapon_drop, 17)
-REGISTER_IMPULSE(weapon_reload, 20)
+REGISTER_IMPULSE(weaplast, 11)
+REGISTER_IMPULSE(weapbest, 13)
+REGISTER_IMPULSE(dropweapon, 17)
+REGISTER_IMPULSE(reload, 20)
 
 // umm...
 #pragma push_macro("use")

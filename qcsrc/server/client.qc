@@ -2494,7 +2494,7 @@ void ObserverOrSpectatorThink(entity this)
 		if (!is_spec || r)
 			CS(this).impulse = 0;
 
-		if (is_spec && CS(this).impulse == IMP_weapon_drop.impulse)
+		if (is_spec && CS(this).impulse == IMP_dropweapon.impulse)
 		{
 			STAT(CAMERA_SPECTATOR, this) = (STAT(CAMERA_SPECTATOR, this) + 1) % 3;
 			CS(this).impulse = 0;
