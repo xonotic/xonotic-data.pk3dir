@@ -5,7 +5,6 @@
 #include <client/hud/panel/chat.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
-#include <client/mapvoting.qh>
 #include <client/teamradar.qh>
 #include <client/view.qh>
 #include <common/deathtypes/all.qh>
@@ -13,6 +12,7 @@
 #include <common/gametypes/_mod.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
