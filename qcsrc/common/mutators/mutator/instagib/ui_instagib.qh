@@ -1,0 +1,13 @@
+#pragma once
+
+const string MENU_INSTAGIB_NAME = _("InstaGib");
+const string MENU_INSTAGIB_DESCRIPTION = _("Players will be given only one weapon, the %s, which can instantly kill the opponent with a single shot. If the player runs out of ammo, they will have 10 seconds to find some or face death if they fail to do so. The secondary fire does not inflict any damage but is good for doing trickjumps.");
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorInstaGibTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorInstaGibTab, fill, void(entity));
+	ATTRIB(XonoticMutatorInstaGibTab, title, string, MENU_INSTAGIB_NAME);
+	ATTRIB(XonoticMutatorInstaGibTab, message, string, "g_instagib");
+	METHOD(XonoticMutatorInstaGibTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorInstaGibTab)
+entity makeXonoticMutatorInstaGibTab();

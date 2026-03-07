@@ -75,7 +75,7 @@ roflsound "New toys, new toys!" sound.
 
 //string autocvar_g_new_toys;
 
-REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok))
+REGISTER_MUTATOR(nt, expr_evaluate(cvar_string("g_new_toys")) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !MUTATOR_IS_ENABLED(melee_only))
 {
 	MUTATOR_ONADD
 	{
