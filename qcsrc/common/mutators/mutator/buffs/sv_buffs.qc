@@ -219,7 +219,7 @@ void buff_Touch(entity this, entity toucher)
 
 	if (heldbuff)
 	{
-		if (CS_CVAR(toucher).cvar_cl_buffs_autoreplace && heldbuff != thebuff)
+		if (autocvar_g_buffs_autoreplace && CS_CVAR(toucher).cvar_cl_buffs_autoreplace && heldbuff != thebuff)
 		{
 			// TODO: lost-gained notification for this case
 			int buffid = heldbuff.m_id;
