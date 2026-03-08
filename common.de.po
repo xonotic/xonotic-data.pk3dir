@@ -4,6 +4,7 @@
 #
 # Translators:
 # afba88cf42cbdff57149d4a6d53a94f9, 2018
+# Albert Sobral, 2026
 # Wuzzy <Wuzzy@disroot.org>, 2016-2018
 # BL4NKY, 2023,2025
 # BL4NKY -, 2023
@@ -38,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: Albert Sobral, 2026\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -163,7 +164,7 @@ msgstr "^1Drücke ^3%s^1 zum Zuschauen, ^3%s^1, um den Kameramodus zu wechseln"
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
 #: qcsrc/common/vehicles/cl_vehicles.qc:165
 msgid "drop weapon"
-msgstr "Waffe wegwerfen"
+msgstr "Waffe fallenlassen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:125
 #: qcsrc/menu/xonotic/keybinder.qc:74
@@ -230,7 +231,7 @@ msgstr "^3%d^2 weitere Spieler werden für den Beginn des Spiels benötigt."
 #: qcsrc/client/hud/panel/infomessages.qc:186
 #: qcsrc/menu/xonotic/keybinder.qc:149
 msgid "ready"
-msgstr "Bereit"
+msgstr "bereit"
 
 #: qcsrc/client/hud/panel/infomessages.qc:190
 #, c-format
@@ -260,7 +261,7 @@ msgstr "%sWarten, bis 1 Spieler beitritt …"
 #: qcsrc/client/hud/panel/infomessages.qc:211
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "1%s Warten für 2%d Spieler zu joinen"
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "Teams are unbalanced!"
@@ -770,7 +771,7 @@ msgstr "SCO^jagden"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "Anzahl der getöteten Schlüsselträger"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -930,7 +931,7 @@ msgstr "Gesamtpunktzahl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Player skill"
-msgstr ""
+msgstr "Spielerfähigkeit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^skill"
@@ -1188,7 +1189,7 @@ msgstr "Du bist tot, drücke ^2%s^7, um neu zu spawnen"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:31
 #, c-format
 msgid "%s°"
-msgstr ""
+msgstr "%s°"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "qu"
@@ -1245,7 +1246,7 @@ msgstr "Verlängerung #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:32
 msgid "^1You must answer before entering HUD configure mode"
-msgstr ""
+msgstr "Du musst antworten bevor du den HUD Konfigurierungsmodus startest"
 
 #: qcsrc/client/hud/panel/vote.qc:35
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1455,7 +1456,7 @@ msgstr "Mir egal"
 #: qcsrc/client/mapvoting.qc:379
 #, c-format
 msgid "Suggested by: %s"
-msgstr ""
+msgstr "Vorgeschlagen von: %s"
 
 #: qcsrc/client/mapvoting.qc:460
 msgid "Decide the gametype"
@@ -1499,6 +1500,8 @@ msgstr "Fehler bei Erzeugung des curl-Handles"
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
+"%s ist ein teambasierter Spieltyp mit einem angreifenden und verteidigenden "
+"Team."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:9
 msgid ""
