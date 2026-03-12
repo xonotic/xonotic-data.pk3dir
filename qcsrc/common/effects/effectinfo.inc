@@ -7907,8 +7907,8 @@ SUB(damage_rifle) {
 }
 
 // rifle damage effect, alien blood
-DEF(damage_rifle_alien);
-SUB(damage_rifle_alien) {
+DEF(alien_damage_rifle);
+SUB(alien_damage_rifle) {
 	MY(airfriction) = 1;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
@@ -7931,7 +7931,7 @@ SUB(damage_rifle_alien) {
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
-SUB(damage_rifle_alien) {
+SUB(alien_damage_rifle) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 400;
@@ -7945,8 +7945,8 @@ SUB(damage_rifle_alien) {
 }
 
 // rifle damage effect, robot blood
-DEF(damage_rifle_robot);
-SUB(damage_rifle_robot) {
+DEF(robot_damage_rifle);
+SUB(robot_damage_rifle) {
 	MY(airfriction) = 1;
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
@@ -7969,7 +7969,7 @@ SUB(damage_rifle_robot) {
 	MY(velocitymultiplier) = 5;
 }
 // blood mist
-SUB(damage_rifle_robot) {
+SUB(robot_damage_rifle) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 256;
 	MY(alpha_fade) = 400;

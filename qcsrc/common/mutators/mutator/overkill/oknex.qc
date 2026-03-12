@@ -340,6 +340,11 @@ METHOD(OverkillNex, wr_zoomdir, bool(entity thiswep))
 	return button_attack2 && !WEP_CVAR(WEP_OVERKILL_NEX, secondary);
 }
 
+METHOD(OverkillNex, wr_damageeffect_getname, string(entity thiswep))
+{
+	return "damage_vortex";
+}
+
 #endif // CSQC
 #ifdef MENUQC
 #include <common/items/item/ammo.qh>
