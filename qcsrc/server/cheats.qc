@@ -194,7 +194,7 @@ float CheatImpulse(entity this, int imp)
 				tracebox(this.personal.origin, this.mins, this.maxs, this.personal.origin, MOVE_WORLDONLY, this);
 				if(trace_startsolid)
 				{
-					sprint(this, "Cannot move there, cheater - only waypoints set using g_waypointsprite_personal work\n");
+					sprint(this, "Cannot move there, cheater - only waypoints set using waypoint_personal_here work\n");
 				}
 				else
 				{
@@ -230,7 +230,7 @@ float CheatImpulse(entity this, int imp)
 			if(IS_DEAD(this))
 				sprint(this, "UR DEAD AHAHAH))\n");
 			else
-				sprint(this, "No waypoint set, cheater (use g_waypointsprite_personal to set one)\n");
+				sprint(this, "No waypoint set, cheater (use waypoint_personal_here to set one)\n");
 			break;
 		case CHIMPULSE_TELEPORT.impulse:
 			IS_CHEAT(this, imp, 0, 0);

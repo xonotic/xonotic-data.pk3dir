@@ -77,10 +77,10 @@ void KeyBinds_BuildList()
 	KEYBIND_HEADER(_("Weapons"));
 	KEYBIND_DEF("weapprev"                              , CTX(_("WEAPON^previous")));
 	KEYBIND_DEF("weapnext"                              , CTX(_("WEAPON^next")));
-	KEYBIND_DEF("weaplast"                              , CTX(_("WEAPON^previously used")));
-	KEYBIND_DEF("weapbest"                              , CTX(_("WEAPON^best")));
-	KEYBIND_DEF("reload"                                , _("reload"));
-	KEYBIND_DEF("dropweapon"                            , _("drop weapon / throw nade"));
+	KEYBIND_DEF("weapon_last"                           , CTX(_("WEAPON^previously used")));
+	KEYBIND_DEF("weapon_best"                           , CTX(_("WEAPON^best")));
+	KEYBIND_DEF("weapon_reload"                         , _("reload"));
+	KEYBIND_DEF("wepaon_drop"                           , _("drop weapon / throw nade"));
 
 	#define SHOWABLE_WEAPON(w) \
 		(!(it.spawnflags & WEP_FLAG_SPECIALATTACK) && \
@@ -201,14 +201,19 @@ entity makeXonoticKeyBinder()
 }
 void replace_bind(string from, string to)
 {
-	int n, j;
-	float k; // not sure if float or int
+	// NOTE: doesn't replace in every scenario, e.g.:
+	//   bind A "say I dropped my weapon; dropweapon"
+	//   bind A my_custom_dropweapon; alias my_custom_dropweapon dropweapon
+	int n, j, k;
 	n = tokenize(findkeysforcommand(from, 0)); // uses '...' strings
 	for (j = 0; j < n; ++j)
 	{
-		k = stof(argv(j));
+		k = stoi(argv(j));
 		if (k != -1)
+		{
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", to, "\"\n");
+			LOG_INFOF("Rebound %s to \"%s\", replacing legacy \"%s\"\n", keynumtostring(k), to, from);
+		}
 	}
 	if (n)
 		cvar_set("_hud_showbinds_reload", "1");
@@ -217,6 +222,32 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
 	me.configureXonoticListBox(me);
 	me.nItems = 0;
+
+	// XONRELEASE TODO: xonotic-v0.9 post-release fully remove the old aliases (eg. dropweapon)
+	// dropweapon etc. were the original aliases, weapon_drop etc. are the new ones
+	// k9er: these replace_bind calls will help deprecate the old ones
+	replace_bind("_weapnext_0", "weapon_next_bygroup");
+	replace_bind("_weapnext_1", "weapon_next_bypriority");
+	replace_bind("_weapnext_2", "weapon_next_byid");
+	replace_bind("_weapprev_0", "weapon_prev_bygroup");
+	replace_bind("_weapprev_1", "weapon_prev_bypriority");
+	replace_bind("_weapprev_2", "weapon_prev_byid");
+	replace_bind("weaplast", "weapon_last");
+	replace_bind("weapbest", "weapon_best");
+	replace_bind("dropweapon", "weapon_drop");
+	replace_bind("reload", "weapon_reload");
+	replace_bind("g_waypointsprite_personal", "waypoint_personal_here");
+	replace_bind("g_waypointsprite_personal_p", "waypoint_personal_crosshair");
+	replace_bind("g_waypointsprite_personal_d", "waypoint_personal_death");
+	replace_bind("g_waypointsprite_team_helpme", "waypoint_here_follow");
+	replace_bind("g_waypointsprite_team_here", "waypoint_here_here");
+	replace_bind("g_waypointsprite_team_here_p", "waypoint_here_crosshair");
+	replace_bind("g_waypointsprite_team_here_d", "waypoint_here_death");
+	replace_bind("g_waypointsprite_team_danger", "waypoint_danger_here");
+	replace_bind("g_waypointsprite_team_danger_p", "waypoint_danger_crosshair");
+	replace_bind("g_waypointsprite_team_danger_d", "waypoint_danger_death");
+	replace_bind("g_waypointsprite_clear_personal", "waypoint_clear_personal");
+	replace_bind("g_waypointsprite_clear", "waypoint_clear");
 }
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
