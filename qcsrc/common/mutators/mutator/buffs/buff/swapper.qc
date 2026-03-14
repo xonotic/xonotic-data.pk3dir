@@ -67,8 +67,8 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	closest.pushltime = time + autocvar_g_maxpushtime;
 	closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
 
-	Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
+	Send_Effect(EFFECT_SWAPPER, their_org, '0 0 0', 1);
+	Send_Effect(EFFECT_SWAPPER, my_org, '0 0 0', 1);
 
 	sound(player,  CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
 	sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);

@@ -57,25 +57,6 @@ void nade_spawn(entity _nade)
 }
 
 
-void nades_orb_think(entity this)
-{
-	if (time >= this.ltime)
-	{
-		delete(this);
-		return;
-	}
-
-	this.nextthink = time;
-
-	if (time >= this.nade_special_time)
-	{
-		this.nade_special_time = time + 0.05;
-		this.nade_show_particles = true;
-	}
-	else
-		this.nade_show_particles = false;
-}
-
 entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad)
 {
 	// NOTE: this function merely places an orb
@@ -103,13 +84,26 @@ entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad)
 	Net_LinkEntity(orb, true, 0, orb_send);
 
 	orb.reset = SUB_Remove;
-
-	setthink(orb, nades_orb_think);
-	orb.nextthink = time;
+	setthink(orb, SUB_Remove);
+	orb.nextthink = orb.ltime;
 
 	return orb;
 }
 
+
+void nade_Effect(entity player, entity eff, int eff_cnt)
+{
+	if (time < player.nade_special_time)
+		return;
+
+	float pl_alpha = (!player.alpha ? 1 : player.alpha);
+	Send_Effect_Core(eff, player.origin, vec2(player.velocity), eff_cnt,
+		'0 0 0', '0 0 0',
+		pl_alpha, pl_alpha, -1,
+		NULL
+	);
+	player.nade_special_time = time + 0.05; // prevent spam
+}
 
 void nade_boom(entity this)
 {
@@ -149,7 +143,7 @@ void nade_boom(entity this)
 #undef SET_NADE_EFFECT
 
 	if (expef)
-		Send_Effect_Except(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, NULL);
+		Send_Effect_Core(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, -1, -1, -1, NULL);
 
 	sound(this, CH_SHOTS_SINGLE, SND_Null,          VOL_BASE, ATTEN_NORM);
 	sound(this, CH_SHOTS,        SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
