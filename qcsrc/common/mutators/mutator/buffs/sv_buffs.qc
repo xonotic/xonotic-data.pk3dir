@@ -214,8 +214,9 @@ void buff_Touch(entity this, entity toucher)
 		// can't touch this
 		return;
 
-	entity heldbuff = buff_FirstFromFlags(toucher);
 	entity thebuff = this.buffdef;
+	entity heldbuff = buff_FirstFromFlags(toucher);
+	int removal_type = STATUSEFFECT_REMOVE_NORMAL;
 
 	if (heldbuff)
 	{
@@ -226,6 +227,7 @@ void buff_Touch(entity this, entity toucher)
 			Send_Notification(NOTIF_ONE, toucher, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
 			if (!IS_INDEPENDENT_PLAYER(toucher))
 				Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_INFO, INFO_ITEM_BUFF_LOST, toucher.netname, buffid);
+			removal_type = STATUSEFFECT_REMOVE_CLEAR;
 			//sound(toucher, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		}
 		else
@@ -243,7 +245,7 @@ void buff_Touch(entity this, entity toucher)
 	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
 	float bufftime = (this.buffs_finished) ? this.buffs_finished : thebuff.m_time(thebuff);
 
-	buff_RemoveAll(toucher, STATUSEFFECT_REMOVE_NORMAL); // remove previous buffs so that a new one may be added
+	buff_RemoveAll(toucher, removal_type); // remove previous buffs so that a new one may be added
 	if (!bufftime)
 		bufftime = 999;
 	StatusEffects_apply(thebuff, toucher, time + bufftime, 0);
@@ -548,8 +550,9 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
 
-	if (frag_deathtype == DEATH_BUFF.m_id)
-		return;
+	if (frag_deathtype == DEATH_BUFF_INFERNO.m_id
+	||  frag_deathtype == DEATH_BUFF_VENGEANCE.m_id)
+		return; // no recurrence
 
 	if (StatusEffects_active(BUFF_RESISTANCE, frag_target))
 		frag_damage = buff_Resistance_CalculateDamage(frag_damage);
@@ -601,7 +604,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		if (StatusEffects_active(BUFF_INFERNO, frag_attacker))
 		{
 			float btime = buff_Inferno_CalculateTime(frag_damage);
-			Fire_AddDamage(frag_target, frag_attacker, buff_Inferno_CalculateDamage(frag_damage), btime, DEATH_BUFF.m_id);
+			Fire_AddDamage(frag_target, frag_attacker, buff_Inferno_CalculateDamage(frag_damage), btime, DEATH_BUFF_INFERNO.m_id);
 		}
 	}
 

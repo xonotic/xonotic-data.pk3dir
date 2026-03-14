@@ -1,19 +1,19 @@
 #pragma once
 
+#include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 
 #ifdef GAMEQC
-#include <common/items/item.qh>
-#include <common/mutators/mutator/waypoints/all.qh>
+	#include <common/items/item.qh>
+	#include <common/mutators/mutator/waypoints/all.qh>
 #endif
 #ifndef SVQC
-#include <common/util.qh> // for icon_path_from_HUDskin
+	#include <common/util.qh> // for icon_path_from_HUDskin
 #endif
 
 #define REGISTER_BUFF(id, inst) REGISTER(StatusEffects, BUFF_##id, m_id, inst)
 
-#include <common/mutators/mutator/status_effects/_mod.qh>
 CLASS(Buff, StatusEffect)
 #ifdef GAMEQC
 	ATTRIB(Buff, m_itemid, int, IT_BUFF);
@@ -82,10 +82,6 @@ STATIC_INIT(REGISTER_BUFFS)
 	#define BUFF_SPAWNFUNC(e, b, t)
 	#define BUFF_SPAWNFUNCS(e, b)
 	#define BUFF_SPAWNFUNC_Q3COMPAT(o, r)
-#endif
-
-#ifdef GAMEQC
-string BUFF_NAME(int i);
 #endif
 
 #ifdef SVQC
