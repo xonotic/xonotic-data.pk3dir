@@ -1,23 +1,19 @@
 #include "step.qh"
 
+#ifdef SVQC
+/// Minimal version of Physics_UpdateStats() for spawning NPCs
+void _Movetype_Physics_Step_UpdateStats(entity this)
+{
+	STAT(GAMEPLAYFIX_STEPDOWN, this) = autocvar_sv_gameplayfix_stepdown;
+	STAT(MOVEVARS_STEPHEIGHT, this) = autocvar_sv_stepheight;
+	// HACK: gravity isn't set here, instead a condition in the PHYS_GRAVITY macro is relied on,
+	// this prevents 0 from meaning 0 gravity, which could be solved by removing the condition from the macro
+	// and setting/updating the gravity STAT (field) on non-player entities which need it.
+	//STAT(MOVEVARS_GRAVITY, this) = autocvar_sv_gravity;
+}
+#endif
+
 void _Movetype_Physics_Step(entity this, float dt) // SV_Physics_Step
 {
-	if(IS_ONGROUND(this))
-	{
-		if(this.velocity_z >= (1.0 / 32.0) && UPWARD_VELOCITY_CLEARS_ONGROUND(this))
-		{
-			UNSET_ONGROUND(this);
-			_Movetype_FlyMove(this, dt, true, false, 0);
-			_Movetype_LinkEdict(this, true);
-		}
-	}
-	else
-	{
-		_Movetype_FlyMove(this, dt, true, false, 0);
-		_Movetype_LinkEdict(this, true);
-
-		// TODO? movetypesteplandevent
-	}
-
-	_Movetype_CheckWaterTransition(this);
+	_Movetype_Physics_Walk(this, dt);
 }
