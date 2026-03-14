@@ -9,6 +9,7 @@
 #include <client/hud/panel/weapons.qh>
 #include <common/constants.qh>
 #include <common/ent_cs.qh>
+#include <common/gametypes/gametype/duel/duel.qh>
 #include <common/mapinfo.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/net_linked.qh>
@@ -103,6 +104,8 @@ bool autocvar_hud_panel_scoreboard_playerid = false;
 string autocvar_hud_panel_scoreboard_playerid_prefix = "#";
 string autocvar_hud_panel_scoreboard_playerid_suffix = " ";
 bool autocvar_hud_panel_scoreboard_scores_per_round;
+
+bool autocvar_hud_panel_scoreboard_minimal = false;
 
 float scoreboard_time;
 
@@ -969,47 +972,57 @@ string Scoreboard_AddPlayerId(string pl_name, entity pl)
 
 // MOVEUP::
 vector sbt_field_rgb;
-// these are drawn overlapping
-string sbt_field_icon_playercolor[3];
+// These are drawn overlapping
+const string sbt_field_icon_playercolor[3] = { "gfx/scoreboard/playercolor_base", "gfx/scoreboard/playercolor_shirt", "gfx/scoreboard/playercolor_pants" };
 vector sbt_field_icon_playercolor_rgb[3];
+int sbt_field_icon_playercolor_set;
 
-const int SBT_FIELD_ICON_EXTRA_COUNT = 3;
-// these are drawn side-by-side, next to playercolor (if present)
-// 0: player_ready, 1: player_handicap, 2: player_ignored
-string sbt_field_icon_extra[SBT_FIELD_ICON_EXTRA_COUNT];
-vector sbt_field_icon_extra_rgb[SBT_FIELD_ICON_EXTRA_COUNT];
+// These are drawn side-by-side, next to playercolor (if present),
+// filled in this order: player_ready, player_handicap, player_ignored
+const int SBT_FIELD_ICON_EXTRA_MAX = 3;
+string sbt_field_icon_extra[SBT_FIELD_ICON_EXTRA_MAX];
+vector sbt_field_icon_extra_rgb[SBT_FIELD_ICON_EXTRA_MAX];
+int sbt_field_icon_extra_set;
 string Scoreboard_GetName(entity pl)
 {
+	int i;
 	if (!teamplay)
 	{
 		// NOTE: always adding 1024 allows saving the colormap 0 as a value != 0
-		int f = (playerslots[pl.sv_entnum].colormap >= 1024)
+		i = (playerslots[pl.sv_entnum].colormap >= 1024)
 			? playerslots[pl.sv_entnum].colormap - 1024 // override server-side player colors
 			: entcs_GetClientColors(pl.sv_entnum);
 
-		sbt_field_icon_playercolor[0] = "gfx/scoreboard/playercolor_base";
-		sbt_field_icon_playercolor[1] = "gfx/scoreboard/playercolor_shirt";
-		sbt_field_icon_playercolor[2] = "gfx/scoreboard/playercolor_pants";
-		sbt_field_icon_playercolor_rgb[2] = colormapPaletteColor(f % 16, 1);
-		sbt_field_icon_playercolor_rgb[1] = colormapPaletteColor(floor(f / 16), 0);
+		sbt_field_icon_playercolor_rgb[2] = colormapPaletteColor(i & BITS(4), 1);
+		sbt_field_icon_playercolor_rgb[1] = colormapPaletteColor(i >> 4, 0);
 		sbt_field_icon_playercolor_rgb[0] = sbt_field_icon_playercolor_rgb[1];
+		sbt_field_icon_playercolor_set = 3;
 	}
+	else
+		sbt_field_icon_playercolor_set = 0;
+
+	float f;
+	sbt_field_icon_extra_set = 0;
 	if (ready_waiting && pl.ready)
 	{
-		sbt_field_icon_extra[0] = "gfx/scoreboard/player_ready";
-		sbt_field_icon_extra_rgb[0].y = 1;
-		sbt_field_icon_extra_rgb[0].x = sbt_field_icon_extra_rgb[0].z = min(1, 1 + sin(2*M_PI * time));
+		f = min(1, 1 + sin(2*M_PI * time));
+		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = vec3(f, 1, f); // pulses from white to green
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_ready";
+		++sbt_field_icon_extra_set;
 	}
-	int handicap_lvl = entcs_GetHandicapLevel(pl.sv_entnum);
-	if (handicap_lvl != 0)
+	if ((i = entcs_GetHandicapLevel(pl.sv_entnum)) != 0)
 	{
-		sbt_field_icon_extra[1] = "gfx/scoreboard/player_handicap";
-		sbt_field_icon_extra_rgb[1] = '1 0 0' + '0 1 1' * ((16 - handicap_lvl) / 15);
-		// goes from white to red over level 1 to 16
+		f = (16 - i) / 15;
+		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = vec3(1, f, f); // goes from white to red over level 1 to 16
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_handicap";
+		++sbt_field_icon_extra_set;
 	}
-
 	if (pl.ignored)
-		sbt_field_icon_extra[2] = "gfx/scoreboard/player_ignored";
+	{
+		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = '1 1 1';
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_ignored";
+		++sbt_field_icon_extra_set;
+	}
 
 	return entcs_GetName(pl.sv_entnum);
 }
@@ -1032,17 +1045,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 	int f;
 	string str;
 	sbt_field_rgb = '1 1 1';
-	sbt_field_icon_playercolor[0] = "";
-	sbt_field_icon_playercolor[1] = "";
-	sbt_field_icon_playercolor[2] = "";
-	sbt_field_icon_playercolor_rgb[0] = '1 1 1';
-	sbt_field_icon_playercolor_rgb[1] = '1 1 1';
-	sbt_field_icon_playercolor_rgb[2] = '1 1 1';
-	for (f = 0; f < SBT_FIELD_ICON_EXTRA_COUNT; ++f)
-	{
-		sbt_field_icon_extra[f] = "";
-		sbt_field_icon_extra_rgb[f] = '1 1 1';
-	}
+	sbt_field_icon_playercolor_set = 0;
+	sbt_field_icon_extra_set = 0;
 
 	int rounds_played = 0;
 	if (per_round)
@@ -1183,9 +1187,8 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 
 float sbt_fixcolumnwidth_len;
 float sbt_fixcolumnwidth_iconlen_playercolor;
-float sbt_fixcolumnwidth_iconlen_extra[2];
+float sbt_fixcolumnwidth_iconlen_extra[SBT_FIELD_ICON_EXTRA_MAX];
 float sbt_fixcolumnwidth_marginlen;
-
 string Scoreboard_FixColumnWidth(int i, string str, bool init)
 {
 	TC(int, i);
@@ -1194,46 +1197,46 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 	float f;
 
 	sbt_fixcolumnwidth_iconlen_playercolor = 0;
-	sbt_fixcolumnwidth_iconlen_extra[0] = 0;
-	sbt_fixcolumnwidth_iconlen_extra[1] = 0;
+	for (j = 0; j < sbt_field_icon_extra_set; ++j)
+		sbt_fixcolumnwidth_iconlen_extra[j] = 0;
 
-	for (j = 0; j < 3; ++j)
-		if (sbt_field_icon_playercolor[j] != "")
-		{
-			sz = draw_getimagesize(sbt_field_icon_playercolor[j]);
-			f = sz.x / sz.y;
-			if (sbt_fixcolumnwidth_iconlen_playercolor < f)
-				sbt_fixcolumnwidth_iconlen_playercolor = f;
-		}
+	for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
+	{
+		sz = draw_getimagesize(sbt_field_icon_playercolor[j]);
+		f = sz.x / sz.y;
+		if (sbt_fixcolumnwidth_iconlen_playercolor < f)
+			sbt_fixcolumnwidth_iconlen_playercolor = f;
+	}
 	// NOTE: extra icons (player_ready and player_handicap) are squares (32x32), so this may not be necessary
 	// simply setting sbt_fixcolumnwidth_iconlen_extra* = 1 would be equivalent
-	for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
-		if (sbt_field_icon_extra[j] != "")
-		{
-			sz = draw_getimagesize(sbt_field_icon_extra[j]);
-			// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
-			if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
-				sz = '1 1 0';
-			sbt_fixcolumnwidth_iconlen_extra[j] = sz.x / sz.y;
-		}
+	for (j = 0; j < sbt_field_icon_extra_set; ++j)
+	{
+		sz = draw_getimagesize(sbt_field_icon_extra[j]);
+		// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
+		if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
+			sz = '1 1 0';
+		sbt_fixcolumnwidth_iconlen_extra[j] = sz.x / sz.y;
+	}
 
 	if (sbt_fixcolumnwidth_iconlen_playercolor != 0)
 		sbt_fixcolumnwidth_iconlen_playercolor *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
-	for (j = 0; j < 2; ++j)
-		if (sbt_fixcolumnwidth_iconlen_extra[j] != 0)
-			sbt_fixcolumnwidth_iconlen_extra[j] *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
+	for (j = 0; j < sbt_field_icon_extra_set; ++j)
+		sbt_fixcolumnwidth_iconlen_extra[j] *= hud_fontsize.y / hud_fontsize.x; // fix icon aspect
 
 	if (sbt_fixcolumnwidth_iconlen_playercolor != 0
-	||  sbt_fixcolumnwidth_iconlen_extra[0] != 0
-	||  sbt_fixcolumnwidth_iconlen_extra[1] != 0)
-	{
+	||  sbt_field_icon_playercolor_set)
 		sbt_fixcolumnwidth_marginlen = stringwidth(" ", false, hud_fontsize);
-	}
 	else
 		sbt_fixcolumnwidth_marginlen = 0;
 
 	if (init)
 		sbt_field_title_width[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
+
+#define ADD_ICON_PADDING(val) \
+	val += sbt_fixcolumnwidth_marginlen; \
+	val += hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor; \
+	for (j = 0; j < sbt_field_icon_extra_set; ++j) \
+		val += hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
 
 	if (sbt_field[i] == SP_NAME) // name gets all remaining space
 	{
@@ -1243,10 +1246,7 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 				used_space += sbt_field_size[j] + hud_fontsize.x;
 		sbt_field_size[i] = max(sbt_field_title_width[i], panel_size.x - used_space);
 
-		used_space += sbt_fixcolumnwidth_marginlen
-			+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
-			+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
-			+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+		ADD_ICON_PADDING(used_space);
 		float namesize = max(sbt_field_title_width[i], panel_size.x - used_space);
 		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
 		sbt_fixcolumnwidth_len = stringwidth(str, true, hud_fontsize);
@@ -1265,10 +1265,10 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		sbt_fixcolumnwidth_len = stringwidth(str, false, hud_fontsize);
 	}
 
-	f = sbt_fixcolumnwidth_len + sbt_fixcolumnwidth_marginlen
-		+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
-		+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
-		+ hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+	f = sbt_fixcolumnwidth_len;
+	if (sbt_field[i] == SP_NAME)
+		ADD_ICON_PADDING(f);
+#undef ADD_ICON_PADDING
 	if (sbt_field_size[i] < f)
 		sbt_field_size[i] = f;
 
@@ -1436,9 +1436,9 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 		if (field == SP_NAME)
 		{
 			tmp.x = sbt_field_size[i] - sbt_fixcolumnwidth_marginlen + hud_fontsize.x
-				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor
-				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[0]
-				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[1];
+				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor;
+			for (j = 0; j < sbt_field_icon_extra_set; ++j)
+				tmp.x -= hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
 			if (teamplay)
 			{
 				int wants_join = entcs_GetWantsJoin(pl.sv_entnum);
@@ -1459,16 +1459,14 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 		tmp.x = sbt_field_size[i] + hud_fontsize.x;
 		icon_sz = vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor, hud_fontsize.y);
-		for (j = 0; j < 3; ++j)
-			if (sbt_field_icon_playercolor[j] != "")
-				drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-		for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
-			if (sbt_field_icon_extra[j] != "")
-			{
-				tmp.x -= icon_sz.x;
-				icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
-				drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-			}
+		for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
+			drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+		for (j = 0; j < sbt_field_icon_extra_set; ++j)
+		{
+			tmp.x -= icon_sz.x;
+			icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
+			drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+		}
 	}
 
 	if (sbt_field[i] == SP_SEPARATOR)
@@ -1502,16 +1500,14 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 			tmp.x = sbt_field_size[i];
 			icon_sz = vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor, hud_fontsize.y);
-			for (j = 0; j < 3; ++j)
-				if (sbt_field_icon_playercolor[j] != "")
-					drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-			for (j = 0; j < SBT_FIELD_ICON_EXTRA_COUNT; ++j)
-				if (sbt_field_icon_extra[j] != "")
-				{
-					tmp.x -= icon_sz.x;
-					icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
-					drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
-				}
+			for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
+				drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+			for (j = 0; j < sbt_field_icon_extra_set; ++j)
+			{
+				tmp.x -= icon_sz.x;
+				icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
+				drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+			}
 			pos.x -= sbt_field_size[i] + hud_fontsize.x;
 		}
 	}
@@ -1656,14 +1652,20 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 
 vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
+	// if tm == 0, we're drawing the header table (minimal scoreboard)
 	int max_players = 999;
+	int tm_size = (tm ? tm.team_size : 0);
 	if (autocvar_hud_panel_scoreboard_maxheight > 0)
 	{
 		float height = autocvar_hud_panel_scoreboard_maxheight * vid_conheight;
 		if (teamplay)
 		{
-			height -= (panel_bg_padding * 2 + hud_fontsize.y * 1.25) * team_count; // - padding and header
-			height -= hud_fontsize.y * (team_count - 1); // - spacing between tables
+			if (autocvar_hud_panel_scoreboard_minimal)
+				height -= (panel_bg_padding * 2) * (team_count + 1) // - padding
+					+ hud_fontsize.y * 1.25; // - header
+			else
+				height -= (panel_bg_padding * 2 + hud_fontsize.y * 1.25) * team_count // - padding and header
+					+ hud_fontsize.y * (team_count - 1); // - spacing between tables
 			height /= team_count;
 		}
 		else
@@ -1671,12 +1673,14 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 		max_players = floor(height / (hud_fontsize.y * 1.25));
 		if (max_players <= 1)
 			max_players = 1;
-		if (max_players == tm.team_size)
+		if (max_players == tm_size)
 			max_players = 999;
 	}
 
+	bool draw_header = !(autocvar_hud_panel_scoreboard_minimal && teamplay && tm);
+
 	panel_pos = pos;
-	panel_size.y = 1.25 * hud_fontsize.y * (1 + bound(1, tm.team_size, max_players));
+	panel_size.y = 1.25 * hud_fontsize.y * (draw_header + bound((tm ? 1 : 0), tm_size, max_players));
 	panel_size.y += panel_bg_padding * 2;
 
 	vector scoreboard_selected_hl_pos = pos;
@@ -1686,13 +1690,15 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 
 	HUD_Panel_DrawBg();
 
-	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
+	vector end_pos = panel_pos + eY * panel_size.y;
+	if (!(autocvar_hud_panel_scoreboard_minimal && teamplay))
+		end_pos.y += 0.5 * hud_fontsize.y;
 	if (panel.current_panel_bg != "0")
 		end_pos.y += panel_bg_border * 2;
 
 	if (panel_bg_padding)
 	{
-		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_pos  += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
@@ -1700,60 +1706,61 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	vector tmp = vec2(panel_size.x, 1.25 * hud_fontsize.y);
 
 	// rounded header
-	if (sbt_bg_alpha)
-		drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, rgb + '0.5 0.5 0.5', sbt_bg_alpha, DRAWFLAG_NORMAL);
-
-	pos.y += 1.25 * hud_fontsize.y;
+	if (draw_header)
+	{
+		if (sbt_bg_alpha)
+			drawpic(pos, "gfx/scoreboard/scoreboard_tableheader", tmp, rgb + '0.5 0.5 0.5', sbt_bg_alpha, DRAWFLAG_NORMAL);
+		pos.y += 1.25 * hud_fontsize.y;
+		tmp.y = panel_size.y - 1.25 * hud_fontsize.y;
+	}
 
 	// table background
-	tmp.y = panel_size.y - 1.25 * hud_fontsize.y;
-	if (sbt_bg_alpha)
+	if (sbt_bg_alpha && tm)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
 
-
 	// print header row and highlight columns
-	pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm.team_size));
+	if (draw_header)
+		pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm_size));
 
-	// fill the table and draw the rows
-	bool is_self = false;
-	bool self_shown = false;
-	int i = 0;
-	entity me = playerslots[current_player];
-	for (entity pl = players.sort_next; pl; pl = pl.sort_next)
+	if (tm)
 	{
-		if (pl.team != tm.team)
-			continue;
-		if (i == max_players - 2 && pl != me)
+		// fill the table and draw the rows
+		bool is_self = false;
+		bool self_shown = false;
+		int i = 0;
+		entity me = playerslots[current_player];
+		for (entity pl = players.sort_next; pl; pl = pl.sort_next)
 		{
-			if (!self_shown && me.team == tm.team)
+			if (pl.team != tm.team)
+				continue;
+			if (i == max_players - 2 && pl != me
+			&& !self_shown && me.team == tm.team)
 			{
 				Scoreboard_DrawItem(pos, rgb, me, true, i);
 				self_shown = true;
 				pos.y += 1.25 * hud_fontsize.y;
 				++i;
 			}
+			if (i >= max_players - 1)
+			{
+				pos = Scoreboard_DrawOthers(pos, rgb, tm.team, (self_shown ? me : NULL), pl, i);
+				break;
+			}
+			is_self = (pl.sv_entnum == current_player);
+			Scoreboard_DrawItem(pos, rgb, pl, is_self, i);
+			if (is_self)
+				self_shown = true;
+			pos.y += 1.25 * hud_fontsize.y;
+			++i;
 		}
-		if (i >= max_players - 1)
-		{
-			pos = Scoreboard_DrawOthers(pos, rgb, tm.team, (self_shown ? me : NULL), pl, i);
-			break;
-		}
-		is_self = (pl.sv_entnum == current_player);
-		Scoreboard_DrawItem(pos, rgb, pl, is_self, i);
-		if (is_self)
-			self_shown = true;
-		pos.y += 1.25 * hud_fontsize.y;
-		++i;
-	}
 
-	if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD)
-	{
-		if (scoreboard_ui_enabled == 1 || (tm && scoreboard_selected_team == tm))
+		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD
+		&& (scoreboard_ui_enabled == 1 || scoreboard_selected_team == tm))
 		{
-			float _alpha = (scoreboard_ui_enabled == 2) ? 0.2 : 0.3 * max(0, (1 - (time - scoreboard_selected_panel_time) * 2));
-			_alpha *= panel_fg_alpha;
-			if (_alpha)
-				drawfill(scoreboard_selected_hl_pos, scoreboard_selected_hl_size, '1 1 1', _alpha, DRAWFLAG_NORMAL);
+			float hl_alpha = (scoreboard_ui_enabled == 2) ? 0.2 : 0.3 * max(0, (1 - (time - scoreboard_selected_panel_time) * 2));
+			hl_alpha *= panel_fg_alpha;
+			if (hl_alpha)
+				drawfill(scoreboard_selected_hl_pos, scoreboard_selected_hl_size, '0.8 0.8 0.8' + 0.2 * rgb, hl_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 
@@ -1761,8 +1768,101 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	return end_pos;
 }
 
+bool is_item_filtered(entity it)
+{
+	if (!autocvar_hud_panel_scoreboard_itemstats_filter)
+		return false;
+	int mask = autocvar_hud_panel_scoreboard_itemstats_filter_mask;
+	if (mask <= 0)
+		return false;
+	if (it.instanceOfArmor || it.instanceOfHealth)
+	{
+		switch (floor(mask) % 10) // health-armor mask
+		{
+			default: return false;
+			case 4:  if (it == ITEM_HealthMega   || it == ITEM_ArmorMega)   return true; // else fallthrough
+			case 3:  if (it == ITEM_HealthBig    || it == ITEM_ArmorBig)    return true; // else fallthrough
+			case 2:  if (it == ITEM_HealthMedium || it == ITEM_ArmorMedium) return true; // else fallthrough
+			case 1:  if (it == ITEM_HealthSmall  || it == ITEM_ArmorSmall)  return true; // else fallthrough
+		}
+	}
+	if (it.instanceOfAmmo)
+		return (floor(mask / 10) % 10) == 1; // ammo mask
+
+	return false;
+}
+
+bool have_item_stats;
+bool Scoreboard_ItemStats_WouldDraw(float ypos)
+{
+	if (MUTATOR_CALLHOOK(DrawScoreboardItemStats))
+		return false;
+	if (!autocvar_hud_panel_scoreboard_itemstats || !g_inventory || warmup_stage || ypos > 0.91 * vid_conheight)
+		return false;
+
+	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_itemstats_showdelay
+		&& ypos > autocvar_hud_panel_scoreboard_itemstats_showdelay_minpos * vid_conheight
+		&& !intermission)
+	{
+		return false;
+	}
+
+	if (!have_item_stats)
+	{
+		IL_EACH(default_order_items, !is_item_filtered(it),
+		{
+			int q = g_inventory.inv_items[it.m_id];
+			//q = 1; // debug: display all items
+			if (q)
+			{
+				have_item_stats = true;
+				break;
+			}
+		});
+		if (!have_item_stats)
+			return false;
+	}
+
+	return true;
+}
+
+bool have_weapon_stats;
+bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
+{
+	if (MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
+		return false;
+	if (!autocvar_hud_panel_scoreboard_accuracy || warmup_stage || ypos > 0.91 * vid_conheight)
+		return false;
+
+	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_accuracy_showdelay
+		&& ypos > autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos * vid_conheight
+		&& !intermission)
+	{
+		return false;
+	}
+
+	if (!have_weapon_stats)
+	{
+		FOREACH(Weapons, it != WEP_Null,
+		{
+			int weapon_stats = weapon_accuracy[i - WEP_FIRST];
+			if (weapon_stats >= 0)
+			{
+				have_weapon_stats = true;
+				break;
+			}
+		});
+		if (!have_weapon_stats)
+			return false;
+	}
+
+	return true;
+}
+
+bool deathscoreboard; ///< Whether the scoreboard is displaying because we're dead - hide accuracy & item stats & rankings
 bool Scoreboard_WouldDraw()
 {
+	deathscoreboard = false;
 	if (scoreboard_ui_enabled)
 	{
 		if (scoreboard_ui_disabling)
@@ -1794,6 +1894,8 @@ bool Scoreboard_WouldDraw()
 		&& time - CSQCModel_server2csqc(player_localentnum - 1).death_time >= autocvar_cl_deathscoreboard_delay
 		&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
 	{
+		if (!ISGAMETYPE(DUEL)) // display all info in Duel even if dead - only 2 players, lots of room
+			deathscoreboard = true;
 		return true;
 	}
 	else if (scoreboard_showscores_force || MUTATOR_CALLHOOK(DrawScoreboard_Force))
@@ -1801,281 +1903,315 @@ bool Scoreboard_WouldDraw()
 	return false;
 }
 
-float average_accuracy;
-vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size)
-{
-	scoreboard_acc_fade_alpha = min(scoreboard_fade_alpha, scoreboard_acc_fade_alpha + frametime * 10);
-
-	WepSet weapons_stat = WepSet_GetFromStat();
-	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
-	int disownedcnt = 0;
-	int nHidden = 0;
-	FOREACH(Weapons, it != WEP_Null,
-	{
-		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
-
-		WepSet set = it.m_wepset;
-		if (it.spawnflags & WEP_TYPE_OTHER)
-		{
-			++nHidden;
-			continue;
-		}
-		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
-		{
-			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED))
-				++nHidden;
-			else
-				++disownedcnt;
-		}
-	});
-
-	int weapon_cnt = (REGISTRY_COUNT(Weapons) - 1) - disownedcnt - nHidden;
-	if (weapon_cnt <= 0)
-		return pos;
-
-	int rows = 1;
-	if (autocvar_hud_panel_scoreboard_accuracy_doublerows && weapon_cnt >= floor((REGISTRY_COUNT(Weapons) - nHidden - 1) * 0.5))
-		rows = 2;
-	int columns = ceil(weapon_cnt / rows);
-
-	float aspect = max(0.001, autocvar_hud_panel_weapons_aspect);
-	float weapon_height = hud_fontsize.y * 2.3 / aspect;
-	float height = weapon_height + hud_fontsize.y;
-
-	drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
-	pos.y += 1.25 * hud_fontsize.y;
-	if (panel.current_panel_bg != "0")
-		pos.y += panel_bg_border;
-
-	panel_pos = pos;
-	panel_size.y = height * rows;
-	panel_size.y += panel_bg_padding * 2;
-
-	float panel_bg_alpha_save = panel_bg_alpha;
-	panel_bg_alpha *= scoreboard_acc_fade_alpha;
-	HUD_Panel_DrawBg();
-	panel_bg_alpha = panel_bg_alpha_save;
-
-	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
-	if (panel.current_panel_bg != "0")
-		end_pos.y += panel_bg_border * 2;
-
-	if (panel_bg_padding)
-	{
-		panel_pos += '1 1 0' * panel_bg_padding;
-		panel_size -= '2 2 0' * panel_bg_padding;
-	}
-
-	pos = panel_pos;
-	vector tmp = panel_size;
-
-	float weapon_width = tmp.x / columns / rows;
-
-	if (sbt_bg_alpha)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
-
-	if (sbt_highlight)
-	{
-		// column highlighting
-		for (int i = 0; i < columns; ++i)
-			if ((i % 2) == 0)
-				drawfill(pos + eX * weapon_width * rows * i, vec2(weapon_width * rows, height * rows), '0 0 0', sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
-
-		// row highlighting
-		for (int i = 0; i < rows; ++i)
-			drawfill(pos + eY * (weapon_height + height * i), vec2(tmp.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
-	}
-
-	average_accuracy = 0;
-	int weapons_with_stats = 0;
-	if (rows == 2)
-		pos.x += weapon_width / 2;
-
-	if (autocvar_hud_panel_scoreboard_accuracy_nocolors)
-		rgb = '1 1 1';
-	else
-		Accuracy_LoadColors();
-
-	float oldposx = pos.x;
-	vector tmpos = pos;
-
-	int column = 0;
-	FOREACH(Weapons, it != WEP_Null,
-	{
-		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
-
-		WepSet set = it.m_wepset;
-		if (weapon_stats < 0 && !((weapons_stat & set) || (weapons_inmap & set)))
-			continue;
-		if (it.spawnflags & WEP_TYPE_OTHER)
-			continue;
-
-		float weapon_alpha;
-		if (weapon_stats >= 0)
-			weapon_alpha = sbt_fg_alpha;
-		else
-			weapon_alpha = 0.2 * sbt_fg_alpha;
-
-		// weapon icon
-		drawpic_aspect_skin(tmpos, it.model2, vec2(weapon_width, weapon_height), '1 1 1', weapon_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
-		// the accuracy
-		if (weapon_stats >= 0)
-		{
-			++weapons_with_stats;
-			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
-
-			string s = ftos_decimals_percentage(weapon_stats, 0);
-			float padding = (weapon_width - stringwidth(s, false, hud_fontsize)) / 2;
-
-			if (!autocvar_hud_panel_scoreboard_accuracy_nocolors)
-				rgb = Accuracy_GetColor(weapon_stats);
-
-			drawstring(tmpos + vec2(padding, weapon_height), s, hud_fontsize, rgb, sbt_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
-		}
-		tmpos.x += weapon_width * rows;
-		pos.x += weapon_width * rows;
-		if (rows == 2 && column == columns - 1)
-		{
-			tmpos.x = oldposx;
-			tmpos.y += height;
-			pos.y += height;
-		}
-		++column;
-	});
-
-	if (weapons_with_stats)
-		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
-
-	panel_size.x += panel_bg_padding * 2; // restore initial width
-
-	return end_pos;
-}
-
-bool is_item_filtered(entity it)
-{
-	if (!autocvar_hud_panel_scoreboard_itemstats_filter)
-		return false;
-	int mask = autocvar_hud_panel_scoreboard_itemstats_filter_mask;
-	if (mask <= 0)
-		return false;
-	if (it.instanceOfArmor || it.instanceOfHealth)
-	{
-		switch (floor(mask) % 10) // health-armor mask
-		{
-			default: return false;
-			case 4:  if (it == ITEM_HealthMega   || it == ITEM_ArmorMega)   return true; // else fallthrough
-			case 3:  if (it == ITEM_HealthBig    || it == ITEM_ArmorBig)    return true; // else fallthrough
-			case 2:  if (it == ITEM_HealthMedium || it == ITEM_ArmorMedium) return true; // else fallthrough
-			case 1:  if (it == ITEM_HealthSmall  || it == ITEM_ArmorSmall)  return true; // else fallthrough
-		}
-	}
-	if (it.instanceOfAmmo)
-		return (floor(mask / 10) % 10) == 1; // ammo mask
-
-	return false;
-}
-
-vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size)
+vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size, int item_rows, int item_columns, float item_height, float item_height_just_item, bool merged)
 {
 	scoreboard_itemstats_fade_alpha = min(scoreboard_fade_alpha, scoreboard_itemstats_fade_alpha + frametime * 10);
 
-	int disowned_cnt = 0;
-	int uninteresting_cnt = 0;
-	IL_EACH(default_order_items, true,
+	if (!autocvar_hud_panel_scoreboard_minimal) // don't draw label if minimal
 	{
-		int q = g_inventory.inv_items[it.m_id];
-		//q = 1; // debug: display all items
-		if (is_item_filtered(it))
-			++uninteresting_cnt;
-		else if (!q)
-			++disowned_cnt;
-	});
-	int items_cnt = REGISTRY_COUNT(Items) - uninteresting_cnt;
-	int n = items_cnt - disowned_cnt;
-	if (n <= 0)
-		return pos;
-
-	int rows = (autocvar_hud_panel_scoreboard_itemstats_doublerows && n >= floor(REGISTRY_COUNT(Items) / 2)) ? 2 : 1;
-	int columns = max(6, ceil(n / rows));
-
-	float item_height = hud_fontsize.y * 2.3;
-	float height = item_height + hud_fontsize.y;
-
-	drawstring(pos + eX * panel_bg_padding, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
-	pos.y += 1.25 * hud_fontsize.y;
-	if (panel.current_panel_bg != "0")
-		pos.y += panel_bg_border;
+		drawstring(pos + eX * panel_bg_padding, _("Item stats"), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		pos.y += 1.25 * hud_fontsize.y;
+		if (panel.current_panel_bg != "0")
+			pos.y += panel_bg_border;
+	}
 
 	panel_pos = pos;
-	panel_size.y = height * rows;
+	panel_size.y = item_height * item_rows;
 	panel_size.y += panel_bg_padding * 2;
 
-	float panel_bg_alpha_save = panel_bg_alpha;
-	panel_bg_alpha *= scoreboard_itemstats_fade_alpha;
-	HUD_Panel_DrawBg();
-	panel_bg_alpha = panel_bg_alpha_save;
+	if (!merged) // don't draw background, accuracy stats already did (and made it large enough)
+	{
+		float panel_bg_alpha_save = panel_bg_alpha;
+		panel_bg_alpha *= scoreboard_itemstats_fade_alpha;
+		HUD_Panel_DrawBg();
+		panel_bg_alpha = panel_bg_alpha_save;
+	}
 
 	vector end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
-	if (panel.current_panel_bg != "0")
+	if (panel.current_panel_bg != "0") // add irrespective of `merged` - need to end a table regardless
 		end_pos.y += panel_bg_border * 2;
 
 	if (panel_bg_padding)
 	{
-		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_pos  += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
 	pos = panel_pos;
 	vector tmp = panel_size;
 
-	float item_width = tmp.x / columns / rows;
+	float item_width = tmp.x / (item_columns * item_rows);
 
 	if (sbt_bg_alpha)
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 
 	if (sbt_highlight)
 	{
+		int i;
 		// column highlighting
-		for (int i = 0; i < columns; ++i)
-			if ((i % 2) == 0)
-				drawfill(pos + eX * item_width * rows * i, vec2(item_width * rows, height * rows), '0 0 0', sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
-
+		for (i = 0; i < item_columns; ++i)
+			if (i % 2 == 0)
+				drawfill(pos + eX * item_width * item_rows * i, vec2(item_width * item_rows, item_height * item_rows), '0 0 0', sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 		// row highlighting
-		for (int i = 0; i < rows; ++i)
-			drawfill(pos + eY * (item_height + height * i), vec2(panel_size.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		for (i = 0; i < item_rows; ++i)
+			drawfill(pos + eY * (item_height_just_item + item_height * i), vec2(panel_size.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 	}
 
-	if (rows == 2)
+	if (item_rows == 2)
 		pos.x += item_width * 0.5;
 
-	float oldposx = pos.x;
 	vector tmpos = pos;
+	float padding, oldposx = pos.x;
 
-	int column = 0;
+	string s;
+	int n, column = 0;
 	IL_EACH(default_order_items, !is_item_filtered(it),
 	{
-		int n = g_inventory.inv_items[it.m_id];
+		n = g_inventory.inv_items[it.m_id];
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0)
 			continue;
-		drawpic_aspect_skin(tmpos, it.m_icon, eX * item_width + eY * item_height, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
-		string s = ftos(n);
-		float padding = (item_width - stringwidth(s, false, hud_fontsize)) / 2;
-		drawstring(tmpos + vec2(padding, item_height), s, hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
-		tmpos.x += item_width * rows;
-		pos.x += item_width * rows;
-		if (rows == 2 && column == columns - 1)
+		drawpic_aspect_skin(tmpos, it.m_icon, vec2(item_width, item_height_just_item), '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		s = itos(n);
+		padding = (item_width - stringwidth(s, false, hud_fontsize)) * 0.5;
+		drawstring(tmpos + vec2(padding, item_height_just_item), s, hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+
+		tmpos.x += item_width * item_rows;
+		pos.x += item_width * item_rows;
+		if (item_rows == 2 && column == item_columns - 1)
 		{
 			tmpos.x = oldposx;
-			tmpos.y += height;
-			pos.y += height;
+			tmpos.y += item_height;
+			pos.y += item_height;
 		}
 		++column;
 	});
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
-
 	return end_pos;
+}
+
+float average_accuracy;
+vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size, WepSet all_weps, int wep_rows, int wep_columns, float wep_height, float wep_height_just_weapon, int item_rows, float item_height, bool merged)
+{
+	scoreboard_acc_fade_alpha = min(scoreboard_fade_alpha, scoreboard_acc_fade_alpha + frametime * 10);
+
+	if (autocvar_hud_panel_scoreboard_minimal) // draw average accuracy % next to the table, code copied from team score code
+	{
+		draw_beginBoldFont();
+		string str = sprintf(_("%.*f%%"), 0, average_accuracy); // reuse transifex string
+		vector str_pos;
+		float y_offset = panel_bg_padding + 0.5 * hud_fontsize.y;
+		if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
+		{
+			// team score on the left (default)
+			str_pos = pos + vec2(-0.5 * hud_fontsize.x - stringwidth(str, false, hud_fontsize * 1.3), y_offset);
+			if (panel.current_panel_bg != "0")
+				str_pos.x -= panel_bg_border;
+		}
+		else
+		{
+			// team score on the right
+			str_pos = pos + vec2(0.5 * hud_fontsize.x + (panel_size.x + hud_fontsize.x * 1.3), y_offset);
+			if (panel.current_panel_bg != "0")
+				str_pos.x += panel_bg_border;
+		}
+		str_pos.y += panel_bg_border;
+		drawstring(str_pos, str, hud_fontsize * 1.3, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
+	}
+	else
+	{
+		drawstring(pos + eX * panel_bg_padding, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', panel_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+		pos.y += 1.25 * hud_fontsize.y;
+	}
+	if (panel.current_panel_bg != "0")
+		pos.y += panel_bg_border;
+
+	panel_pos = pos;
+	panel_size.y = wep_height * wep_rows + item_height * (merged ? item_rows : 0); // make it large enough to include ItemStats
+	panel_size.y += panel_bg_padding * 2;
+
+	{
+		float panel_bg_alpha_save = panel_bg_alpha;
+		panel_bg_alpha *= scoreboard_acc_fade_alpha;
+		HUD_Panel_DrawBg();
+		panel_bg_alpha = panel_bg_alpha_save;
+	}
+
+	vector end_pos;
+	if (merged) // only add the height the weapons will take up
+		end_pos = panel_pos + eY * (wep_height * wep_rows);
+	else
+	{
+		end_pos = panel_pos + eY * (panel_size.y + 0.5 * hud_fontsize.y);
+		if (panel.current_panel_bg != "0")
+			end_pos.y += panel_bg_border * 2;
+	}
+
+	if (panel_bg_padding)
+	{
+		panel_pos  += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	pos = panel_pos;
+	vector tmp = panel_size;
+
+	float wep_width = tmp.x / (wep_columns * wep_rows);
+
+	if (sbt_bg_alpha)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+
+	if (sbt_highlight)
+	{
+		int i;
+		// column highlighting
+		for (i = 0; i < wep_columns; ++i)
+			if (i % 2 == 0)
+				drawfill(pos + eX * wep_width * wep_rows * i, vec2(wep_width * wep_rows, wep_height * wep_rows), '0 0 0', sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+		// row highlighting
+		for (i = 0; i < wep_rows; ++i)
+			drawfill(pos + eY * (wep_height_just_weapon + wep_height * i), vec2(tmp.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+	}
+
+	average_accuracy = 0;
+	if (wep_rows == 2)
+		pos.x += wep_width * 0.5;
+
+	vector wep_rgb = '1 1 1';
+	if (!autocvar_hud_panel_scoreboard_accuracy_nocolors)
+		Accuracy_LoadColors();
+
+	vector tmpos = pos;
+	float wep_alpha, padding, oldposx = pos.x;
+
+	string s;
+	WepSet set;
+	int acc, weps_with_stats = 0;
+	int column = 0;
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		acc = weapon_accuracy[i - WEP_FIRST];
+		set = it.m_wepset;
+		if (acc < 0 && !(all_weps & set))
+			continue;
+		if (it.spawnflags & WEP_TYPE_OTHER)
+			continue;
+
+		wep_alpha = (acc >= 0)
+			? sbt_fg_alpha
+			: 0.2 * sbt_fg_alpha;
+
+		// weapon icon
+		drawpic_aspect_skin(tmpos, it.model2, vec2(wep_width, wep_height_just_weapon), '1 1 1', wep_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+		// the accuracy
+		if (acc >= 0)
+		{
+			++weps_with_stats;
+			average_accuracy += acc; // store sum of all accuracies in average_accuracy
+
+			s = ftos_decimals_percentage(acc, 0);
+			padding = (wep_width - stringwidth(s, false, hud_fontsize)) * 0.5;
+			if (!autocvar_hud_panel_scoreboard_accuracy_nocolors)
+				wep_rgb = Accuracy_GetColor(acc);
+
+			drawstring(tmpos + vec2(padding, wep_height_just_weapon), s, hud_fontsize, wep_rgb, sbt_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+		}
+
+		tmpos.x += wep_width * wep_rows;
+		pos.x += wep_width * wep_rows;
+		if (wep_rows == 2 && column == wep_columns - 1)
+		{
+			tmpos.x = oldposx;
+			tmpos.y += wep_height;
+			pos.y += wep_height;
+		}
+		++column;
+	});
+
+	if (weps_with_stats)
+		average_accuracy = floor((average_accuracy * 100 / weps_with_stats) + 0.5);
+
+	panel_size.x += panel_bg_padding * 2; // restore initial width
+	return end_pos;
+}
+
+vector Scoreboard_AccuracyAndItemStats_Draw(vector pos, vector rgb, vector bg_size)
+{
+	// pre-calculate number of weapons
+	WepSet set, all_weps = WepSet_GetFromStat() | WepSet_GetFromStat_InMap();
+	int disowned_cnt = 0;
+	int wep_hidden = 0;
+	int acc;
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		set = it.m_wepset;
+		if (it.spawnflags & WEP_TYPE_OTHER)
+		{
+			++wep_hidden;
+			continue;
+		}
+		acc = weapon_accuracy[i - WEP_FIRST];
+		if (acc < 0 && !(all_weps & set))
+		{
+			if (it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED))
+				++wep_hidden;
+			else
+				++disowned_cnt;
+		}
+	});
+	int wep_cnt = (REGISTRY_COUNT(Weapons) - 1) - disowned_cnt - wep_hidden;
+
+	// pre-calculate number of items
+	disowned_cnt = 0;
+	int uninteresting_cnt = 0;
+	IL_EACH(default_order_items, true,
+	{
+		if (is_item_filtered(it))
+			++uninteresting_cnt;
+		else if (!g_inventory.inv_items[it.m_id]) // debug: display all items by changing this to `else if (true)`
+			++disowned_cnt;
+	});
+	int items_cnt = REGISTRY_COUNT(Items) - disowned_cnt - uninteresting_cnt;
+
+	// size pre-calculations
+	int item_rows = (autocvar_hud_panel_scoreboard_itemstats_doublerows && items_cnt >= floor(REGISTRY_COUNT(Items) * 0.5))
+		? 2
+		: 1;
+	int item_columns = ceil(items_cnt / item_rows);
+	float item_height_just_item = hud_fontsize.y * 2.3;
+	float item_height = item_height_just_item + hud_fontsize.y;
+
+	int wep_rows = (autocvar_hud_panel_scoreboard_accuracy_doublerows && wep_cnt >= floor((REGISTRY_COUNT(Weapons) - wep_hidden - 1) * 0.5))
+		? 2
+		: 1;
+	int wep_columns = ceil(wep_cnt / wep_rows);
+	float wep_height_just_weapon = hud_fontsize.y * 2.3 / max(0.001, autocvar_hud_panel_weapons_aspect);
+	float wep_height = wep_height_just_weapon + hud_fontsize.y;
+
+
+	float items_posy = pos.y;
+	bool draw_accuracy = (Scoreboard_AccuracyStats_WouldDraw(pos.y) && wep_cnt > 0);
+	if (draw_accuracy)
+	{
+		// Scoreboard_ItemStats_WouldDraw needs the y-pos as if Scoreboard_AccuracyStats_WouldDraw has already been called,
+		// so we need to calculate it manually
+		items_posy += wep_height * wep_rows;
+		if (panel.current_panel_bg != "0")
+			items_posy += panel_bg_border;
+		if (!autocvar_hud_panel_scoreboard_minimal)
+			items_posy += hud_fontsize.y * 1.75 + (panel_bg_padding + panel_bg_border) * 2;
+	}
+	bool draw_items = (Scoreboard_ItemStats_WouldDraw(items_posy) && items_cnt > 0);
+	bool merged = (autocvar_hud_panel_scoreboard_minimal && draw_accuracy && draw_items);
+	// can only merge if both are drawn, hence all this pre-calculation is necessary (determining which will draw)
+
+	if (draw_accuracy)
+		pos = Scoreboard_AccuracyStats_Draw(pos, rgb, bg_size, all_weps, wep_rows, wep_columns, wep_height, wep_height_just_weapon, item_rows, item_height, merged);
+	if (draw_items)
+		pos = Scoreboard_ItemStats_Draw(pos, rgb, bg_size, item_rows, item_columns, item_height, item_height_just_item, merged);
+	return pos;
 }
 
 vector MapStats_DrawKeyValue(vector pos, string key, string value)
@@ -2176,8 +2312,11 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	vector scoreboard_selected_hl_pos = pos;
 
-	drawstring(pos + eX * panel_bg_padding, ranktitle, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	pos.y += 1.25 * hud_fontsize.y;
+	if (!autocvar_hud_panel_scoreboard_minimal)
+	{
+		drawstring(pos + eX * panel_bg_padding, ranktitle, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		pos.y += 1.25 * hud_fontsize.y;
+	}
 	if (panel.current_panel_bg != "0")
 		pos.y += panel_bg_border;
 
@@ -2294,73 +2433,6 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	return end_pos;
 }
 
-bool have_weapon_stats;
-bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
-{
-	if (MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
-		return false;
-	if (!autocvar_hud_panel_scoreboard_accuracy || warmup_stage || ypos > 0.91 * vid_conheight)
-		return false;
-
-	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_accuracy_showdelay
-		&& ypos > autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos * vid_conheight
-		&& !intermission)
-	{
-		return false;
-	}
-
-	if (!have_weapon_stats)
-	{
-		FOREACH(Weapons, it != WEP_Null,
-		{
-			int weapon_stats = weapon_accuracy[i - WEP_FIRST];
-			if (weapon_stats >= 0)
-			{
-				have_weapon_stats = true;
-				break;
-			}
-		});
-		if (!have_weapon_stats)
-			return false;
-	}
-
-	return true;
-}
-
-bool have_item_stats;
-bool Scoreboard_ItemStats_WouldDraw(float ypos)
-{
-	if (MUTATOR_CALLHOOK(DrawScoreboardItemStats))
-		return false;
-	if (!autocvar_hud_panel_scoreboard_itemstats || !g_inventory || warmup_stage || ypos > 0.91 * vid_conheight)
-		return false;
-
-	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_itemstats_showdelay
-		&& ypos > autocvar_hud_panel_scoreboard_itemstats_showdelay_minpos * vid_conheight
-		&& !intermission)
-	{
-		return false;
-	}
-
-	if (!have_item_stats)
-	{
-		IL_EACH(default_order_items, !is_item_filtered(it),
-		{
-			int q = g_inventory.inv_items[it.m_id];
-			//q = 1; // debug: display all items
-			if (q)
-			{
-				have_item_stats = true;
-				break;
-			}
-		});
-		if (!have_item_stats)
-			return false;
-	}
-
-	return true;
-}
-
 vector Scoreboard_Spectators_Draw(vector pos)
 {
 	string str = "";
@@ -2389,13 +2461,16 @@ vector Scoreboard_Spectators_Draw(vector pos)
 	return pos;
 }
 
-string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit)
+string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit, bool is_last)
 {
 	string s_label = (teamplay) ? teamscores_label(ts_primary) : scores_label(ps_primary);
 	int s_flags = (teamplay) ? teamscores_flags(ts_primary) : scores_flags(ps_primary);
-	return sprintf((is_leadlimit ? _("^2+%s %s") : _("^5%s %s")), ScoreString(s_flags, limit, 0),
+
+	if (autocvar_hud_panel_scoreboard_minimal && !is_last) // only add the label at the end (is_last) if minimal
+		return strcat((is_leadlimit ? "^5+" : "^5"), ScoreString(s_flags, limit, 0));
+	return strcat("^5", sprintf((is_leadlimit ? _("+%s %s") : _("%s %s")), ScoreString(s_flags, limit, 0),
 		(s_label == "score") ? CTX(_("SCO^points")) :
-		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label));
+		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label)));
 }
 
 void Scoreboard_Draw(bool should_draw)
@@ -2550,13 +2625,14 @@ void Scoreboard_Draw(bool should_draw)
 			str = strcat(str, "^3", count_minutes(floor(tl)));
 		if (!gametype.m_hidelimits)
 		{
+			bool draw_ll = (ll > 0 && (ll < fl || fl <= 0));
 			if (fl > 0)
 			{
 				if (tl > 0)
 					str = strcat(str, "^7 / "); // delimiter
-				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false));
+				str = strcat(str, Scoreboard_Fraglimit_Draw(fl, false, !draw_ll));
 			}
-			if (ll > 0 && (ll < fl || fl <= 0))
+			if (draw_ll)
 			{
 				if (tl > 0 || fl > 0)
 				{
@@ -2566,7 +2642,7 @@ void Scoreboard_Draw(bool should_draw)
 					else
 						str = strcat(str, "^7 / ");
 				}
-				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true));
+				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true, true));
 			}
 		}
 		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
@@ -2575,7 +2651,10 @@ void Scoreboard_Draw(bool should_draw)
 			str = "";
 		else
 			str = sprintf(_("^5%d^7/^5%d ^7players"), numplayers, srv_maxplayers ? srv_maxplayers : maxclients);
-		str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
+		if (autocvar_hud_panel_scoreboard_minimal)
+			str = strcat("^2", mi_shortname, "    ", str);
+		else
+			str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
 		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
 	// End of Game Info Section
@@ -2596,26 +2675,27 @@ void Scoreboard_Draw(bool should_draw)
 		vector panel_bg_color_save = panel_bg_color;
 		vector team_score_baseoffset;
 		vector team_size_baseoffset;
+		float y_offset = panel_bg_padding + (autocvar_hud_panel_scoreboard_minimal ? 0 : 0.5) * hud_fontsize.y;
 		if (autocvar_hud_panel_scoreboard_team_size_position != 1) // team size not on left
 		{
 			// put team score to the left of scoreboard (and team size to the right)
-			team_score_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
-			team_size_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
+			team_score_baseoffset = vec2(-0.5 * hud_fontsize.x, y_offset);
+			team_size_baseoffset  = vec2( 0.5 * hud_fontsize.x, y_offset);
 			if (panel.current_panel_bg != "0")
 			{
 				team_score_baseoffset.x -= panel_bg_border;
-				team_size_baseoffset.x += panel_bg_border;
+				team_size_baseoffset.x  += panel_bg_border;
 			}
 		}
 		else
 		{
 			// put team score to the right of scoreboard (and team size to the left)
-			team_score_baseoffset = eY * hud_fontsize.y + eX * hud_fontsize.x * 0.5;
-			team_size_baseoffset = eY * hud_fontsize.y - eX * hud_fontsize.x * 0.5;
+			team_score_baseoffset = vec2( 0.5 * hud_fontsize.x, y_offset);
+			team_size_baseoffset  = vec2(-0.5 * hud_fontsize.x, y_offset);
 			if (panel.current_panel_bg != "0")
 			{
 				team_score_baseoffset.x += panel_bg_border;
-				team_size_baseoffset.x -= panel_bg_border;
+				team_size_baseoffset.x  -= panel_bg_border;
 			}
 		}
 
@@ -2627,6 +2707,9 @@ void Scoreboard_Draw(bool should_draw)
 				if (tm.team != NUM_SPECTATOR)
 					team_size_total += tm.team_size;
 		}
+
+		if (autocvar_hud_panel_scoreboard_minimal) // draw header table first
+			pos = Scoreboard_MakeTable(pos, NULL, '0.5 0.5 0.5', bg_size);
 
 		vector str_pos;
 		for (tm = teams.sort_next; tm; tm = tm.sort_next)
@@ -2704,6 +2787,8 @@ void Scoreboard_Draw(bool should_draw)
 		// display it anyway
 		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
 	}
+	if (autocvar_hud_panel_scoreboard_minimal)
+		pos.y += 0.5 * hud_fontsize.y;
 
 	// if the name column is too small, try to compress all other field titles
 	if (sbt_field_size[name_field_index] < sbt_field_title_width[name_field_index] + hud_fontsize.x)
@@ -2714,18 +2799,17 @@ void Scoreboard_Draw(bool should_draw)
 		pos = Scoreboard_Spectators_Draw(pos);
 
 	// draw accuracy and item stats
-	if (Scoreboard_AccuracyStats_WouldDraw(pos.y))
-		pos = Scoreboard_AccuracyStats_Draw(pos, panel_bg_color, bg_size);
-	if (Scoreboard_ItemStats_WouldDraw(pos.y))
-		pos = Scoreboard_ItemStats_Draw(pos, panel_bg_color, bg_size);
+	if (!deathscoreboard)
+		pos = Scoreboard_AccuracyAndItemStats_Draw(pos, panel_bg_color, bg_size);
 
 	// draw scoreboard spectators after accuracy and item stats and before rankings
 	if (autocvar_hud_panel_scoreboard_spectators_position == 1)
 		pos = Scoreboard_Spectators_Draw(pos);
 
-	if (MUTATOR_CALLHOOK(ShowRankings))
+	// draw rankings
+	if (MUTATOR_CALLHOOK(ShowRankings, deathscoreboard))
 	{
-		string ranktitle = M_ARGV(0, string);
+		string ranktitle = M_ARGV(1, string);
 		string unit = GetSpeedUnit(autocvar_hud_speed_unit);
 		float conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		if (race_speedaward_alltimebest)
