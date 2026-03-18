@@ -355,6 +355,7 @@ void W_Arc_Beam_Think(entity this)
 
 	int new_beam_type = 0;
 	vector last_origin = w_shotorg;
+	vector original_start_pos = w_shotorg;
 	vector last_origin_prev = '0 0 0';
 	for (int i = 1; i <= segments; ++i)
 	{
@@ -424,13 +425,14 @@ void W_Arc_Beam_Think(entity this)
 			// NO. trace_endpos should be just fine. If not,
 			// that's an engine bug that needs proper debugging.
 			vector hitorigin = trace_endpos;
-
-			float falloff = ExponentialFalloff(
-				WEP_CVAR(WEP_ARC, beam_falloff_mindist),
-				WEP_CVAR(WEP_ARC, beam_falloff_maxdist),
-				WEP_CVAR(WEP_ARC, beam_falloff_halflifedist),
-				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
-			);
+			float falloff = 1;
+			if (WEP_CVAR(WEP_ARC, beam_falloff_halflifedist))
+				falloff = ExponentialFalloff(
+					WEP_CVAR(WEP_ARC, beam_falloff_mindist),
+					WEP_CVAR(WEP_ARC, beam_falloff_maxdist),
+					WEP_CVAR(WEP_ARC, beam_falloff_halflifedist),
+					vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - original_start_pos)
+				);
 
 			float damage;
 			if (is_player)
