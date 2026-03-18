@@ -264,10 +264,12 @@ void W_Arc_Beam_Think(entity this)
 		float rootammo = (burst ? WEP_CVAR(WEP_ARC, burst_ammo) : WEP_CVAR(WEP_ARC, beam_ammo));
 		if (rootammo)
 		{
-			coefficient = min(coefficient, GetResource(own, thiswep.ammo_type) / rootammo);
-			SetResource(own, thiswep.ammo_type, max(0, GetResource(own, thiswep.ammo_type) - (rootammo * frametime)));
+			float curr_ammo = GetResource(own, thiswep.ammo_type);
+			coefficient = min(coefficient, curr_ammo / rootammo);
+			SetResource(own, thiswep.ammo_type, max(0, curr_ammo - rootammo * frametime));
 		}
 	}
+
 	float heat_speed = (burst ? WEP_CVAR(WEP_ARC, burst_heat) : WEP_CVAR(WEP_ARC, beam_heat));
 	this.beam_heat = min(WEP_CVAR(WEP_ARC, overheat_max), this.beam_heat + heat_speed * frametime);
 
@@ -430,29 +432,25 @@ void W_Arc_Beam_Think(entity this)
 				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
 			);
 
-			float rootdamage;
+			float damage;
 			if (is_player)
 			{
 				if (burst)
-					rootdamage = WEP_CVAR(WEP_ARC, burst_damage);
+					damage = WEP_CVAR(WEP_ARC, burst_damage);
 				else
-					rootdamage = WEP_CVAR(WEP_ARC, beam_damage);
+					damage = WEP_CVAR(WEP_ARC, beam_damage);
 			}
 			else
-				rootdamage = WEP_CVAR(WEP_ARC, beam_nonplayerdamage);
+				damage = WEP_CVAR(WEP_ARC, beam_nonplayerdamage);
+			damage *= coefficient * falloff;
 
 			if (accuracy_isgooddamage(own, trace_ent))
-				accuracy_add(own, WEP_ARC, 0, rootdamage * coefficient * falloff, 0); // add to hit
+				accuracy_add(own, WEP_ARC, 0, damage, 0); // add to hit
 
 			vector new_dir = normalize(new_origin - last_origin_prev);
 			new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
-			Damage(trace_ent, own, own,
-				rootdamage * coefficient * falloff,
-				WEP_ARC.m_id,
-				weaponentity,
-				hitorigin,
-				WEP_CVAR(WEP_ARC, beam_force) * coefficient * falloff * new_dir
-			);
+			float force = WEP_CVAR(WEP_ARC, beam_force) * coefficient * falloff;
+			Damage(trace_ent, own, own, damage, WEP_ARC.m_id, weaponentity, hitorigin, force * new_dir);
 
 			new_beam_type = ARC_BT_HIT;
 		}
@@ -648,10 +646,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
 }
 METHOD(Arc, wr_suicidemessage, Notification(entity thiswep))
 {
-	if (w_deathtype & HITTYPE_SECONDARY)
-		return WEAPON_ARC_SUICIDE_BOLT;
-	else
-		return WEAPON_THINKING_WITH_PORTALS;
+	return (w_deathtype & HITTYPE_SECONDARY) ? WEAPON_ARC_SUICIDE_BOLT : WEAPON_THINKING_WITH_PORTALS;
 }
 METHOD(Arc, wr_init, void(entity thiswep))
 {
@@ -666,7 +661,7 @@ METHOD(Arc, wr_init, void(entity thiswep))
 }
 METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-	return ((!WEP_CVAR(WEP_ARC, beam_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
+	return (!WEP_CVAR(WEP_ARC, beam_ammo) || GetResource(actor, thiswep.ammo_type) > 0);
 }
 METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -677,15 +672,12 @@ METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponenti
 		return ammo_amount;
 	}
 	else
-		return WEP_CVAR(WEP_ARC, overheat_max) > 0 &&
-			((!WEP_CVAR(WEP_ARC, burst_ammo)) || (GetResource(actor, thiswep.ammo_type) > 0));
+		return WEP_CVAR(WEP_ARC, overheat_max) > 0
+		       && (!WEP_CVAR(WEP_ARC, burst_ammo) || GetResource(actor, thiswep.ammo_type) > 0);
 }
 METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 {
-	if (w_deathtype & HITTYPE_SECONDARY)
-		return WEAPON_ARC_MURDER_SPRAY;
-	else
-		return WEAPON_ARC_MURDER;
+	return (w_deathtype & HITTYPE_SECONDARY) ? WEAPON_ARC_MURDER_SPRAY : WEAPON_ARC_MURDER;
 }
 METHOD(Arc, wr_drop, void(entity thiswep, entity actor, .entity weaponentity))
 {
