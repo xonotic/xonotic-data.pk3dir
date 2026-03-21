@@ -98,6 +98,7 @@ SPAWNFUNC_WEAPON(weapon_electro, WEP_ELECTRO)
 
 #ifdef SVQC
 IntrusiveList LimitedElectroBallRubbleList;
+.float dmg_last;
 .float electro_count;
 .float electro_secondarytime;
 void W_Electro_ExplodeCombo(entity this);
