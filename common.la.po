@@ -5090,7 +5090,7 @@ msgstr "^F1Superstites^BG tempore vincunt"
 #: qcsrc/common/notifications/all.inc:466
 #: qcsrc/common/notifications/all.inc:822
 msgid "^K2You're not allowed to join a stronger team!"
-msgstr ""
+msgstr "^K2Ire in potentiorem manum non potes!"
 
 #: qcsrc/common/notifications/all.inc:467
 #: qcsrc/common/notifications/all.inc:823
