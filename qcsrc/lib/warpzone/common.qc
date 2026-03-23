@@ -657,13 +657,44 @@ void WarpZone_FindRadius_Recurse(
 		e.enemy.WarpZone_findradius_hit = 0;
 	}
 }
+.bool found_by_findradius;
 entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 {
-	if (!warpzone_warpzones_exist && !needlineofsight)
-		return findradius(org, rad);
+	//if (!warpzone_warpzones_exist && !needlineofsight)
+	//	return findradius(org, rad);
+	int found_by_findradius_count = 0;
+	int found_by_WarpZone_FindRadius_count = 0;
+	print("findradius");
+	for (entity head = findradius(org, rad); head; head = head.chain)
+		if (!WarpZoneLib_BadEntity(head)) // make results comparable
+		{
+			head.found_by_findradius = true;
+			print(sprintf(" %d", etof(head)));
+			++found_by_findradius_count;
+		}
+	print("\n");
+	print("WarpZone_F");
 	WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
 	entity list_first = findchainfloat(WarpZone_findradius_hit, 1);
-	FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
+	FOREACH_LIST(list, chain, true,
+	{
+		it.WarpZone_findradius_hit = 0;
+		++found_by_WarpZone_FindRadius_count;
+		print(sprintf(" %d", etof(it)));
+	});
+	print("\n");
+	if (found_by_WarpZone_FindRadius_count != found_by_findradius_count)
+		LOG_INFOF("^6 ERROR: count mismatch: %d != %d\n", found_by_findradius_count, found_by_WarpZone_FindRadius_count);
+	FOREACH_LIST(list, chain, true,
+	{
+		if (!it.found_by_findradius)
+		{
+			LOG_INFOF("^6 ERROR: %d found by WarpZone_FindRadius but not found by findradius\n", etof(it));
+			LOG_INFOF("^6  radius       = %f\n", rad);
+			LOG_INFOF("^6  ent distance = %f\n", vlen(it.origin - org));
+		}
+		it.found_by_findradius = false;
+	});
 	return list_first;
 }
 
