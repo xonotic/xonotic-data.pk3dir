@@ -8,6 +8,9 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
 	vector org = vec3(floor(this.origin.x), floor(this.origin.y), floor(this.origin.z));
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
+
+	WriteByte(MSG_ENTITY, etof(this.realowner)); // attacker
+
 	WriteShort(MSG_ENTITY, this.projectiledeathtype);
 	WriteVector(MSG_ENTITY, org);
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
@@ -32,12 +35,12 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 	return true;
 }
 
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, float force, vector dir, int deathtype, float bloodtype, entity dmg_owner)
 {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
 
-	if(!sound_allowed(MSG_BROADCAST, dmgowner))
+	if(!sound_allowed(MSG_BROADCAST, dmg_owner))
 		deathtype |= 0x8000;
 
 	entity e = new_pure(damageinfo);
@@ -55,14 +58,16 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 		rad = -rad;
 	}
 	e.dmg_radius = rad;
-	e.dmg_force = vlen(force);
-	e.velocity = (e.dmg_force ? force / e.dmg_force : '0 0 0');
+	e.dmg_force = force;
+	e.velocity = dir;
 
 	e.species = bloodtype & BITS(4); // it only uses bits from 0 to 3, see SPECIES_* constants
 	if(rad_negative)
 		e.species |= BIT(7);
 
-	e.colormap = (teamplay) ? dmgowner.team : dmgowner.clientcolors; // NOTE: doesn't work on non-clients
+	e.colormap = (teamplay) ? dmg_owner.team : dmg_owner.clientcolors; // NOTE: doesn't work on non-clients
+
+	e.realowner = dmg_owner; // attacker
 
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -209,6 +214,9 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	int species, forcemul;
 	vector force_dir, force, thisforce;
 
+	int attacker = ReadByte() - 1;
+	entity attacker_entcs = entcs_receiver(attacker);
+
 	w_deathtype = ReadShort();
 	w_issilent = (w_deathtype & 0x8000);
 	w_deathtype = (w_deathtype & 0x7FFF);
@@ -300,11 +308,24 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if(it != csqcplayer && (it.isplayermodel & ISPLAYER_MODEL))
+		if (it.entnum && it.entnum < 255 // only players
+		&& it.entnum - 1 == current_player && attacker != current_player
+		&& !autocvar_chase_active && autocvar_cl_hit_indicator)
+		{
+			if (rad)
+				thisforce = normalize(it.origin - w_org);
+			else if (attacker_entcs)
+				thisforce = normalize(it.origin - attacker_entcs.origin);
+			else
+				thisforce = force;
+			HitIndicatorUpdate(attacker_entcs, thedamage, thisforce, rad_negative);
+		}
+
+		if(it != csqcplayer && it.entnum && it.entnum < 255)
 			hitplayer = true; // this impact damaged another player
 	});
 
-	if(DEATH_ISVEHICLE(w_deathtype))
+	if(DEATH_ISVEHICLE(w_deathtype) && !(w_deathtype & HITTYPE_SPAM))
 	{
 		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
@@ -378,7 +399,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	}
 
 
-	if(DEATH_ISTURRET(w_deathtype))
+	if(DEATH_ISTURRET(w_deathtype) && !(w_deathtype & HITTYPE_SPAM))
 	{
 		traceline(w_org - force_dir * 16, w_org + force_dir * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
@@ -436,7 +457,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	MUTATOR_CALLHOOK(DamageInfo, this, w_deathtype, w_org);
 
 	// TODO spawn particle effects and sounds based on w_deathtype
-	if(!DEATH_ISSPECIAL(w_deathtype))
+	if(!(DEATH_ISSPECIAL(w_deathtype) || w_deathtype & HITTYPE_SPAM))
 	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
 		Weapon hitwep = DEATH_WEAPONOF(w_deathtype);

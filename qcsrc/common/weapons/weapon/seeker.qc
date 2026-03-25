@@ -411,7 +411,9 @@ void W_Seeker_Tag_Explode(entity this)
 {
 	//if (other == this.realowner)
 	//	return;
-	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
+	float force = vlen(this.velocity);
+	vector dir = (force ? this.velocity / force : '0 0 0');
+	Damage_DamageInfo(this.origin, 0, 0, 0, force, dir, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
 
 	delete(this);
 }
@@ -429,14 +431,14 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
 
-	vector dir;
-	dir = normalize(this.realowner.origin - this.origin);
 	vector org2 = findbetterlocation(this.origin, 8);
 
 	te_knightspike(org2);
 
 	this.event_damage = func_null;
-	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
+	float force = vlen(this.velocity);
+	vector dir = (force ? this.velocity / force : '0 0 0');
+	Damage_DamageInfo(this.origin, 0, 0, 0, force, dir, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
 
 	if (toucher.takedamage == DAMAGE_AIM && !IS_DEAD(toucher))
 	{

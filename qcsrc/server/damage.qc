@@ -739,7 +739,7 @@ float RadiusDamageForSource(
 	float total_damage_to_creatures = 0;
 
 	vector force;
-	if (!(deathtype & (HITTYPE_SOUND | HITTYPE_SPAM))) // do not send bandwidth-hogging radial spam attacks
+	if (!(deathtype & HITTYPE_SOUND)) // do not send bandwidth-hogging radial spam attacks
 	{
 		force = inflictorvelocity;
 		if (force == '0 0 0')
@@ -747,9 +747,9 @@ float RadiusDamageForSource(
 		else
 			force = normalize(force);
 		if (forceintensity >= 0)
-			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
+			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity, force, deathtype, 0, attacker);
 		else
-			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
+			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, -forceintensity, force, deathtype, 0, attacker);
 	}
 
 	entity targ = WarpZone_FindRadius(inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, false);
