@@ -2,6 +2,8 @@
 
 #include "oo.qh"
 
+// Only creates entities when they're needed (.m_get)
+
 CLASS(Lazy, Object)
 	ATTRIB(Lazy, m_get, entity());
 	CONSTRUCTOR(Lazy, entity() _compute)

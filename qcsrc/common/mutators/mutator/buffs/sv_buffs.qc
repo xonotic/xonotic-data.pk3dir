@@ -689,13 +689,15 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {
-	if (autocvar_g_buffs > 0) // only report as a mutator if they're enabled
+	// Only report as a mutator if they're enabled,
+	// ... and they're not replacing powerups (powerups mutator adds the string for that)
+	if (autocvar_g_buffs > 0 && !autocvar_g_buffs_replace_powerups)
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Buffs");
 }
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 {
-	if (autocvar_g_buffs > 0)
+	if (autocvar_g_buffs > 0 && !autocvar_g_buffs_replace_powerups)
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Buffs");
 }
 
