@@ -133,7 +133,7 @@ string species_prefix(int specnum)
 	}
 }
 
-void DamageEffect(entity this, vector hitorg, float thedamage, int type, int specnum)
+void DamageEffect(entity this, vector org, float damage, int type, int specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
@@ -159,7 +159,7 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 			continue; // player model bone blacklist
 
 		// now choose the bone closest to impact origin
-		if(nearestbone == 0 || vlen2(hitorg - gettaginfo(this, tagnum)) <= vlen2(hitorg - gettaginfo(this, nearestbone)))
+		if(nearestbone == 0 || vlen2(org - gettaginfo(this, tagnum)) <= vlen2(org - gettaginfo(this, nearestbone)))
 			nearestbone = tagnum;
 	}
 	gettaginfo(this, nearestbone); // set gettaginfo_name
@@ -177,7 +177,7 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 			return; // allow a single damage on non-skeletal models
 	}
 
-	life = bound(autocvar_cl_damageeffect_lifetime_min, thedamage * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
+	life = bound(autocvar_cl_damageeffect_lifetime_min, damage * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
 	wep = DEATH_WEAPONOF(type);
 	string effectname = wep.wr_damageeffect_getname ? wep.wr_damageeffect_getname(wep) : strcat("damage_", wep.netname);
@@ -207,54 +207,29 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 	++this.total_damages;
 }
 
-NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
+void Damage_DamageInfo_Apply(entity this, int attacker, vector org, float damage, float edgedamage, float rad,
+                             bool rad_negative, float vlen_force, vector force_dir, int deathtype, bool issilent,
+                             float species, int colors)
 {
-	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
-	int species, forcemul;
-	vector force_dir, force, thisforce;
-
-	int attacker = ReadByte() - 1;
 	entity attacker_entcs = entcs_receiver(attacker);
 
-	w_deathtype = ReadShort();
-	w_issilent = (w_deathtype & 0x8000);
-	w_deathtype = (w_deathtype & 0x7FFF);
+	w_deathtype = deathtype;
+	w_issilent = issilent;
+	w_org = org;
 
-	w_org = ReadVector();
-
-	thedamage = ReadByte();
-	rad = ReadByte();
-	edge = ReadByte();
-
-	// map [-127, 127] back to [-1, 1]
-	force_dir.x = ReadChar() / BITS(7);
-	force_dir.y = ReadChar() / BITS(7);
-	force_dir.z = ReadChar() / BITS(7);
 	if (force_dir == '0 0 0')
 		force_dir = '0 0 -1';
+	vector force = force_dir * vlen_force;
 
-	int vlen_force = ReadByte() * 4 + 2; // + 2 rounds the value and makes it > 0 so that decals can always work
-	force = force_dir * vlen_force;
+	int forcemul = (rad_negative ? -1 : 1);
 
-	species = ReadByte();
-	bool rad_negative = boolean(species & BIT(7));
-	species = (species & BITS(4));
-
-	int dmg_colors = ReadByte();
-
-	return = true;
-
-	if (!isNew)
-		return;
-
-	forcemul = (rad_negative ? -1 : 1);
 	// team color logic copied from projectiles
-	int tcolor = dmg_colors;
+	int tcolor = colors;
 	if(teamplay)
 	{
-		if(dmg_colors)
-			tcolor = (dmg_colors - 1) * 0x11;
+		if(colors)
+			tcolor = (colors - 1) * 0x11;
 		else
 			tcolor = 0x00;
 		tcolor |= BIT(10); // RENDER_COLORMAPPED
@@ -265,6 +240,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	particles_colormax = colormapPaletteColor(tcolor % 16, true);
 
 	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity && !is_pure(it), {
+		float thisdmg;
+		vector thisforce;
 		vector nearest = NearestPointOnBox(it, w_org);
 		if (rad)
 		{
@@ -273,10 +250,10 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				continue;
 			if(thisdmg < 0)
 				thisdmg = 0;
-			if(thedamage)
+			if(damage)
 			{
-				thisdmg = thedamage + (edge - thedamage) * thisdmg;
-				thisforce = forcemul * vlen_force * (thisdmg / thedamage) * normalize(it.origin - w_org);
+				thisdmg = damage + (edgedamage - damage) * thisdmg;
+				thisforce = forcemul * vlen_force * (thisdmg / damage) * normalize(it.origin - w_org);
 			}
 			else
 			{
@@ -289,7 +266,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 			if(vdist((nearest - w_org), >, bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)))
 				continue;
 
-			thisdmg = thedamage;
+			thisdmg = damage;
 			thisforce = forcemul * force;
 		}
 
@@ -318,7 +295,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				thisforce = normalize(it.origin - attacker_entcs.origin);
 			else
 				thisforce = force;
-			HitIndicatorUpdate(attacker_entcs, thedamage, thisforce, rad_negative);
+			HitIndicatorUpdate(attacker_entcs, damage, thisforce, rad_negative);
 		}
 
 		if(it != csqcplayer && it.entnum && it.entnum < 255)
@@ -397,7 +374,6 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				break;
 		}
 	}
-
 
 	if(DEATH_ISTURRET(w_deathtype) && !(w_deathtype & HITTYPE_SPAM))
 	{
@@ -480,6 +456,44 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				hitwep.wr_impacteffect(hitwep, this);
 		}
 	}
+}
+
+NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
+{
+	int attacker = ReadByte() - 1;
+
+	int deathtype = ReadShort();
+	bool issilent = (deathtype & 0x8000);
+	deathtype = (deathtype & 0x7FFF);
+
+	vector org = ReadVector();
+
+	int damage = ReadByte();
+	int rad = ReadByte();
+	int edgedamage = ReadByte();
+
+	// map [-127, 127] back to [-1, 1]
+	vector force_dir;
+	force_dir.x = ReadChar() / BITS(7);
+	force_dir.y = ReadChar() / BITS(7);
+	force_dir.z = ReadChar() / BITS(7);
+
+	int vlen_force = ReadByte() * 4 + 2; // + 2 rounds the value and makes it > 0 so that decals can always work
+
+	int species = ReadByte();
+	bool rad_negative = boolean(species & BIT(7));
+	species = (species & BITS(4));
+
+	int colors = ReadByte();
+
+	return = true;
+
+	if (!isNew)
+		return;
+
+	Damage_DamageInfo_Apply(
+		this, attacker, org, damage, edgedamage, rad, rad_negative,
+		vlen_force, force_dir, deathtype, issilent, species, colors);
 }
 
 #endif

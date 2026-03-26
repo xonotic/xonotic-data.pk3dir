@@ -718,6 +718,9 @@ METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor, .entity weaponent
 #endif // SVQC
 #ifdef CSQC
 
+entity DamageInfo_ent;
+STATIC_INIT(arc_damageinfo) { DamageInfo_ent = new(DamageInfo); }
+
 bool autocvar_cl_arcbeam_simple = true;
 
 .int beam_slot;
@@ -1071,6 +1074,27 @@ void Draw_ArcBeam(entity this)
 			-WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir),
 			dt * 2
 		);
+
+	// the this.beam_type == ARC_BT_HIT check excludes teammate healing (this.beam_type == ARC_BT_HEAL)
+	if (trace_fraction < 1 && trace_ent && trace_ent.entnum && this.beam_type == ARC_BT_HIT)
+	{
+		float falloff = 1;
+		if (WEP_CVAR(WEP_ARC, beam_falloff_halflifedist))
+		{
+			float dist = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - original_start_pos);
+			falloff = ExponentialFalloff(
+				WEP_CVAR(WEP_ARC, beam_falloff_mindist),
+				WEP_CVAR(WEP_ARC, beam_falloff_maxdist),
+				WEP_CVAR(WEP_ARC, beam_falloff_halflifedist),
+				dist
+			);
+		}
+		// .team + 1 due to mismatching server and client team numbers
+		int colors = (teamplay) ? playerslots[this.sv_entnum - 1].team + 1 : entcs_GetClientColors(this.sv_entnum - 1);
+		Damage_DamageInfo_Apply(DamageInfo_ent, this.sv_entnum - 1, last_origin, WEP_CVAR(WEP_ARC, beam_damage) * falloff, 0, 0,
+			false, WEP_CVAR_SEC(WEP_SHOTGUN, force), WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir),
+			WEP_ARC.m_id, false, trace_ent.species, colors);
+	}
 
 	if (this.beam_hitlight[0])
 		adddynamiclight(
