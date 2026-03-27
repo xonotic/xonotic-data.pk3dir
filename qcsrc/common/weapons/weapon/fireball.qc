@@ -86,15 +86,14 @@ void W_Fireball_TouchExplode(entity this, entity toucher)
 	W_Fireball_Explode(this, toucher);
 }
 
-void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float edgedamage, float burntime)
+void W_Fireball_LaserPlay(entity this, float rad, float damage, float edgedamage, float burntime)
 {
 	if (damage <= 0)
 		return;
 
 	RandomSelection_Init();
-	vector p;
 	float d;
-	for (entity e = WarpZone_FindRadius(this.origin, dist, true); e; e = e.chain)
+	for (entity e = WarpZone_FindRadius(this.origin, rad, true); e; e = e.chain)
 	{
 		if (STAT(FROZEN, e) || StatusEffects_active(STATUSEFFECT_Frozen, e)
 		|| e == this.realowner || IS_INDEPENDENT_PLAYER(e)
@@ -102,12 +101,12 @@ void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float
 		|| (IS_PLAYER(e) && this.realowner && SAME_TEAM(e, this)))
 			continue;
 
-		p = e.origin;
+		vector p = e.origin;
 		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
 		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
 		p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
 		d = vlen(WarpZone_UnTransformOrigin(e, this.origin) - p);
-		if (d < dist)
+		if (d < rad)
 		{
 			e.fireball_impactvec = p;
 			RandomSelection_AddEnt(e, 1 / (1 + d), !StatusEffects_active(STATUSEFFECT_Burning, e));
@@ -116,7 +115,7 @@ void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float
 	if (RandomSelection_chosen_ent)
 	{
 		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
-		d = damage + (edgedamage - damage) * (d / dist);
+		d = damage + (edgedamage - damage) * (d / rad);
 		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, d * burntime, burntime, this.projectiledeathtype | HITTYPE_BOUNCE);
 		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.fireball_impactvec);
 		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.fireball_impactvec - this.origin, 1);
@@ -133,7 +132,11 @@ void W_Fireball_Think(entity this)
 		return;
 	}
 
-	W_Fireball_LaserPlay(this, 0.1, WEP_CVAR_PRI(WEP_FIREBALL, laserradius), WEP_CVAR_PRI(WEP_FIREBALL, laserdamage), WEP_CVAR_PRI(WEP_FIREBALL, laseredgedamage), WEP_CVAR_PRI(WEP_FIREBALL, laserburntime));
+	W_Fireball_LaserPlay(this,
+		WEP_CVAR_PRI(WEP_FIREBALL, laserradius),
+		WEP_CVAR_PRI(WEP_FIREBALL, laserdamage),
+		WEP_CVAR_PRI(WEP_FIREBALL, laseredgedamage),
+		WEP_CVAR_PRI(WEP_FIREBALL, laserburntime));
 
 	this.nextthink = time + 0.1;
 }
@@ -251,7 +254,11 @@ void W_Fireball_Firemine_Think(entity this)
 			this.cnt = 0;
 	}
 
-	W_Fireball_LaserPlay(this, 0.1, WEP_CVAR_SEC(WEP_FIREBALL, laserradius), WEP_CVAR_SEC(WEP_FIREBALL, laserdamage), WEP_CVAR_SEC(WEP_FIREBALL, laseredgedamage), WEP_CVAR_SEC(WEP_FIREBALL, laserburntime));
+	W_Fireball_LaserPlay(this,
+		WEP_CVAR_SEC(WEP_FIREBALL, laserradius),
+		WEP_CVAR_SEC(WEP_FIREBALL, laserdamage),
+		WEP_CVAR_SEC(WEP_FIREBALL, laseredgedamage),
+		WEP_CVAR_SEC(WEP_FIREBALL, laserburntime));
 
 	this.nextthink = time + 0.1;
 }
