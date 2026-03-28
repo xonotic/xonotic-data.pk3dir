@@ -1,5 +1,6 @@
 REGISTER_DEATHTYPE(AUTOTEAMCHANGE,        DEATH_SELF_AUTOTEAMCHANGE,      NULL,                          NULL,                 NULL,                   "")
-REGISTER_DEATHTYPE(BUFF,                  NULL,                           DEATH_MURDER_BUFF,             NULL,                 NULL,                   "")
+REGISTER_DEATHTYPE(BUFF_INFERNO,          NULL,                           DEATH_MURDER_BUFF_INFERNO,     NULL,                 NULL,                   "")
+REGISTER_DEATHTYPE(BUFF_VENGEANCE,        NULL,                           DEATH_MURDER_BUFF_VENGEANCE,   NULL,                 NULL,                   "")
 REGISTER_DEATHTYPE(CAMP,                  DEATH_SELF_CAMP,                NULL,                          NULL,                 NULL,                   "")
 REGISTER_DEATHTYPE(CHEAT,                 DEATH_SELF_CHEAT,               DEATH_MURDER_CHEAT,            NULL,                 NULL,                   "")
 REGISTER_DEATHTYPE(CUSTOM,                DEATH_SELF_CUSTOM,              NULL,                          NULL,                 NULL,                   "")
