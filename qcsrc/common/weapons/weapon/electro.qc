@@ -109,19 +109,20 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 		}
 }
 
+const float ELECTRO_COMBO_OVERTIME_DELAY = 0.0625; // (1/16) exact multiple of default frametime 0.015625 (1/64)
 void W_Electro_ExplodeComboThink(entity this)
 {
-	if (time >= this.ltime)
-	{
-		delete(this);
-		return;
-	}
+	// NOTE: W_Hook_ExplodeThink uses similar code, please keep them in sync
+	float dt = time - this.teleport_time;
 
-	this.nextthink = time;
+	float dmg_remaining_next = bound(0, 1 - dt / WEP_CVAR(WEP_ELECTRO, combo_duration), 1);
+
+	float f = this.dmg_last - dmg_remaining_next;
+	this.dmg_last = dmg_remaining_next;
 
 	RadiusDamage(this, this.realowner,
-		PHYS_INPUT_TIMELENGTH * WEP_CVAR(WEP_ELECTRO, combo_damage),
-		PHYS_INPUT_TIMELENGTH * WEP_CVAR(WEP_ELECTRO, combo_edgedamage),
+		f * WEP_CVAR(WEP_ELECTRO, combo_damage),
+		f * WEP_CVAR(WEP_ELECTRO, combo_edgedamage),
 		WEP_CVAR(WEP_ELECTRO, combo_radius),
 		NULL,
 		NULL,
@@ -131,6 +132,11 @@ void W_Electro_ExplodeComboThink(entity this)
 		NULL
 	);
 	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
+
+	if (dt < WEP_CVAR(WEP_ELECTRO, combo_duration))
+		this.nextthink = time + ELECTRO_COMBO_OVERTIME_DELAY;
+	else
+		delete(this);
 }
 
 void W_Electro_Orb_ExplodeOverTime(entity this)
@@ -147,15 +153,13 @@ void W_Electro_Orb_ExplodeOverTime(entity this)
 	newproj.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_BOUNCE; // use THIS type for a combo because primary can't bounce
 
 	setthink(newproj, W_Electro_ExplodeComboThink);
-	newproj.nextthink = time;
-	newproj.ltime = time + WEP_CVAR(WEP_ELECTRO, combo_duration);
+	newproj.nextthink = time + ELECTRO_COMBO_OVERTIME_DELAY;
+	newproj.teleport_time = time;
+	newproj.dmg_last = 1;
 	set_movetype(newproj, MOVETYPE_NONE);
 
 	Net_LinkEntity(newproj, true, 0, electro_orb_send);
 	newproj.SendFlags = 0xFFFFFF;
-
-	// fire the first damage tick immediately
-	getthink(newproj)(newproj);
 }
 
 void W_Electro_ExplodeCombo(entity this)

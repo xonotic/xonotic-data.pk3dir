@@ -38,6 +38,8 @@ entity navigation_bestgoal;
 .entity nearestwaypoint;
 .float nearestwaypointtimeout;
 
+.float dmg; // for danger detection
+
 /*
 // item it is linked from waypoint it.wpXX (INCOMING link)
 // links are sorted by their cost (wpXXmincost)

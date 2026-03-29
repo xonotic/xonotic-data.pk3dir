@@ -27,7 +27,6 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 void WarpZone_Camera_SetUp(entity e, vector my_org, vector my_ang);
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig);
-vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org);
 
 entity WarpZone_Find(vector mi, vector ma);
 void WarpZone_MakeAllSolid();
