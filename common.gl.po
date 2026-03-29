@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-03 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020\n"
+"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2026\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -4753,7 +4753,7 @@ msgstr "^BG%s%s^K1 foi explotado pola ^BG%s^K1 granada%s%s"
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 couldn't find the light in ^BG%s^K1's Darkness Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 foi consumido pola granada de escuridade de ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
@@ -5580,7 +5580,7 @@ msgstr "^F1Supervivintes^BG gañan a rolda"
 #: qcsrc/common/notifications/all.inc:466
 #: qcsrc/common/notifications/all.inc:822
 msgid "^K2You're not allowed to join a stronger team!"
-msgstr ""
+msgstr "^K2Non tes permitido unirte a un equipo máis forte!"
 
 #: qcsrc/common/notifications/all.inc:467
 #: qcsrc/common/notifications/all.inc:823
@@ -8686,12 +8686,18 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after some time they will self-detonate."
 msgstr ""
+"O %s coloca  minas no chan ao disparar, que detonan e danan aos inimigos se "
+"as pisan. Só se poden colocar unhas poucas minas ao mesmo tempo, e tras un "
+"tempo autodetónanse."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:555
 msgid ""
 "Uniquely, the mines explode sooner the closer an enemy comes to them. The "
 "secondary fire can be used to detonate all mines placed by the primary fire."
 msgstr ""
+"De forma única, as minas explotan máis rápido canto máis se achega un "
+"inimigo a elas. O disparo secundario pódese usar para detonar todas as minas "
+"colocadas polo disparo primario."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format
