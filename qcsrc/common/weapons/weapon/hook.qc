@@ -2,7 +2,7 @@
 
 #ifdef SVQC
 
-const float HOOK_SECONDARY_DELAY = 0.05;
+const float HOOK_SECONDARY_DELAY = 0.0625; // (1/16) exact multiple of default frametime 0.015625 (1/64)
 void W_Hook_ExplodeThink(entity this)
 {
 	// NOTE: W_Electro_ExplodeComboThink uses similar code, please keep them in sync

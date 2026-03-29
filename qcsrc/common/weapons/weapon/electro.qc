@@ -109,7 +109,7 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 		}
 }
 
-const float ELECTRO_COMBO_OVERTIME_DELAY = 0.05;
+const float ELECTRO_COMBO_OVERTIME_DELAY = 0.0625; // (1/16) exact multiple of default frametime 0.015625 (1/64)
 void W_Electro_ExplodeComboThink(entity this)
 {
 	// NOTE: W_Hook_ExplodeThink uses similar code, please keep them in sync
