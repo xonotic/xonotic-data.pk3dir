@@ -1090,8 +1090,9 @@ void Draw_ArcBeam(entity this)
 			);
 		}
 		// .team + 1 due to mismatching server and client team numbers
-		int colors = (teamplay) ? playerslots[this.sv_entnum - 1].team + 1 : entcs_GetClientColors(this.sv_entnum - 1);
-		Damage_DamageInfo_Apply(DamageInfo_ent, this.sv_entnum - 1, last_origin, WEP_CVAR(WEP_ARC, beam_damage) * falloff, 0, 0,
+		int entnum = this.sv_entnum - 1;
+		int colors = (teamplay) ? playerslots[entnum].team + 1 : entcs_GetClientColors(entnum);
+		Damage_DamageInfo_Apply(DamageInfo_ent, entnum, last_origin, WEP_CVAR(WEP_ARC, beam_damage) * falloff, 0, 0,
 			false, WEP_CVAR_SEC(WEP_SHOTGUN, force), WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir),
 			WEP_ARC.m_id, false, trace_ent.species, colors);
 	}

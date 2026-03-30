@@ -220,6 +220,8 @@ void Damage_DamageInfo_Apply(entity this, int attacker, vector org, float damage
 
 	if (force_dir == '0 0 0')
 		force_dir = '0 0 -1';
+	if (vlen_force < 1)
+		vlen_force = 1;
 	vector force = force_dir * vlen_force;
 
 	int forcemul = (rad_negative ? -1 : 1);

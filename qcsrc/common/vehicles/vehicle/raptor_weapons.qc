@@ -147,7 +147,7 @@ void raptor_bomb_burst(entity this)
 		}
 	}
 
-	Damage_DamageInfo(this.origin, 0, 0, 0, 0, norm_vel, DEATH_VH_RAPT_FRAGMENT.m_id, 0, this);
+	Damage_DamageInfo(this.origin, 0, 0, 0, 1, norm_vel, DEATH_VH_RAPT_FRAGMENT.m_id, 0, this);
 
 	entity bomblet;
 	float speed = vlen(this.velocity);
