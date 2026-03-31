@@ -94,7 +94,7 @@ spawnfunc(trigger_viewlocation)
 	// we won't check target2 here yet, as it may not even need to exist
 	if(this.target == "") { LOG_INFO("^1FAIL!"); delete(this); return; }
 
-	WarpZoneLib_ExactTrigger_Init(this, false);
+	WarpZoneLib_ExactTrigger_Init(this, false, true);
 	InitializeEntity(this, viewloc_init, INITPRIO_FINDTARGET);
 }
 
