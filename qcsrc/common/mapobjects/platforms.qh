@@ -6,6 +6,7 @@ const int PLAT_LOW_TRIGGER = BIT(0);
 .float dmg;
 .float dmgtime;
 .float dmgtime2;
+.entity last_dmger;
 
 .float phase;
 
