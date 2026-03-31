@@ -18,4 +18,14 @@ spawnfunc(trigger_gamestart)
 	setthink(this, func_null);
 	InitializeEntity(this, gamestart_think, INITPRIO_LAST);
 }
+
+/*QUAKED trigger_always (.5 .5 .5) (-8 -8 -8) (8 8 8)
+This trigger will always fire.  It is activated by the world.
+*/
+spawnfunc(trigger_always)
+{
+	// Q3: we must have some delay to make sure our use targets are present
+	this.wait = 0.3;
+	spawnfunc_trigger_gamestart(this);
+}
 #endif
