@@ -240,16 +240,21 @@ spawnfunc(func_train)
 		return;
 	this.effects |= EF_LOWPRECISION;
 
-	if(this.spawnflags & TRAIN_NEEDACTIVATION)
-		this.use = train_use;
-
-	if (this.spawnflags & TRAIN_TURN)
-	{
-		this.platmovetype_turn = true;
-		this.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
-	}
+	if (q3compat)
+		this.spawnflags = 0; // Q3 defines 3 spawnflags but they lack enough code to work.
 	else
-		this.view_ofs = this.mins;
+	{
+		if (this.spawnflags & TRAIN_NEEDACTIVATION)
+			this.use = train_use;
+
+		if (this.spawnflags & TRAIN_TURN)
+		{
+			this.platmovetype_turn = true;
+			this.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
+		}
+		else
+			this.view_ofs = this.mins;
+	}
 
 	// wait for targets to spawn
 	InitializeEntity(this, func_train_find, INITPRIO_FINDTARGET);
@@ -257,7 +262,7 @@ spawnfunc(func_train)
 	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
-    if(this.dmg && (this.message2 == ""))
+	if(this.dmg && (this.message2 == ""))
 		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
