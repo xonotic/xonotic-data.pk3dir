@@ -75,4 +75,4 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 
 void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor, .entity weaponentity, int fire) func);
 
-//REPLICATE_APPLYCHANGE("cl_gunalign", { W_ResetGunAlign(this, store.cvar_cl_gunalign); });
+//REPLICATE_APPLYCHANGE("cl_gunalign", W_ResetGunAlign(this, store.cvar_cl_gunalign));

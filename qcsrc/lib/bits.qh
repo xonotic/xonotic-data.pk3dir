@@ -27,23 +27,23 @@ int lowestbit(int f)
 ERASEABLE
 int randombit(int bits)
 {
-	if (!(bits & (bits - 1)))  // this ONLY holds for powers of two!
+	if (!(bits & (bits - 1))) // this ONLY holds for powers of two!
 		return bits;
 
 	int r = random();
 	int b = 0;
 	int n = 0;
-
 	for (int f = 1; f <= bits; f *= 2)
-	{
 		if (bits & f)
 		{
 			++n;
 			r *= n;
-			if (r <= 1) b = f;
-			else r = (r - 1) / (n - 1);
+			if (r <= 1)
+				b = f;
+			else
+				r = (r - 1) / (n - 1);
 		}
-	}
+
 	return b;
 }
 
@@ -56,8 +56,8 @@ int randombits(int bits, int k, bool error_return)
 		r += randombit(bits - r);
 		--k;
 	}
-	if (error_return)
-		if (k > 0) return -1;
+	if (error_return && k > 0)
+		return -1;
 	// all
 	return r;
 }
@@ -73,7 +73,8 @@ void randombit_test(int bits, int iter)
 }
 */
 
-enum {
+enum
+{
 	OP_SET,
 	OP_MIN,
 	OP_MAX,
@@ -88,18 +89,23 @@ bool GiveBit(entity e, .int fld, int bit, int op, int val)
 	switch (op)
 	{
 		case OP_SET:
-			if (val > 0) e.(fld) |= bit;
-			else e.(fld) &= ~bit;
+			if (val > 0)
+				e.(fld) |= bit;
+			else
+				e.(fld) &= ~bit;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
-			if (val > 0) e.(fld) |= bit;
+			if (val > 0)
+				e.(fld) |= bit;
 			break;
 		case OP_MAX:
-			if (val <= 0) e.(fld) &= ~bit;
+			if (val <= 0)
+				e.(fld) &= ~bit;
 			break;
 		case OP_MINUS:
-			if (val > 0) e.(fld) &= ~bit;
+			if (val > 0)
+				e.(fld) &= ~bit;
 			break;
 	}
 	int v1 = (e.(fld) & bit);

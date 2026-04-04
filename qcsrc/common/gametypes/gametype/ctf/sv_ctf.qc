@@ -2621,11 +2621,6 @@ MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ctf, TeamBalance_CheckAllowedTeams)
-{
-	M_ARGV(1, string) = "ctf_team";
-}
-
 MUTATOR_HOOKFUNCTION(ctf, GetRecords)
 {
 	int record_page = M_ARGV(0, int);
@@ -2671,10 +2666,10 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 		{
 			switch(argv(1))
 			{
-				case "red":    if(ctf_teams & BIT(0)) _team = NUM_TEAM_1; break;
-				case "blue":   if(ctf_teams & BIT(1)) _team = NUM_TEAM_2; break;
-				case "yellow": if(ctf_teams & BIT(2)) _team = NUM_TEAM_3; break;
-				case "pink":   if(ctf_teams & BIT(3)) _team = NUM_TEAM_4; break;
+				case "red":    if(teamplay_bitmask & BIT(0)) _team = NUM_TEAM_1; break;
+				case "blue":   if(teamplay_bitmask & BIT(1)) _team = NUM_TEAM_2; break;
+				case "yellow": if(teamplay_bitmask & BIT(2)) _team = NUM_TEAM_3; break;
+				case "pink":   if(teamplay_bitmask & BIT(3)) _team = NUM_TEAM_4; break;
 			}
 		}
 
@@ -2863,19 +2858,9 @@ void ctf_ScoreRules(int teams)
 	});
 }
 
-// code from here on is just to support maps that don't have flag and team entities
-void ctf_SpawnTeam (string teamname, int teamcolor)
-{
-	entity this = new_pure(ctf_team);
-	this.netname = teamname;
-	this.cnt = teamcolor - 1;
-	this.spawnfunc_checked = true;
-	this.team = teamcolor;
-}
-
 void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
-	ctf_teams = 0;
+	int ctf_teams = 0;
 
 	IL_EACH(g_flags, true,
 	{
@@ -2904,18 +2889,7 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	//ctf_teams = bound(2, ctf_teams, 4);
 
 	// if no teams are found, spawn defaults
-	if(find(NULL, classname, "ctf_team") == NULL)
-	{
-		LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.");
-		if(ctf_teams & BIT(0))
-			ctf_SpawnTeam("Red", NUM_TEAM_1);
-		if(ctf_teams & BIT(1))
-			ctf_SpawnTeam("Blue", NUM_TEAM_2);
-		if(ctf_teams & BIT(2))
-			ctf_SpawnTeam("Yellow", NUM_TEAM_3);
-		if(ctf_teams & BIT(3))
-			ctf_SpawnTeam("Pink", NUM_TEAM_4);
-	}
+	Team_MapEnts_FindOrSpawn("ctf_team", ctf_teams);
 
 	ctf_ScoreRules(ctf_teams);
 }

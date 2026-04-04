@@ -3,8 +3,6 @@
 bool autocvar_g_allow_checkpoints;
 string autocvar_sv_checkpoint_house_url;
 
-float race_teams;
-
 // scores
 const float ST_RACE_LAPS = 1;
 

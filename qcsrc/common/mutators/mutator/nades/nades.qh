@@ -67,9 +67,6 @@ Nade Nade_FromProjectile(int proj)
 	FOREACH(Nades, it.m_projectile[0] == proj || it.m_projectile[1] == proj, return it);
 	return NADE_TYPE_Null;
 }
-
-.float orb_lifetime;
-.float orb_radius;
 #endif // GAMEQC
 
 #include "all.inc"

@@ -1,7 +1,6 @@
 #pragma once
 
 #ifdef GAMEQC
-
 	#include "oo.qh"
 	#include "self.qh"
 
@@ -9,7 +8,7 @@
 	classfield(Defer).entity owner;
 	classfield(Defer).void(entity) defer_func;
 
-	/** Remove entity */
+	/// Remove entity
 	void SUB_Remove(entity this)
 	{
 		delete(this);
@@ -22,17 +21,14 @@
 		this.defer_func(this.owner);
 	}
 
-    /**
-     * Execute func() after time + fdelay.
-     * self when func is executed = self when defer is called
-     */
+	/// Execute func() after time + fdelay.
+	/// self when func is executed = self when defer is called
 	void defer(entity this, float fdelay, void(entity) func)
 	{
-		entity e    = new_pure(deferred);
-		e.owner     = this;
+		entity e = new_pure(deferred);
+		e.owner = this;
 		e.defer_func = func;
 		setthink(e, defer_think);
 		e.nextthink = time + fdelay;
 	}
-
-#endif
+#endif // GAMEQC

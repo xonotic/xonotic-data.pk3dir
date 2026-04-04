@@ -51,14 +51,26 @@ const int STATS_ENGINE_RESERVE = 32;
 int g_magic_stats_hole = 0;
 
 #define MAGIC_STATS_FIX_MANUAL(it, var, id) \
-	if (it.registered_id == "STAT_" #var) { --g_magic_stats_hole; it.m_id = id; } else
+	if (it.registered_id == "STAT_" #var) \
+	{ \
+		--g_magic_stats_hole; \
+		it.m_id = id; \
+	} \
+	else
 
 #define MAGIC_STATS_FIX_AUTO(it, var, id) \
-	if (it.m_id == id) { ++g_magic_stats_hole; ++it.m_id; }
+	if (it.m_id == id) \
+	{ \
+		++g_magic_stats_hole; \
+		++it.m_id; \
+	}
 
 #define MAGIC_STATS_FIX(it) \
 	it.m_id += g_magic_stats_hole; \
-	MAGIC_STATS(MAGIC_STATS_FIX_MANUAL, it) { MAGIC_STATS(MAGIC_STATS_FIX_AUTO, it) }
+	MAGIC_STATS(MAGIC_STATS_FIX_MANUAL, it) \
+	{ \
+		MAGIC_STATS(MAGIC_STATS_FIX_AUTO, it) \
+	}
 
 #define type_INT     int
 #define type_BOOL    bool
@@ -76,8 +88,8 @@ int g_magic_stats_hole = 0;
 
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
-#if defined(CSQC)
-	/** Get all stats and store them as globals, access with `STAT(ID)` */
+#ifdef CSQC
+	/// Get all stats and store them as globals, access with `STAT(ID)`
 	void stats_get() {}
 	#define STAT(...) EVAL_STAT(OVERLOAD(STAT, __VA_ARGS__))
 	#define EVAL_STAT(...) __VA_ARGS__
@@ -105,10 +117,10 @@ int g_magic_stats_hole = 0;
 				CAT(_STAT(id), _prev) = */ _STAT(id) = it; \
 		}
 	#define REGISTER_STAT_3(id, T, expr) REGISTER_STAT_2(id, T)
-#elif defined(SVQC)
-	/** Internal use only */
+#elifdef SVQC
+	/// Internal use only
 	entity STATS;
-	/** Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat` */
+	/// Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat`
 	void stats_add() {}
 	#define STAT(...) EVAL_STAT(OVERLOAD_(STAT, __VA_ARGS__))
 	#define EVAL_STAT(...) __VA_ARGS__
@@ -138,7 +150,8 @@ int g_magic_stats_hole = 0;
 		STATS = new_pure(stats);
 		// Prevent engine stats being sent
 		int r = STATS_ENGINE_RESERVE;
-		for (int i = 0, n = 256 - r; i < n; ++i) {
+		for (int i = 0, n = 256 - r; i < n; ++i)
+		{
 			#define X(_, name, id) if (i == id) continue;
 			MAGIC_STATS(X, );
 			#undef X
@@ -163,9 +176,20 @@ int g_magic_stats_hole = 0;
 	/** TODO: do we want the global copy to update? */
 	#define REGISTER_STAT_3(id, T, expr) \
 		REGISTER_STAT_2(id, T); \
-		ACCUMULATE void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
-		ACCUMULATE void GlobalStats_updateglobal() { entity this = STATS; STAT(id, this) = (expr); } \
-		STATIC_INIT(worldstat_##id) { entity this = STATS; STAT(id, this) = (expr); }
+		ACCUMULATE void GlobalStats_update(entity this) \
+		{ \
+			STAT(id, this) = (expr); \
+		} \
+		ACCUMULATE void GlobalStats_updateglobal() \
+		{ \
+			entity this = STATS; \
+			STAT(id, this) = (expr); \
+		} \
+		STATIC_INIT(worldstat_##id) \
+		{ \
+			entity this = STATS; \
+			STAT(id, this) = (expr); \
+		}
 #else
 	#define REGISTER_STAT_2(id, T)
 	#define REGISTER_STAT_3(id, T, expr)
@@ -179,11 +203,15 @@ REGISTRY_CHECK(Stats)
 REGISTRY_DEFINE_GET(Stats, NULL)
 STATIC_INIT(Stats_renumber)
 {
-	FOREACH(Stats, true, {
+	FOREACH(Stats, true,
+	{
 		it.m_id = STATS_ENGINE_RESERVE + i;
 		MAGIC_STATS_FIX(it);
 	});
 }
 #ifdef SVQC
-STATIC_INIT(stats_add) { stats_add(); }
+STATIC_INIT(stats_add)
+{
+	stats_add();
+}
 #endif

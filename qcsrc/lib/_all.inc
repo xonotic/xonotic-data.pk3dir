@@ -38,23 +38,23 @@
 #endif
 
 #ifndef QCC_SUPPORT_ALIAS
-    #warning "QCC does not support alias, may not compile correctly"
-    #define ALIAS(var)
+	#warning "QCC does not support alias, may not compile correctly"
+	#define ALIAS(var)
 #else
-    #define ALIAS(var) [[alias(var)]]
+	#define ALIAS(var) [[alias(var)]]
 #endif
 
 #include <dpdefs/pre.qh>
 
-#if defined(CSQC)
+#ifdef CSQC
 	#include <dpdefs/csprogsdefs.qh>
 	#include <dpdefs/keycodes.qh>
-#elif defined(SVQC)
+#elifdef SVQC
 	#include <server/sys-pre.qh>
 	#include <dpdefs/progsdefs.qh>
 	#include <dpdefs/dpextensions.qh>
 	#include <server/sys-post.qh>
-#elif defined(MENUQC)
+#elifdef MENUQC
 	#include <dpdefs/menudefs.qh>
 	#include <dpdefs/keycodes.qh>
 #endif
@@ -62,9 +62,9 @@
 #include <dpdefs/post.qh>
 
 #ifndef QCC_SUPPORT_POW
-    #define pow(a, b) pow(a, b)
+	#define pow(a, b) pow(a, b)
 #else
-    #define pow(a, b) ((a) ** (b))
+	#define pow(a, b) ((a) ** (b))
 #endif
 
 #include "self.qh"
@@ -80,7 +80,8 @@
 	#define TC(T, sym) MACRO_BEGIN MACRO_END
 #else
 	#define TC(T, sym) MACRO_BEGIN \
-		if (!is_##T(sym)) { \
+		if (!is_##T(sym)) \
+		{ \
 			LOG_WARNF("Type check failed: " #sym " :: " #T); \
 			isnt_##T(sym); \
 		} \
@@ -163,7 +164,7 @@
 #define objerror_safe(e)
 #else
 void make_safe_for_remove(entity this);
-    #define objerror_safe(e) make_safe_for_remove(e)
+	#define objerror_safe(e) make_safe_for_remove(e)
 #endif
 
 #define objerror(this, msg) MACRO_BEGIN \
@@ -209,14 +210,17 @@ MACRO_END
 	void _StartFrame();
 	bool _StartFrame_init;
 	void spawnfunc_worldspawn(entity);
-	void StartFrame() {
-		if (!_StartFrame_init) {
+	void StartFrame()
+	{
+		if (!_StartFrame_init)
+		{
 			_StartFrame_init = true;
 			float oldtime = time; time = 1;
 			__spawnfunc_expecting = 2; NULL.__spawnfunc_constructor(NULL);
 			time = oldtime;
-        }
-        if (_StartFrame) _StartFrame();
+		}
+		if (_StartFrame)
+			_StartFrame();
 	}
 	#define StartFrame _StartFrame
 
@@ -279,7 +283,8 @@ MACRO_END
 	void SV_ParseClientCommand(string command)
 	{
 		ENGINE_EVENT();
-		if (_SV_ParseClientCommand) _SV_ParseClientCommand(this, command);
+		if (_SV_ParseClientCommand)
+			_SV_ParseClientCommand(this, command);
 	}
 	#define SV_ParseClientCommand _SV_ParseClientCommand
 #endif

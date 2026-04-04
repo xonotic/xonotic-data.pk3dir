@@ -23,7 +23,8 @@ bool TEST_Run(string s)
 	TEST_fatal = 0;
 	TEST_ok = false;
 	string fn = strcat("_TEST_", s);
-	if (isfunction(fn)) callfunction(fn);
+	if (isfunction(fn))
+		callfunction(fn);
 	if (TEST_failed > 0)
 	{
 		LOG_HELPF("%s: %d items failed.", s, TEST_failed);

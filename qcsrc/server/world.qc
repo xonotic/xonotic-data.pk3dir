@@ -361,7 +361,6 @@ void cvar_changes_init()
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_buffs_pickup_anyway");
 		BADCVAR("g_buffs_randomize");
-		BADCVAR("g_buffs_randomize_teamplay");
 		BADCVAR("g_campcheck_distance");
 		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
@@ -462,8 +461,8 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_queue");
 		BADCVAR("g_balance_teams_remove");
 		BADCVAR("g_balance_teams_remove_wait");
-		BADCVAR("g_balance_teams_prevent_imbalance");
-		BADCVAR("g_balance_teams_scorefactor");
+		BADCVAR("g_balance_teams_skill_significance_threshold");
+		BADCVAR("g_balance_teams_skill_unranked_factor");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_buffs");
@@ -669,7 +668,7 @@ void GameplayMode_DelayedInit(entity this)
 	// at this stage team entities are spawned, teamplay contains the number of them
 
 	if(!scores_initialized)
-		ScoreRules_generic();
+		GameRules_scoring(teamplay_bitmask, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {});
 
 	if (warmup_stage >= 0 && autocvar_g_maxplayers >= 0)
 		return;
@@ -1377,7 +1376,7 @@ void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field)
 		{
 			INGAME_STATUS_CLEAR(it);
 			PutObserverInServer(it, true, false);
-			bprint(playername(it.netname, it.team, false), " has been moved back to spectator");
+			bprint(playername(it.netname, it.team, false), " has been moved back to spectator\n");
 			it.winning = false;
 		}
 		else if (fix_team && INGAME_JOINED(it) && it.(prev_team_field) && it.team != it.(prev_team_field))
@@ -1386,7 +1385,7 @@ void MatchEnd_RestoreSpectatorAndTeamStatus(.int prev_team_field)
 			if (MoveToTeam(it, Team_TeamToIndex(it.(prev_team_field)), 6))
 			{
 				string pl_name = playername(it.netname, it.team, false);
-				bprint(pl_name, " has been moved back to the ", Team_ColoredFullName(it.team));
+				bprint(pl_name, " has been moved back to the ", Team_ColoredFullName(it.team), "\n");
 			}
 			it.winning = (it.team == WinningConditionHelper_winnerteam);
 		}
@@ -1565,7 +1564,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(teamplay)
 	{
-		for (int i = 1; i < 5; ++i)
+		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 		{
 			Team_SetTeamScore(Team_GetTeamFromIndex(i),
 				TeamScore_GetCompareValue(Team_IndexToTeam(i)));
@@ -1650,7 +1649,7 @@ float WinningCondition_RanOutOfSpawns()
 	if(!some_spawn_has_been_used)
 		return WINNING_NO;
 
-	for (int i = 1; i < 5; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetTeamScore(Team_GetTeamFromIndex(i), 0);
 	}
@@ -1695,7 +1694,7 @@ float WinningCondition_RanOutOfSpawns()
 		entity balance = TeamBalance_CheckAllowedTeams(NULL);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			for (int j = 1; j <= NUM_TEAMS; ++j)
+			for (int j = 1; j <= AVAILABLE_TEAMS; ++j)
 			{
 				if (t == j)
 				{

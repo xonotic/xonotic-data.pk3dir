@@ -21,23 +21,22 @@
 	#define OVERLOAD__(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)
 #endif
 
-#if defined(CSQC)
+#ifdef CSQC
 	#define etof(e) num_for_edict(e)
 	#define ftoe(i) entitybyindex(i)
-#elif defined(SVQC)
+#elifdef SVQC
 	#define etof(e) num_for_edict(e)
 	#define ftoe(i) edict_num(i)
-#elif defined(MENUQC)
+#elifdef MENUQC
 	// already defined
 #endif
 
 #define LAMBDA(...) { __VA_ARGS__; }
 
 // With block may not contain continue or break
-#define WITH(type, name, value, block) \
-	MACRO_BEGIN \
-		type __with_save = (name); \
-		name = (value); \
-		LAMBDA(block) \
-		name = __with_save; \
-	MACRO_END
+#define WITH(type, name, value, block) MACRO_BEGIN \
+	type __with_save = (name); \
+	name = (value); \
+	LAMBDA(block) \
+	name = __with_save; \
+MACRO_END

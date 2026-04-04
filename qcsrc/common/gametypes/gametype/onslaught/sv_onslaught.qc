@@ -1151,7 +1151,7 @@ void Onslaught_count_generators()
 {
 	entity e;
 	total_generators = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		Team_SetNumberOfOwnedItems(Team_GetTeamFromIndex(i), 0);
 	}
@@ -1917,20 +1917,6 @@ MUTATOR_HOOKFUNCTION(ons, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ons, TeamBalance_CheckAllowedTeams)
-{
-	// onslaught is special
-	for(entity tmp_entity = ons_worldgeneratorlist; tmp_entity; tmp_entity = tmp_entity.ons_worldgeneratornext)
-	{
-		if (Team_IsValidTeam(tmp_entity.team))
-		{
-			M_ARGV(0, float) |= Team_TeamToBit(tmp_entity.team);
-		}
-	}
-
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ons, SpectateCopy)
 {
 	entity spectatee = M_ARGV(0, entity);
@@ -2148,9 +2134,13 @@ spawnfunc(onslaught_generator)
 // scoreboard setup
 void ons_ScoreRules()
 {
-	entity balance = TeamBalance_CheckAllowedTeams(NULL);
-	int teams = TeamBalance_GetAllowedTeams(balance);
-	TeamBalance_Destroy(balance);
+	int teams = 0;
+
+	// onslaught is special
+	for (entity tmp_entity = ons_worldgeneratorlist; tmp_entity; tmp_entity = tmp_entity.ons_worldgeneratornext)
+		if (Team_IsValidTeam(tmp_entity.team))
+			teams |= Team_TeamToBit(tmp_entity.team);
+
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
 	    field_team(ST_ONS_GENS, "generators", SFL_SORT_PRIO_PRIMARY);
 	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);

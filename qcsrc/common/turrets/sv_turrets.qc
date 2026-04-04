@@ -34,7 +34,7 @@ vector turret_aim_generic(entity this)
 
 			if ((this.aim_flags & TFL_AIM_ZPREDICT)
 			&& !IS_ONGROUND(this.enemy)
-			&& (this.enemy.move_movetype == MOVETYPE_WALK || this.enemy.move_movetype == MOVETYPE_TOSS || this.enemy.move_movetype == MOVETYPE_BOUNCE))
+			&& (this.enemy.move_movetype == MOVETYPE_WALK || this.enemy.move_movetype == MOVETYPE_STEP || this.enemy.move_movetype == MOVETYPE_TOSS || this.enemy.move_movetype == MOVETYPE_BOUNCE))
 			{
 				prep.z = pre_pos.z;
 				float vz = this.enemy.velocity.z;

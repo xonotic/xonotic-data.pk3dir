@@ -81,9 +81,9 @@ float DistributeEvenly_GetRandomized(float weight)
 	return f;
 }
 
-ERASEABLE
 /// Returns a Gaussian random variate, with mean zero and standard deviation sigma 1
 /// From the GNU Scientific Library
+ERASEABLE
 float gsl_ran_ugaussian()
 {
 	static float lastvalue;
@@ -94,8 +94,8 @@ float gsl_ran_ugaussian()
 		return lastvalue;
 	}
 
-	const float a = random() * (2 * M_PI);
-	const float b = sqrt(-2 * log(random()));
+	float a = random() * (2 * M_PI);
+	float b = sqrt(-2 * log(random()));
 	lastvalue = cos(a) * b;
 	lastvalue_set = true;
 	return sin(a) * b;
@@ -111,7 +111,7 @@ float gsl_ran_ugaussian()
 		prandom_seed = c;
 
 	#ifdef USE_PRANDOM_DEBUG
-			LOG_TRACE("RANDOM -> ", ftos(c));
+		LOG_TRACE("RANDOM -> ", ftos(c));
 	#endif
 
 		return c / 65536;  // in [0..1[
@@ -120,7 +120,6 @@ float gsl_ran_ugaussian()
 	vector prandomvec()
 	{
 		vector v;
-
 		do
 		{
 			v.x = prandom();
@@ -128,7 +127,6 @@ float gsl_ran_ugaussian()
 			v.z = prandom();
 		}
 		while (v * v > 1);
-
 		return v;
 	}
 
@@ -136,14 +134,14 @@ float gsl_ran_ugaussian()
 	{
 		prandom_seed = seed;
 	#ifdef USE_PRANDOM_DEBUG
-			LOG_TRACE("SRANDOM ", ftos(seed));
+		LOG_TRACE("SRANDOM ", ftos(seed));
 	#endif
 	}
 
 	#ifdef USE_PRANDOM_DEBUG
-		void prandom_debug()
-		{
-			LOG_TRACE("Current random seed = ", ftos(prandom_seed));
-		}
+	void prandom_debug()
+	{
+		LOG_TRACE("Current random seed = ", ftos(prandom_seed));
+	}
 	#endif
 #endif

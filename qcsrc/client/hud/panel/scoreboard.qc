@@ -2435,9 +2435,8 @@ void Scoreboard_Draw(bool should_draw)
 				scoreboard_time = time;
 			if (hud_configure_menu_open == 1)
 				scoreboard_fade_alpha = 1;
-			float scoreboard_fadeinspeed = autocvar_hud_panel_scoreboard_fadeinspeed;
-			if (scoreboard_fadeinspeed && frametime)
-				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * scoreboard_fadeinspeed);
+			if (scoreboard_fade_alpha < 1 && autocvar_hud_panel_scoreboard_fadeinspeed && frametime)
+				scoreboard_fade_alpha = min(1, scoreboard_fade_alpha + frametime * autocvar_hud_panel_scoreboard_fadeinspeed);
 			else
 				scoreboard_fade_alpha = 1;
 
@@ -2460,9 +2459,8 @@ void Scoreboard_Draw(bool should_draw)
 		}
 		else
 		{
-			float scoreboard_fadeoutspeed = autocvar_hud_panel_scoreboard_fadeoutspeed;
-			if (scoreboard_fadeoutspeed && frametime)
-				scoreboard_fade_alpha = max(0, scoreboard_fade_alpha - frametime * scoreboard_fadeoutspeed);
+			if (scoreboard_fade_alpha > 0 && autocvar_hud_panel_scoreboard_fadeoutspeed && frametime)
+				scoreboard_fade_alpha = max(0, scoreboard_fade_alpha - frametime * autocvar_hud_panel_scoreboard_fadeoutspeed);
 			else
 				scoreboard_fade_alpha = 0;
 		}

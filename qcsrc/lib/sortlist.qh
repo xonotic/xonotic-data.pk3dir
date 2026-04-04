@@ -1,7 +1,7 @@
 #pragma once
 
 entityclass(Sort);
-// .float(entity,entity) sort_cmp;
+// .float(entity, entity) sort_cmp;
 classfield(Sort).entity chain, sort_next, sort_prev;
 
 entity Sort_Spawn();
@@ -14,8 +14,8 @@ entity Sort_Spawn();
 #define SORT_SWAP(a, b) MACRO_BEGIN \
 	b.sort_prev = a.sort_prev; \
 	a.sort_next = b.sort_next; \
-	if (b.sort_next) b.sort_next.sort_prev = a; \
-	if (a.sort_prev) a.sort_prev.sort_next = b; \
+	if (b.sort_next)  b.sort_next.sort_prev = a; \
+	if (a.sort_prev)  a.sort_prev.sort_next = b; \
 	a.sort_prev = b; \
 	b.sort_next = a; \
 MACRO_END

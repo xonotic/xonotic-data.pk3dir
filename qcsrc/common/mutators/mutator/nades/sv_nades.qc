@@ -69,37 +69,40 @@ void nades_orb_think(entity this)
 
 	if (time >= this.nade_special_time)
 	{
-		this.nade_special_time = time + 0.25;
-		this.nade_show_particles = 1;
+		this.nade_special_time = time + 0.05;
+		this.nade_show_particles = true;
 	}
 	else
-		this.nade_show_particles = 0;
+		this.nade_show_particles = false;
 }
 
-entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, float orb_rad)
+entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad)
 {
 	// NOTE: this function merely places an orb
 	// you must add a custom touch function to the returned entity if desired
-	// also set .colormod if you wish to have it colorized
 	entity orb = new(nades_spawn_orb);
-	orb.owner = own;
-	orb.realowner = realown;
-	setorigin(orb, org);
+	orb.owner = this.owner;
+	orb.realowner = this.realowner;
+	setorigin(orb, this.origin);
 
-	orb.orb_lifetime = orb_ltime; // required for timers
-	orb.ltime = time + orb.orb_lifetime;
+	orb.lifetime = orb_lifetime; // required for timers
+	orb.ltime = time + orb.lifetime;
 	orb.bot_dodge = false;
-	orb.team = realown.team;
+	orb.team = this.realowner.team;
 	orb.solid = SOLID_TRIGGER;
 
 	setmodel(orb, MDL_NADE_ORB);
 	orb.skin = 1;
-	orb.orb_radius = orb_rad; // required for fading
-	vector size = '0.5 0.5 0.5' * orb.orb_radius;
+	orb.radius = orb_rad; // required for fading
+	vector size = '0.5 0.5 0.5' * orb.radius;
 	setsize(orb, -size, size);
 
+	STAT(NADE_BONUS_TYPE, orb) = STAT(NADE_BONUS_TYPE, this);
+	orb.colormod = REGISTRY_GET(Nades, STAT(NADE_BONUS_TYPE, orb)).m_color;
+
 	Net_LinkEntity(orb, true, 0, orb_send);
-	orb.SendFlags |= 1;
+
+	orb.reset = SUB_Remove;
 
 	setthink(orb, nades_orb_think);
 	orb.nextthink = time;
@@ -298,8 +301,9 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	hp -= damage;
 	SetResource(this, RES_HEALTH, hp);
 
-	if (STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_TRANSLOCATE.m_id && STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_SPAWN.m_id)
-	if (STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker))
+	if (IS_PLAYER(attacker)
+	&& STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_TRANSLOCATE.m_id
+	&& STAT(NADE_BONUS_TYPE, this) != NADE_TYPE_SPAWN.m_id)
 		this.realowner = attacker;
 
 	if (hp <= 0)
@@ -742,7 +746,17 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		if (time + 0.1 >= held_nade.wait)
 		{
 			toss_nade(player, false, '0 0 0', time + 0.05);
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_THROW);
+			int ntype = STAT(NADE_BONUS_TYPE, held_nade);
+			if (ntype == NADE_TYPE_NORMAL.m_id
+			||  ntype == NADE_TYPE_NAPALM.m_id
+			|| (ntype == NADE_TYPE_ICE.m_id      && !autocvar_g_nades_ice_teamcheck)
+			||  ntype == NADE_TYPE_TRANSLOCATE.m_id
+			|| (ntype == NADE_TYPE_HEAL.m_id     && (autocvar_g_nades_heal_friend < 0 || autocvar_g_nades_heal_armor_rate < 0))
+			|| (ntype == NADE_TYPE_ENTRAP.m_id   && (autocvar_g_nades_entrap_speed < 1 || autocvar_g_nades_entrap_strength < 1))
+			|| (ntype == NADE_TYPE_MONSTER.m_id  && !autocvar_g_monsters)
+			|| (ntype == NADE_TYPE_AMMO.m_id     && autocvar_g_nades_ammo_friend < 0)
+			|| (ntype == NADE_TYPE_DARKNESS.m_id && !autocvar_g_nades_darkness_teamcheck))
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_THROW);
 		}
 	}
 
@@ -901,6 +915,8 @@ void nades_RemovePlayer(entity this)
 {
 	nades_Clear(this);
 	nades_RemoveBonus(this);
+	delete(this.nade_spawnloc);
+	this.nade_spawnloc = NULL;
 }
 
 MUTATOR_HOOKFUNCTION(nades, MakePlayerObserver)

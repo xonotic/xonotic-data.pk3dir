@@ -211,8 +211,11 @@ void GameCommand_allspec(int request, int argc)
 				PutObserverInServer(it, true, true);
 				++n;
 			});
-			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
-			else   LOG_INFO("No players found to spectate.");
+			if (n)
+				bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate",
+					(reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
+			else
+				LOG_INFO("No players found to spectate.");
 			return;
 		}
 
@@ -1117,7 +1120,7 @@ void GameCommand_moveplayer(int request, int argc)
 							TeamBalance_Destroy(balance);
 							return;
 						}
-						if (!IsTeamAvailable(team_num))
+						if (!(teamplay_bitmask & Team_TeamToBit(team_num)))
 						{
 							LOG_INFO("Can't move player to ", destination, " team because it isn't available.");
 							TeamBalance_Destroy(balance);
@@ -1387,7 +1390,7 @@ void shuffleteams()
 
 	int number_of_teams = 0;
 	entity balance = TeamBalance_CheckAllowedTeams(NULL);
-	for (int i = 1; i <= NUM_TEAMS; ++i)
+	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 	{
 		if (TeamBalance_IsTeamAllowed(balance, i))
 		{

@@ -65,11 +65,11 @@ SPAWNFUNC_Q3(weapon_grenadelauncher, ammo_grenades, WEP_MORTAR)
 // Team Arena Proximity Launcher -> Mine Layer
 SPAWNFUNC_Q3(weapon_prox_launcher, ammo_mines, WEP_MINE_LAYER)
 
-// Team Arena Chain Gun -> HLAC
-SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HLAC)
+// Team Arena Chain Gun -> Hagar (vanilla Xonotic has no "strong" and "weak" MG types)
+SPAWNFUNC_Q3(weapon_chaingun, ammo_belt, WEP_HAGAR)
 
-// Quake Live Heavy MachineGun -> HLAC
-SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HLAC)
+// Quake Live Heavy MachineGun -> Hagar (vanilla Xonotic has no "strong" and "weak" MG types)
+SPAWNFUNC_Q3(weapon_hmg, ammo_hmg, WEP_HAGAR)
 
 // Team Arena Nail Gun -> Crylink || Quake Nail Gun -> Electro
 SPAWNFUNC_Q3(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3 ? WEP_CRYLINK : WEP_ELECTRO)
@@ -79,13 +79,13 @@ SPAWNFUNC_Q3(weapon_nailgun, ammo_nails, autocvar_sv_mapformat_is_quake3 ? WEP_C
 // Xonotic's GetAmmoConsumption() will return 4 so we need a 1/8 .count scale here.
 SPAWNFUNC_Q3(weapon_lightning, ammo_lightning, WEP_ELECTRO, 0.125)
 
-// Plasma Gun -> Hagar
-SPAWNFUNC_Q3(weapon_plasmagun, ammo_cells, WEP_HAGAR)
+// Plasma Gun -> Hagar (XDF) || HLAC
+SPAWNFUNC_Q3(weapon_plasmagun, ammo_cells, cvar_string("g_mod_balance") == "XDF" ? WEP_HAGAR : WEP_HLAC)
 
 // Rail Gun -> Vortex
 SPAWNFUNC_Q3(weapon_railgun, ammo_slugs, WEP_VORTEX)
 
-// BFG -> Crylink || Fireball
+// BFG -> Crylink (XDF) || Fireball
 SPAWNFUNC_Q3(weapon_bfg, ammo_bfg, cvar_string("g_mod_balance") == "XDF" ? WEP_CRYLINK : WEP_FIREBALL)
 	// NB: WEP_FIREBALL has no ammo_type field so ammo_bfg is deleted by SPAWNFUNC_BODY
 

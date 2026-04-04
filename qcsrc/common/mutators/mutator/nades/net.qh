@@ -1,1 +1,15 @@
 #pragma once
+
+#ifdef GAMEQC
+// By default bytes are networked, only larger if the values don't permit bytes
+const int SF_NADEORB_LIFETIME_FLOAT  = BIT(0);
+const int SF_NADEORB_RADIUS_FLOAT    = BIT(1);
+
+#ifdef CSQC
+// Reused fields
+.float ltime;
+.float update_time;
+.float animstate_entime;
+.float height;
+#endif
+#endif // GAMEQC

@@ -4,7 +4,10 @@
 // #define KEEP_ROLL
 
 IntrusiveList g_warpzones;
-STATIC_INIT(g_warpzones) { g_warpzones = IL_NEW(); }
+STATIC_INIT(g_warpzones)
+{
+	g_warpzones = IL_NEW();
+}
 
 float warpzone_warpzones_exist;
 float warpzone_cameras_exist;
@@ -89,22 +92,22 @@ void WarpZone_RefSys_Copy(entity me, entity from); // to.R := from.R
 entity WarpZone_RefSys_SpawnSameRefSys(entity me); // spawn().R = me.R
 
 #ifndef BITCLR
-# define BITCLR(a,b) ((a) & ~(b))
+# define BITCLR(a, b) ((a) & ~(b))
 #endif
 #ifndef BITSET
-# define BITSET(a,b) ((a) | (b))
+# define BITSET(a, b) ((a) | (b))
 #endif
 #ifndef BITXOR
-# define BITXOR(a,b) (((a) ^ (b))
+# define BITXOR(a, b) (((a) ^ (b))
 #endif
 #ifndef BITCLR_ASSIGN
-# define BITCLR_ASSIGN(a,b) ((a) &= ~(b))
+# define BITCLR_ASSIGN(a, b) ((a) &= ~(b))
 #endif
 #ifndef BITSET_ASSIGN
-# define BITSET_ASSIGN(a,b) ((a) |= (b))
+# define BITSET_ASSIGN(a, b) ((a) |= (b))
 #endif
 #ifndef BITXOR_ASSIGN
-# define BITXOR_ASSIGN(a,b) ((a) ^= (b))
+# define BITXOR_ASSIGN(a, b) ((a) ^= (b))
 #endif
 int WarpZoneLib_MoveOutOfSolid(entity e);
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
@@ -112,5 +115,5 @@ int WarpZoneLib_MoveOutOfSolid(entity e);
 bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher, bool touchfunc);
 
 // WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH(e,t) if(!WarpZoneLib_ExactTrigger_Touch((e), (t), true)) return // intended for use in touch funcs
+#define EXACTTRIGGER_TOUCH(e, t) if (!WarpZoneLib_ExactTrigger_Touch((e), (t), true)) return // intended for use in touch funcs
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init(this, true)

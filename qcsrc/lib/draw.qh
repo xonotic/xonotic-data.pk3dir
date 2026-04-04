@@ -1,7 +1,6 @@
 #pragma once
 
 #ifdef CSQC
-
 	#include "i18n.qh"
 	#include "vector.qh"
 
@@ -23,7 +22,7 @@
 		// direction is perpendicular to the view normal, and perpendicular to the axis
 		vector thickdir = normalize(cross(axis, vieworg - from));
 
-		vector ofs = thickdir * (thickness / 2);
+		vector ofs = thickdir * (thickness * 0.5);
 
 		R_BeginPolygon(texture, drawflag, false);
 		R_PolygonVertex(from - ofs, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
@@ -129,5 +128,4 @@
 		position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
 		drawstring_builtin(position, text, theScale, rgb, theAlpha, flag);
 	}
-
-#endif
+#endif // CSQC

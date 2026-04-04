@@ -37,8 +37,8 @@
 #define DEGLOB_LOGGING 1
 #define DEGLOB_CLEAR 1
 
-const int DEGLOB_ORIGINAL = 1;
-const int DEGLOB_WRAPPED = 2;
+const int DEGLOB_ORIGINAL  = 1;
+const int DEGLOB_WRAPPED   = 2;
 #if DEGLOB_LOGGING
 int autocvar_debug_deglobalization_logging = 0;
 // Varargs to this should already be stringized, otherwise they're expanded first which makes them less readable.
@@ -47,10 +47,10 @@ int autocvar_debug_deglobalization_logging = 0;
 // This needs to be a function, not a macro,
 // because some wrappers of the old functions need to use comma expressions
 // because they return values.
-void deglob_log(int kind, string name, string file, int line, string func, string more_text) {
-	if (autocvar_debug_deglobalization_logging & kind) {
+void deglob_log(int kind, string name, string file, int line, string func, string more_text)
+{
+	if (autocvar_debug_deglobalization_logging & kind)
 		LOG_INFOF("%s %f %s %s:%d:%s args: %s", PROGNAME, time, name, file, line, func, more_text);
-	}
 }
 #else
 #define DEGLOB_LOG(kind, name, ...)
@@ -63,11 +63,15 @@ void deglob_log(int kind, string name, string file, int line, string func, strin
 #if DEGLOB_CLEAR
 bool autocvar_debug_deglobalization_clear = true;
 #define CLEAR_V_GLOBALS() MACRO_BEGIN \
-	if (autocvar_debug_deglobalization_clear) { \
-		v_forward = VEC_NAN; v_right = VEC_NAN; v_up = VEC_NAN \
+	if (autocvar_debug_deglobalization_clear) \
+	{ \
+		v_forward = VEC_NAN; \
+		v_right = VEC_NAN; \
+		v_up = VEC_NAN; \
 	} \
 MACRO_END
-STATIC_INIT(globals) {
+STATIC_INIT(globals)
+{
 	// set to NaN to more easily detect uninitialized use
 	CLEAR_V_GLOBALS();
 }

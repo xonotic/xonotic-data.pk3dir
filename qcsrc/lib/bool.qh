@@ -8,7 +8,7 @@
 
 #define boolean(value) ((value) != 0)
 
-// get true/false value of a string with multiple different inputs
+/// Get true/false value of a string with multiple different inputs
 ERASEABLE
 float InterpretBoolean(string input)
 {
@@ -18,12 +18,11 @@ float InterpretBoolean(string input)
 		case "true":
 		case "on":
 			return true;
-
 		case "no":
 		case "false":
 		case "off":
 			return false;
-
-		default: return boolean(stof(input));
+		default:
+			return boolean(stof(input));
 	}
 }

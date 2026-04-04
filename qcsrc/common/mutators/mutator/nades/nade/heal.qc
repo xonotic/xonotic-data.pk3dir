@@ -1,6 +1,9 @@
 #include "heal.qh"
 
 #ifdef SVQC
+#include <common/items/item/health.qh>
+#include <common/items/item/armor.qh>
+
 void nade_heal_touch(entity this, entity toucher)
 {
 	if ((!IS_PLAYER(toucher) && !IS_MONSTER(toucher) && !IS_VEHICLE(toucher))
@@ -21,7 +24,7 @@ void nade_heal_touch(entity this, entity toucher)
 		if (GetResource(toucher, RES_HEALTH) < maxhealth)
 		{
 			if (this.nade_show_particles)
-				Send_Effect(EFFECT_HEALING, toucher.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_HEALING, toucher.origin, vec2(toucher.velocity), 1);
 
 			GiveResourceWithLimit(toucher, RES_HEALTH, health_factor, maxhealth);
 		}
@@ -34,14 +37,23 @@ void nade_heal_touch(entity this, entity toucher)
 			toucher.origin,
 			'0 0 0'
 		);
+
+	float armor_factor = autocvar_g_nades_heal_armor_rate * frametime * 0.5;
+	if (toucher != this.realowner)
+		armor_factor *= autocvar_g_nades_heal_friend;
+
+	if (SAME_TEAM(toucher, this))
+	{
+		float maxarmor = autocvar_g_pickup_armormega_max;
+		if (GetResource(toucher, RES_ARMOR) < maxarmor)
+			GiveResourceWithLimit(toucher, RES_ARMOR, armor_factor, maxarmor);
+	}
 }
 
 void nade_heal_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_heal_time, autocvar_g_nades_nade_radius);
-
+	entity orb = nades_spawn_orb(this, autocvar_g_nades_heal_time, autocvar_g_nades_heal_radius);
 	settouch(orb, nade_heal_touch);
-	orb.colormod = '1 0 0';
 }
 #endif // SVQC
 #ifdef MENUQC

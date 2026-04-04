@@ -32,10 +32,8 @@ void nade_entrap_touch(entity this, entity toucher)
 
 void nade_entrap_boom(entity this)
 {
-	entity orb = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_entrap_time, autocvar_g_nades_entrap_radius);
-
+	entity orb = nades_spawn_orb(this, autocvar_g_nades_entrap_time, autocvar_g_nades_entrap_radius);
 	settouch(orb, nade_entrap_touch);
-	orb.colormod = NADE_TYPE_ENTRAP.m_color;
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPhysics_UpdateStats)

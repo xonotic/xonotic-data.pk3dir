@@ -36,7 +36,8 @@ float exp(float e);
 float exp2(float e);
 float expm1(float e);
 
-vector frexp(float e); // returns mantissa as _x, exponent as _y
+/// Returns mantissa as .x, exponent as .y
+vector frexp(float e);
 int ilogb(float e);
 float ldexp(float e, int e);
 //float log(float e);
@@ -45,7 +46,8 @@ float log10(float e);
 float log1p(float e);
 float log2(float e);
 float logb(float e);
-vector modf(float f); // fraction as _x, integer as _y
+/// Fraction as .x, integer as .y
+vector modf(float f);
 
 float scalbn(float e, int n);
 
@@ -57,7 +59,8 @@ float hypot(float e, float f);
 
 float erf(float e);
 float erfc(float e);
-vector lgamma(float e); // value in _x, sign in _y
+/// Value in .x, sign in .y
+vector lgamma(float e);
 float tgamma(float e);
 
 /**
@@ -99,17 +102,18 @@ int islessequal(float e, float f);
 int islessgreater(float e, float f);
 int isunordered(float e, float f);
 
-const float M_E        = 2.7182818284590452354;   /* e */
-const float M_LOG2E    = 1.4426950408889634074;   /* log_2 e */
-const float M_LOG10E   = 0.43429448190325182765;  /* log_10 e */
-const float M_LN2      = 0.69314718055994530942;  /* log_e 2 */
-const float M_LN10     = 2.30258509299404568402;  /* log_e 10 */
+const float M_E        = 2.7182818284590452354;   ///< e
+const float M_LOG2E    = 1.4426950408889634074;   ///< log_2 e
+const float M_LOG10E   = 0.43429448190325182765;  ///< log_10 e
+const float M_LN2      = 0.69314718055994530942;  ///< log_e 2
+const float M_LN10     = 2.30258509299404568402;  ///< log_e 10
 // -Wdouble-declaration
-#define M_PI             3.14159265358979323846   /* pi */
-const float M_PI_2     = 1.57079632679489661923;  /* pi/2 */
-const float M_PI_4     = 0.78539816339744830962;  /* pi/4 */
-const float M_1_PI     = 0.31830988618379067154;  /* 1/pi */
-const float M_2_PI     = 0.63661977236758134308;  /* 2/pi */
-const float M_2_SQRTPI = 1.12837916709551257390;  /* 2/sqrt(pi) */
-const float M_SQRT2    = 1.41421356237309504880;  /* sqrt(2) */
-const float M_SQRT1_2  = 0.70710678118654752440;  /* 1/sqrt(2) */
+/// pi
+#define M_PI             3.14159265358979323846   /**/
+const float M_PI_2     = 1.57079632679489661923;  ///< pi/2
+const float M_PI_4     = 0.78539816339744830962;  ///< pi/4
+const float M_1_PI     = 0.31830988618379067154;  ///< 1/pi
+const float M_2_PI     = 0.63661977236758134308;  ///< 2/pi
+const float M_2_SQRTPI = 1.12837916709551257390;  ///< 2/sqrt(pi)
+const float M_SQRT2    = 1.41421356237309504880;  ///< sqrt(2)
+const float M_SQRT1_2  = 0.70710678118654752440;  ///< 1/sqrt(2)

@@ -27,11 +27,14 @@ int autocvar__urllib_nextslot;
 ERASEABLE
 float url_URI_Get_Callback(int id, float status, string data)
 {
-	if (id < MIN_URL_ID) return 0;
+	if (id < MIN_URL_ID)
+		return 0;
 	id -= MIN_URL_ID;
-	if (id >= NUM_URL_ID) return 0;
+	if (id >= NUM_URL_ID)
+		return 0;
 	entity e = url_fromid[id];
-	if (!e) return 0;
+	if (!e)
+		return 0;
 	if (e.url_rbuf >= 0 || e.url_wbuf >= 0)
 	{
 		LOG_INFOF("WARNING: handle %d (%s) has already received data?!?", id + NUM_URL_ID, e.url_url);
@@ -42,7 +45,8 @@ float url_URI_Get_Callback(int id, float status, string data)
 	url_fromid[id] = NULL;
 
 	// if we get here, we MUST have both buffers cleared
-	if (e.url_rbuf != -1 || e.url_wbuf != -1 || e.url_fh != URL_FH_CURL) error("url_URI_Get_Callback: not a request waiting for data");
+	if (e.url_rbuf != -1 || e.url_wbuf != -1 || e.url_fh != URL_FH_CURL)
+		error("url_URI_Get_Callback: not a request waiting for data");
 
 	if (status == 0)
 	{
@@ -88,7 +92,6 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 	entity e;
 	int i;
 	if (strstrofs(url, "://", 0) >= 0)
-	{
 		switch (mode)
 		{
 			case FILE_WRITE:
@@ -123,11 +126,13 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 
 				// get slot for HTTP request
 				for (i = autocvar__urllib_nextslot; i < NUM_URL_ID; ++i)
-					if (url_fromid[i] == NULL) break;
+					if (url_fromid[i] == NULL)
+						break;
 				if (i >= NUM_URL_ID)
 				{
 					for (i = 0; i < autocvar__urllib_nextslot; ++i)
-						if (url_fromid[i] == NULL) break;
+						if (url_fromid[i] == NULL)
+							break;
 					if (i >= autocvar__urllib_nextslot)
 					{
 						LOG_INFO("url_single_fopen: too many concurrent requests");
@@ -161,9 +166,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				cvar_set("_urllib_nextslot", ftos((i + 1) % NUM_URL_ID));
 				break;
 		}
-	}
 	else if (url == "-")
-	{
 		switch (mode)
 		{
 			case FILE_WRITE:
@@ -179,7 +182,6 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				rdy(NULL, pass, URL_READY_ERROR);
 				break;
 		}
-	}
 	else
 	{
 		float fh = fopen(url, mode);
@@ -194,8 +196,10 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 			e.url_fh = fh;
 			e.url_ready = rdy;
 			e.url_ready_pass = pass;
-			if (mode == FILE_READ) rdy(e, pass, URL_READY_CANREAD);
-			else rdy(e, pass, URL_READY_CANWRITE);
+			if (mode == FILE_READ)
+				rdy(e, pass, URL_READY_CANREAD);
+			else
+				rdy(e, pass, URL_READY_CANWRITE);
 		}
 	}
 }
@@ -208,9 +212,9 @@ void url_fclose(entity e)
 
 	if (e.url_fh == URL_FH_CURL)
 	{
-		if (e.url_rbuf == -1 || e.url_wbuf != -1)     // not(post GET/POST request)
-			if (e.url_rbuf != -1 || e.url_wbuf == -1) // not(pre POST request)
-				error("url_fclose: not closable in current state");
+		if (e.url_rbuf == -1 || e.url_wbuf != -1) // not(post GET/POST request)
+		if (e.url_rbuf != -1 || e.url_wbuf == -1) // not(pre POST request)
+			error("url_fclose: not closable in current state");
 
 		// closing an URL!
 		if (e.url_wbuf >= 0)
@@ -219,11 +223,13 @@ void url_fclose(entity e)
 
 			// get slot for HTTP request
 			for (i = autocvar__urllib_nextslot; i < NUM_URL_ID; ++i)
-				if (url_fromid[i] == NULL) break;
+				if (url_fromid[i] == NULL)
+					break;
 			if (i >= NUM_URL_ID)
 			{
 				for (i = 0; i < autocvar__urllib_nextslot; ++i)
-					if (url_fromid[i] == NULL) break;
+					if (url_fromid[i] == NULL)
+						break;
 				if (i >= autocvar__urllib_nextslot)
 				{
 					LOG_INFO("url_fclose: too many concurrent requests");
@@ -286,22 +292,19 @@ string url_fgets(entity e)
 {
 	if (e.url_fh == URL_FH_CURL)
 	{
-		if (e.url_rbuf == -1) error("url_fgets: not readable in current state");
+		if (e.url_rbuf == -1)
+			error("url_fgets: not readable in current state");
 		// curl
 		string s = bufstr_get(e.url_rbuf, e.url_rbufpos);
 		++e.url_rbufpos;
 		return s;
 	}
 	else if (e.url_fh == URL_FH_STDOUT)
-	{
 		// stdout
 		return string_null;
-	}
 	else
-	{
 		// file
 		return fgets(e.url_fh);
-	}
 }
 
 // without \n (blame FRIK_FILE)
@@ -316,15 +319,11 @@ void url_fputs(entity e, string s)
 		++e.url_wbufpos;
 	}
 	else if (e.url_fh == URL_FH_STDOUT)
-	{
 		// stdout
 		print(s);
-	}
 	else
-	{
 		// file
 		fputs(e.url_fh, s);
-	}
 }
 
 // multi URL object, tries URLs separated by space in sequence

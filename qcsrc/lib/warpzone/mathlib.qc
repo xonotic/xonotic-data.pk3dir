@@ -1,16 +1,12 @@
 #include "mathlib.qh"
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
 
 int fpclassify(float e)
 {
-	if(isnan(e))
+	if (isnan(e))
 		return FP_NAN;
-	if(isinf(e))
+	if (isinf(e))
 		return FP_INFINITE;
-	if(e == 0)
+	if (e == 0)
 		return FP_ZERO;
 	return FP_NORMAL;
 }
@@ -152,11 +148,11 @@ float erfc(float e)
 vector lgamma(float e)
 {
 	// TODO improve accuracy
-	if(!isfinite(e))
+	if (!isfinite(e))
 		return fabs(e) * '1 0 0' + copysign(1, e) * '0 1 0';
-	if(e < 1 && e == floor(e))
+	if (e < 1 && e == floor(e))
 		return nan("gamma") * '1 1 1';
-	if(e < 0.1)
+	if (e < 0.1)
 	{
 		vector v = lgamma(1.0 - e);
 		// reflection formula:
@@ -165,12 +161,12 @@ vector lgamma(float e)
 		// sign of gamma(1-z) = sign of gamma(z) * sign of sin(pi*z)
 		v.z = sin(M_PI * e);
 		v.x = log(M_PI) - log(fabs(v.z)) - v.x;
-		if(v.z < 0)
+		if (v.z < 0)
 			v.y = -v.y;
 		v.z = 0;
 		return v;
 	}
-	if(e < 1.1)
+	if (e < 1.1)
 		return lgamma(e + 1) - log(e) * '1 0 0';
 	--e;
 	return (0.5 * log(2 * M_PI * e) + e * (log(e) - 1)) * '1 0 0' + '0 1 0';
@@ -233,9 +229,9 @@ float nan(string tag)
 float nextafter(float e, float f)
 {
 	// TODO very crude
-	if(e == f)
+	if (e == f)
 		return nan("nextafter");
-	if(e > f)
+	if (e > f)
 		return -nextafter(-e, -f);
 	// now we know that e < f
 	// so we need the next number > e
@@ -248,7 +244,7 @@ float nextafter(float e, float f)
 		b = a;
 		a = e + d;
 	}
-	while(a != e);
+	while (a != e);
 	return b;
 }
 float nexttoward(float e, float f)
