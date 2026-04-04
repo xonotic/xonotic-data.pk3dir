@@ -4,7 +4,7 @@
 void buff_Vengeance_DelayedDamage(entity this)
 {
 	if (this.enemy)
-		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, DMG_NOWEP, this.enemy.origin, '0 0 0');
+		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF_VENGEANCE.m_id, DMG_NOWEP, this.enemy.origin, '0 0 0');
 
 	delete(this);
 	return;

@@ -116,7 +116,7 @@ void LogDeath(string mode, int deathtype, entity killer, entity killed)
 
 void Obituary_SpecialDeath(
 	entity notif_target,
-	float murder,
+	bool murder,
 	bool msg_from_ent,
 	int deathtype,
 	string s1, string s2, string s3, string s4,
@@ -164,7 +164,7 @@ void Obituary_SpecialDeath(
 
 float Obituary_WeaponDeath(
 	entity notif_target,
-	float murder,
+	bool murder,
 	int deathtype,
 	string s1, string s2, string s3,
 	float f1, float f2)
@@ -270,13 +270,13 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 		if (DEATH_ISSPECIAL(deathtype))
 		{
 			if (deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
-				Obituary_SpecialDeath(targ, false, 0, deathtype, targ.netname, deathlocation, "", "", targ.team, 0, 0);
+				Obituary_SpecialDeath(targ, false, false, deathtype, targ.netname, deathlocation, "", "", targ.team, 0, 0);
 			else
 			{
 				switch (DEATH_ENT(deathtype))
 				{
 					case DEATH_MIRRORDAMAGE:
-						Obituary_SpecialDeath(targ, false, 0, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, false, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
 						break;
 					case DEATH_HURTTRIGGER:
 					{
@@ -290,7 +290,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 						break;
 					}
 					default:
-						Obituary_SpecialDeath(targ, false, 0, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, false, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
 						break;
 				}
 			}
@@ -417,20 +417,14 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker_name, deathlocation, CS(targ).killcount, kill_count_to_attacker))
 			{
-				int f3 = (deathtype == DEATH_BUFF.m_id) ? buff_FirstFromFlags(attacker).m_id : 0;
-				if (DEATH_ENT(deathtype) == DEATH_HURTTRIGGER)
-				{
-					bool msg_from_ent = (inflictor && inflictor.message2 != "");
-					Obituary_SpecialDeath(targ, true, msg_from_ent, deathtype,
-						targ.netname,
-						attacker_name,
-						(msg_from_ent ? inflictor.message2 : deathlocation),
-						(msg_from_ent ? deathlocation : ""),
-						CS(targ).killcount, kill_count_to_attacker, f3
-					);
-				}
-				else
-					Obituary_SpecialDeath(targ, true, 0, deathtype, targ.netname, attacker_name, deathlocation, "", CS(targ).killcount, kill_count_to_attacker, f3);
+				bool msg_from_ent = (DEATH_ENT(deathtype) == DEATH_HURTTRIGGER && inflictor && inflictor.message2 != "");
+				Obituary_SpecialDeath(targ, true, msg_from_ent, deathtype,
+					targ.netname,
+					attacker_name,
+					(msg_from_ent ? inflictor.message2 : deathlocation),
+					(msg_from_ent ? deathlocation : ""),
+					CS(targ).killcount, kill_count_to_attacker, 0
+				);
 			}
 		}
 	}
@@ -453,25 +447,21 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype, .en
 					(msg_from_ent ? inflictor.message : deathlocation),
 					(msg_from_ent ? deathlocation : ""),
 					"",
-					CS(targ).killcount,
-					0,
-					0
+					CS(targ).killcount, 0, 0
 				);
 				break;
 			}
 			case DEATH_CUSTOM:
-				Obituary_SpecialDeath(targ, false, 0, deathtype,
+				Obituary_SpecialDeath(targ, false, false, deathtype,
 					targ.netname,
 					((strstrofs(deathmessage, "%", 0) < 0) ? strcat("%s ", deathmessage) : deathmessage),
 					deathlocation,
 					"",
-					CS(targ).killcount,
-					0,
-					0
+					CS(targ).killcount, 0, 0
 				);
 				break;
 			default:
-				Obituary_SpecialDeath(targ, false, 0, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
+				Obituary_SpecialDeath(targ, false, false, deathtype, targ.netname, deathlocation, "", "", CS(targ).killcount, 0, 0);
 				break;
 		}
 
@@ -627,7 +617,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		// count the damage
 		if (attacker && targ != attacker
 		&& !IS_DEAD(targ)
-		&& deathtype != DEATH_BUFF.m_id
+		&& deathtype != DEATH_BUFF_INFERNO.m_id
+		&& deathtype != DEATH_BUFF_VENGEANCE.m_id
 		&& targ.takedamage == DAMAGE_AIM)
 		{
 			entity victim;
