@@ -38,7 +38,7 @@ void multi_trigger(entity this, bool exacttrigger)
 			if (this.enemy.spawn_time <= triggertime) // havn't respawned since triggering
 			{
 				if ((this.wait <= 0 && (q3compat || this.wait >= -1)) // wait forever (until respawn in CTS)
-				|| triggertime + this.wait > time) // too soon
+				|| triggertime + this.wait + this.rnd * crandom() > time) // too soon
 					return;
 			}
 		}
@@ -73,7 +73,7 @@ void multi_trigger(entity this, bool exacttrigger)
 	else if (this.wait > 0)
 	{
 		setthink(this, multi_wait);
-		this.nextthink = time + this.wait;
+		this.nextthink = time + this.wait + this.rnd * crandom();
 	}
 	else if (this.wait < -1 && !q3compat) // xon maps only: no waiting
 	{
@@ -206,17 +206,19 @@ spawnfunc(trigger_multiple)
 	if(this.noise && this.noise != "")
 		precache_sound(this.noise);
 
-	if (q3compat)
+	if (!this.wait)
 	{
-		if (!this.wait)
-		{
-			string s = GetField_fullspawndata(this, "wait", false);
-			if (!s || s == "") // it's really not set ("0" or "foo" waits forever)
-				this.wait = 0.5;
-		}
+		if (q3compat)
+			G_SpawnFloat("wait", 0.5, this, wait); // "0" or "foo" waits forever like < 0
+		else
+			this.wait = 0.2;
 	}
-	else if (!this.wait)
-		this.wait = 0.2;
+	G_SpawnFloat("random", 0, this, rnd);
+	if (this.rnd >= this.wait && this.wait >= 0)
+	{
+		this.rnd = this.wait - FRAMETIME_Q3;
+		LOG_WARNF("trigger_multiple has random >= wait\n");
+	}
 
 	this.use = multi_use;
 
