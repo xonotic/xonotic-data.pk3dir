@@ -22,4 +22,5 @@
 #include <common/mapobjects/trigger/secret.qc>
 #include <common/mapobjects/trigger/swamp.qc>
 #include <common/mapobjects/trigger/teleport.qc>
+#include <common/mapobjects/trigger/timer.qc>
 #include <common/mapobjects/trigger/viewloc.qc>
