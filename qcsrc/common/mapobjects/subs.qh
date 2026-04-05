@@ -37,6 +37,7 @@ void SUB_SetFade(entity ent, float when, float fading_time);
 
 .float	delay;
 .float	wait;
+.float	rnd;
 .float	lip;
 .float	speed;
 .float	sounds;
