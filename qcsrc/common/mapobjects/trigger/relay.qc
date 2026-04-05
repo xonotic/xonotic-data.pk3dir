@@ -5,6 +5,8 @@ void relay_use(entity this, entity actor, entity trigger)
 {
 	if(this.active != ACTIVE_ACTIVE)
 		return;
+	if(this.team && this.team != actor.team)
+		return;
 
 	SUB_UseTargets(this, actor, trigger);
 }
@@ -21,6 +23,13 @@ spawnfunc(trigger_relay)
 
 spawnfunc(target_relay)
 {
+	// Q3 spawnflags
+	if (this.spawnflags & 1)
+		this.team = NUM_TEAM_1;
+	if (this.spawnflags & 2)
+		this.team = NUM_TEAM_2;
+	if (this.spawnflags & 4)
+		this.target_random = true;
 	spawnfunc_trigger_relay(this);
 }
 #endif
