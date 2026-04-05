@@ -16,34 +16,8 @@ void multi_wait(entity this)
 }
 
 // the trigger was just touched/killed/used
-void multi_trigger(entity this, bool exacttrigger, entity actor, entity trigger)
+void multi_trigger(entity this, entity actor, entity trigger)
 {
-	if ((this.spawnflags & ONLY_PLAYERS) && !IS_PLAYER(actor))
-		return; // only players
-
-	// In Q3 .wait <= 0 is forever,
-	// in Xonotic .wait == -1 means forever and == -2 means don't wait at all.
-	if (IS_GAMETYPE(CTS) && IS_CLIENT(actor))
-	{
-		// check the client-specific trigger time
-		int cnum = etof(actor);
-		if (buf_getsize(this.triggertimes) >= cnum) // buffer slot exists
-		{
-			float triggertime = stof(bufstr_get(this.triggertimes, cnum - 1));
-			if (actor.spawn_time <= triggertime) // havn't respawned since triggering
-			{
-				if ((this.wait <= 0 && (q3compat || this.wait >= -1)) // wait forever (until respawn in CTS)
-				|| triggertime + this.wait + this.rnd * crandom() > time) // too soon
-					return;
-			}
-		}
-	}
-	else if (this.nextthink > time)
-		return;		// allready been triggered
-
-	if (exacttrigger)
-		EXACTTRIGGER_TOUCH(this, actor);
-
 	if (this.noise && this.noise != "")
 		_sound (actor, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
@@ -86,58 +60,99 @@ void multi_trigger(entity this, bool exacttrigger, entity actor, entity trigger)
 	}
 }
 
+bool multi_conds(entity this, entity actor)
+{
+	if (q3compat)
+	{
+		if (AVAILABLE_TEAMS == 2)
+		// This feature isn't mentioned in entities.def but it's in the source.
+		// Xonotic has given these spawnflags other meanings.
+		if(((this.spawnflags & 1) && actor.team != NUM_TEAM_1) // not on red
+		|| ((this.spawnflags & 2) && actor.team != NUM_TEAM_2)) // not on blue
+			return false;
+	}
+	else
+	{
+		if (this.team)
+		if (((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != actor.team))
+			return false;
+
+		if ((this.spawnflags & ONLY_PLAYERS) && !IS_PLAYER(actor))
+			return false;
+	}
+
+	// In Q3 .wait <= 0 is forever,
+	// in Xonotic .wait == -1 means forever and == -2 means don't wait at all.
+	if (IS_GAMETYPE(CTS) && IS_CLIENT(actor))
+	{
+		// check the client-specific trigger time
+		int cnum = etof(actor);
+		if (buf_getsize(this.triggertimes) >= cnum) // buffer slot exists
+		{
+			float triggertime = stof(bufstr_get(this.triggertimes, cnum - 1));
+			if (actor.spawn_time <= triggertime) // havn't respawned since triggering
+			{
+				if ((this.wait <= 0 && (q3compat || this.wait >= -1)) // wait forever (until respawn in CTS)
+				|| triggertime + this.wait + this.rnd * crandom() > time) // too soon
+					return false;
+			}
+		}
+	}
+	else if (this.nextthink > time)
+		return false;		// allready been triggered
+
+	return true;
+}
+
 void multi_use(entity this, entity actor, entity trigger)
 {
-	multi_trigger(this, false, actor, trigger);
+	if (multi_conds(this, actor))
+		multi_trigger(this, actor, trigger);
 }
 
 void multi_touch(entity this, entity toucher)
 {
-	if(!q3compat && !(this.spawnflags & ALL_ENTITIES) && !toucher.iscreature)
-		return;
-
-	if (q3compat && AVAILABLE_TEAMS == 2)
+	if (!q3compat)
 	{
-		// This feature isn't mentioned in entities.def but it's in the source.
-		// Xonotic has given these spawnflags other meanings.
-		if(((this.spawnflags & 1) && toucher.team != NUM_TEAM_1) // not on red
-		|| ((this.spawnflags & 2) && toucher.team != NUM_TEAM_2)) // not on blue
-			return;
-	}
-	else if (this.team)
-		if (((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != toucher.team))
+		if (!(this.spawnflags & ALL_ENTITIES) && !toucher.iscreature)
 			return;
 
-	// if the trigger has an angles field, check player's facing direction
-	if (this.movedir != '0 0 0')
-	{
-		makevectors (toucher.angles);
-		if (v_forward * this.movedir < 0)
-			return;		// not facing the right way
-	}
+		// if the trigger has an angles field, check player's facing direction
+		if (this.movedir != '0 0 0')
+		{
+			makevectors (toucher.angles);
+			if (v_forward * this.movedir < 0)
+				return;		// not facing the right way
+		}
 
-	// if the trigger has pressed keys, check that the player is pressing those keys
-	if (this.pressedkeys && IS_PLAYER(toucher)) // only for players
+		// if the trigger has pressed keys, check that the player is pressing those keys
+		if (this.pressedkeys && IS_PLAYER(toucher)) // only for players
 		if (!(CS(toucher).pressedkeys & this.pressedkeys))
 			return;
+	}
 
-	multi_trigger(this, true, toucher, toucher);
+	if (!multi_conds(this, toucher))
+		return;
+
+	EXACTTRIGGER_TOUCH(this, toucher);
+
+	multi_trigger(this, toucher, toucher);
 }
 
 void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(!this.takedamage)
+	if (!this.takedamage)
 		return;
-	if(this.spawnflags & NOSPLASH)
+	if (this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	if(this.team)
-		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != attacker.team))
-			return;
+
+	if (!multi_conds(this, attacker))
+		return;
 
 	TakeResource(this, RES_HEALTH, damage);
 	if (GetResource(this, RES_HEALTH) <= 0)
-		multi_trigger(this, false, attacker, inflictor);
+		multi_trigger(this, attacker, inflictor);
 }
 
 void multi_reset(entity this)
