@@ -15,27 +15,22 @@ void multi_wait(entity this)
 	}
 }
 
-
 // the trigger was just touched/killed/used
-// this.enemy should be set to the activator so it can be held through a delay
-// so wait for the delay time before firing
-void multi_trigger(entity this, bool exacttrigger)
+void multi_trigger(entity this, bool exacttrigger, entity actor, entity trigger)
 {
-	if((this.spawnflags & ONLY_PLAYERS) && !IS_PLAYER(this.enemy))
-	{
+	if ((this.spawnflags & ONLY_PLAYERS) && !IS_PLAYER(actor))
 		return; // only players
-	}
 
 	// In Q3 .wait <= 0 is forever,
 	// in Xonotic .wait == -1 means forever and == -2 means don't wait at all.
-	if (IS_GAMETYPE(CTS) && IS_CLIENT(this.enemy))
+	if (IS_GAMETYPE(CTS) && IS_CLIENT(actor))
 	{
 		// check the client-specific trigger time
-		int cnum = etof(this.enemy);
+		int cnum = etof(actor);
 		if (buf_getsize(this.triggertimes) >= cnum) // buffer slot exists
 		{
 			float triggertime = stof(bufstr_get(this.triggertimes, cnum - 1));
-			if (this.enemy.spawn_time <= triggertime) // havn't respawned since triggering
+			if (actor.spawn_time <= triggertime) // havn't respawned since triggering
 			{
 				if ((this.wait <= 0 && (q3compat || this.wait >= -1)) // wait forever (until respawn in CTS)
 				|| triggertime + this.wait + this.rnd * crandom() > time) // too soon
@@ -47,23 +42,21 @@ void multi_trigger(entity this, bool exacttrigger)
 		return;		// allready been triggered
 
 	if (exacttrigger)
-		EXACTTRIGGER_TOUCH(this, this.enemy);
+		EXACTTRIGGER_TOUCH(this, actor);
 
 	if (this.noise && this.noise != "")
-	{
-		_sound (this.enemy, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
-	}
+		_sound (actor, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
 	// don't trigger again until reset
 	this.takedamage = DAMAGE_NO;
 
-	SUB_UseTargets(this, this.enemy, this.goalentity);
+	SUB_UseTargets(this, actor, trigger);
 
-	if (IS_GAMETYPE(CTS) && IS_CLIENT(this.enemy))
+	if (IS_GAMETYPE(CTS) && IS_CLIENT(actor))
 	{
 		// store the client-specific trigger time
 		string triggertime = sprintf("%15.14g", time); // 16b, perfect precision until timelimit_max @ <= 512hz (32768 sec)
-		int cnum = etof(this.enemy);
+		int cnum = etof(actor);
 		int bsize = buf_getsize(this.triggertimes);
 		if (bsize >= cnum) // already got a slot
 			bufstr_set(this.triggertimes, cnum - 1, triggertime);
@@ -95,17 +88,13 @@ void multi_trigger(entity this, bool exacttrigger)
 
 void multi_use(entity this, entity actor, entity trigger)
 {
-	this.goalentity = trigger;
-	this.enemy = actor;
-	multi_trigger(this, false);
+	multi_trigger(this, false, actor, trigger);
 }
 
 void multi_touch(entity this, entity toucher)
 {
 	if(!q3compat && !(this.spawnflags & ALL_ENTITIES) && !toucher.iscreature)
-	{
 		return;
-	}
 
 	if (q3compat && AVAILABLE_TEAMS == 2)
 	{
@@ -116,12 +105,8 @@ void multi_touch(entity this, entity toucher)
 			return;
 	}
 	else if (this.team)
-	{
-		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != toucher.team))
-		{
+		if (((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != toucher.team))
 			return;
-		}
-	}
 
 	// if the trigger has an angles field, check player's facing direction
 	if (this.movedir != '0 0 0')
@@ -132,17 +117,11 @@ void multi_touch(entity this, entity toucher)
 	}
 
 	// if the trigger has pressed keys, check that the player is pressing those keys
-	if(this.pressedkeys && IS_PLAYER(toucher)) // only for players
-	{
-		if(!(CS(toucher).pressedkeys & this.pressedkeys))
-		{
+	if (this.pressedkeys && IS_PLAYER(toucher)) // only for players
+		if (!(CS(toucher).pressedkeys & this.pressedkeys))
 			return;
-		}
-	}
 
-	this.enemy = toucher;
-	this.goalentity = toucher;
-	multi_trigger(this, true);
+	multi_trigger(this, true, toucher, toucher);
 }
 
 void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -155,13 +134,10 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 	if(this.team)
 		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != attacker.team))
 			return;
+
 	TakeResource(this, RES_HEALTH, damage);
 	if (GetResource(this, RES_HEALTH) <= 0)
-	{
-		this.enemy = attacker;
-		this.goalentity = inflictor;
-		multi_trigger(this, false);
-	}
+		multi_trigger(this, false, attacker, inflictor);
 }
 
 void multi_reset(entity this)
