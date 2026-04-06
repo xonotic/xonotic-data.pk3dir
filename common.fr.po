@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -4791,17 +4791,17 @@ msgstr "Les équipes sont trop déséquilibrées."
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 burned at the mercy of ^BG%s^K1's Inferno buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a brûlé sous l'effet du bonus Inferno de ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot thanks to ^BG%s^K1's Inferno buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a été brûlé par le bonus Inferno de ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 felt the karma of ^BG%s^K1's Vengeance buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a senti le karma du bonus de Vengeance de ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
@@ -5026,7 +5026,7 @@ msgstr "^BG%s^K1 est devenu un peu trop croustillant%s%s"
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 felt a little hot%s%s"
-msgstr "^BG%s^K1 a eu un coup de chaud%s%s"
+msgstr "^BG%s^K1 a eu un coup de chaleur%s%s"
 
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
@@ -6407,7 +6407,7 @@ msgstr "^K1Vous avez heurté le sol dans un craquement !"
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^K1You felt a little too hot!"
-msgstr "^K1Vous avez eu un coup de chaud !"
+msgstr "^K1Vous avez eu un coup de chaleur !"
 
 #: qcsrc/common/notifications/all.inc:663
 msgid "^K1You got a little bit too crispy!"

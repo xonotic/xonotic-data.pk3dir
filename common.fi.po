@@ -2254,6 +2254,8 @@ msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
 msgstr ""
+"Kilpaile joukkueesi kanssa vahingon ja tappojen määrästä tässä kaoottisessa "
+"sekasortossa"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -3189,7 +3191,7 @@ msgstr "Häivennyksen kesto:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:66
 msgid "Accumulate:"
-msgstr ""
+msgstr "Kertymä:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:70
 msgid "If younger than:"
@@ -3239,7 +3241,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/dodging/dodging.qc:13
 #, c-format
 msgid "Some other mutators like %s enable this by default."
-msgstr ""
+msgstr "Jotkut muut muovaajat, kuten %s, ottavat tämän käyttöön oletuksena."
 
 #: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:295
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
@@ -3476,7 +3478,7 @@ msgstr ""
 msgid ""
 "Make sure you remember to throw it with %s, or else it will blow up in your "
 "hands!"
-msgstr ""
+msgstr "Muistathan heittää sen ja %s, tai muuten se räjähtää käsiisi!"
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:17
@@ -3513,7 +3515,7 @@ msgstr ""
 msgid ""
 "If this grenade is destroyed by an attacker, it will deal some damage to "
 "them."
-msgstr ""
+msgstr "Jos hyökkääjä tuhoaa tämän kranaatin, se tekee jotain vahinkoa niille."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qh:19
 msgid "Translocate grenade"
@@ -3549,7 +3551,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nades.qc:53
 #, c-format
 msgid "This mutator is enabled by default in %s."
-msgstr ""
+msgstr "Tämä muovaaja on oletuksena käytössä: %s."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qh:83 qcsrc/common/util.qc:318
 #: qcsrc/menu/xonotic/guide/guide.qh:16
@@ -3573,7 +3575,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
 #, c-format
 msgid "The current %s weapons are:"
-msgstr ""
+msgstr "Nykyiset %s aseet ovat:"
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
 #: qcsrc/common/util.qc:297
@@ -3652,6 +3654,8 @@ msgid ""
 "It is a superweapon found on some maps, meaning that it breaks down after "
 "some time."
 msgstr ""
+"Se on superase, joka löytyy joiltakin kartoilta, eli se hajoaa jonkin ajan "
+"kuluttua."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:176
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:170
@@ -3733,6 +3737,8 @@ msgid ""
 "Since it is the only %s weapon which deals splash damage, the %s is a good "
 "choice of weapon for attacking groups of enemies."
 msgstr ""
+"Koska se on vain %s-ase, joka tekee roiskevahinkoa, %s on hyvä asevalinta "
+"vihollisjoukkoja vastaan hyökätessä."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:35
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -3744,6 +3750,8 @@ msgid ""
 "The %s fires a single shotgun round which spreads into multiple pellets upon "
 "exiting the barrel, dealing a deadly blow if up close."
 msgstr ""
+"%s ampuu yhden haulikon laukauksen, joka hajoaa useiksi hauleiksi piipusta "
+"ulos tullessaan ja aiheuttavat lähietäisyydeltä tappavan iskun."
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:133
 #: qcsrc/common/weapons/weapon/shotgun.qc:424
@@ -3752,6 +3760,8 @@ msgid ""
 "The %s damage drops off quickly as the range increases, so it is only useful "
 "for close combat or sometimes medium range combat."
 msgstr ""
+"%s-vahinko laskee pian välimatkan kasvaessa, joten se on hyödyllinen vain "
+"lähitaistelussa tai joskus keskimatkan taistelussa.  "
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:28
 msgid "Overkill Shotgun"
@@ -3768,6 +3778,8 @@ msgid ""
 "%s is a mutator that makes players drop all their weapons when they die. "
 "Without this mutator, players normally drop only their equipped weapon."
 msgstr ""
+"%s on muovaaja, joka saa pelaajan pudottamaan kaikki aseensa kuollessaan. "
+"Ilman tätä muovaajaa, pelaaja pudottaa vain varustetun aseen."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:307
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
@@ -3854,6 +3866,9 @@ msgid ""
 "regeneration speed while the powerup is active. However, it also makes you a "
 "bit more vulnerable to incoming attacks."
 msgstr ""
+"Vahvistus %slisää liikkumisnopeutta, hyökkäysnopeutta ja terveyden "
+"palautumisnopeutta vahvistuksen ollessa päällä. Se kuitenkin tekee sinusta "
+"myös hieman alttiimman tuleville hyökkäyksille."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -3926,6 +3941,7 @@ msgstr "Superaseet"
 msgid ""
 "The %s mutator causes an explosion when two players collide if it is enabled."
 msgstr ""
+"Muovaaja %s aiheuttaa räjähdyksen, kun kaksi pelaajaa törmää päällä ollessa."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qc:9
 msgid ""
@@ -3962,13 +3978,15 @@ msgid ""
 "%s is a mutator that enables jumping off walls for added mobility. To do a "
 "wall jump, tap %s when against a wall."
 msgstr ""
+"%s on muovaaja, jolla voi hypätä seinistä lisäliikkumista varten. Hyppää "
+"napauttamalla %s seinää vasten ollessasi."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
 msgid ""
 "This mutator adds a bit of versatility, allowing for more dynamic and "
 "unpredictable movement."
 msgstr ""
-"Tämä mutaattori lisää monipuolisuutta hieman ja mahdollistaa dynaamista ja "
+"Tämä muovaaja lisää monipuolisuutta hieman ja mahdollistaa dynaamista ja "
 "odottamatonta liikkumista."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
@@ -6243,7 +6261,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Pelaat nyt joukkueessa ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
@@ -6478,6 +6496,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Joudut katsomaan eikä sinulla ole lupa pelata, koska olet estetty tältä "
+"palvelimelta"
 
 #: qcsrc/common/notifications/all.inc:800
 msgid "^F2The race is over, finish your lap!"
@@ -6532,7 +6552,7 @@ msgstr "^K1Itsemurha ajassa ^LASKENTA"
 
 #: qcsrc/common/notifications/all.inc:822
 msgid "^K2Your current team choice seems fine."
-msgstr ""
+msgstr "^K2Nykyinen joukkuevalintasi näyttää hyvältä."
 
 #: qcsrc/common/notifications/all.inc:828
 msgid "^F4Timeout begins in ^COUNT"
@@ -6614,26 +6634,26 @@ msgstr "heitä naatti"
 #: qcsrc/common/notifications/all.qh:487
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG!"
-msgstr ""
+msgstr "%s^K1 toteutti KOLMOISFRÄGIN!"
 
 #: qcsrc/common/notifications/all.qh:487
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
-msgstr ""
+msgstr "%s^K1 teki KOLMOISPISTEET!"
 
 #: qcsrc/common/notifications/all.qh:487
 msgid "TRIPLE FRAG!"
-msgstr ""
+msgstr "KOLMOISLAHTAUS!"
 
 #: qcsrc/common/notifications/all.qh:488
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 toteutti VIIDEN PUTKEN!"
 
 #: qcsrc/common/notifications/all.qh:488
 #, c-format
 msgid "%s^K1 unlocked RAGE!"
-msgstr ""
+msgstr "%s^K1 avasi ominaisuuden: RAIVO!"
 
 #: qcsrc/common/notifications/all.qh:488
 msgid "RAGE!"
@@ -6642,12 +6662,12 @@ msgstr "RAIVO!"
 #: qcsrc/common/notifications/all.qh:489
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 toteutti KYMMENEN PUTKEN!"
 
 #: qcsrc/common/notifications/all.qh:489
 #, c-format
 msgid "%s^K1 started a MASSACRE!"
-msgstr ""
+msgstr "%s^K1 aloitti TEURASTUKSEN!"
 
 #: qcsrc/common/notifications/all.qh:489
 msgid "MASSACRE!"
@@ -6656,12 +6676,12 @@ msgstr "TEURASTUS!"
 #: qcsrc/common/notifications/all.qh:490
 #, c-format
 msgid "%s^K1 executed MAYHEM!"
-msgstr ""
+msgstr "%s^K1 laittoi alulle SEKASORRON!"
 
 #: qcsrc/common/notifications/all.qh:490
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 toteutti VIIDENKYMMENEN PUTKEN!"
 
 #: qcsrc/common/notifications/all.qh:490
 msgid "MAYHEM!"
@@ -6670,12 +6690,12 @@ msgstr "SEKASORTO!"
 #: qcsrc/common/notifications/all.qh:491
 #, c-format
 msgid "%s^K1 is a BERSERKER!"
-msgstr ""
+msgstr "%s^K1 on RAIVOHULLU!"
 
 #: qcsrc/common/notifications/all.qh:491
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 toteutti KAHDENKYMMENEN PUTKEN!"
 
 #: qcsrc/common/notifications/all.qh:491
 msgid "BERSERKER!"
@@ -6684,12 +6704,12 @@ msgstr "RAIVOHULLU!"
 #: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 inflicts CARNAGE!"
-msgstr ""
+msgstr "%s^K1 aloitti VERILÖYLYN!"
 
 #: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 toteutti KAHDENKYMMENENVIIDEN PUTKEN!"
 
 #: qcsrc/common/notifications/all.qh:492
 msgid "CARNAGE!"
@@ -6698,12 +6718,12 @@ msgstr "VERILÖYLY!"
 #: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
-msgstr ""
+msgstr "%s^K1 toteutti KOLMENKYMMENEN PUTKEN!"
 
 #: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON!"
-msgstr ""
+msgstr "%s^K1 päästi valloilleen MAAILMANLOPUN MEININGIN!"
 
 #: qcsrc/common/notifications/all.qh:493
 msgid "ARMAGEDDON!"
@@ -6740,12 +6760,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:523 qcsrc/common/notifications/all.qh:533
 #, c-format
 msgid "%d score spree!"
-msgstr ""
+msgstr "%d pisteputki!"
 
 #: qcsrc/common/notifications/all.qh:532
 #, c-format
 msgid "%d frag spree!"
-msgstr ""
+msgstr "%d lahtausputki!"
 
 #: qcsrc/common/notifications/all.qh:542
 msgid "First blood!"
@@ -7681,11 +7701,11 @@ msgstr "Raptor-soihtu"
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:671
 #, c-format
 msgid "The %s vehicle walks and jumps around, and takes only one rider."
-msgstr ""
+msgstr "Ajoneuvo %s kävelee ja hyppii ympäriinsä ja ottaa vain yhden ajajan."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:672
 msgid "It can jump from very high altitudes while protecting the rider."
-msgstr ""
+msgstr "Se pystyy hyppäämään hyvin korkealta ja suojaamaan ajajaa."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:673
 #, c-format
@@ -7816,12 +7836,16 @@ msgid ""
 "It has no secondary fire, instead switching to the previously selected "
 "weapon."
 msgstr ""
+"Sillä ei ole toissijaista tulitusta, vaan se vaihtaa aiemmin valittuun "
+"aseeseen."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:169
 msgid ""
 "It doesn't require ammo, meaning it is a great choice if you are running low "
 "on ammo and need to preserve some."
 msgstr ""
+"Se ei vaadi ammuksia, eli se on mahtava valinta, jos ammukset ovat vähissä "
+"ja niitä pitää vähän säästää."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:170
 #, c-format
@@ -7875,7 +7899,7 @@ msgstr ""
 #, c-format
 msgid ""
 "It consumes %s ammo for each projectile, which is shared by several weapons."
-msgstr ""
+msgstr "Se kuluttaa %s ammusta, jotka ovat yhteisiä useille aseille."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:619
 #, c-format
@@ -7913,6 +7937,8 @@ msgid ""
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr ""
+"Toissijaisella tulituksella laukaistaan raketteja välittömästi, jolloin "
+"vihollista voidaan vahingoittaa, vaikka raketti olisi mennyt heistä ohi."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:590
 #, c-format
@@ -8008,6 +8034,8 @@ msgid ""
 "it effectively may be difficult, but if done properly it can deal a ton of "
 "damage."
 msgstr ""
+"Koska %s latautuu tovin ja tulipallo kulkee hitaasti, sen tehokas käyttö voi "
+"olla vaikeaa, mutta oikein tehtynä se voi aiheuttaa paljon vahinkoa."
 
 #: qcsrc/common/weapons/weapon/fireball.qh:38
 msgid "Fireball"
@@ -8029,6 +8057,10 @@ msgid ""
 "it will fire itself after some time (after a warning beep) if the secondary "
 "fire isn't released."
 msgstr ""
+"Kun toissijaista tulitusta pitää pohjassa, useita raketteja ladataan, ja ne "
+"laukaistaan yhtä aikaa, kun painike vapautetaan. Näitä raketteja ei voi "
+"pitää ladattuna loputtomiin, joten ne lauotaan jonkin ajan kuluttua "
+"(varoituspiippauksen jälkeen), jos toissijaista tulitusta ei vapauteta."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:513
 #, c-format
@@ -8060,6 +8092,8 @@ msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
+"Toissijainen tulitus ampuu kerralla sarjan useita satunnaisesti hajaantuvia "
+"lasereita."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:248
 #, c-format

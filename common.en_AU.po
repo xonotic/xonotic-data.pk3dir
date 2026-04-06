@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2026\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -4647,17 +4647,17 @@ msgstr "Teams are too unbalanced."
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 burned at the mercy of ^BG%s^K1's Inferno buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 burned at the mercy of ^BG%s^K1's Inferno buff %s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot thanks to ^BG%s^K1's Inferno buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 felt a little hot thanks to ^BG%s^K1's Inferno buff %s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 felt the karma of ^BG%s^K1's Vengeance buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 felt the karma of ^BG%s^K1's Vengeance buff %s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
