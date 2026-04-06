@@ -2830,7 +2830,18 @@ spawnfunc(team_CTF_blueplayer) { spawnfunc_info_player_team2(this);  }
 spawnfunc(team_CTF_bluespawn)  { spawnfunc_info_player_team2(this);  }
 
 spawnfunc(team_CTF_neutralflag)	{ spawnfunc_item_flag_neutral(this);  }
-spawnfunc(team_neutralobelisk)	{ spawnfunc_item_flag_neutral(this);  }
+/* On some Q3TA maps like q3w2 the obelisk for the harvester gametype is
+ * allowed to spawn in the oneflag gametype too. In this case it uses a
+ * different model (a kind of pedestal for the flag), is immovable and
+ * non-solid with no gameplay function.
+ * If we get a suitable prop we could use it here.
+spawnfunc(team_neutralobelisk)
+{
+	if (g_ctf && cvar("g_ctf_oneflag"))
+		setmodel(this, MDL_TUR_BASE);
+	else
+		delete(this);
+}*/
 
 // compatibility for wop maps
 spawnfunc(team_redplayer)      { spawnfunc_info_player_team1(this);  }
