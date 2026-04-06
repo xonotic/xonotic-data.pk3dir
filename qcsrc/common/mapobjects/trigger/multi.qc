@@ -11,7 +11,6 @@ void multi_wait(entity this)
 	{
 		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
-		this.solid = SOLID_BBOX;
 	}
 }
 
@@ -46,15 +45,17 @@ void multi_trigger(entity this, entity actor, entity trigger)
 	{
 		multi_wait(this); // waiting finished
 	}
-	else
+	else // wait indefinitely
 	{
-		if (IS_GAMETYPE(CTS)) // client-specific .wait timers
-			this.nextthink = stof("inf"); // clients can trigger again after respawning, disabled for other touchers
+		if (IS_GAMETYPE(CTS)) // uses client-specific .wait timers above
+			this.nextthink = stof("inf"); // disabled for non-client touchers
 		else
 		{
-			// we can't just delete(this) here, because this is a touch function
-			// called while C code is looping through area links...
-			settouch(this, func_null);
+			if (this.solid == SOLID_TRIGGER)
+			{
+				this.solid = SOLID_NOT;
+				setorigin(this, this.origin);
+			}
 			this.use = func_null;
 		}
 	}
@@ -157,14 +158,17 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 
 void multi_reset(entity this)
 {
-	if (q3compat || !(this.spawnflags & SPAWNFLAG_NOTOUCH))
-		settouch(this, multi_touch);
 	if (this.max_health)
 	{
 		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
-		this.solid = SOLID_BBOX;
 	}
+	else if (q3compat || !(this.spawnflags & SPAWNFLAG_NOTOUCH))
+	{
+		this.solid = SOLID_TRIGGER;
+		setorigin(this, this.origin);
+	}
+
 	setthink(this, func_null);
 	this.nextthink = 0;
 	this.team = this.team_saved;
