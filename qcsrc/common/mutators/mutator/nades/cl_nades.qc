@@ -73,7 +73,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, BuildGameplayTipsString)
 {
 	if (mut_is_active(MUT_NADES))
 	{
-		string key = getcommandkey(_("drop weapon / throw nade"), "dropweapon");
+		string key = getcommandkey(_("drop weapon / throw nade"), "weapon_drop");
 		M_ARGV(0, string) = strcat(M_ARGV(0, string),
 			"\n", sprintf(_("^3nades^8 are enabled, press ^3%s^8 to use them"), key), "\n");
 	}
