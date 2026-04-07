@@ -203,8 +203,7 @@ spawnfunc(func_button)
 		this.speed = 40;
 	if (!this.wait)
 		this.wait = 1;
-	if (!this.lip)
-		this.lip = 4;
+	G_SpawnFloat("lip", 4, this, lip); // explicit 0 is supported
 
 	if(this.wait < 0 && q3compat)
 		this.wait = 0.1; // compatibility for q3: -1 = return immediately
