@@ -747,10 +747,7 @@ void door_init_shared(entity this)
 		this.wait = q3compat ? 2 : 3;
 	}
 
-	if (!this.lip)
-	{
-		this.lip = 8;
-	}
+	G_SpawnFloat("lip", 8, this, lip); // explicit 0 is supported
 
 	this.state = STATE_BOTTOM;
 
@@ -815,8 +812,7 @@ spawnfunc(func_door)
 
 	if (q3compat)
 	{
-		if (!this.dmg)
-			this.dmg = 2;
+		G_SpawnFloat("dmg", 2, this, dmg); // explicit 0 is supported
 
 		if (!this.team)
 		{
