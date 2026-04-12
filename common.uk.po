@@ -2692,7 +2692,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/ttt.qc:700
 msgid "Single Player"
-msgstr ""
+msgstr "Одиночна гра"
 
 #: qcsrc/common/monsters/monster.qh:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:76
@@ -4071,7 +4071,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
-msgstr ""
+msgstr "^F4ПРИМІТКА: ^BGГравці не бачать чат спостерігачів під час матчу"
 
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
@@ -5087,6 +5087,8 @@ msgid ""
 "^F2You have to become a player within the next %s, otherwise you will be "
 "kicked, because spectating isn't allowed at this time!"
 msgstr ""
+"^F2Вам потрібно стати гравцем через %s, інакше вас буде вилучено, тому що "
+"спостерігання заборонено!"
 
 #: qcsrc/common/notifications/all.inc:459
 #: qcsrc/common/notifications/all.inc:807
@@ -5096,7 +5098,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:460
 #: qcsrc/common/notifications/all.inc:808
 msgid "^F2Spectating specific players isn't allowed at this time!"
-msgstr ""
+msgstr "^F2Спостерігати за певними гравцями зараз заборонено!"
 
 #: qcsrc/common/notifications/all.inc:462
 #, c-format
@@ -6083,6 +6085,8 @@ msgid ""
 "^K1You may not join the game at this time.\n"
 "This match is limited to ^F2%s^BG players."
 msgstr ""
+"^K1Ви не можете зараз приєднатися.\n"
+"Цей матч обмежений до ^F2%s^BG гравців."
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K1Cannot join given minigame session!"
@@ -8827,6 +8831,8 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
+"Статистика гравців увімкнена за замовчуванням, змінити це можна в меню "
+"\"Профіль\"."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
@@ -9750,7 +9756,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_media.qc:15
 msgid "Music Player"
-msgstr ""
+msgstr "Музичний плеєр"
 
 #: qcsrc/menu/xonotic/dialog_media.qh:6
 msgid "Media"
@@ -9943,6 +9949,8 @@ msgstr "Мультиплеєр"
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
 msgstr ""
+"Грайте в мережі, чи з друзями в локальній мережі, або змініть налаштування "
+"гравця"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
@@ -10128,7 +10136,7 @@ msgstr "Мутатори і арени зі зброєю"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:212
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "Почати мультиплеєр!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:51
 msgid "Title:"
@@ -10167,11 +10175,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:82
 msgid "An explosion occurs when two players collide"
-msgstr ""
+msgstr "Коли два гравці зіткнулися, відбувається вибух"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:86
 msgid "All players are almost invisible"
-msgstr "Всі гравці майже невидимі"
+msgstr "Всі гравці становляться майже невидимими"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:90
 msgid ""
@@ -10192,6 +10200,8 @@ msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
+"Кількість здоров'я, нижче якого гравці починають кровотечати (здоров'я "
+"зменшується, стрибати не можна)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
@@ -10204,12 +10214,16 @@ msgstr "Мутатори зброї та предметів:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:126
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
 msgstr ""
+"Гравці з'являються з абордажним гаком. Для використання натисніть клавішу "
+"'гак'"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
+"Гравці з'являються з джетпаком. Для використання двічі натисніть 'стрибок', "
+"або натисніть клавішу 'джетпак'"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
@@ -10241,10 +10255,13 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
+"Ракети Спустошувача можна підірвати миттєво (інакше буде невеличка "
+"затримка). Це дозволяє гравцям стріляти та підірвати ракету в польоті, щоб "
+"отримати потужний буст навіть під час швидкого переміщення."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Players will drop all weapons they possessed when they are killed"
-msgstr "Після того, як гравця вб'ють, з нього випаде вся зброя яку він мав"
+msgstr "Після смерті гравця випадає вся його зброя"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:165
 msgid "Weapons stay after they are picked up"
@@ -10534,15 +10551,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:126
 msgid "Allow player statistics to track your client"
-msgstr "Дозволити збір статистика про вашого гравця"
+msgstr "Дозволити відстеження клієнта для статистики"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:130
 msgid "Allow player statistics to use your nickname"
-msgstr "Дозволити використання вашого нікнейму в статистиці"
+msgstr "Дозволити використання псевдоніму в статистиці"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:135
 msgid "Allow player statistics to rank you in leaderboards"
-msgstr ""
+msgstr "Дозволити відображення профілю в таблицях лідерів"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:155
 msgid "Select language..."
@@ -11282,7 +11299,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Particle effects at all spawn points and whenever a player spawns"
-msgstr ""
+msgstr "Ефекти частинок з'являтимуться в точках появи та при появі гравця"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:236
 msgid "Quality:"
@@ -11485,7 +11502,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:200
 msgid "HUD moves around following player's movement"
-msgstr ""
+msgstr "HUD реагує на рухи гравця"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:201
 msgid "Shake the HUD when hurt"
@@ -11584,7 +11601,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:85
 msgid "Display player statuses in the chatbox"
-msgstr ""
+msgstr "Відображати статуси гравців у вікні чату"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Powerup notifications"
@@ -11666,7 +11683,7 @@ msgstr "Використовувати власну модель для всіх
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Force player colors to mine:"
-msgstr ""
+msgstr "Використовувати власні кольори для всіх гравців:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""
@@ -11720,7 +11737,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
-msgstr ""
+msgstr "Налаштувати відображення гравців та предметів у грі"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:25
 msgid "Perspective"
@@ -12189,7 +12206,7 @@ msgstr "Розширені налаштування..."
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:97
 msgid "Advanced settings where you can tweak every single variable of the game"
-msgstr "Тут ви зможете змінити будь-які деталі гри"
+msgstr "Розширені налаштування, де ви можете змінити кожен параметр гри"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:103
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qh:6
@@ -12563,7 +12580,7 @@ msgstr "Одиночна гра"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qh:7
 msgid "Play the singleplayer campaign or instant action matches against bots"
-msgstr "Почніть одиночну кампанію або випадковий бій проти ботів"
+msgstr "Грайте в одиночну кампанію або швидкі матчі проти ботів"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qh:7
 msgid "Winner"
@@ -12902,6 +12919,9 @@ msgid ""
 "many players will often have single digit accuracy for the %s. It is instead "
 "especially useful to make high jumps."
 msgstr ""
+"У більшості випадків, %s - це швидше інструмент пересування, ніж зброя. Саме "
+"тому чимало гравців мають низьку точність %s. Натомість він надзвичайно "
+"корисний для високих стрибків."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:107
 #, c-format
@@ -13268,7 +13288,7 @@ msgstr "Вийти з одиночної гри"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:20
 msgid "Leave multiplayer"
-msgstr "Вийти з гри у мережі"
+msgstr "Вийти з мережевої гри"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:28
 msgid "Leave current campaign level"
