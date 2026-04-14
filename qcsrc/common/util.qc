@@ -288,10 +288,15 @@ string build_mutator_list(string s)
 	string s2 = "";
 	for (string arg = ""; i < n; ++i)
 	{
-		if (i >= 0) arg = argv(i);
+		if (i >= 0)
+			arg = argv(i);
 		// cond is the condition for showing the mutator enabled in the menu
 		#define X(name, translated_name, mut, cond) \
-			if(arg == name || (!n && (cond))) { s2 = cons_mid(s2, ", ", translated_name); mut_set_active(mut); }
+			if (arg == name || (!n && (cond))) \
+			{ \
+				s2 = cons_mid(s2, ", ", translated_name); \
+				mut_set_active(mut); \
+			}
 		X("Dodging"                   , _("Dodging")                   , MUT_DODGING                   , cvar("g_dodging"))
 		X("InstaGib"                  , _("InstaGib")                  , MUT_INSTAGIB                  , cvar("g_instagib"))
 		X("New Toys"                  , _("New Toys")                  , MUT_NEW_TOYS                  , cvar("g_new_toys"))
