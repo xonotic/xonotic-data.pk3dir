@@ -574,11 +574,11 @@ msgstr "Серверне швидке меню"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:919
 msgid "Waypoint editor menu"
-msgstr "Меню редактора вейпоінтів"
+msgstr "Меню редактора маршрутних точок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:922
 msgid "Waypoint editor menu as default"
-msgstr "Меню редактора вейпоінтів за замовчуванням"
+msgstr "Меню редактора маршрутних точок за замовчуванням"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:924
 msgid "Server quick menu as default"
@@ -1167,17 +1167,17 @@ msgstr "Найшвидший за весь час: %d%s^7(%s^7)"
 #: qcsrc/client/hud/panel/scoreboard.qc:2775
 #, c-format
 msgid "^1Respawning in ^3%s^1..."
-msgstr "^1Повернення до гри через ^3%s^1..."
+msgstr "^1Відродження через ^3%s^1..."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2784
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr "Ви загинули, почекайте ще ^3%s^7 перед поверненням у гру"
+msgstr "Ви загинули, почекайте ще ^3%s^7 перед відродженням"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2792
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr "Ви загинули, натисніть ^2%s^7 щоб повернутися до гри"
+msgstr "Ви загинули, натисніть ^2%s^7 для відродження"
 
 #: qcsrc/client/hud/panel/strafehud/extra.qc:115
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
@@ -3889,7 +3889,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr ""
+msgstr "Маршрутна точка"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
@@ -4208,7 +4208,7 @@ msgstr "^BG%s^BG повернув ^TC^TT^BG прапор"
 #: qcsrc/common/notifications/all.inc:576
 #, c-format
 msgid "^F2Throwing coin... Result: %s^F2!"
-msgstr ""
+msgstr "^F2Кидається монета... Результат: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
@@ -4228,7 +4228,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:276
 msgid "^F2Match is restarting..."
-msgstr ""
+msgstr "^F2Матч перезапускається..."
 
 #: qcsrc/common/notifications/all.inc:277
 #: qcsrc/common/notifications/all.inc:564
@@ -5852,7 +5852,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:670
 msgid "^K1You are respawning for running out of ammo..."
-msgstr "^K1Ви почнете з початку за витрату всіх набоїв..."
+msgstr "^K1Вас буде відроджено через брак набоїв..."
 
 #: qcsrc/common/notifications/all.inc:670
 msgid "^K1You were killed for running out of ammo..."
@@ -5981,13 +5981,15 @@ msgid ""
 "^BGDisconnecting in ^COUNT..."
 msgstr ""
 "^K1Годі ледарювати!\n"
-"^BGРоз'єднання через ^COUNT..."
+"^BGВід'єднання через ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:695
 msgid ""
 "^K1Stop idling!\n"
 "^BGMoving to spectators in ^COUNT..."
 msgstr ""
+"^K1Годі ледарювати!\n"
+"^BGПерехід до спостерігачів через ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:696
 #, c-format
@@ -5995,6 +5997,8 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
+"^K1Команди незбалансовані!\n"
+"^BGПерехід з %s^BG до спостерігачів через ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:698
 #, c-format
@@ -6359,12 +6363,12 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:803
 msgid "^BGThere are more to go..."
-msgstr ""
+msgstr "^BGЦе ще не все..."
 
 #: qcsrc/common/notifications/all.inc:804
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
-msgstr ""
+msgstr "^BGЗалишилось вже %s..."
 
 #: qcsrc/common/notifications/all.inc:810
 msgid "^F2Superweapons have broken down"
@@ -10563,7 +10567,7 @@ msgstr "Дозволити відображення профілю в табли
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:155
 msgid "Select language..."
-msgstr ""
+msgstr "Обрати мову..."
 
 #: qcsrc/menu/xonotic/dialog_quit.qc:12
 msgid "Are you sure you want to quit?"
@@ -11409,11 +11413,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:66
 msgid "Waypoints"
-msgstr "Дороговкази"
+msgstr "Маршрутні точки"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:68
 msgid "Display waypoint markers for objectives on the map"
-msgstr ""
+msgstr "Відображувати маршрутні точки цілей на мапі"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:69
 msgid "Show various gametype specific waypoints"
@@ -11848,7 +11852,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:152
 msgid "Release zoom when you die or respawn"
-msgstr ""
+msgstr "Відпустити прицілювання при смерті чи відродженні"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:156
 msgid "Release zoom when you switch weapons"
@@ -12402,10 +12406,12 @@ msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
+"Усунення перемальовування шляхом рендерингу сцени лише з даними про глибину "
+"перед початком основного відтворення"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:98
 msgid "Depth first:"
-msgstr "Глибина спершу:"
+msgstr "Пріоритет глибини:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:99
 msgid "DF^Disabled"
@@ -12428,6 +12434,8 @@ msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines"
 msgstr ""
+"Змусити процесор чекати, поки відеокарта завершить кожний кадр, може усунути "
+"затримку введення або візуальні лаги на деяких системах"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:110
 msgid "Use OpenGL 2.0 shaders (GLSL)"
@@ -12458,6 +12466,8 @@ msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
 msgstr ""
+"Значення зворотної гамма-корекції, ефект яскравості, що не впливає на білий "
+"та чорний колір"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:131
 msgid "Contrast boost:"
@@ -12465,7 +12475,7 @@ msgstr "Підсилення контрасту:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:135
 msgid "By how much to multiply the contrast in dark areas"
-msgstr ""
+msgstr "На скільки збільшувати контраст в темних місцях"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid "Saturation:"
@@ -12476,6 +12486,8 @@ msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
+"Корекція насиченості (0 = чорно-біла, 1 = нормальна, 2 = перенасичена), "
+"потребує GLSL для керування кольором"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:147
 msgid "LIT^Ambient:"
@@ -12486,6 +12498,8 @@ msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
 msgstr ""
+"Навколишнє освітлення, якщо значення надто високе, то освітлення на мапах "
+"стає приглушеним та плоским"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:151
 msgid "Intensity:"
@@ -12493,7 +12507,7 @@ msgstr "Інтенсивність:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:153
 msgid "Global rendering brightness"
-msgstr ""
+msgstr "Глобальна яскравість рендеринга"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:157
 msgid "Framerate"
@@ -12508,7 +12522,7 @@ msgstr "Максимум:"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:180
 #, c-format
 msgid "%s fps"
-msgstr ""
+msgstr "%s fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:165
 msgid "MAXFPS^Unlimited"
@@ -12548,11 +12562,11 @@ msgstr "Показувати кількість кадрів в секунду"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:190
 msgid "Show your rendered frames per second"
-msgstr "Показувати лічильник кадрів за секунду"
+msgstr "Показувати лічильник відтворених кадрів в секунду"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:147
 msgid "Instant action with bots!"
-msgstr ""
+msgstr "Миттєва гра з ботами!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:167
 msgid "Campaign Difficulty:"
@@ -12588,11 +12602,11 @@ msgstr "Переможець"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:31
 msgid "join 'best' team (auto-select)"
-msgstr "обрати підхожу команду (автовибір)"
+msgstr "обрати 'найкращу' команду (автовибір)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "Auto-select team (recommended)"
-msgstr ""
+msgstr "Автоматичний вибір команди (рекомендовано)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:36
 msgid "red"
@@ -12653,11 +12667,11 @@ msgstr "бій без правил"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:9 qcsrc/menu/xonotic/guide/pages.qc:62
 msgid "Introduction"
-msgstr ""
+msgstr "Вступ"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:10
 msgid "Movement"
-msgstr ""
+msgstr "Пересування"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
@@ -12665,23 +12679,23 @@ msgstr "Режими ігор"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
-msgstr ""
+msgstr "Монстри"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:18
 msgid "Vehicles"
-msgstr ""
+msgstr "Транспорт"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:19
 msgid "Turrets"
-msgstr ""
+msgstr "Турелі"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:21
 msgid "Mods"
-msgstr ""
+msgstr "Моди"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
-msgstr ""
+msgstr "Про цей посібник"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
@@ -12718,12 +12732,12 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:30
 msgid "Community"
-msgstr ""
+msgstr "Спільнота"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:32
 #, c-format
 msgid "%s on Matrix, %s on QuakeNet IRC, or the Discord"
-msgstr ""
+msgstr "%s в Matrix, %s в QuakeNet IRC, або Discord"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:34
 msgid ""
@@ -12747,7 +12761,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:40
 msgid "Getting good"
-msgstr ""
+msgstr "Шлях до Майстерності"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:43
 msgid ""
@@ -12888,23 +12902,27 @@ msgstr "рухатися вперед"
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:64
 msgid "strafe left"
-msgstr "крок ліворуч"
+msgstr "стрейф ліворуч"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:65
 msgid "strafe right"
-msgstr "крок праворуч"
+msgstr "стрейф праворуч"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:96
 msgid ""
 "Note that if you press the strafe key before releasing the forward key, you "
 "will suffer a speed penalty."
 msgstr ""
+"Зауважте, що якщо Ви натиснете клавішу стрейфу до того, як відпустити "
+"клавішу руху вперед, призведе до втрати швидкості."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:97
 msgid ""
 "If you do it right, you will even continue to accelerate in strafe turns."
 msgstr ""
+"Якщо робити все правильно, ви навіть продовжите прискорюватися під час "
+"стрейф поворотах. "
 
 #: qcsrc/menu/xonotic/guide/pages.qc:98 qcsrc/menu/xonotic/guide/pages.qc:120
 #: qcsrc/menu/xonotic/guide/pages.qc:159
@@ -12920,7 +12938,7 @@ msgid ""
 "especially useful to make high jumps."
 msgstr ""
 "У більшості випадків, %s - це швидше інструмент пересування, ніж зброя. Саме "
-"тому чимало гравців мають низьку точність %s. Натомість він надзвичайно "
+"тому чимало гравців мають низьку точність %sа. Натомість він надзвичайно "
 "корисний для високих стрибків."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:107
@@ -12930,10 +12948,13 @@ msgid ""
 "immediately afterwards. Experiment a bit with the timing of firing the %s "
 "and jumping to get a feeling of which timings will get you how high."
 msgstr ""
+"Щоб зробити \"стрибок лазером\", просто зробіть постріл %sом собі під ноги "
+"та одразу стрибніть. Поекспериментуйте з моменту пострілу з %sа та стрибка, "
+"щоб відчути, як обраний час впливає на висоту польоту."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
-msgstr ""
+msgstr "Стрибок Від Стіни Бластером"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:114
 #, c-format
@@ -12942,6 +12963,9 @@ msgid ""
 "you, you can get significant horizontal speed. You can do this to pick up "
 "speed off the stand or even when passing a wall while already bunny hopping."
 msgstr ""
+"Якщо вистрілити з %sа не в підлогу, а в стіну поруч із собою, можна отримати "
+"значне горизонтальне прискорення. Це можна робити як з місця, так і "
+"пролітаючи повз стіни під час бані-хопінгу."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:116
 #, c-format
@@ -12952,6 +12976,11 @@ msgid ""
 "%s. Immediately flick back to your movement direction and continue to bunny "
 "hop."
 msgstr ""
+"Щоб скористатися цією технікою, треба почати бані-хопінг. Одразу після "
+"стрибка, поверніть мишею назад через приблизно на \"8 годину\", якщо стіна "
+"ліворуч (або на \"4 годину\", якщо стіна праворуч), стріляючи на рівні "
+"голови з %sа. Одразу поверніться назад до вашого напрямку руху та "
+"продовжуйте бані-хопінг."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:118
 #, c-format
@@ -12960,6 +12989,9 @@ msgid ""
 "a strafe key for the duration of the flick. This means using %s if the wall "
 "is to your left, and %s if the wall is to your right."
 msgstr ""
+"Щоб якнайменше втрачати швидкість при повороті назад, увімкніть клавішу "
+"стрейфу під час руху. Це означає те, що треба використовувати %s, якщо стіна "
+"зліва від вас, та %s, якщо стіна праворуч від вас."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:126
 #, c-format
@@ -12968,6 +13000,9 @@ msgid ""
 "damage to the player. In gametypes without self damage however it is a very "
 "versatile movement tool."
 msgstr ""
+"%s може бути використаний так само, як і %s для пересування, але він завдає "
+"значно більшої шкоди гравцю. Проте в типах ігор без самопошкодження це дуже "
+"універсальний інструмент руху. "
 
 #: qcsrc/menu/xonotic/guide/pages.qc:128
 msgid ""
@@ -12975,11 +13010,13 @@ msgid ""
 "immediately detonate it. The explosion will push you upwards a little bit, "
 "and can prolong a jump."
 msgstr ""
+"Поки в польоті, можна зробити постріл під собою та одразу підірвати ракету. "
+"Вибух відштовхне Вас трохи угору, і можна буде продовжити стрибок."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:130
 #, c-format
 msgid "Note that this strategy only really works if the %s mutator is enabled."
-msgstr ""
+msgstr "Зауважте, що ця стратегія працює лише з увімкненим мутатором \"%s\"."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:136
 #, c-format
@@ -12987,6 +13024,8 @@ msgid ""
 "The drag force of the %s secondary fire can not only break other players' "
 "movement, but can also give yourself a significant speed boost."
 msgstr ""
+"Сила опору вторинного вогню %sа може не тільки перешкоджати рух інших "
+"гравців, але також може збільшити швидкість самому собі. "
 
 #: qcsrc/menu/xonotic/guide/pages.qc:137
 #, c-format
@@ -12996,10 +13035,14 @@ msgid ""
 "stand into high speed. Finding the best angle to aim at takes some practice, "
 "and changes depending on your speed."
 msgstr ""
+"Для \"розгону з крайлінком\", зробіть постріл з альтернативного вогню %sа в "
+"підлогу (або паралельну стіну) прямо перед собою та почніть бані-хоп, щоб "
+"миттєво набрати високу швидкість. Знайти найкращий кут пострілу потребує "
+"практики, але цей кут змінюється залежно від швидкості."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:141
 msgid "Crylink Wall Climbing"
-msgstr ""
+msgstr "Підйом із Крайлінком"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:144
 #, c-format
@@ -13143,19 +13186,19 @@ msgstr "Бій"
 
 #: qcsrc/menu/xonotic/keybinder.qc:78
 msgid "WEAPON^previous"
-msgstr "WEAPON^попередня"
+msgstr "попередня"
 
 #: qcsrc/menu/xonotic/keybinder.qc:79
 msgid "WEAPON^next"
-msgstr "WEAPON^наступна"
+msgstr "наступна"
 
 #: qcsrc/menu/xonotic/keybinder.qc:80
 msgid "WEAPON^previously used"
-msgstr "WEAPON^попередньо використана"
+msgstr "попередньо використана"
 
 #: qcsrc/menu/xonotic/keybinder.qc:81
 msgid "WEAPON^best"
-msgstr "WEAPON^найкраща"
+msgstr "найкраща"
 
 #: qcsrc/menu/xonotic/keybinder.qc:82
 msgid "reload"
@@ -13168,11 +13211,11 @@ msgstr "група зброї %d"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "hold zoom"
-msgstr "утримувати для зуму"
+msgstr "утримувати прицілювання"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "toggle zoom"
-msgstr "увімк / вимк зум"
+msgstr "перемикати прицілювання"
 
 #: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "show scores"
@@ -13180,7 +13223,7 @@ msgstr "показати рахунок"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "screenshot"
-msgstr ""
+msgstr "скріншот"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
@@ -13240,7 +13283,7 @@ msgstr "викинути ключа/прапор, вийти з транспор
 
 #: qcsrc/menu/xonotic/keybinder.qc:170
 msgid "suicide / respawn"
-msgstr "самогубство / респаун"
+msgstr "самогубство / відродження"
 
 #: qcsrc/menu/xonotic/keybinder.qc:171
 msgid "quick menu"
@@ -13268,7 +13311,7 @@ msgstr "потягнути об'єкт (у пісочниці)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:186
 msgid "waypoint editor menu"
-msgstr "меню редактора вейпоінту"
+msgstr "меню редактора маршрутних точок"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
@@ -13310,6 +13353,8 @@ msgstr "Більше не натискайте цю клавішу!"
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
+"Га? Неможливо запустити (m є NULL). Повторна фільтрація, так щоб цього "
+"більше не відбулося."
 
 #: qcsrc/menu/xonotic/maplist.qc:299
 #, c-format
@@ -13334,15 +13379,15 @@ msgstr "<модель не знайдена>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "SERVER^Remove favorite"
-msgstr ""
+msgstr "Видалити з обраного"
 
 #: qcsrc/menu/xonotic/serverlist.qc:264
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr ""
+msgstr "Видалити виділений сервер зі списку обраного"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid "SERVER^Favorite"
-msgstr ""
+msgstr "Обрані"
 
 #: qcsrc/menu/xonotic/serverlist.qc:269
 msgid ""
@@ -13357,7 +13402,7 @@ msgstr "Пінг"
 
 #: qcsrc/menu/xonotic/serverlist.qc:754
 msgid "Hostname"
-msgstr ""
+msgstr "Назва хоста"
 
 #: qcsrc/menu/xonotic/serverlist.qc:755
 msgid "Map"
@@ -13370,74 +13415,74 @@ msgstr "Тип"
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 #, c-format
 msgid "AES level %d"
-msgstr ""
+msgstr "Рівень AES %d"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "ENC^none"
-msgstr ""
+msgstr "відсутнє"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 msgid "encryption:"
-msgstr ""
+msgstr "шифрування:"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 #, c-format
 msgid "mod: %s"
-msgstr ""
+msgstr "мод: %s"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1058
 #, c-format
 msgid "modified settings"
-msgstr ""
+msgstr "модифіковані налаштування"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1058
 #, c-format
 msgid "official settings"
-msgstr ""
+msgstr "офіційні налаштування"
 
 #: qcsrc/menu/xonotic/serverlist.qh:151
 msgid "SLCAT^Favorites"
-msgstr ""
+msgstr "Обрані"
 
 #: qcsrc/menu/xonotic/serverlist.qh:152
 msgid "SLCAT^Recommended"
-msgstr ""
+msgstr "Рекомендовані"
 
 #: qcsrc/menu/xonotic/serverlist.qh:153
 msgid "SLCAT^Normal Servers"
-msgstr ""
+msgstr "Звичайні Cервери"
 
 #: qcsrc/menu/xonotic/serverlist.qh:154
 msgid "SLCAT^Servers"
-msgstr ""
+msgstr "Сервери"
 
 #: qcsrc/menu/xonotic/serverlist.qh:155
 msgid "SLCAT^Competitive Mode"
-msgstr ""
+msgstr "Змагальний режим"
 
 #: qcsrc/menu/xonotic/serverlist.qh:156
 msgid "SLCAT^Modified Servers"
-msgstr ""
+msgstr "Модифіковані Сервери"
 
 #: qcsrc/menu/xonotic/serverlist.qh:157
 msgid "SLCAT^Overkill"
-msgstr "SLCAT^Оверкіл"
+msgstr "Оверкіл"
 
 #: qcsrc/menu/xonotic/serverlist.qh:158
 msgid "SLCAT^InstaGib"
-msgstr ""
+msgstr "ІнстаҐіб"
 
 #: qcsrc/menu/xonotic/serverlist.qh:159
 msgid "SLCAT^Defrag Mode"
-msgstr "SLCAT^Режим Дефрага"
+msgstr "Режим Дефрага"
 
 #: qcsrc/menu/xonotic/skinlist.qc:69
 msgid "<TITLE>"
-msgstr "<Назва>"
+msgstr "<НАЗВА>"
 
 #: qcsrc/menu/xonotic/skinlist.qc:70
 msgid "<AUTHOR>"
-msgstr "<Автор>"
+msgstr "<АВТОР>"
 
 #: qcsrc/menu/xonotic/slider_decibels.qc:71
 msgid "VOL^MAX"
@@ -13457,6 +13502,8 @@ msgid ""
 "Change the sharpness of the textures. Lowering it will effectively reduce "
 "texture memory usage, but make the textures appear very blurry."
 msgstr ""
+"Зміна чіткості текстур. Зниження параметра зменшить споживання відеопам'яті, "
+"але зробить текстури дуже розмитими"
 
 #: qcsrc/menu/xonotic/slider_resolution.qc:130
 msgid "Screen resolution"
@@ -13464,15 +13511,15 @@ msgstr "Роздільність екрану"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:12
 msgid "FADESPEED^Slow"
-msgstr ""
+msgstr "Повільно"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Normal"
-msgstr ""
+msgstr "Нормально"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Fast"
-msgstr ""
+msgstr "Швидко"
 
 #: qcsrc/menu/xonotic/statslist.qc:28
 msgid "January"
@@ -13525,7 +13572,7 @@ msgstr "Грудень"
 #: qcsrc/menu/xonotic/statslist.qc:45
 #, no-c-format
 msgid "DATE^%m %d, %Y"
-msgstr ""
+msgstr "DATE^%d %m, %Y"
 
 #: qcsrc/menu/xonotic/statslist.qc:96
 msgid "Joined:"
@@ -13576,7 +13623,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/statslist.qc:231
 #, c-format
 msgid "%d (unranked)"
-msgstr ""
+msgstr "%d (без рейтингу)"
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
@@ -13584,12 +13631,12 @@ msgstr "Оновлення можна завантажити:"
 
 #: qcsrc/menu/xonotic/util.qc:518
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "Створення відомостей про нові мапи..."
+msgstr "Автоматичне створення mapinfo для нових мап..."
 
 #: qcsrc/menu/xonotic/util.qc:553
 #, c-format
 msgid "Update to %s now!"
-msgstr "Негайно оновіть версію до %s!"
+msgstr "Негайно оновіться до %s!"
 
 #: qcsrc/menu/xonotic/util.qc:627
 msgid ""
