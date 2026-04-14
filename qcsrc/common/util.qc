@@ -271,6 +271,7 @@ bool mut_is_active(int mut)
 // MENUQC and CSQC code is merged in order to avoid duplicating and separating strings
 string build_mutator_list(string s)
 {
+	static bool already_called = false;
 	#ifdef CSQC
 	if (s == "") return "";
 	#endif
@@ -291,39 +292,42 @@ string build_mutator_list(string s)
 		if (i >= 0)
 			arg = argv(i);
 		// cond is the condition for showing the mutator enabled in the menu
-		#define X(name, translated_name, mut, cond) \
-			if (arg == name || (!n && (cond))) \
+		#define X(name, translated_name, cl_hook, mut, cond) \
+			if (arg == name || (PROGNAME == "MENUQC" && (cond))) \
 			{ \
 				s2 = cons_mid(s2, ", ", translated_name); \
 				mut_set_active(mut); \
+				if (!already_called && PROGNAME == "CSQC" && cl_hook != "") \
+					localcmd("\n", cl_hook, "\n"); \
 			}
-		X("Dodging"                   , _("Dodging")                   , MUT_DODGING                   , cvar("g_dodging"))
-		X("InstaGib"                  , _("InstaGib")                  , MUT_INSTAGIB                  , cvar("g_instagib"))
-		X("New Toys"                  , _("New Toys")                  , MUT_NEW_TOYS                  , cvar("g_new_toys"))
-		X("NIX"                       , _("NIX")                       , MUT_NIX                       , cvar("g_nix"))
-		X("Rocket Flying"             , _("Rocket Flying")             , MUT_ROCKET_FLYING             , cvar("g_rocket_flying"))
-		X("Invincible Projectiles"    , _("Invincible Projectiles")    , MUT_INVINCIBLE_PROJECTILES    , cvar("g_invincible_projectiles"))
-		X("Low gravity"               , _("Low gravity")               , MUT_GRAVITY                   , cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
-		X("Cloaked"                   , _("Cloaked")                   , MUT_CLOAKED                   , cvar("g_cloaked"))
-		X("Hook"                      , _("Hook")                      , MUT_GRAPPLING_HOOK            , cvar("g_grappling_hook"))
-		X("Midair"                    , _("Midair")                    , MUT_MIDAIR                    , cvar("g_midair"))
-		X("Melee only Arena"          , _("Melee only Arena")          , MUT_MELEE_ONLY                , cvar("g_melee_only"))
-		X("Vampire"                   , _("Vampire")                   , MUT_VAMPIRE                   , cvar("g_vampire"))
-		X("Piñata"                    , _("Piñata")                    , MUT_PINATA                    , cvar("g_pinata"))
-		X("Weapons stay"              , _("Weapons stay")              , MUT_WEAPON_STAY               , cvar("g_weapon_stay"))
-		X("Blood loss"                , _("Blood loss")                , MUT_BLOODLOSS                 , cvar("g_bloodloss") > 0)
-		X("Jetpack"                   , _("Jetpack")                   , MUT_JETPACK                   , cvar("g_jetpack"))
-		X("Buffs"                     , _("Buffs")                     , MUT_BUFFS                     , cvar("g_buffs") > 0)
-		X("Overkill"                  , _("Overkill")                  , MUT_OVERKILL                  , cvar("g_overkill"))
-		X("No powerups"               , _("No powerups")               , MUT_NO_POWERUPS               , cvar("g_powerups") == 0)
-		X("Powerups"                  , _("Powerups")                  , MUT_POWERUPS                  , cvar("g_powerups") > 0)
-		X("Touch explode"             , _("Touch explode")             , MUT_TOUCHEXPLODE              , cvar("g_touchexplode") > 0)
-		X("Wall jumping"              , _("Wall jumping")              , MUT_WALLJUMP                  , cvar("g_walljump"))
-		X("No start weapons"          , _("No start weapons")          , MUT_NO_START_WEAPONS          , cvar_string("g_weaponarena") == "0" && cvar("g_balance_blaster_weaponstartoverride") == 0)
-		X("Nades"                     , _("Nades")                     , MUT_NADES                     , cvar("g_nades"))
-		X("Offhand blaster"           , _("Offhand blaster")           , MUT_OFFHAND_BLASTER           , cvar("g_offhand_blaster"))
+		X("Dodging"                   , _("Dodging")                            , "", MUT_DODGING                , cvar("g_dodging"))
+		X("InstaGib"                  , _("InstaGib")   , "cl_hook_mutator_instagib", MUT_INSTAGIB               , cvar("g_instagib"))
+		X("New Toys"                  , _("New Toys")                           , "", MUT_NEW_TOYS               , cvar("g_new_toys"))
+		X("NIX"                       , _("NIX")                                , "", MUT_NIX                    , cvar("g_nix"))
+		X("Rocket Flying"             , _("Rocket Flying")                      , "", MUT_ROCKET_FLYING          , cvar("g_rocket_flying"))
+		X("Invincible Projectiles"    , _("Invincible Projectiles")             , "", MUT_INVINCIBLE_PROJECTILES , cvar("g_invincible_projectiles"))
+		X("Low gravity"               , _("Low gravity")                        , "", MUT_GRAVITY                , cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
+		X("Cloaked"                   , _("Cloaked")                            , "", MUT_CLOAKED                , cvar("g_cloaked"))
+		X("Hook"                      , _("Hook")           , "cl_hook_mutator_hook", MUT_GRAPPLING_HOOK         , cvar("g_grappling_hook"))
+		X("Midair"                    , _("Midair")                             , "", MUT_MIDAIR                 , cvar("g_midair"))
+		X("Melee only Arena"          , _("Melee only Arena")                   , "", MUT_MELEE_ONLY             , cvar("g_melee_only"))
+		X("Vampire"                   , _("Vampire")                            , "", MUT_VAMPIRE                , cvar("g_vampire"))
+		X("Piñata"                    , _("Piñata")                             , "", MUT_PINATA                 , cvar("g_pinata"))
+		X("Weapons stay"              , _("Weapons stay")                       , "", MUT_WEAPON_STAY            , cvar("g_weapon_stay"))
+		X("Blood loss"                , _("Blood loss")                         , "", MUT_BLOODLOSS              , cvar("g_bloodloss") > 0)
+		X("Jetpack"                   , _("Jetpack")     , "cl_hook_mutator_jetpack", MUT_JETPACK                , cvar("g_jetpack"))
+		X("Buffs"                     , _("Buffs")                              , "", MUT_BUFFS                  , cvar("g_buffs") > 0)
+		X("Overkill"                  , _("Overkill")   , "cl_hook_mutator_overkill", MUT_OVERKILL               , cvar("g_overkill"))
+		X("No powerups"               , _("No powerups")                        , "", MUT_NO_POWERUPS            , cvar("g_powerups") == 0)
+		X("Powerups"                  , _("Powerups")                           , "", MUT_POWERUPS               , cvar("g_powerups") > 0)
+		X("Touch explode"             , _("Touch explode")                      , "", MUT_TOUCHEXPLODE           , cvar("g_touchexplode") > 0)
+		X("Wall jumping"              , _("Wall jumping")                       , "", MUT_WALLJUMP               , cvar("g_walljump"))
+		X("No start weapons"          , _("No start weapons")                   , "", MUT_NO_START_WEAPONS       , cvar_string("g_weaponarena") == "0" && cvar("g_balance_blaster_weaponstartoverride") == 0)
+		X("Nades"                     , _("Nades")                              , "", MUT_NADES                  , cvar("g_nades"))
+		X("Offhand blaster"           , _("Offhand blaster")                    , "", MUT_OFFHAND_BLASTER        , cvar("g_offhand_blaster"))
 		#undef X
 	}
+	already_called = true;
 	return s2;
 }
 #endif

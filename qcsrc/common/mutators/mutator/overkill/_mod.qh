@@ -5,9 +5,6 @@
 #include <common/mutators/mutator/overkill/okrpc.qh>
 #include <common/mutators/mutator/overkill/okshotgun.qh>
 #include <common/mutators/mutator/overkill/overkill.qh>
-#ifdef CSQC
-	#include <common/mutators/mutator/overkill/cl_overkill.qh>
-#endif
 #ifdef SVQC
 	#include <common/mutators/mutator/overkill/sv_overkill.qh>
 #endif
