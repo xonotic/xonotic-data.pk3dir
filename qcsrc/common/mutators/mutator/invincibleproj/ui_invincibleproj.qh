@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorInvincibleProjectilesTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorInvincibleProjectilesTab, fill, void(entity));
+	ATTRIB(XonoticMutatorInvincibleProjectilesTab, title, string, _("Invincible projectiles"));
+	ATTRIB(XonoticMutatorInvincibleProjectilesTab, message, string, "g_invincible_projectiles");
+	METHOD(XonoticMutatorInvincibleProjectilesTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorInvincibleProjectilesTab)
+entity makeXonoticMutatorInvincibleProjectilesTab();
