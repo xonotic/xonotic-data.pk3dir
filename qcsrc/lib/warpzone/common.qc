@@ -549,15 +549,6 @@ vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 	return ang;
 }
 
-vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
-{
-	vector nearest;
-	nearest.x = bound(mi.x, org.x, ma.x);
-	nearest.y = bound(mi.y, org.y, ma.y);
-	nearest.z = bound(mi.z, org.z, ma.z);
-	return nearest;
-}
-
 // blacklist of entities that WarpZone_FindRadius doesn't care about
 bool WarpZoneLib_BadEntity(entity e)
 {
@@ -605,7 +596,7 @@ void WarpZone_FindRadius_Recurse(
 	entity wz = NULL;
 	FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity(it),
 	{
-		vector p = WarpZoneLib_NearestPointOnBox(it.origin + it.mins, it.origin + it.maxs, org0);
+		vector p = NearestPointOnBoundingBox(it.origin + it.mins, it.origin + it.maxs, org0);
 		if (needlineofsight)
 		{
 			traceline(org, p, MOVE_NOMONSTERS, it);
@@ -659,8 +650,33 @@ void WarpZone_FindRadius_Recurse(
 }
 entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 {
-	// FIXME: why can't we do this? (sometimes finds nothing, breaking explosions)
-	// if (!warpzone_warpzones_exist && !needlineofsight) return findradius(org, rad);
+	if (!warpzone_warpzones_exist && !needlineofsight)
+	{
+		entity prev_good_ent = NULL;
+		entity list_first = findradius(org, rad);
+		FOREACH_LIST(list, chain, true,
+		{
+			// remove bad elements from this list while iterating
+			if (WarpZoneLib_BadEntity(it))
+			{
+				if (!prev_good_ent)
+					list_first = list_first.chain;
+				else
+					prev_good_ent.chain = it.chain;
+				continue;
+			}
+
+			if (!prev_good_ent)
+				list_first = it;
+			prev_good_ent = it;
+
+			vector p = NearestPointOnBoundingBox(it.origin + it.mins, it.origin + it.maxs, org);
+			it.WarpZone_findradius_nearest = p;
+			it.WarpZone_findradius_dist = org - p;
+		});
+		return list_first;
+	}
+
 	WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
 	entity list_first = findchainfloat(WarpZone_findradius_hit, 1);
 	FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
