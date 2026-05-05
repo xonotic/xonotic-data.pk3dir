@@ -4,6 +4,7 @@
 #
 # Translators:
 # 4m <4m038105@gmail.com>, 2015
+# Aleksander Kijanka, 2026
 # alex progger <tiprogrammierer.alex@gmail.com>, 2015
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
@@ -46,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Wojciech Sikora, 2022\n"
+"Last-Translator: Aleksander Kijanka, 2026\n"
 "Language-Team: Polish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/pl/)\n"
 "Language: pl\n"
@@ -187,7 +188,7 @@ msgstr "^1Naciśnij ^3%s^1 by zmienić tryb kamery"
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1Naciśnij ^3%s^1 dla informacji o trybie gry"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -258,17 +259,17 @@ msgstr "^2Naciśnij ^3%s^2 by zakończyć rozgrzewkę"
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
 msgid "%sNeed active players for: %s"
-msgstr ""
+msgstr "Potrzeba %s aktywnych graczy dla: %s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%sOczekiwanie na dołączenie 1 gracza..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "%sOczekiwanie na dołączenie %d graczy..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "Teams are unbalanced!"
@@ -298,7 +299,7 @@ msgstr "^7Naciśnij ^3ESC ^7aby pokazać opcie HUD."
 
 #: qcsrc/client/hud/panel/infomessages.qc:257
 msgid "^3Double-click ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Kliknij dwa razy ^7na panel aby pokazać opcje panelu."
 
 #: qcsrc/client/hud/panel/infomessages.qc:258
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -340,7 +341,7 @@ msgstr "Czat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^Send public message to"
-msgstr "QMCMD^Wyślij publiczną wiadomość do"
+msgstr "Wyślij publiczną wiadomość do"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid "QMCMD^:-) / nice one"
@@ -364,7 +365,7 @@ msgstr "hej / powodzenia i miłej zabawy"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^Send in English"
-msgstr "QMCMD^Wyślij w języku angielskim"
+msgstr "Wyślij w języku angielskim"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
@@ -453,7 +454,7 @@ msgstr "zabiłem niosącego flagę (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "QMCMD^killed flagcarrier, icon"
-msgstr "QMCMD^zabiłem niosącego flagę, ikona"
+msgstr "zabiłem niosącego flagę, ikona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 #, c-format
@@ -466,19 +467,19 @@ msgstr "upuściłem flagę, ikona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^drop weapon, icon"
-msgstr "QMCMD^upuść broń, icon"
+msgstr "upuść broń, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "QMCMD^dropped weapon %w^7 (l:%l^7)"
-msgstr "QMCMD^upuszczono broń %w^7 (l:%l^7)"
+msgstr "upuszczono broń %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "QMCMD^drop flag/key, icon"
-msgstr "QMCMD^upuść flagę/klucz, icon"
+msgstr "upuść flagę/klucz, icon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "QMCMD^dropped flag/key %w^7 (l:%l^7)"
-msgstr "QMCMD^upuszczono flagę/klucz %w^7 (l:%l^7)"
+msgstr "upuszczono flagę/klucz %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "QMCMD^Send private message to"
@@ -512,7 +513,7 @@ msgstr "Celownik broni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "QMCMD^FPS"
-msgstr "QMCMD^FPS"
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "QMCMD^Net graph"
@@ -533,7 +534,7 @@ msgstr "Dźwięk czatu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "QMCMD^Change spectator camera"
-msgstr "QMCMD^Zmień kamerę trybu widza"
+msgstr "Zmień kamerę trybu widza"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 #: qcsrc/client/hud/panel/quickmenu.qc:897
@@ -550,7 +551,7 @@ msgstr "Zmniejsz szybkość"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "QMCMD^Wall collision"
-msgstr "QMCMD^Kolizja ze ścianą"
+msgstr "Kolizja ze ścianą"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 msgid "QMCMD^Fullscreen"
@@ -599,7 +600,7 @@ msgstr "Ustaw menu szybkich akcji serwera jako domyślne"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "QMCMD^Spectate a player"
-msgstr "QMCMD^Obserwuj gracza"
+msgstr "Obserwuj gracza"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -645,11 +646,11 @@ msgstr "Liczba zabitych graczy niosących piłkę"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^bckills"
-msgstr ""
+msgstr "bckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "SCO^bctime"
-msgstr ""
+msgstr "bctime"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:131
 msgid "Total amount of time holding the ball in Keepaway"
@@ -657,7 +658,7 @@ msgstr "Łączny czas kontroli nad piłką w trybie Keepaway"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "How often a flag (CTF) or a key (Key Hunt) was captured"
-msgstr ""
+msgstr "Jak często została przejęta flaga (CTF) lub klucz (Key Hunt)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
@@ -685,19 +686,19 @@ msgstr "Liczba kluczy zniszczonych przez zepchnięcie do pustki"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^destructions"
-msgstr ""
+msgstr "zniszczenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage dealt"
-msgstr ""
+msgstr "zadane obrażenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "The total damage dealt"
-msgstr "Zadanych obrażeń w ogóle"
+msgstr "Całkowite zadane obrażenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^damage taken"
-msgstr ""
+msgstr "przyjęte obrażenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "The total damage taken"
@@ -713,7 +714,7 @@ msgstr "porzucenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "SCO^fastest"
-msgstr "Najszybszy"
+msgstr "najszybszy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Time of fastest lap (Race/CTS)"
@@ -733,7 +734,7 @@ msgstr "Liczba zabitych graczy niosących flagę"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^fckills"
-msgstr "SCO^fckills"
+msgstr "fckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "FPS"
@@ -741,7 +742,7 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^fps"
-msgstr "SCO^fps"
+msgstr "fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of kills minus suicides"
@@ -749,7 +750,7 @@ msgstr "Liczba zabójstw odjąć samobójstwa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^frags"
-msgstr "SCO^fragi"
+msgstr "fragi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of generators destroyed"
@@ -757,7 +758,7 @@ msgstr "Liczba zniszczonych generatorów"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^generators"
-msgstr ""
+msgstr "generatory"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "Number of goals scored"
@@ -769,15 +770,15 @@ msgstr "cele"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of hunts (Survival)"
-msgstr ""
+msgstr "Liczba polowań (Survival)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "SCO^hunts"
-msgstr ""
+msgstr "polowania"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "Number of key carrier kills"
-msgstr ""
+msgstr "Liczba zabitych graczy niosących klucz"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:147
 msgid "SCO^kckills"
@@ -785,7 +786,7 @@ msgstr "kckills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 msgid "SCO^k/d"
-msgstr "SCO^k/d"
+msgstr "z/ś"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:148
 #: qcsrc/client/hud/panel/scoreboard.qc:149
@@ -795,11 +796,11 @@ msgstr "Stosunek zabójstwa-śmierci"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^kdr"
-msgstr "SCO^kdr"
+msgstr "kdr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "SCO^kdratio"
-msgstr "SCO^kdratio"
+msgstr "kdratio"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of kills"
@@ -807,7 +808,7 @@ msgstr "Liczba zabójstw"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^kills"
-msgstr "SCO^zabici"
+msgstr "zabici"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of laps finished (Race/CTS)"
@@ -815,7 +816,7 @@ msgstr "Liczba zakończonych okrążeń (Race/CTS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^laps"
-msgstr "SCO^okrążenia"
+msgstr "okrążenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "Number of lives (LMS)"
@@ -823,7 +824,7 @@ msgstr "Liczba żyć (LMS)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:153
 msgid "SCO^lives"
-msgstr "SCO^życia"
+msgstr "życia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "Number of times a key was lost"
@@ -831,7 +832,7 @@ msgstr "Ilość zgubionych kluczy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:154
 msgid "SCO^losses"
-msgstr "SCO^straty"
+msgstr "straty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 #: qcsrc/client/hud/panel/scoreboard.qc:156
@@ -840,11 +841,11 @@ msgstr "Nazwa gracza"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^name"
-msgstr "SCO^nazwa"
+msgstr "nazwa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "SCO^nick"
-msgstr "SCO^ksywka"
+msgstr "ksywka"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "Number of objectives destroyed"
@@ -852,16 +853,17 @@ msgstr "Liczba zniszczonych celów"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:157
 msgid "SCO^objectives"
-msgstr "SCO^cele"
+msgstr "cele"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid ""
 "How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"
 msgstr ""
+"Jak często flaga (CTF), klucz (Key Hunt) lub piłka (Keepaway) był przejmowany"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:158
 msgid "SCO^pickups"
-msgstr "SCO^znajdźki"
+msgstr "znajdźki"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Ping time"
@@ -869,7 +871,7 @@ msgstr "Czas pingowania"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^ping"
-msgstr "SCO^ping"
+msgstr "ping"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Packet loss"
@@ -877,7 +879,7 @@ msgstr "Utrata pakietów"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "SCO^pl"
-msgstr "SCO^pl"
+msgstr "pl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "Number of players pushed into void"
@@ -885,7 +887,7 @@ msgstr "Liczba graczy zepchniętych w pustkę"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:161
 msgid "SCO^pushes"
-msgstr "SCO^pchnięcia"
+msgstr "pchnięcia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "Player rank"
@@ -893,7 +895,7 @@ msgstr "Ranga gracza"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:162
 msgid "SCO^rank"
-msgstr "SCO^ranga"
+msgstr "ranga"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "Number of flag returns"
@@ -901,7 +903,7 @@ msgstr "Liczba zwróceń flagi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:163
 msgid "SCO^returns"
-msgstr "SCO^zwroty"
+msgstr "zwroty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of revivals"
@@ -909,7 +911,7 @@ msgstr "Liczba wskrzeszeń"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^revivals"
-msgstr "SCO^wskrzeszenia"
+msgstr "wskrzeszenia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Number of rounds won"
@@ -917,7 +919,7 @@ msgstr "Liczba wygranych rund"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "SCO^rounds won"
-msgstr "SCO^wygrane rundy"
+msgstr "wygrane rundy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "Number of rounds played"
@@ -925,11 +927,11 @@ msgstr "Liczba rozegranych rund"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:166
 msgid "SCO^rounds played"
-msgstr ""
+msgstr "rozegrane rundy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "SCO^score"
-msgstr "SCO^wynik"
+msgstr "wynik"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:167
 msgid "Total score"
@@ -937,11 +939,11 @@ msgstr "Łączny wynik"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Player skill"
-msgstr ""
+msgstr "Umięjętność gracza"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^skill"
-msgstr ""
+msgstr "umiejętność"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "Number of suicides"
@@ -949,7 +951,7 @@ msgstr "Liczba samobójstw"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:169
 msgid "SCO^suicides"
-msgstr "SCO^samobójstwa"
+msgstr "samobójstwa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "Number of kills minus deaths"
@@ -957,15 +959,15 @@ msgstr "Liczba zabójstw odjąć śmierci"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:170
 msgid "SCO^sum"
-msgstr "SCO^suma"
+msgstr "suma"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "Number of survivals"
-msgstr ""
+msgstr "Liczba przeżyć"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:171
 msgid "SCO^survivals"
-msgstr ""
+msgstr "przeżycia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "Number of domination points taken (Domination)"
@@ -973,7 +975,7 @@ msgstr "Liczba przejętych punktów dominacji (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:172
 msgid "SCO^takes"
-msgstr "SCO^przejęcia"
+msgstr "przejęcia"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of teamkills"
@@ -981,19 +983,19 @@ msgstr "Liczba zabitych sojuszników"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^teamkills"
-msgstr "SCO^teamkille"
+msgstr "teamkille"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of ticks (Domination)"
-msgstr ""
+msgstr "Liczba ticków (Domination)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^ticks"
-msgstr "SCO^ticks"
+msgstr "ticks"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "SCO^time"
-msgstr "SCO^czas"
+msgstr "czas"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Total time raced (Race/CTS)"
@@ -1018,22 +1020,28 @@ msgid ""
 "^2scoreboard_columns_set ^7without arguments reads the arguments from the "
 "cvar scoreboard_columns"
 msgstr ""
+"^2scoreboard_columns_set ^7bez argumentów odczytuje argumenty z cvar "
+"scoreboard_columns"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:718
 msgid ""
 "  ^5Note: ^7scoreboard_columns_set without arguments is executed on every "
 "map start"
 msgstr ""
+" ^5Notka: ^7scoreboard_columns_set bez argumentów są uruchamiane przy każdym "
+"uruchomieniu mapy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:719
 msgid ""
 "^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands "
 "it into the cvar scoreboard_columns so you can edit it"
 msgstr ""
+"^2scoreboard_columns_set ^3expand_default ^7wczytuje domyślny układ i "
+"rozszerza je do cvar scoreboard_columns więc możesz je edytować"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:720
 msgid "You can use a ^3|^7 to start the right-aligned fields."
-msgstr ""
+msgstr "Możesz użyć ^3|^7 by wyrównać pola do prawej."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:721
 msgid "The following field names are recognized (case insensitive):"
@@ -1047,12 +1055,21 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
+"Przed nazwą pola możesz dać znak + lub -, a następnie oddzieloną "
+"przecinkami\n"
+"listę typów gier przedzielonych ukośnikiem z numerem pola, by pole "
+"pokazywało się\n"
+"tylko w tych lub we wszystkich typach gier. Możesz także użyć 'all' jako "
+"pola,\n"
+"by pokazać wszystkie dostępne pola w danym trybie gry."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:733
 msgid ""
 "The special gametype names 'teams' and 'noteams' can be used to\n"
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
+"Specjalne nazwy typów gier 'teams' i 'noteams' mogą zostać użyte do\n"
+"włączenia/wyłączenie WSZYSTKICH drużynowych/nie drużynowych trybów gry."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:737
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1064,12 +1081,16 @@ msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
+"pokaże nazwę, ping i pl wyrównane do lewej,\n"
+"a pola na prawo od '|' wyrównane do prawej."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:740
 msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gametypes except DM."
 msgstr ""
+"'field3' będzie pokazane tylko w trybie CTF, a 'field4' we wszystkich "
+"trybach poza DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1058
 #: qcsrc/client/hud/panel/scoreboard.qc:1072
@@ -1090,7 +1111,7 @@ msgstr "Statystyka dokładności (średnia %d%%)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2004
 msgid "Item stats"
-msgstr "Statystyki przedmiotu"
+msgstr "Statystyki przedmiotu:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2120
 msgid "Map stats:"
@@ -1107,12 +1128,12 @@ msgstr "Znalezione sekrety:"
 #: qcsrc/client/hud/panel/scoreboard.qc:2374
 #, c-format
 msgid "Spectators"
-msgstr "Obserwujący"
+msgstr "Obserwujący:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2396
 #, c-format
 msgid "^2+%s %s"
-msgstr ""
+msgstr "^2+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2396
 #, c-format
@@ -1121,7 +1142,7 @@ msgstr "^5%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2397
 msgid "SCO^points"
-msgstr "SCO^punkty"
+msgstr "punkty"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2512
 msgid "Next map:"
@@ -1130,7 +1151,7 @@ msgstr "Następna mapa:"
 #: qcsrc/client/hud/panel/scoreboard.qc:2519
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
 msgid "Team Selection"
-msgstr "Wybór drużyny "
+msgstr "Wybór drużyny:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2533
 #, c-format
@@ -1151,7 +1172,7 @@ msgstr "^7Naciśnij ^3 %s^7żeby wybrać jedną z drużyn "
 #: qcsrc/client/hud/panel/scoreboard.qc:2577
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7graczy"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1419
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:42
@@ -1188,7 +1209,7 @@ msgstr "Jesteś martwy, wciśnij ^2%s^7 by się wskrzesić"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:31
 #, c-format
 msgid "%s°"
-msgstr ""
+msgstr "%s°"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "qu"
@@ -1208,7 +1229,7 @@ msgstr "mi"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:105
 msgid "nmi"
-msgstr ""
+msgstr "nmi"
 
 #: qcsrc/client/hud/panel/timer.qc:155
 msgid "Warmup"
@@ -1245,7 +1266,7 @@ msgstr "Dodatkowy czas #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:32
 msgid "^1You must answer before entering HUD configure mode"
-msgstr ""
+msgstr "^1Musisz odpowiedzieć zanim przejdziesz do trybu konfiguracji HUD"
 
 #: qcsrc/client/hud/panel/vote.qc:35
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1325,7 +1346,7 @@ msgstr "węzły"
 
 #: qcsrc/client/main.qc:1338
 msgid "All Weapons Arena"
-msgstr "Arena Wszystkich Broni"
+msgstr "Arena wszystkich broni"
 
 #: qcsrc/client/main.qc:1339
 msgid "All Available Weapons Arena"
@@ -1333,7 +1354,7 @@ msgstr "Arena wszystkich dostępnych broni"
 
 #: qcsrc/client/main.qc:1340
 msgid "Most Weapons Arena"
-msgstr "Arena Większości Broni"
+msgstr "Arena większości broni"
 
 #: qcsrc/client/main.qc:1341
 msgid "Most Available Weapons Arena"
@@ -1388,7 +1409,7 @@ msgstr "Poziom %d :"
 #: qcsrc/client/main.qc:1394
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
-msgstr ""
+msgstr "^BGWciśnij ^F2%s^BG aby wejść do gry"
 
 #: qcsrc/client/main.qc:1417
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:37
@@ -1416,7 +1437,7 @@ msgstr "%d do %d graczy"
 #: qcsrc/client/main.qc:1431
 #, c-format
 msgid "%d players maximum"
-msgstr "%dgraczy maksymalnie"
+msgstr "%d graczy maksymalnie"
 
 #: qcsrc/client/main.qc:1433
 #, c-format
@@ -1456,7 +1477,7 @@ msgstr "Wszystko jedno"
 #: qcsrc/client/mapvoting.qc:379
 #, c-format
 msgid "Suggested by: %s"
-msgstr ""
+msgstr "Zapropowane przez: %s"
 
 #: qcsrc/client/mapvoting.qc:460
 msgid "Decide the gametype"
@@ -1498,7 +1519,7 @@ msgstr "błąd przy tworzeniu curl handle"
 #, c-format
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
-msgstr ""
+msgstr "%s to drużynowy tryb gry z udziałem atakującej i broniącej drużyny."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:9
 msgid ""
@@ -1510,12 +1531,23 @@ msgid ""
 "teams switch roles and the new attacking team wins only if they destroy the "
 "main object within the time the other team took to do it."
 msgstr ""
+"Atakująca drużyna ma na celu zniszczyć obiekty położone na mapie, które "
+"otwierają nowe drzwi lub przejścia do kolejnych obiektów, dopóki drużyna "
+"dostanie się do głównego obiektu i go zniszczy. Broniąca drużyna ma za "
+"zadanie bronić obiektów, drużyna wygrywa grę, gdy z powodzeniem powstrzyma "
+"atakującą drużynę przed zniszczeniem głównego obiektu przez upłynięciem "
+"limitu czasowego. Jeśli się to nie uda, rozgrywana jest druga runda, gdzie "
+"drużyny zamieniają się rolami i nowa atakująca drużyna wygrywa wtedy, gdy "
+"główny obiekt zostanie zniszczony w czasie, w jakim wykonała to druga "
+"drużyna."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:12
 msgid ""
 "Objects have waypoints which show their health and position, and they're "
 "destroyed by shooting them with any weapon."
 msgstr ""
+"Obiekty posiadają punkty, które pokazują zdrowie i pozycję i można je "
+"zniszczyć strzelając w nie z dowolnej broni."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:8
 msgid "Assault"
@@ -1551,18 +1583,26 @@ msgid ""
 "life per round. There are no pickups available on the map in %s, making the "
 "gameplay fast-paced and focused on combat."
 msgstr ""
+"%s to tryb gry oparty na rundach rozgrywane z podziałem na drużyny, gdzie "
+"gracze rodzą się z wszystkimi dostępnymi broniami, mając maksymalne zdrowie "
+"i pancerz, ale posiadając jedynie jedno życie na rundę. Nie ma dostępnych "
+"zasobów na mapie w %s, czyniąc gameplay dynamicznym i skupionym na walce."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:10
 msgid ""
 "Rounds start with a ten second grace period where weapons cannot be fired, "
 "so it's a good opportunity to group up with your team."
 msgstr ""
+"Rundy zaczynają się z 10 sekundowym okresem, gdzie nie można strzelać z "
+"broni czyniąc tym samym dobrą okazję, aby pogrupować się z zespołem."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:11
 msgid ""
 "The match ends once a team reaches a certain number of rounds won, or has a "
 "considerable lead over the other team."
 msgstr ""
+"Mecz kończy się, gdy jedna z drużyn osiągnie daną liczbę wygranych rund lub "
+"ma znaczącą przewagę nad drugą drużyną."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:12
 msgid ""
@@ -1570,6 +1610,9 @@ msgid ""
 "fellow teammates and pay attention to any callouts from them. Team "
 "coordination is key!"
 msgstr ""
+"Ponieważ gracze mają tylko jedno życie na rundę, ważne jest, aby "
+"współpracować z innymi członkami drużyny i zwracać na siebie uwagę. "
+"Współpraca drużynowa jest kluczowa!"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Clan Arena"
@@ -1601,12 +1644,18 @@ msgid ""
 "captured if your own flag is also home in its base, so it's important to "
 "collect your flag after it's dropped."
 msgstr ""
+"%s to tryb gry rozgrywany z podziałem na drużyny, której zadaniem jest "
+"kradzież flagi drużyny przeciwnej i przeniesienie jej na własną rekę. Flaga "
+"może być przechwycona tylko wtedy, gdy twoja flaga będzie w twojej bazie, "
+"więc ważne jest, aby wziąć flagę po jej opuszczeniu."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:10
 msgid ""
 "The game is won once a team reaches a certain number of \"caps\" (captures), "
 "or has a considerable lead over the other team."
 msgstr ""
+"Gra zostanie uznana za wygraną, gdy drużyna osiągnie określoną liczbę "
+"\"caps\" (przejęć) lub będzie miała znaczącą przewagę na drugą drużyną."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:11
 msgid ""
@@ -1616,6 +1665,11 @@ msgid ""
 "\"stalemate\" will initiate and all flag carriers (\"fc\"s) will be exposed "
 "on the radar and with waypoints."
 msgstr ""
+"Jeśli flaga spadnie w pustkę lub śmiertelną pułapkę to natychmiastowo wróci "
+"do bazy lub postoi przez jakiś czas, po czym automatycznie wróci do bazy. "
+"Jeśli wszystkie flagi zostaną utrzymane to po pewnym czasie rozpocznie się "
+"\"stalemate\" i wszystkie flagi (\"fc\") będą widoczne na radarze i na "
+"punktach."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:13
 #, c-format
@@ -1627,6 +1681,12 @@ msgid ""
 "important, especially to let teammates know if you see the enemy flag "
 "carrier."
 msgstr ""
+"%s nagradza przebiegły ruch, gdyż im trudniej będzie wrogom cię zaatakować, "
+"tym większe prawdopodobieństwo, że uciekniesz z ich bazy z ich flagą. "
+"Nagradzane również jest obrona bazy, ponieważ jeśli Twoi wrogowie nie mogą "
+"zdobyć Twojej flagi to nie będą mogli ją przejąć. Dobra komunikacja z "
+"drużyną również jest ważna, zwłaszcza jeśli chcesz dać znać członkom drużyny "
+"gdy zobaczą gracza niosącego flagę przeciwnika."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:11
 msgid "Capture the Flag"
@@ -1661,6 +1721,9 @@ msgid ""
 "from start to finish as fast as possible and try to beat the times set by "
 "others."
 msgstr ""
+"%s to tryb gry skupiający się na wyścigu z innymi graczami na mapie, zamiast "
+"na walce z bronią. Gracze biegną przez mapę od startu do mety najszybciej "
+"jak to tylko możliwe i próbują pobić czas ustanowiony przez innych."
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qc:12
 #, c-format
@@ -1668,6 +1731,8 @@ msgid ""
 "%s is similar to %s, except you don't run in laps, and instead run from the "
 "start line to the finish line then start over again."
 msgstr ""
+"%s jest podobny do %s z wyjątkiem, że nie biegasz przez okrążenia, a "
+"biegniesz od startu do mety i potem zaczynasz ponownie."
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qc:13
 msgid ""
@@ -1676,6 +1741,10 @@ msgid ""
 "heaps of community-made maps available. Also, it only requires one player to "
 "play."
 msgstr ""
+"Aczkolwiek ten tryb gry znacznie różni się od pozostałych, to jest często "
+"ogrywany, gdyż jest to dobry sposób na opanowanie umiejętności poruszania "
+"się i jest sporo dostępnych map stworzonych przez społeczność. Do rozgrywki "
+"jest potrzebny tylko jeden gracz."
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race CTS"
@@ -1683,7 +1752,7 @@ msgstr "Wyścig CTS"
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
-msgstr ""
+msgstr "Dotrzyj do mety w jak najszybszym czasie"
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:11
 #, c-format
@@ -1693,12 +1762,18 @@ msgid ""
 "you respawn with only the starter weapons, so any you collected will have to "
 "be picked up again."
 msgstr ""
+"%s to walka free-for-all na śmierć, gdzie wszyscy grają przeciwko sobie i "
+"wygrywa ten, kto zdobędzie najwięcej punktów. Kiedy zostaniesz zabity, "
+"odradzasz się tylko z podstawowymi broniami, więc wszystko to, co zebrałeś "
+"musisz zebrać ponownie."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:13
 msgid ""
 "Scoring is quite simple, fragging an opponent adds one to your score, and "
 "fragging yourself subtracts one."
 msgstr ""
+"Zasady punktacji są proste, zabicie przeciwnika da ci punkt do wyniku, a "
+"zabicie siebie samego odejmie ci punkt."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:14
 #, c-format
@@ -1707,6 +1782,9 @@ msgid ""
 "contested since they sometimes have the power to make or break a game, so "
 "making good use of them is important."
 msgstr ""
+"Mapy często zawierają doładowania i przedmioty takie jak %s i %s, które są "
+"kwestionowane, ponieważ mogą zadecydować o losach gry, dlatego ważne jest "
+"dobre wykorzystywanie."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
@@ -1722,6 +1800,8 @@ msgid ""
 "%s is a gametype where teams compete to dominate the map by capturing and "
 "keeping control points."
 msgstr ""
+"%s to tryb gry, gdzie drużyny rywalizują o dominację na mapie przez "
+"przejmowanie i utrzymywanie punktów kontrolnych."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:9
 msgid ""
@@ -1730,12 +1810,19 @@ msgid ""
 "as easily steal a control point owned by your team by doing the same. "
 "Control points start neutral (owned by no teams)."
 msgstr ""
+"Punkty kontrolne są wyświetlane na radarze, aby było je łatwiej znaleźć i są "
+"przechwycywane poprzez wejście na nie. Jednak przeciwnik może przejąć punkt "
+"kontrolny zajęty poprzez twoją drużynę robiąc to samo. Po rozpoczęciu gry "
+"punkty kontrolne są neutralne (nie są zajmowane przez żadną drużynę)."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:12
 msgid ""
 "Scoring is a combination of frags and score automatically generated by any "
 "control points held by your team every few seconds."
 msgstr ""
+"Zasady punktacji polegają na połączeniu fragów i wyników automatycznie "
+"generowanych przez dowolne punkty kontrolne zajmowane przez twoją drużynę co "
+"każde kilka sekund."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qh:11
 msgid "Capture and defend all the control points to win"
@@ -1759,6 +1846,9 @@ msgid ""
 "%s is a 1-vs-1 arena battle to decide the winner, essentially a 2-player "
 "version of %s, making it one of the most competitive gametypes."
 msgstr ""
+"%s to walka 1-na-1 na arenie, która kończy się zwycięstwem jednego z graczy. "
+"Jest to wersja trybu %s przeznaczonego dla 2 graczy, czyniąc z nich "
+"najbardziej kompetetywny tryb gry."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:13
 #, c-format
@@ -1769,6 +1859,11 @@ msgid ""
 "with the best item control is often the winner, so this is a key aspect to "
 "master."
 msgstr ""
+"Ponieważ gracze są zdani na siebie, ważne rzeczy takie jak %s i %s są często "
+"kwestionowane i często \"mierzone\" poprzez obserwację timera w grze, kiedy "
+"są podniesione, aby określić, kiedy się ponownie pojawią. Gracz posiadający "
+"kontrolę nad najlepszymi rzeczami często wygrywa, dlatego jest ważny aspekt "
+"do opanowania."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:16
 msgid ""
@@ -1776,16 +1871,19 @@ msgid ""
 "health, so it is a good opportunity to search the map for them to pick up an "
 "easy frag and continue your streak."
 msgstr ""
+"Kiedy zabijesz przeciwnika, pojawi się on z niewielką ilością broni i "
+"ograniczonym zdrowiem, więc jest to dobra okazja, by przeszukać mapę w "
+"poszukiwaniu go, by zdobyć łatwe zabójstwo i kontynuować swoją passę."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #, c-format
 msgid "%s is often played with %s rules."
-msgstr ""
+msgstr "%s jest często ogrywany z zasadami %s."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
 msgid "XPM"
-msgstr ""
+msgstr "XPM"
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qh:9
 msgid "Duel"
