@@ -99,47 +99,23 @@ bool _Movetype_NudgeOutOfSolid_PivotIsKnownGood(entity this, vector pivot) // SV
 	return true;
 }
 
-void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
-{
-	/*float d, i;
-	vector into, side;
-	makevectors(this.v_angle);
-	d = (stepnormal * v_forward) + 0.5;
-
-	if(d < 0)
-	{
-	    i = (stepnormal * this.velocity);
-	    into = i * stepnormal;
-	    side = this.velocity - into;
-	    this.velocity_x = side.x * (1 * d);
-	    this.velocity_y = side.y * (1 * d);
-	}*/
-}
-
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepnormal, float stepheight) // SV_FlyMove
+int _Movetype_FlyMove(entity this, float time_left, bool applygravity, float stepheight) // SV_FlyMove
 {
-	move_stepnormal = '0 0 0';
-
-	if(dt <= 0)
-		return 0;
-
+	int i;
 	int blockedflag = 0;
-	int numplanes = 0;
-	float time_left = dt, grav = 0;
-	vector push;
-	vector primal_velocity, original_velocity;
-	vector restore_velocity = this.velocity;
-
-	for(int j = 0; j < MAX_CLIP_PLANES; ++j)
-		planes[j] = '0 0 0';
+	vector jumporigin = this.origin;
+	LABEL(ReapplyGravityContinue)
+	int numplanes;
+	float grav = 0;
+	vector previous_velocity = this.velocity;
 
 	if(applygravity)
 	{
 		this.move_didgravity = 1;
-		grav = dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
+		grav = time_left * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
-		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
+		if (!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this) || IS_ONSLICK(this) || HAS_KNOCKBACK(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.velocity_z -= grav * 0.5;
@@ -148,15 +124,18 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		}
 	}
 
-	original_velocity = primal_velocity = this.velocity;
+	vector primal_velocity = this.velocity;
+
+	// Q3: never turn against original velocity
+	planes[0] = normalize(this.velocity);
+	numplanes = 1;
 
 	for(int bumpcount = 0;bumpcount < MAX_CLIP_PLANES; ++bumpcount)
 	{
 		if(this.velocity == '0 0 0')
 			break;
 
-		push = this.velocity * time_left;
-		if(!_Movetype_PushEntity(this, push, false))
+		if (!_Movetype_PushEntity(this, this.velocity * time_left, false))
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -164,11 +143,13 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 			break;
 		}
 
-		// this code is used by MOVETYPE_WALK and MOVETYPE_STEP and SV_UnstickEntity
 		// abort move if we're stuck in the world (and didn't make it out)
-		if(trace_startsolid && trace_allsolid)
+		if (trace_startsolid) // on some maps this is needed when trace_allsolid is false
 		{
-			this.velocity = restore_velocity;
+			if (PM_CorrectStuck(this))
+				continue; // retry from new position
+			this.velocity = '0 0 0'; // no Q3 wallbug type exploits plz
+			SET_ONGROUND(this); // disable gravity to limit spam
 			return 3;
 		}
 
@@ -177,77 +158,166 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 
 		time_left *= 1 - trace_fraction;
 
-		float my_trace_fraction = trace_fraction;
+		// Q3: if this is the same plane we hit before, nudge velocity
+		// out along it, which fixes some epsilon issues with non-axial planes
+		for (i = 0; i < numplanes; ++i)
+		{
+			if (trace_plane_normal * planes[i] > 0.99) // very loose, DOOM 3 uses 0.999 but that fails on dkr14
+			{
+				// bones_was_here: clip first to prevent this from causing sticking on some concave curves.
+				this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+				this.velocity += trace_plane_normal;
+				break;
+			}
+		}
+		if (i < numplanes)
+			continue;
+
 		vector my_trace_plane_normal = trace_plane_normal;
 
-		if(trace_plane_normal.z)
-		{
-			if(trace_plane_normal.z > 0.7)
-			{
-				// floor
-				blockedflag |= 1;
-
-				if(!trace_ent)
-				{
-					//dprint("_Movetype_FlyMove: !trace_ent\n");
-					trace_ent = NULL;
-				}
-
-				SET_ONGROUND(this);
-				this.groundentity = trace_ent;
-			}
-		}
-		else if(stepheight)
+		if (stepheight)
+		if (trace_plane_normal * this.groundplane_normal <= 0.999) // it's not the same as the ground plane
+		if (trace_plane_normal.x * this.velocity.x + trace_plane_normal.y * this.velocity.y < 0) // it's obstructing horizontal movement
 		{
 			// step - handle it immediately
-			vector org = this.origin;
-			vector steppush = vec3(0, 0, stepheight);
-			push = this.velocity * time_left;
+			vector prestep_org = this.origin;
 
-			if(!_Movetype_PushEntity(this, steppush, false))
+			// Q3's PM_WaterMove() doesn't step up, PM_WaterJumpMove() does
+			if (PHYS_STEPTYPE(this) > 1 && this.waterlevel > WATERLEVEL_WETFEET && !IS_WATERJUMPING(this))
+				goto NoStep;
+
+			// Q3: never step up when you still have up velocity
+			if (PHYS_STEPTYPE(this) > 1 && this.velocity.z > 0)
+			// bones_was_here: CPM conditions first to skip the trace when possible,
+			if (PHYS_STEPTYPE(this) == 3 /* VQ3 */ || this.velocity.z > 370 || !WOULD_DJ(this))
+			// can also skip it when onground, but due to spurious '1 0 0' edge collisions in some creases (likely engine issue)
+			if (!this.groundplane_normal.z) // we also must always allow stepping up while sliding up a steep plane, eg on dkr14.
 			{
-				blockedflag |= 8;
-				break;
-			}
-			if(!_Movetype_PushEntity(this, push, false))
-			{
-				blockedflag |= 8;
-				break;
-			}
-			float trace2_fraction = trace_fraction;
-			steppush = vec3(0, 0, org.z - this.origin_z);
-			if(!_Movetype_PushEntity(this, steppush, false))
-			{
-				blockedflag |= 8;
-				break;
+				_Movetype_PushEntityTrace(this, vec3(0, 0, -stepheight)); // always -18 in VQ3 and CPM
+				if (trace_fraction == 1 || trace_plane_normal.z < MIN_WALK_NORMAL)
+					goto NoStep;
 			}
 
-			// accept the new position if it made some progress...
-			// previously this checked if absolute distance >= 0.03125 which made stepping up unreliable
-			if(this.origin_x - org.x || this.origin_y - org.y)
+			// step up
+			if (!_Movetype_PushEntity(this, vec3(0, 0, stepheight), false))
 			{
-				trace_endpos = this.origin;
-				time_left *= 1 - trace2_fraction;
-				numplanes = 0;
-				continue;
+				blockedflag |= 8;
+				break;
 			}
-			else
-				this.origin = org;
+			if (!trace_fraction) // no room to step up
+				goto NoStep;
+			float pushdown = prestep_org.z - this.origin.z;
+
+			// gained some height, try to continue the move from this position
+			// bones_was_here: hack time to step over tiny ramps (brush misalignments) consistently,
+			// in Q3 there's 1 step per frame and frametime is usually 8ms so ~4ms median for this.
+			float move_time = my_trace_plane_normal.z > 0 ? 1/256 : time_left;
+			if (!_Movetype_PushEntity(this, this.velocity * move_time, false))
+			{
+				blockedflag |= 8;
+				break;
+			}
+			if (this.origin.x == prestep_org.x && this.origin.y == prestep_org.y) // no horizontal progress
+			{
+				my_trace_plane_normal = trace_plane_normal; // so the next move attempt could succeed
+				goto NoStep;
+			}
+			move_time *= trace_fraction;
+
+			// push down the final amount
+			if (!_Movetype_PushEntity(this, vec3(0, 0, pushdown), false))
+			{
+				blockedflag |= 8;
+				break;
+			}
+			int clip = 0;
+			if (trace_fraction < 1)
+			{
+				// Cancel the step up (so we don't jitter up steep ramps or jump from higher up) when
+				if (PHYS_STEPTYPE(this) < 1) // we're only allowed to step over tiny ramps that are likely brush misalignments,
+					// and land on any steep plane (might be curved) whilst having a walkable ground plane,
+					if ((trace_plane_normal.z < MIN_WALK_NORMAL && this.groundplane_normal.z >= MIN_WALK_NORMAL)
+					|| trace_plane_normal * my_trace_plane_normal > 0.99) // or land on ~ the same plane we're trying to step over.
+						goto NoStep; // NB: the main test maps for this code path are dkr14 and ctctf3.
+
+				if ((PHYS_DOUBLEJUMP(this) && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_STEPTYPE(this) > 1)
+					clip = PM_GroundDetected(this, previous_velocity);
+
+				if ((PHYS_DOUBLEJUMP(this) == 2 && PHYS_INPUT_BUTTON_JUMP(this)) || PHYS_STEPTYPE(this) > 1)
+				{
+					this.velocity = _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1);
+					if (IS_SKIMMING(this)) // Q3 skimming doesn't undo clipping to a plane hit during pushdown
+						primal_velocity = _Movetype_ClipVelocity(primal_velocity, trace_plane_normal, 1);
+				}
+				else if (PHYS_DOUBLEJUMP(this) == 1 && PHYS_INPUT_BUTTON_JUMP(this) && trace_plane_normal.z >= MIN_WALK_NORMAL)
+				{
+					float f = this.velocity * trace_plane_normal;
+					if (f < 0)
+						this.velocity -= f * trace_plane_normal;
+					if (IS_SKIMMING(this)) // Q3 skimming doesn't undo clipping to a plane hit during pushdown
+					{
+						f = primal_velocity * trace_plane_normal;
+						if (f < 0)
+							primal_velocity -= f * trace_plane_normal;
+					}
+				}
+			}
+
+			if (move_time > time_left) // hacking too much time!
+			{
+				// with the right computer algorithms I can hack you back in time
+				_Movetype_PushEntityTrace(this, (time_left - move_time)
+				* (trace_fraction < 1 ? _Movetype_ClipVelocity(this.velocity, trace_plane_normal, 1) : this.velocity));
+				this.origin = trace_endpos;
+			}
+			time_left -= move_time;
+
+			// frametime-independent jumping, although the step up can't be fully frametime-independent
+			if (PHYS_INPUT_BUTTON_JUMP(this) && (clip & 1)) // no need for jumporigin check
+			{
+				if (IS_SKIMMING(this))
+					this.velocity = primal_velocity; // apply skimming now else it'll be lost
+				PlayerJump(this);
+				if (!IS_ONGROUND(this)) // definitely did jump
+				{
+					if (time_left <= 0)
+						return blockedflag; // no more gravity, new jump's height would be too low
+					jumporigin = this.origin;
+					goto ReapplyGravityContinue;
+				}
+			}
+
+			if (time_left <= 0)
+				break;
+			// Hit a plane above the step (or move_time < time_left), the pushdown may have cleared it
+			// or presented a different one, so try to move again before clipping velocity.
+			numplanes = 1;
+			continue;
+
+			LABEL(NoStep)
+			// failed to step up, velocity will be clipped to my_trace_plane_normal
+			this.origin = prestep_org;
 		}
-		else
-		{
-			// step - return it to caller
-			blockedflag |= 2;
-			// save the trace for player extrafriction
-			if(applystepnormal)
-				move_stepnormal = trace_plane_normal;
-		}
 
-		if(my_trace_fraction >= 0.001)
+		if (my_trace_plane_normal.z > 0) // landed on a ground plane or got an edge collision
 		{
-			// actually covered some distance
-			original_velocity = this.velocity;
-			numplanes = 0;
+			// trace to confirm it's really ground to prevent the wallwalk bug
+			int clip = PM_GroundTrace(this, previous_velocity, false);
+
+			// frametime-independent jumping
+			if (PHYS_INPUT_BUTTON_JUMP(this) && (clip & 1)
+			&& this.origin != jumporigin) // prevents infinite looping when wedged
+			{
+				if (IS_SKIMMING(this))
+					this.velocity = primal_velocity; // apply skimming now else it'll be lost
+				this.velocity = _Movetype_ClipVelocity(this.velocity, my_trace_plane_normal, 1);
+				PlayerJump(this);
+				if (!IS_ONGROUND(this)) // definitely did jump
+				{
+					jumporigin = this.origin;
+					goto ReapplyGravityContinue;
+				}
+			}
 		}
 
 		// clipped to another plane
@@ -255,73 +325,75 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 		{
 			// this shouldn't really happen
 			this.velocity = '0 0 0';
-			blockedflag = 3;
-			break;
+			return 3;
 		}
 
 		planes[numplanes] = my_trace_plane_normal;
 		++numplanes;
 
-		// modify original_velocity so it parallels all of the clip planes
-		vector new_velocity = '0 0 0';
-		int plane;
-		for (plane = 0;plane < numplanes; ++plane)
+		// Q3: modify velocity so it parallels all of the clip planes
+		// bones_was_here: Q3 and DOOM 3 use 0.1 epsilons, changed to 0 here because >= 0 is
+		// the correct comparison and helps avoid the triple plane case and works fine in Xonotic.
+
+		// find a plane that it enters
+		for (i = 0; i < numplanes; ++i)
 		{
-			int newplane;
-			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[plane], 1);
-			for (newplane = 0;newplane < numplanes; ++newplane)
+			if (this.velocity * planes[i] >= 0)
+				continue; // move doesn't interact with the plane
+
+			// slide along the plane
+			vector clipvelocity = _Movetype_ClipVelocity(this.velocity, planes[i], OVERCLIP);
+
+			// see if there is a second plane that the new move enters
+			for (int j = 0; j < numplanes; ++j)
 			{
-				if(newplane != plane)
+				if (j == i)
+					continue;
+				if (clipvelocity * planes[j] >= 0)
+					continue; // move doesn't interact with the plane
+
+				// try clipping the move to the plane
+				clipvelocity = _Movetype_ClipVelocity(clipvelocity, planes[j], OVERCLIP);
+
+				// see if it goes back into the first clip plane
+				if (clipvelocity * planes[i] >= 0)
+					continue;
+
+				// slide the original velocity along the crease
+				vector dir = normalize(cross(planes[i], planes[j]));
+				clipvelocity = dir * (dir * this.velocity);
+
+				// see if there is a third plane the new move enters
+				for (int k = 0; k < numplanes; ++k)
 				{
-					// not ok
-					if((new_velocity * planes[newplane]) < 0)
-						break;
+					if (k == i || k == j)
+						continue;
+					if (clipvelocity * planes[k] >= 0)
+						continue; // move doesn't interact with the plane
+
+					// stop dead at a triple plane interaction
+					this.velocity = '0 0 0';
+					return 7;
 				}
 			}
-			if(newplane == numplanes)
-				break;
-		}
 
-		if(plane != numplanes)
-		{
-			// go along this plane
-			this.velocity = new_velocity;
-		}
-		else
-		{
-			// go along the crease
-			if(numplanes != 2)
-			{
-				this.velocity = '0 0 0';
-				blockedflag = 7;
-				break;
-			}
-			vector dir = cross(planes[0], planes[1]);
-			// LordHavoc: thanks to taniwha of QuakeForge for pointing out this fix for slowed falling in corners
-			dir = normalize(dir);
-			float d = (dir * this.velocity);
-			this.velocity = dir * d;
-		}
-
-		// if current velocity is against the original velocity,
-		// stop dead to avoid tiny occilations in sloping corners
-		if((this.velocity * primal_velocity) <= 0)
-		{
-			this.velocity = '0 0 0';
+			// if we have fixed all interactions, try another move
+			this.velocity = clipvelocity;
 			break;
 		}
+
+		// if we start skimming during this move don't undo clipping done before that
+		if (PHYS_SKIMMING(this) && !IS_SKIMMING(this))
+			primal_velocity = this.velocity;
 	}
 
-	// LordHavoc: this came from QW and allows you to get out of water more easily
-	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.flags & FL_WATERJUMP) && !(blockedflag & 8))
-		this.velocity = primal_velocity;
-
-	if(PHYS_WALLCLIP(this) && this.pm_time && !(this.flags & FL_WATERJUMP) && !(blockedflag & 8))
+	// NB: skimming applies during water jumps because they share .pm_time like in Q3.
+	if (IS_SKIMMING(this) && !(blockedflag & 8))
 		this.velocity = primal_velocity;
 
 	if(applygravity)
 	{
-		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this))
+		if (!GAMEPLAYFIX_NOGRAVITYONGROUND || !IS_ONGROUND(this) || IS_ONSLICK(this) || HAS_KNOCKBACK(this))
 		{
 			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.velocity_z -= grav * 0.5f;
@@ -331,7 +403,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, bool applystepno
 	return blockedflag;
 }
 
-bool _Movetype_CheckWater(entity this)  // SV_CheckWater
+bool _Movetype_CheckWater(entity this)  // SV_CheckWater, PM_SetWaterLevel
 {
 	vector point = this.origin;
 	point.z += this.mins.z + 1;
@@ -344,6 +416,8 @@ bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 			this.contentstransition(this.watertype, nativecontents);
 	}
 
+	// Q3: get waterlevel, accounting for ducking
+
 	this.waterlevel = WATERLEVEL_NONE;
 	this.watertype = CONTENT_EMPTY;
 
@@ -352,7 +426,8 @@ bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 	{
 		this.watertype = nativecontents;
 		this.waterlevel = WATERLEVEL_WETFEET;
-		point.z = this.origin.z + (this.mins.z + this.maxs.z) * 0.5;
+
+		point.z = this.origin.z + (this.mins.z + this.view_ofs.z) * 0.5;
 		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
 			this.waterlevel = WATERLEVEL_SWIMMING;
@@ -605,14 +680,9 @@ int _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 	#undef X
 	{
 		if(_Movetype_TestEntityPosition_Offset(rint((this.maxs.z - this.mins.z) * 0.36)))
-		{
-			LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)",
-			etof(this), this.classname, vtos(this.origin));
 			return UNSTICK_STUCK;
-		}
 	}
-	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)",
-		etof(this), this.classname, vtos(this.origin));
+
 	_Movetype_LinkEdict(this, false);
 	return UNSTICK_FIXED;
 }
@@ -626,25 +696,25 @@ void _Movetype_CheckStuck(entity this)  // SV_CheckStuck
 			this.oldorigin = this.origin;
 			break;
 		case UNSTICK_FIXED:
+			LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)", etof(this), this.classname, vtos(this.origin));
 			break; // already sorted
 		case UNSTICK_STUCK:
 			vector offset = this.oldorigin - this.origin;
 			if(!_Movetype_TestEntityPosition(offset))
 				_Movetype_LinkEdict(this, false);
-			// couldn't unstick, should we warn about this?
+			LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)", etof(this), this.classname, vtos(this.origin));
 			break;
 	}
 }
 
-vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // ClipVelocity
+/// This matches PM_ClipVelocity() from Q3 and ProjectOntoPlane() from DOOM 3
+vector _Movetype_ClipVelocity(vector vel, vector norm, float ob)
 {
-	vel -= ((vel * norm) * norm) * f;
+	float backoff = vel * norm;
 
-	if(vel.x > -0.1 && vel.x < 0.1) vel.x = 0;
-	if(vel.y > -0.1 && vel.y < 0.1) vel.y = 0;
-	if(vel.z > -0.1 && vel.z < 0.1) vel.z = 0;
-
-	return vel;
+	if (ob != 1)
+		backoff < 0 ? backoff *= ob : backoff /= ob;
+	return vel - norm * backoff;
 }
 
 void _Movetype_PushEntityTrace(entity this, vector push)
