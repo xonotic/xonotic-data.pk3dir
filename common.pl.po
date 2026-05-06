@@ -5,6 +5,7 @@
 # Translators:
 # 4m <4m038105@gmail.com>, 2015
 # Aleksander Kijanka, 2026
+# Aleksander Kijanka, 2026
 # alex progger <tiprogrammierer.alex@gmail.com>, 2015
 # Amadeusz Sławiński <amade@asmblr.net>, 2015-2017
 # Artur Motyka <slashcraftpl@gmail.com>, 2016
@@ -1763,7 +1764,7 @@ msgid ""
 "be picked up again."
 msgstr ""
 "%s to walka free-for-all na śmierć, gdzie wszyscy grają przeciwko sobie i "
-"wygrywa ten, kto zdobędzie najwięcej punktów. Kiedy zostaniesz zabity, "
+"wygrywa ten, kto zdobędzie najwięcej punktów. Kiedy zostaniesz sfragowany, "
 "odradzasz się tylko z podstawowymi broniami, więc wszystko to, co zebrałeś "
 "musisz zebrać ponownie."
 
@@ -1772,8 +1773,8 @@ msgid ""
 "Scoring is quite simple, fragging an opponent adds one to your score, and "
 "fragging yourself subtracts one."
 msgstr ""
-"Zasady punktacji są proste, zabicie przeciwnika da ci punkt do wyniku, a "
-"zabicie siebie samego odejmie ci punkt."
+"Zasady punktacji są proste, sfragowanie przeciwnika da ci punkt do wyniku, a "
+"sfragowanie siebie samego odejmie ci punkt."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:14
 #, c-format
@@ -1871,9 +1872,9 @@ msgid ""
 "health, so it is a good opportunity to search the map for them to pick up an "
 "easy frag and continue your streak."
 msgstr ""
-"Kiedy zabijesz przeciwnika, pojawi się on z niewielką ilością broni i "
+"Kiedy sfragujesz przeciwnika, pojawi się on z niewielką ilością broni i "
 "ograniczonym zdrowiem, więc jest to dobra okazja, by przeszukać mapę w "
-"poszukiwaniu go, by zdobyć łatwe zabójstwo i kontynuować swoją passę."
+"poszukiwaniu go, by zdobyć łatwego fraga i kontynuować swoją passę."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #, c-format
@@ -1900,6 +1901,10 @@ msgid ""
 "need to be unfrozen to re-enter the round. The round ends when all players "
 "from all opposing teams are frozen, scoring the remaining team a point."
 msgstr ""
+"%s to tryb gry z podziałem na rundy i drużyny, gdzie sfragowani gracze są "
+"zamrożeni i muszą zostać odmrożeni, aby móc wejść ponownie do rundy. Runda "
+"kończy się, gdy wszyscy gracze ze wszystkich drużyn przeciwnych są "
+"zamrożeni, a pozostała drużyna zdobywa punkt."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:10
 msgid ""
@@ -1908,6 +1913,10 @@ msgid ""
 "damaging frozen players on the other team helps unfreeze them, so it is best "
 "to try to avoid doing that."
 msgstr ""
+"Zamrożeni gracze z biegem czasu powoli się odmrażają, ale odmrażają się "
+"znacznie szybciej, gdy są \"ożywiany\" przez członka drużyny w bliskiej "
+"odległości. Dodatkowo, zadawanie obrażeń zamrożonym graczom z innej drużyny "
+"pomaga je odmrozić, dlatego najlepiej to unikać."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:12
 msgid ""
@@ -1915,6 +1924,9 @@ msgid ""
 "grace period where weapons cannot be fired, meaning it's a good opportunity "
 "to grab as many pickups as you can."
 msgstr ""
+"Tak jest w wielu trybach gry opartych na rundach, rundy zaczynają się z 10 "
+"sekundowym okresem, gdzie nie można strzelać z broni czyniąc tym samym dobrą "
+"okazję, aby zebrać najwięcej znajdziek jak to tylko jest możliwe."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:13
 msgid ""
@@ -1925,6 +1937,12 @@ msgid ""
 "especially while frozen, so you can let your teammates know where the "
 "enemies are."
 msgstr ""
+"Podstępne ożywianie członka drużyny przywróci go do meczu, aby pomóc w "
+"przewyższeniu liczby przeciwników, ale należy robić to ostrożnie, ponieważ "
+"przeciwnicy często zwracają uwagę na zamrożonych graczy, aby mieć pewność, "
+"że nie zostaną ożywieni. Z tego powodu ważna jest dobra komunikacja w "
+"drużynie, szczególnie gdy są zamrożeni, aby móc poinformować członkom "
+"drużyny, gdzie są przeciwnicy."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:11
 msgid "Freeze Tag"
@@ -1947,11 +1965,18 @@ msgid ""
 "from each other. The player who frags the most monsters overall wins the "
 "match."
 msgstr ""
+"%s to tryb gry rozgrywany z podziałem na rundy, gdzie stado potworów pojawia "
+"się na całej mapie, a gracze muszą sfragować tyle potworów, na ile to jest "
+"możliwe. Ponieważ gracze nie mogą zadawać obrażeń między sobą, a zamiast "
+"tego walczą, aby ukraść sobie nazwajem fragi potworów. Gracz, który "
+"sfragował największą ilość potworów wygrywa mecz."
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qc:11
 msgid ""
 "A round ends when either all monsters are fragged, or after a time limit."
 msgstr ""
+"Runda kończy się, gdy wszystkie potwory zostaną sfragowane, bądź po "
+"przekroczeniu limitu czasowego."
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qh:8
 msgid "Invasion"
@@ -1967,6 +1992,8 @@ msgid ""
 "%s is a free-for-all match where a ball spawns randomly on the map and the "
 "goal is to hold the ball for as long as possible."
 msgstr ""
+"%s to mecz free-for-all, gdzie kula pojawia się losowo na mapie i celem gry "
+"jest przetrzymanie kuli tak długo jak to jest możliwe."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:11
 msgid ""
@@ -1974,6 +2001,9 @@ msgid ""
 "when you frag the ball carrier. The first player to reach the score limit "
 "will win the match."
 msgstr ""
+"Twój wynik zwiększa się, kiedy sfragujesz kogoś przetrzymując kulę, bądź gdy "
+"ty sfragujesz kogoś, kto nosił tą kulę. Pierwszy gracz, które osiągnie limit "
+"wyniku wygra mecz."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:13
 msgid ""
@@ -1981,6 +2011,9 @@ msgid ""
 "anyone is able to pick it up. If nobody picks it up after some time it will "
 "get bored and teleport itself elsewhere."
 msgstr ""
+"Kiedy ktoś, kto nosił kulę zostanie sfragowany, kula spadnie na podłogę i "
+"każdy będzie mógł ją podnieść. Jeśli nikt ją nie podniesie przez pewien "
+"czas, kula przeteleportuje się w inne miejsce."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:15
 #, c-format
@@ -1988,6 +2021,8 @@ msgid ""
 "%s rewards good fragging but also good movement, since the better you can "
 "evade attacks, the longer you can keep the ball."
 msgstr ""
+"%s nagradza dobre fragowanie, ale również dobre poruszanie się, ponieważ im "
+"lepiej unikasz ataków, tym dłużej trzymasz kulę."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:11
 msgid "Hold the ball to get points for kills"
@@ -2006,6 +2041,11 @@ msgid ""
 "after a ten second period, and the location of all keys will be visible on "
 "the radar after a few seconds."
 msgstr ""
+"%s to tryb gry oparty na rundach, który rozgrywa się z kilkoma drużynami. "
+"Każda drużyna zaczyna z jednym kluczem i wszystkie klucze muszą zostać "
+"zebrane, aby wygrać rundę. Członek drużyny, który dostanie klucz na początku "
+"rundy jest losowy wybierany po 10 sekundowym okresie. Lokalizacja wszystkich "
+"kluczy jest widoczna na radarze po kilku sekundach."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:12
 #, c-format
@@ -2014,6 +2054,9 @@ msgid ""
 "points for collecting a key, fragging an enemy key carrier, and fragging "
 "other enemies."
 msgstr ""
+"Punktacja w %s jest nieco skompikowana, stanowi ona połączenie zebrania "
+"wszystkich kluczy, zdobyciu punktu za zebranie klucza, sfragowanie "
+"przeciwnika noszącego klucz i sfragowania innych przeciwników."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:13
 #, c-format
@@ -2021,6 +2064,8 @@ msgid ""
 "Like in %s the key can be dropped, so you can pass it to your teammates if "
 "you're running low on health."
 msgstr ""
+"Jak w %s klucz może być opuszczony, więc możesz go przekazać swoim członkom "
+"drużyny, gdy masz niskie zdrowie."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
@@ -2043,12 +2088,20 @@ msgid ""
 "health and armor do not regenerate, similar to gametypes like %s. Similarly, "
 "item pickups don't spawn on the map."
 msgstr ""
+"%s to tryb gry free-for-all, gdzie wszyscy gracze zaczynają z określoną "
+"liczbą żyć. Gracze są eliminowani z meczu, gdy stracą wszystkie życia. "
+"Gracze pojawiają się z dostępem do wszystkich broni, maksymalnym zdrowiem i "
+"pancerzem. Zdrowie i pancerz nie regenerują się, podobnie jak w trybach gry "
+"takich jak %s. Znajdźki nie pojawiają się na mapie."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:13
 msgid ""
 "Hiding is sometimes a viable strategy since if you can't be found you can't "
 "lose lives, but often you become a vulnerable target once discovered."
 msgstr ""
+"Ukrywanie się jest czasem opłacalną strategią, ponieważ gdy nie mogą cię "
+"znaleźć to nie możesz stracić życia, ale często staniesz się podatnym celem, "
+"gdy cię odkryją."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:14
 #, c-format
@@ -2058,6 +2111,11 @@ msgid ""
 "to prevent hiding too much. Players who aren't in the lead steal a small "
 "percentage of health when they attack leaders, like in the %s mutator."
 msgstr ""
+"Gracze, którzy prowadzą w grze z przewagą co najmniej 2 żyć, świecą i co "
+"jakiś czas mają nad głowami punkty widoczne dla wszystkich graczy przez "
+"kilka sekund, aby zapobiec nadmiernemu ukrywaniu się. Gracze, którzy nie "
+"prowadzą, kradną niewielki procent zdrowia, atakując liderów, jak w "
+"mutatorze %s."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Last Man Standing"
@@ -2078,6 +2136,9 @@ msgid ""
 "available weapons and maximum health and armor. There are no pickups enabled "
 "on maps, but buffs are still available."
 msgstr ""
+"%s to dynamiczny free-for-all deathmatch, gdzie gracze pojawiają się z "
+"dostępem do wszystkich broni i maksymalnym zdrowiem i pancerzem. Znajdźki na "
+"mapie są wyłączone, ale buffy nadal są dostępne."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:12
 msgid ""
@@ -2087,6 +2148,12 @@ msgid ""
 "if possible. Points are deducted when you walk into hazards, but not when "
 "you do movement tricks like blaster jumping since self damage is disabled."
 msgstr ""
+"Wyróżnia się punktacją, która uwzględnia zarówno fragi jak i ilość zadanego "
+"obrażenia. Oznacza to, że jeśli prawie sfragujesz danego gracza to otrzymasz "
+"punkty, ale zadanie ostatecznego ciosu nadal jest lepsze, o ile jest to "
+"możliwe. Punkty są odejmowane, kiedy wchodzisz w chemikalia, jednak nie w "
+"przypadku, gdy wykonujesz sztuczki w poruszaniu takie jak blaster jumping "
+"ponieważ samouszkadzanie się jest wyłączone."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:15
 #, c-format
@@ -2094,19 +2161,23 @@ msgid ""
 "Since damage is always rewarded in %s, the more you shoot the better, "
 "turning this gametype into chaotic fun at times."
 msgstr ""
+"Ponieważ obrażenia zawsze są nagradzane w %s, tym lepiej strzelasz, czasami "
+"czyniąc ten tryb gry chaotyczną zabawą."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
 #, c-format
 msgid "This gametype is often seen as a more newbie-friendly version of %s."
 msgstr ""
+"Ten tryb gry jest często widziany jako %s odpowiedniego dla początkujących "
+"graczy."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
-msgstr ""
+msgstr "Rywalizuj o największe obrażenia i fragi w tym chaosie"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Mayhem"
-msgstr ""
+msgstr "Chaos"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:31
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:48
@@ -2118,6 +2189,8 @@ msgstr "Ile punktów należy zdobyć przed końcem gry"
 msgid ""
 "%s is a fun ball sport game where 2 teams compete to score the most goals."
 msgstr ""
+"%s to sportowa gra z piłką, gdzie 2 drużyny rywalizują o największą ilość "
+"goli."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:11
 #, c-format
@@ -2126,12 +2199,17 @@ msgid ""
 "kick it around, or basketball where players have a %s so they can pass the "
 "ball and intercept passes."
 msgstr ""
+"%s jest często rozgrywany w sposób podobny do piłki nożnej, gdzie gracze "
+"wchodzą w piłkę i ją uderzają lub w koszykówkę, gdzie gracze mają %s więc "
+"mogą podać piłkę i przechywcić jej podanie."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:12
 msgid ""
 "Keep in mind players can score own goals, so don't embarrass yourself in "
 "front of your team!"
 msgstr ""
+"Miej na uwadze, że gracze mogą strzelać gole samobójcze, więc nie ośmiesz "
+"się przed swoją drużyną!"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Nexball"
@@ -2139,7 +2217,7 @@ msgstr "Nexpiłka"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:11
 msgid "Shoot and kick the ball into the enemy's goal, keep your goal clean"
-msgstr ""
+msgstr "Strzelaj do piłki i kop ją do bramki przeciwnika, broń własnej bramki"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "Goal limit:"
@@ -2160,6 +2238,9 @@ msgid ""
 "the enemy team core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s to tryb gry z podziałem na drużyny podobny do %s, gdzie celem jest "
+"zniszczenie generatora mocy drużyny przeciwnej. Aby zniszczyć generator, "
+"należy najpierw przejąć punkty kontrolne na mapie (podobne do tych jak w %s)."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2167,6 +2248,9 @@ msgid ""
 "another control point currently owned by your team, you have to "
 "systematically progress across the map to reach the enemy generator."
 msgstr ""
+"Drużyna może przejmować punkty kontrolne tylko wtedy, gdy są połączone z "
+"innym punktem kontrolnym, które są zajmowane przez twoją drużynę. Musisz "
+"systematycznie przemieszcać się po mapie, aby dotrzeć do generatora wroga."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2175,12 +2259,18 @@ msgid ""
 "the \"info bot\" that hovers above them, converting the control point to "
 "neutral once it is destroyed."
 msgstr ""
+"Punkt kontrolny jest przechwytywany przez wejście na nie, co rozpoczyna "
+"automatyczną konstrukcję. Punkty kontrolne przeciwnej drużyny można "
+"zniszczyć atakując \"bota informacyjnego\" który unosi się nad nim. Punkt "
+"kontrolny po zniszczeniu staje się neutralny."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:82
 msgid ""
 "When in overtime, the enemy's generator will start to decay, at a faster "
 "rate the more control points your team has."
 msgstr ""
+"Podczas dogrywki generator przeciwnika zacznie się rozpadać, tym szybciej, "
+"im więcej punktów kontrolnych ma twoja drużyna."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -2204,6 +2294,8 @@ msgid ""
 "%s is a gametype similar to %s where players run on a track to be the first "
 "to cross the finish line after a certain number of laps."
 msgstr ""
+"%s to tryb gry podobny do %s, gdzie gracze biegną na trasie, aby jako "
+"pierwsi przekroczyć linię po określonej liczbie okrążeń."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:11
 #, c-format
@@ -2213,12 +2305,19 @@ msgid ""
 "similar to %s since weapons can't be used to disturb other players but can "
 "still be used to run faster."
 msgstr ""
+"Zanim właściwy wyścig się zacznie odbywają się kwalifikacje, które decydują "
+"o pozycji startowej na podstawie najlepszego czasu okrążenia każdego gracza. "
+"Ten etap jest bardzo podobny do %s, ponieważ nie można używać broni do "
+"przeszkadzania innym graczom, ale mogą być używane, aby poruszać się "
+"szybciej."
 
 #: qcsrc/common/gametypes/gametype/race/race.qc:13
 msgid ""
 "During the real race it's possible to shoot other players in order to slow "
 "them down."
 msgstr ""
+"Podczas właściwego wyścigu jest możliwe strzelanie do innych graczy, aby ich "
+"spowolnić."
 
 #: qcsrc/common/gametypes/gametype/race/race.qh:11
 msgid "Race"
@@ -2234,11 +2333,11 @@ msgstr "Okrążenia:"
 
 #: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:64
 msgid "Hunter"
-msgstr ""
+msgstr "Łowca"
 
 #: qcsrc/common/gametypes/gametype/survival/cl_survival.qc:70
 msgid "Survivor"
-msgstr ""
+msgstr "Ocalały"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:11
 #, c-format
@@ -2248,6 +2347,10 @@ msgid ""
 "all hunters or survive until time runs out. The trick lies in the fact that "
 "survivors don't know who else is a survivor."
 msgstr ""
+"%s to tryb gry łowca-ocalały dla dwóch drużyn, gdzie celem łowcy jest "
+"sfragowanie wszystkich ocalałych, a celem ocalałych jest sfragowanie "
+"wszystkich łowców lub przetrwanie dopóki minie czas. Sztuczka polega na tym, "
+"że ocalali nie wiedzą, kto jeszcze jest ocalałym."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:13
 msgid ""
@@ -2255,6 +2358,9 @@ msgid ""
 "opposite team, it can be tricky for survivors to figure out their fellow "
 "teammates."
 msgstr ""
+"Ponieważ celem obu drużyn jest wyeliminowanie wszystkich członków z drużyny "
+"przeciwnej, ocalałym trudno będzie się zorientować, kim są ich członkowie "
+"drużyny."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:14
 msgid ""
@@ -2262,6 +2368,9 @@ msgid ""
 "a bit smaller, and then the round starts with a brief warmup grace period in "
 "which items can be collected but weapons can't be fired."
 msgstr ""
+"Na początku rundy, drużyny są losowo przydzielane, przy czym drużyna łowców "
+"jest trochę mniejsza. Runda zaczyna się krótką rozgrzewką, gdzie można "
+"zebrać przedmioty, ale z broni nie można strzelać."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qc:16
 msgid ""
@@ -2270,31 +2379,43 @@ msgid ""
 "fragged. Extra points are also given to survivors who survive until the "
 "round timer expires."
 msgstr ""
+"Gracze otrzymują punkt za każdego sfragowanego członka drużyny przeciwnej, "
+"pod warunkiem, że przetrwają rundę. Punkty są odejmowane za każdego "
+"sfragowanego członka drużyny. Dodatkowe punkty przyznawane są również tym, "
+"którzy przetrwają do końca rundy."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Identify and eliminate all the hunters before all your allies are gone"
 msgstr ""
+"Zidentyfikuj i wyeliminuj wszystkich łowców, zanim wszyscy twoi sojusznicy "
+"znikną"
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
 msgid "Survival"
-msgstr ""
+msgstr "Przetrwanie"
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:10
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
 msgstr ""
+"%s to drużynowa wersja %s, która jest rozgrywana w drużynach zamiast "
+"pojedynczo. "
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:11
 msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
 msgstr ""
+"Zasady punktacji są proste, punkt jest dodawany przy każdym fragu, a jest "
+"odejmowany przy sfragowaniu samego siebie, bądź innego członka drużyny."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
 "Careful team coordination and map control is often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"Uważna koordynacja drużyny i kontrola mapy często jest kluczem w wygraniu "
+"meczu. Czasami gracze dzielą się broniami z innymi członkami swojej drużyny."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2310,6 +2431,8 @@ msgid ""
 "%s is the team version of %s, where teams compete to maintain superior "
 "control over the ball."
 msgstr ""
+"%s to drużynowa wersja %s, gdzie drużyny rywalizują o utrzymanie kontroli "
+"nad kulą."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
@@ -2317,14 +2440,18 @@ msgid ""
 "Scoring is similar to in %s, except that points are awarded for frags for "
 "all members of the team of the player holding the ball."
 msgstr ""
+"System punktacji jest podobny do %s, z wyjątkiem tego, że punkty są "
+"nagradzane za fragi dla każdego członka drużyny, w której gracz trzymał daną "
+"kulę."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
 msgstr ""
+"Utrzymaj kulę w posiadaniu swojej drużyny, aby zdobyć punkty za zabójstwa"
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Team Keepaway"
-msgstr ""
+msgstr "Drużynowy trzymaj się z daleka"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:11
 #, c-format
@@ -2334,6 +2461,10 @@ msgid ""
 "differences being that %s is a round-based gametype, and of course the "
 "scoring system differences."
 msgstr ""
+"%s to drużynowy tryb gry skupiony na akcji oparty na %s, używając tego "
+"samego systemu punktacji. Jest dużo podobieństwo do %s, jednak jedna z "
+"największych różnic jest taka, że %s jest trybem gry oparty na rundach i ma "
+"różnice w systemie punktacji."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -2341,31 +2472,34 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "other team-based gametypes."
 msgstr ""
+"Ponieważ nie ma rund, chaos jest nieprzerwany. Konsekwencja chaotycznej "
+"natury jest taka, że komunikacja w drużynie jest mniej ważna w tym trybie "
+"gry niż w innych trybach opartych o drużyny."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
-msgstr ""
+msgstr "Rywalizuj z twoją drużyną o największe obrażenia i fragi w tym chaosie"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
-msgstr ""
+msgstr "Drużynowy chaos"
 
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr ""
+msgstr "Typ amunicji %s jest używany przez:"
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
 msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
-msgstr ""
+msgstr "Domyślnie, znajdźka daje ci %s amunicji, do maksymalnego %s."
 
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
 msgid "The %s ammo type is used by the %s."
-msgstr ""
+msgstr "Typ amunicji %s jest używany przez %s."
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
@@ -2390,7 +2524,7 @@ msgstr "Paliwo"
 #: qcsrc/common/items/item/armor.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s armor."
-msgstr ""
+msgstr "Domyślnie, znajdźka daje ci %s pancerza."
 
 #: qcsrc/common/items/item/armor.qc:13
 #, c-format
@@ -2398,6 +2532,8 @@ msgid ""
 "The %s provides you a small amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"%s daje ci niewielką ilość pancerza po podniesieniu, który chroni cię przed "
+"obrażeniami poprzez pochłanianie ciosów, aż do wyczerpania."
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
@@ -2405,6 +2541,8 @@ msgid ""
 "The %s provides you a medium amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"%s daje ci średnią ilość pancerza po podniesieniu, który chroni cię przed "
+"obrażeniami poprzez pochłanianie ciosów, aż do wyczerpania."
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
@@ -2412,6 +2550,8 @@ msgid ""
 "The %s provides you a large amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"%s daje ci dużą ilość pancerza po podniesieniu, który chroni cię przed "
+"obrażeniami poprzez pochłanianie ciosów, aż do wyczerpania."
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
@@ -2419,6 +2559,8 @@ msgid ""
 "The %s provides you a huge amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"%s daje ci ogromną ilość pancerza po podniesieniu, który chroni cię przed "
+"obrażeniami poprzez pochłanianie ciosów, aż do wyczerpania."
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
@@ -2426,27 +2568,29 @@ msgid ""
 "It tends to be one of the most highly contested items on a map, particularly "
 "in gametypes like %s."
 msgstr ""
+"Zwykle jest to jeden z najbardziej spornych przedmiotów na mapie, "
+"szczególnie w takich trybach gry jak %s."
 
 #: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
-msgstr "Mała zbroja"
+msgstr "Mały pancerz"
 
 #: qcsrc/common/items/item/armor.qh:96
 msgid "Medium armor"
-msgstr "Średnia zbroja"
+msgstr "Średni pancerz"
 
 #: qcsrc/common/items/item/armor.qh:148 qcsrc/common/items/item/armor.qh:159
 msgid "Big armor"
-msgstr "Duża zbroja"
+msgstr "Duży pancerz"
 
 #: qcsrc/common/items/item/armor.qh:200 qcsrc/common/items/item/armor.qh:211
 msgid "Mega armor"
-msgstr "Mega zbroja"
+msgstr "Mega pancerz"
 
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s health."
-msgstr ""
+msgstr "Domyślnie, znajdźka daje ci %s zdrowia."
 
 #: qcsrc/common/items/item/health.qc:13
 #, c-format
@@ -2454,6 +2598,8 @@ msgid ""
 "The %s restores a small amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"%s daje ci niewielką ilość zdrowia po podniesieniu, pomagając ci "
+"zregenerować się po obrażeniach odniesionych w walce."
 
 #: qcsrc/common/items/item/health.qc:23
 #, c-format
@@ -2461,6 +2607,8 @@ msgid ""
 "The %s restores a medium amount of health when picked up, helping you "
 "recover from damage taken during combat."
 msgstr ""
+"%s daje ci średnią ilość zdrowia po podniesieniu, pomagając ci zregenerować "
+"się po obrażeniach odniesionych w walce."
 
 #: qcsrc/common/items/item/health.qc:33
 #, c-format
@@ -2468,6 +2616,8 @@ msgid ""
 "The %s restores a large amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"%s daje ci dużą ilość zdrowia po podniesieniu, pomagając ci zregenerować się "
+"po obrażeniach odniesionych w walce."
 
 #: qcsrc/common/items/item/health.qc:43
 #, c-format
@@ -2475,6 +2625,8 @@ msgid ""
 "The %s restores a huge amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"%s daje ci ogromną ilość zdrowia po podniesieniu, pomagając ci zregenerować "
+"się po obrażeniach odniesionych w walce."
 
 #: qcsrc/common/items/item/health.qh:44
 msgid "Small health"
@@ -2561,7 +2713,7 @@ msgstr "Koniec gry!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1110
 msgid "Well done! Click \"Next Level\" to continue"
-msgstr ""
+msgstr "Nieźle! Kliknij \"Następny Poziom\" aby kontynuować"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1181
 #: qcsrc/common/minigames/minigame/c4.qc:380
@@ -2587,7 +2739,7 @@ msgstr "Ostro! Naciśnij \"Następny Poziom\" by kontynuować!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1195
 msgid "Press the spacebar to change your currently selected tile"
-msgstr ""
+msgstr "Wciśnij spację aby zmienić zaznaczone pole"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1198
 msgid "Push the boulders onto the targets"
@@ -2628,7 +2780,7 @@ msgstr "%s^7 wygrał rozgrywkę!"
 #: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ttt.qc:333
 msgid "Draw"
-msgstr "Rysuj"
+msgstr "Remis"
 
 #: qcsrc/common/minigames/minigame/c4.qc:388
 #: qcsrc/common/minigames/minigame/nmm.qc:610
@@ -2666,6 +2818,8 @@ msgstr "Nine Men's Morris"
 msgid ""
 "You can select one of your pieces to move it to one of the surrounding places"
 msgstr ""
+"Możesz zaznaczyć jeden ze swoich elementów, żeby przenieść go na okoliczne "
+"miejsca"
 
 #: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid "You can select one of your pieces to move it anywhere on the board"
@@ -2704,12 +2858,12 @@ msgstr "Usuń bota"
 
 #: qcsrc/common/minigames/minigame/pp.qc:2
 msgid "Push-Pull"
-msgstr ""
+msgstr "Push-Pull"
 
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:340
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr ""
+msgstr "Wybierz w menu opcję \"^1Następny Mecz^7\" by rozegrać rewanż!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:457
 #: qcsrc/common/minigames/minigame/pp.qc:463
@@ -2734,7 +2888,7 @@ msgstr "Pasjans"
 
 #: qcsrc/common/minigames/minigame/ps.qc:417
 msgid "All pieces cleared!"
-msgstr ""
+msgstr "Wszystkie elementy wyczyszczono!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:419
 msgid "Remaining pieces:"
@@ -2755,7 +2909,7 @@ msgstr "Bardzo dobrze, wygrywasz!"
 
 #: qcsrc/common/minigames/minigame/ps.qc:506
 msgid "Jump a piece over another to capture it"
-msgstr ""
+msgstr "Przeskocz jeden element nad drugim, aby go przechwycić"
 
 #: qcsrc/common/minigames/minigame/ttt.qc:2
 msgid "Tic Tac Toe"
@@ -2775,6 +2929,8 @@ msgid ""
 "Golems are large powerful brutes capable of taking and dealing a beating. "
 "Keeping your distance is advised."
 msgstr ""
+"Golemy to potężne bestie, zdolne przyjąć i zadać ciosy. Zaleca się "
+"zachowanie dystansu."
 
 #: qcsrc/common/monsters/monster/golem.qc:313
 msgid ""
@@ -2782,12 +2938,18 @@ msgid ""
 "Golem may jump into the air, dealing massive damage in an area as it slams "
 "the ground."
 msgstr ""
+"Podstawowym atakiem wręcz Golema jest seria ciosów. Czasami Golem może "
+"wyskoczyć w powietrze, zadając ogromne obrażenia w danym obszarze, uderzając "
+"o ziemię."
 
 #: qcsrc/common/monsters/monster/golem.qc:315
 msgid ""
 "To deal with distant foes, the Golem may throw a chunk of its electrified "
 "rocky exterior, zapping nearby targets on impact."
 msgstr ""
+"Aby poradzić sobie z odległymi wrogami, Golem może rzucić kawałkiem swojej "
+"naelektryzowanej, kamiennej powłoki, raząc prądem pobliskie cele w momencie "
+"uderzenia."
 
 #: qcsrc/common/monsters/monster/golem.qh:19
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:17
@@ -2799,6 +2961,8 @@ msgid ""
 "Wielding nanotechnology as if it were sorcery, the Mage employs a range of "
 "unique abilities of its own creation in combat."
 msgstr ""
+"Władając nanotechnologią niczym czarną magią, Mag wykorzystuje w walce "
+"szereg wyjątkowych, stworzonych przez siebie umiejętności."
 
 #: qcsrc/common/monsters/monster/mage.qc:520
 msgid ""
@@ -2806,6 +2970,9 @@ msgid ""
 "player. This sphere will track its target at high speed, exploding on impact "
 "or if it does not reach its target in time."
 msgstr ""
+"Jako główny atak, Mag rzuca w stronę gracza samonaprowadzającą się kulę "
+"elektryczną. Kula ta będzie podążać za celem z dużą prędkością i eksplodować "
+"przy uderzeniu lub jeśli nie dotrze do celu na czas."
 
 #: qcsrc/common/monsters/monster/mage.qc:522
 msgid ""
@@ -2813,18 +2980,25 @@ msgid ""
 "damage briefly. Enemies approaching too closely during this time may be "
 "pushed away with explosive force!"
 msgstr ""
+"W obliczu zagrożenia Mag może na krótko rozłożyć tarczę energetyczną, aby "
+"uchronić się przed obrażeniami. Przeciwnicy, którzy zbliżą się zbyt blisko w "
+"tym czasie, mogą zostać odrzuceni z siłą eksplozji!"
 
 #: qcsrc/common/monsters/monster/mage.qc:524
 msgid ""
 "Defensively the Mage is capable of healing itself and nearby allies, with "
 "some variants also providing armor and ammunition."
 msgstr ""
+"Z punktu widzenia obrony Mag jest w stanie leczyć siebie i pobliskich "
+"sojuszników, a niektóre jego warianty zapewniają także pancerz i amunicję."
 
 #: qcsrc/common/monsters/monster/mage.qc:525
 msgid ""
 "The Mage may sometimes appear to blink out of existence as it teleports "
 "behind its target for a sneak attack."
 msgstr ""
+"Mag czasami może sprawiać wrażenie, jakby zniknął, gdy teleportuje się za "
+"swój cel, aby przeprowadzić niespodziewany atak."
 
 #: qcsrc/common/monsters/monster/mage.qh:19
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:18
@@ -2833,13 +3007,15 @@ msgstr "Mag"
 
 #: qcsrc/common/monsters/monster/mage.qh:31
 msgid "Mage spike"
-msgstr ""
+msgstr "Kolec Maga"
 
 #: qcsrc/common/monsters/monster/spider.qc:256
 msgid ""
 "The Spider is a large mechanically-enhanced arachnoid adept at hunting "
 "speedy enemies."
 msgstr ""
+"Pająk to duży, mechanicznie ulepszony pajęczak, który doskonale poluje na "
+"szybkich wrogów."
 
 #: qcsrc/common/monsters/monster/spider.qc:257
 msgid ""
@@ -2847,6 +3023,9 @@ msgid ""
 "from its cannons. Approaching its enwebbed prey, the Spider will inflict a "
 "series of high damage bites."
 msgstr ""
+"Aby spowolnić swój cel, Pająk wystrzeliwuje z dział syntetyczną substancję "
+"przypominającą sieć. Zbliżając się do splątanej ofiary, Pająk zadaje jej "
+"serię ugryzień, zadając duże obrażenia."
 
 #: qcsrc/common/monsters/monster/spider.qh:19
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:16
@@ -2866,12 +3045,16 @@ msgid ""
 "The Wyvern is a flying reptilian monster that glides around hunting for "
 "fresh prey."
 msgstr ""
+"Wywerna to latający gadowaty potwór, który szybuje w poszukiwaniu świeżej "
+"zdobyczy."
 
 #: qcsrc/common/monsters/monster/wyvern.qc:197
 msgid ""
 "While fragile, the Wyvern is capable of launching deadly fireballs at the "
 "player from a distance, inflicting high damage and causing burning."
 msgstr ""
+"Mimo że Wywerna jest krucha, potrafi miotać w stronę gracza śmiercionośnymi "
+"kulami ognia z dystansu, zadając duże obrażenia i powodując podpalenia."
 
 #: qcsrc/common/monsters/monster/wyvern.qh:19
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:19
@@ -2887,6 +3070,8 @@ msgid ""
 "Zombies are the undead remains of deceased soldiers, risen with a ravenous "
 "hunger and no sense of self-preservation."
 msgstr ""
+"Zombie to nieumarłe szczątki zmarłych żołnierzy, które powstały z wilczym "
+"głodem i brakiem instynktu samozachowawczego."
 
 #: qcsrc/common/monsters/monster/zombie.qc:183
 msgid ""
@@ -2895,18 +3080,26 @@ msgid ""
 "massive damage on contact. If it gets close, the Zombie will punch and bite "
 "repeatedly."
 msgstr ""
+"Gdy Zombie wyczuje pobliskiego gracza, zacznie szarżować na swój cel z dużą "
+"prędkością. Podczas szarży Zombie może skoczyć w kierunku gracza, zadając mu "
+"ogromne obrażenia w kontakcie. Jeśli się zbliży, Zombie będzie wielokrotnie "
+"uderzać i gryźć."
 
 #: qcsrc/common/monsters/monster/zombie.qc:186
 msgid ""
 "When threatened the Zombie may hold up its hands to block incoming attacks "
 "briefly."
 msgstr ""
+"Gdy Zombie czuje się zagrożony, może podnieść ręce, aby na krótko zablokować "
+"nadchodzące ataki."
 
 #: qcsrc/common/monsters/monster/zombie.qc:187
 msgid ""
 "It is no small task to kill that which is already dead. Once a Zombie is "
 "defeated, destroy its corpse to prevent it from rising again!"
 msgstr ""
+"Zabicie tego, co już nie żyje, to nie lada wyzwanie. Gdy Zombie zostanie "
+"pokonany, zniszcz jego ciało, aby zapobiec jego ponownemu powstaniu!"
 
 #: qcsrc/common/monsters/monster/zombie.qh:19
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:15
@@ -2919,6 +3112,8 @@ msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
 msgstr ""
+"%s to mutator, w którym gracze poniżej pewnego poziomu zdrowia (na przykład "
+"25) będą cierpieć na utratę krwi."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
 msgid ""
@@ -2926,6 +3121,9 @@ msgid ""
 "rapidly takes away health points until they either die or gain enough health "
 "to go above the health threshold."
 msgstr ""
+"Utrata krwi ogłusza graczy, poważnie ogranicza ich poruszanie i szybko "
+"odbiera im punkty zdrowia, dopóki umrą lub odzyskają na tyle dużo zdrowia, "
+"by przekroczyć dany poziom zdrowia."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
 #: qcsrc/common/util.qc:309
@@ -2939,6 +3137,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
+"%s buff daje ci nieskończoną amunicję dopóki buff wygaśnie, więc nie musisz "
+"się martwić o wyczerpanie się amunicji. "
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
 #, c-format
@@ -2946,6 +3146,8 @@ msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
 "the %s and %s."
 msgstr ""
+"Usuwa również konieczność przeładowywania broni, której wymagają takie jak "
+"%s i %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qh:11
 msgid "Ammo"
@@ -2957,10 +3159,12 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
+"%s buff zwiększa siłę odrzucenia, którą zadajesz, i czyni cię odpornym na "
+"odrzucenie, dopóki buff jest aktywny."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
-msgstr ""
+msgstr "Nieznacznie zwiększa również siłę odrzucenia, którą sobie zadajesz."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qh:14
 msgid "Bash"
