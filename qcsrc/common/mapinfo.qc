@@ -1524,7 +1524,7 @@ void MapInfo_LoadMap(string s, float reinit)
 	LOG_INFO("Switching to map ", s);
 
 	cvar_settemp_restore();
-	if(reinit)
+	if (reinit)
 		localcmd(strcat("\nmap ", s, "\n"));
 	else
 		localcmd(strcat("\nchangelevel ", s, "\n"));
