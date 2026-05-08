@@ -4100,6 +4100,9 @@ msgid ""
 "%s is a mutator that makes players drop all their weapons when they die. "
 "Without this mutator, players normally drop only their equipped weapon."
 msgstr ""
+"%s to mutator, który sprawia, że ​​gracze upuszczają wszystkie bronie po "
+"śmierci. Bez tego mutatora gracze zazwyczaj upuszczają tylko broń, którą "
+"trzymają."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:307
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
@@ -4112,6 +4115,8 @@ msgid ""
 "The %s powerup regenerates %s needed for the %s until the powerup expires, "
 "so you can continue flying around for longer."
 msgstr ""
+"Wzmocnienie %s regeneruje %s potrzebną do %s dopóki wzmocnienie wygaśnie, "
+"więc możesz latać nieco dłużej."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:21
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:54
@@ -4119,7 +4124,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:40
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
 msgid "Since it is a powerup, it will drop if you die while holding it."
-msgstr ""
+msgstr "Ponieważ jest to wzmocnienie, upuścisz je, kiedy umrzesz."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
 msgid "Fuel regenerator"
@@ -4136,6 +4141,9 @@ msgid ""
 "making it more difficult for enemies to see you. This powerup is often "
 "present in %s."
 msgstr ""
+"Wzmocnienie %s zwiększa twoją przezroczystość, gdy wzmocnienie jest aktywne, "
+"przez co wrogom trudniej będzie cię zobaczyć. Wzmocnienie jest często obecne "
+"w %s."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
@@ -4150,6 +4158,9 @@ msgid ""
 "providing increased mobility, maneuverability, and the ability to reach "
 "higher ground."
 msgstr ""
+"Wzmocnienie %s pozwala ci latać po mapie przez krótki okres, zapewniając "
+"zwiększoną mobilność, zwrotność i zdolność do sięgania wyżej położonych "
+"terenów."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qc:21
 #, c-format
@@ -4157,6 +4168,8 @@ msgid ""
 "It consumes %s ammo while operating, so make sure you don't run out when "
 "you're high up!"
 msgstr ""
+"Zużywa ona amunicję %s podczas działania, więc pamiętaj, żeby ci go nie "
+"zabrakło, gdy będziesz wysoko!"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
@@ -4172,6 +4185,9 @@ msgid ""
 "expires, having a compounding effect with armor. It also makes you more "
 "resistant to knockback."
 msgstr ""
+"Wzmocnienie %s znacznie zmniejsza obrażenia, które otrzymujesz, aż do "
+"wygaśnięcia wzmocnienia, działając łącznie z pancerzem. Zwiększa również "
+"twoją odporność na odrzucenie."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -4186,6 +4202,9 @@ msgid ""
 "regeneration speed while the powerup is active. However, it also makes you a "
 "bit more vulnerable to incoming attacks."
 msgstr ""
+"Wzmocnienie %s zwiększa prędkość poruszania się, szybkość ataku i szybkość "
+"regeneracji zdrowia, gdy wzmocnienie jest aktywne. Jednak sprawia również, "
+"że jesteś nieco bardziej podatny na ataki."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -4200,12 +4219,16 @@ msgid ""
 "The %s powerup greatly increases the damage you deal, until the powerup "
 "expires. It also increases the knockback that your attacks deal."
 msgstr ""
+"Wzmocnienie %s znacznie zwiększa zadawane obrażenia, aż do wygaśnięcia "
+"wzmocnienia. Zwiększa również siłę odrzutu, jaką zadają twoje ataki."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
 msgid ""
 "The damage and knockback you deal to yourself also increases but by a "
 "smaller amount."
 msgstr ""
+"Obrażenia i odrzut, które sobie zadajesz, również się zwiększają, ale w "
+"mniejszym stopniu."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:59
 #, c-format
@@ -4214,6 +4237,9 @@ msgid ""
 "allow you to easily dominate a map, so it's often highly contested when it "
 "spawns in."
 msgstr ""
+"%s jest jednym z najbardziej pożądanych przedmiotów na mapie ze względu na "
+"możliwość łatwego zdominowania mapy, dlatego też często jest bardzo trudno o "
+"niego walczyć."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -4229,6 +4255,10 @@ msgid ""
 "hitbox, so they can give you a much larger speed boost, also allowing flying "
 "around the map."
 msgstr ""
+"Mutator %s usuwa niewielkie opóźnienie przy natychmiastowej detonacji "
+"rakiety %s po wystrzeleniu. Dzięki temu rakiety mogą być detonowane znacznie "
+"bliżej twojego pola rażenia, dzięki czemu możesz zyskać znacznie większą "
+"prędkość, a także latać po mapie."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
 #: qcsrc/common/util.qc:299
@@ -4239,7 +4269,7 @@ msgstr "Latanie Rakietami"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
-msgstr ""
+msgstr "Palenie"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/spawnshield.qh:10
 msgid "Spawn Shield"
@@ -4247,7 +4277,7 @@ msgstr "Tarcza przy wskrzeszeniu"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
 msgid "Stunned"
-msgstr ""
+msgstr "Oszołomienie"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/superweapons.qh:7
 msgid "Superweapons"
@@ -4258,12 +4288,16 @@ msgstr "Superbronie"
 msgid ""
 "The %s mutator causes an explosion when two players collide if it is enabled."
 msgstr ""
+"Mutator %s powoduje eksplozję, gdy zderzą się dwaj gracze, jeśli jest "
+"włączona."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qc:9
 msgid ""
 "This is a nice way to add some silly fun to a server, but it also does allow "
 "for the use of new tactics in some gametypes."
 msgstr ""
+"To świetny sposób na dodanie odrobiny zabawy do serwera, ale pozwala także "
+"na wykorzystanie nowych taktyk w niektórych trybach gier."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
 #: qcsrc/common/util.qc:315
@@ -4278,6 +4312,9 @@ msgid ""
 "However, unlike the normal %s buff, when this mutator is enabled players' "
 "health can go way above the usual limit of 200."
 msgstr ""
+"Mutator %s daje wszystkim graczom trwałą wersję buffa %s. Jednak w "
+"przeciwieństwie do normalnego buffa %s, kiedy ten mutator jest włączony, "
+"zdrowie gracza może znacznie przekroczyć limit 200 punktów zdrowia."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #, c-format
@@ -4285,6 +4322,8 @@ msgid ""
 "Additionally the amount of health players get is equal to the damage they "
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
+"Dodatkowo ilość zdrowia, jaką otrzymują gracze, jest równa zadanym "
+"obrażeniom, co normalnie nie ma miejsca w przypadku buffa %s."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
 #, c-format
@@ -4292,17 +4331,21 @@ msgid ""
 "%s is a mutator that enables jumping off walls for added mobility. To do a "
 "wall jump, tap %s when against a wall."
 msgstr ""
+"%s to mutator, który umożliwia skakanie ze ścian, zwiększając mobilność. Aby "
+"wykonać skok po ścianie, wciśnij %s gdy stoisz przy ścianie."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
 msgid ""
 "This mutator adds a bit of versatility, allowing for more dynamic and "
 "unpredictable movement."
 msgstr ""
+"Ten mutator dodaje odrobinę wszechstronności, umożliwiając bardziej "
+"dynamiczny i nieprzewidywalny ruch."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
 #: qcsrc/common/util.qc:316
 msgid "Wall jumping"
-msgstr ""
+msgstr "Skakanie po ścianach"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
@@ -4412,7 +4455,7 @@ msgstr "Zanieś tu flagę"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:69
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:70
 msgid "Control point"
-msgstr "Punkt kontroli"
+msgstr "Punkt kontrolny"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Dropped key"
@@ -4433,7 +4476,7 @@ msgstr "Biegnij tu"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:56
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:65
 msgid "Ball"
-msgstr "Piłka"
+msgstr "Kula"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:58
@@ -4636,11 +4679,11 @@ msgstr "^BGNie masz więcej paliwa dla ^F1Jetpacka"
 
 #: qcsrc/common/notifications/all.inc:271
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
-msgstr ""
+msgstr "^F2Brakuje ci UID, opcje superspec nie będą zapisane/przywrócone"
 
 #: qcsrc/common/notifications/all.inc:273
 msgid "^F1Round already started, you will join the game in the next round"
-msgstr "^F1Okrągł zastartował, ty połączysz w nastempnu okrągłu"
+msgstr "^F1Runda się już zaczęła, dołączysz do gry w następnej rundzie"
 
 #: qcsrc/common/notifications/all.inc:274
 msgid "^F2You will spectate in the next round"
@@ -4666,27 +4709,27 @@ msgstr "^F4Odliczanie zatrzymało się!"
 #: qcsrc/common/notifications/all.inc:278
 #: qcsrc/common/notifications/all.inc:565
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "Drużyny są zbyt niezbalansowane!"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 burned at the mercy of ^BG%s^K1's Inferno buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 spłonął na łasce ^BG%s^K1 buffa Inferno %s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot thanks to ^BG%s^K1's Inferno buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 poczuł się zbyt gorąco dzięki ^BG%s^K1 buffowi Inferno %s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 felt the karma of ^BG%s^K1's Vengeance buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 poczuł karmę ^BG%s^K1 buffa Vengeance %s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został niesprawiedliwie wyeliminowany przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:283
 #, c-format
@@ -4701,12 +4744,12 @@ msgstr "^BG%s%s^K1 został uziemiony przez ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 poczuł się zbyt gorąco od ognia ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został spalony na chrupko przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
@@ -4716,7 +4759,7 @@ msgstr "^BG%s%s^K1 został upieczony przez ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został popchnięty przed potwora przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
@@ -4727,16 +4770,19 @@ msgstr "^BG%s%s^K1 został wysadzony przez granat ^BG%s^K1%s%s"
 #, c-format
 msgid "^BG%s%s^K1 couldn't find the light in ^BG%s^K1's Darkness Nade%s%s"
 msgstr ""
+"^BG%s%s^K1 nie mógł znaleźć światła w ciemnym granacie gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:290
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
 msgstr ""
+"^BG%s%s^K1 nie został uleczony przez granat leczący gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
 msgstr ""
+"^BG%s%s^K1 został wysadzony w powietrze przez granat zamrażający ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:292
 #, c-format
@@ -4752,99 +4798,110 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:293
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został wystrzelony w kosmos przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:294
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został zeszlamowany przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:295
 #, c-format
 msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został uratowany przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:296
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
 msgstr ""
+"^BG%s%s^K1 próbował zająć przestrzeń docelową teleportacji gracza "
+"^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:296
 #, c-format
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 zostałeś ztelefragowany przez ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 został ztelefragowany przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:297
 #, c-format
 msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 zginął w wypadku z ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:298
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 został złapany w wybuchu, kiedy Bumblebee gracza ^BG%s^K1 "
+"wybuchł%s%s"
 
 #: qcsrc/common/notifications/all.inc:299
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 zobaczył ładne światła broni Bumblebee gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:300
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został zmiażdzony przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:301
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s"
 msgstr ""
+"^BG%s%s^K1 został skastetowo zbombardowany przez Raptor gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:302
 #, c-format
 msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 nie mógł się oprzeć fioletowym blobom gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:303
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 został złapany w wybuchu, kiedy Raptor gracza ^BG%s^K1 wybuchł%s%s"
 
 #: qcsrc/common/notifications/all.inc:304
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 został złapany w wybuchu, kiedy Spiderbot gracza ^BG%s^K1 "
+"wybuchł%s%s"
 
 #: qcsrc/common/notifications/all.inc:305
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został poszarpany przez Spiderbot gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:306
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"
 msgstr ""
+"^BG%s%s^K1 został rozerwany na strzępy przez Spiderbot gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:307
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
 msgstr ""
+"^BG%s%s^K1 został złapany w wybuchu, kiedy Racer gracza ^BG%s^K1 wybuchł%s%s"
 
 #: qcsrc/common/notifications/all.inc:308
 #, c-format
 msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został przykręcony przez Racer gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:309
 #, c-format
 msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"
 msgstr ""
+"^BG%s%s^K1 nie mógł znaleźć schronienia przed Racer gracza ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:310
 #, c-format
 msgid "^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 został wrzucony do świata bólu przez ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:313
 #, c-format
@@ -4854,22 +4911,22 @@ msgstr "^BG%s^K1 został przeniesiony do %s%s"
 #: qcsrc/common/notifications/all.inc:314
 #, c-format
 msgid "^BG%s^K1 became enemies with the Lord of Teamplay%s%s"
-msgstr ""
+msgstr "^BG%s^K1 stał się wrogami Pana Gry Zespołowej%s%s"
 
 #: qcsrc/common/notifications/all.inc:315
 #, c-format
 msgid "^BG%s^K1 thought they found a nice camping ground%s%s"
-msgstr ""
+msgstr "^BG%s^K1 myślał, że znalazł fajne miejsce do kempingu%s%s"
 
 #: qcsrc/common/notifications/all.inc:316
 #, c-format
 msgid "^BG%s^K1 unfairly eliminated themselves%s%s"
-msgstr ""
+msgstr "^BG%s^K1 niesprawiedliwie się wyeliminował%s%s"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
 msgid "^BG%s^K1 couldn't catch their breath%s%s"
-msgstr ""
+msgstr "^BG%s^K1 nie mógł złapać oddechu%s%s"
 
 #: qcsrc/common/notifications/all.inc:318
 #, c-format
@@ -4884,17 +4941,17 @@ msgstr "^BG%s^K1 uderzył w ziemię ze zbyt dużą siłą%s%s"
 #: qcsrc/common/notifications/all.inc:319
 #, c-format
 msgid "^BG%s^K1 hit the ground with a crunch%s%s"
-msgstr ""
+msgstr "^BG%s^K1 uderzył chrobocząc w ziemię%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s"
-msgstr ""
+msgstr "^BG%s^K1 stał się trochę zbyt chrupiący%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 felt a little hot%s%s"
-msgstr "^BG%s^K1  poczuł się trochę gorąco%s%s"
+msgstr "^BG%s^K1 poczuł się trochę gorąco%s%s"
 
 #: qcsrc/common/notifications/all.inc:321
 #, c-format
@@ -4909,7 +4966,7 @@ msgstr "^BG%s^K1 znalazł gorące miejsce%s%s"
 #: qcsrc/common/notifications/all.inc:322
 #, c-format
 msgid "^BG%s^K1 turned into hot slag%s%s"
-msgstr ""
+msgstr "^BG%s^K1 zamienił się w gorący popiół%s%s"
 
 #: qcsrc/common/notifications/all.inc:323
 #, c-format
@@ -4919,17 +4976,17 @@ msgstr "^BG%s^K1 został wysadzony przez Maga%s%s"
 #: qcsrc/common/notifications/all.inc:324
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Golem%s%s"
-msgstr ""
+msgstr "Wnętrzności ^BG%s^K1 stały się zewnętrzne dzięki Golemowi%s%s"
 
 #: qcsrc/common/notifications/all.inc:325
 #, c-format
 msgid "^BG%s^K1 was smashed by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został zmiażdzony przez Golema%s%s"
 
 #: qcsrc/common/notifications/all.inc:326
 #, c-format
 msgid "^BG%s^K1 was zapped to death by a Golem%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został porażony na śmierć przez Golema%s%s"
 
 #: qcsrc/common/notifications/all.inc:327
 #, c-format
@@ -4956,23 +5013,23 @@ msgstr "^BG%s^K1 otrzymał lekcję kung fu od Zombie%s%s"
 #: qcsrc/common/notifications/all.inc:334
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
-msgstr ""
+msgstr "^BG%s^K1 opanował sztukę samonakłuwania%s%s"
 
 #: qcsrc/common/notifications/all.inc:333
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr ""
+msgstr "Leczący granat gracza ^BG%s^K1 nie wyleczył go dostatecznie%s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 postanowił się przyjrzeć skutkom eksplozji napalmu%s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid "^BG%s^K1 was burned to death by their own Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został spalony na śmierć przez swój granat napalmowy%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
@@ -4997,17 +5054,17 @@ msgstr "^BG%s^K1 został spadającą gwiazdą%s%s"
 #: qcsrc/common/notifications/all.inc:339
 #, c-format
 msgid "^BG%s^K1 was slimed%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został zeszlamowany%s%s"
 
 #: qcsrc/common/notifications/all.inc:340
 #, c-format
 msgid "^BG%s^K1 couldn't take it anymore%s%s"
-msgstr ""
+msgstr "^BG%s^K1 nie mógł znieść dłużej%s%s"
 
 #: qcsrc/common/notifications/all.inc:341
 #, c-format
 msgid "^BG%s^K1 is now preserved for centuries to come%s%s"
-msgstr ""
+msgstr "^BG%s^K1 jest zachowany na kolejne stulecia%s%s"
 
 #: qcsrc/common/notifications/all.inc:342
 #, c-format
@@ -5027,67 +5084,68 @@ msgstr "^BG%s^K1 wbiegł w wieżyczkę%s%s"
 #: qcsrc/common/notifications/all.inc:345
 #, c-format
 msgid "^BG%s^K1 was blasted away by an eWheel turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został wysadzony w powietrze przez wieżyczkę eWheel%s%s"
 
 #: qcsrc/common/notifications/all.inc:346
 #, c-format
 msgid "^BG%s^K1 got caught up in the FLAC turret fire%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został złapany w ogniu wieżyczki FLAC%s%s"
 
 #: qcsrc/common/notifications/all.inc:347
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Hellion turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został wysadzony w powietrze przez wieżyczkę Hellion%s%s"
 
 #: qcsrc/common/notifications/all.inc:348
 #, c-format
 msgid "^BG%s^K1 could not hide from the Hunter turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 nie mógł się ukryć przez wieżyczką Łowcy%s%s"
 
 #: qcsrc/common/notifications/all.inc:349
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został podziurawiony przez wieżyczkę karabinu maszynowego%s%s"
 
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
 msgid "^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s%s"
 msgstr ""
+"^BG%s^K1 został zamieniony w tlące się resztki przez wieżyczkę MLRS%s%s"
 
 #: qcsrc/common/notifications/all.inc:351
 #, c-format
 msgid "^BG%s^K1 was phased out by a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został wycofany przez wieżyczkę%s%s"
 
 #: qcsrc/common/notifications/all.inc:352
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 dostał trochę przegrzanej plazmy z wieżyczki%s%s"
 
 #: qcsrc/common/notifications/all.inc:353
 #, c-format
 msgid "^BG%s^K1 was electrocuted by a Tesla turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został porażony prądem przez wieżyczkę Tesla%s%s"
 
 #: qcsrc/common/notifications/all.inc:354
 #, c-format
 msgid "^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 otrzymał wzbogacenie ołowiu za pomocą wieżyczki Walker%s%s "
 
 #: qcsrc/common/notifications/all.inc:355
 #, c-format
 msgid "^BG%s^K1 was impaled by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został przebity przez wieżyczkę Walker%s%s"
 
 #: qcsrc/common/notifications/all.inc:356
 #, c-format
 msgid "^BG%s^K1 was blasted away by a Walker turret%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został wysadzony w powietrze przez wieżyczkę Walker%s%s"
 
 #: qcsrc/common/notifications/all.inc:357
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został złapany w wybuchu przez wybuch Bumblebee%s%s"
 
 #: qcsrc/common/notifications/all.inc:358
 #, c-format
@@ -5097,37 +5155,37 @@ msgstr "^BG%s^K1 został zmiażdżony przez pojazd%s%s"
 #: qcsrc/common/notifications/all.inc:359
 #, c-format
 msgid "^BG%s^K1 was caught in a Raptor cluster bomb%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został złapany w bombę kastetową Raptor%s%s"
 
 #: qcsrc/common/notifications/all.inc:360
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Raptor explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został złapany w wybuchu przez wybuch Raptor%s%s"
 
 #: qcsrc/common/notifications/all.inc:361
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został złapany w wybuchu przez wybuch Spiderbot%s%s"
 
 #: qcsrc/common/notifications/all.inc:362
 #, c-format
 msgid "^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został rozerwany na strzępy przez rakietę Spiderbot%s%s"
 
 #: qcsrc/common/notifications/all.inc:363
 #, c-format
 msgid "^BG%s^K1 got caught in the blast of a Racer explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 został złapany w wybuchu przez wybuch Racer%s%s"
 
 #: qcsrc/common/notifications/all.inc:364
 #, c-format
 msgid "^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"
-msgstr ""
+msgstr "^BG%s^K1 nie mógł znaleźć schronienia przed rakietą Racer%s%s"
 
 #: qcsrc/common/notifications/all.inc:365
 #, c-format
 msgid "^BG%s^K1 ended up in the wrong place%s%s"
-msgstr ""
+msgstr "^BG%s^K1 skończył w złym miejscu%s%s"
 
 #: qcsrc/common/notifications/all.inc:368
 #, c-format
@@ -5137,7 +5195,7 @@ msgstr "^BG%s^K1 został zdradzony przez ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:370
 #, c-format
 msgid "(%s every %s seconds)"
-msgstr ""
+msgstr "(%s każdej %s sekundy)"
 
 #: qcsrc/common/notifications/all.inc:372
 #, c-format
@@ -5162,12 +5220,12 @@ msgstr "^BG%s^K3 rozsadził lód granatem"
 #: qcsrc/common/notifications/all.inc:376
 #, c-format
 msgid "^BG%s^K3 was automatically revived after %s seconds"
-msgstr ""
+msgstr "^BG%s^K3 został samoistnie rozmrożony po %s sekundach"
 
 #: qcsrc/common/notifications/all.inc:377
 #, c-format
 msgid "^BG%s^K1 froze themselves"
-msgstr ""
+msgstr "^BG%s^K1 zamroził się"
 
 #: qcsrc/common/notifications/all.inc:379
 #: qcsrc/common/notifications/all.inc:712
@@ -5193,7 +5251,7 @@ msgstr "^BGKoniec rundy, nie ma zwycięzcy"
 #: qcsrc/common/notifications/all.inc:384
 #, c-format
 msgid "^BGGodmode saved you %s units of damage, cheater!"
-msgstr ""
+msgstr "^BGTryb boga uratował ci %s obrażeń, oszuście!"
 
 #: qcsrc/common/notifications/all.inc:386
 #, c-format
@@ -5276,12 +5334,12 @@ msgstr "^BG%s^F3 teraz gra dla drużyny ^TC^TT"
 #: qcsrc/common/notifications/all.inc:402
 #, c-format
 msgid "^BG%s^F3 wants to play on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 chce grać w drużynie ^TC^TT"
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 chce grać"
 
 #: qcsrc/common/notifications/all.inc:405
 #: qcsrc/common/notifications/all.inc:743
@@ -5346,7 +5404,7 @@ msgstr "^BG%s^BG przejął punkt kontrolny %s^BG"
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
 msgid "^BG%s^BG captured a control point"
-msgstr ""
+msgstr "^BG%s^BG przejął punkt kontrolny"
 
 #: qcsrc/common/notifications/all.inc:423
 #, c-format
@@ -5356,7 +5414,7 @@ msgstr "Punkt kontrolny %s^BG drużyny ^TC^TT^BG został zniszczony przez %s"
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr ""
+msgstr "Punkt kontrolny drużyny ^TC^TT^BG został zniszczony przez %s"
 
 #: qcsrc/common/notifications/all.inc:425
 msgid "^TC^TT^BG generator has been destroyed"
