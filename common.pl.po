@@ -8000,6 +8000,8 @@ msgid ""
 "The %s vehicle seats up to three passengers, who are given different roles "
 "based on the order they enter."
 msgstr ""
+"Pojazd %s może pomieścić maksymalnie trzech pasażerów, w którym przydzielane "
+"są role w zależności od kolejności wejścia."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:1010
 msgid ""
@@ -8007,18 +8009,25 @@ msgid ""
 "skies. The first player can also shoot a green healing wave to heal other "
 "teammates on the ground."
 msgstr ""
+"Pierwszy gracz, który wejdzie do pojazdu, zostanie pilotem i poleci w "
+"przestworza. Pierwszy gracz może również wystrzelić zieloną falę leczniczą, "
+"aby uleczyć pozostałych członków drużyny na ziemi."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:1012
 msgid ""
 "The second player to enter is the right gunner and the third player to enter "
 "is the left gunner."
 msgstr ""
+"Drugi gracz, który wejdzie będzie prawym strzelcem, a trzeci gracz, który "
+"wejdzie będzie lewym strzelcem."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:1013
 msgid ""
 "When the pilot exits the vehicle, the players switch roles by moving up in "
 "position."
 msgstr ""
+"Kiedy pilot wyjdzie z pojazdu, gracze zmienają się rolami, przesuwając się "
+"miejscami."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qh:23
 msgid "Bumblebee"
@@ -8030,6 +8039,8 @@ msgid ""
 "The %s vehicle looks like a jet, but does not fly upwards very well. It "
 "seats only one passenger, who becomes the pilot."
 msgstr ""
+"Pojazd %s wygląda jak odrzutowiec, ale nie lata zbyt dobrze w górę. Mieści "
+"tylko jednego pasażera, który zostaje pilotem."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
 #, c-format
@@ -8037,6 +8048,8 @@ msgid ""
 "It can be accelerated by pressing %s, which consumes power from the same "
 "source as the primary weapon."
 msgstr ""
+"Można go przyśpieszyć wciskając %s, który pobiera energię z tego samego "
+"źródła co broń główna."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:650
 #, c-format
@@ -8044,6 +8057,8 @@ msgid ""
 "The %s primary weapon is a laser and the secondary weapon shoots energy "
 "balls that explode on impact."
 msgstr ""
+"Broń główna %s jest laserem, a broń dodatkowa strzela kulami energii która "
+"eksploduje przy uderzeniu."
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:23
 msgid "Racer"
@@ -8059,6 +8074,8 @@ msgid ""
 "The %s vehicle is a flying vehicle that takes only one pilot, who can "
 "operate both of the weapons."
 msgstr ""
+"Pojazd %s jest pojazdem latającym, do którego potrzebny jest tylko jeden "
+"pilot, mogący obsługiwać obydwa rodzaje broni."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qc:851
 #, c-format
@@ -8069,6 +8086,11 @@ msgid ""
 "reticle. The white reticle always points to the head of the vehicle, while "
 "the green reticle's location is determined by the momentum of the vehicle."
 msgstr ""
+"Obie bronie mają różne siatki celownicze, podobnie jak %s. Broń główna jest "
+"oparta na laserze i strzela w kierunku białego celownika. Broń dodatkowa "
+"zrzuca bomby na ziemię, celując w zielony celownik. Biały celownik zawsze "
+"wskazuje przód pojazdu, podczas gdy położenie zielonego celownika zależy od "
+"pędu pojazdu."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qh:23
 msgid "Raptor"
@@ -8076,24 +8098,25 @@ msgstr "Raptor"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:9
 msgid "Raptor cannon"
-msgstr ""
+msgstr "działko Raptora"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:17
 msgid "Raptor bomb"
-msgstr ""
+msgstr "bomba Raptora"
 
 #: qcsrc/common/vehicles/vehicle/raptor_weapons.qh:25
 msgid "Raptor flare"
-msgstr ""
+msgstr "flara Raptora"
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:671
 #, c-format
 msgid "The %s vehicle walks and jumps around, and takes only one rider."
 msgstr ""
+"Pojazd %s porusza się i skacze, który może pomieścić tylko jednego pasażera."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:672
 msgid "It can jump from very high altitudes while protecting the rider."
-msgstr ""
+msgstr "Potrafi skakać z bardzo dużej wysokości, chroniąc przy tym pasażera."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:673
 #, c-format
@@ -8105,6 +8128,11 @@ msgid ""
 "the green reticle also points to the front but with a bit of delay when the "
 "%s rotates."
 msgstr ""
+"Posiada dwie bronie, którymi może sterować pasażer, które mają różne "
+"celowniki, podobnie jak %s. Broń główna to karabin maszynowy, strzelający w "
+"kierunku zielonego celownika. Broń dodatkowa strzela rakietami w kierunku "
+"białego celownika. Biały celownik wskazuje przód pojazdu, a zielony celownik "
+"również wskazuje przód, ale z niewielkim opóźnieniem podczas obrotu %s."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qh:23
 msgid "Spiderbot"
@@ -8112,48 +8140,48 @@ msgstr "Robot-pająk"
 
 #: qcsrc/common/weapons/all.qc:856
 msgid "This weapon has not been bound directly."
-msgstr ""
+msgstr "Ta broń nie została bezpośrednio przypisana."
 
 #: qcsrc/common/weapons/all.qc:857
 #, c-format
 msgid "You have bound this weapon to: %s."
-msgstr ""
+msgstr "Przypisałeś broń do: %s."
 
 #: qcsrc/common/weapons/all.qc:863 qcsrc/common/weapons/all.qc:864
 #: qcsrc/common/weapons/all.qc:895
 #, c-format
 msgid "(DPS: %.2f)"
-msgstr ""
+msgstr "(DPS: %.2f)"
 
 #: qcsrc/common/weapons/all.qc:868
 #, c-format
 msgid "It does %s damage"
-msgstr ""
+msgstr "Zadaje %s obrażeń"
 
 #: qcsrc/common/weapons/all.qc:869
 #, c-format
 msgid "It shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "Wystrzeliwuje %s strzałów zadając po %s obrażeń każdy"
 
 #: qcsrc/common/weapons/all.qc:870
 #, c-format
 msgid "The %s does %s damage"
-msgstr ""
+msgstr "%s zadaje %s obrażeń"
 
 #: qcsrc/common/weapons/all.qc:871
 #, c-format
 msgid "The %s does %s damage per second"
-msgstr ""
+msgstr "%s zadaje %s obrażeń na sekundę"
 
 #: qcsrc/common/weapons/all.qc:872
 #, c-format
 msgid "The %s shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "%s wystrzeliwuje %s strzałów zadając po %s obrażeń każdy"
 
 #: qcsrc/common/weapons/all.qc:873
 #, c-format
 msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr ""
+msgstr "%s oddaje do %s strzałów zadając po %s obrażeń każdy"
 
 #: qcsrc/common/weapons/all.qc:896 qcsrc/common/weapons/all.qc:906
 #: qcsrc/common/weapons/all.qc:927 qcsrc/common/weapons/all.qc:941
@@ -8161,22 +8189,22 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:984 qcsrc/common/weapons/all.qc:998
 #: qcsrc/common/weapons/all.qc:1022 qcsrc/common/weapons/all.qc:1034
 msgid "Default damage stats:"
-msgstr ""
+msgstr "Domyślne statystyki obrażeń:"
 
 #: qcsrc/common/weapons/all.qc:898
 #, c-format
 msgid "A direct hit does %s damage"
-msgstr ""
+msgstr "Bezpośrednie uderzenie zadaje %s obrażeń"
 
 #: qcsrc/common/weapons/all.qc:1020
 #, c-format
 msgid "(total DPS: %.2f)"
-msgstr ""
+msgstr "(całkowity DPS: %.2f)"
 
 #: qcsrc/common/weapons/all.qc:1025
 #, c-format
 msgid "The combo adds an extra %s damage"
-msgstr ""
+msgstr "Combo zadaje dodatkowe %s obrażeń"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1442
 #, c-format
@@ -8184,19 +8212,23 @@ msgid ""
 "The %s fires a continuous beam of electricity, steadily dealing damage to "
 "any enemies that cross its path."
 msgstr ""
+"%s wystrzeliwuje ciągłą wiązkę elektryczności, która zadaje stałe obrażenia "
+"wszystkim wrogom, którzy staną na jej drodze."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1443
 msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
+"Ogień dodatkowy szybko wystrzeliwuje przed siebie pioruny elektryczne, które "
+"eksplodują przy uderzeniu i zadają obrażenia odłamkowe."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1444
 #, c-format
 msgid ""
 "It consumes %s ammo, steadily churning through your supply to maintain the "
 "stream."
-msgstr ""
+msgstr "Zużywa %s amunicji, stale przetwarzając zasoby, aby utrzymać strumień."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1445
 #, c-format
@@ -8204,6 +8236,8 @@ msgid ""
 "The %s is quite a versatile weapon, however it is more effective at close to "
 "medium ranges, since the stream is not instantaneous."
 msgstr ""
+"%s jest dość wszechstronną bronią, jednak jest skuteczniejsza na bliskim i "
+"średnim dystansie, ponieważ strumień nie jest natychmiastowy."
 
 #: qcsrc/common/weapons/weapon/arc.qh:38
 msgid "Arc"
@@ -8216,18 +8250,25 @@ msgid ""
 "high speed laser, dealing some splash damage but importantly a lot of "
 "knockback."
 msgstr ""
+"%s jest jedną z dwóch głównych broni domyślnych, strzelającą stosunkowo "
+"słabym, ale szybkim laserem, zadającym obrażenia odłamkowe, ale co "
+"ważniejsze, zadaje spory odrzut."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:168
 msgid ""
 "It has no secondary fire, instead switching to the previously selected "
 "weapon."
 msgstr ""
+"Nie posiada ognia dodatkowego, zamiast tego przełącza się na poprzednio "
+"wybraną broń."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:169
 msgid ""
 "It doesn't require ammo, meaning it is a great choice if you are running low "
 "on ammo and need to preserve some."
 msgstr ""
+"Nie wymaga amunicji, co oznacza, że ​​jest świetnym wyborem, jeśli kończy Ci "
+"się amunicja i chcesz ją zachować."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:170
 #, c-format
@@ -8236,6 +8277,9 @@ msgid ""
 "in, but it's difficult to master when used over a medium to long range. "
 "Unlike other weapons, the %s can hit other projectiles directly."
 msgstr ""
+"%s jest zawsze dostępny, więc często go używa się po odrodzeniu, ale trudno "
+"go opanować, gdy używa się go na średnim lub dalekim dystansie. W "
+"przeciwieństwie do innych broni, %s może bezpośrednio trafiać w inne pociski."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:172
 #, c-format
@@ -8245,6 +8289,11 @@ msgid ""
 "Because it does a lot of knockback, another common usage is alternating "
 "between a high damage weapon and the %s to throw the enemy's aim off."
 msgstr ""
+"Jednym z najczęstszych zastosowań %s jest „laser jump”, gdzie można uzyskać "
+"wysokość, celując w dół, skacząc, a następnie strzelając, aby się unieść. "
+"Ponieważ odrzuca ona mocno, innym powszechnym zastosowaniem jest "
+"naprzemienne używanie broni o dużej sile rażenia i %s, aby zmylić celność "
+"przeciwnika."
 
 #: qcsrc/common/weapons/weapon/blaster.qh:32
 msgid "Blaster"
@@ -8259,12 +8308,19 @@ msgid ""
 "be utilized to deal more damage to an enemy by making the projectiles "
 "converge on them."
 msgstr ""
+"%s wystrzeliwuje serie pocisków podobnych do lasera, które rozprzestrzeniają "
+"się w miarę oddalania się i odbijają od ścian. Jeśli główny ogień zostanie "
+"wstrzymany, po jego zwolnieniu pociski skupią się, a następnie ponownie się "
+"rozproszą. Efekt ten można wykorzystać do zadania większych obrażeń wrogowi, "
+"kierując pociski na niego."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:616
 msgid ""
 "Projectiles deal damage on collision but also when they bounce, so with good "
 "positioning they can sometimes deal double damage."
 msgstr ""
+"Pociski zadają obrażenia nie tylko przy zderzeniu z celem, ale także po "
+"odbiciu, więc przy dobrym ustawieniu mogą czasami zadać podwójne obrażenia."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:617
 msgid ""
@@ -8272,12 +8328,16 @@ msgid ""
 "is often the better option in situations where the enemy is an easy target "
 "to hit."
 msgstr ""
+"Ogień dodatkowy wystrzeliwuje pociski blisko siebie, co często stanowi "
+"lepsze rozwiązanie w sytuacjach, gdy wróg jest łatwym celem do trafienia."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:618
 #, c-format
 msgid ""
 "It consumes %s ammo for each projectile, which is shared by several weapons."
 msgstr ""
+"Zużywa amunicję %s dla każdego pocisku, który jest współdzielony przez kilka "
+"broni."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:619
 #, c-format
@@ -8285,6 +8345,8 @@ msgid ""
 "Close to medium range is the ideal time to use the %s, although the "
 "secondary fire can be useful for long range combat sometimes."
 msgstr ""
+"Bliski lub średni dystans to najlepszy moment na użycie %s, choć czasami "
+"ogień dodatkowy może być przydatny w walce na większe odległości."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:620
 #, c-format
@@ -8296,6 +8358,12 @@ msgid ""
 "angle down and use the secondary fire to pull yourself forwards, in order to "
 "gain speed."
 msgstr ""
+"%s zadaje odrzut w unikalny sposób, przeciągając gracza od środka do punktu "
+"uderzenia. To czyni go jedną z najlepszych broni do spowolnienia przeciwnika "
+"w pogoni, szczególnie z użyciem ognia dodatkowego. Innym powszechnym "
+"zastosowaniem %s jest „bieganie Crylink”, gdzie częściowo pochylasz się w "
+"dół i używasz ataku dodatkowego, aby przyciągnąć się do przodu i nabrać "
+"prędkości."
 
 #: qcsrc/common/weapons/weapon/crylink.qh:36
 msgid "Crylink"
@@ -8308,6 +8376,10 @@ msgid ""
 "it explodes on impact. If the primary fire is held, the rocket can be guided "
 "by the user's aim, allowing steering it towards enemies."
 msgstr ""
+"%s wystrzeliwuje zdalnie sterowaną rakietę, która eksploduje po uderzeniu i "
+"zadaje znaczne obrażenia. Jeśli główny tryb ognia jest aktywny, rakieta może "
+"być sterowana przez użytkownika, co pozwala na skierowanie jej w stronę "
+"wrogów."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:589
 msgid ""
@@ -8315,6 +8387,8 @@ msgid ""
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr ""
+"Ogień dodatkowy można wykorzystać do natychmiastowej detonacji rakiet, co "
+"pozwala zadać obrażenia wrogom, nawet jeśli rakieta o włos nie trafi w nich."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:590
 #, c-format
@@ -8322,6 +8396,8 @@ msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
+"Każda rakieta zużywa sporo amunicji %s, która może się szybko wyczerpać, "
+"dlatego gracze często używają zamiennie innej broni, na przykład %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:591
 #, c-format
@@ -8331,6 +8407,10 @@ msgid ""
 "combat. In close range combat, the large splash radius often results in "
 "rockets damaging both you and your enemy."
 msgstr ""
+"Ze względu na wysokie obrażenia, %s jest jedną z najczęściej używanych "
+"broni. Można jej używać w niemal każdej sytuacji, najlepiej sprawdzając się "
+"w walce na średnim dystansie. W walce w zwarciu, duży promień rozprysku "
+"często powoduje, że rakiety ranią zarówno ciebie, jak i przeciwnika."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:594
 #, c-format
@@ -8339,10 +8419,14 @@ msgid ""
 "flying,\" where you fire a rocket and immediately detonate it to boost "
 "yourself while mid-air, much more effective with the %s mutator enabled."
 msgstr ""
+"Ze względu na możliwość zdalnego detonowania rakiet, powszechnym "
+"zastosowaniem jest „latanie rakietą”, w którym odpalasz rakietę i "
+"natychmiast ją detonujesz, aby dodać sobie sił w powietrzu, co jest znacznie "
+"bardziej efektywne, gdy włączony jest mutator %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qh:36
 msgid "Devastator"
-msgstr "Devastator"
+msgstr "Dewastator"
 
 #: qcsrc/common/weapons/weapon/electro.qc:754
 #, c-format
@@ -8350,6 +8434,8 @@ msgid ""
 "The %s shoots electric balls forwards, dealing some splash damage when they "
 "burst on impact."
 msgstr ""
+"%s strzela kulami elektrycznymi, które wybuchając przy uderzeniu, zadają "
+"obrażenia odłamkowe."
 
 #: qcsrc/common/weapons/weapon/electro.qc:755
 #, c-format
@@ -8359,11 +8445,16 @@ msgid ""
 "damage enemies that walk by. The orbs burst after some time, and can be "
 "forced to burst in a \"combo\" if a primary fire ball bursts near them."
 msgstr ""
+"Ogień dodatkowy wystrzeliwuje kule, na które działa grawitacja. Można je "
+"rozmieszczać na mapie w miejscach o dużym natężeniu ruchu (na przykład w "
+"bazach z flagą w %s), aby zadawać obrażenia przechodzącym w pobliżu "
+"przeciwnikom. Kule wybuchają po pewnym czasie i można je zmusić do wybuchu w "
+"„combo”, jeśli w ich pobliżu wybuchnie główna kula ognia."
 
 #: qcsrc/common/weapons/weapon/electro.qc:758
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
-msgstr ""
+msgstr "Zużywa amunicję %s na każdą kulę."
 
 #: qcsrc/common/weapons/weapon/electro.qc:759
 #, c-format
@@ -8373,6 +8464,10 @@ msgid ""
 "fire doesn't travel particularly fast, the %s is not useful in many other "
 "situations."
 msgstr ""
+"%s to jedna z najlepszych broni spamowych do użycia w zatłoczonych "
+"miejscach, ponieważ kombinacje mogą zadać ogromne obrażenia, jeśli wróg jest "
+"wystarczająco blisko. Ponieważ ogień główny nie rozprzestrzenia się szybko, "
+"%s nie jest przydatne w wielu innych sytuacjach."
 
 #: qcsrc/common/weapons/weapon/electro.qh:37
 msgid "Electro"
@@ -8384,20 +8479,25 @@ msgid ""
 "The %s supercharges then fires a massive fireball in a straight line, "
 "dealing heaps of splash damage over a large radius on impact."
 msgstr ""
+"%s mocno się ładuje, a następnie wystrzeliwuje ogromną kulę ognia w linii "
+"prostej, która w momencie uderzenia powoduje obrażenia od rozprysku na dużym "
+"obszarze."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:433
 msgid ""
 "The secondary fire launches flaming balls that set nearby players alight."
 msgstr ""
+"Ogień dodatkowy wystrzeliwuje płonące kule, które podpalają pobliskich "
+"graczy."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:434
 msgid "It is a superweapon, so isn't often found in game."
-msgstr ""
+msgstr "Jest to superbroń, więc nie jest ona często znajdowana w grze."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:435
 #: qcsrc/common/weapons/weapon/porto.qc:423
 msgid "It doesn't require ammo, but it is destroyed after some time."
-msgstr ""
+msgstr "Nie wymaga ona amunicji, ale ulega samozniszczeniu po pewnym czasie."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:436
 #, c-format
@@ -8406,10 +8506,13 @@ msgid ""
 "it effectively may be difficult, but if done properly it can deal a ton of "
 "damage."
 msgstr ""
+"Ponieważ ładowanie %s trwa chwilę, a kula ognia porusza się powoli, jej "
+"skuteczne użycie może być trudne, jednak jeśli zrobisz to poprawnie, może "
+"zadać ogromne obrażenia."
 
 #: qcsrc/common/weapons/weapon/fireball.qh:38
 msgid "Fireball"
-msgstr "Fireball"
+msgstr "Kula ognia"
 
 #: qcsrc/common/weapons/weapon/hagar.qc:510
 #, c-format
@@ -8417,6 +8520,8 @@ msgid ""
 "The %s rapidly fires small propelled rockets forwards, dealing some splash "
 "damage on impact."
 msgstr ""
+"%s szybko wystrzeliwuje małe rakiety, które zadają obrażenia od rozprysku "
+"przy uderzeniu."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:511
 msgid ""
@@ -8425,11 +8530,15 @@ msgid ""
 "it will fire itself after some time (after a warning beep) if the secondary "
 "fire isn't released."
 msgstr ""
+"Podczas utrzymywania ognia dodatkowego ładowane jest wiele rakiet, które są "
+"odpalane jednocześnie po zwolnieniu. Rakiety nie mogą być trzymane w "
+"nieskończoność, więc po pewnym czasie (po sygnale ostrzegawczym) odpalą się "
+"same, jeśli ogień dodatkowy nie zostanie zwolniony."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:513
 #, c-format
 msgid "It consumes %s ammo for each rocket."
-msgstr ""
+msgstr "Zużywa amunicję %s na każdą rakietę."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:514
 #, c-format
@@ -8439,6 +8548,10 @@ msgid ""
 "before turning a corner, so you can surprise any enemies around the corner "
 "with a bunch of rockets to the face."
 msgstr ""
+"%s sprawdza się najlepiej na bliskim i średnim dystansie, ponieważ trudno "
+"jest trafić z dużej odległości. Powszechnym zastosowaniem jest pełne "
+"załadowanie ognia dodatkowego przed skrętem, dzięki czemu można zaskoczyć "
+"wrogów za rogiem gradem rakiet prosto w twarz."
 
 #: qcsrc/common/weapons/weapon/hagar.qh:41
 msgid "Hagar"
@@ -8450,12 +8563,16 @@ msgid ""
 "The %s (or HLAC for short) fires lasers in quick succession. The projectiles "
 "it fires are similar to those of the %s."
 msgstr ""
+"%s (w skrócie HLAC) wystrzeliwują lasery w krótkich seriach. Wystrzeliwane "
+"przez niego pociski są podobne do tych z %s."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:247
 msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
+"Ogień dodatkowy polega na jednoczesnym wystrzeleniu serii losowo "
+"rozproszonych laserów."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:248
 #, c-format
@@ -8463,6 +8580,8 @@ msgid ""
 "Unlike the %s, it consumes %s ammo for each laser shot, meaning that it "
 "cannot be used infinitely."
 msgstr ""
+"W przeciwieństwie do %s, zużuwa amunicję %s dla każdego strzału laserowego, "
+"co oznacza, że nie można używać tej broni w nieskończoność."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:249
 #, c-format
@@ -8470,6 +8589,8 @@ msgid ""
 "The %s works best in close ranges, but the primary fire is also useful in "
 "medium ranges."
 msgstr ""
+"%s najlepiej sprawdza się na bliskim dystansie, ale ogień główny sprawdza "
+"się również na średnim dystansie."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:250
 #, c-format
@@ -8479,6 +8600,10 @@ msgid ""
 "fire every now and then is important to restore accuracy. Also, the %s has "
 "less spread when used while crouching."
 msgstr ""
+"Unikalną cechą %s jest to, że im dłużej ogień główny jest utrzymywany, tym "
+"bardziej rozprzestrzeniają się jego lasery. Oznacza to, że od czasu do czasu "
+"ważne jest wystrzeliwanie ognia głównego, aby przywrócić celność. Ponadto, "
+"rozproszenie jest mniejsze, gdy %s jest używana podczas kucania."
 
 #: qcsrc/common/weapons/weapon/hlac.qh:35
 msgid "Heavy Laser Assault Cannon"
@@ -8490,12 +8615,16 @@ msgid ""
 "The %s is a unique weapon, firing a chain forwards which pulls you in once "
 "it latches onto something."
 msgstr ""
+"%s to unikalna broń, która wystrzeliwuje łańcuch do przodu, który wciąga "
+"cię, gdy się czegoś zaczepi."
 
 #: qcsrc/common/weapons/weapon/hook.qc:430
 msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
+"Ogień dodatkowy zwykle zrzuca bombę grawitacyjną, która oddziałuje na "
+"wrogów, a dodatkowo uwalnia światło i dym, coś w rodzaju granatu hukowego."
 
 #: qcsrc/common/weapons/weapon/hook.qc:431
 #, c-format
@@ -8503,6 +8632,8 @@ msgid ""
 "It usually requires %s ammo to work, consuming it both when initially firing "
 "the hook, and after a couple seconds as it reels you in."
 msgstr ""
+"Zazwyczaj wymaga amunicji %s, którą zużywa się zarówno w momencie "
+"wystrzelenia haka, jak i po kilku sekundach od wciągnięcia żyłki."
 
 #: qcsrc/common/weapons/weapon/hook.qc:432
 #, c-format
@@ -8511,6 +8642,9 @@ msgid ""
 "around the map at high speeds, making both surprise ambushes and miraculous "
 "escapes possible."
 msgstr ""
+"%s pozwala dotrzeć do miejsc na mapie, do których wcześniej nie można było "
+"dotrzeć, i poruszać się po mapie z dużą prędkością, co pozwala na "
+"przeprowadzanie niespodziewanych zasadzek i cudowne ucieczki."
 
 #: qcsrc/common/weapons/weapon/hook.qc:434
 #, c-format
@@ -8518,6 +8652,8 @@ msgid ""
 "It isn't available very often on maps, unless the %s mutator is active, in "
 "which all players have it on their offhand, used with %s."
 msgstr ""
+"Nie jest on często dostępny na mapie, chyba że mutator %s jest aktywny i "
+"wszyscy gracze mają jako broń dodatkową, używną z %s."
 
 #: qcsrc/common/weapons/weapon/hook.qh:36
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
@@ -8530,13 +8666,16 @@ msgid ""
 "fire and with no spread, but there's a short delay until it can be used "
 "again."
 msgstr ""
+"Ogień dodatkowy strzela szybką serią pocisków szybciej niż ogień podstawowy "
+"i bez rozrzutu, ale występuje krótkie opóźnienie, zanim można go użyć "
+"ponownie."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:423
 #, c-format
 msgid ""
 "It consumes %s ammo for each bullet shot, until the whole magazine is "
 "emptied."
-msgstr ""
+msgstr "Zużywa amunicję %s przy każdym strzale, aż do opróżnienia magazynka."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:424
 #, c-format
@@ -8546,6 +8685,10 @@ msgid ""
 "secondary fire has no spread, it's the better option when firing over a long "
 "range."
 msgstr ""
+"%s może być używany w wielu sytuacjach i sprawdza się szczególnie dobrze na "
+"dużych dystansach, ponieważ pociski przebijają niebo natychmiastowo. "
+"Ponieważ ogień dodatkowy nie ma rozrzutu, jest to lepsza opcja na daleki "
+"dystans."
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:33
 msgid "MachineGun"
@@ -8558,17 +8701,23 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after some time they will self-detonate."
 msgstr ""
+"%s po wystrzeleniu umieszcza miny na ziemi, które detonują i ranią wrogów, "
+"jeśli na nie nadepną. Jednocześnie można umieścić tylko kilka min, które po "
+"pewnym czasie same się detonują."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:555
 msgid ""
 "Uniquely, the mines explode sooner the closer an enemy comes to them. The "
 "secondary fire can be used to detonate all mines placed by the primary fire."
 msgstr ""
+"Co wyjątkowe, miny eksplodują tym szybciej, im bliżej znajduje się wróg. "
+"Ogień dodatkowy może być użyty do zdetonowania wszystkich min umieszczonych "
+"przez ogień główny."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:557
 #, c-format
 msgid "It consumes %s ammo for each mine laid."
-msgstr ""
+msgstr "Zużywa amunicję %s na każdą położoną minę."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:558
 #, c-format
@@ -8578,10 +8727,14 @@ msgid ""
 "important areas of the map such as the flag in %s, control points in %s, or "
 "checkpoints in %s."
 msgstr ""
+"Miny nie są wystrzeliwane na dużą odległość przed uderzeniem w ziemię, więc "
+"%s nie jest zbyt skuteczna na średnim i dużym dystansie. Często używa się "
+"ich do ochrony ważnych obszarów mapy, takich jak flaga w %s, punkty "
+"kontrolne w %s i %s."
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:38
 msgid "Mine Layer"
-msgstr ""
+msgstr "Warstwa min"
 
 #: qcsrc/common/weapons/weapon/mortar.qc:398
 #, c-format
@@ -8589,17 +8742,21 @@ msgid ""
 "The %s launches a grenade that explodes immediately on impact, dealing a "
 "medium amount of splash damage."
 msgstr ""
+"%s wystrzeliwuje granat, który eksploduje natychmiast po uderzeniu, zadając "
+"średnie obrażenia odłamkowe."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:399
 msgid ""
 "The secondary fire shoots a similar grenade that explodes shortly after "
 "bouncing."
 msgstr ""
+"Ogień dodatkowy wystrzeliwuje podobny granat, który eksploduje krótko po "
+"odbiciu."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:400
 #, c-format
 msgid "It consumes %s ammo for every grenade launched."
-msgstr ""
+msgstr "Zużywa amunicję %s dla każdego wystrzelonego granatu."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:401
 #, c-format
@@ -8609,6 +8766,10 @@ msgid ""
 "exploding, it can be bounced against walls to damage enemies lurking around "
 "a corner."
 msgstr ""
+"%s najlepiej działa na bliskim i średnim dystansie, ale trafienie wroga w "
+"powietrzu jest dość trudne. Ponieważ ogień dodatkowy granatu odbija się "
+"przed wybuchem, można go odbić od ścian, aby zadać obrażenia wrogom czającym "
+"się za rogiem."
 
 #: qcsrc/common/weapons/weapon/mortar.qh:35
 msgid "Mortar"
@@ -8620,18 +8781,24 @@ msgid ""
 "The %s is a unique gun that creates one-way portals between flat surfaces on "
 "the map, that immediately teleport players and projectiles."
 msgstr ""
+"%s to wyjątkowa broń tworzącą jednokierunkowe portale między płaskimi "
+"powierzchniami na mapie, które natychmiast teleportują graczy i pociski."
 
 #: qcsrc/common/weapons/weapon/porto.qc:422
 msgid ""
 "The secondary fire is used to shoot the out-portal, while the primary fire "
 "shoots the in-portal."
 msgstr ""
+"Ogień dodatkowy służy do wystrzelenia portalu zewnętrznego, natomiast ogień "
+"główny do wystrzelenia portalu wejściowego."
 
 #: qcsrc/common/weapons/weapon/porto.qc:424
 msgid ""
 "The portals will close either after the player who shot them dies or after "
 "some time period."
 msgstr ""
+"Portale zamkną się albo po śmierci gracza, który je otworzył, albo po "
+"upływie określonego czasu."
 
 #: qcsrc/common/weapons/weapon/porto.qc:425
 #, c-format
@@ -8639,10 +8806,12 @@ msgid ""
 "The %s isn't often placed on maps, but if used well it can make for some "
 "interesting gameplay."
 msgstr ""
+"%s nie jest często umieszczany na mapie, ale jeśli zostanie dobrze "
+"wykorzystany, może być źródłem ciekawego gameplay'u."
 
 #: qcsrc/common/weapons/weapon/porto.qh:36
 msgid "Port-O-Launch"
-msgstr ""
+msgstr "Wystrzeliwacz portali"
 
 #: qcsrc/common/weapons/weapon/rifle.qc:249
 #, c-format
@@ -8650,17 +8819,21 @@ msgid ""
 "The %s fires bullets that traverse the map instantaneously and deal a "
 "significant chunk of damage on impact."
 msgstr ""
+"%s wystrzeliwuje pociski, które błyskawicznie przemierzają mapę i zadają "
+"znaczne obrażenia przy uderzeniu."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:250
 msgid ""
 "The secondary fire shoots a few less powerful bullets at once with a bit of "
 "scatter."
 msgstr ""
+"Ogień dodatkowy wystrzeliwuje kilka słabszych pocisków na raz, z niewielkim "
+"rozrzutem."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:251
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr ""
+msgstr "Zużywa amunicję %s dla każdego wystrzelonego pocisku."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:252
 #, c-format
@@ -8669,10 +8842,13 @@ msgid ""
 "manually with the %s. Also, it needs to be reloaded after its magazine is "
 "emptied."
 msgstr ""
+"W przeciwieństwie do %s, dodatkowego ognia nie można powiększać, więc %s "
+"trzeba używać ręcznie z %s. Ponadto, po opróżnieniu magazynka, trzeba go "
+"przeładować."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:253
 msgid "zoom"
-msgstr ""
+msgstr "powiększenie"
 
 #: qcsrc/common/weapons/weapon/rifle.qc:254
 #: qcsrc/common/weapons/weapon/vortex.qc:372
@@ -8681,6 +8857,8 @@ msgid ""
 "Similar to the %s, the %s can be used at any range, but it stands out at "
 "long ranges."
 msgstr ""
+"Podobnie do %s, %s można używać na dowolną odległość, ale najlepiej sprawdza "
+"się na większych dystansach."
 
 #: qcsrc/common/weapons/weapon/rifle.qh:34
 msgid "Rifle"
@@ -8693,17 +8871,23 @@ msgid ""
 "missiles if it collides with a player. The homing isn't perfect, so "
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
+"%s to unikalna broń, która wystrzeliwuje „znacznik”, który następnie "
+"wystrzeliwuje kilka pocisków samonaprowadzających, jeśli zderzy się z "
+"graczem. Samonaprowadzanie nie jest idealne, więc czasami pociski mogą "
+"trafić w obiekt lub róg."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:681
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
+"Ogień dodatkowy szybko wystrzeliwuje rozproszone ładunki wybuchowe, które "
+"rozprzestrzeniają się na niewielką odległość."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:682
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
-msgstr ""
+msgstr "Zużywa amunicję %s, nawet, jeśli znacznik nie wyląduje."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:683
 #, c-format
@@ -8712,10 +8896,13 @@ msgid ""
 "it requires skill to aim effectively. The secondary fire is only useful in "
 "close range combat, and sometimes the explosives can damage yourself too."
 msgstr ""
+"Ogień główny %s zadaje spore obrażenia, gdy trafi w cel, choć celowanie "
+"wymaga umiejętności. Ogień dodatkowy przydaje się tylko w walce na krótkim "
+"dystansie, a czasami ładunki wybuchowe mogą również tobie zadać obrażenia."
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
 msgid "T.A.G. Seeker"
-msgstr ""
+msgstr "T.A.G. Seeker"
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
@@ -8723,6 +8910,8 @@ msgid ""
 "The %s is one of the two main default weapons, firing a single shotgun round "
 "which spreads into multiple pellets upon exiting the barrel."
 msgstr ""
+"%s to jedna z dwóch głównych broni domyślnych, strzelającą pojedynczym "
+"pociskiem, który po wystrzeleniu z lufy rozpryskuje się na wiele śrucin."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:421
 #, c-format
@@ -8731,6 +8920,9 @@ msgid ""
 "head of the weapon. Since the slap takes a moment to land, timing this well "
 "is difficult."
 msgstr ""
+"Ogień dodatkowy uderza ostrze %s, uderzając graczy wystarczająco blisko "
+"głowicą broni. Ponieważ uderzenie trwa chwilę, wyczucie odpowiedniego "
+"momentu jest trudne."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:423
 #, c-format
@@ -8738,10 +8930,12 @@ msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
 "will already have some."
 msgstr ""
+"Ogień główny zużywa amunicję %s, ale jeśli się pojawisz z %s, to już "
+"będziesz ją miał."
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:34
 msgid "Shotgun"
-msgstr "Dubeltówka"
+msgstr "Strzelba"
 
 #: qcsrc/common/weapons/weapon/tuba.qc:604
 #, c-format
@@ -8749,14 +8943,16 @@ msgid ""
 "The %s is a unique weapon that makes the ears of nearby enemies bleed by "
 "playing awful sounds, also slightly knocking them back."
 msgstr ""
+"%s to wyjątkowa broń, która sprawia, że ​​uszy pobliskich wrogów krwawią, "
+"ponieważ odtwarza okropne dźwięki i lekko ich odrzuca."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:605
 msgid "The secondary fire works the same way, playing a higher pitch."
-msgstr ""
+msgstr "Ogień dodatkowy działa w ten sam sposób, odtwarzając wyższą tonację."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 msgid "The only ammo it needs to operate is the breath from your lungs."
-msgstr ""
+msgstr "Jedyną amunicją, jakiej potrzebuje, jest oddech z twoich płuc."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:607
 #, c-format
@@ -8764,11 +8960,14 @@ msgid ""
 "Since your enemies need to be close by to hear your rubbish music, the %s is "
 "only effective at very close ranges."
 msgstr ""
+"Ponieważ Twoi wrogowie muszą być blisko, aby usłyszeć Twoją beznadziejną "
+"muzykę, %s działa skutecznie tylko z bardzo bliskiej odległości."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:608
 #, c-format
 msgid "The pitch the %s plays depends on the movement keys pressed."
 msgstr ""
+"Wysokość odtwarzanego dźwięku z %s zależy od naciśniętych klawiszy ruchu."
 
 #: qcsrc/common/weapons/weapon/tuba.qh:39
 #, no-c-format
@@ -8782,6 +8981,9 @@ msgid ""
 "amount of damage. In %s, the beam has the ability to instantly kill enemies "
 "with a single shot, unless they have an %s."
 msgstr ""
+"%s to unikalna broń, strzelającą śmiercionośną wiązką energii zadającą "
+"ogromne obrażenia. W %s, promień ma zdolność natychmiastowego zabijania "
+"wrogów jednym strzałem, chyba że posiadają %s."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:442
 #, c-format
@@ -8789,6 +8991,8 @@ msgid ""
 "The secondary fire shoots a laser identical to that fired by the %s, with "
 "strong knockback."
 msgstr ""
+"Ogień dodatkowy wystrzeliwuje identyczny laser z tego, którego korzysta %s, "
+"powodujący silny odrzut."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:443
 #, c-format
@@ -8796,24 +9000,26 @@ msgid ""
 "It is a superweapon, so isn't often found in game, except in %s where all "
 "players spawn with it."
 msgstr ""
+"Jest to superbroń, więc nie pojawia się często w grze, z wyjątkiem %s, gdzie "
+"wszyscy gracze pojawiają się z nią w grze."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:444
 #, c-format
 msgid "It consumes some %s ammo with each shot."
-msgstr ""
+msgstr "Zużywa amunicję %s na każdy strzał."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:35
 msgid "Vaporizer"
-msgstr ""
+msgstr "Vaporizer"
 
 #: qcsrc/common/weapons/weapon/vortex.qc:368
 msgid "The secondary fire zooms in when held, allowing for ease of aiming."
-msgstr ""
+msgstr "Ogień dodatkowy powiększa się po przytrzymaniu, co ułatwia celowanie."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:369
 #, c-format
 msgid "It consumes %s ammo for each shot."
-msgstr ""
+msgstr "Zużywa amunicję %s na każdy strzał."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:370
 #, c-format
@@ -8823,6 +9029,10 @@ msgid ""
 "slightly before it finishes completely reloading, albeit with the tradeoff "
 "of dealing slightly less damage."
 msgstr ""
+"W przeciwieństwie do %s, %s nie wymaga ręcznego przeładowywania, choć trzeba "
+"odczekać kilka sekund między strzałami. Co ciekawe, można z niego wystrzelić "
+"na krótko przed całkowitym przeładowaniem, choć kosztem nieco mniejszych "
+"obrażeń."
 
 #: qcsrc/common/weapons/weapon/vortex.qh:36
 msgid "Vortex"
@@ -8861,7 +9071,7 @@ msgstr "%d lat"
 #: qcsrc/lib/counting.qh:18
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr "%s weeks"
+msgstr "%s tygodnia"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
@@ -9045,7 +9255,7 @@ msgstr "%02d:%02d:%02d"
 #: qcsrc/lib/string.qh:489
 #, c-format
 msgid "%.*f%%"
-msgstr ""
+msgstr "%.*f%%"
 
 #: qcsrc/menu/item/listbox.qc:414
 #, c-format
@@ -9063,51 +9273,51 @@ msgstr "Ustaw"
 #: qcsrc/menu/menu.qc:520
 #, c-format
 msgid "^3%s^7 not equal to \"%s\""
-msgstr ""
+msgstr "^3%s^7 nie jest równy \"%s\""
 
 #: qcsrc/menu/menu.qc:525
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 w zakresie \"%s\" do \"%s\""
 
 #: qcsrc/menu/menu.qc:527
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 poza zakresem \"%s\" do \"%s\""
 
 #: qcsrc/menu/menu.qc:556
 msgid "Has special requirements"
-msgstr ""
+msgstr "Posiada specjalne wymagania"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
-msgstr ""
+msgstr "Wymaga ^3%s^7 nie jest równy \"%s^7\""
 
 #: qcsrc/menu/menu.qc:571
 #, c-format
 msgid "Requires %s, %s, and %s"
-msgstr ""
+msgstr "Wymaga %s, %s i %s"
 
 #: qcsrc/menu/menu.qc:571
 #, c-format
 msgid "Requires %s, %s, or %s"
-msgstr ""
+msgstr "Wymaga %s, %s lub %s"
 
 #: qcsrc/menu/menu.qc:574
 #, c-format
 msgid "Requires %s and %s"
-msgstr ""
+msgstr "Wymaga %s i %s"
 
 #: qcsrc/menu/menu.qc:574
 #, c-format
 msgid "Requires %s or %s"
-msgstr ""
+msgstr "Wymaga %s lub %s"
 
 #: qcsrc/menu/menu.qc:577
 #, c-format
 msgid "Requires %s"
-msgstr ""
+msgstr "Wymaga %s"
 
 #: qcsrc/menu/xonotic/credits.qc:7
 msgid "Core Team"
@@ -9139,7 +9349,7 @@ msgstr "Kampania"
 
 #: qcsrc/menu/xonotic/credits.qc:62
 msgid "Level Design"
-msgstr "Projektowanie poziomów"
+msgstr "Projekt poziomów"
 
 #: qcsrc/menu/xonotic/credits.qc:87
 msgid "Music / Sound FX"
@@ -9175,7 +9385,7 @@ msgstr "Tłumacze"
 
 #: qcsrc/menu/xonotic/credits.qc:153
 msgid "Asturian"
-msgstr "Estoński"
+msgstr "Asturyjski"
 
 #: qcsrc/menu/xonotic/credits.qc:159
 msgid "Belarusian"
@@ -9191,7 +9401,7 @@ msgstr "Chiński (Chiny)"
 
 #: qcsrc/menu/xonotic/credits.qc:191
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Chiński (Hong Kong)"
 
 #: qcsrc/menu/xonotic/credits.qc:204
 msgid "Chinese (Taiwan)"
@@ -9203,7 +9413,7 @@ msgstr "Czeski"
 
 #: qcsrc/menu/xonotic/credits.qc:238
 msgid "Dutch"
-msgstr "Holenderski"
+msgstr "Niderlandzki"
 
 #: qcsrc/menu/xonotic/credits.qc:247
 msgid "English (Australia)"
@@ -9211,7 +9421,7 @@ msgstr "Angielski (Australia)"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "English (United Kingdom)"
-msgstr ""
+msgstr "Angielski (Wielka Brytania)"
 
 #: qcsrc/menu/xonotic/credits.qc:259
 msgid "Finnish"
@@ -9223,7 +9433,7 @@ msgstr "Francuski"
 
 #: qcsrc/menu/xonotic/credits.qc:288
 msgid "Galician"
-msgstr ""
+msgstr "Galicyjski"
 
 #: qcsrc/menu/xonotic/credits.qc:292
 msgid "German"
@@ -9239,11 +9449,11 @@ msgstr "Węgierski"
 
 #: qcsrc/menu/xonotic/credits.qc:333
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonezyjski"
 
 #: qcsrc/menu/xonotic/credits.qc:338
 msgid "Irish"
-msgstr ""
+msgstr "Irlandzki"
 
 #: qcsrc/menu/xonotic/credits.qc:341
 msgid "Italian"
@@ -9263,7 +9473,7 @@ msgstr "Koreański"
 
 #: qcsrc/menu/xonotic/credits.qc:369
 msgid "Latin"
-msgstr ""
+msgstr "Łaciński"
 
 #: qcsrc/menu/xonotic/credits.qc:372
 msgid "Polish"
@@ -9312,11 +9522,11 @@ msgstr "Poprzedni Współpracownicy"
 #: qcsrc/menu/xonotic/cvarlist.qc:24
 #, c-format
 msgid "%d results"
-msgstr ""
+msgstr "%d wyników"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:24
 msgid "1 result"
-msgstr ""
+msgstr "1 wynik"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:118
 msgid "forced to be saved to config.cfg"
@@ -9357,7 +9567,7 @@ msgstr "Twórcy"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:8
 msgid "The Xonotic credits"
-msgstr ""
+msgstr "Twórcy Xonotic"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:44
 msgid ""
@@ -9384,7 +9594,7 @@ msgstr "Język:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:84
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
-msgstr "Pozwól statystykom graczy na stats.xonotic.org używać twojego imienia?"
+msgstr "Pozwolić statystykom graczy na stats.xonotic.org używać twojej nazwy?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:90
 msgid "Undecided"
@@ -9395,7 +9605,7 @@ msgid ""
 "Player statistics are enabled by default, you can change this in the Profile "
 "menu"
 msgstr ""
-"Statystyki gracza są domyślnie włączone, możesz to zmienić w menu Profilu"
+"Statystyki gracza są domyślnie włączone, możesz to zmienić w menu Profil"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
@@ -9447,7 +9657,7 @@ msgstr "Sterowanie"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:58
 #: qcsrc/menu/xonotic/dialog_media.qc:12
 msgid "Guide"
-msgstr ""
+msgstr "Poradnik"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:60
 msgid "Quick menu"
@@ -9469,12 +9679,12 @@ msgstr "Pokazuj tylko obecny rodzaj amunicji"
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Noncurrent opacity:"
-msgstr ""
+msgstr "Nieaktualna przezroczystość:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
 msgid "Noncurrent scale:"
-msgstr ""
+msgstr "Nieaktualna skala:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:37
 msgid "Align icon:"
@@ -9515,7 +9725,7 @@ msgstr "Prawy"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:17
 msgid "Enable status bar"
-msgstr ""
+msgstr "Włącz pasek statusu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qh:6
 msgid "Ammo Panel"
@@ -9533,7 +9743,7 @@ msgstr "Czas trwania wiadomości:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:30
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Instant"
-msgstr "FADESPEED^Natychmiast"
+msgstr "Natychmiast"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:18
@@ -9546,7 +9756,7 @@ msgstr "Rozmiar pogrubionej czcionki:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:45
 msgid "Title font scale:"
-msgstr ""
+msgstr "Rozmiar czcionki tytularnej:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:50
 msgid "Flip messages order"
@@ -9564,11 +9774,11 @@ msgstr "Justowanie tekstu:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:22
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:86
 msgid "Center"
-msgstr "Centrum"
+msgstr "Środek"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
-msgstr ""
+msgstr "Panel Środka"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:18
 msgid "Chat size:"
@@ -9580,7 +9790,7 @@ msgstr "Wygasanie wiadomości:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:27
 msgid "LIFETIME^Infinite"
-msgstr ""
+msgstr "Nieskończony"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:30
 msgid "Chat beep sound"
@@ -9592,23 +9802,23 @@ msgstr "Panel Czatu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Flip checkpoint order"
-msgstr ""
+msgstr "Odwróć kolejność punktów kontrolnych"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qh:6
 msgid "Checkpoints Panel"
-msgstr ""
+msgstr "Panel punktów kontrolnych"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
-msgstr ""
+msgstr "Klatki na sekundę:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
 msgid "Use an averaging algorithm"
-msgstr ""
+msgstr "Użyj algorytmu uśredniającego"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
 msgid "Decimal places:"
-msgstr ""
+msgstr "Miejsca dziesiętne:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -9616,7 +9826,7 @@ msgstr "Panel Informacji o Silniku"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:18
 msgid "Combine health and armor"
-msgstr "Połącz zdrowie i pancerz:"
+msgstr "Połącz zdrowie i pancerz"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:20
 msgid "Flip health and armor positions"
@@ -9626,7 +9836,7 @@ msgstr "Zamień zdrowie i zbroję pozycjami"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:20
 msgid "Status bar alignment:"
-msgstr ""
+msgstr "Położenie panelu statusu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:46
@@ -9656,7 +9866,7 @@ msgstr "Panel Zdrowia/Zbroi"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qh:6
 msgid "Info Messages Panel"
-msgstr ""
+msgstr "Panel Wiadomość"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
@@ -9677,15 +9887,15 @@ msgstr "Dezaktywuj"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 msgid "Enable spectating"
-msgstr ""
+msgstr "Włącz obserwowanie"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even in warmup"
-msgstr ""
+msgstr "Włącz nawet w czasie rozgrzewki"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "Stosunek Tekst/ikona:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:34
 msgid "Reduced"
@@ -9705,36 +9915,36 @@ msgstr "Dynamiczny rozmiar"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
-msgstr ""
+msgstr "Panel Czas Przedmiotów"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr ""
+msgstr "%s:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
 msgid "Show icons"
-msgstr ""
+msgstr "Pokaż ikony"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
-msgstr ""
+msgstr "Panel Ikony Modów"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:19
 msgid "Entry lifetime:"
-msgstr ""
+msgstr "Wygasanie wpisu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:24
 msgid "Entry fadetime:"
-msgstr ""
+msgstr "Zanikanie wpisu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:35
 msgid "Flip notify order"
-msgstr "Odwróć kolejność powiadamiania"
+msgstr "Odwróć kolejność powiadomiania"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
@@ -9768,11 +9978,11 @@ msgstr "Pasek stanu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
 msgid "None"
-msgstr ""
+msgstr "Brak"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
 msgid "Acceleration"
-msgstr ""
+msgstr "Przyśpieszenie"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Both"
@@ -9793,11 +10003,11 @@ msgstr "Największa prędkość"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:71
 msgid "Jump speed"
-msgstr ""
+msgstr "Prędkość skoku"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:78
 msgid "Show speed unit"
-msgstr ""
+msgstr "Pokaż jednostkę prędkości"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:84
 msgid "Acceleration:"
@@ -9809,11 +10019,11 @@ msgstr "Pokazuj przyśpieszenie w pionie"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qh:6
 msgid "Physics Panel"
-msgstr ""
+msgstr "Panel Fizyki"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:35
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Skala rozmiaru ikon:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
@@ -9826,23 +10036,23 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:89
 #, c-format
 msgid "%sx"
-msgstr ""
+msgstr "%s razy"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:42
 msgid "Show timer:"
-msgstr ""
+msgstr "Pokaż czas:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:48
 msgid "Spectating"
-msgstr ""
+msgstr "Obserwowanie"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Panel Znajdziek"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
-msgstr ""
+msgstr "Panel Wzmocnień"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:18
@@ -9851,11 +10061,11 @@ msgstr "Zawsze włączone"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
-msgstr ""
+msgstr "Wymuś aspekt:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
 msgid "Show attack keys"
-msgstr ""
+msgstr "Pokaż klawisze ataku"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
@@ -9863,11 +10073,11 @@ msgstr "Panel Wciśniętych Przycisków"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
 msgid "Translate commands"
-msgstr ""
+msgstr "Tłumacz komendy"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
 msgid "Use the server's quickmenu"
-msgstr ""
+msgstr "Użyj menu szybkich akcji serwera"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
@@ -9875,7 +10085,7 @@ msgstr "Panel szybkiego menu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
-msgstr ""
+msgstr "Panel Czasu Wyścigu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Enable in team games"
@@ -9892,7 +10102,7 @@ msgstr "Włącz w grach zespołowych"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
 #: qcsrc/menu/xonotic/util.qc:764
 msgid "Opacity:"
-msgstr ""
+msgstr "Przezroczystość:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:61
@@ -9940,7 +10150,7 @@ msgstr "Skala:"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:71
 #, c-format
 msgid "%s qu"
-msgstr ""
+msgstr "%s qu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:45
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:80
@@ -9969,7 +10179,7 @@ msgstr "Zawsze oddalony"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:57
 msgid "Maximized radar:"
-msgstr ""
+msgstr "Powiększony radar:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -9986,11 +10196,11 @@ msgstr "Wyłącz"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:19
 msgid "And me"
-msgstr ""
+msgstr "I ja"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:20
 msgid "Pure"
-msgstr ""
+msgstr "Czysty"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
@@ -9998,27 +10208,27 @@ msgstr "Tablica wyników"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "Centered on:"
-msgstr ""
+msgstr "Wyśrodkowany na:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
 msgid "View angle"
-msgstr ""
+msgstr "Zobacz kąt"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:43
 msgid "Velocity angle"
-msgstr ""
+msgstr "Prędkość kątu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "Style:"
-msgstr ""
+msgstr "Styl:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
 msgid "STYL^Basic"
-msgstr ""
+msgstr "Podstawowy"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Gradient"
-msgstr ""
+msgstr "Gradient"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "Range:"
@@ -10026,55 +10236,57 @@ msgstr "Zasięg:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "Dynamic"
-msgstr ""
+msgstr "Dynamiczny"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:61
 msgid "Strafe bar:"
-msgstr ""
+msgstr "Pasek strafe:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:65
 msgid "Angle indicator:"
-msgstr ""
+msgstr "Wskaźnik kąta:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:67
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:75
 msgid "Neutral:"
-msgstr ""
+msgstr "Neutralny:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:69
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:77
 msgid "Good:"
-msgstr ""
+msgstr "Dobry:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:71
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:79
 msgid "Overturn:"
-msgstr ""
+msgstr "Przewrót:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:119
 msgid "Switch:"
-msgstr ""
+msgstr "Przełącz:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:120
 msgid "Indicator on the angle to aim at when switching strafing direction"
-msgstr ""
+msgstr "Wskaźnik kąta celowania przy zmianie kierunku ostrzału"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:124
 msgid "W-turn:"
-msgstr ""
+msgstr "Kierunek W:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:125
 msgid ""
 "Indicator on the angle to aim at when W-turning to rotate as fast as possible"
 msgstr ""
+"Wskaźnik kąta, pod jakim należy celować podczas skrętu W, aby jak "
+"najszybciej wykonać obrót"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:129
 msgid "Best angle:"
-msgstr ""
+msgstr "Najlepszy kąt:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:130
 msgid "Indicator on the angle to aim at for maximal acceleration"
-msgstr ""
+msgstr "Wskaźnik kąta, pod jakim należy ustawić maksymalne przyspieszenie"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:165
 msgid "Demo mode"
@@ -10094,23 +10306,23 @@ msgstr "Pokaż czas jaki upłynął"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Secondary timer:"
-msgstr ""
+msgstr "Dodatkowy czas:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 msgid "Swapped"
-msgstr ""
+msgstr "Zamieniony"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
-msgstr "Panel czasu"
+msgstr "Panel Czasu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Opacity after voting:"
-msgstr ""
+msgstr "Przezroczystość po głosowaniu:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
-msgstr "Panel głosowania"
+msgstr "Panel Głosowania"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:21
 msgid "Fade out after:"
@@ -10122,19 +10334,19 @@ msgstr "Zanikanie:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:32
 msgid "EF^None"
-msgstr "EF^Brak"
+msgstr "Brak"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Opacity"
-msgstr ""
+msgstr "Przezroczystość"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Slide"
-msgstr ""
+msgstr "Suwak"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:35
 msgid "EF^Both"
-msgstr ""
+msgstr "Obydwa"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:40
 msgid "Show only owned weapons"
@@ -10142,7 +10354,7 @@ msgstr "Pokazuje tyko bronie które posiadasz"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:59
 msgid "Show label:"
-msgstr ""
+msgstr "Pokaż znacznik:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:60
 msgid "Number"
@@ -10167,7 +10379,7 @@ msgstr "Pokaż dokładność"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
 msgid "Ammo bar opacity:"
-msgstr ""
+msgstr "Przezroczystość paska amunicji:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:86
 msgid "Ammo bar color:"
@@ -10179,7 +10391,7 @@ msgstr "Panel Broni"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:27
 msgid "Are you sure you want to reset your HUD to this skin?"
-msgstr ""
+msgstr "Jesteś pewien, że chcesz przywrócić HUD do tej skórki?"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "HUD skins"
@@ -10217,10 +10429,12 @@ msgid ""
 "Note: HUD skins are saved in data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Uwaga: Skórki HUD są zapisywane w folderze data/data/ i mogą być stąd "
+"ręcznie zmienione/usunięte"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
-msgstr ""
+msgstr "Domyślne tło panelu:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:737
 msgid "Background:"
@@ -10248,7 +10462,7 @@ msgstr "Odstęp:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:115
 msgid "HUD Dock:"
-msgstr ""
+msgstr "Panel HUD:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:117
 msgid "DOCK^Disabled"
@@ -10288,7 +10502,7 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:162
 msgid "Center line"
-msgstr ""
+msgstr "Środkowa linia"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:163
 #, c-format
@@ -10296,6 +10510,8 @@ msgid ""
 "Show a vertical centerline to help align panels. It's possible to show more "
 "vertical lines by editing %s in the console"
 msgstr ""
+"Pokaż pionową linię środkową, aby ułatwić wyrównanie paneli. Możesz "
+"wyświetlić więcej linii pionowych, edytując w konsoli %s"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:166
 msgid "Exit setup"
@@ -10303,19 +10519,19 @@ msgstr "Wyjdź z ustawień"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:6
 msgid "Panel HUD Setup"
-msgstr ""
+msgstr "Ustawienia panelu HUD"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qh:18
 msgid "Reset HUD skin"
-msgstr ""
+msgstr "Zresetuj skórkę HUD"
 
 #: qcsrc/menu/xonotic/dialog_media.qc:13
 msgid "Demos"
-msgstr "Demonstracje"
+msgstr "Dema"
 
 #: qcsrc/menu/xonotic/dialog_media.qc:14
 msgid "Screenshots"
-msgstr "Zrzuty z ekranu"
+msgstr "Zrzuty ekranu"
 
 #: qcsrc/menu/xonotic/dialog_media.qc:15
 msgid "Music Player"
@@ -10330,6 +10546,8 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
+"Przeczytaj poradnik, posłuchaj ścieżki dźwiękowej Xonotic i zobacz dema i "
+"zrzuty ekranu"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:47
 msgid "Auto record demos"
@@ -10337,11 +10555,12 @@ msgstr "Automatycznie nagrywaj dema"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:56
 msgid "Timedemo"
-msgstr ""
+msgstr "Czas dema"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:57
 msgid "Benchmark how fast your computer can run the highlighted demo"
 msgstr ""
+"Benchmark tego, jak szybko Twój komputer może uruchomić zaznaczone demo"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:61
 msgid "DEMO^Play"
@@ -10349,7 +10568,7 @@ msgstr "Odtwórz"
 
 #: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:13
 msgid "Playing a demo will disconnect you from the current match."
-msgstr "Odtworzenie dema rozłączy cię z obecnej rozgrywki."
+msgstr "Odtworzenie dema rozłączy cię z obecnego meczu."
 
 #: qcsrc/menu/xonotic/dialog_media_demo_startconfirm.qc:15
 #: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:15
@@ -10363,7 +10582,7 @@ msgstr "Rozłącz"
 
 #: qcsrc/menu/xonotic/dialog_media_demo_timeconfirm.qc:13
 msgid "Timing a demo will disconnect you from the current match."
-msgstr ""
+msgstr "Nagrywanie dema rozłączy cię z obecnego meczu."
 
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:33
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:169
@@ -10371,6 +10590,8 @@ msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
 msgstr ""
+"Kliknij tutaj lub naciśnij CTRL+F, aby podać słowo kluczowe i zawęzić listę; "
+"CTRL+DEL, aby wyczyścić; ENTER, aby zakończyć."
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:36
 msgid "MUSICPL^Add"
@@ -10390,7 +10611,7 @@ msgstr "Resetuj domyślną muzykę menu"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:53
 msgid "Playlist:"
-msgstr "Playlista"
+msgstr "Playlista:"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:54
 msgid "Random order"
@@ -10402,7 +10623,7 @@ msgstr "Zatrzymaj"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:62
 msgid "MUSICPL^Play"
-msgstr "Graj"
+msgstr "Odtwórz"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:65
 msgid "MUSICPL^Pause"
@@ -10463,7 +10684,7 @@ msgstr "Usunąć"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:25
 msgid "Move target:"
-msgstr ""
+msgstr "Przesuń cel:"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:26
 msgid "Follow"
@@ -10471,7 +10692,7 @@ msgstr "Podążaj"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:27
 msgid "Wander"
-msgstr ""
+msgstr "Wędruj"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:28
 msgid "Spawnpoint"
@@ -10504,11 +10725,11 @@ msgstr "Hostuj własną grę"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:6
 msgid "Multiplayer"
-msgstr "Tryb multiplayer"
+msgstr "Multiplayer"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.qh:7
 msgid "Play online, against your friends in LAN, or change player settings"
-msgstr ""
+msgstr "Graj online, przeciwko znajomym na LAN, albo zmień ustawienia"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
@@ -10527,15 +10748,15 @@ msgstr "Nielimitowany"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
 msgid "Gametype"
-msgstr "Rodzaj gry:"
+msgstr "Tryby gier"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
 msgid "Show all"
-msgstr ""
+msgstr "Pokaż wszystko"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Pokaż wszystkie dostępne tryby gier"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
 msgid "Time limit:"
@@ -10543,7 +10764,7 @@ msgstr "Limit czasu:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:98
 msgid "Time limit in minutes that when hit, will end the match"
-msgstr ""
+msgstr "Limit czasowy w minutach, który po trafieniu zakończy mecz"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
 msgid "TIMLIM^Default"
@@ -10578,6 +10799,8 @@ msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Maksymalna liczba graczy lub botów, którzy mogą być jednocześnie połączeni z "
+"Twoim serwerem"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
@@ -10641,12 +10864,14 @@ msgstr "Bóg wojny"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
 msgid "Bots against humans"
-msgstr ""
+msgstr "Boty przeciwko ludziom"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr ""
+"Zmuszaj ludzi do gry w tej samej drużynie przeciwko równej wielkości "
+"drużynie botów"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Maplist"
@@ -10674,7 +10899,7 @@ msgstr "Dodaj wszystkie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
 msgid "Add every available map to your selection"
-msgstr ""
+msgstr "Dodaj każdą dostępną mapę do wybranych"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
 msgid "Remove all"
@@ -10682,7 +10907,7 @@ msgstr "Usuń wszystkie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:193
 msgid "Remove all the maps from your selection"
-msgstr ""
+msgstr "Usuń wszystkie mapę z wybranych"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Mutators..."
@@ -10690,7 +10915,7 @@ msgstr "Modyfikatory"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:202
 msgid "Mutators and weapon arenas"
-msgstr ""
+msgstr "Mutatory i areny broni"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:212
 msgid "Start multiplayer!"
@@ -10706,7 +10931,7 @@ msgstr "Autor:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:63
 msgid "Gametypes:"
-msgstr ""
+msgstr "Tryby gier:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -10723,13 +10948,15 @@ msgstr "Informacja o mapie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:74
 msgid "Gameplay mutators:"
-msgstr "Modyfikatory rozgrywki:"
+msgstr "Mutatory rozgrywki:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:78
 msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr ""
+"Włącz unikanie (szybkie przyspieszenie w danym kierunku). Dwukrotne "
+"naciśnięcie klawisza kierunkowego umożliwia unikanie."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:82
 msgid "An explosion occurs when two players collide"
@@ -10744,62 +10971,76 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Włącz zbieranie buffow (losowe bonusy, takie jak Medyk, Niewidzialność itp.) "
+"na mapach, które to obsługują"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Only possible to inflict damage on your enemy while they're airborne"
 msgstr ""
+"Można zadać obrażenia przeciwnikowi tylko wtedy, gdy znajduje się on w "
+"powietrzu."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "Damage done to your enemy gets added to your own health"
-msgstr ""
+msgstr "Obrażenia zadane Twojemu wrogowi są dodawane do Twojego zdrowia"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:104
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)"
 msgstr ""
+"Ilość zdrowia, poniżej której gracze zaczynają się wykrwawiać (poziom "
+"zdrowia spada i nie mogą skakać)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
 msgstr ""
+"Spraw, aby przedmioty spadały na ziemię wolniej (procent normalnej "
+"grawitacji)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:122
 msgid "Weapon & item mutators:"
-msgstr "Modyfikatory przedmiotów i broni:"
+msgstr "Mutatory przedmiotów i broni:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:126
 msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
-msgstr ""
+msgstr "Gracze pojawiają się z hakiem. Naciśnij klawisz „hak”, aby go użyć."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
 msgid ""
 "Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
 "to use it"
 msgstr ""
+"Gracze pojawiają się z plecakiem odrzutowym. Aby go użyć, naciśnij "
+"dwukrotnie przycisk „skok” lub naciśnij klawisz „plecak odrzutowy”."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
 msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
+"Pocisków nie można zniszczyć. Nadal jednak możesz detonować kule Elektro, "
+"używając ognia głównego Elektro."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Allow maps to spawn additional weapons (new toys)"
-msgstr ""
+msgstr "Zezwól mapie na pojawianie się dodatkowych broni (nowe zabawki)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
 msgid "Replacement:"
-msgstr ""
+msgstr "Zastępstwo:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
 msgid ""
 "Automatically replace some normal weapons of the map with their "
 "corresponding additional weapons"
 msgstr ""
+"Automatycznie zamień niektóre normalne bronie na mapie na odpowiadające im "
+"dodatkowe bronie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
 msgid "Randomly"
-msgstr ""
+msgstr "Losowo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
 msgid ""
@@ -10807,6 +11048,10 @@ msgid ""
 "delay). This allows players to fire and detonate a Devastator rocket while "
 "in the air for a strong mid-air boost even while moving fast"
 msgstr ""
+"Rakiety dewastatora można detonować natychmiast (w przeciwnym razie "
+"występuje krótkie opóźnienie). Dzięki temu gracze mogą wystrzelić i "
+"zdetonować rakietę dewastator w powietrzu, co zapewnia im silne doładowanie "
+"w powietrzu, nawet podczas szybkiego ruchu."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
 msgid "Players will drop all weapons they possessed when they are killed"
@@ -10825,6 +11070,8 @@ msgid ""
 "Players will be given a set of weapons at spawn as well as unlimited ammo, "
 "without weapon pickups"
 msgstr ""
+"Gracze otrzymają zestaw broni w momencie pojawienia się, a także "
+"nieograniczoną ilość amunicji, bez konieczności podnoszenia broni"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Weapon arenas:"
@@ -10853,6 +11100,10 @@ msgid ""
 "seconds to find some or if they fail to do so, face death. The secondary "
 "fire mode does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Gracze otrzymają tylko jedną broń, która może natychmiast zabić przeciwnika "
+"jednym strzałem. Jeśli graczowi skończy się amunicja, będzie miał 10 sekund "
+"na jej znalezienie, a jeśli mu się to nie uda, zostanie zabity. Ogień "
+"dodatkowy nie zadaje obrażeń, ale sprawdza się przy wykonywaniu trickjumpów."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
 msgid ""
@@ -10860,6 +11111,9 @@ msgid ""
 "weapon. After some time, a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
+"Brak przedmiotów Xonotic – zamiast zbierania przedmiotów, wszyscy grają tą "
+"samą bronią. Po pewnym czasie rozpocznie się odliczanie, po którym wszyscy "
+"przejdą na inną broń."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:218
 msgid "with blaster"
@@ -10867,12 +11121,12 @@ msgstr "z Blasterem"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:219
 msgid "Always carry the blaster as an additional weapon in Nix"
-msgstr ""
+msgstr "Zawsze noś Blaster jako broń dodatkową w Nix"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:8
 #: qcsrc/menu/xonotic/guide/guide.qh:20
 msgid "Mutators"
-msgstr "Modyfikatory"
+msgstr "Mutatory"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:31
 msgid "SRVS^Categories"
@@ -10896,7 +11150,7 @@ msgstr "Pokazuj pełne serwery bez wolnych miejsc"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:51
 msgid "SRVS^Laggy"
-msgstr ""
+msgstr "Lagujące"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:52
 msgid "Show high latency servers"
@@ -10908,12 +11162,13 @@ msgstr "Odśwież listę serwerów"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:61
 msgid "Pause"
-msgstr "Przerwa"
+msgstr "Pauza"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
+"Zapauzuj uaktualnianie się listy serwerów, aby zapobiec serwerom \"skakaniu\""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:74
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:29
@@ -10922,7 +11177,7 @@ msgstr "Adres:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:85
 msgid "Info..."
-msgstr "Informacje o ..."
+msgstr "Informacje o..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Show more information about the currently highlighted server"
@@ -10931,12 +11186,12 @@ msgstr "Wyświetl więcej informacji o aktualnie wybranym serwerze"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:93
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:105
 msgid "No Terms of Service specified"
-msgstr ""
+msgstr "Nie określono warunków korzystania"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:144
 #: qcsrc/menu/xonotic/serverlist.qc:1056
 msgid "MOD^Default"
-msgstr "MOD^Domyślny"
+msgstr "Domyślny"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 #, c-format
@@ -10989,12 +11244,12 @@ msgstr "Wymagane (z szyfrowaniem)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:191
 msgid "Use the `crypto_aeslevel` cvar to change your preferences"
-msgstr ""
+msgstr "Użyj cvar `crypto_aeslevel`, aby zmienić ustawienia"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1060
 msgid "custom stats server"
-msgstr ""
+msgstr "niestandardowe statystyki serwera"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:203
 #: qcsrc/menu/xonotic/serverlist.qc:1060
@@ -11013,7 +11268,7 @@ msgstr "Status"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
 msgid "Terms of Service"
-msgstr ""
+msgstr "Warunki korzystania"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
@@ -11062,7 +11317,7 @@ msgstr "Klucz:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:95
 msgid "Stats:"
-msgstr ""
+msgstr "Statystyki:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:37
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:21
@@ -11099,7 +11354,7 @@ msgstr "Pozwól statystykom gracza używać twój nick"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:135
 msgid "Allow player statistics to rank you in leaderboards"
-msgstr ""
+msgstr "Pozwól statystykom gracza rankingować ciebie na liście wyników"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:155
 msgid "Select language..."
@@ -11135,7 +11390,7 @@ msgstr "Kość:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:33
 msgid "Set * as child"
-msgstr ""
+msgstr "Ustaw * jako dziecko"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:35
 msgid "Attach to *"
@@ -11147,11 +11402,11 @@ msgstr "Odłączać od *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:40
 msgid "Visual object properties for *:"
-msgstr ""
+msgstr "Wizualne własności dla *:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:44
 msgid "Set opacity:"
-msgstr ""
+msgstr "Ustaw przezroczystość:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:48
 msgid "Set color main:"
@@ -11159,11 +11414,11 @@ msgstr "Ustaw główny kolor:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:50
 msgid "Set color glow:"
-msgstr "Ustaw kolor poświata:"
+msgstr "Ustaw kolor poświaty:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:54
 msgid "Set frame:"
-msgstr "Ustaw frame:"
+msgstr "Ustaw klatkę:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:57
 msgid "Physical object properties for *:"
@@ -11187,7 +11442,7 @@ msgstr "Solidny"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:68
 msgid "Set physics:"
-msgstr "Fizyka:"
+msgstr "Ustaw fizykę:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:69
 msgid "Static"
@@ -11199,7 +11454,7 @@ msgstr "Przesuwalny"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:71
 msgid "Physical"
-msgstr "Materialny"
+msgstr "Fizyczny"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:73
 msgid "Set scale:"
@@ -11211,7 +11466,7 @@ msgstr "Ustaw siłę:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
 msgid "Claim *"
-msgstr ""
+msgstr "Żądanie *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:81
 msgid "* object info"
@@ -11219,11 +11474,11 @@ msgstr "* informacje o obiekcie"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:82
 msgid "* mesh info"
-msgstr ""
+msgstr "* informacje o siatce"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:83
 msgid "* attachment info"
-msgstr ""
+msgstr "* informacje o załączniku"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:85
 msgid "Show help"
@@ -11275,7 +11530,7 @@ msgstr "Muzyka:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:44
 msgid "VOL^Ambient:"
-msgstr "VOL^Otoczenia:"
+msgstr "Otoczenia:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:51
 msgid "Info:"
@@ -11403,13 +11658,15 @@ msgstr "Zamień lewy i prawy kanał"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:138
 msgid "Headphone-friendly mode"
-msgstr ""
+msgstr "Tryb przyjazny dla słuchawek"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:139
 msgid ""
 "Blend the left and right channels slightly to decrease stereo separation a "
 "bit"
 msgstr ""
+"Nieznacznie zmiksuj kanały lewy i prawy, aby nieco zmniejszyć separację "
+"stereo"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
 msgid "Hit indication sound"
@@ -11421,23 +11678,23 @@ msgstr "Zagraj dźwięk kiedy trafisz w przeciwnika"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:148
 msgid "SND^Fixed"
-msgstr ""
+msgstr "Naprawiony"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:151
 msgid "Decrease pitch with more damage"
-msgstr ""
+msgstr "Zmniejsz wysokość dźwięku, im więcej jest obrażeń"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:151
 msgid "Decreasing"
-msgstr ""
+msgstr "Zmniejszanie"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:154
 msgid "Increase pitch with more damage"
-msgstr ""
+msgstr "Zwiększ wysokość dźwięku, im więcej jest obrażeń"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:154
 msgid "Increasing"
-msgstr ""
+msgstr "Zwiększanie"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:158
 msgid "Chat message sound"
@@ -11453,11 +11710,11 @@ msgstr "Odtwarzaj dźwięk przy kliknięciu na elementy menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:162
 msgid "Focus sounds"
-msgstr ""
+msgstr "Skup dźwięki"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:163
 msgid "Play sounds when hovering over menu items too"
-msgstr "Odtwarzaj dźwięk także po najechaniu na elementy menu"
+msgstr "Odtwarzaj dźwięk przy najechaniu na elementy menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:167
 msgid "Time announcer:"
@@ -11490,10 +11747,11 @@ msgstr "Często"
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qc:11
 msgid "Are you sure you want to reset all key bindings?"
 msgstr ""
+"Jesteś pewien, że chcesz przywrócić domyślne wszystkie przypisania klawiszy?"
 
 #: qcsrc/menu/xonotic/dialog_settings_bindings_reset.qh:6
 msgid "Reset key bindings"
-msgstr ""
+msgstr "Zresetuj przypisania klawiszy"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:41
 msgid "Quality preset:"
@@ -11525,7 +11783,7 @@ msgstr "Detale geometrii:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:57
 msgid "Change the smoothness of the curves on the map"
-msgstr ""
+msgstr "Zmień gładkość krzywych na mapie"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:58
 msgid "DET^Lowest"
@@ -11605,19 +11863,19 @@ msgstr "Najlepsza"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:91
 msgid "Texture compression:"
-msgstr ""
+msgstr "Kompresja tesktur:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:97
 msgid "TCOMP^Fast"
-msgstr ""
+msgstr "Szybka"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:98
 msgid "TCOMP^Good"
-msgstr ""
+msgstr "Dobra"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:99
 msgid "TCOMP^None"
-msgstr ""
+msgstr "Brak"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:108
 msgid "Disable sky for performance and visibility"
@@ -11636,14 +11894,16 @@ msgid ""
 "Use high resolution lightmaps, which will look pretty but use up some extra "
 "video memory"
 msgstr ""
+"Użyj map świetlnych o wysokiej rozdzielczości, które będą wyglądać ładnie, "
+"ale wykorzystają trochę dodatkowej pamięci wideo"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:113
 msgid "Deluxe mapping"
-msgstr ""
+msgstr "Mapowanie deluxe"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:114
 msgid "Use per-pixel lighting effects"
-msgstr ""
+msgstr "Użyj efektów świetlnych po pikselu"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:118
 msgid "Gloss"
@@ -11651,7 +11911,7 @@ msgstr "Połysk"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Enable the use of glossmaps on textures supporting it"
-msgstr ""
+msgstr "Włącz używanie map połysku na teksturach, które obsługują"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:125
 msgid "Offset mapping"
@@ -11662,6 +11922,8 @@ msgid ""
 "Offset mapping effect that will make textures with bumpmaps appear like they "
 "\"pop out\" of the flat 2D surface"
 msgstr ""
+"Efekt mapowania offsetowego sprawi, że tekstury z mapami wypukłości będą "
+"wyglądać, jakby „wyskakiwały” z płaskiej powierzchni 2D"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:129
 msgid "Relief mapping"
@@ -11671,6 +11933,8 @@ msgstr "Mapowanie rzeźby terenu"
 msgid ""
 "Higher quality offset mapping, which also has a huge impact on performance"
 msgstr ""
+"Wyższej jakości mapowanie offsetowe, które ma również ogromny wpływ na "
+"wydajność"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:135
 msgid "Reflections:"
@@ -11681,10 +11945,12 @@ msgid ""
 "Reflection and refraction quality, has a huge impact on performance on maps "
 "with reflecting surfaces"
 msgstr ""
+"Jakość odbicia i refrakcji ma ogromny wpływ na wydajność map z "
+"powierzchniami odbijającymi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:140
 msgid "Resolution of reflections/refractions"
-msgstr ""
+msgstr "Rozdzielczość odbić/refrakcji"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:141
 msgid "Blurred"
@@ -11704,7 +11970,7 @@ msgstr "Naklejki"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:150
 msgid "Enable decals (bullet holes and blood)"
-msgstr ""
+msgstr "Włącz naklejki (dziury po nabojach i krew)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:151
 msgid "Decals on models"
@@ -11717,11 +11983,11 @@ msgstr "Odległość: "
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
 msgid "Decals further away than this will not be drawn"
-msgstr ""
+msgstr "Naklejki znajdujące się dalej niż ta odległość nie zostaną narysowane"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:168
 msgid "Time in seconds before decals fade away"
-msgstr ""
+msgstr "Czas w sekundach do wyblaknięcia naklejek"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:173
 msgid "Damage effects:"
@@ -11741,12 +12007,14 @@ msgstr "Wszystkie"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:181
 msgid "Realtime dynamic lights"
-msgstr ""
+msgstr "Dynamiczne światła w czasie rzeczywistym"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:182
 msgid ""
 "Temporary realtime light sources such as explosions, rockets and powerups"
 msgstr ""
+"Tymczasowe źródła światła w czasie rzeczywistym takie jak eksplozje, rakiety "
+"i wzmocnienia"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:184
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:190
