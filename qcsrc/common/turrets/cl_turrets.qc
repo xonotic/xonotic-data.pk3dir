@@ -240,7 +240,7 @@ void turret_construct(entity this, bool isNew)
 	{
 		// set default teamradar_color here because TNSF_SETUP (respawn) can override it
 		// if received right after TNSF_STATUS (team change)
-		this.teamradar_color = '1 0 0';
+		this.teamradar_color = '1 0.6 0.1';
 		IL_PUSH(g_drawables, this);
 		IL_PUSH(g_drawables_2d, this);
 	}
@@ -410,7 +410,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isNew)
 
 	if (sf & TNSF_STATUS)
 	{
-		float _tmp = ReadByte();
+		int _tmp = ReadByte();
 		if (_tmp != this.team)
 		{
 			this.team = _tmp;

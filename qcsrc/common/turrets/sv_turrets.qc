@@ -1266,7 +1266,8 @@ bool turret_initialize(entity this, Turret tur)
 	this.netname = tur.netname;
 	load_unit_settings(this, 0);
 
-	if (!this.team || !teamplay)         this.team = FLOAT_MAX;
+	// Group all turrets into the same team, so they don't shoot eachother
+	if (!this.team || !teamplay)         this.team = TURRET_TEAM;
 	if (!GetResource(this, RES_HEALTH))  SetResourceExplicit(this, RES_HEALTH, 1000);
 	if (!this.shot_refire)               this.shot_refire = 1;
 	if (!this.tur_shotorg)               this.tur_shotorg = '50 0 50';
