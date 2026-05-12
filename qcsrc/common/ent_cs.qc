@@ -130,9 +130,9 @@ void entcs_force_origin(entity player)
 	}
 #endif
 
-#define ENTCS_SET_NORMAL(var, x) var = x;
+#define ENTCS_SET_NORMAL(var, x) var = x
 /** the engine player name strings are mutable! */
-#define ENTCS_SET_MUTABLE_STRING(var, x) strcpy(var, x);
+#define ENTCS_SET_MUTABLE_STRING(var, x) strcpy(var, x)
 
 ENTCS_PROP(ENTNUM, false, sv_entnum, sv_entnum, ENTCS_SET_NORMAL, , ) /* sentinel */
 

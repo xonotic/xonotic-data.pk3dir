@@ -1350,27 +1350,28 @@ void ClientDisconnect(entity this)
 void ChatBubbleThink(entity this)
 {
 	this.nextthink = time;
-	if ((this.owner.alpha < 0) || this.owner.chatbubbleentity != this)
+
+	entity ownr = this.owner;
+	if (ownr.alpha < 0 || ownr.chatbubbleentity != this)
 	{
-		if(this.owner) // but why can that ever be NULL?
-			this.owner.chatbubbleentity = NULL;
+		if (ownr) // but why can that ever be NULL?
+			ownr.chatbubbleentity = NULL;
 		delete(this);
 		return;
 	}
 
 	this.mdl = "";
 
-	if ( !IS_DEAD(this.owner) && IS_PLAYER(this.owner) && !MUTATOR_CALLHOOK(ShowChatBubble, this.owner, this) )
+	if (!IS_DEAD(ownr) && IS_PLAYER(ownr) && !MUTATOR_CALLHOOK(ShowChatBubble, ownr, this))
 	{
-		if ( CS(this.owner).active_minigame && PHYS_INPUT_BUTTON_MINIGAME(this.owner) )
+		if (CS(ownr).active_minigame && PHYS_INPUT_BUTTON_MINIGAME(ownr))
 			this.mdl = "models/sprites/minigame_busy.iqm";
-		else if (PHYS_INPUT_BUTTON_CHAT(this.owner))
+		else if (PHYS_INPUT_BUTTON_CHAT(ownr))
 			this.mdl = "models/misc/chatbubble.spr";
 	}
 
-	if ( this.model != this.mdl )
+	if (this.model != this.mdl)
 		_setmodel(this, this.mdl);
-
 }
 
 void UpdateChatBubble(entity this)
