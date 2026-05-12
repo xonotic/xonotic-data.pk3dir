@@ -120,7 +120,10 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	*/
 	int entcs_GetTeamColor(int i)
 	{
-		return (!teamplay) ? 0 : entcs_GetClientColors(i) & 15;
+		if (!teamplay)
+			return 0;
+		int clr = entcs_GetClientColors(i) & 15;
+		return (clr ? clr : NUM_SPECTATOR); // 0 in teamplay is invalid, fall back to spectator team
 	}
 
 	/**
