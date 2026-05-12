@@ -11983,7 +11983,7 @@ msgstr "Odległość: "
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:159
 msgid "Decals further away than this will not be drawn"
-msgstr "Naklejki znajdujące się dalej niż ta odległość nie zostaną narysowane"
+msgstr "Naklejki znajdujące się dalej nie zostaną narysowane"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:168
 msgid "Time in seconds before decals fade away"
@@ -12023,21 +12023,23 @@ msgstr "Cienie"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:185
 msgid "Shadows cast by realtime dynamic lights"
-msgstr ""
+msgstr "Cienie rzucane przez dynamiczne światła w czasie rzeczywistym"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:188
 msgid "Realtime world lights"
-msgstr ""
+msgstr "Światła świata w czasie rzeczywistym"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:189
 msgid ""
 "Realtime light sources included in certain maps. May have a big impact on "
 "performance."
 msgstr ""
+"Źródła światła w czasie rzeczywistym są zaware na niektórych mapach. Mogą "
+"mieć duży wpływ na wydajność."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:191
 msgid "Shadows cast by realtime world lights"
-msgstr ""
+msgstr "Cienie rzucane przez światła świata w czasie rzeczywistym"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:195
 msgid "Use normal maps"
@@ -12048,6 +12050,8 @@ msgid ""
 "Directional shading of certain textures to simulate interaction of realtime "
 "light with a bumpy surface"
 msgstr ""
+"Kierunkowe cieniowanie niektórych tekstur w celu symulacji interakcji "
+"światła w czasie rzeczywistym z nierówną powierzchnią"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:199
 msgid "Soft shadows"
@@ -12055,43 +12059,47 @@ msgstr "Miękkie Cienie"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:202
 msgid "Corona brightness:"
-msgstr ""
+msgstr "Jasność corona:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:204
 msgid "Flare effects around certain lights"
-msgstr ""
+msgstr "Efekty flary dookoła niektórych świateł"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
 msgid "Fade coronas according to visibility"
-msgstr ""
+msgstr "Wyblakłe corony w zależności od widoczności"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Corona fading using occlusion queries"
-msgstr ""
+msgstr "Zanikanie corony za pomocą zapytań o okluzję"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:212
 msgid "Bloom"
-msgstr ""
+msgstr "Bloom"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:213
 msgid ""
 "Enable bloom effect, which brightens the neighboring pixels of very bright "
 "pixels. Has a big impact on performance."
 msgstr ""
+"Włącz efekt bloom, który rozjaśnia sąsiednie piksele bardzo jasnych pikseli. "
+"Ma to duży wpływ na wydajność."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Extra postprocessing effects"
-msgstr ""
+msgstr "Dodatkowe efekty postprocessingu"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid ""
 "Enables special postprocessing effects for when damaged or under water or "
 "using a powerup"
 msgstr ""
+"Włącza specjalne efekty postprocessingu w przypadku uszkodzenia, pod wodą "
+"lub użycia wzmocnienia"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:221
 msgid "Motion blur strength - 0.4 recommended"
-msgstr ""
+msgstr "Siła rozmycia ruchu - zalecane 0.4"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:222
 msgid "Motion blur:"
@@ -12103,11 +12111,13 @@ msgstr "Cząsteczki"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
 msgid "Spawnpoint effects"
-msgstr ""
+msgstr "Efekty punktu odradzania się"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Particle effects at all spawn points and whenever a player spawns"
 msgstr ""
+"Efekty cząsteczkowe we wszystkich punktach odradzania się i za każdym razem, "
+"kiedy pojawi się gracz"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:236
 msgid "Quality:"
@@ -12118,10 +12128,12 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Mnożnik dla ilości cząstek. Mniej oznacza mniej cząstek, co z kolei "
+"przekłada się na lepszą wydajność."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
 msgid "Particles further away than this will not be drawn"
-msgstr ""
+msgstr "Cząsteczki znajdujące się dalej nie zostaną narysowane"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qh:7
@@ -12160,7 +12172,7 @@ msgstr "Kropka na środku celownika"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:140
 msgid "Use normal color"
-msgstr ""
+msgstr "Użyj normalnego koloru"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:156
 msgid "Smooth effects of crosshairs"
@@ -12168,19 +12180,19 @@ msgstr "Wygładź efekty celownika"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:159
 msgid "Perform hit tests for the crosshair"
-msgstr ""
+msgstr "Wykonaj testy uderzeń dla celownika"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:163
 msgid "Blur if obstructed by an obstacle"
-msgstr ""
+msgstr "Rozmycie, jeśli jest zasłonięte przez przeszkodę"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:168
 msgid "Blur if obstructed by a teammate"
-msgstr ""
+msgstr "Rozmycie, jeśli jest zasłonięte przez członka drużyny"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:173
 msgid "Shrink if obstructed by a teammate"
-msgstr ""
+msgstr "Zmniejszenie, jeśli jest zasłonięte przez członka drużyny"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:177
 msgid "Animate crosshair when hitting an enemy"
@@ -12196,7 +12208,7 @@ msgstr "Tablica wyników"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:49
 msgid "Fading speed:"
-msgstr "Prędkość zanikania:"
+msgstr "Prędkość zanikania:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:52
 msgid "Enable rows / columns highlighting"
@@ -12215,6 +12227,9 @@ msgid ""
 "Team size position: Off=do not show; Left=on the left side of the scoreboard "
 "and move team scores to the right; Right=on the right of the scoreboard"
 msgstr ""
+"Pozycja rozmiaru zespołu: Wył. = nie wyświetlaj; Lewo = po lewej stronie "
+"tablicy wyników i przenieś wyniki zespołu na prawo; Prawo = po prawej "
+"stronie tablicy wyników"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:66
 msgid "Waypoints"
@@ -12226,7 +12241,7 @@ msgstr "Pokaż znaczniki punktów orientacyjnych dla celi na mapie"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:69
 msgid "Show various gametype specific waypoints"
-msgstr ""
+msgstr "Pokaż różne punkty orientacyjne specyficzne dla danego trybu gry"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
@@ -12235,7 +12250,7 @@ msgstr "Rozmiar czcionki:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:87
 msgid "Edge offset:"
-msgstr ""
+msgstr "Przesunięcie krawędzi:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:97
 msgid "Fade when near the crosshair"
@@ -12243,7 +12258,7 @@ msgstr "Zanikaj gdy w pobliżu celownika"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:102
 msgid "Display names instead of icons"
-msgstr ""
+msgstr "Wyświetlaj nazwy zamiast ikon"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:108
 msgid "Damage"
@@ -12288,7 +12303,7 @@ msgstr "Tylko gdy blisko celownika"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:175
 msgid "Display health and armor"
-msgstr "Pokaż zdrowie i zbroję"
+msgstr "Pokaż zdrowie i pancerz"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:181
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:79
@@ -12350,15 +12365,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:35
 msgid "Show spree information in centerprints"
-msgstr ""
+msgstr "Pokaż informacje o rozproszeniu na środku"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:39
 msgid "Show spree information in death messages"
-msgstr ""
+msgstr "Pokaż informacje o rozproszeniu w wiadomościach o śmierci"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:44
 msgid "Sprees in info messages:"
-msgstr ""
+msgstr "Rozproszenia w wiadomościach info:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:47
 msgid "SPREES^Disabled"
@@ -12378,7 +12393,7 @@ msgstr "Obydwa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:56
 msgid "Print on a separate line"
-msgstr ""
+msgstr "Pokaż w osobnej linii"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:60
 msgid "Add extra frag information to centerprint when available"
@@ -12391,21 +12406,21 @@ msgstr "Dodaj miejsce zabójstwa do wiadomości o śmierci, gdy dostępne"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:68
 msgid "Gametype Settings"
-msgstr ""
+msgstr "Ustawienia Trybu Gry"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:70
 #, c-format
 msgid "Display capture times in %s"
-msgstr ""
+msgstr "Wyświetl czasy przechwytywania w %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:74
 #, c-format
 msgid "Display name of flag stealer in %s"
-msgstr ""
+msgstr "Wyświetl nazwę złodzieja flagi w %s"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:81
 msgid "Display console messages in the top left corner"
-msgstr ""
+msgstr "Wyświetl komunikaty konsoli w lewym górnym rogu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:83
 msgid "Display all info messages in the chatbox"
@@ -12417,15 +12432,15 @@ msgstr "Pokazuj statusy graczy w czacie"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Powerup notifications"
-msgstr ""
+msgstr "Powiadomienia wzmocnień"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:92
 msgid "Weapon centerprint notifications"
-msgstr ""
+msgstr "Powiadomienia uśrodkowania broni"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:95
 msgid "Weapon info message notifications"
-msgstr ""
+msgstr "Powiadomienia informacji o broni"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:100
 msgid "Announcers"
@@ -12458,7 +12473,7 @@ msgstr "Użyj obrazów 2D zamiast modeli przedmiotów"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:34
 msgid "Unavailable opacity:"
-msgstr ""
+msgstr "Niedostępna przezroczystość:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:38
 msgid "Unavailable color:"
@@ -12495,7 +12510,7 @@ msgstr "Użyj mojego modelu jako model graczy"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Force player colors to mine:"
-msgstr ""
+msgstr "Użyj mojego koloru jako kolor graczy"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""
@@ -12555,7 +12570,7 @@ msgstr "Ustaw jak gracze i przedmioty są pokazywane w grze"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:25
 msgid "Perspective"
-msgstr ""
+msgstr "Perspektywa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:28
 msgid "Field of view:"
@@ -12567,7 +12582,7 @@ msgstr "Pole widzenia w stopniach"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:34
 msgid "1st person perspective"
-msgstr "Widok Pierwszoosobowy"
+msgstr "Widok 1-szoosobowy"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:37
 msgid "Slide to third person upon death"
@@ -12583,23 +12598,23 @@ msgstr "Wygładź widok podczas kucania"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:49
 msgid "View bobbing while walking around"
-msgstr ""
+msgstr "Widok na kołysanie się podczas chodzenia"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:54
 msgid "View waving while idle"
-msgstr ""
+msgstr "Widok machania w stanie bezczynności"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:58
 msgid "3rd person perspective"
-msgstr "Widok trzecioosobowy"
+msgstr "Widok 3-cioosobowy"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:61
 msgid "Back distance"
-msgstr ""
+msgstr "Dolna odległość"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:68
 msgid "Up distance"
-msgstr ""
+msgstr "Górna odległość"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:75
 msgid "Allow passing through walls while spectating"
@@ -12607,19 +12622,20 @@ msgstr "Pozwól na przechodzenie przez ściany w trybie obserwacji"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:79
 msgid "Zooming"
-msgstr ""
+msgstr "Przybliżenie"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:81
 msgid "ZOOM^Zoom factor:"
-msgstr "ZOOM^Przybliżenie o:"
+msgstr "Przybliżenie o:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:83
 msgid "How big the zoom factor is when the zoom button is pressed"
 msgstr ""
+"Jak duży jest współczynnik powiększenia po naciśnięciu przycisku powiększenia"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:90
 msgid "ZOOM^Zoom speed:"
-msgstr "ZOOM^Prędkość zooma:"
+msgstr "Prędkość zooma:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:93
 msgid "How fast the view will be zoomed, disable to zoom instantly"
@@ -12628,7 +12644,7 @@ msgstr "Jak szybko widok się przybliży, wyłącz by było natychmiastowe"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:95
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:125
 msgid "ZOOM^Instant"
-msgstr "ZOOM^Natychmiast"
+msgstr "Natychmiast"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:100
 msgid "ZOOM^Zoom sensitivity:"
@@ -12639,34 +12655,36 @@ msgid ""
 "How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no "
 "sensitivity change)"
 msgstr ""
+"Jak zoom zmienia swoją czułość, od 0% (niska czułość) do 100% (brak zmian w "
+"czułości)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:107
 msgid "Zoom scrolling"
-msgstr ""
+msgstr "Przewijanie zooma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:131
 msgid "Velocity zoom"
-msgstr ""
+msgstr "Prędkość zooma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:134
 msgid "VZOOM^Factor"
-msgstr "VZOOM^Współczynnik"
+msgstr "Współczynnik"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:143
 msgid "Forward movement only"
-msgstr ""
+msgstr "Tylko ruch do przodu"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:149
 msgid "Display reticle 2D overlay while zooming"
-msgstr ""
+msgstr "Wyświetlaj nakładkę siatki 2D podczas powiększania"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:152
 msgid "Release zoom when you die or respawn"
-msgstr ""
+msgstr "Zwolnij zoom, gdy umrzesz lub odrodzisz się"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:156
 msgid "Release zoom when you switch weapons"
-msgstr ""
+msgstr "Zwolnij zoom, gdy przełączysz bronie"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:133
@@ -12696,11 +12714,11 @@ msgstr "Użyj powyższej listy przy zmienianiu broni za pomocą scrolla na myszy
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:53
 msgid "Cycle through only usable weapon selections"
-msgstr "Zmieniaj tylko do dających się użyć broni"
+msgstr "Zmieniaj tylko do dających się użyć broni"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid "Weapon Options"
-msgstr ""
+msgstr "Ustawienia broni"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:59
 msgid "Release attack buttons when you switch weapons"
@@ -12720,15 +12738,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
 msgid "Auto switch in CTS:"
-msgstr ""
+msgstr "Samoczynne zmienianie w CTS:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:76
 msgid "Weapon Visuals"
-msgstr ""
+msgstr "Wizualia broni"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:78
 msgid "Draw 1st person weapon model"
-msgstr "Rysuj broń w trybie pierwszoosobowym"
+msgstr "Rysuj broń w trybie 1-szoosobowym"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:79
 msgid "Draw the weapon model"
@@ -12750,23 +12768,23 @@ msgstr "Wyrównaj do prawej"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:96
 msgid "Gun model swaying"
-msgstr ""
+msgstr "Kołysanie modelu broni"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:100
 msgid "Gun model bobbing"
-msgstr ""
+msgstr "Podskakiwanie modelu broni"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:104
 msgid "Weapon model opacity:"
-msgstr "Przeźroczystość modelu broni:"
+msgstr "Przezroczystość modelu broni:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:113
 msgid "Apply team colors to weapon beam effects:"
-msgstr ""
+msgstr "Zastosuj kolory drużyn do efektów promieniowania broni:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:117
 msgid "In team games"
-msgstr ""
+msgstr "W grach zespołowych"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
 #: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
@@ -12783,7 +12801,7 @@ msgstr "Zmień przycisk..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:77
 msgid "Edit..."
-msgstr "Edycja ..."
+msgstr "Edytuj..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:83
 msgid "Clear"
@@ -12812,7 +12830,7 @@ msgstr "Gładkie celowanie"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:108
 msgid "Smooths the mouse movement, but makes aiming slightly less responsive"
-msgstr ""
+msgstr "Wygładza ruch myszki, ale celowanie jest trochę mniej czułe"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:110
 msgid "Invert aiming"
@@ -12827,28 +12845,31 @@ msgid ""
 "In-game linear acceleration factor. \"Fully disabled\" also disables other "
 "acceleration types that can be enabled via the m_accelerate_* cvars"
 msgstr ""
+"Współczynnik przyspieszenia liniowego w grze. „Całkowicie wyłączony” wyłącza "
+"również inne typy przyspieszenia, które można włączyć za pomocą cvars "
+"m_accelerate_*."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:115
 msgid "Acceleration factor:"
-msgstr ""
+msgstr "Współczynnik przyspieszenia:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "MOUSEACCEL^Fully disabled"
-msgstr ""
+msgstr "W pełni wyłączony"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Linear disabled"
-msgstr ""
+msgstr "Liniowo wyłączony"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:124
 msgid "Speed bounds:"
-msgstr ""
+msgstr "Ograniczenia prędkości:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:136
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:140
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:143
 msgid "Disable system mouse acceleration"
-msgstr " Wyłącz przyspieszenie myszy "
+msgstr "Wyłącz przyspieszenie myszy "
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:137
 msgid "Make use of DGA mouse input"
@@ -12865,10 +12886,11 @@ msgstr "Wciśnięcie klawisza \"włącz konsole\" też ją wyłącza"
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:157
 msgid "Allow the console toggling bind to also close the console"
 msgstr ""
+"Zezwól klawiszowi odpowiadającemu za włączanie konsoli również jego zamykaniu"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:159
 msgid "Automatically repeat jumping if holding jump"
-msgstr "Automatikalne powtarzanie skoku jak ty utrzymasz tastę skok"
+msgstr "Automatyczne powtarzanie skoku jak ty utrzymasz skok"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:162
 msgid "Jetpack on jump:"
@@ -12930,7 +12952,7 @@ msgstr "Każdy pakiet zawiera kopię poprzedniej wiadomości"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:35
 msgid "Movement prediction error compensation"
-msgstr ""
+msgstr "Kompensata błędów ruchu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "Use encryption (AES) when available"
@@ -12938,7 +12960,7 @@ msgstr "Użyj szyfrowania (AES) gdy dostępne"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:42
 msgid "HTTP downloads"
-msgstr ""
+msgstr "Pobrania HTTP"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:44
 msgid "Simultaneous:"
@@ -12976,7 +12998,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:72
 msgid "TLTIP^Disabled"
-msgstr " Wyłączone"
+msgstr "Wyłączone"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:73
 msgid "TLTIP^Standard"
@@ -12988,11 +13010,11 @@ msgstr "Zaawansowane"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:77
 msgid "Menu animations:"
-msgstr ""
+msgstr "Animacje menu:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:79
 msgid "How fast animations in the menu occur"
-msgstr ""
+msgstr "Jak szybko animacje w menu mają się dziać"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
 msgid "Disabled"
@@ -13000,11 +13022,11 @@ msgstr "Wyłączone"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:86
 msgid "Text shadow"
-msgstr ""
+msgstr "Cień tekstu"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
 msgid "Draw a shadow behind all text to improve readability"
-msgstr ""
+msgstr "Rysuj cień przed każdym tekstem, aby poprawić czytelność"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:90
 msgid "Show current date and time"
@@ -13033,11 +13055,11 @@ msgstr "Tylko zmienione cvar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:46
 msgid "Search in cvar descriptions too"
-msgstr ""
+msgstr "Szukaj również w opisach cvar"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:53
 msgid "Setting:"
-msgstr "Ustawienia:"
+msgstr "Ustawienie:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:58
 msgid "Type:"
@@ -13049,7 +13071,7 @@ msgstr "Wartość:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:71
 msgid "Reset to default"
-msgstr ""
+msgstr "Przywróć do domyślnych"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:79
 msgid "Description:"
@@ -13069,7 +13091,7 @@ msgstr "To stworzy kopię twojej konfiguracji w twoim katalogu danych"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:22
 msgid "Menu Skin"
-msgstr ""
+msgstr "Skórka menu"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:61
 msgid "Text Language"
@@ -13089,17 +13111,19 @@ msgstr "Zmień krew i flaki na mniej agresywne efekty"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:76
 msgid "Just the gore"
-msgstr ""
+msgstr "Tylko gore"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:81
 msgid "Just the language"
-msgstr ""
+msgstr "Tylko język"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
 msgid ""
 "While connected language changes will be applied only to the menu, full "
 "language changes will take effect starting from the next game"
 msgstr ""
+"Choć powiązane zmiany językowe zostaną zastosowane tylko do menu, pełne "
+"zmiany językowe zaczną obowiązywać od następnej gry"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:18
 msgid "Disconnect now"
@@ -13119,7 +13143,7 @@ msgstr "Pełny ekran"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:34
 msgid "Borderless window"
-msgstr ""
+msgstr "Okno, bez ramki"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:37
 msgid "Resolution:"
@@ -13167,7 +13191,7 @@ msgstr "Kolosalny"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:55
 msgid "Anaglyph 3D (red-cyan)"
-msgstr ""
+msgstr "Anaglif 3D (czerwony-cyjan)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:57
 msgid "High-quality frame buffer"
@@ -13198,6 +13222,8 @@ msgid ""
 "Screen or window size multiplier, above 1x does antialiasing, below 1x may "
 "help slow GPUs"
 msgstr ""
+"Mnożnik rozmiaru ekranu lub okna – powyżej 1x powoduje wygładzanie krawędzi, "
+"poniżej 1x może spowolnić GPU"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "Anisotropy:"
@@ -13216,6 +13242,8 @@ msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
+"Wyeliminuj nadmierne rysowanie, renderując wersję sceny zawierającą tylko "
+"głębokość przed rozpoczęciem normalnego renderowania"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:98
 msgid "Depth first:"
@@ -13242,8 +13270,7 @@ msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines"
 msgstr ""
-"Niech procek czeka na grafikę, może pomóc z dziwnymi lagami na niektórych "
-"sprzętach"
+"Niech CPU czeka na GPU, może pomóc z dziwnymi lagami na niektórych sprzętach"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:110
 msgid "Use OpenGL 2.0 shaders (GLSL)"
@@ -13274,6 +13301,7 @@ msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black"
 msgstr ""
+"Odwrotna wartość korekcji gamma, efekt jasności nie wpłynie na biel ani czerń"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:131
 msgid "Contrast boost:"
@@ -13292,6 +13320,8 @@ msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control"
 msgstr ""
+"Regulacja nasycenia (0 = skala szarości, 1 = normalna, 2 = przesycona), "
+"wymaga kontroli kolorów GLSL"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:147
 msgid "LIT^Ambient:"
@@ -13302,6 +13332,8 @@ msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat"
 msgstr ""
+"Oświetlenie otoczenia, jeśli ustawione jest zbyt wysoko, może sprawić, że "
+"światło na mapach będzie wyglądać matowo i płasko"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:151
 msgid "Intensity:"
@@ -13324,7 +13356,7 @@ msgstr "Maksymalna:"
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:180
 #, c-format
 msgid "%s fps"
-msgstr ""
+msgstr "%s fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:165
 msgid "MAXFPS^Unlimited"
@@ -13355,18 +13387,20 @@ msgid ""
 "Vsync prevents tearing, but increases latency and caps your fps at the "
 "screen refresh rate"
 msgstr ""
+"Synchronizacja pionowa zapobiega rozrywaniu obrazu, ale zwiększa opóźnienie "
+"i ogranicza liczbę klatek na sekundę do częstotliwości odświeżania ekranu"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:189
 msgid "Show frames per second"
-msgstr "Pokazuj klatki na sekundę"
+msgstr "Pokaż klatki na sekundę"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:190
 msgid "Show your rendered frames per second"
-msgstr "Wyświetla liczbę wygenerowanych klatek na sekundę"
+msgstr "Wyświetl liczbę wygenerowanych klatek na sekundę"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:147
 msgid "Instant action with bots!"
-msgstr ""
+msgstr "Natychmiastowa akcja z botami!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:167
 msgid "Campaign Difficulty:"
@@ -13406,23 +13440,23 @@ msgstr "dołącz do 'najlepszego' zespołu (automatyczny-wybór) "
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:32
 msgid "Auto-select team (recommended)"
-msgstr ""
+msgstr "Automatyczny wybór drużyny (zalecane)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:36
 msgid "red"
-msgstr "czerwon"
+msgstr "czerwony"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:37
 msgid "blue"
-msgstr "niebiesk"
+msgstr "niebieski"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:38
 msgid "yellow"
-msgstr "żółt"
+msgstr "żółty"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:39
 msgid "pink"
-msgstr "różow"
+msgstr "różowy"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:42
 #: qcsrc/menu/xonotic/keybinder.qc:165
@@ -13432,10 +13466,12 @@ msgstr "obserwuj"
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:75
 msgid "Terms of Service have been updated. Please read them before continuing:"
 msgstr ""
+"Warunki korzystania zostały zaktualizowane. Proszę je przeczytać, zanim "
+"będziesz kontynuował:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:77
 msgid "Welcome to Xonotic! Please read the following Terms of Service:"
-msgstr "Witaj w Xonotic! Proszę przeczytaj napierw Umowę Użytkownika:"
+msgstr "Witaj w Xonotic! Proszę przeczytaj napierw Warunki korzystania:"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:91
 msgid "Accept"
@@ -13463,39 +13499,39 @@ msgstr "każdy na każdego"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:9 qcsrc/menu/xonotic/guide/pages.qc:62
 msgid "Introduction"
-msgstr ""
+msgstr "Wprowadzenie"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:10
 msgid "Movement"
-msgstr ""
+msgstr "Poruszanie"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
-msgstr ""
+msgstr "Tryby gier"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
-msgstr ""
+msgstr "Potwory"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:18
 msgid "Vehicles"
-msgstr ""
+msgstr "Pojazdy"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:19
 msgid "Turrets"
-msgstr ""
+msgstr "Wieżyczki"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:21
 msgid "Mods"
-msgstr ""
+msgstr "Mody"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
-msgstr ""
+msgstr "O poradniku"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
-msgstr ""
+msgstr "Witaj w Xonotic, w bezpłatnym i szybkim arena shooterze!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:23
 msgid ""
@@ -13503,6 +13539,9 @@ msgid ""
 "other aspects of the game, but most of what you will learn will come from "
 "trying it out in practice."
 msgstr ""
+"W tym poradniku znajdziesz podstawowe informacje na temat broni, przedmiotów "
+"i innych aspektów gry, ale większość wiedzy zdobędziesz, wypróbowując "
+"wszystko w praktyce."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:25
 msgid ""
@@ -13510,6 +13549,9 @@ msgid ""
 "settings. Xonotic is highly customizable and there are tons of servers out "
 "there that run with lightly or highly modified settings."
 msgstr ""
+"Należy pamiętać, że ten poradnik opisuje domyślne zachowanie gry z "
+"podstawowymi ustawieniami. Xonotic jest bardzo konfigurowalny i istnieje "
+"mnóstwo serwerów działających z lekko lub mocno zmodyfikowanymi ustawieniami."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:27
 #, c-format
@@ -13517,15 +13559,17 @@ msgid ""
 "You can usually find out which settings are modified by issuing %s in "
 "console after connecting to a server."
 msgstr ""
+"Zazwyczaj można dowiedzieć się, które ustawienia zostały zmodyfikowane, "
+"wpisując komendę %s w konsoli po połączeniu się z serwerem."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:30
 msgid "Community"
-msgstr ""
+msgstr "Społeczność"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:32
 #, c-format
 msgid "%s on Matrix, %s on QuakeNet IRC, or the Discord"
-msgstr ""
+msgstr "%s w Matrix, %s na QuakeNet IRC lub na Discordzie"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:34
 msgid ""
@@ -13535,6 +13579,11 @@ msgid ""
 "respectfully, this will be recognized, while acting toxic on the other hand "
 "will not make your life easier on the servers."
 msgstr ""
+"Xonotic wyróżnia się przyjazną, dojrzałą i otwartą społecznością graczy, a "
+"wielu graczy z długim stażem twierdzi, że to prawdopodobnie jedna z "
+"największych zalet Xonotic. Jeśli będziesz odnosić się do innych graczy "
+"przyjaźnie i z szacunkiem, zostanie to zauważone, podczas gdy toksyczne "
+"zachowanie nie ułatwi ci życia na serwerach."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:36
 #, c-format
@@ -13543,10 +13592,13 @@ msgid ""
 "online and use the in-game chat. You can also connect to the official "
 "communication channels (%s), and of course the official forum."
 msgstr ""
+"Najlepszym sposobem na kontakt ze społecznością jest po prostu rozpoczęcie "
+"gry online i skorzystanie z czatu w grze. Możesz również połączyć się z "
+"oficjalnymi kanałami komunikacji (%s), a także z oficjalnym forum."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:40
 msgid "Getting good"
-msgstr ""
+msgstr "Stawanie się dobrym"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:43
 msgid ""
@@ -13555,6 +13607,11 @@ msgid ""
 "the game mechanics. If you see experienced players doing tricks you don't "
 "understand, don't hesitate to ask anyone on the server!"
 msgstr ""
+"Różnica w umiejętnościach między nowymi a doświadczonymi graczami jest "
+"często ogromna. Wynika to jednak głównie z faktu, że doświadczeni gracze "
+"nauczyli się korzystać z mechaniki gry. Jeśli widzisz, że doświadczeni "
+"gracze wykonują sztuczki, których nie rozumiesz, nie wahaj się zapytać "
+"kogokolwiek na serwerze!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:46
 msgid ""
@@ -13563,6 +13620,10 @@ msgid ""
 "at which weapons they choose depending on the gameplay situation, for "
 "example in close combat, mid-range battles, or against groups of opponents."
 msgstr ""
+"Innym sposobem nauki jest obserwowanie doświadczonych graczy. Obserwuj, z "
+"jakiej broni korzystają i jakich technik ruchu używają. Zwróć też uwagę na "
+"to, jaką broń wybierają w zależności od sytuacji w grze, na przykład w walce "
+"wręcz, na średnim dystansie lub przeciwko grupom przeciwników."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:49
 msgid ""
@@ -13570,10 +13631,13 @@ msgid ""
 "works will enable you to speed around the map and apply effective weapon "
 "combos in no time."
 msgstr ""
+"Krzywa uczenia się jest bardzo stroma. Mimo to, zrozumienie zasad gry "
+"pozwoli ci szybko poruszać się po mapie i błyskawicznie stosować skuteczne "
+"kombinacje broni."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:52
 msgid "XonStat"
-msgstr ""
+msgstr "XonStat"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:55
 msgid ""
@@ -13581,10 +13645,13 @@ msgid ""
 "stores vital stats like your kill-death ratio, weapon damage and accuracy, "
 "and scoreboards from past games."
 msgstr ""
+"XonStat to zintegrowana aplikacja do statystyk graczy dla Xonotic. "
+"Przechowuje ona kluczowe statystyki, takie jak stosunek zabójstw do śmierci, "
+"obrażenia i celność broni, a także tabele wyników z poprzednich gier."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:57
 msgid "Tracking is completely opt-in, and no login is required."
-msgstr ""
+msgstr "Zbieranie statystyk jest całkowicie dobrowolne i nie wymaga logowania."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:58
 #, c-format
@@ -13592,6 +13659,8 @@ msgid ""
 "Some of the statistics are available in-game on your player profile, while "
 "the rest are accessible at %s."
 msgstr ""
+"Niektóre statystyki są dostępne w grze na Twoim profilu gracza, a do "
+"pozostałych można uzyskać dostęp pod adresem %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:65
 msgid ""
@@ -13600,36 +13669,42 @@ msgid ""
 "skills is an essential part of Xonotic gameplay and must not be "
 "underestimated."
 msgstr ""
+"Xonotic to niezwykle dynamiczny arena shooter. Dynamiczne tempo gry "
+"przekłada się nie tylko na czas reakcji, ale także na szybkość poruszania "
+"się. Oznacza to, że opanowanie umiejętności poruszania się jest kluczowym "
+"elementem rozgrywki w Xonotic i nie można go lekceważyć."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:67
 msgid "For a new player, the most important tricks to learn are:"
-msgstr ""
+msgstr "Najważniejsze sztuczki, których musi nauczyć się nowy gracz, to:"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:69 qcsrc/menu/xonotic/guide/pages.qc:77
 msgid "Bunny Hopping"
-msgstr ""
+msgstr "Bunny Hopping"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
 msgid "Strafe Turning"
-msgstr ""
+msgstr "Strafe Turning"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:71 qcsrc/menu/xonotic/guide/pages.qc:101
 msgid "Blaster Jumping"
-msgstr ""
+msgstr "Blaster Jumping"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:73 qcsrc/menu/xonotic/guide/pages.qc:133
 msgid "Crylink Running"
-msgstr ""
+msgstr "Crylink Running"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
-msgstr ""
+msgstr "Ramp Jumping"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:80
 msgid ""
 "Bunny hopping (\"bhopping\") is a technique known also from other arena "
 "shooters."
 msgstr ""
+"Bunny hopping (\"bhopping\") to technika znana także z innych arena "
+"shooterów."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:81
 #, c-format
@@ -13640,6 +13715,11 @@ msgid ""
 "down. This allows you to get around the map much faster than if you would "
 "just walk."
 msgstr ""
+"Dzięki kontroli powietrza możesz przyspieszyć w powietrzu znacznie "
+"przekraczając maksymalną prędkość poruszania się na ziemi. Aby uniknąć "
+"tarcia o podłoże, gracze stale podskakują, trzymając przycisk %s, dzięki "
+"czemu kontakt z podłożem ich nie spowalnia. Dzięki temu możesz poruszać się "
+"po mapie znacznie szybciej niż pieszo."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -13647,6 +13727,9 @@ msgid ""
 "Therefore, keeping %s held while moving quickly is one of the most essential "
 "movement strategies, used by all experienced players."
 msgstr ""
+"Dlatego przytrzymywanie %s i jednoczesne szybkie poruszanie się jest jedną z "
+"najważniejszych strategii poruszania się, stosowaną przez wszystkich "
+"doświadczonych graczy."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:85
 msgid ""
@@ -13654,6 +13737,10 @@ msgid ""
 "900 qu/s (\"units per second\"). CTS/DeFRaG servers usually run with "
 "different CPMA-like physics that remove this cap."
 msgstr ""
+"Przy ustawieniach domyślnych, prędkość, jaką można osiągnąć przez bunny "
+"hopping, jest ograniczona do 900 qu/s („jednostek na sekundę”). Serwery CTS/"
+"DeFRaG zazwyczaj działają z inną fizyką, podobną do CPMA, która usuwa to "
+"ograniczenie."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:92
 msgid ""
@@ -13662,6 +13749,10 @@ msgid ""
 "method used to quickly change the direction you're traveling while mid-air, "
 "without losing speed."
 msgstr ""
+"Bunny hopping wymaga „strafe turning”, w przeciwnym razie stracisz dużo "
+"prędkości (lub po prostu nie będziesz w stanie wykonać skrętu). Strafe "
+"turning to metoda szybkiej zmiany kierunku lotu w powietrzu, bez utraty "
+"prędkości."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:94
 #, c-format
@@ -13670,10 +13761,13 @@ msgid ""
 "turn direction (%s or %s), then start turning smoothly into the turn "
 "direction. As always, during the entire strafe turn keep %s held."
 msgstr ""
+"Podczas bunny hoppingu, najpierw wciśnij %s, a następnie naciśnij przycisk "
+"strafe'u w kierunku obrotu (%s lub %s), po czym zacznij płynnie obracać się "
+"w tym kierunku. Jak zawsze, trzymaj przycisk %s przez cały obrót."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
-msgstr ""
+msgstr "do przodu"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:119
 #: qcsrc/menu/xonotic/keybinder.qc:64
@@ -13690,17 +13784,20 @@ msgid ""
 "Note that if you press the strafe key before releasing the forward key, you "
 "will suffer a speed penalty."
 msgstr ""
+"Należy pamiętać, że naciśnięcie przycisku strafe'a przed puszczeniem "
+"przycisku ruchu do przodu spowoduje obniżenie prędkości."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:97
 msgid ""
 "If you do it right, you will even continue to accelerate in strafe turns."
 msgstr ""
+"Jeżeli zrobisz to dobrze, będziesz mógł nawet przyspieszać podczas strafe'ów."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:98 qcsrc/menu/xonotic/guide/pages.qc:120
 #: qcsrc/menu/xonotic/guide/pages.qc:159
 #, c-format
 msgid "For an illustration of this technique, see %s."
-msgstr ""
+msgstr "Aby zapoznać się z ilustracją tej techniki, zobacz %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:104
 #, c-format
@@ -13709,6 +13806,9 @@ msgid ""
 "many players will often have single digit accuracy for the %s. It is instead "
 "especially useful to make high jumps."
 msgstr ""
+"W większości sytuacji, %s jest bardziej narzędziem ruchu niż bronią. Dlatego "
+"wielu graczy często osiąga jednocyfrową celność dla %s. Jest on natomiast "
+"szczególnie przydatny do wykonywania wysokich skoków."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:107
 #, c-format
@@ -13717,10 +13817,14 @@ msgid ""
 "immediately afterwards. Experiment a bit with the timing of firing the %s "
 "and jumping to get a feeling of which timings will get you how high."
 msgstr ""
+"Aby wykonać „laser jump”, wystarczy wystrzelić %s w swoje stopy i "
+"natychmiast skoczyć. Poeksperymentuj trochę z momentem wystrzelenia %s i "
+"skoku, aby zorientować się, jaki moment pozwoli ci osiągnąć odpowiednią "
+"wysokość."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
-msgstr ""
+msgstr "Wall Blastering"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:114
 #, c-format
@@ -13729,6 +13833,9 @@ msgid ""
 "you, you can get significant horizontal speed. You can do this to pick up "
 "speed off the stand or even when passing a wall while already bunny hopping."
 msgstr ""
+"Jeśli nie strzelasz %s w podłogę, ale w ścianę obok siebie, możesz uzyskać "
+"znaczną prędkość poziomą. Możesz to zrobić, aby nabrać prędkości podczas "
+"stania lub nawet mijając ścianę, będąc już w bunny hoppingu."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:116
 #, c-format
@@ -13739,6 +13846,11 @@ msgid ""
 "%s. Immediately flick back to your movement direction and continue to bunny "
 "hop."
 msgstr ""
+"Aby użyć tej techniki, wykonaj bunny hop. Zaraz po skoku, wykonaj szybki "
+"ruch myszką w kierunku południowo-zachodnim, jeśli ściana jest po lewej "
+"stronie (lub południowo-wschodnim, jeśli ściana jest po prawej), wyceluj na "
+"wysokości głowy i strzel %s. Natychmiast wykonaj szybki ruch w kierunku "
+"ruchu i kontynuuj bunny hop."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:118
 #, c-format
@@ -13747,6 +13859,9 @@ msgid ""
 "a strafe key for the duration of the flick. This means using %s if the wall "
 "is to your left, and %s if the wall is to your right."
 msgstr ""
+"Aby jak najmniej tracić prędkość podczas ruchu w tył, przełącz się na "
+"klawisz strafe'a na czas trwania ruchu. Oznacza to, że możesz używać %s, "
+"jeśli ściana znajduje się po lewej stronie i %s, jeśli po prawej stronie."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:126
 #, c-format
@@ -13755,6 +13870,9 @@ msgid ""
 "damage to the player. In gametypes without self damage however it is a very "
 "versatile movement tool."
 msgstr ""
+"%s może być użyty tak samo jak %s do poruszania się, ale zadaje graczowi "
+"znacznie większe obrażenia. W trybach gry bez samookaleczeń jest to jednak "
+"bardzo wszechstronne narzędzie do poruszania się."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:128
 msgid ""
@@ -13762,11 +13880,15 @@ msgid ""
 "immediately detonate it. The explosion will push you upwards a little bit, "
 "and can prolong a jump."
 msgstr ""
+"W powietrzu możesz również wystrzelić rakietę pod siebie i natychmiast ją "
+"zdetonować. Eksplozja lekko uniesie cię w górę i może wydłużyć skok."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:130
 #, c-format
 msgid "Note that this strategy only really works if the %s mutator is enabled."
 msgstr ""
+"Należy pamiętać, że strategia ta działa tylko wtedy, gdy mutator %s jest "
+"włączony."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:136
 #, c-format
@@ -13774,6 +13896,8 @@ msgid ""
 "The drag force of the %s secondary fire can not only break other players' "
 "movement, but can also give yourself a significant speed boost."
 msgstr ""
+"Siła oporu dodatkowego ataku %s może nie tylko zatrzymać ruchy innych "
+"graczy, ale także zapewnić ci znaczną premię do prędkości."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:137
 #, c-format
@@ -13783,10 +13907,15 @@ msgid ""
 "stand into high speed. Finding the best angle to aim at takes some practice, "
 "and changes depending on your speed."
 msgstr ""
+"Aby wykonać „crylink run”, strzel z %s ogień dodatkowy w podłogę (lub "
+"równoległą ścianę) tuż przed sobą i wykonaj bunny hopping, aby wystrzelić "
+"się ze stanowiska i osiągnąć dużą prędkość. Znalezienie najlepszego kąta do "
+"celowania wymaga trochę praktyki i zmienia się w zależności od Twojej "
+"prędkości."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:141
 msgid "Crylink Wall Climbing"
-msgstr ""
+msgstr "Crylink Wall Climbing"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:144
 #, c-format
@@ -13795,12 +13924,17 @@ msgid ""
 "head), you can climb up walls quickly. This is called \"wall climbing\" with "
 "the %s."
 msgstr ""
+"Strzelając z %s ogniem dodatkowym w ścianę obok siebie (tuż nad głową), "
+"możesz szybko wspinać się po ścianach. Nazywa się to „wall climbing” w "
+"przypadku %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:146
 msgid ""
 "This is also a good way to save yourself from falling off the map, as it "
 "reliably stops your downfall."
 msgstr ""
+"To także dobry sposób na uniknięcie wypadnięcia z mapy, gdyż niezawodnie "
+"zapobiega to upadkowi."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:152
 msgid ""
@@ -13809,12 +13943,19 @@ msgid ""
 "upwards boost and enable you to reach places that are otherwise accessible "
 "only with laser jumps, which cost health and make noise."
 msgstr ""
+"Rampy są ważnym elementem projektu mapy Xonotic. Każda pochyłość, na którą "
+"trafisz z odpowiednią prędkością i pod odpowiednim kątem, zapewni ci znaczną "
+"prędkość w górę i umożliwi dotarcie do miejsc, do których w przeciwnym razie "
+"można dotrzeć tylko za pomocą laserowych skoków, które kosztują zdrowie i "
+"hałasują."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:154
 msgid ""
 "When doing ramp jumps, it is vital to hit the ramp at a flat angle to "
 "receive the upwards boost and not lose too much speed."
 msgstr ""
+"Wykonując skoki z rampy, ważne jest, aby uderzać w rampę pod płaskim kątem, "
+"aby otrzymać przyspieszenie w górę i nie stracić zbyt dużej prędkości."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:155
 #, c-format
@@ -13823,6 +13964,9 @@ msgid ""
 "just before the ramp and keep %s pressed so you jump again once you hit the "
 "ramp."
 msgstr ""
+"Aby wykonać skok z rampy, podejdź do pochyłej powierzchni („rampy”), skocz "
+"tuż przed rampą i nie przestawaj wciskać %s, aby wykonać kolejny skok po "
+"dotarciu do rampy."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:156
 msgid ""
@@ -13830,16 +13974,22 @@ msgid ""
 "the stronger the upwards boost. As always, you can gain speed before the "
 "ramp by bunny hopping."
 msgstr ""
+"Im większa prędkość, gdy uderzysz w rampę (pod kątem prostym), tym "
+"silniejsze będzie przyspieszenie w górę. Jak zawsze, możesz nabrać prędkości "
+"przed rampą, wykonując bunny hopping."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:158
 msgid ""
 "Note that when trying to make a ramp jump while bunny hopping, it is vital "
 "to time your hops carefully so you get the angle right."
 msgstr ""
+"Należy pamiętać, że podczas próby wykonania skoku z rampy w trakcie "
+"wykonywania techniki bunny hopping, niezwykle ważne jest staranne wyczucie "
+"czasu skoków, aby uzyskać odpowiedni kąt."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:162
 msgid "Advanced Movement"
-msgstr ""
+msgstr "Zaawansowane Poruszanie"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:165
 msgid ""
@@ -13847,11 +13997,15 @@ msgid ""
 "jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are "
 "crucial on CTS/DeFRaG servers that use slightly different physics."
 msgstr ""
+"Zaawansowane techniki, takie jak „strafe jumping” („strafing”) lub „circle "
+"jumping” („CJ”), oferują jedynie ograniczone korzyści w podstawowej "
+"rozgrywce, ale są kluczowe na serwerach CTS/DeFRaG, które wykorzystują nieco "
+"inną fizykę."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167
 #, c-format
 msgid "If you want to master these techniques, be sure to check out %s."
-msgstr ""
+msgstr "Jeśli chcesz opanować te techniki, koniecznie sprawdź %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:174
 #, c-format
@@ -13859,6 +14013,8 @@ msgid ""
 "%s is a mod that heavily changes the game, giving players fewer but more "
 "powerful weapons, nades, and more movement options."
 msgstr ""
+"%s to mod mocno zmieniający rozgrywkę, dając graczom mniej, ale za to "
+"potężniejsze bronie, granaty i więcej możliwości ruchu."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:175
 #, c-format
@@ -13868,6 +14024,10 @@ msgid ""
 "These weapons are a lot more powerful than the regular weapons, so their "
 "time-to-kill is quite low."
 msgstr ""
+"Jeśli chodzi o uzbrojenie, gracze mają nieskończoną amunicję i pojawiają się "
+"z %s, %s, i %s, a czasami mogą podnosić superbronie %s i %s na mapie. Broń "
+"ta jest znacznie potężniejsza niż broń standardowa, więc czas potrzebny na "
+"jej zabicie jest dość krótki."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:177
 #, c-format
@@ -13876,6 +14036,9 @@ msgid ""
 "push enemies, but can be used to push yourself around. Also since the %s "
 "mutator is active, all players have offhand nades."
 msgstr ""
+"Ogień dodatkowy wszystkich broni strzela laserem, który nie zadaje obrażeń "
+"ani nie odpycha wrogów, ale można go użyć do odpychania siebie. Ponadto, "
+"kiedy mutator %s jest aktywny, wszyscy gracze mają granaty dodatkowe."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:179
 #, c-format
@@ -13883,6 +14046,8 @@ msgid ""
 "As for movement tricks, %s is enabled by default in %s, allowing for rapidly "
 "changing your movement direction."
 msgstr ""
+"Jeśli chodzi o sztuczki związane z poruszaniem się, %s jest domyślnie "
+"włączony w %s, co pozwala na szybką zmianę kierunku ruchu."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:186
 #, c-format
@@ -13890,6 +14055,8 @@ msgid ""
 "%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for "
 "competitive play, particularly in %s."
 msgstr ""
+"%s (\"Xonotic Pro-Mode\") jest zestawem ustawień rozgrywki często "
+"wykorzystywanym w grach rywalizacyjnych, szczególnie w %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:187
 #, c-format
@@ -13899,18 +14066,23 @@ msgid ""
 "give other players a fairer chance of rebuilding their stack. It also "
 "disables spawn protection and enables friendly fire in team-based gametypes."
 msgstr ""
+"Dodaje dodatkowe zasady dotyczące podnoszenia przedmiotów, uniemożliwiając "
+"graczom z poziomem zdrowia lub pancerza 100 lub wyższym podnoszenie "
+"przedmiotów %s, %s, %s, i %s, aby dać innym graczom większe szanse na "
+"odbudowanie swojego stosu. Wyłącza również ochronę przed odradzaniem się i "
+"umożliwia ostrzał sojuszniczy w trybach gry z podziałem na drużyny."
 
 #: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"
-msgstr "Nawigacja"
+msgstr "Poruszanie się"
 
 #: qcsrc/menu/xonotic/keybinder.qc:62
 msgid "move forwards"
-msgstr ""
+msgstr "do przodu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:63
 msgid "move backwards"
-msgstr ""
+msgstr "do tyłu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:66
 msgid "jump / swim"
@@ -13951,7 +14123,7 @@ msgstr "przeładuj"
 #: qcsrc/menu/xonotic/keybinder.qc:111
 #, c-format
 msgid "weapon group %d"
-msgstr ""
+msgstr "grupa broni %d"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "hold zoom"
@@ -13967,7 +14139,7 @@ msgstr "pokaż wyniki"
 
 #: qcsrc/menu/xonotic/keybinder.qc:137
 msgid "screenshot"
-msgstr ""
+msgstr "zrzut ekranu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:138
 msgid "maximize radar"
@@ -14023,11 +14195,11 @@ msgstr "automatycznie dołącz do drużyny"
 
 #: qcsrc/menu/xonotic/keybinder.qc:169
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "opuść klucz/flagę, wyjdź z pojazdu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:170
 msgid "suicide / respawn"
-msgstr "odwal magika"
+msgstr "samobójstwo / respawn"
 
 #: qcsrc/menu/xonotic/keybinder.qc:171
 msgid "quick menu"
@@ -14035,7 +14207,7 @@ msgstr "szybkie menu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:173
 msgid "scoreboard user interface"
-msgstr ""
+msgstr "tabela wyników interfejsu użytkownika"
 
 #: qcsrc/menu/xonotic/keybinder.qc:176
 msgid "User defined"
@@ -14043,7 +14215,7 @@ msgstr "Zdefiniowane przez użytkownika"
 
 #: qcsrc/menu/xonotic/keybinder.qc:183
 msgid "Development"
-msgstr ""
+msgstr "Development"
 
 #: qcsrc/menu/xonotic/keybinder.qc:184
 msgid "sandbox menu"
@@ -14051,11 +14223,11 @@ msgstr "menu piaskownicy"
 
 #: qcsrc/menu/xonotic/keybinder.qc:185
 msgid "drag object (sandbox)"
-msgstr ""
+msgstr "przeciągnij obiekt (piaskownica)"
 
 #: qcsrc/menu/xonotic/keybinder.qc:186
 msgid "waypoint editor menu"
-msgstr ""
+msgstr "edytor punktów orientacyjnych"
 
 #: qcsrc/menu/xonotic/leavematchbutton.qc:12
 msgid "Leave current match"
@@ -14097,6 +14269,8 @@ msgstr "Nie wciskaj więcej tego przycisku!"
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again."
 msgstr ""
+"Co? Nie można w to grać (m jest puste). Filtruję ponownie aby się to więcej "
+"nie zdarzyło."
 
 #: qcsrc/menu/xonotic/maplist.qc:299
 #, c-format
@@ -14108,6 +14282,8 @@ msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
+"Co? Nie można w to grać (zły tryb gry). Filtruję ponownie aby się to więcej "
+"nie zdarzyło."
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
@@ -14119,7 +14295,7 @@ msgstr "<nie znaleziono modelu>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "SERVER^Remove favorite"
-msgstr "SERVER^Usuń ulubione"
+msgstr "Usuń ulubione"
 
 #: qcsrc/menu/xonotic/serverlist.qc:264
 msgid "Remove the currently highlighted server from bookmarks"
@@ -14127,7 +14303,7 @@ msgstr "Usuń obecnie zaznaczony serwer z zakładek"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid "SERVER^Favorite"
-msgstr "SERVER^Ulubione"
+msgstr "Ulubione"
 
 #: qcsrc/menu/xonotic/serverlist.qc:269
 msgid ""
@@ -14251,15 +14427,15 @@ msgstr "Rozmiar ekranu"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:12
 msgid "FADESPEED^Slow"
-msgstr "FADESPEED^Powoli"
+msgstr "Powoli"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:13
 msgid "FADESPEED^Normal"
-msgstr "FADESPEED^Normalnie"
+msgstr "Normalnie"
 
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:14
 msgid "FADESPEED^Fast"
-msgstr "FADESPEED^Szybko"
+msgstr "Szybko"
 
 #: qcsrc/menu/xonotic/statslist.qc:28
 msgid "January"
@@ -14358,7 +14534,7 @@ msgstr "Współczynnik zabójstw:"
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 msgid "Skill:"
-msgstr ""
+msgstr "Umiejętność:"
 
 #: qcsrc/menu/xonotic/statslist.qc:231
 #, c-format
@@ -14376,7 +14552,7 @@ msgstr "Generuje info od nowo addowanych mapach..."
 #: qcsrc/menu/xonotic/util.qc:553
 #, c-format
 msgid "Update to %s now!"
-msgstr "Aktualizuj fo %s już teraz!"
+msgstr "Aktualizuj %s już teraz!"
 
 #: qcsrc/menu/xonotic/util.qc:627
 msgid ""
@@ -14388,4 +14564,4 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:798
 msgid "Hide on death"
-msgstr ""
+msgstr "Ukryj podczas śmierci"
