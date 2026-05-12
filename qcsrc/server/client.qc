@@ -1154,6 +1154,10 @@ void ClientConnect(entity this)
 
 	bot_clientconnect(this);
 
+	// after bot_clientconnect
+	if (teamplay)
+		this.clientcolors = 0;
+
 	this.team = -1;
 	Player_DetermineForcedTeam(this);
 

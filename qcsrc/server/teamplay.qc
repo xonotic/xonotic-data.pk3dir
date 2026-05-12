@@ -250,6 +250,8 @@ bool Player_SetTeamIndex(entity player, int index)
 	}
 	if (new_team == -1)
 	{
+		if (teamplay) // sanity check, if false this code path should never be reached anyway
+			player.clientcolors = 0;
 		player.team = -1;
 	}
 	else
