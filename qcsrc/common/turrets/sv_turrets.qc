@@ -951,6 +951,9 @@ bool turret_firecheck(entity this)
 
 bool turret_checkfire(entity this)
 {
+	if (time < game_starttime || game_stopped)
+		return false;
+
 	if (MUTATOR_CALLHOOK(Turret_CheckFire, this))
 		return M_ARGV(1, bool);
 
