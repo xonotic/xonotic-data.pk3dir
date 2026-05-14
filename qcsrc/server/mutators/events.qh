@@ -1173,6 +1173,7 @@ MUTATOR_HOOKABLE(CopyBody, EV_CopyBody);
     /** ret */ i(int, MUTATOR_ARGV_1_int) \
     /**/ o(int, MUTATOR_ARGV_1_int) \
     /** message */ i(string, MUTATOR_ARGV_2_string) \
+    /** private msg target */ i(entity, MUTATOR_ARGV_3_entity) \
     /**/
 MUTATOR_HOOKABLE(ChatMessage, EV_ChatMessage);
 
