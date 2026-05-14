@@ -265,7 +265,14 @@ string getlsmaps()
 				continue; // we still get the added count, but skip the actual processing
 
 			// todo: Check by play count of maps for other gametypes?
+			// TODO: standardized system for adding new map clause
+			bool isnewmap = false;
 			if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
+				isnewmap = true;
+			else if(g_ctf && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time"))))
+				isnewmap = true;
+
+			if(isnewmap)
 			{
 				newmaps = true;
 				if (i % 2) col = "^4*"; else col = "^5*";
