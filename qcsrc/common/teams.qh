@@ -235,8 +235,8 @@ int Team_IndexToBit(int index)
 #define Team_IndexToColoredFullName(index) Team_ColoredFullName(Team_IndexToTeam(index))
 
 // replace these flags in a string with the strings provided
-#define TCR(input,type,team) strreplace("^TC", COL_TEAM_##team, strreplace("^TT", strtoupper(type##_TEAM_##team), input))
+#define TCR(input, type, team) strreplace("^TC", COL_TEAM_##team, strreplace("^TT", strtoupper(type##_TEAM_##team), input))
 
 // safe team comparisons
-#define SAME_TEAM(a,b) (teamplay ? (a.team == b.team) : (a == b))
-#define DIFF_TEAM(a,b) (teamplay ? (a.team != b.team) : (a != b))
+#define SAME_TEAM(a, b) (teamplay ? (a.team == b.team) : (a == b))
+#define DIFF_TEAM(a, b) (teamplay ? (a.team != b.team) : (a != b))

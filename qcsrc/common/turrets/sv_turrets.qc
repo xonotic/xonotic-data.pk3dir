@@ -214,7 +214,7 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	if (!this.active)
 		return;
 
-	if (SAME_TEAM(this, attacker))
+	if (TURRET_SAME_TEAM(this, attacker))
 	{
 		if (autocvar_g_friendlyfire)
 			damage *= autocvar_g_friendlyfire;
@@ -718,7 +718,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	// enemy turrets
 	if ((validate_flags & TFL_TARGETSELECT_NOTURRETS)
 	&& e_target.owner.tur_head == e_target
-	&& DIFF_TEAM(e_target, e_turret)) // Dont break support units.
+	&& TURRET_DIFF_TEAM(e_target, e_turret)) // Dont break support units.
 		return -9;
 
 	// Missile
@@ -735,20 +735,20 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	{
 		if (validate_flags & TFL_TARGETSELECT_OWNTEAM)
 		{
-			if (DIFF_TEAM(e_target, e_turret))
+			if (TURRET_DIFF_TEAM(e_target, e_turret))
 				return -11;
-			if (DIFF_TEAM(e_turret, e_target.owner))
+			if (TURRET_DIFF_TEAM(e_turret, e_target.owner))
 				return -12;
-			if (DIFF_TEAM(e_turret, e_target.aiment))
+			if (TURRET_DIFF_TEAM(e_turret, e_target.aiment))
 				return -12; // portals
 		}
 		else
 		{
-			if (SAME_TEAM(e_target, e_turret))
+			if (TURRET_SAME_TEAM(e_target, e_turret))
 				return -13;
-			if (SAME_TEAM(e_turret, e_target.owner))
+			if (TURRET_SAME_TEAM(e_turret, e_target.owner))
 				return -14;
-			if (SAME_TEAM(e_turret, e_target.aiment))
+			if (TURRET_SAME_TEAM(e_turret, e_target.aiment))
 				return -14; // portals
 		}
 	}
@@ -926,7 +926,7 @@ bool turret_firecheck(entity this)
 
 	// Try to avoid FF?
 	if ((this.firecheck_flags & TFL_FIRECHECK_AFF)
-	&& SAME_TEAM(this.tur_impactent, this))
+	&& TURRET_SAME_TEAM(this.tur_impactent, this))
 		return false;
 
 	// aim<->predicted impact
