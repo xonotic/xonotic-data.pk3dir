@@ -20,7 +20,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 	if(!draw_PictureExists(me.currentMapPreviewImage)) // Quake 3 compatibility
 		strcpy(me.currentMapPreviewImage, strcat("/levelshots/", MapInfo_Map_bspname));
 
-	me.frame.setText(me.frame, me.currentMapBSPName);
+	me.border.setText(me.border, me.currentMapBSPName);
 	me.titleLabel.setText(me.titleLabel, me.currentMapTitle);
 	me.authorLabel.setText(me.authorLabel, me.currentMapAuthor);
 	me.descriptionLabel.setText(me.descriptionLabel, me.currentMapDescription);
