@@ -911,7 +911,7 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 		{
 			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
-			int unranked_clients = team_ent.m_num_players_net - team_ent.count;
+			int unranked_clients = team_ent.m_num_players - team_ent.count; // noobs and bots
 			if (unranked_clients)
 			{
 				if (!server_skill_average_var)
@@ -1048,13 +1048,18 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 			// Do fabs afterwards, since the player can be in the middle of the teams (one z +ve, other -ve)
 			team_i_z = fabs(team_i_z);
 			team_p_z = fabs(team_p_z);
-			if ((!significant && team_i.m_num_players_net < team_p.m_num_players_net)
-			|| ((significant || team_i.m_num_players_net == team_p.m_num_players_net) && team_i_z > team_p_z))
+
+			int team_i_size = IS_REAL_CLIENT(player) ? team_i.m_num_players_net : team_i.m_num_players;
+			int team_p_size = IS_REAL_CLIENT(player) ? team_p.m_num_players_net : team_p.m_num_players;
+
+			if ((!significant && team_i_size < team_p_size)
+			|| ((significant || team_i_size == team_p_size) && team_i_z > team_p_z))
 			{
 				team_bits = Team_IndexToBit(i);
 				previous_team = i;
 			}
-			else if (team_i_z == team_p_z) // rather unlikely
+			else if (team_i_z == team_p_z // unlikely with humans, normal with all bots
+			&& team_i_size == team_p_size)
 			{
 				team_bits |= Team_IndexToBit(i);
 				previous_team = i;
@@ -1062,7 +1067,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 			continue;
 		}
 
-		int compare = TeamBalance_CompareTeamsInternal(team_i, team_p, use_score);
+		int compare = TeamBalance_CompareTeamsInternal(team_i, team_p, player, use_score);
 		if (compare == TEAMS_COMPARE_LESS)
 		{
 			team_bits = Team_IndexToBit(i);
@@ -1291,14 +1296,17 @@ int TeamBalanceTeam_GetNumberOfBots(entity team_ent)
 	return team_ent.m_num_bots;
 }
 
-int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, bool use_score)
+int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, entity client, bool use_score)
 {
 	if (team_a == team_b)
 		return TEAMS_COMPARE_EQUAL;
 
-	if (team_a.m_num_players_net < team_b.m_num_players_net)
+	int team_a_size = IS_REAL_CLIENT(client) ? team_a.m_num_players_net : team_a.m_num_players;
+	int team_b_size = IS_REAL_CLIENT(client) ? team_b.m_num_players_net : team_b.m_num_players;
+
+	if (team_a_size < team_b_size)
 		return TEAMS_COMPARE_LESS;
-	if (team_a.m_num_players_net > team_b.m_num_players_net)
+	if (team_a_size > team_b_size)
 		return TEAMS_COMPARE_GREATER;
 	if (!use_score)
 		return TEAMS_COMPARE_EQUAL;
@@ -1313,11 +1321,14 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, bool use_scor
 	// Early in the match scores are ~random due to too few samples,
 	// as the match progresses scores become more reliable indicators of team strength.
 	// 0.96875 (31/32): if at halftime one team has score 0 and the other has 2 its skill is multiplied by 1.376,
-	// < 1 so that a team with 1 point is better than one with 0 (but not by much as sample size is small).
+	// < 1 so that a team with 1 point is stronger than one with 0 (but not by much as sample size is small).
 	// Applying full score ratio to one team is equivalent here to applying half of it to each.
 	if (!warmup_stage && time > game_starttime)
+	{
+		float timelimit_sec = autocvar_timelimit > 0 ? autocvar_timelimit * 60 : 20 * 60;
 		team_a_strength *= (1 + ((team_a.m_team_score ? team_a.m_team_score : 0.96875) / (team_b.m_team_score ? team_b.m_team_score : 0.96875) - 1)
-		                      * ((time - game_starttime) / (autocvar_timelimit * 60))**1.5);
+		                      * min(1, (time - game_starttime) / timelimit_sec)**1.5);
+	}
 
 	if (team_a_strength < team_b_strength)
 		return TEAMS_COMPARE_LESS;
