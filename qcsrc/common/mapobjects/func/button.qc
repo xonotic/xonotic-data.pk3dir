@@ -206,7 +206,7 @@ spawnfunc(func_button)
 	G_SpawnFloat("lip", 4, this, lip); // explicit 0 is supported
 
 	if(this.wait < 0 && q3compat)
-		this.wait = 0.1; // compatibility for q3: -1 = return immediately
+		this.wait = 1/1024; // compatibility for q3: -1 = return immediately
 
 	if(this.noise != "")
 		precache_sound(this.noise);

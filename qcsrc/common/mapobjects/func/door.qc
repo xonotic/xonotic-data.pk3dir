@@ -739,13 +739,11 @@ void door_init_shared(entity this)
 	}
 
 	if(autocvar_sv_doors_always_open)
-	{
 		this.wait = -1;
-	}
 	else if (!this.wait)
-	{
 		this.wait = q3compat ? 2 : 3;
-	}
+	else if (q3compat && this.wait < 0)
+		this.wait = 1/1024; // return immediately
 
 	G_SpawnFloat("lip", 8, this, lip); // explicit 0 is supported
 
