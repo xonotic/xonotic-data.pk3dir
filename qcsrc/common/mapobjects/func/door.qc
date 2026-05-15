@@ -109,6 +109,10 @@ void door_hit_bottom(entity this)
 	if (this.noise1 != "")
 		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	this.state = STATE_BOTTOM;
+
+#ifdef SVQC
+	this.dmg_inflictor = world; // should be redundant but just in case spurious credits might occur somehow
+#endif
 }
 
 void door_go_down(entity this)
@@ -221,6 +225,10 @@ void door_use(entity this, entity actor, entity trigger)
 	if (this.owner.active != ACTIVE_ACTIVE)
 		return;
 	this = this.owner;
+
+#ifdef SVQC
+	this.dmg_inflictor = actor; // for kill and dmg credits via MOVETYPE_PUSH
+#endif
 
 	if (this.spawnflags & DOOR_TOGGLE)
 	{
@@ -655,6 +663,7 @@ void door_reset(entity this)
 	this.nextthink = 0;
 
 #ifdef SVQC
+	this.dmg_inflictor = world;
 	this.SendFlags |= SF_TRIGGER_RESET;
 	door_init_keys(this);
 #endif
