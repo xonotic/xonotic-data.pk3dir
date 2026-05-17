@@ -119,6 +119,7 @@ void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, 
 void ApplyMinMaxScaleAngles(entity e);
 
 void SetBrushEntityModel(entity this, bool with_lod);
+void SetBrushEntityModel2(entity this);
 
 int autocvar_loddebug;
 .string lodtarget1;
