@@ -52,6 +52,7 @@ spawnfunc(func_pendulum)
 	this.avelocity_z = 0.0000001;
 	if (!InitMovingBrushTrigger(this))
 		return;
+	SetBrushEntityModel2(this); // TODO: when CSQC movers are enabled move model2 ents to CSQC
 
 	if(!this.freq)
 	{
