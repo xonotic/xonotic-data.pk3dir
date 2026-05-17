@@ -809,7 +809,7 @@ msgstr "Liczba zabójstw"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^kills"
-msgstr "zabici"
+msgstr "zabójstwa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of laps finished (Race/CTS)"
