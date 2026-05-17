@@ -19,7 +19,7 @@ command -V chmod     > /dev/null
 command -V git       > /dev/null
 command -V grep      > /dev/null
 command -V make      > /dev/null
-command -V md5sum    > /dev/null
+command -V sha512sum > /dev/null
 command -V mkdir     > /dev/null
 command -V mktemp    > /dev/null
 command -V rm        > /dev/null
@@ -204,7 +204,7 @@ HASH=$(${ENGINE} +exec serverbench.cfg \
       | grep '^:' \
       | grep -v '^:gamestart:' \
       | grep -v '^:anticheat:' \
-      | md5sum | awk '{ print $1 }')
+      | sha512sum | awk '{ print $1 }')
 
 hashtestcleanup
 
