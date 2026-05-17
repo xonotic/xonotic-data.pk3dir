@@ -2476,7 +2476,7 @@ bool PlayerThink(entity this)
 			.entity weaponentity = weaponentities[slot];
 			float chargelimit = WEP_CVAR(WEP_VORTEX, charge_limit);
 			float chargerate = WEP_CVAR(WEP_VORTEX, charge_rot_rate);
-			if(WEP_CVAR(WEP_VORTEX, charge_rot_unequipped) && this.(weaponentity).m_weapon != WEP_VORTEX)
+			if(WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_rate) && this.(weaponentity).m_weapon != WEP_VORTEX)
 			{
 				chargelimit = WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_limit);
 				chargerate = WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_rate);

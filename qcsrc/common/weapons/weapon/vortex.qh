@@ -54,7 +54,6 @@ CLASS(Vortex, Weapon)
 		P(class, prefix, charge_rate, float, NONE) \
 		P(class, prefix, charge_rot_pause, float, NONE) \
 		P(class, prefix, charge_rot_rate, float, NONE) \
-		P(class, prefix, charge_rot_unequipped, float, NONE) \
 		P(class, prefix, charge_rot_unequipped_limit, float, NONE) \
 		P(class, prefix, charge_rot_unequipped_rate, float, NONE) \
 		P(class, prefix, charge_shot_multiplier, float, NONE) \
