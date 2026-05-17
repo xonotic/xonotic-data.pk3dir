@@ -139,7 +139,11 @@ void plat_blocked(entity this, entity blocker)
 #ifdef SVQC
 	if (this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
 	{
-		Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+		if (blocker.dmgtime2 <= time)
+		{
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+			blocker.dmgtime2 = time + 1/32; // 20hz in Q3, 30hz in CPMA
+		}
 
 		// Gib dead/dying stuff
 		if (IS_DEAD(blocker))
@@ -148,7 +152,8 @@ void plat_blocked(entity this, entity blocker)
 #endif
 
 	// don't change direction for dead or dying stuff
-	if (!IS_DEAD(blocker))
+	if (!IS_DEAD(blocker)
+	&& !(this.spawnflags & CRUSH)) // Q3: crushers don't reverse
 	{
 		if (this.state == STATE_UP)
 			plat_go_down (this);
@@ -158,6 +163,9 @@ void plat_blocked(entity this, entity blocker)
 	// plat state already had changed
 	// this isn't a bug per se!
 	}
+	// if we didn't change direction and are using a non-linear movement controller, we must pause it
+	else if (this.move_controller)
+		SUB_CalcMovePause(this);
 }
 
 void plat_use(entity this, entity actor, entity trigger)

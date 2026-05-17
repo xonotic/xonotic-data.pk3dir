@@ -60,7 +60,7 @@ spawnfunc(func_plat)
 {
 	if (q3compat)
 	{
-		this.spawnflags = 0; // Q3 plats have no spawnflags
+		this.spawnflags &= CRUSH; // Q3 plats have only this undocumented spawnflag
 		G_SpawnFloat("dmg", 2, this, dmg); // explicit 0 is supported
 	}
 	else if (this.spawnflags & CRUSH)

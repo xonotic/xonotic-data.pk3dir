@@ -30,7 +30,11 @@ void door_blocked(entity this, entity blocker)
 #ifdef SVQC
 	if (this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
 	{
-		Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+		if (blocker.dmgtime2 <= time)
+		{
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+			blocker.dmgtime2 = time + 1/32; // A Q3 team of doors deals damage once per tick: 20hz in Q3, 30hz in CPMA
+		}
 
 		//gib dying stuff just to make sure
 		if (IS_DEAD(blocker))    // Shall we bite?
@@ -44,7 +48,7 @@ void door_blocked(entity this, entity blocker)
 	&& blocker.takedamage != DAMAGE_NO
 #endif
 	&& this.wait >= 0
-	&& !(Q3COMPAT_COMMON && (this.spawnflags & Q3_DOOR_CRUSHER)))
+	&& !(Q3COMPAT_COMMON && (this.spawnflags & CRUSH))) // Q3: crushers don't reverse
 	{
 		if (this.state == STATE_DOWN)
 		{
