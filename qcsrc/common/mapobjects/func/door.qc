@@ -780,6 +780,7 @@ spawnfunc(func_door)
 
 	if (!InitMovingBrushTrigger(this))
 		return;
+	SetBrushEntityModel2(this); // TODO: when CSQC movers are enabled move model2 ents to CSQC
 	this.effects |= EF_LOWPRECISION;
 	this.classname = "door";
 
