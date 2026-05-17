@@ -8,7 +8,7 @@ const int START_DISABLED = BIT(0);
 const int ALL_ENTITIES = BIT(1);
 const int ON_MAPLOAD = BIT(1);
 const int INVERT_TEAMS = BIT(2);
-const int CRUSH = BIT(2);
+const int CRUSH = BIT(2); // in Q3 this disables door & plat auto-reverse so the blocking player takes damage every frame
 const int NOSPLASH = BIT(8); // generic anti-splashdamage spawnflag
 const int ONLY_PLAYERS = BIT(14);
 
