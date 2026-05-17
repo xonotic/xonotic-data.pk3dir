@@ -70,6 +70,7 @@ spawnfunc(func_bobbing)
 
 	if (!InitMovingBrushTrigger(this))
 		return;
+	SetBrushEntityModel2(this); // TODO: when CSQC movers are enabled move model2 ents to CSQC
 
 	// wait for targets to spawn
 	controller = new_pure(func_bobbing_controller);
