@@ -7,6 +7,7 @@
 # Contijn Buijs <contijn.buijs@gmail.com>, 2017
 # C. Righart, 2026
 # C. Righart, 2026
+# David Brans, 2026
 # 62197a8afd75a0a64478212fcb55f596, 2017
 # Jonathan van der Steege <jonakeys@hotmail.com>, 2016
 # Jonathan van der Steege <jonakeys@hotmail.com>, 2016,2022
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: joostruis <joostruis@gmail.com>, 2024\n"
+"Last-Translator: David Brans, 2026\n"
 "Language-Team: Dutch (http://app.transifex.com/team-xonotic/xonotic/language/"
 "nl/)\n"
 "Language: nl\n"
@@ -29,7 +30,7 @@ msgstr ""
 
 #: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:126
 msgid "Checkpoint times:"
-msgstr ""
+msgstr "Tijdstippen controlepunten:"
 
 #: qcsrc/client/hud/hud_config.qc:79
 #, c-format
@@ -45,7 +46,7 @@ msgstr "^1Kon niet schrijven naar %s"
 
 #: qcsrc/client/hud/panel/centerprint.qc:200
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: qcsrc/client/hud/panel/centerprint.qc:204
 #, c-format
@@ -83,7 +84,7 @@ msgstr "^3Player^7: Dit is de ruimte om te chatten."
 #: qcsrc/client/hud/panel/racetimer.qc:216
 #, c-format
 msgid "Checkpoint %d"
-msgstr ""
+msgstr "Controlepunt %d"
 
 #: qcsrc/client/hud/panel/engineinfo.qc:71
 #, c-format
@@ -723,7 +724,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of generators destroyed"
-msgstr ""
+msgstr "Aantal generatoren vernietigd"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "SCO^generators"
