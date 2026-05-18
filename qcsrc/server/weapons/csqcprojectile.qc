@@ -8,7 +8,8 @@
 #include <server/command/common.qh>
 #include <server/items/items.qh>
 
-.float csqcprojectile_type;
+.int csqcprojectile_type;
+.bool silent;
 
 bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 {
@@ -22,6 +23,11 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 
 	if(IS_ONGROUND(this))
 		sf |= 0x40;
+
+	if(this.silent)
+		sf |= 4;
+	else
+		sf &= ~4;
 
 	ft = fr = 0;
 	if(this.fade_time != 0 || this.fade_rate != 0)
@@ -91,8 +97,7 @@ void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 	else
 		e.gravity = 0;
 
-	if(!sound_allowed(MSG_BROADCAST, e))
-		type |= 0x80;
+	e.silent = !sound_allowed(MSG_BROADCAST, e);
 	e.csqcprojectile_type = type;
 }
 

@@ -931,9 +931,8 @@ void Draw_ArcBeam(entity this)
 		{
 			this.beam_dir = wantdir;
 			this.beam_initialized = true;
-
-			this.beam_muzzleentity.drawmask = MASK_NORMAL; // NOTE: this works around the muzzle entity flashing on the middle of the screen for a frame
 		}
+		this.beam_muzzleentity.drawmask = MASK_NORMAL; // NOTE: this works around the muzzle entity flashing on the middle of the screen for a frame
 
 		segments = 1;
 		if (this.beam_dir != wantdir)
@@ -1152,6 +1151,11 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isNew)
 	}
 	else
 		flash = this.beam_muzzleentity;
+
+	// the muzzle flash may have changed this frame
+	// reset it to prevent drawing at the wrong position briefly
+	if(flash)
+		flash.drawmask = 0;
 
 	if (sf & ARC_SF_UPDATE)
 	{

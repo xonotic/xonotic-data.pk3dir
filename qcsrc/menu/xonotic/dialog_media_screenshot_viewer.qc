@@ -28,7 +28,7 @@ void XonoticScreenshotViewerDialog_loadScreenshot(entity me, string scrImage)
 		return;
 	strcpy(me.currentScrPath, scrImage);
 	me.screenshotImage.load(me.screenshotImage, me.currentScrPath);
-	me.frame.setText(me.frame, me.screenshotImage.screenshotTitle);
+	me.border.setText(me.border, me.screenshotImage.screenshotTitle);
 }
 void prevScreenshot_Click(entity btn, entity me)
 {

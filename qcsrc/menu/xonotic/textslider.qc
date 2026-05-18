@@ -87,7 +87,7 @@ void XonoticTextSlider_saveCvars(entity me)
 				}
 			}
 			else
-				error("XonoticTextSlider: invalid identifier ", me.getIdentifier(me), " does not match cvar list ", me.controlledCvar);
+				error(strcat("XonoticTextSlider: invalid identifier ", me.getIdentifier(me), " does not match cvar list ", me.controlledCvar));
 		}
 	}
 }

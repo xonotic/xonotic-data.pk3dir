@@ -160,7 +160,7 @@
 			{
 				// Can this happen?
 				//LOG_WARNF("Missing entcs data for player %d", who);
-				sound8(e, o, chan, sample, vol, atten, 0, 0);
+				sound8(e, o, chan, sample, vol, atten, pitch, 0);
 			}
 			return true;
 		}
@@ -244,7 +244,7 @@
 		int fh = fopen(f, FILE_READ);
 		if (fh < 0)
 		{
-			LOG_WARNF("Player sound file not found: %s", f);
+			//LOG_WARNF("Player sound file not found: %s", f);
 			return;
 		}
 		for (string s; (s = fgets(fh)); )
@@ -285,7 +285,7 @@
 			int fh = fopen(f, FILE_READ);
 			if (fh < 0)
 			{
-				if (strict) LOG_WARNF("Player sound file not found: %s", f);
+				//if (strict) LOG_WARNF("Player sound file not found: %s", f);
 				return false;
 			}
 			for (string s; (s = fgets(fh)); )

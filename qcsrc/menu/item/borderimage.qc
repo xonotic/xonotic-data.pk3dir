@@ -22,7 +22,7 @@
 		if (me.zoomedOutTitleBar)
 			if (me.parent.parent.instanceOfNexposee)
 				if (me.parent.instanceOfDialog)
-					if (me == me.parent.frame) me.isNexposeeTitleBar = true;
+					if (me == me.parent.border) me.isNexposeeTitleBar = true;
 		me.saveRelOrigin = relOrigin;
 		me.saveRelSize = relSize;
 		SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);

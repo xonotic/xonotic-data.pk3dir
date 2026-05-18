@@ -115,11 +115,12 @@ void ctf_CaptureRecord(entity flag, entity player)
 	float cap_record = ctf_captimerecord;
 	float cap_time = (time - flag.ctf_pickuptime);
 	string refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
+	bool valid_record = (cap_time > 0.01);
 
 	// notify about shit
 	if(ctf_oneflag)
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CTF_CAPTURE_NEUTRAL, player.netname);
-	else if(!ctf_captimerecord)
+	else if(!ctf_captimerecord || !valid_record)
 		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_TIME), player.netname, TIME_ENCODE(cap_time));
 	else if(cap_time < cap_record)
 		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_BROKEN), player.netname, refername, TIME_ENCODE(cap_time), TIME_ENCODE(cap_record));
@@ -127,7 +128,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 		Send_Notification(NOTIF_ALL, NULL, MSG_CHOICE, APP_TEAM_NUM(flag.team, CHOICE_CTF_CAPTURE_UNBROKEN), player.netname, refername, TIME_ENCODE(cap_time), TIME_ENCODE(cap_record));
 
 	// write that shit in the database
-	if(!ctf_oneflag) // but not in 1-flag mode
+	if(!ctf_oneflag && valid_record) // but not in 1-flag mode
 	if((!ctf_captimerecord) || (cap_time < cap_record))
 	{
 		ctf_captimerecord = cap_time;
@@ -136,7 +137,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 		write_recordmarker(player, flag.ctf_pickuptime, cap_time);
 	}
 
-	if(autocvar_g_ctf_leaderboard && !ctf_oneflag)
+	if(autocvar_g_ctf_leaderboard && !ctf_oneflag && valid_record)
 		race_setTime(GetMapname(), TIME_ENCODE(cap_time), player.crypto_idfp, player.netname, player, false);
 }
 

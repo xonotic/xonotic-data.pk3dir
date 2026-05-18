@@ -295,7 +295,6 @@ void Draw_GrapplingHook(entity this)
 {
 	vector a, b;
 	string tex;
-	vector rgb;
 
 	if (this.teleport_time && time > this.teleport_time)
 	{
@@ -326,16 +325,14 @@ void Draw_GrapplingHook(entity this)
 
 	float intensity = autocvar_cl_grapplehook_alpha;
 	float offset = 0;
+	vector rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 	switch (t)
 	{
-		case NUM_TEAM_1:  tex = "particles/hook_red";     rgb = '1 0.3 0.3';  break;
-		case NUM_TEAM_2:  tex = "particles/hook_blue";    rgb = '0.3 0.3 1';  break;
-		case NUM_TEAM_3:  tex = "particles/hook_yellow";  rgb = '1 1 0.3';    break;
-		case NUM_TEAM_4:  tex = "particles/hook_pink";    rgb = '1 0.3 1';    break;
-		default:
-			tex = "particles/hook_white";
-			rgb = entcs_GetColor(this.sv_entnum - 1);
-			break;
+		case NUM_TEAM_1:  tex = "particles/hook_red"; break;
+		case NUM_TEAM_2:  tex = "particles/hook_blue"; break;
+		case NUM_TEAM_3:  tex = "particles/hook_yellow"; break;
+		case NUM_TEAM_4:  tex = "particles/hook_pink"; break;
+		default: tex = "particles/hook_white"; break;
 	}
 
 	MUTATOR_CALLHOOK(DrawGrapplingHook, this, tex, rgb, t);
@@ -405,7 +402,8 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool isNew)
 	if (isNew || !this.teleport_time)
 	{
 		this.draw = Draw_GrapplingHook;
-		IL_PUSH(g_drawables, this);
+		if (!IL_CONTAINS(g_drawables, this))
+			IL_PUSH(g_drawables, this);
 		this.entremove = Remove_GrapplingHook;
 
 		setmodel(this, MDL_HOOK);
