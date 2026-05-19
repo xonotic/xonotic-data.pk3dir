@@ -64,12 +64,12 @@
 
 		if (me.isTabRoot)
 		{
-			me.frame = NEW(BorderImage);
-			me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.borderLines * me.titleHeight);
-			me.frame.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
-			me.frame.zoomedOutTitleBar = me.zoomedOutTitleBar;
-			me.frame.alpha = me.alpha;
-			me.addItem(me, me.frame, '0 0 0', '1 1 0', 1);
+			me.border = NEW(BorderImage);
+			me.border.configureBorderImage(me.border, me.title, me.titleFontSize, me.color, me.backgroundImage, me.borderLines * me.titleHeight);
+			me.border.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
+			me.border.zoomedOutTitleBar = me.zoomedOutTitleBar;
+			me.border.alpha = me.alpha;
+			me.addItem(me, me.border, '0 0 0', '1 1 0', 1);
 		}
 
 		if (!me.titleFontSize) me.titleHeight = 0;  // no title bar
@@ -91,7 +91,7 @@
 
 		if (me.isTabRoot && me.closable && me.borderLines > 0)
 		{
-			entity closebutton = me.closeButton = me.frame.closeButton = NEW(Button);
+			entity closebutton = me.closeButton = me.border.closeButton = NEW(Button);
 			closebutton.configureButton(closebutton, "", 0, me.closeButtonImage);
 			closebutton.onClick = Dialog_Close;
 			closebutton.onClickEntity = me;

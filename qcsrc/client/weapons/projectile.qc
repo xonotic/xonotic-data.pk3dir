@@ -15,6 +15,8 @@
 .vector colormod;
 .vector glowmod;
 
+.int csqcprojectile_type;
+
 void SUB_Stop(entity this, entity toucher)
 {
 	this.velocity = this.avelocity = '0 0 0';
@@ -35,7 +37,7 @@ void Projectile_DrawTrail(entity this, vector to)
 	this.trail_oldtime = time;
 
 	// force the effect even for stationary firemine
-	if (this.cnt == PROJECTILE_FIREMINE)
+	if (this.csqcprojectile_type == PROJECTILE_FIREMINE)
 		if (from == to)
 			++from.z;
 
@@ -119,13 +121,13 @@ void Projectile_Draw(entity this)
 		drawn = (this.iflags & IFLAG_VALID);
 		t = time;
 	}
-	bool is_nade = Projectile_isnade(this.cnt);
+	bool is_nade = Projectile_isnade(this.csqcprojectile_type);
 
 	if (!(f & FL_ONGROUND))
 	{
 		rot = '0 0 0';
 		if (is_nade) rot = this.avelocity;
-		else switch (this.cnt)
+		else switch (this.csqcprojectile_type)
 		{
 			case PROJECTILE_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
@@ -167,7 +169,7 @@ void Projectile_Draw(entity this)
 		makevectors(ang);
 		trailorigin += v_up * 4;
 	}
-	else switch (this.cnt)
+	else switch (this.csqcprojectile_type)
 	{
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
@@ -186,7 +188,7 @@ void Projectile_Draw(entity this)
 	if (!drawn)
 		return;
 
-	switch (this.cnt)
+	switch (this.csqcprojectile_type)
 	{
 		// Possibly add dlights here.
 		default:
@@ -330,16 +332,15 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		#endif
 	}
 
+	this.silent = (f & 4);
+
 	if (f & 2)
 	{
-		this.cnt = ReadByte();
-
-		this.silent = (this.cnt & 0x80);
-		this.cnt = (this.cnt & 0x7F);
+		this.csqcprojectile_type = ReadByte();
 
 		this.scale = 1;
 		this.traileffect = 0;
-		switch (this.cnt)
+		switch (this.csqcprojectile_type)
 		{
 #define HANDLE(id) case PROJECTILE_##id: setmodel(this, MDL_PROJECTILE_##id);
 			HANDLE(ELECTRO)            this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
@@ -397,7 +398,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		set_movetype(this, MOVETYPE_TOSS);
 		this.alphamod = 1;
 
-		switch (this.cnt)
+		switch (this.csqcprojectile_type)
 		{
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object

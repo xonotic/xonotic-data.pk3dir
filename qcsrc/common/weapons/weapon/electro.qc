@@ -42,7 +42,9 @@ NET_HANDLE(Electro_Orb, bool isNew)
 {
 	Net_Accept(Electro_Orb);
 	this.origin = ReadVector();
+	int myowner = ReadByte();
 	setorigin(this, this.origin);
+	this.colormap = entcs_GetClientColors(myowner - 1);
 	this.ltime = time + ReadByte() / 10.0;
 	// this.ltime = time + this.orb_lifetime;
 	electro_orb_setup(this);
@@ -56,6 +58,7 @@ bool electro_orb_send(entity this, entity to, int sf)
 	int channel = MSG_ENTITY;
 	WriteHeader(channel, Electro_Orb);
 	WriteVector(channel, this.origin);
+	WriteByte(channel, etof(this.realowner));
 	// round time delta to a 1/10th of a second
 	WriteByte(channel, (this.ltime - time) * 10 + 0.5);
 	return true;

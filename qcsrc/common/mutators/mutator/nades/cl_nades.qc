@@ -9,16 +9,16 @@ MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 {
 	entity proj = M_ARGV(0, entity);
 
-	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
+	if (proj.csqcprojectile_type == PROJECTILE_NAPALM_FOUNTAIN)
 	{
 		proj.modelindex = 0;
 		proj.traileffect = EFFECT_FIREBALL.m_id;
 		return true;
 	}
-	if (Nade_FromProjectile(proj.cnt) != NADE_TYPE_Null)
+	if (Nade_FromProjectile(proj.csqcprojectile_type) != NADE_TYPE_Null)
 	{
 		setmodel(proj, MDL_PROJECTILE_NADE);
-		entity trail = Nade_TrailEffect(proj.cnt, proj.team);
+		entity trail = Nade_TrailEffect(proj.csqcprojectile_type, proj.team);
 		if (trail.eent_eff_name)
 			proj.traileffect = trail.m_id;
 		return true;
@@ -31,14 +31,14 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	entity proj = M_ARGV(0, entity);
 
-	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
+	if (proj.csqcprojectile_type == PROJECTILE_NAPALM_FOUNTAIN)
 	{
 		loopsound(proj, CH_SHOTS_SINGLE, SND_NADE_NAPALM_FLY, VOL_BASE, ATTEN_NORM);
 		proj.mins = '-16 -16 -16'; // k9er: setsize instead?
 		proj.maxs = '16 16 16';
 	}
 
-	entity nade_type = Nade_FromProjectile(proj.cnt);
+	entity nade_type = Nade_FromProjectile(proj.csqcprojectile_type);
 	if (nade_type == NADE_TYPE_Null)
 		return;
 

@@ -7,9 +7,9 @@ void animdecide_load_if_needed(entity e);
 void animdecide_setimplicitstate(entity e, float onground);
 void animdecide_setframes(entity e, bool support_blending, .int fld_frame, .int fld_frame1time, .int fld_frame2, .int fld_frame2time);
 
-CLASS(Animation, Object)
-	ATTRIB(Animation, m_framenames, string);
-	STATIC_METHOD(Animation, getframe, int(Animation this, int mdlidx))
+CLASS(ModelAnimation, Object)
+	ATTRIB(ModelAnimation, m_framenames, string);
+	STATIC_METHOD(ModelAnimation, getframe, int(ModelAnimation this, int mdlidx))
 	{
 		FOREACH_WORD(this.m_framenames, true, {
 			int f = frameforname(mdlidx, it);
@@ -20,7 +20,7 @@ CLASS(Animation, Object)
 #endif
 		return -1;
 	}
-ENDCLASS(Animation)
+ENDCLASS(ModelAnimation)
 
 REGISTRY(Animations, BITS(8))
 REGISTER_REGISTRY(Animations)
@@ -30,14 +30,14 @@ REGISTRY_DEFINE_GET(Animations, NULL)
 #define ReadAnimation() ReadRegistered(Animations)
 #define REGISTER_ANIMATION(id, framenames) \
 	.vector anim_##id; \
-	REGISTER(Animations, ANIM_##id, m_id, NEW(Animation)) { \
+	REGISTER(Animations, ANIM_##id, m_id, NEW(ModelAnimation)) { \
 		this.m_framenames = framenames; \
 	}
 
-vector anim_vec(Animation anim, int mdlidx, int numframes, float framerate)
+vector anim_vec(ModelAnimation anim, int mdlidx, int numframes, float framerate)
 {
 	vector v;
-	v.x = Animation_getframe(anim, mdlidx);
+	v.x = ModelAnimation_getframe(anim, mdlidx);
 	v.y = numframes;
 	v.z = framerate;
 	return v;
