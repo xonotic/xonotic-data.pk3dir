@@ -6,11 +6,13 @@ string autocvar_g_monster_wyvern_loot = "cells";
 float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
 float autocvar_g_monster_wyvern_attack_fireball_damagetime;
-float autocvar_g_monster_wyvern_attack_fireball_delay = 2;
+float autocvar_g_monster_wyvern_attack_fireball_delay = 4;
 float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_force;
 float autocvar_g_monster_wyvern_attack_fireball_radius;
 float autocvar_g_monster_wyvern_attack_fireball_speed;
+float autocvar_g_monster_wyvern_attack_melee_damage = 25;
+float autocvar_g_monster_wyvern_attack_melee_delay = 2;
 float autocvar_g_monster_wyvern_speed_stop;
 float autocvar_g_monster_wyvern_speed_run;
 float autocvar_g_monster_wyvern_speed_walk;
@@ -65,6 +67,11 @@ METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor, .entit
 	return true;
 }
 
+void M_Wyvern_Attack_Slash(entity this)
+{
+	Monster_Attack_Melee(this, autocvar_g_monster_wyvern_attack_melee_damage, this.attack_range, DEATH_MONSTER_WYVERN_MELEE.m_id);
+}
+
 void M_Wyvern_Attack_Fireball_Explode(entity this)
 {
 	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
@@ -109,14 +116,25 @@ bool M_Wyvern_Attack(int attack_type, entity actor, entity targ, .entity weapone
 {
 	switch (attack_type)
 	{
-		case MONSTER_ATTACK_MELEE: // TODO: we have the animation for it!
+		case MONSTER_ATTACK_MELEE:
+		{
+			Monster_Delay(actor, 1, 0.7, M_Wyvern_Attack_Slash);
+
+			setanim(actor, actor.anim_melee, false, true, true);
+			actor.anim_finished = actor.animstate_endtime;
+
+			actor.attack_finished_single[0] = time + autocvar_g_monster_wyvern_attack_melee_delay;
+			return true;
+		}
 		case MONSTER_ATTACK_RANGED:
+		{
 			Monster_Delay(actor, 0, 1.2, M_Wyvern_Attack_Fireball);
 			setanim(actor, actor.anim_shoot, false, true, true);
 			actor.anim_finished = actor.animstate_endtime;
 
 			actor.attack_finished_single[0] = time + autocvar_g_monster_wyvern_attack_fireball_delay;
 			return true;
+		}
 	}
 	return false;
 }
@@ -144,7 +162,7 @@ METHOD(Wyvern, mr_pain, float(Wyvern this, entity actor, float damage_take, enti
 {
 	TC(Wyvern, this);
 	actor.pain_finished = time + 0.5;
-	setanim(actor, actor.anim_pain1, true, true, false);
+	setanim(actor, actor.anim_pain1, true, false, false);
 	return damage_take;
 }
 

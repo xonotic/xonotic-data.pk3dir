@@ -253,7 +253,8 @@ METHOD(Golem, mr_pain, float(Golem this, entity actor, float damage_take, entity
 {
 	TC(Golem, this);
 	actor.pain_finished = time + 0.5;
-	setanim(actor, ((random() >= 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
+	if(actor.state != MONSTER_STATE_NOMOVE)
+		setanim(actor, ((random() >= 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
 	return damage_take;
 }
 

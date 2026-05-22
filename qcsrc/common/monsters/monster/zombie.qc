@@ -21,12 +21,12 @@ void M_Zombie_Attack_Slam(entity this)
 
 void M_Zombie_Attack_Punch(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage * 0.85, this.attack_range, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage, this.attack_range, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
 }
 
 void M_Zombie_Attack_Spin(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage, this.attack_range * 0.75, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage * 0.5, this.attack_range * 0.75, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
 }
 
 void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
@@ -94,6 +94,8 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 				// big slam
 				Monster_Delay(actor, 1, 0.7, M_Zombie_Attack_Slam);
 				chosen_anim = actor.anim_melee1;
+				if (IS_MONSTER(actor))
+					actor.state = MONSTER_STATE_NOMOVE;
 			}
 			else if (anim_chance < 0.66)
 			{
@@ -106,13 +108,12 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 				// multiple punches
 				Monster_Delay(actor, 2, 0.5, M_Zombie_Attack_Punch);
 				chosen_anim = actor.anim_melee3;
+				if (IS_MONSTER(actor))
+					actor.state = MONSTER_STATE_NOMOVE;
 			}
 
 			setanim(actor, chosen_anim, false, true, true);
 			actor.anim_finished = actor.animstate_endtime;
-
-			if (IS_MONSTER(actor))
-				actor.state = MONSTER_STATE_NOMOVE;
 
 			actor.attack_finished_single[0] = time + autocvar_g_monster_zombie_attack_melee_delay;
 
@@ -146,7 +147,7 @@ METHOD(Zombie, mr_pain, float(Zombie this, entity actor, float damage_take, enti
 {
 	TC(Zombie, this);
 	actor.pain_finished = time + 0.34;
-	if (time >= actor.spawn_time)
+	if (time >= actor.spawn_time && actor.state != MONSTER_STATE_NOMOVE)
 		setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
 	return damage_take;
 }

@@ -468,7 +468,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);
 		if (attack_success == 1)
-			Monster_Sound(this, monstersound_melee, 0, false, CH_VOICE);
+			Monster_Sound(this, monstersound_ranged, 0, false, CH_VOICE);
 		else if (attack_success > 0)
 			return;
 	}
@@ -1015,7 +1015,7 @@ void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float d
 
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	if (GetResource(this, RES_HEALTH) <= -50) // 100 health until gone?
+	if (GetResource(this, RES_HEALTH) <= -100) // 100 health until gone?
 	{
 		Violence_GibSplash(this, 1, 1, attacker);
 
