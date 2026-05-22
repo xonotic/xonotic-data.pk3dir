@@ -48,7 +48,12 @@ void M_Golem_Attack_Smash(entity this)
 
 void M_Golem_Attack_Swing(entity this)
 {
-	Monster_Attack_Melee(this, this.enemy, autocvar_g_monster_golem_attack_claw_damage, ((random() >= 0.5) ? this.anim_melee2 : this.anim_melee3), this.attack_range, 0.8, DEATH_MONSTER_GOLEM_CLAW.m_id, true);
+	Monster_Attack_Melee(this, autocvar_g_monster_golem_attack_claw_damage, this.attack_range, DEATH_MONSTER_GOLEM_CLAW.m_id);
+}
+
+void M_Golem_Attack_Slam(entity this)
+{
+	Monster_Attack_Melee(this, autocvar_g_monster_golem_attack_claw_damage * 1.5, this.attack_range * 0.8, DEATH_MONSTER_GOLEM_CLAW.m_id);
 }
 
 #include <common/effects/qc/_mod.qh>
@@ -175,10 +180,20 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			setanim(actor, ((random() >= 0.5) ? actor.anim_melee2 : actor.anim_melee3), false, true, true);
-			int swing_cnt = bound(1, floor(random() * 4), 3);
-			Monster_Delay(actor, swing_cnt, 0.5, M_Golem_Attack_Swing);
-			actor.anim_finished = actor.attack_finished_single[0] = time + (0.5 * swing_cnt); // set this for the delay
+			if(random() > 0.5)
+			{
+				// swing
+				setanim(actor, actor.anim_melee2, false, true, true);
+				Monster_Delay(actor, 3, 0.45, M_Golem_Attack_Swing);
+			}
+			else
+			{
+				// slam
+				setanim(actor, actor.anim_melee1, false, true, true);
+				Monster_Delay(actor, 1, 0.66, M_Golem_Attack_Slam);
+			}
+			actor.anim_finished = actor.animstate_endtime;
+			actor.attack_finished_single[0] = time + 2;
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
@@ -190,21 +205,21 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 
 			if (randomness <= 0.5 && vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_golem_attack_smash_range))
 			{
-				setanim(actor, actor.anim_melee1, false, true, true);
+				setanim(actor, actor.anim_melee3, false, true, true);
 				Monster_Delay(actor, 1, 1.1, M_Golem_Attack_Smash);
 				if (actor.animstate_endtime > time)
 					actor.anim_finished = actor.animstate_endtime;
 				else
 					actor.anim_finished = time + 1.2;
 				actor.attack_finished_single[0] = actor.anim_finished + 0.2;
-				actor.state = MONSTER_ATTACK_MELEE; // kinda a melee attack
+				actor.state = MONSTER_STATE_NOMOVE;
 				actor.golem_lastattack = time + 3 + random() * 1.5;
 				return true;
 			}
 			else if (randomness <= 0.1 && vdist(actor.enemy.origin - actor.origin, >=, autocvar_g_monster_golem_attack_smash_range * 1.5)) // small chance, don't want this spammed
 			{
-				setanim(actor, actor.anim_melee2, true, true, false);
-				actor.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general
+				setanim(actor, actor.anim_shoot, true, true, false);
+				actor.state = MONSTER_STATE_NOMOVE;
 				actor.attack_finished_single[0] = time + 1.1;
 				actor.anim_finished = 1.1;
 				actor.golem_lastattack = time + 3 + random() * 1.5;
@@ -257,11 +272,10 @@ METHOD(Golem, mr_anim, bool(Golem this, entity actor))
 	actor.anim_idle = animfixfps(actor, '0 1 1', none);
 	actor.anim_walk = animfixfps(actor, '1 1 1', none);
 	actor.anim_run = animfixfps(actor, '2 1 1', none);
-	//actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
-	actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-	actor.anim_melee3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
-	//actor.anim_melee4 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
-	actor.anim_melee1 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+	actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+	actor.anim_shoot = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+	actor.anim_melee2 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+	actor.anim_melee3 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
 	actor.anim_pain1 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
 	actor.anim_pain2 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
 	//actor.anim_pain3 = animfixfps(actor, '9 1 2', none); // 0.5 seconds
@@ -300,6 +314,8 @@ METHOD(Golem, mr_setup, bool(Golem this, entity actor))
 	actor.spawn_time = actor.animstate_endtime;
 	StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
 	actor.monster_attackfunc = M_Golem_Attack;
+
+	actor.species = SPECIES_ROBOT_SOLID;
 
 	return true;
 }

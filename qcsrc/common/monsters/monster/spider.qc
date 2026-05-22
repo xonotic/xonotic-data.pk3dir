@@ -19,6 +19,7 @@ float autocvar_g_monster_spider_speed_walk;
 
 .float spider_web_delay;
 
+void M_Spider_Attack_Bite(entity this);
 void M_Spider_Attack_Web(entity this);
 
 REGISTER_MUTATOR(spiderweb, true);
@@ -74,14 +75,26 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 	if (fire & 2)
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5))
 	{
+		setanim(actor, actor.anim_melee, false, true, true);
 		if (isPlayer)
 		{
 			actor.enemy = Monster_FindTarget(actor);
 			actor.attack_range = 60;
 		}
-		Monster_Attack_Melee(actor, actor.enemy, autocvar_g_monster_spider_attack_bite_damage, ((random() > 0.5) ? actor.anim_melee : actor.anim_shoot), actor.attack_range, autocvar_g_monster_spider_attack_bite_delay, DEATH_MONSTER_SPIDER.m_id, true);
+		else
+		{
+			actor.state = MONSTER_STATE_NOMOVE;
+			actor.anim_finished = actor.animstate_endtime;
+		}
+		actor.attack_finished_single[0] = time + autocvar_g_monster_spider_attack_bite_delay;
+		Monster_Delay(actor, 2, 0.6, M_Spider_Attack_Bite);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
 	}
+}
+
+void M_Spider_Attack_Bite(entity this)
+{
+	Monster_Attack_Melee(this, autocvar_g_monster_spider_attack_bite_damage, this.attack_range, DEATH_MONSTER_SPIDER.m_id);
 }
 
 void M_Spider_Attack_Web_Explode(entity this)
@@ -192,7 +205,9 @@ METHOD(Spider, mr_think, bool(Spider this, entity actor))
 METHOD(Spider, mr_pain, float(Spider this, entity actor, float damage_take, entity attacker, float deathtype))
 {
 	TC(Spider, this);
-	setanim(actor, ((random() > 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
+	// TODO: flinch chance
+	if(actor.state != MONSTER_STATE_NOMOVE)
+		setanim(actor, ((random() > 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
 	actor.pain_finished = actor.animstate_endtime;
 	return damage_take;
 }
@@ -244,6 +259,8 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 
 	actor.monster_loot = autocvar_g_monster_spider_loot;
 	actor.monster_attackfunc = M_Spider_Attack;
+
+	actor.species = SPECIES_ALIEN;
 
 	return true;
 }

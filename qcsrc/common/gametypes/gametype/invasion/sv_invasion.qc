@@ -16,6 +16,7 @@ float autocvar_g_invasion_warmup;
 int autocvar_g_invasion_monster_count;
 bool autocvar_g_invasion_zombies_only;
 float autocvar_g_invasion_spawn_delay;
+string autocvar_g_invasion_monster_loot = "random";
 
 bool victent_present;
 .bool inv_endreached;
@@ -334,6 +335,26 @@ void Invasion_RoundStart()
 	inv_numkilled = 0;
 
 	inv_maxspawned = rint(max(autocvar_g_invasion_monster_count, autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)));
+}
+
+MUTATOR_HOOKFUNCTION(inv, MonsterDropItem)
+{
+	if(autocvar_g_invasion_monster_loot == "none")
+		M_ARGV(1, string) = "";
+	else if(autocvar_g_invasion_monster_loot != "")
+		M_ARGV(1, string) = autocvar_g_invasion_monster_loot;
+}
+
+MUTATOR_HOOKFUNCTION(inv, reset_map_players)
+{
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(inv, ReadLevelCvars)
+{
+	// incompatible
+	warmup_stage = 0;
+	sv_ready_restart_after_countdown = 0;
 }
 
 MUTATOR_HOOKFUNCTION(inv, MonsterDies)

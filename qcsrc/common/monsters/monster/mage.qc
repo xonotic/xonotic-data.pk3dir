@@ -31,7 +31,6 @@ float autocvar_g_monster_mage_heal_range;
 float autocvar_g_monster_mage_heal_delay;
 float autocvar_g_monster_mage_shield_time;
 float autocvar_g_monster_mage_shield_delay;
-float autocvar_g_monster_mage_shield_blockpercent;
 float autocvar_g_monster_mage_speed_stop;
 float autocvar_g_monster_mage_speed_run;
 float autocvar_g_monster_mage_speed_walk;
@@ -286,7 +285,7 @@ void M_Mage_Defend_Heal(entity this)
 	{
 		setanim(this, this.anim_melee, true, true, true);
 		this.attack_finished_single[0] = time + autocvar_g_monster_mage_heal_delay;
-		this.state = MONSTER_ATTACK_MELEE;
+		this.state = MONSTER_STATE_NOMOVE;
 		this.anim_finished = time + 1.5;
 	}
 }
@@ -310,7 +309,7 @@ void M_Mage_Attack_Push(entity this)
 	setanim(this, this.anim_duckjump, true, true, true);
 	this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_push_delay;
 	this.anim_finished = time + 1;
-	this.state = MONSTER_ATTACK_MELEE; // prevent moving while firing spike
+	this.state = MONSTER_STATE_NOMOVE; // prevent moving while firing spike
 }
 
 void M_Mage_Attack_Teleport(entity this, entity targ)
@@ -367,7 +366,6 @@ void M_Mage_Defend_Shield(entity this)
 {
 	StatusEffects_apply(STATUSEFFECT_Shield, this, time + autocvar_g_monster_mage_shield_time, 0);
 	this.mage_shield_delay = time + autocvar_g_monster_mage_shield_delay;
-	SetResourceExplicit(this, RES_ARMOR, autocvar_g_monster_mage_shield_blockpercent);
 	setanim(this, this.anim_shoot, true, true, true);
 	this.attack_finished_single[0] = this.anim_finished = time + 1; // give just a short cooldown on attacking
 }
@@ -401,7 +399,7 @@ bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 				setanim(actor, actor.anim_shoot, true, true, true);
 				actor.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_spike_delay;
 				actor.anim_finished = time + 1;
-				actor.state = MONSTER_ATTACK_MELEE; // prevent moving while firing spike
+				actor.state = MONSTER_STATE_NOMOVE; // prevent moving while firing spike
 				Weapon wep = WEP_MAGE_SPIKE;
 				wep.wr_think(wep, actor, weaponentity, 1);
 				return true;
@@ -421,33 +419,25 @@ spawnfunc(monster_mage)
 METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
 {
 	TC(Mage, thismon);
-	bool need_help = false;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it != actor,
+	if (random() < 0.5 && time >= actor.attack_finished_single[0])
 	{
-		if (vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range)
-		&& M_Mage_Defend_Heal_Check(actor, it))
+		bool need_help = (GetResource(actor, RES_HEALTH) < autocvar_g_monster_mage_heal_minhealth);
+		if (!need_help)
 		{
-			need_help = true;
-			break;
-		}
-	});
-
-	if (!need_help)
-		IL_EACH(g_monsters, it != actor,
-		{
-			if (vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range)
-			&& M_Mage_Defend_Heal_Check(actor, it))
+			// TODO: cooldown on this check?
+			FOREACH_ENTITY_RADIUS(actor.origin, autocvar_g_monster_mage_heal_range, it != actor && (IS_MONSTER(it) || IS_PLAYER(it)),
 			{
-				need_help = true;
-				break;
-			}
-		});
-
-	if (random() < 0.5
-	&& time >= actor.attack_finished_single[0]
-	&& (GetResource(actor, RES_HEALTH) < autocvar_g_monster_mage_heal_minhealth || need_help))
-		M_Mage_Defend_Heal(actor);
+				if(M_Mage_Defend_Heal_Check(actor, it))
+				{
+					need_help = true;
+					break;
+				}
+			});
+		}
+		if (need_help)
+			M_Mage_Defend_Heal(actor);
+	}
 
 	if (random() < 0.5
 	&& actor.enemy && time >= actor.mage_shield_delay
@@ -507,6 +497,8 @@ METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 
 	actor.monster_loot = autocvar_g_monster_mage_loot;
 	actor.monster_attackfunc = M_Mage_Attack;
+
+	actor.species = SPECIES_ROBOT_SHINY;
 
 	return true;
 }

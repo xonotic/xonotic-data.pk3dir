@@ -5,8 +5,9 @@ float autocvar_g_monster_wyvern_health;
 string autocvar_g_monster_wyvern_loot = "cells";
 float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
-float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_damagetime;
+float autocvar_g_monster_wyvern_attack_fireball_delay = 2;
+float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_force;
 float autocvar_g_monster_wyvern_attack_fireball_radius;
 float autocvar_g_monster_wyvern_attack_fireball_speed;
@@ -23,13 +24,19 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 {
 	TC(WyvernAttack, thiswep);
 	if (fire & 1)
-	if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2))
+	if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_wyvern_attack_fireball_delay))
 	{
 		monster_makevectors(actor, actor.enemy);
 		if (IS_PLAYER(actor))
 			W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_WYVERN.m_id);
+
+		vector shotorg = actor.origin + actor.view_ofs + v_forward * 14;
 		if (IS_MONSTER(actor))
-			actor.attack_finished_single[0] = actor.anim_finished = time + 1.2;
+		{
+			int shotidx = gettagindex(actor, "WyvernJaw_Down");
+			if (shotidx)
+				shotorg = gettaginfo(actor, shotidx);
+		}
 
 		entity missile = new(WyvernAttack);
 		missile.owner = missile.realowner = actor;
@@ -37,7 +44,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		set_movetype(missile, MOVETYPE_FLYMISSILE);
 		missile.projectiledeathtype = DEATH_MONSTER_WYVERN.m_id;
 		setsize(missile, '-6 -6 -6', '6 6 6');
-		setorigin(missile, actor.origin + actor.view_ofs + v_forward * 14);
+		setorigin(missile, shotorg);
 		missile.flags = FL_PROJECTILE;
 		IL_PUSH(g_projectiles, missile);
 		IL_PUSH(g_bot_dodge, missile);
@@ -102,16 +109,13 @@ bool M_Wyvern_Attack(int attack_type, entity actor, entity targ, .entity weapone
 {
 	switch (attack_type)
 	{
-		case MONSTER_ATTACK_MELEE:
+		case MONSTER_ATTACK_MELEE: // TODO: we have the animation for it!
 		case MONSTER_ATTACK_RANGED:
-			Monster_Delay(actor, 0, 1, M_Wyvern_Attack_Fireball);
-			//actor.anim_finished = time + 1.2;
+			Monster_Delay(actor, 0, 1.2, M_Wyvern_Attack_Fireball);
 			setanim(actor, actor.anim_shoot, false, true, true);
-			if (actor.animstate_endtime > time)
-				actor.anim_finished = actor.animstate_endtime;
-			else
-				actor.anim_finished = time + 1.2;
-			actor.attack_finished_single[0] = actor.anim_finished + 0.2;
+			actor.anim_finished = actor.animstate_endtime;
+
+			actor.attack_finished_single[0] = time + autocvar_g_monster_wyvern_attack_fireball_delay;
 			return true;
 	}
 	return false;
@@ -132,7 +136,7 @@ METHOD(Wyvern, mr_deadthink, bool(Wyvern this, entity actor))
 {
 	TC(Wyvern, this);
 	if (IS_ONGROUND(actor))
-		setanim(actor, actor.anim_die2, true, false, false);
+		setanim(actor, actor.anim_die2, false, true, false);
 	return true;
 }
 
@@ -184,6 +188,8 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 
 	actor.monster_loot = autocvar_g_monster_wyvern_loot;
 	actor.monster_attackfunc = M_Wyvern_Attack;
+
+	actor.species = SPECIES_ANIMAL;
 
 	return true;
 }
