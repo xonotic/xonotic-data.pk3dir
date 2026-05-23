@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2026\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -3603,7 +3603,7 @@ msgid ""
 "The %s powerup acts as armor in %s. If a player is shot while having one or "
 "more extra lives, they will survive the shot but suffer strong knockback."
 msgstr ""
-"Усилитель %s выполняет роль брони в %s. Получив удар, игрок с "
+"Усилитель %s выполняет роль брони в режиме %s. Получив удар, игрок с "
 "дополнительными жизнями не погибнет, но будет отброшен с большой силой."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:29
@@ -10612,7 +10612,7 @@ msgstr "Стоп"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:62
 msgid "MUSICPL^Play"
-msgstr "Воспр."
+msgstr "Играть"
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:65
 msgid "MUSICPL^Pause"
@@ -12572,7 +12572,7 @@ msgstr "Плавное приземление камеры после прыжк
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:45
 msgid "Smooth the view while crouching"
-msgstr "Плавное приседание"
+msgstr "Сглаживать движение камеры при приседании"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:49
 msgid "View bobbing while walking around"
@@ -13915,7 +13915,7 @@ msgid ""
 "This is also a good way to save yourself from falling off the map, as it "
 "reliably stops your downfall."
 msgstr ""
-"Это также хороший способ спастись от выдения с арены, так как это надёжно "
+"Это также хороший способ спастись от вылета с арены, так как это надёжно "
 "тормозит ваше падение."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:152
@@ -14075,7 +14075,7 @@ msgstr "прыжок/всплыть"
 
 #: qcsrc/menu/xonotic/keybinder.qc:67
 msgid "crouch / sink"
-msgstr "пригнуться/погрузиться"
+msgstr "присесть/погрузиться"
 
 #: qcsrc/menu/xonotic/keybinder.qc:69
 msgid "jetpack"
