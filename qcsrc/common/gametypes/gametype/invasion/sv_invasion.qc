@@ -218,6 +218,10 @@ bool Invasion_CheckWinner()
 			Monster_Remove(it);
 		});
 
+		inv_maxcurrent = 0;
+		inv_numspawned = 0;
+		inv_numkilled = 0;
+
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
@@ -238,7 +242,7 @@ bool Invasion_CheckWinner()
 
 	float total_alive_monsters = 0, supermonster_count = 0;
 
-	IL_EACH(g_monsters, GetResource(it, RES_HEALTH) > 0,
+	IL_EACH(g_monsters, it.inv_spawned && GetResource(it, RES_HEALTH) > 0,
 	{
 		if(it.monsterdef.spawnflags & MON_FLAG_SUPERMONSTER)
 			++supermonster_count;
@@ -274,6 +278,9 @@ bool Invasion_CheckWinner()
 	TeamScore_AddToTeam(winner_team, ST_INV_ROUNDS, +1);
 
 	inv_roundcnt += 1;
+	inv_maxcurrent = 0;
+	inv_numspawned = 0;
+	inv_numkilled = 0;
 
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 
