@@ -120,14 +120,14 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity we
 // weapon frames
 void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (actor.(weaponentity).m_weapon != actor.(weaponentity).m_switchweapon || !weapon_prepareattack_check(thiswep, actor, weaponentity, (fire & 2), -1)) // abort immediately if switching
+	if (actor.(weaponentity).m_weapon != actor.(weaponentity).m_switchweapon || !weapon_prepareattack_check(thiswep, actor, weaponentity, false, -1)) // abort immediately if switching
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 	if (PHYS_INPUT_BUTTON_ATCK(actor))
 	{
-		if (!thiswep.wr_checkammo2(thiswep, actor, weaponentity)
+		if (!thiswep.wr_checkammo1(thiswep, actor, weaponentity)
 		&& !(actor.items & IT_UNLIMITED_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
@@ -295,7 +295,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 		}
 
 		// You can "shoot" more rounds than what's "used", and vice versa.
-		if (fire & 2)
+		if ((fire & 2) && WEP_CVAR(WEP_MACHINEGUN, burst))
 		if (weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
 		{
 			if (!thiswep.wr_checkammo2(thiswep, actor, weaponentity)
@@ -365,6 +365,10 @@ METHOD(MachineGun, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 
 METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
+	bool want_zoom = ((WEP_CVAR(WEP_MACHINEGUN, mode) == 1 && !WEP_CVAR(WEP_MACHINEGUN, burst)) || (WEP_CVAR(WEP_MACHINEGUN, mode) == 0 && !WEP_CVAR(WEP_MACHINEGUN, first)));
+	if (want_zoom)
+		return false; // zoom is not a fire mode
+
 	float burst_ammo_per_shot = WEP_CVAR(WEP_MACHINEGUN, burst_ammo) / WEP_CVAR(WEP_MACHINEGUN, burst);
 	float ammo_amount = (WEP_CVAR(WEP_MACHINEGUN, mode) == 1)
 		? (GetResource(actor, thiswep.ammo_type) >= burst_ammo_per_shot)
@@ -399,6 +403,12 @@ METHOD(MachineGun, wr_killmessage, Notification(entity thiswep))
 		return WEAPON_MACHINEGUN_MURDER_SPRAY;
 }
 
+METHOD(MachineGun, wr_zoom, bool(entity thiswep, entity actor))
+{
+	bool want_zoom = ((WEP_CVAR(WEP_MACHINEGUN, mode) == 1 && !WEP_CVAR(WEP_MACHINEGUN, burst)) || (WEP_CVAR(WEP_MACHINEGUN, mode) == 0 && !WEP_CVAR(WEP_MACHINEGUN, first)));
+	return PHYS_INPUT_BUTTON_ATCK2(actor) && want_zoom;
+}
+
 #endif // SVQC
 #ifdef CSQC
 
@@ -408,6 +418,20 @@ METHOD(MachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 	pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
 	if (!w_issilent)
 		sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
+}
+
+METHOD(MachineGun, wr_zoom, bool(entity thiswep, entity actor))
+{
+	bool want_zoom = ((WEP_CVAR(WEP_MACHINEGUN, mode) == 1 && !WEP_CVAR(WEP_MACHINEGUN, burst)) || (WEP_CVAR(WEP_MACHINEGUN, mode) == 0 && !WEP_CVAR(WEP_MACHINEGUN, first)));
+	if (button_zoom || zoomscript_caught || (button_attack2 && want_zoom))
+		return true;
+	else // no weapon specific image for this weapon
+		return false;
+}
+METHOD(MachineGun, wr_zoomdir, bool(entity thiswep))
+{
+	bool want_zoom = ((WEP_CVAR(WEP_MACHINEGUN, mode) == 1 && !WEP_CVAR(WEP_MACHINEGUN, burst)) || (WEP_CVAR(WEP_MACHINEGUN, mode) == 0 && !WEP_CVAR(WEP_MACHINEGUN, first)));
+	return button_attack2 && want_zoom;
 }
 
 #endif // CSQC

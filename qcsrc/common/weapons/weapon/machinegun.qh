@@ -27,6 +27,7 @@ CLASS(MachineGun, Weapon)
 #ifdef CSQC
 /* crosshair */ ATTRIB(MachineGun, w_crosshair, string, "gfx/crosshairuzi");
 /* crosshair */ ATTRIB(MachineGun, w_crosshair_size, float, 0.6);
+/* reticle   */ ATTRIB(MachineGun, w_reticle, string, "gfx/reticle_nex");
 #endif
 /* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponuzi");
 /* refname   */ ATTRIB(MachineGun, netname, string, "machinegun");
