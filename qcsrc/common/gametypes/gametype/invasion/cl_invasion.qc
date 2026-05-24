@@ -12,7 +12,7 @@ MUTATOR_HOOKFUNCTION(cl_inv, DrawScoreboardItemStats)
 void HUD_Mod_Invasion_Draw(vector myPos, vector mySize)
 {
 	int monster_count = STAT(MONSTERS_TOTAL) - STAT(MONSTERS_KILLED);
-	if(monster_count <= 0)
+	if (monster_count <= 0)
 	{
 		mod_active = 0;
 		return;

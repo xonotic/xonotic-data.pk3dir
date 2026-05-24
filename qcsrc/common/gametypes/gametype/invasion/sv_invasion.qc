@@ -218,6 +218,7 @@ bool Invasion_CheckWinner()
 			Monster_Remove(it);
 		});
 
+		inv_maxspawned = 0;
 		inv_maxcurrent = 0;
 		inv_numspawned = 0;
 		inv_numkilled = 0;
@@ -278,6 +279,8 @@ bool Invasion_CheckWinner()
 	TeamScore_AddToTeam(winner_team, ST_INV_ROUNDS, +1);
 
 	inv_roundcnt += 1;
+
+	inv_maxspawned = 0;
 	inv_maxcurrent = 0;
 	inv_numspawned = 0;
 	inv_numkilled = 0;
