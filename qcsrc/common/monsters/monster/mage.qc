@@ -58,9 +58,16 @@ METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weapon
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
 	}
 	if (fire & 2)
-	if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5))
+	if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, true, 1))
 	{
-		M_Mage_Attack_Push(actor);
+		Monster_Delay(actor, 1, 0.8, M_Mage_Attack_Push);
+		setanim(actor, actor.anim_duckjump, true, true, true);
+		actor.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_push_delay;
+		if (!IS_PLAYER(actor))
+		{
+			actor.anim_finished = actor.animstate_endtime;
+			actor.state = MONSTER_STATE_NOMOVE;
+		}
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
 	}
 }
@@ -89,12 +96,16 @@ void M_Mage_Defend_Shield(entity this);
 
 .entity mage_spike;
 .float mage_shield_delay;
+.float mage_heal_delay;
 
 bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
 	// TODO: mutator hook to choose valid healing targets?
-	if (!targ)
+	if (!targ || IS_DEAD(targ))
 		return false;
+	// TODO: doesn't scale properly with max health, minhealth should probably be a percentage!
+	if (targ == this)
+		return (GetResource(targ, RES_HEALTH) < (autocvar_g_monster_mage_heal_minhealth * MONSTER_SKILLMOD(targ)));
 	if (DIFF_TEAM(targ, this) && targ != this.monster_follow)
 		return false;
 	if (GetResource(targ, RES_HEALTH) <= 0 || STAT(FROZEN, targ))
@@ -241,8 +252,14 @@ void M_Mage_Defend_Heal(entity this)
 {
 	bool washealed = false;
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_mage_heal_range, M_Mage_Defend_Heal_Check(this, it),
+	entity it = WarpZone_FindRadius(this.origin, autocvar_g_monster_mage_heal_range, true);
+	while(it)
 	{
+		if (!M_Mage_Defend_Heal_Check(this, it))
+		{
+			it = it.chain;
+			continue;
+		}
 		washealed = true;
 		entity fx = EFFECT_Null;
 		if (IS_PLAYER(it))
@@ -279,14 +296,16 @@ void M_Mage_Defend_Heal(entity this)
 			if (!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
 				WaypointSprite_UpdateHealth(it.sprite, GetResource(it, RES_HEALTH));
 		}
-	});
+
+		it = it.chain;
+	}
 
 	if (washealed)
 	{
-		setanim(this, this.anim_melee, true, true, true);
-		this.attack_finished_single[0] = time + autocvar_g_monster_mage_heal_delay;
+		setanim(this, this.anim_fire2, true, true, true);
+		this.anim_finished = this.animstate_endtime;
+		this.attack_finished_single[0] = time + 1.5;
 		this.state = MONSTER_STATE_NOMOVE;
-		this.anim_finished = time + 1.5;
 	}
 }
 
@@ -305,11 +324,6 @@ void M_Mage_Attack_Push(entity this)
 		this.enemy
 	);
 	Send_Effect(EFFECT_TE_EXPLOSION, this.origin, '0 0 0', 1);
-
-	setanim(this, this.anim_duckjump, true, true, true);
-	this.attack_finished_single[0] = time + autocvar_g_monster_mage_attack_push_delay;
-	this.anim_finished = time + 1;
-	this.state = MONSTER_STATE_NOMOVE; // prevent moving while firing spike
 }
 
 void M_Mage_Attack_Teleport(entity this, entity targ)
@@ -367,7 +381,8 @@ void M_Mage_Defend_Shield(entity this)
 	StatusEffects_apply(STATUSEFFECT_Shield, this, time + autocvar_g_monster_mage_shield_time, 0);
 	this.mage_shield_delay = time + autocvar_g_monster_mage_shield_delay;
 	setanim(this, this.anim_shoot, true, true, true);
-	this.attack_finished_single[0] = this.anim_finished = time + 1; // give just a short cooldown on attacking
+	this.anim_finished = this.animstate_endtime;
+	this.attack_finished_single[0] = time + 1; // give just a short cooldown on attacking
 }
 
 bool M_Mage_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
@@ -416,30 +431,19 @@ spawnfunc(monster_mage)
 	Monster_Spawn(this, true, MON_MAGE);
 }
 
-METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
+METHOD(Mage, mr_think, bool(Mage this, entity actor))
 {
-	TC(Mage, thismon);
+	TC(Mage, this);
 
-	if (random() < 0.5 && time >= actor.attack_finished_single[0])
+	// done outside the attack function so it can passively heal
+	if (random() < 0.25 && time >= actor.attack_finished_single[0] && time >= actor.mage_heal_delay)
 	{
-		bool need_help = (GetResource(actor, RES_HEALTH) < autocvar_g_monster_mage_heal_minhealth);
-		if (!need_help)
-		{
-			// TODO: cooldown on this check?
-			FOREACH_ENTITY_RADIUS(actor.origin, autocvar_g_monster_mage_heal_range, it != actor && (IS_MONSTER(it) || IS_PLAYER(it)),
-			{
-				if(M_Mage_Defend_Heal_Check(actor, it))
-				{
-					need_help = true;
-					break;
-				}
-			});
-		}
-		if (need_help)
-			M_Mage_Defend_Heal(actor);
+		M_Mage_Defend_Heal(actor);
+		actor.mage_heal_delay = time + autocvar_g_monster_mage_heal_delay;
 	}
 
-	if (random() < 0.5
+	// TODO: engage defensively (attacks incoming, threatened etc) rather than on first hit
+	if (random() < 0.25
 	&& actor.enemy && time >= actor.mage_shield_delay
 	&& GetResource(actor, RES_HEALTH) < actor.max_health && !StatusEffects_active(STATUSEFFECT_Shield, actor))
 		M_Mage_Defend_Shield(actor);
@@ -469,10 +473,10 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 	actor.anim_walk = animfixfps(actor, '1 1 1', none);
 	actor.anim_run = animfixfps(actor, '1 1 1', none);
 	actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-	actor.anim_duckjump = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-	actor.anim_melee = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+	actor.anim_duckjump = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+	//actor.anim_melee = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
 	//actor.anim_fire1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
-	//actor.anim_fire2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+	actor.anim_fire2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
 	//actor.anim_fire3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
 	actor.anim_pain1 = animfixfps(actor, '6 1 2', none); // 0.5 seconds
 	actor.anim_pain2 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
@@ -488,7 +492,7 @@ METHOD(Mage, mr_anim, bool(Mage this, entity actor))
 METHOD(Mage, mr_setup, bool(Mage this, entity actor))
 {
 	TC(Mage, this);
-	if (!GetResource(this, RES_HEALTH))
+	if (!GetResource(actor, RES_HEALTH))
 		SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_mage_health);
 	if (!actor.speed)             actor.speed = autocvar_g_monster_mage_speed_walk;
 	if (!actor.speed2)            actor.speed2 = autocvar_g_monster_mage_speed_run;

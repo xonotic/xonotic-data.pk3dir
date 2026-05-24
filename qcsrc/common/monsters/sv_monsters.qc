@@ -31,12 +31,6 @@
 #include <server/steerlib.qh>
 #include <server/weapons/_mod.qh>
 
-void monsters_setstatus(entity this)
-{
-	STAT(MONSTERS_TOTAL, this) = monsters_total;
-	STAT(MONSTERS_KILLED, this) = monsters_killed;
-}
-
 void monster_dropitem(entity this, entity attacker)
 {
 	if (!this.candrop || autocvar_g_monsters_drop_time <= 0)
@@ -136,34 +130,27 @@ bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
 
 entity Monster_FindTarget(entity this)
 {
-	if (MUTATOR_CALLHOOK(MonsterFindTarget))
+	if (MUTATOR_CALLHOOK(MonsterFindTarget, this))
 		return this.enemy; // Handled by a mutator
 
 	entity closest_target = NULL;
+	float closest_dist = 0;
 	vector my_center = CENTER_OR_VIEWOFS(this);
 
-	float trange;
-	// find the closest acceptable target to pass to
-	IL_EACH(g_monster_targets, it.monster_attack,
+	FOREACH_ENTITY_RADIUS(my_center, this.target_range, it.monster_attack,
 	{
-		trange = this.target_range;
-		if (PHYS_INPUT_BUTTON_CROUCH(it))
-			trange *= 0.75; // TODO cvar this
-		vector theirmid = (it.absmin + it.absmax) * 0.5;
-		if (vdist(theirmid - this.origin, >, trange) || !Monster_ValidTarget(this, it, false))
+		vector targ_center = (it.absmin + it.absmax) * 0.5;
+		if (PHYS_INPUT_BUTTON_CROUCH(it) && vdist(targ_center - my_center, >, this.target_range * 0.5))
+			continue;
+		if (!Monster_ValidTarget(this, it, false))
 			continue;
 
-		// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-		vector targ_center = CENTER_OR_VIEWOFS(it);
-
-		if (closest_target)
+		float targ_dist = vlen2(my_center - targ_center);
+		if (!closest_target || targ_dist < closest_dist)
 		{
-			vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
-			if (vlen2(my_center - targ_center) < vlen2(my_center - closest_target_center))
-				closest_target = it;
-		}
-		else
+			closest_dist = targ_dist;
 			closest_target = it;
+		}
 	});
 
 	return closest_target;
@@ -220,7 +207,6 @@ void monster_changeteam(entity this, int newteam)
 .void(entity) monster_delayedfunc;
 void Monster_Delay_Action(entity this)
 {
-	// TODO: maybe do check for facing here
 	// TODO: also allow monsters to cancel attacks (flinching)
 	if (Monster_ValidTarget(this.owner, this.owner.enemy, false))
 	{
@@ -1027,7 +1013,7 @@ void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float d
 	}
 }
 
-void Monster_Dead(entity this, entity attacker, float gibbed)
+void Monster_Dead(entity this, entity attacker, bool gibbed)
 {
 	setthink(this, Monster_Dead_Think);
 	this.nextthink = time;
@@ -1117,6 +1103,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 	if (GetResource(this, RES_HEALTH) <= 0)
 	{
+		bool gibbed = (GetResource(this, RES_HEALTH) < -100 || deathtype == DEATH_KILL.m_id);
 		if (deathtype == DEATH_KILL.m_id)
 			this.candrop = false; // killed by mobkill command
 
@@ -1124,13 +1111,13 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 		SUB_UseTargets(this, attacker, this.enemy);
 		this.target2 = this.oldtarget2; // reset to original target on death, incase we respawn
 
-		Monster_Dead(this, attacker, (GetResource(this, RES_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id));
+		Monster_Dead(this, attacker, gibbed);
 
 		WaypointSprite_Kill(this.sprite);
 
 		MUTATOR_CALLHOOK(MonsterDies, this, attacker, deathtype);
 
-		if (GetResource(this, RES_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
+		if (gibbed) // check if we're already gibbed
 		{
 			Violence_GibSplash(this, 1, 0.5, attacker);
 

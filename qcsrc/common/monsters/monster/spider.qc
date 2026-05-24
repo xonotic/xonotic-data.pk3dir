@@ -250,7 +250,7 @@ METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 {
 	TC(Spider, this);
-	if (!GetResource(this, RES_HEALTH))
+	if (!GetResource(actor, RES_HEALTH))
 		SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_spider_health);
 	if (!actor.speed)             actor.speed = autocvar_g_monster_spider_speed_walk;
 	if (!actor.speed2)            actor.speed2 = autocvar_g_monster_spider_speed_run;
