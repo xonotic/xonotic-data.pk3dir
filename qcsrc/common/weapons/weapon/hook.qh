@@ -86,6 +86,7 @@ STATIC_INIT(OFFHAND_HOOK)
 	OFFHAND_HOOK = NEW(OffhandHook);
 }
 
+.float teleport_time;
 .float dmg_last;
 .float hook_refire;
 .float hook_time_hooked;

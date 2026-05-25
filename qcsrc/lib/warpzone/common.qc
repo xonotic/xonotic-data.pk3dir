@@ -650,25 +650,20 @@ void WarpZone_FindRadius_Recurse(
 }
 entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 {
-	bool simple_findradius = false;
+	bool simple_findradius = true;
 	// use simple findradius if no warpzone is touching the box of side 2 * rad and center org
 	// which includes the sphere of radius rad and center org
-	if (!warpzone_warpzones_exist)
-		simple_findradius = true;
-	else
+	if (warpzone_warpzones_exist)
 	{
-		simple_findradius = true;
 		vector boxmin = vec3(org.x - rad, org.y - rad, org.z - rad);
 		vector boxmax = vec3(org.x + rad, org.y + rad, org.z + rad);
-		IL_EACH(g_warpzones, true,
+		IL_EACH(g_warpzones, boxesoverlap(it.absmin, it.absmax, boxmin, boxmax),
 		{
-			if (boxesoverlap(it.absmin, it.absmax, boxmin, boxmax))
-			{
-				simple_findradius = false;
-				break;
-			}
+			simple_findradius = false;
+			break;
 		});
 	}
+
 	if (simple_findradius)
 	{
 		entity prev_good_ent = NULL;
@@ -702,8 +697,6 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 			it.WarpZone_findradius_nearest = p;
 			it.WarpZone_findradius_dist = org - p;
 
-			if (!prev_good_ent)
-				list_first = it;
 			prev_good_ent = it;
 		});
 		return list_first;
