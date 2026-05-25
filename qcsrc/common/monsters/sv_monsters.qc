@@ -99,7 +99,7 @@ bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
 		return false;
 
 	if (targ == this
-	|| (IS_VEHICLE(targ) && !(this.monsterdef.spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
+	//|| (IS_VEHICLE(targ) && !(this.monsterdef.spawnflags & MON_FLAG_RANGED)) // melee vs vehicle is useless
 	|| game_stopped || time < game_starttime // monsters do nothing before match has started
 	|| targ.takedamage == DAMAGE_NO
 	|| IS_SPEC(targ) || IS_OBSERVER(targ) // don't attack spectators
