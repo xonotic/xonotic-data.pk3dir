@@ -648,6 +648,35 @@ void WarpZone_FindRadius_Recurse(
 		e.enemy.WarpZone_findradius_hit = 0;
 	}
 }
+entity chain_list[99];
+string sorted_list(entity list_first)
+{
+	string s = "";
+	FOREACH_LIST(list, chain, true,
+	{
+		int j = 0;
+		for ( ; j < 99; ++j)
+		{
+			if (etof(chain_list[j]) == 0 || etof(it) < etof(chain_list[j]))
+				break;
+		}
+		if (j < 99)
+		{
+			for (int k = 99; k > j; --k)
+				chain_list[k] = chain_list[k-1]; // move all elements from j to end by one position
+			chain_list[j] = it; // insert at pos j
+		}
+	});
+	for (int j = 0; j < 99; ++j)
+	{
+		entity it = chain_list[j];
+		if (it == NULL)
+			break;
+		s = cons(s, sprintf("%s%d: %v  %v\n", (j == 0 ? "" : "  "), etof(it), it.WarpZone_findradius_nearest, it.WarpZone_findradius_dist));
+		chain_list[j] = NULL; // clear
+	}
+	return (s == "") ? "\n" : s;
+}
 entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 {
 	bool simple_findradius = true;
@@ -664,6 +693,7 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 		});
 	}
 
+	string simp = "";
 	if (simple_findradius)
 	{
 		entity prev_good_ent = NULL;
@@ -699,12 +729,22 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 
 			prev_good_ent = it;
 		});
-		return list_first;
+		//return list_first;
+		simp = sorted_list(list_first);
 	}
 
 	WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
 	entity list_first = findchainfloat(WarpZone_findradius_hit, 1);
 	FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
+	if (simple_findradius)
+	{
+		string norm = sorted_list(list_first);
+		if (cvar("aaa") || simp != norm)
+		{
+			LOG_INFOF("^3S: %s", simp);
+			LOG_INFOF("^5N: %s", norm);
+		}
+	}
 	return list_first;
 }
 
