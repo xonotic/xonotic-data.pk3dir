@@ -3613,7 +3613,7 @@ msgstr "Патроны испарителя"
 #: qcsrc/common/mutators/mutator/instagib/items.qh:57
 #: qcsrc/common/mutators/mutator/instagib/items.qh:60
 msgid "Extra life"
-msgstr "Доп. жизнь"
+msgstr "Запасная жизнь"
 
 #: qcsrc/common/mutators/mutator/nades/cl_nades.qc:76
 #: qcsrc/menu/xonotic/keybinder.qc:83
@@ -3806,7 +3806,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qh:19
 msgid "Translocate grenade"
-msgstr "Граната телепортации"
+msgstr "Граната-телепорт"
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qc:53
 #, c-format
@@ -6504,7 +6504,7 @@ msgstr "^BGДверь разблокирована!"
 #: qcsrc/common/notifications/all.inc:702
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr "^F2Получено дополнительных жизней: ^K1%s"
+msgstr "^F2Получено запасных жизней: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:704
 #, c-format
@@ -6692,7 +6692,7 @@ msgstr "^BGРаздобудьте патронов! Осталось ^F4^COUNT^B
 #: qcsrc/common/notifications/all.inc:762
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
-msgstr "^F2Осталось дополнительных жизней: ^K1%s"
+msgstr "^F2Осталось запасных жизней: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:764
 #, c-format
@@ -12072,7 +12072,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:214
 msgid "Extra postprocessing effects"
-msgstr "Дополнительные эффекты"
+msgstr "Дополнительные пост-эффекты"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:215
 msgid ""
