@@ -2474,8 +2474,16 @@ bool PlayerThink(entity this)
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if (WEP_CVAR(WEP_VORTEX, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(WEP_VORTEX, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
-				this.(weaponentity).vortex_charge = bound(WEP_CVAR(WEP_VORTEX, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(WEP_VORTEX, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+			float chargelimit = WEP_CVAR(WEP_VORTEX, charge_limit);
+			float chargerate = WEP_CVAR(WEP_VORTEX, charge_rot_rate);
+			if(WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_rate) && this.(weaponentity).m_weapon != WEP_VORTEX)
+			{
+				chargelimit = WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_limit);
+				chargerate = WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_rate);
+			}
+
+			if (chargerate && this.(weaponentity).vortex_charge > chargelimit && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(chargelimit, this.(weaponentity).vortex_charge - chargerate * frametime / W_TICSPERFRAME, 1);
 		}
 
 		player_regen(this);
