@@ -142,7 +142,7 @@ spawnfunc(func_plat)
 	this.effects |= EF_LOWPRECISION;
 	setsize (this, this.mins , this.maxs);
 
-	setblocked(this, plat_crush);
+	setblocked(this, plat_blocked);
 
 	G_SpawnFloat("lip", (q3compat ? 8 : 16), this, lip); // explicit 0 is supported
 	if (!this.speed) this.speed = q3compat ? 200 : 150;
