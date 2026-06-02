@@ -134,32 +134,27 @@ void plat_trigger_use(entity this, entity actor, entity trigger)
 	plat_go_down(this);
 }
 
-
-void plat_crush(entity this, entity blocker)
+void plat_blocked(entity this, entity blocker)
 {
-	if((this.spawnflags & CRUSH) && (blocker.takedamage != DAMAGE_NO))
-	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
-#endif
-	}
-	else
+	if (this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
 	{
-#ifdef SVQC
-		if((this.dmg) && (blocker.takedamage != DAMAGE_NO))
-		{   // Shall we bite?
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
-			// Gib dead/dying stuff
-			if(IS_DEAD(blocker))
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
-		}
+		Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+
+		// Gib dead/dying stuff
+		if (IS_DEAD(blocker))
+			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+	}
 #endif
 
+	// don't change direction for dead or dying stuff
+	if (!IS_DEAD(blocker))
+	{
 		if (this.state == STATE_UP)
 			plat_go_down (this);
 		else if (this.state == STATE_DOWN)
 			plat_go_up (this);
-	// when in other states, then the plat_crush event came delayed after
+	// when in other states, then the blocked event came delayed after
 	// plat state already had changed
 	// this isn't a bug per se!
 	}
