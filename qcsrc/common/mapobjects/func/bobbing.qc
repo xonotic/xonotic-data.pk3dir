@@ -52,13 +52,15 @@ spawnfunc(func_bobbing)
 
 	// damage when blocked
 	setblocked(this, generic_plat_blocked);
+	if (q3compat)
+		// Q3: bobbing entities are instant-kill and never get blocked
+		this.dmg = 99999;
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
 	if(this.dmg && (this.message2 == ""))
 		this.message2 = "was squished by";
-	if(this.dmg && (!this.dmgtime))
+	if(this.dmg && (!this.dmgtime) && !q3compat)
 		this.dmgtime = 0.25;
-	this.dmgtime2 = time;
 
 	// how far to bob
 	if (this.spawnflags & BOBBING_XAXIS)
