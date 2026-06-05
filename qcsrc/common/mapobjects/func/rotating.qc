@@ -87,8 +87,6 @@ spawnfunc(func_rotating)
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
 
-	this.dmgtime2 = time;
-
 	if (!InitMovingBrushTrigger(this))
 		return;
 	SetBrushEntityModel2(this); // TODO: when CSQC movers are enabled move model2 ents to CSQC
