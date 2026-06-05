@@ -37,15 +37,17 @@ spawnfunc(func_pendulum)
 
 	if(!this.speed)
 		this.speed = 30;
-	// not initializing this.dmg to 2, to allow damageless pendulum
 
+	if (q3compat)
+		// Q3: bobbing entities are instant-kill and never get blocked
+		this.dmg = 99999;
+	// not initializing this.dmg to 2, to allow damageless pendulum
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
 	if(this.dmg && (this.message2 == ""))
 		this.message2 = "was squished by";
-	if(this.dmg && (!this.dmgtime))
+	if(this.dmg && (!this.dmgtime) && !q3compat)
 		this.dmgtime = 0.25;
-	this.dmgtime2 = time;
 
 	setblocked(this, generic_plat_blocked);
 

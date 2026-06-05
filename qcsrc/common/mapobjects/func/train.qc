@@ -267,7 +267,6 @@ spawnfunc(func_train)
 		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
-	this.dmgtime2 = time;
 
 	if(!set_platmovetype(this, this.platmovetype))
 		return;
