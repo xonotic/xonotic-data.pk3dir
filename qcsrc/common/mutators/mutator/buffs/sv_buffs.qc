@@ -74,6 +74,8 @@ void buffs_BuffModel_Remove(entity player)
 	player.buff_model = NULL;
 }
 
+/// TODO: move this to CSQC, it has no interactions so doesn't need to exist in SVQC,
+/// see also https://gitlab.com/xonotic/xonotic-data.pk3dir/-/work_items/2852
 void buffs_BuffModel_Spawn(entity player)
 {
 	player.buff_model = new(buff_model);
@@ -85,7 +87,6 @@ void buffs_BuffModel_Spawn(entity player)
 	player.buff_model.exteriormodeltoclient = player;
 	player.buff_model.scale = 0.7;
 	player.buff_model.pflags = PFLAGS_FULLDYNAMIC;
-	player.buff_model.light_lev = 200;
 	setthink(player.buff_model, buffs_BuffModel_Think);
 	player.buff_model.nextthink = time;
 	setcefc(player.buff_model, buffs_BuffModel_Customize);
@@ -98,6 +99,7 @@ void buffs_BuffModel_Update(entity this)
 	// spawn a buff model entity if needed
 	if (!this.buff_model)
 		buffs_BuffModel_Spawn(this);
+	this.buff_model.light_lev = 200 + 36 * sin(time);
 }
 
 void buff_Effect(entity player, string eff)
@@ -406,15 +408,12 @@ bool buff_Customize(entity this, entity client)
 		this.alpha = 0.3;
 		if (this.effects & EF_FULLBRIGHT)
 			this.effects &= ~EF_FULLBRIGHT;
-		this.pflags = 0;
 	}
 	else
 	{
 		this.alpha = 1;
 		if (!(this.effects & EF_FULLBRIGHT))
 			this.effects |= EF_FULLBRIGHT;
-		this.light_lev = 220 + 36 * sin(time);
-		this.pflags = PFLAGS_FULLDYNAMIC;
 	}
 	return true;
 }
@@ -475,7 +474,6 @@ void buff_Init(entity this)
 	this.glowmod = buff.m_color;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate + max(0, game_starttime - time));
 	this.buff_active = !this.buff_activetime;
-	this.pflags = PFLAGS_FULLDYNAMIC;
 	this.dtor = buff_Delete;
 
 	if (!this.buffs_finished)
