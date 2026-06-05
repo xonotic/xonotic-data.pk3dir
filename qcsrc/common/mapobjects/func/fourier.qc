@@ -63,7 +63,6 @@ spawnfunc(func_fourier)
 		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
-	this.dmgtime2 = time;
 
 	if(this.netname == "")
 		this.netname = "1 0 0 0 1";

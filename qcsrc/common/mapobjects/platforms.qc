@@ -5,10 +5,10 @@ void generic_plat_blocked(entity this, entity blocker)
 #ifdef SVQC
 	if(this.dmg && blocker.takedamage != DAMAGE_NO)
 	{
-		if(this.dmgtime2 < time)
+		if(blocker.dmgtime2 <= time)
 		{
 			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
-			this.dmgtime2 = time + this.dmgtime;
+			blocker.dmgtime2 = time + this.dmgtime;
 		}
 
 		// Gib dead/dying stuff
