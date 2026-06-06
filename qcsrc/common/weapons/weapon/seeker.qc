@@ -211,7 +211,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 
 	missile.angles = vectoangles(missile.velocity);
 
-	CSQCProjectile(missile, false, PROJECTILE_SEEKER, true);
+	CSQCProjectile(missile, false, PROJECTILE_SEEKER_MISSILE, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
@@ -301,7 +301,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 	setsize(missile, '-2 -2 -2', '2 2 2');
 
 	W_SetupProjVelocity_UP_PRE(missile, WEP_SEEKER, flac_);
-	CSQCProjectile(missile, true, PROJECTILE_FLAC, true);
+	CSQCProjectile(missile, true, PROJECTILE_SEEKER_FLAC, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
@@ -431,9 +431,6 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 
 	vector dir;
 	dir = normalize(this.realowner.origin - this.origin);
-	vector org2 = findbetterlocation(this.origin, 8);
-
-	te_knightspike(org2);
 
 	this.event_damage = func_null;
 	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
@@ -520,7 +517,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupProjVelocity_PRE(missile, WEP_SEEKER, tag_);
 	missile.angles = vectoangles(missile.velocity);
 
-	CSQCProjectile(missile, true, PROJECTILE_TAG, false); // has sound
+	CSQCProjectile(missile, true, PROJECTILE_SEEKER_TAG, false); // has sound
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
@@ -645,24 +642,39 @@ METHOD(Seeker, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
 {
+	// XONRELEASE TODO: xonotic-v0.9.0 post-release remove this caching & fallback, use SEEKER_TAG_IMPACT and SEEKER_EXPLODE
+	// See also client/weapons/projectile.qc.
+	static int impact_effnum;
+	if (!impact_effnum)
+		impact_effnum = particleeffectnum(EFFECT_SEEKER_TAG_IMPACT); // can't return 0
+	static entity explode_eff;
+	if (!explode_eff)
+		explode_eff = (particleeffectnum(EFFECT_SEEKER_EXPLODE) < 0)
+			? EFFECT_HAGAR_EXPLODE // compatible with Xonotic v0.8.6 or lower
+			: EFFECT_SEEKER_EXPLODE;
+
 	vector org2 = w_org + w_backoff * 2;
 	if (w_deathtype & HITTYPE_BOUNCE)
 	{
 		if (w_deathtype & HITTYPE_SECONDARY)
 		{
+			if (impact_effnum < 0)
+				te_knightspike(org2); // compatible with Xonotic v0.8.6 or lower
+			else
+				pointparticles(EFFECT_SEEKER_TAG_IMPACT, org2, '0 0 0', 1);
 			if (!w_issilent)
 				sound(actor, CH_SHOTS, SND_TAG_IMPACT, 1, ATTEN_NORM);
 		}
 		else
 		{
-			pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
+			pointparticles(explode_eff, org2, '0 0 0', 1);
 			if (!w_issilent)
 				sound(actor, CH_SHOTS, SND_TAGEXP_RANDOM(w_random), 1, ATTEN_NORM);
 		}
 	}
 	else
 	{
-		pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
+		pointparticles(explode_eff, org2, '0 0 0', 1);
 		if (!w_issilent)
 			sound(actor, CH_SHOTS, SND_SEEKEREXP_RANDOM(w_random), 1, ATTEN_NORM);
 	}

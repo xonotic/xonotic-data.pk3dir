@@ -360,9 +360,18 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(HAGAR_BOUNCING)     this.traileffect = EFFECT_HAGAR_ROCKET.m_id; this.scale = 0.75; break;
 			HANDLE(FIREBALL)           this.modelindex = 0; this.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
 			HANDLE(FIREMINE)           this.modelindex = 0; this.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
-			HANDLE(TAG)                this.traileffect = EFFECT_TR_ROCKET.m_id; break;
-			HANDLE(FLAC)               this.scale = 0.4; this.traileffect = EFFECT_FLAC_TRAIL.m_id; break;
-			HANDLE(SEEKER)             this.traileffect = EFFECT_SEEKER_TRAIL.m_id; break;
+			HANDLE(SEEKER_FLAC)        this.scale = 0.4; this.traileffect = EFFECT_SEEKER_FLAC.m_id; break;
+			HANDLE(SEEKER_MISSILE)     this.traileffect = EFFECT_SEEKER_MISSILE.m_id; break;
+			HANDLE(SEEKER_TAG)
+				// XONRELEASE TODO: xonotic-v0.9.0 post-release remove this caching & fallback, use SEEKER_TAG
+				// See also common/weapons/weapon/seeker.qc.
+				static int tag_eff_m_id;
+				if (!tag_eff_m_id)
+					tag_eff_m_id = ((particleeffectnum(EFFECT_SEEKER_TAG) < 0)
+						? EFFECT_TR_ROCKET // compatible with Xonotic v0.8.6 or lower
+						: EFFECT_SEEKER_TAG).m_id;
+				this.traileffect = tag_eff_m_id;
+				break;
 
 			HANDLE(MAGE_SPIKE)         this.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
 			HANDLE(GOLEM_LIGHTNING)    this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
@@ -470,15 +479,15 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
-			case PROJECTILE_TAG:
+			case PROJECTILE_SEEKER_TAG:
 				this.mins = '-2 -2 -2';
 				this.maxs = '2 2 2';
 				break;
-			case PROJECTILE_FLAC:
+			case PROJECTILE_SEEKER_FLAC:
 				this.mins = '-2 -2 -2';
 				this.maxs = '2 2 2';
 				break;
-			case PROJECTILE_SEEKER:
+			case PROJECTILE_SEEKER_MISSILE:
 				loopsound(this, CH_SHOTS_SINGLE, SND_SEEKER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
