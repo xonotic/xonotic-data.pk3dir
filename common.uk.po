@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-05 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Kostiantyn Tsebro, 2026\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -13033,9 +13033,9 @@ msgid ""
 "immediately afterwards. Experiment a bit with the timing of firing the %s "
 "and jumping to get a feeling of which timings will get you how high."
 msgstr ""
-"Щоб зробити \"стрибок лазером\", просто зробіть постріл %sом собі під ноги "
-"та одразу стрибніть. Поекспериментуйте з моменту пострілу з %sа та стрибка, "
-"щоб відчути, як обраний час впливає на висоту польоту."
+"Щоб зробити \"лазер-джамп\", просто зробіть постріл %sом собі під ноги та "
+"одразу стрибніть. Поекспериментуйте з моменту пострілу з %sа та стрибка, щоб "
+"відчути, як обраний час впливає на висоту польоту."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:111
 msgid "Wall Blastering"
@@ -13136,12 +13136,17 @@ msgid ""
 "head), you can climb up walls quickly. This is called \"wall climbing\" with "
 "the %s."
 msgstr ""
+"Стріляючи зі зброї %s вторинним режимом по стіні поруч із собою (вище "
+"голови), можна швидко піднятися. Це називається \"підйом по стіні\" зі зброї "
+"%s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:146
 msgid ""
 "This is also a good way to save yourself from falling off the map, as it "
 "reliably stops your downfall."
 msgstr ""
+"Цей спосіб також допоможе не вилетіти з мапи, адже він надійно зупиняє "
+"падіння."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:152
 msgid ""
@@ -13150,12 +13155,18 @@ msgid ""
 "upwards boost and enable you to reach places that are otherwise accessible "
 "only with laser jumps, which cost health and make noise."
 msgstr ""
+"Рампи є важливою складовою дизайну мап Xonotic. Будь-яка похила поверхня, по "
+"якій можна налетіти під правильною швидкістю та кутом, дасть вам значний "
+"буст до локацій, куди інакше можна потрапити лише за \"лазер-джампами\", які "
+"шкодять та шумлять. "
 
 #: qcsrc/menu/xonotic/guide/pages.qc:154
 msgid ""
 "When doing ramp jumps, it is vital to hit the ramp at a flat angle to "
 "receive the upwards boost and not lose too much speed."
 msgstr ""
+"Під час стрибків з рампи, важливо залітати на них під гострий кут, щоб "
+"отримати підйомний буст і не втрачати забагато швидкості."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:155
 #, c-format
@@ -13164,6 +13175,9 @@ msgid ""
 "just before the ramp and keep %s pressed so you jump again once you hit the "
 "ramp."
 msgstr ""
+"Щоб зробити стрибок з рампи, наблизьтеся до похилої поверхні (\"рампи\"), "
+"стрибніть безпосередньо перед нею та утримуйте %s, щоб автоматично стрибнути "
+"ще раз, щойно торкнетеся рампи."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:156
 msgid ""
@@ -13171,16 +13185,21 @@ msgid ""
 "the stronger the upwards boost. As always, you can gain speed before the "
 "ramp by bunny hopping."
 msgstr ""
+"Чим вища швидкість налітання по рампі (під правильним кутом), тим сильніший "
+"підйомний буст. Як завжди, можна прискоритися перед рампою за допомогою бані-"
+"хопінгу."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:158
 msgid ""
 "Note that when trying to make a ramp jump while bunny hopping, it is vital "
 "to time your hops carefully so you get the angle right."
 msgstr ""
+"Зауважте, при спробі стрибка з рампи під час бані-хопінгу, важливо ретельно "
+"розрахувати час стрибків, щоб залетіти під рампу під потрібним кутом."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:162
 msgid "Advanced Movement"
-msgstr ""
+msgstr "Просунуте Пересування"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:165
 msgid ""
@@ -13188,11 +13207,15 @@ msgid ""
 "jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are "
 "crucial on CTS/DeFRaG servers that use slightly different physics."
 msgstr ""
+"Такі просунуті техніки як \"стрейф-джампінг\" (\"стрейфінг\") або \"сьоркл-"
+"джамп\" (\"CJ\") дають незначну перевагу в звичайній грі, проти вони є "
+"вирішальними на серверах CTS/ДеФРаГу, у яких злегка змінені налаштування "
+"фізики."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167
 #, c-format
 msgid "If you want to master these techniques, be sure to check out %s."
-msgstr ""
+msgstr "Якщо ви хочете освоїти ці техніки, ознайомтеся з %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:174
 #, c-format
@@ -13200,6 +13223,8 @@ msgid ""
 "%s is a mod that heavily changes the game, giving players fewer but more "
 "powerful weapons, nades, and more movement options."
 msgstr ""
+"%s - мод, який кардинально змінює гру, даючи гравцям менше видів зброї, але "
+"набагато потужнішої, додаючи гранатами, та більшими можливостями руху."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:175
 #, c-format
@@ -13209,6 +13234,10 @@ msgid ""
 "These weapons are a lot more powerful than the regular weapons, so their "
 "time-to-kill is quite low."
 msgstr ""
+"З точки зору озброєння, у гравців нескінчена кількість набоїв, та "
+"з'являються з такою зброєю як %s, %s, та %s, а також можна інколи підібрати "
+"на мапі таку суперзброю як %s і %s. Вся ця зброя є набагато сильнішою за "
+"звичайну зброю, то ж їхній час вбивства є доволі низьким.  "
 
 #: qcsrc/menu/xonotic/guide/pages.qc:177
 #, c-format
@@ -13217,6 +13246,9 @@ msgid ""
 "push enemies, but can be used to push yourself around. Also since the %s "
 "mutator is active, all players have offhand nades."
 msgstr ""
+"Альтернативний вогонь всієї зброї стріляє лазером, який ні шкодить, ні "
+"штовхає противників, але використовується, щоб штовхати самого себе. Крім "
+"того, оскільки активується мутатор %s, усі гравці мають гранати нашвидкуруч."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:179
 #, c-format
@@ -13224,6 +13256,8 @@ msgid ""
 "As for movement tricks, %s is enabled by default in %s, allowing for rapidly "
 "changing your movement direction."
 msgstr ""
+"Щодо рухових трюків, %s увімкнено за замовчуванням в %s, дозволяючи часто "
+"змінювати напрям руху. "
 
 #: qcsrc/menu/xonotic/guide/pages.qc:186
 #, c-format
@@ -13231,6 +13265,8 @@ msgid ""
 "%s (\"Xonotic Pro-Mode\") is a set of gameplay settings often used for "
 "competitive play, particularly in %s."
 msgstr ""
+"%s (\"Xonotic Pro-Mode\") - це набір ігрових наташтувань, які часто "
+"використовуються для змагань, особливо в режимі %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:187
 #, c-format
@@ -13240,6 +13276,11 @@ msgid ""
 "give other players a fairer chance of rebuilding their stack. It also "
 "disables spawn protection and enables friendly fire in team-based gametypes."
 msgstr ""
+"Додаються правила під час підбору предметів, що забороняють гравцям із 100 "
+"чи більше здоров'я або броні підбирати такі предмети як %s, %s, %s, та %s "
+"для того, щоб дати іншим гравцям більш чесний шанс відновити свій стек. "
+"Також вимикається захист при відродженні та вмикається шкода по союзниках в "
+"командних режимах."
 
 #: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"
@@ -13703,7 +13744,7 @@ msgstr "Співвідношення вбивств:"
 
 #: qcsrc/menu/xonotic/statslist.qc:208
 msgid "Skill:"
-msgstr ""
+msgstr "Скіл:"
 
 #: qcsrc/menu/xonotic/statslist.qc:231
 #, c-format
