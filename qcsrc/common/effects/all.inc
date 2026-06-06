@@ -90,7 +90,12 @@ EFFECT(0, HOOK_EXPLODE,             "hookbomb_explode")
 EFFECT(0, HOOK_IMPACT,              "grapple_impact")
 EFFECT(0, HOOK_MUZZLEFLASH,         "grapple_muzzleflash")
 
+EFFECT(0, SEEKER_EXPLODE,           "seeker_explode")
 EFFECT(0, SEEKER_MUZZLEFLASH,       "seeker_muzzleflash")
+EFFECT(0, SEEKER_TAG_IMPACT,        "tag_impact")
+EFFECT(1, SEEKER_TAG,               "tr_tag")
+EFFECT(1, SEEKER_MISSILE,           "TR_SEEKER")
+EFFECT(1, SEEKER_FLAC,              "TR_SEEKER")
 
 EFFECT(1, FIREBALL,                 "fireball")
 EFFECT(0, FIREBALL_BFGDAMAGE,       "fireball_bfgdamage")
@@ -223,8 +228,6 @@ EFFECT(0, ONS_SHOCKWAVE,            "electro_combo")
 
 
 EFFECT(0, LASER_DEADLY,             "laser_deadly")
-EFFECT(1, FLAC_TRAIL,               "TR_SEEKER")
-EFFECT(1, SEEKER_TRAIL,             "TR_SEEKER")
 EFFECT(1, FIREMINE,                 "firemine")
 EFFECT(0, BALL_SPARKS,              "kaball_sparks")
 EFFECT(0, ELECTRIC_SPARKS,          "electricity_sparks")

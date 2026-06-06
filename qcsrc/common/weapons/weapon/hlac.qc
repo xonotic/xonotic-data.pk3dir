@@ -219,13 +219,14 @@ METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
 
 METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
 {
-	// TODO: remove this caching & fallback after next release (xonotic-v0.9.0)
-	// do the same for the muzzleflash effect in hlac.qh. see also common/effects/all.inc
-	entity eff = EFFECT_GREEN_HLAC_IMPACT;
-	if (!thiswep.cnt) // cache effect num here
-		thiswep.cnt = particleeffectnum(eff); // can't return 0
-	if (thiswep.cnt < 0)
-		eff = EFFECT_BLASTER_IMPACT; // compatible with Xonotic v0.8.6 or lower
+	// XONRELEASE TODO: xonotic-v0.9.0 post-release remove this caching & fallback, use GREEN_HLAC_IMPACT
+	// Do the same for .m_muzzleeffect in hlac.qh (use GREEN_HLAC_MUZZLEFLASH).
+	// See also common/effects/all.inc.
+	static entity eff;
+	if (!eff)
+		eff = (particleeffectnum(EFFECT_GREEN_HLAC_IMPACT) < 0)
+			? EFFECT_BLASTER_IMPACT // compatible with Xonotic v0.8.6 or lower
+			: EFFECT_GREEN_HLAC_IMPACT;
 
 	vector org2 = w_org + w_backoff * 2;
 	pointparticles(eff, org2, w_backoff * 1000, 1);

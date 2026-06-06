@@ -1633,14 +1633,14 @@ DEF(TR_GRENADE);
 SUB(TR_GRENADE) {
 	MY(alpha_min) = 300;
 	MY(alpha_max) = 400;
-	MY(alpha_fade) = 780;
+	MY(alpha_fade) = 384;
 	MY(bounce) = 1;
 	MY(color_min) = "0x101010";
 	MY(color_max) = "0x000000";
 	MY(originjitter) = '1.0 1.0 1.0';
-	MY(sizeincrease) = 10;
-	MY(size_min) = 3;
-	MY(size_max) = 2;
+	MY(sizeincrease) = 8;
+	MY(size_min) = 2;
+	MY(size_max) = 3;
 	MY(tex_max) = 8;
 	MY(trailspacing) = 4;
 	MY(type) = "smoke";
@@ -1651,14 +1651,14 @@ SUB(TR_GRENADE) {
 SUB(TR_GRENADE) {
 	MY(airfriction) = 8;
 	MY(alpha_min) = 100;
-	MY(alpha_max) = 144;
-	MY(alpha_fade) = 988;
-	MY(color_min) = "0xffdf72";
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 456;
+	MY(color_min) = "0xffb672";
 	MY(color_max) = "0x811200";
 	MY(notunderwater) = true;
-	MY(sizeincrease) = -15;
-	MY(size_min) = 5;
-	MY(size_max) = 2;
+	MY(sizeincrease) = -6;
+	MY(size_min) = 3;
+	MY(size_max) = 5;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(trailspacing) = 4;
@@ -1749,7 +1749,7 @@ SUB(grenade_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightcolor) = '8.0 3.0 1.0';
 	MY(lightradiusfade) = 400;
 	MY(lightradius) = 250;
 	MY(originjitter) = '26.0 26.0 26.0';
@@ -2826,7 +2826,7 @@ SUB(TR_ROCKET) {
 	MY(bounce) = 1;
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x666666";
-	MY(lightcolor) = '6.0 3.0 1.0';
+	MY(lightcolor) = '6.0 4.0 1.0';
 	MY(lightradius) = 150;
 	MY(notunderwater) = true;
 	MY(originjitter) = '2.0 2.0 2.0';
@@ -2850,7 +2850,7 @@ SUB(TR_ROCKET) {
 	MY(alpha_max) = 144;
 	MY(alpha_fade) = 588;
 	MY(color_min) = "0xffdf72";
-	MY(color_max) = "0x811200";
+	MY(color_max) = "0x812f00";
 	MY(sizeincrease) = -30;
 	MY(size_min) = 7;
 	MY(size_max) = 7;
@@ -2907,7 +2907,7 @@ SUB(rocket_explode) {
 	MY(alpha_min) = 256;
 	MY(alpha_max) = 256;
 	MY(countabsolute) = 1;
-	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightcolor) = '8.0 5.0 1.0';
 	MY(lightradiusfade) = 750;
 	MY(lightradius) = 400;
 	MY(originjitter) = '23.0 23.0 23.0';
@@ -6333,7 +6333,7 @@ SUB(pipe_smoke) {
 	MY(velocitymultiplier) = 15;
 }
 
-// seeker missile trail
+// seeker missile and flac trail
 DEF(TR_SEEKER);
 SUB(TR_SEEKER) {
 	MY(alpha_min) = 200;
@@ -6342,7 +6342,7 @@ SUB(TR_SEEKER) {
 	MY(bounce) = 1;
 	MY(color_min) = "0x000000";
 	MY(color_max) = "0x666666";
-	MY(lightcolor) = '6.0 3.0 1.0';
+	MY(lightcolor) = '6.0 2.0 1.0';
 	MY(lightradius) = 100;
 	MY(notunderwater) = true;
 	MY(originjitter) = '2.0 2.0 2.0';
@@ -6365,8 +6365,8 @@ SUB(TR_SEEKER) {
 	MY(alpha_min) = 100;
 	MY(alpha_max) = 144;
 	MY(alpha_fade) = 588;
-	MY(color_min) = "0xffdf72";
-	MY(color_max) = "0x811200";
+	MY(color_min) = "0xff9172";
+	MY(color_max) = "0x810013";
 	MY(sizeincrease) = -30;
 	MY(size_min) = 5;
 	MY(size_max) = 5;
@@ -6402,19 +6402,19 @@ SUB(TR_SEEKER) {
 	MY(alpha_max) = 512;
 	MY(alpha_fade) = 1866;
 	MY(bounce) = 1;
-	MY(color_min) = "0xFFFDD9";
-	MY(color_max) = "0xFFFDD9";
+	MY(color_min) = "0xFFD9E9";
+	MY(color_max) = "0xFFD9E9";
 	MY(notunderwater) = true;
 	MY(originjitter) = '1.0 1.0 1.0';
 	MY(size_min) = 0.500000;
 	MY(size_max) = 0.500000;
-	MY(stretchfactor) = 0.300000;
+	MY(stretchfactor) = 0.200000;
 	MY(tex_min) = 40;
 	MY(tex_max) = 40;
 	MY(trailspacing) = 20;
 	MY(type) = "spark";
 	MY(velocityjitter) = '100.0 100.0 100.0';
-	MY(velocitymultiplier) = -0.310000;
+	MY(velocitymultiplier) = -0.250000;
 }
 
 #include "effectinfo_vehicles.inc"
@@ -7991,14 +7991,14 @@ SUB(damage_seeker) {
 	MY(alpha_max) = 32;
 	MY(alpha_fade) = 1024;
 	MY(color_min) = "0x8f0c00";
-	MY(color_max) = "0xff2200";
+	MY(color_max) = "0xff0022";
 	MY(count) = 3;
 	MY(gravity) = -0.300000;
 	MY(notunderwater) = true;
 	MY(originjitter) = '2.0 2.0 2.0';
 	MY(sizeincrease) = -10;
-	MY(size_min) = 4;
-	MY(size_max) = 8;
+	MY(size_min) = 6;
+	MY(size_max) = 10;
 	MY(tex_min) = 48;
 	MY(tex_max) = 55;
 	MY(type) = "smoke";
@@ -8016,8 +8016,8 @@ SUB(damage_seeker) {
 	MY(notunderwater) = true;
 	MY(originjitter) = '4.0 4.0 4.0';
 	MY(sizeincrease) = 10;
-	MY(size_min) = 2;
-	MY(size_max) = 4;
+	MY(size_min) = 3;
+	MY(size_max) = 6;
 	MY(tex_max) = 8;
 	MY(type) = "alphastatic";
 	MY(velocityjitter) = '11.0 11.0 50.0';
@@ -9654,6 +9654,232 @@ SUB(hmg_muzzleflash) {
 	MY(type) = "spark";
 	MY(velocityjitter) = '555.0 555.0 555.0';
 	MY(velocitymultiplier) = 3;
+}
+
+DEF(seeker_explode);
+// decal
+SUB(seeker_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 2.0 2.0';
+	MY(lightradiusfade) = 400;
+	MY(lightradius) = 120;
+	MY(originjitter) = '14.0 14.0 14.0';
+	MY(size_min) = 28;
+	MY(size_max) = 38;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+// fire effect which make bright dot inside
+SUB(seeker_explode) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 80;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 356;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xffe955";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 3.500000;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 16;
+	MY(size_max) = 26;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '156.0 156.0 156.0';
+}
+// fire effect which expands then slows
+SUB(seeker_explode) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 456;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 12;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 15;
+	MY(size_min) = 20;
+	MY(size_max) = 26;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '286.0 286.0 286.0';
+}
+// smoke
+SUB(seeker_explode) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 500;
+	MY(alpha_fade) = 600;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 7;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '244.0 244.0 244.0';
+}
+// underwater bubbles
+SUB(seeker_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 16;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+// bouncing sparks
+SUB(seeker_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 4;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 0.100000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '224.0 224.0 224.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+// seeker tag impact
+DEF(tag_impact);
+// decal
+SUB(tag_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 1.0 1.5';
+	MY(lightradiusfade) = 300;
+	MY(lightradius) = 100;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(size_min) = 20;
+	MY(size_max) = 20;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+// flare effect
+SUB(tag_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(color_min) = "0xFF1024";
+	MY(color_max) = "0xFF1024";
+	MY(countabsolute) = 1;
+	MY(size_min) = 20;
+	MY(size_max) = 20;
+	MY(tex_min) = 39;
+	MY(tex_max) = 39;
+	MY(type) = "static";
+}
+// sparks that rapidly expand and rapidly slow down to form an interesting spherical effect
+SUB(tag_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x800000";
+	MY(color_max) = "0xFF1024";
+	MY(count) = 64;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(type) = "spark";
+	MY(velocityjitter) = '72.0 72.0 72.0';
+}
+
+// seeker tag trail
+DEF(tr_tag);
+// fire
+SUB(tr_tag) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 192;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xff9172";
+	MY(color_max) = "0x810013";
+	MY(lightcolor) = '3.0 1.0 1.5';
+	MY(lightradius) = 80;
+	MY(sizeincrease) = -16;
+	MY(size_min) = 6;
+	MY(size_max) = 7;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = -0.400000;
+}
+// bubbles
+SUB(tr_tag) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocitymultiplier) = -0.250000;
+}
+// sparks
+SUB(tr_tag) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 384;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFFD9E9";
+	MY(color_max) = "0xFFD9E9";
+	MY(notunderwater) = true;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.500000;
+	MY(size_max) = 0.500000;
+	MY(stretchfactor) = 0.200000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(trailspacing) = 24;
+	MY(type) = "spark";
+	MY(velocityjitter) = '80.0 80.0 80.0';
+	MY(velocitymultiplier) = -0.250000;
 }
 
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
