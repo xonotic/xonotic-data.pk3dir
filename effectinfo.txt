@@ -9354,3 +9354,9 @@ effect tr_tag
 	trailspacing 24
 	velocityjitter 80 80 80
 	velocitymultiplier -0.250000
+effect tr_laser
+	lightcolor 6 1 1
+	lightradius 100
+effect tr_hlac
+	lightcolor 1 2 0.5
+	lightradius 100

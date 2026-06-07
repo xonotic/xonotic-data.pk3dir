@@ -1,6 +1,7 @@
 #pragma once
 // Global list of effects, networked to CSQC by ID to save bandwidth and to use client particle numbers (allows mismatching effectinfos to some degree)
 // Not too concerned about the order of this list, just keep the weapon effects together!
+// XONRELEASE TODO: xonotic-v0.9.0 post-release consider improving the order of effectinfo.txt (and ./effectinfo.inc)
 
 #include "../teams.qh"
 
@@ -17,6 +18,7 @@ EFFECT(0, ARC_MUZZLEFLASH,          "electro_muzzleflash")
 
 EFFECT(0, BLASTER_IMPACT,           "laser_impact")
 EFFECT(0, BLASTER_MUZZLEFLASH,      "laser_muzzleflash")
+EFFECT(1, BLASTER,                  "tr_laser")
 
 EFFECT(0, SHOTGUN_IMPACT,           "shotgun_impact")
 EFFECT(0, SHOTGUN_MUZZLEFLASH,      "shotgun_muzzleflash")
@@ -50,17 +52,18 @@ EFFECT(0, CRYLINK_IMPACT2,          "crylink_impact")
 EFFECT(0, CRYLINK_JOINEXPLODE,      "crylink_joinexplode")
 EFFECT(0, CRYLINK_MUZZLEFLASH,      "crylink_muzzleflash")
 
-// TODO: rename GREEN_HLAC_* to HLAC_* after next release (xonotic-v0.9.0)
+// XONRELEASE TODO: xonotic-v0.9.0 post-release rename GREEN_HLAC* to HLAC*
 // see also common/weapons/weapon/hlac.q*
 EFFECT(0, GREEN_HLAC_IMPACT,        "hlac_impact")
 EFFECT(0, GREEN_HLAC_MUZZLEFLASH,   "hlac_muzzleflash")
+EFFECT(1, GREEN_HLAC,               "tr_hlac")
 
 EFFECT(0, VORTEX_BEAM,              "nex_beam")
 EFFECT(0, VORTEX_BEAM_OLD,          "TE_TEI_G3")
 EFFECT(0, VORTEX_IMPACT,            "nex_impact")
 EFFECT(0, VORTEX_MUZZLEFLASH,       "nex_muzzleflash")
 
-// TODO: remove the effect definitions from effectinfo.txt post-release (xonotic-v0.9.0)
+// XONRELEASE TODO: xonotic-v0.9.0 post-release remove the effect definitions from effectinfo.txt
 //EFFECT(1, VAPORIZER_RED,            "TE_TEI_G3RED")
 //EFFECT(1, VAPORIZER_HIT_RED,        "TE_TEI_G3RED_HIT")
 //EFFECT(1, VAPORIZER_BLUE,           "TE_TEI_G3BLUE")
