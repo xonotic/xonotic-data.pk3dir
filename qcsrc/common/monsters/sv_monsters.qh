@@ -31,6 +31,7 @@ float autocvar_g_monsters_armor_blockpercent;
 float autocvar_g_monsters_healthbars;
 bool autocvar_g_monsters_lineofsight = true;
 //bool autocvar_g_monsters_ignoretraces = true;
+float autocvar_g_monsters_turnrate = 10;
 
 // monster properties
 .int monster_movestate;   ///< monster move target priority
@@ -46,6 +47,7 @@ bool autocvar_g_monsters_lineofsight = true;
 .string oldtarget2;       ///< a copy of the original follow target string for monsters
 .float last_trace;        ///< monster logic delay between target tracing
 .float last_enemycheck;   ///< for checking monster enemy
+.float search_time;       ///< reset when an enemy is confirmed to be in view, gives up the chase when it runs out
 .float anim_finished;     ///< will be phased out when we have proper animations system
 .vector monster_moveto;   ///< custom destination for monster (reset to '0 0 0' when you're done!)
 .vector monster_face;     ///< custom looking direction for monster (reset to '0 0 0' when you're done!)

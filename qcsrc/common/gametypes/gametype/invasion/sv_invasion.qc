@@ -17,6 +17,7 @@ int autocvar_g_invasion_monster_count;
 bool autocvar_g_invasion_zombies_only;
 float autocvar_g_invasion_spawn_delay;
 string autocvar_g_invasion_monster_loot = "random";
+float autocvar_g_invasion_monster_skill = 0.4;
 
 .bool inv_spawned; // identifier for monsters spawned during the invasion
 
@@ -73,22 +74,26 @@ Monster invasion_PickMonster(entity sp, string preferred_list, int supermonster_
 {
 	RandomSelection_Init();
 
-	bool allow_flying = (sp && (sp.spawnflags & INV_SPAWNPOINT_FLYING));
-	bool allow_swimming = (sp && (sp.spawnflags & INV_SPAWNPOINT_SWIMMING));
+	// NOTE: flying monsters are still allowed if no spawnpoints exist
+	bool only_flying = (sp && (sp.spawnflags & INV_SPAWNPOINT_FLYING));
+	bool only_swimming = (sp && (sp.spawnflags & INV_SPAWNPOINT_SWIMMING));
 
 	FOREACH(Monsters, it != MON_Null,
 	{
 		if((it.spawnflags & (MON_FLAG_HIDDEN | MONSTER_TYPE_PASSIVE | MONSTER_SIZE_QUAKE))
 		|| ((it.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1)
-		|| ((!allow_flying && (it.spawnflags & MONSTER_TYPE_FLY)) || (allow_flying && !(it.spawnflags & MONSTER_TYPE_FLY)))
-		|| ((!allow_swimming && (it.spawnflags & MONSTER_TYPE_SWIM)) || (allow_swimming && !(it.spawnflags & MONSTER_TYPE_SWIM))))
+		|| ((sp && !only_flying && (it.spawnflags & MONSTER_TYPE_FLY)) || (only_flying && !(it.spawnflags & MONSTER_TYPE_FLY)))
+		|| ((!only_swimming && (it.spawnflags & MONSTER_TYPE_SWIM)) || (only_swimming && !(it.spawnflags & MONSTER_TYPE_SWIM))))
 			continue;
 		if(autocvar_g_invasion_zombies_only && !(it.spawnflags & MONSTER_TYPE_UNDEAD))
 			continue;
 		int prio = 1;
 		if(preferred_list != "" && strstrofs(preferred_list, it.netname, 0) >= 0)
 			prio = 2;
-        RandomSelection_AddEnt(it, 1, prio);
+		float weight = 1;
+		if((it.spawnflags & MONSTER_TYPE_FLY) || (it.spawnflags & MONSTER_TYPE_SWIM))
+			weight = 0.25; // even when allowed, low chance!
+        RandomSelection_AddEnt(it, weight, prio);
 	});
 
 	return RandomSelection_chosen_ent;
@@ -149,9 +154,17 @@ void invasion_SpawnMonster(int supermonster_count)
 		}
 		setsize(monster, mon.m_mins, mon.m_maxs);
 
-		if(MoveToRandomMapLocation(monster, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+		float maxaboveground = ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM)) ? 2048 : 10;
+		int badcontents = DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER;
+
+		if(!(mon.spawnflags & MONSTER_TYPE_SWIM))
+			badcontents |= DPCONTENTS_WATER;
+
+		if(MoveToRandomMapLocation(monster, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, badcontents, Q3SURFACEFLAG_SKY, maxaboveground, 1024, 256))
 		{
 			monster = spawnmonster(monster, "", mon, NULL, NULL, monster.origin, false, false, 2);
+			if (!monster)
+				return;
 			monster.angles_x = monster.angles_z = 0;
 		}
 		else
@@ -181,19 +194,16 @@ void invasion_SpawnMonster(int supermonster_count)
 		IL_REMOVE(g_monster_targets, monster);
 	monster.monster_attack = false; // it's the player's job to kill all the monsters
 
-	if(autocvar_fraglimit > 0 && inv_roundcnt == autocvar_fraglimit)
-		monster.spawnflags |= MONSTERFLAG_MINIBOSS; // last round spawns minibosses
+	// FIXME: vertical movement doesn't actually work, see Monster_Move
+	monster.spawnflags |= MONSTERFLAG_FLY_VERTICAL;
 }
 
 bool Invasion_CheckWinner()
 {
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
-	{
-		IL_EACH(g_monsters, it.inv_spawned,
-		{
-			Monster_Remove(it);
-		});
+	Invasion_count_alive_players();
 
+	if(total_players <= 0 || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
+	{
 		inv_maxspawned = 0;
 		inv_maxcurrent = 0;
 		inv_numspawned = 0;
@@ -204,8 +214,6 @@ bool Invasion_CheckWinner()
 		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 		return 1;
 	}
-
-	Invasion_count_alive_players();
 
 	if(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) == 0)
 	{
@@ -242,11 +250,6 @@ bool Invasion_CheckWinner()
 
 	if(inv_numkilled < inv_maxspawned)
 		return 0;
-
-	IL_EACH(g_monsters, it.inv_spawned,
-	{
-		Monster_Remove(it);
-	});
 
 	int winner_team = NUM_TEAM_1;
 
@@ -304,13 +307,13 @@ void Invasion_RoundStart()
 	});
 
 	// TODO: configurable difficulty spike
-	inv_monsterskill = inv_roundcnt + max(1, numplayers * 0.3);
+	inv_monsterskill = max(0.025, autocvar_g_invasion_monster_skill) * inv_roundcnt;
 
 	inv_maxcurrent = 0;
 	inv_numspawned = 0;
 	inv_numkilled = 0;
 
-	inv_maxspawned = rint(max(autocvar_g_invasion_monster_count, autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)));
+	inv_maxspawned = rint(max(autocvar_g_invasion_monster_count, (autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)) * max(1, numplayers * 0.3)));
 
 	allowed_to_spawn = false;
 }
@@ -494,17 +497,24 @@ MUTATOR_HOOKFUNCTION(inv, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
 	float frag_damage = M_ARGV(4, float);
+	float frag_mirrordamage = M_ARGV(5, float);
 	vector frag_force = M_ARGV(6, vector);
 
-	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker != frag_target)
+	if (IS_PLAYER(frag_target) && (IS_PLAYER(frag_attacker) || DEATH_IS(frag_deathtype, DEATH_FALL)))
 	{
 		frag_damage = 0;
-		frag_force = '0 0 0';
+		if(frag_attacker != frag_target)
+			frag_force = '0 0 0';
 
 		M_ARGV(4, float) = frag_damage;
 		M_ARGV(6, vector) = frag_force;
 	}
+
+	frag_mirrordamage = 0;
+
+	M_ARGV(5, float) = frag_mirrordamage;
 }
 
 MUTATOR_HOOKFUNCTION(inv, Bot_ForbidAttack)

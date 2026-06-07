@@ -194,6 +194,7 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 			}
 			actor.anim_finished = actor.animstate_endtime;
 			actor.attack_finished_single[0] = time + 2;
+			actor.state = MONSTER_STATE_NOMOVE;
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:

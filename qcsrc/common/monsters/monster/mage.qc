@@ -103,9 +103,13 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 	// TODO: mutator hook to choose valid healing targets?
 	if (!targ || IS_DEAD(targ))
 		return false;
-	// TODO: doesn't scale properly with max health, minhealth should probably be a percentage!
 	if (targ == this)
-		return (GetResource(targ, RES_HEALTH) < (autocvar_g_monster_mage_heal_minhealth * MONSTER_SKILLMOD(targ)));
+	{
+		// heal to full outside of combat
+		if (!targ.enemy)
+			return GetResource(targ, RES_HEALTH) < targ.max_health;
+		return ((GetResource(targ, RES_HEALTH) / targ.max_health) * 100) < autocvar_g_monster_mage_heal_minhealth;
+	}
 	if (DIFF_TEAM(targ, this) && targ != this.monster_follow)
 		return false;
 	if (GetResource(targ, RES_HEALTH) <= 0 || STAT(FROZEN, targ))

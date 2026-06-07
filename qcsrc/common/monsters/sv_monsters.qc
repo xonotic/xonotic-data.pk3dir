@@ -872,7 +872,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	vector real_angle = vectoangles(this.steerto) - this.angles;
 
 	if (this.state != MONSTER_STATE_NOMOVE)
-		this.angles.y += bound(-25, shortangle_f(real_angle.y, this.angles.y), 25);
+		this.angles.y += bound(-autocvar_g_monsters_turnrate, shortangle_f(real_angle.y, this.angles.y), autocvar_g_monsters_turnrate);
 
 	// Update velocity
 	fixedmakevectors(this.angles);
@@ -886,7 +886,14 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if (!danger && !turret_closetotarget(this, this.moveto, 16))
 	{
 		bool do_run = (this.enemy || this.monster_moveto);
-		movelib_move_simple(this, v_forward, (do_run ? runspeed : walkspeed), 0.4);
+		float movespeed = (do_run) ? runspeed : walkspeed;
+		// too much air control and monsters become unavoidable
+		// cut their movement speed in half as necessary
+		// NOTE: also applies to land based monsters in the water
+		if(!IS_ONGROUND(this) && !(this.flags & (FL_FLY | FL_SWIM)))
+			movespeed *= 0.5;
+		// TODO: only supports horizontal movement, MONSTERFLAG_FLY_VERTICAL is nonfunctional!
+		movelib_move_simple(this, v_forward, movespeed, 0.4);
 
 		if (time > this.pain_finished && time > this.anim_finished
 		&& this.state == MONSTER_STATE_NORMAL)
@@ -1230,6 +1237,11 @@ void Monster_Enemy_Check(entity this)
 		targ_origin = WarpZone_RefSys_TransformOrigin(this.enemy, this, targ_origin); // origin of target as seen by the monster (us)
 		WarpZone_TraceLine(this.origin, targ_origin, MOVE_NOMONSTERS, this);
 
+		// enemies may hide temporarily behind walls or beyond drops
+		// continue chasing for a little while before "giving up"
+		if (trace_fraction == 1)
+			this.search_time = time + 5;
+
 		// cases where the enemy may have changed their state (don't need to check everything here)
 		// TODO: mutator hook
 		if (IS_DEAD(this.enemy) || GetResource(this.enemy, RES_HEALTH) < 1
@@ -1238,7 +1250,7 @@ void Monster_Enemy_Check(entity this)
 		|| (this.enemy.alpha < 0.5 && this.enemy.alpha != 0)
 		|| this.enemy.takedamage == DAMAGE_NO
 		|| vdist(this.origin - targ_origin, >, this.target_range)
-		|| (trace_fraction < 1 && trace_ent != this.enemy))
+		|| time >= this.search_time)
 			this.enemy = NULL;
 		else
 			return;
