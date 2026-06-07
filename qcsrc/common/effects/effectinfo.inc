@@ -9428,4 +9428,26 @@ SUB(vengeance_fx) {
 	MY(velocitymultiplier) = 0.200000;
 }
 
+DEF(magnet_fx);
+// health/armor/ammo particles that fly towards the player
+SUB(magnet_fx) {
+	MY(airfriction) = 4.500000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 384;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xffff00";
+	MY(color_max) = "0xf1eb6c";
+	MY(countabsolute) = 1;
+	MY(originjitter) = '5.0 5.0 5.0';
+	MY(sizeincrease) = 3;
+	MY(size_min) = 3;
+	MY(size_max) = 7;
+	MY(tex_min) = 75;
+	MY(tex_max) = 81;
+	MY(type) = "static";
+	MY(velocityjitter) = '5.0 5.0 5.0';
+	MY(velocitymultiplier) = 5;
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
