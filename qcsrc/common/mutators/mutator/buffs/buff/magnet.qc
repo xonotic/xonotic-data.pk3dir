@@ -19,6 +19,8 @@ METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 		});
 	}
 
+	vector vel = randomvec() * 75;
+	buff_Effect(actor, EFFECT_MAGNET, CENTER_OF_ENT(actor) - vel, vel, 1, true); // needs countabsolute 1, spawning more requires calling buff_Effect repeatedly but that uses more bandwidth
 	SUPER(MagnetBuff).m_tick(this, actor);
 }
 #endif // SVQC
