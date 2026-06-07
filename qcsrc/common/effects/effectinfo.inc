@@ -9882,4 +9882,20 @@ SUB(tr_tag) {
 	MY(velocitymultiplier) = -0.250000;
 }
 
+// laser trail
+DEF(tr_laser);
+// light only
+SUB(tr_laser) {
+	MY(lightcolor) = '6.0 1.0 1.0';
+	MY(lightradius) = 100;
+}
+
+// hlac trail
+DEF(tr_hlac);
+// light only
+SUB(tr_hlac) {
+	MY(lightcolor) = '1.0 2.0 0.5';
+	MY(lightradius) = 100;
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
