@@ -184,7 +184,6 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.nextthink = time; // + 0.2; // + cvar("g_balance_seeker_missile_activate_delay");
 	missile.cnt = time + WEP_CVAR(WEP_SEEKER, missile_lifetime);
 	missile.enemy = m_target;
-	missile.solid = SOLID_BBOX;
 	missile.scale = 2;
 	missile.takedamage = DAMAGE_YES;
 	missile.weaponentity_fld = weaponentity;
@@ -199,6 +198,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	else
 		missile.projectiledeathtype = thiswep.m_id;
 
+	PROJECTILE_MAKETRIGGER(missile);
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-4 -4 -4', '4 4 4');
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -240,6 +240,8 @@ void W_Seeker_Flac_Explode(entity this, entity directhitentity)
 
 void W_Seeker_Flac_Touch(entity this, entity toucher)
 {
+	PROJECTILE_TOUCH(this, toucher);
+
 	W_Seeker_Flac_Explode(this, toucher);
 }
 
@@ -284,7 +286,6 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.use = W_Seeker_Flac_Explode_use;
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink = time + WEP_CVAR(WEP_SEEKER, flac_lifetime) + WEP_CVAR(WEP_SEEKER, flac_lifetime_rand);
-	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLY);
 	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	missile.weaponentity_fld = weaponentity;
@@ -297,6 +298,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 	//missile.angles = vectoangles(missile.velocity);
 	//missile.scale = 0.4; // BUG: the model is too big
 
+	PROJECTILE_MAKETRIGGER(missile);
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-2 -2 -2', '2 2 2');
 
@@ -501,13 +503,13 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	setthink(missile, SUB_Remove);
 	missile.nextthink = time + WEP_CVAR(WEP_SEEKER, tag_lifetime);
 	set_movetype(missile, MOVETYPE_FLY);
-	missile.solid = SOLID_BBOX;
 
 	missile.takedamage = DAMAGE_YES;
 	missile.event_damage = W_Seeker_Tag_Damage;
 	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(WEP_SEEKER, tag_health));
 	missile.damageforcescale = WEP_CVAR(WEP_SEEKER, tag_damageforcescale);
 
+	PROJECTILE_MAKETRIGGER(missile);
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-2 -2 -2', '2 2 2');
 
