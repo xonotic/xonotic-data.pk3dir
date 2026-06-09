@@ -90,7 +90,6 @@ void KillIndicator_Think(entity this)
 
 .float lip;
 float clientkilltime;
-.float clientkill_nexttime;
 void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -1 = auto, -2 = spec
 {
 	if (game_stopped)
@@ -126,7 +125,8 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 		TeamBalance_Destroy(balance);
 		if (targetteam == this.team)
 		{
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_ALREADYBEST);
+			if (this.clientkill_nexttime < time) // don't show conflicting/repeated notifs for legacy selectteam; join
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_ALREADYBEST);
 			return;
 		}
 	}
