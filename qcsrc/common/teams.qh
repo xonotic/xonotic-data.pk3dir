@@ -121,7 +121,7 @@ float Team_ColorToTeam(string team_color)
 		case "blue": return NUM_TEAM_2;
 		case "yellow": return NUM_TEAM_3;
 		case "pink": return NUM_TEAM_4;
-		case "auto": return 0;
+		case "auto": case "": return 0;
 	}
 
 	return -1;

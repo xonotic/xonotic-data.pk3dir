@@ -2088,7 +2088,7 @@ void Join(entity this, bool queued_join)
 		int clients_remaining = AVAILABLE_TEAMS;
 		// First we must join player(s) queued for specific team(s) (they chose first)
 		// so TeamBalance_JoinBestTeam() won't select the same team(s).
-		// Assumes `this` was already assigned a team via ClientCommand_selectteam() or is using autoselect.
+		// Assumes `this` was already assigned a team or is using autoselect.
 		FOREACH_CLIENT(it != this && it.wants_join > 0,
 		{
 			// detect any conflict between `this` and a queued player (queuePlayer() handles other conflicts)
@@ -2203,7 +2203,7 @@ int nJoinAllowed(entity this)
 	return free_slots;
 }
 
-// Callsites other than ClientCommand_selectteam() should pass this.wants_join as team_index
+// Callsites other than ClientCommand_join() teamplay should pass this.wants_join as team_index
 // so the player won't accidentally reset a specific preference by pressing +jump
 // and will see the centreprint with their current preference each time they press +jump.
 bool queuePlayer(entity this, int team_index)
@@ -2290,8 +2290,8 @@ bool joinAllowed(entity this, int team_index)
 
 	if (QueueNeeded(this, team_index))
 	{
-		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
-			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
+		if (team_index == 0) // so ClientCommand_join() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
+			if (ShowTeamSelection(this)) return false; // only needed by callsites other than ClientCommand_join() teamplay
 		// queuePlayer called here so that only conditions above block queuing (g_maxplayers shouldn't)
 		if (queuePlayer(this, team_index)) return false;
 		if (!nJoinAllowed(this)) return false;
@@ -2299,8 +2299,8 @@ bool joinAllowed(entity this, int team_index)
 	else
 	{
 		if (!nJoinAllowed(this)) return false;
-		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
-			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
+		if (team_index == 0) // so ClientCommand_join() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
+			if (ShowTeamSelection(this)) return false; // only needed by callsites other than ClientCommand_join() teamplay
 	}
 
 	return true;

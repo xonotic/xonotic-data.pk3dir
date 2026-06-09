@@ -504,36 +504,6 @@ void ClientCommand_ignore(entity caller, int request, int argc, string command)
 	}
 }
 
-void ClientCommand_join(entity caller, int request)
-{
-	switch (request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if (!game_stopped && IS_CLIENT(caller) && !IS_PLAYER(caller))
-			{
-				if (caller.team == -666) // because FIXME join and selectteam are separate commands
-					caller.team = -1;
-				else if (joinAllowed(caller, caller.wants_join))
-					Join(caller, teamplay);
-				else if(time < CS(caller).jointime + MIN_SPEC_TIME)
-					CS(caller).autojoin_checked = -1;
-			}
-			CS(caller).parm_idlesince = time;
-
-			return;  // never fall through to usage
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(caller, "\nUsage:^3 cmd join\n");
-			sprint(caller, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_kill(entity caller, int request)
 {
 	switch (request)
@@ -679,30 +649,26 @@ void ClientCommand_say_team(entity caller, int request, int argc, string command
 	}
 }
 
-void ClientCommand_selectteam(entity caller, int request, int argc)
+void ClientCommand_join(entity caller, int request, int argc)
 {
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argv(1) == "")
-			{
-				return;
-			}
+			CS(caller).parm_idlesince = time;
+
 			if (!IS_CLIENT(caller) || intermission_running)
-			{
 				return;
-			}
+
 			if (!teamplay)
 			{
-				sprint(caller, "^7selectteam can only be used in teamgames\n");
+				if (!IS_PLAYER(caller) && joinAllowed(caller, caller.wants_join))
+					Join(caller, teamplay);
+				else if (time < CS(caller).jointime + MIN_SPEC_TIME)
+					CS(caller).autojoin_checked = -1;
 				return;
 			}
-			if (Player_GetForcedTeamIndex(caller) > 0)
-			{
-				sprint(caller, "^7selectteam can not be used as your team is forced\n");
-				return;
-			}
+
 			if (lockteams)
 			{
 				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_LOCKED);
@@ -713,7 +679,10 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			// TEAMNUMBERS_THAT_ARENT_STUPID FIXME: 0 and -1 mean different things to different funcs
 			float team_num = Team_ColorToTeam(argv(1));
 			if (team_num == -1) // invalid
+			{
+				sprint(caller, sprintf("^7There's no \"%s\" team!\n", argv(1)));
 				return;
+			}
 			int team_index = Team_TeamToIndex(team_num);
 
 			// players queued to change teams may leave the queue by selecting their current team or autoselect
@@ -727,14 +696,19 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 				return;
 			}
 
-			if (caller.team == team_num && team_num)
-			{
-				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_SAME);
-				Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
-				return;
-			}
 			if (team_num)
 			{
+				if (caller.team == team_num)
+				{
+					if (caller.clientkill_nexttime < time) // don't show conflicting/repeated notifs for legacy selectteam; join
+					{
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_SAME);
+						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_SAME);
+						caller.clientkill_nexttime = max(time, caller.clientkill_nexttime);
+					}
+					return;
+				}
+
 				entity balance = TeamBalance_CheckAllowedTeams(caller);
 				if (!TeamBalance_IsTeamAllowed(balance, team_index))
 				{
@@ -749,8 +723,6 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 					TeamBalance_GetTeamCounts(balance, caller);
 					if ((Team_IndexToBit(Team_TeamToIndex(team_num)) & TeamBalance_FindBestTeams(balance, caller, true)) == 0)
 					{
-						if (caller.team <= 0)
-							caller.team = -666; // workaround: cancel the subsequent join command
 						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_STRONGERTEAM);
 						Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_STRONGERTEAM);
 						TeamBalance_Destroy(balance);
@@ -761,7 +733,14 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			}
 
 			if (joinAllowed(caller, team_num ? team_index : -1))
+			{
 				ClientKill_TeamChange(caller, team_num ? team_num : -1);
+				caller.clientkill_nexttime = max(time, caller.clientkill_nexttime);
+				if (!IS_PLAYER(caller))
+					Join(caller, teamplay);
+			}
+			else if (time < CS(caller).jointime + MIN_SPEC_TIME)
+				CS(caller).autojoin_checked = -1;
 
 			return;
 		}
@@ -769,7 +748,7 @@ void ClientCommand_selectteam(entity caller, int request, int argc)
 			sprint(caller, sprintf("Incorrect parameters for ^2%s^7\n", argv(0)));
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(caller, "\nUsage:^3 cmd selectteam <team>\n");
+			sprint(caller, "\nUsage:^3 cmd join <team>\n");
 			sprint(caller, "  Where <team> is the prefered team to try and join.\n");
 			sprint(caller, "  Full list of options here: red, blue, yellow, pink, auto.\n");
 			return;
@@ -1112,7 +1091,7 @@ CLIENT_COMMAND(clear_bestcptimes, "Clear all your best checkpoint times for this
 CLIENT_COMMAND(clear_ignores, "Remove all existing ignores of players") { ClientCommand_clear_ignores(caller, request); }
 CLIENT_COMMAND(clientversion, "Release version of the game") { ClientCommand_clientversion(caller, request, arguments); }
 CLIENT_COMMAND(ignore, "Ignore a player in the game keeping them out of your personal chat log") { ClientCommand_ignore(caller, request, arguments, command); }
-CLIENT_COMMAND(join, "Become a player in the game") { ClientCommand_join(caller, request); }
+CLIENT_COMMAND(join, "Become a player in the game, optionally with a preferred team") { ClientCommand_join(caller, request, arguments); }
 CLIENT_COMMAND(kill, "Become a member of the dead") { ClientCommand_kill(caller, request); }
 CLIENT_COMMAND(minigame, "Start a minigame") { ClientCommand_minigame(caller, request, arguments, command); }
 CLIENT_COMMAND(mv_getpicture, "Retrieve mapshot picture from the server") { ClientCommand_mv_getpicture(caller, request, arguments); }
@@ -1120,7 +1099,7 @@ CLIENT_COMMAND(physics, "Change physics set") { ClientCommand_physics(caller, re
 CLIENT_COMMAND(ready, "Qualify as ready to end warmup-stage") { ClientCommand_ready(caller, request); }
 CLIENT_COMMAND(say, "Send a public chat message to all players") { ClientCommand_say(caller, request, arguments, command); }
 CLIENT_COMMAND(say_team, "Send a chat message to all teammates") { ClientCommand_say_team(caller, request, arguments, command); }
-CLIENT_COMMAND(selectteam, "Attempt to choose a team to join into") { ClientCommand_selectteam(caller, request, arguments); }
+CLIENT_COMMAND(selectteam, "Obsolete (for compatibility with old versions)") { ClientCommand_join(caller, request, arguments); }
 CLIENT_COMMAND(selfstuff, "Stuffcmd a command to your own client") { ClientCommand_selfstuff(caller, request, command); }
 CLIENT_COMMAND(sentcvar, "New system for sending a client cvar to the server") { ClientCommand_sentcvar(caller, request, arguments); }
 CLIENT_COMMAND(spectate, "Become a spectator") { ClientCommand_spectate(caller, request); }
