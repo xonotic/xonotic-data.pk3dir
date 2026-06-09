@@ -126,7 +126,10 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 		if (targetteam == this.team)
 		{
 			if (this.clientkill_nexttime < time) // don't show conflicting/repeated notifs for legacy selectteam; join
-				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_ALREADYBEST);
+			{
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, APP_TEAM_NUM(this.team, INFO_TEAMCHANGE_ALREADYBEST));
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_TEAMCHANGE_ALREADYBEST));
+			}
 			return;
 		}
 	}
@@ -206,7 +209,6 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 		if (IS_REAL_CLIENT(this) && this.killindicator.cnt > 0)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, notif, this.killindicator.cnt);
 	}
-
 }
 
 void ClientKill_Silent(entity this, float _delay)
