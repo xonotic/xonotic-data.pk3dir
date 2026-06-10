@@ -65,7 +65,9 @@ bool monster_facing(entity this, entity targ)
 {
 	// relies on target having an origin
 	makevectors(this.angles);
-	vector targ_org = targ.origin, my_org = this.origin;
+	vector my_org = this.origin;
+	vector targ_org = (targ.absmin + targ.absmax) * 0.5;
+	targ_org = WarpZone_RefSys_TransformOrigin(targ, this, targ_org);
 	if (autocvar_g_monsters_target_infront_2d)
 	{
 		targ_org = vec2(targ_org);
@@ -92,7 +94,7 @@ void monster_makevectors(entity this, entity targ)
 // Target handling
 // ===============
 
-bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
+bool Monster_ValidTarget(entity this, entity targ, bool skipfacing, bool skiplos)
 {
 	// ensure we're not checking nonexistent monster/target
 	if (!this || !targ)
@@ -109,16 +111,19 @@ bool Monster_ValidTarget(entity this, entity targ, bool skipfacing)
 	|| (!autocvar_g_monsters_typefrag && PHYS_INPUT_BUTTON_CHAT(targ))
 	|| SAME_TEAM(targ, this)
 	|| (targ.alpha != 0 && targ.alpha < 0.5)
-	|| (autocvar_g_monsters_lineofsight && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
+	|| (autocvar_g_monsters_lineofsight && !skiplos && !checkpvs(this.origin + this.view_ofs, targ)) // enemy cannot be seen
 	|| MUTATOR_CALLHOOK(MonsterValidTarget, this, targ))
 		// if any of the above checks fail, target is not valid
 		return false;
 
-	vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
-	traceline(this.origin + this.view_ofs, targ_origin, MOVE_NOMONSTERS, this); // TODO: maybe we can rely a bit on PVS data instead?
+	if (!skiplos)
+	{
+		vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
+		traceline(this.origin + this.view_ofs, targ_origin, MOVE_NOMONSTERS, this); // TODO: maybe we can rely a bit on PVS data instead?
 
-	if (trace_fraction < 1 && trace_ent != targ)
-		return false; // solid
+		if (trace_fraction < 1 && trace_ent != targ)
+			return false; // solid
+	}
 
 	if (!skipfacing && (autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT))
 	&& this.enemy != targ
@@ -136,13 +141,17 @@ entity Monster_FindTarget(entity this)
 	entity closest_target = NULL;
 	float closest_dist = 0;
 	vector my_center = CENTER_OR_VIEWOFS(this);
+	entity head = WarpZone_FindRadius(this.origin, this.target_range, true);
 
-	FOREACH_ENTITY_RADIUS(my_center, this.target_range, it.monster_attack,
+	while(head)
 	{
-		vector targ_center = (it.absmin + it.absmax) * 0.5;
+		entity it = head;
+		head = head.chain;
+
+		vector targ_center = WarpZone_UnTransformOrigin(it, CENTER_OR_VIEWOFS(it));
 		if (PHYS_INPUT_BUTTON_CROUCH(it) && vdist(targ_center - my_center, >, this.target_range * 0.5))
 			continue;
-		if (!Monster_ValidTarget(this, it, false))
+		if (!Monster_ValidTarget(this, it, false, true))
 			continue;
 
 		float targ_dist = vlen2(my_center - targ_center);
@@ -151,7 +160,7 @@ entity Monster_FindTarget(entity this)
 			closest_dist = targ_dist;
 			closest_target = it;
 		}
-	});
+	}
 
 	return closest_target;
 }
@@ -208,7 +217,7 @@ void monster_changeteam(entity this, int newteam)
 void Monster_Delay_Action(entity this)
 {
 	// TODO: also allow monsters to cancel attacks (flinching)
-	if (Monster_ValidTarget(this.owner, this.owner.enemy, false))
+	if (Monster_ValidTarget(this.owner, this.owner.enemy, false, false))
 	{
 		monster_makevectors(this.owner, this.owner.enemy);
 		this.monster_delayedfunc(this.owner);
@@ -493,7 +502,7 @@ void Monster_Touch(entity this, entity toucher)
 
 	if (toucher.monster_attack && this.enemy != toucher && !IS_MONSTER(toucher)
 	&& time >= this.spawn_time
-	&& Monster_ValidTarget(this, toucher, true))
+	&& Monster_ValidTarget(this, toucher, true, false))
 		this.enemy = toucher;
 }
 
@@ -576,7 +585,7 @@ void Monster_Dead_Fade(entity this)
 
 void Monster_Use(entity this, entity actor, entity trigger)
 {
-	if (Monster_ValidTarget(this, actor, true))
+	if (Monster_ValidTarget(this, actor, true, false))
 		this.enemy = actor;
 }
 
@@ -1259,8 +1268,8 @@ void Monster_Enemy_Check(entity this)
 	this.enemy = Monster_FindTarget(this);
 	if (this.enemy)
 	{
-		WarpZone_RefSys_Copy(this.enemy, this);
-		WarpZone_RefSys_AddInverse(this.enemy, this); // wz1^-1 ... wzn^-1 receiver
+		WarpZone_RefSys_Copy(this, this.enemy);
+		WarpZone_RefSys_AddInverse(this, this.enemy); // wz1^-1 ... wzn^-1 receiver
 		// update move target immediately?
 		this.moveto = WarpZone_RefSys_TransformOrigin(this.enemy, this, 0.5 * (this.enemy.absmin + this.enemy.absmax));
 		this.monster_moveto = '0 0 0';
