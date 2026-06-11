@@ -5,15 +5,18 @@ METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 {
 	if (IS_PLAYER(actor))
 	{
-		entity head = WarpZone_FindRadius(
+		entity next, head = WarpZone_FindRadius(
 			actor.origin + actor.view_ofs,  // line from eyes
 			autocvar_g_buffs_magnet_range,
 			true                            // require line of sight
 		);
-		for (; head; head = head.chain)
-			if (head.itemdef // this (intentionally) doesn't include buffs
+		for (; head; head = next)
+		{
+			next = head.chain; // save next entity in case head is deleted (or head.chain changed) by gettouch(head)
+			if (head.itemdef // this (intentionally) doesn't include buffs -- they use .buffdef not .itemdef
 			&&  gettouch(head))
 				gettouch(head)(head, actor);
+		}
 	}
 
 	SUPER(MagnetBuff).m_tick(this, actor);
