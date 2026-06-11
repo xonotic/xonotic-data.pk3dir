@@ -33,7 +33,7 @@ bool PreviewExists(string name)
 	return false;
 }
 
-string MapVote_FormatItem(int id, string text, int _count, float maxwidth, vector fontsize, int most_votes)
+string MapVote_FormatItem(int id, string text, int _count, float maxwidth, vector fontsize)
 {
 	TC(int, id);
 	string post, pre = strcat(itos(id + 1), ". ");
@@ -45,14 +45,11 @@ string MapVote_FormatItem(int id, string text, int _count, float maxwidth, vecto
 			post = sprintf(_(" (%d votes)"), _count);
 		else
 			post = "";
-		if (post != "" && (mv_flags[id] & GTV_AVAILABLE))
-		if (mv_tie_winner == id || (mv_tie_winner == -2 && _count == most_votes))
-			post = strcat("^5", post);
 	}
 	else
 		post = "";
 
-	maxwidth -= stringwidth(pre, false, fontsize) + stringwidth(post, true, fontsize);
+	maxwidth -= stringwidth_nocolors(pre, fontsize) + stringwidth_nocolors(post, fontsize);
 	text = textShortenToWidth(text, maxwidth, fontsize, stringwidth_nocolors);
 	return strcat(pre, text, post);
 }
@@ -161,8 +158,14 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		offset.y += maxh * 0.5;
 
 	// Draw the title
-	string title = strcat(rgb_to_hexcolor(rgb), MapVote_FormatItem(id, mv_data[id], _count, tsize, gtv_text_size, most_votes));
-	drawcolorcodedstring(offset, title, gtv_text_size, alpha, DRAWFLAG_NORMAL);
+	bool is_bold = ((mv_flags[id] & GTV_AVAILABLE)
+		&& (mv_tie_winner == id || (mv_tie_winner == -2 && _count == most_votes)));
+	if (is_bold)
+		draw_beginBoldFont();
+	string title = MapVote_FormatItem(id, mv_data[id], _count, tsize, gtv_text_size);
+	drawstring(offset, title, gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL);
+	if (is_bold)
+		draw_endBoldFont();
 
 	// Draw the icon
 	if (pic != "")
@@ -239,10 +242,14 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	pos.y += (isize - img_size.y - hud_fontsize.y) * 0.5;
 
+	bool is_bold = ((mv_flags[id] & GTV_AVAILABLE)
+		&& (mv_tie_winner == id || (mv_tie_winner == -2 && _count == most_votes)));
+	if (is_bold)
+		draw_beginBoldFont();
+	string label = MapVote_FormatItem(id, map, _count, tsize, hud_fontsize);
 	vector rgb = MapVote_RGB(id);
-	string label = strcat(rgb_to_hexcolor(rgb), MapVote_FormatItem(id, map, _count, tsize, hud_fontsize, most_votes));
 
-	float text_size = stringwidth(label, true, hud_fontsize);
+	float text_size = stringwidth_nocolors(label, hud_fontsize);
 
 	float save_rect_sizex = rect_size.x;
 	rect_size.x = max(img_size.x, text_size) + rect_margin;
@@ -255,14 +262,11 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	pos.x += (tsize - img_size.x) * 0.5;
 
-	float theAlpha;
+	float theAlpha = panel_fg_alpha;
 	if (!(mv_flags[id] & GTV_AVAILABLE) && mv_reduce_alpha)
-		theAlpha = mv_reduce_alpha;
+		theAlpha *= mv_reduce_alpha;
 	else if (mv_winner && mv_winner_alpha)
-		theAlpha = mv_winner_alpha;
-	else
-		theAlpha = 1;
-	theAlpha *= panel_fg_alpha;
+		theAlpha *= mv_winner_alpha;
 
 	if (!mv_winner)
 	{
@@ -285,14 +289,16 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		}
 	}
 
-	drawcolorcodedstring(text_pos, label, hud_fontsize, theAlpha, DRAWFLAG_NORMAL);
-
 	MapVote_DrawMapPicture(pic, pos, img_size, theAlpha);
+
+	drawstring(text_pos, label, hud_fontsize, rgb, theAlpha, DRAWFLAG_NORMAL);
+	if (is_bold)
+		draw_endBoldFont();
 }
 
 void MapVote_DrawAbstain(vector pos, float tsize, int _count, int id)
 {
-	string label = MapVote_FormatItem(id, _("Don't care"), _count, tsize, hud_fontsize, -1);
+	string label = MapVote_FormatItem(id, _("Don't care"), _count, tsize, hud_fontsize);
 
 	float theAlpha = (mv_winner && mv_winner_alpha)
 		? mv_winner_alpha
