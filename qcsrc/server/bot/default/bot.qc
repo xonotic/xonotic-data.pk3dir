@@ -651,9 +651,7 @@ bool bot_fixcount(bool multiple_per_frame)
 		// add bots to reach minplayers if needed
 		bots = max(minbots, minplayers - activerealplayers);
 		// cap bots to the max players allowed by the server
-		int player_limit = GetPlayerLimit();
-		if(player_limit)
-			bots = min(bots, max(player_limit - activerealplayers, 0));
+		bots = min(bots, max(GetPlayerLimit() - activerealplayers, 0));
 		bots = min(bots, maxclients - realplayers);
 
 		bots_would_leave = max(0, bots - minbots);
