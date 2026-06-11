@@ -84,17 +84,18 @@ bool MapHasRightSize(string map)
 	if(autocvar_g_maplist_ignore_sizes)
 		return true;
 
-	// open map size restriction file
+	// open map size restriction file (sets map_minplayers and map_maxplayers)
 	if(!MapReadSizes(map))
 		return true; // map has no size restrictions
 
 	string checksize_msg = strcat("MapHasRightSize ", map);
-	int player_limit = ((autocvar_g_maplist_sizes_count_maxplayers) ? GetPlayerLimit() : 0);
-	int pcount = ((player_limit > 0) ? min(player_count, player_limit) : player_count); // bind it to the player limit so that forced spectators don't influence the limits
+	int pcount = player_count;
 
 	if(!autocvar_g_maplist_sizes_count_bots)
 		pcount -= currentbots;
 	pcount -= rint(cvar("g_maplist_sizes_specparty") * pcount);
+	if (autocvar_g_maplist_sizes_count_maxplayers)
+		pcount = min(pcount, GetPlayerLimit()); // bind it to the player limit so that forced spectators don't influence the limits
 
 	// ensure small maps can be selected when pcount is low
 	if(map_minplayers <= (_MapInfo_GetTeamPlayBool(MapInfo_CurrentGametype()) ? 4 : 2))

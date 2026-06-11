@@ -692,8 +692,6 @@ void GameplayMode_DelayedInit(entity this)
 	if (warmup_stage < 0)
 	{
 		int m = GetPlayerLimit();
-		if (m <= 0)
-			m = maxclients;
 		map_minplayers = bound(max(2, AVAILABLE_TEAMS * 2), map_minplayers, m);
 		if (teamplay)
 		{
