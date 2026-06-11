@@ -343,6 +343,11 @@ MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 		ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
 }
 
+MUTATOR_HOOKFUNCTION(cts, ReadLevelCvars)
+{
+	warmup_stage = 0;
+}
+
 MUTATOR_HOOKFUNCTION(cts, FixClientCvars)
 {
 	entity player = M_ARGV(0, entity);
