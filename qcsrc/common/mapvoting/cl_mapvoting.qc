@@ -137,7 +137,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	pos.x += image_size.x + desc_padding;
 
 	// Split the description into lines, count lines
-	tsize -= image_size.x + desc_padding;
+	float desc_tsize = tsize - (image_size.x + desc_padding);
 	string the_label = mv_desc[id];
 	int nlines = 0;
 	if (the_label != "")
@@ -148,7 +148,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		{
 			getWrappedLine_remaining = argv(i);
 			while (getWrappedLine_remaining && maxh > (nlines + 1) * gtv_text_size_small.y)
-				if ((ts = getWrappedLine(tsize, gtv_text_size_small, stringwidth_colors)) != "")
+				if ((ts = getWrappedLine(desc_tsize, gtv_text_size_small, stringwidth_colors)) != "")
 					++nlines;
 		}
 	}
@@ -193,7 +193,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	{
 		getWrappedLine_remaining = argv(i);
 		while (getWrappedLine_remaining && maxh > (nlines + 1) * gtv_text_size_small.y)
-			if ((ts = getWrappedLine(tsize, gtv_text_size_small, stringwidth_colors)) != "")
+			if ((ts = getWrappedLine(desc_tsize, gtv_text_size_small, stringwidth_colors)) != "")
 			{
 				drawstring(pos + offset, ts, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
 				pos.y += gtv_text_size_small.y;
