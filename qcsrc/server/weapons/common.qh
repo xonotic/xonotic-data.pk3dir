@@ -16,6 +16,8 @@ void adaptor_think2use_hittype_splash(entity this);
 
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher);
 
+void W_GuideProjectile(entity this, .entity weaponentity, float guide_rate, float guide_rate_delay, float guide_goal, float guide_delay, entity eff, entity snd, float vol);
+
 .float misc_bulletcounter;
 
 .int projectiledeathtype;
