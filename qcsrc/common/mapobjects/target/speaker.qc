@@ -1,11 +1,16 @@
 #include "speaker.qh"
+REGISTER_NET_LINKED(ENT_CLIENT_SPEAKER)
+
 #ifdef SVQC
-// TODO add a way to do looped sounds with sound(); then complete this entity
-void target_speaker_use_off(entity this, entity actor, entity trigger);
-void target_speaker_use_activator(entity this, entity actor, entity trigger)
+void target_speaker_use(entity this, entity actor, entity trigger)
 {
-	if (!IS_REAL_CLIENT(actor))
+	if (this.spawnflags & (SPEAKER_LOOPED_ON | SPEAKER_LOOPED_OFF))
+	{
+		this.state = !this.state;
+		this.SendFlags |= SF_TRIGGER_UPDATE;
 		return;
+	}
+
 	string snd;
 	if(substring(this.noise, 0, 1) == "*")
 	{
@@ -26,74 +31,81 @@ void target_speaker_use_activator(entity this, entity actor, entity trigger)
 	}
 	else
 		snd = this.noise;
-	msg_entity = actor;
-	soundto(MSG_ONE, this, CH_TRIGGER, snd, VOL_BASE * this.volume, this.atten, 0);
+
+	_sound(this.spawnflags & SPEAKER_ACTIVATOR ? actor : this, CH_TRIGGER_SINGLE, snd, VOL_BASE * this.volume, this.atten);
 }
-void target_speaker_use_on(entity this, entity actor, entity trigger)
-{
-	string snd;
-	if(substring(this.noise, 0, 1) == "*")
-	{
-		var .string sample = GetVoiceMessageSampleField(substring(this.noise, 1, -1));
-		if(GetPlayerSoundSampleField_notFound)
-			snd = SND(Null);
-		else if(actor.(sample) == "")
-			snd = SND(Null);
-		else
-		{
-			tokenize_console(actor.(sample));
-			float n = stof(argv(1));
-			if(n > 0)
-				snd = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
-			else
-				snd = strcat(argv(0), ".wav"); // randomization
-		}
-	}
-	else
-		snd = this.noise;
-	_sound(this, CH_TRIGGER_SINGLE, snd, VOL_BASE * this.volume, this.atten);
-	if(this.spawnflags & (SPEAKER_LOOPED_ON + SPEAKER_LOOPED_OFF))
-		this.use = target_speaker_use_off;
-}
-void target_speaker_use_off(entity this, entity actor, entity trigger)
-{
-	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE * this.volume, this.atten);
-	this.use = target_speaker_use_on;
-}
+
 void target_speaker_reset(entity this)
 {
-	if(this.spawnflags & SPEAKER_LOOPED_ON)
-	{
-		if(this.use == target_speaker_use_on)
-			target_speaker_use_on(this, NULL, NULL);
-	}
-	else if(this.spawnflags & SPEAKER_LOOPED_OFF)
-	{
-		if(this.use == target_speaker_use_off)
-			target_speaker_use_off(this, NULL, NULL);
-	}
+	this.state = this.spawnflags & SPEAKER_LOOPED_ON;
+	this.SendFlags |= SF_TRIGGER_RESET;
 }
 
+float target_speaker_send(entity this, entity to, float sf)
+{
+	if (this.state)
+		sf |= SF_TRIGGER_ENABLE;
+	else
+		sf &= ~SF_TRIGGER_ENABLE;
+
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPEAKER);
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & SF_TRIGGER_INIT)
+	{
+		WriteVector(MSG_ENTITY, this.origin);
+		WriteString(MSG_ENTITY, this.noise);
+		WriteFloat(MSG_ENTITY, this.volume);
+		WriteFloat(MSG_ENTITY, this.atten);
+	}
+
+	return true;
+}
+
+/*QUAKED target_speaker (1 0 0) (-8 -8 -8) (8 8 8) looped-on looped-off global activator
+"noise"		wav file to play
+
+A global sound will play full volume throughout the level.
+Activator sounds will play on the player that activated the target.
+Global and activator sounds can't be combined with looping.
+Normal sounds play each time the target is used.
+Looped sounds will be toggled by use functions.
+Multiple identical looping sounds will just increase volume without any speed cost.
+"wait" : Seconds between auto triggerings, 0 = don't auto trigger
+"random"	wait variance, default is 0
+*/
 spawnfunc(target_speaker)
 {
-	// TODO: "*" prefix to sound file name
 	// TODO: wait and random (just, HOW? random is not a field)
-	if(this.noise)
-		precache_sound (this.noise);
 
-	if(!this.atten && (this.spawnflags & SPEAKER_GLOBAL) && !(this.spawnflags & 3)) // special check for quake 3: looped sounds are never global
+	if (!this.noise)
 	{
-		if (!Q3COMPAT_COMMON)
-			LOG_WARN("target_speaker uses legacy spawnflag GLOBAL (BIT(2)), please set atten to -1 instead");
-		this.atten = -1;
+		string s = sprintf("target_speaker without a noise key at %v", this.origin);
+		objerror(this, s); // s = macro workaround (origin is always '0 0 0' otherwise)
 	}
+
+	if (substring(this.noise, 0, 1) == "*")
+		// Q3: force all client reletive sounds to be "activator" speakers that
+		// play on the entity that activates it
+		this.spawnflags |= SPEAKER_ACTIVATOR;
+	else
+		precache_sound(this.noise);
 
 	if(!this.atten)
 	{
-		if(this.targetname && this.targetname != "")
-			this.atten = ATTEN_NORM;
+		if (this.spawnflags == SPEAKER_GLOBAL) // Q3 looped and activator sounds are never global
+		{
+			if (!Q3COMPAT_COMMON)
+				LOG_WARN("target_speaker uses legacy spawnflag GLOBAL (BIT(2)), please set atten to -1 instead");
+		}
 		else
-			this.atten = ATTEN_STATIC;
+		{
+			if (this.targetname != ""
+			&& !(this.spawnflags & (SPEAKER_LOOPED_ON | SPEAKER_LOOPED_OFF)))
+				this.atten = ATTEN_NORM;
+			else
+				this.atten = ATTEN_STATIC;
+		}
 	}
 	else if(this.atten < 0)
 		this.atten = 0;
@@ -101,22 +113,15 @@ spawnfunc(target_speaker)
 	if(!this.volume)
 		this.volume = 1;
 
-	if(this.targetname && this.targetname != "")
+	if(this.targetname != "")
 	{
-		if(this.spawnflags & SPEAKER_ACTIVATOR)
-			this.use = target_speaker_use_activator;
-		else if(this.spawnflags & SPEAKER_LOOPED_ON)
+		this.use = target_speaker_use;
+		if (this.spawnflags & (SPEAKER_LOOPED_ON | SPEAKER_LOOPED_OFF))
 		{
-			target_speaker_use_on(this, NULL, NULL);
 			this.reset = target_speaker_reset;
+			target_speaker_reset(this);
+			Net_LinkEntity(this, false, 0, target_speaker_send);
 		}
-		else if(this.spawnflags & SPEAKER_LOOPED_OFF)
-		{
-			this.use = target_speaker_use_on;
-			this.reset = target_speaker_reset;
-		}
-		else
-			this.use = target_speaker_use_on;
 	}
 	else if(this.spawnflags & SPEAKER_LOOPED_ON)
 	{
@@ -127,11 +132,45 @@ spawnfunc(target_speaker)
 	{
 		objerror(this, "This sound entity can never be activated");
 	}
-	else
+	else if (!q3compat)
 	{
 		// Quake/Nexuiz fallback
 		ambientsound (this.origin, this.noise, VOL_BASE * this.volume, this.atten);
 		delete(this);
 	}
+}
+
+#elifdef CSQC
+void target_speaker_think(entity this)
+{
+	if (getsoundtime(this, CH_AMBIENT_SINGLE) == -1)
+	{
+		sound7(this, CH_AMBIENT_SINGLE, this.noise, VOL_BASE * this.volume, this.atten, 0, 0);
+		this.nextthink = time + soundlength(this.noise);
+	}
+	else
+		this.nextthink = time;
+}
+
+NET_HANDLE(ENT_CLIENT_SPEAKER, bool isnew)
+{
+	float sf = ReadByte();
+
+	if (sf & SF_TRIGGER_INIT)
+	{
+		setorigin(this, ReadVector());
+		this.noise = strzone(ReadString());
+		this.volume = ReadFloat();
+		this.atten = ReadFloat();
+
+		setthink(this, target_speaker_think);
+	}
+
+	if (sf & SF_TRIGGER_ENABLE)
+		target_speaker_think(this);
+	else
+		this.nextthink = 0;
+
+	return true;
 }
 #endif
