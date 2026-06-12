@@ -311,3 +311,74 @@ void W_DamageOverTime_Think(entity this,
 	else
 		delete(this);
 }
+
+vector W_SteerProjectileTo(vector thisdir, vector goaldir, float maxturn_cos)
+{
+	if (thisdir * goaldir > maxturn_cos)
+		return goaldir;
+	if (thisdir * goaldir < -0.9998) // less than 1 degree and opposite
+		return thisdir; // refuse to guide (better than letting a numerical error happen)
+
+	// solve:
+	//   g = normalize(thisdir + goaldir * X)
+	//   thisdir * g = maxturn
+	//
+	//   gg = thisdir + goaldir * X
+	//   (thisdir * gg)^2 = maxturn^2 * (gg * gg)
+	//
+	//   (1 + (thisdir * goaldir) * X)^2 = maxturn^2 * (1 + X*X + 2 * X * thisdir * goaldir)
+	float f = thisdir * goaldir;
+	//   (1 + f * X)^2 = maxturn^2 * (1 + X*X + 2 * X * f)
+	//   0 = (m^2 - f^2) * x^2 + (2 * f * (m^2 - 1)) * x + (m^2 - 1)
+	float m2 = maxturn_cos * maxturn_cos;
+	vector v = solve_quadratic(m2 - f * f, 2 * f * (m2 - 1), m2 - 1);
+	return normalize(thisdir + goaldir * v.y); // the larger solution!
+}
+// assume thisdir == -goaldir:
+//   f == -1
+//   v = solve_qadratic(m2 - 1, -2 * (m2 - 1), m2 - 1)
+//   (m2 - 1) x^2 - 2 * (m2 - 1) * x + (m2 - 1) = 0
+//   x^2 - 2 * x + 1 = 0
+//   (x - 1)^2 = 0
+//   x = 1
+//   normalize(thisdir + goaldir)
+//   normalize(0)
+
+/// Guides a projectile towards the crosshair (v_forward).
+/// Call makevectors first
+void W_GuideProjectile(entity this, .entity weaponentity, float guide_rate, float guide_rate_delay, float guide_goal, float guide_delay, entity eff, entity snd, float vol)
+{
+	float f = (guide_rate_delay)
+		? bound(0, (time - this.pushltime) / guide_rate_delay, 1)
+		: 1;
+
+	vector md = this.realowner.(weaponentity).movedir;
+	vector dv = (W_DualWielding(this.realowner))
+		? v_right * -md.y + v_up * md.z
+		: '0 0 0'; // don't override!
+
+	float velspeed = vlen(this.velocity);
+
+	makevectors(this.realowner.v_angle);
+	vector desireddir = WarpZone_RefSys_TransformVelocity(this.realowner, this, v_forward);
+	vector desiredorigin = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs + dv);
+	vector olddir = normalize(this.velocity);
+
+	// now it gets tricky... we want to move like some curve to approximate the target direction
+	// but we are limiting the rate at which we can turn!
+	vector goal = desiredorigin + ((this.origin - desiredorigin) * desireddir + guide_goal) * desireddir;
+	vector newdir = W_SteerProjectileTo(olddir, normalize(goal - this.origin), cos(guide_rate * f * frametime * DEG2RAD));
+
+	this.velocity = newdir * velspeed;
+	this.angles = vectoangles(this.velocity);
+
+	if (!this.count && guide_delay > 0 && (eff || snd))
+	{
+		if (eff)
+			Send_Effect(eff, this.origin, this.velocity, 1);
+		// TODO add a better sound here
+		if (snd)
+			sound(this.realowner, CH_WEAPON_B, snd, vol, ATTN_NORM);
+		this.count = 1;
+	}
+}

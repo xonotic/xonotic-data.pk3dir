@@ -348,13 +348,26 @@ void W_Seeker_Tracker_Think(entity this)
 // ============================
 // Begin: Tag projectile
 // ============================
+.entity lasttag;
+
+void W_Seeker_Tag_Delete(entity this)
+{
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if (this.realowner.(weaponentity).lasttag == this)
+			this.realowner.(weaponentity).lasttag = NULL;
+	}
+	delete(this);
+}
+
 void W_Seeker_Tag_Explode(entity this)
 {
 	//if (other == this.realowner)
 	//	return;
 	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
 
-	delete(this);
+	W_Seeker_Tag_Delete(this);
 }
 
 void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -418,8 +431,37 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 		}
 	}
 
-	delete(this);
-	return;
+	W_Seeker_Tag_Delete(this);
+}
+
+/// Think function, only for guided tags
+void W_Seeker_Tag_Think(entity this)
+{
+	if (time >= this.ltime)
+	{
+		W_Seeker_Tag_Delete(this);
+		return;
+	}
+	this.nextthink = time;
+
+	// laser guided
+	.entity weaponentity = this.weaponentity_fld;
+	if (this.realowner.(weaponentity).m_weapon == WEP_SEEKER
+	&& this == this.realowner.(weaponentity).lasttag
+	&& !this.realowner.(weaponentity).tag_release
+	&& WEP_CVAR(WEP_SEEKER, tag_guiderate)
+	&& time > this.pushltime
+	&& !IS_DEAD(this.realowner))
+	{
+		makevectors(this.angles.x * -eX + this.angles.y * eY);
+		W_GuideProjectile(this, weaponentity,
+			WEP_CVAR(WEP_SEEKER, tag_guiderate),
+			WEP_CVAR(WEP_SEEKER, tag_guideratedelay),
+			WEP_CVAR(WEP_SEEKER, tag_guidegoal),
+			WEP_CVAR(WEP_SEEKER, tag_guidedelay),
+			NULL, SND_DEVASTATOR_MODE, VOL_BASE * 0.5); // TODO: add a better sound here
+		UpdateCSQCProjectile(this);
+	}
 }
 
 void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
@@ -430,13 +472,25 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 
 	entity missile = new(seeker_tag);
 	WarpZone_RefSys_Copy(missile, actor);
+	if (WEP_CVAR(WEP_SEEKER, tag_guiderate) > 0)
+	{
+		actor.(weaponentity).lasttag = missile;
+		missile.pushltime = time + WEP_CVAR(WEP_SEEKER, tag_guidedelay);
+		missile.ltime = time + WEP_CVAR(WEP_SEEKER, tag_lifetime);
+		missile.nextthink = time;
+		setthink(missile, W_Seeker_Tag_Think);
+	}
+	else
+	{
+		missile.nextthink = time + WEP_CVAR(WEP_SEEKER, tag_lifetime);
+		setthink(missile, SUB_Remove);
+	}
+
 	missile.weaponentity_fld = weaponentity;
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = 50;
 	settouch(missile, W_Seeker_Tag_Touch);
-	setthink(missile, SUB_Remove);
-	missile.nextthink = time + WEP_CVAR(WEP_SEEKER, tag_lifetime);
 	set_movetype(missile, MOVETYPE_FLY);
 
 	missile.takedamage = DAMAGE_YES;
@@ -457,9 +511,14 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupProjVelocity_PRE(missile, WEP_SEEKER, tag_);
 	missile.angles = vectoangles(missile.velocity);
 
-	CSQCProjectile(missile, true, PROJECTILE_SEEKER_TAG, false); // has sound
+	CSQCProjectile(missile, fabs(WEP_CVAR(WEP_SEEKER, tag_guiderate)) <= 30, PROJECTILE_SEEKER_TAG, false); // has sound
+	// Network velocity for the trail only if the guiding isn't strong,
+	// or else the trail clearly goes off path (backwards)
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+
+	if (time >= missile.nextthink)
+		getthink(missile)(missile);
 }
 
 // ============================
@@ -487,9 +546,9 @@ METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 		return;
 	}
 
-	if (fire & 1)
+	if (WEP_CVAR(WEP_SEEKER, type) == 1)
 	{
-		if (WEP_CVAR(WEP_SEEKER, type) == 1)
+		if (fire & 1)
 		{
 			if (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_SEEKER, missile_refire)))
 			{
@@ -497,26 +556,32 @@ METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(WEP_SEEKER, missile_animtime), w_ready);
 			}
 		}
-		else
+		else if (fire & 2)
 		{
-			if (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_SEEKER, tag_refire)))
+			if ((actor.(weaponentity).tag_release || WEP_CVAR(WEP_SEEKER, tag_guidestop))
+			&& weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_SEEKER, tag_refire)))
 			{
 				W_Seeker_Fire_Tag(thiswep, actor, weaponentity);
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(WEP_SEEKER, tag_animtime), w_ready);
+				actor.(weaponentity).tag_release = false;
 			}
 		}
+		else
+			actor.(weaponentity).tag_release = true;
 	}
-	else if (fire & 2)
+	else
 	{
-		if (WEP_CVAR(WEP_SEEKER, type) == 1)
+		if (fire & 1)
 		{
-			if (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_SEEKER, tag_refire)))
+			if ((actor.(weaponentity).tag_release || WEP_CVAR(WEP_SEEKER, tag_guidestop))
+			&& weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_SEEKER, tag_refire)))
 			{
 				W_Seeker_Fire_Tag(thiswep, actor, weaponentity);
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(WEP_SEEKER, tag_animtime), w_ready);
+				actor.(weaponentity).tag_release = false;
 			}
 		}
-		else
+		else if (fire & 2)
 		{
 			if (weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(WEP_SEEKER, flac_refire)))
 			{
@@ -524,7 +589,14 @@ METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(WEP_SEEKER, flac_animtime), w_ready);
 			}
 		}
+		else
+			actor.(weaponentity).tag_release = true;
 	}
+}
+
+METHOD(Seeker, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
+{
+	actor.(weaponentity).tag_release = true;
 }
 
 METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -557,6 +629,16 @@ METHOD(Seeker, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapone
 		ammo_amount += actor.(weaponentity).(weapon_load[thiswep.m_id]) >= WEP_CVAR(WEP_SEEKER, flac_ammo);
 	}
 	return ammo_amount;
+}
+
+METHOD(Seeker, wr_resetplayer, void(entity thiswep, entity actor))
+{
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		actor.(weaponentity).lasttag = NULL; // stop tag guiding, no revenge from the grave!
+		actor.(weaponentity).tag_release = true;
+	}
 }
 
 METHOD(Seeker, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))

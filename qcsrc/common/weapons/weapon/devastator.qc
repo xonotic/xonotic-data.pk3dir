@@ -157,50 +157,18 @@ void W_Devastator_RemoteExplode(entity this, .entity weaponentity)
 		W_Devastator_DoRemoteExplode(this, weaponentity);
 }
 
-vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)
-{
-	if (thisdir * goaldir > maxturn_cos)
-		return goaldir;
-	if (thisdir * goaldir < -0.9998) // less than 1 degree and opposite
-		return thisdir; // refuse to guide (better than letting a numerical error happen)
-
-	// solve:
-	//   g = normalize(thisdir + goaldir * X)
-	//   thisdir * g = maxturn
-	//
-	//   gg = thisdir + goaldir * X
-	//   (thisdir * gg)^2 = maxturn^2 * (gg * gg)
-	//
-	//   (1 + (thisdir * goaldir) * X)^2 = maxturn^2 * (1 + X*X + 2 * X * thisdir * goaldir)
-	float f = thisdir * goaldir;
-	//   (1 + f * X)^2 = maxturn^2 * (1 + X*X + 2 * X * f)
-	//   0 = (m^2 - f^2) * x^2 + (2 * f * (m^2 - 1)) * x + (m^2 - 1)
-	float m2 = maxturn_cos * maxturn_cos;
-	vector v = solve_quadratic(m2 - f * f, 2 * f * (m2 - 1), m2 - 1);
-	return normalize(thisdir + goaldir * v.y); // the larger solution!
-}
-// assume thisdir == -goaldir:
-//   f == -1
-//   v = solve_qadratic(m2 - 1, -2 * (m2 - 1), m2 - 1)
-//   (m2 - 1) x^2 - 2 * (m2 - 1) * x + (m2 - 1) = 0
-//   x^2 - 2 * x + 1 = 0
-//   (x - 1)^2 = 0
-//   x = 1
-//   normalize(thisdir + goaldir)
-//   normalize(0)
-
 void W_Devastator_Think(entity this)
 {
-	this.nextthink = time;
 	if (time > this.cnt)
 	{
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		W_Devastator_Explode(this, NULL);
 		return;
 	}
+	this.nextthink = time;
 
 	// accelerate
-	makevectors(this.angles.x * '-1 0 0' + this.angles.y * '0 1 0');
+	makevectors(this.angles.x * -eX + this.angles.y * eY);
 	float velspeed = WEP_CVAR(WEP_DEVASTATOR, speed) * W_WeaponSpeedFactor(this.realowner) - (this.velocity * v_forward);
 	if (velspeed > 0)
 		this.velocity += v_forward * min(WEP_CVAR(WEP_DEVASTATOR, speedaccel) * W_WeaponSpeedFactor(this.realowner) * frametime, velspeed);
@@ -215,49 +183,18 @@ void W_Devastator_Think(entity this)
 		&& WEP_CVAR(WEP_DEVASTATOR, guiderate)
 		&& time > this.pushltime
 		&& !IS_DEAD(this.realowner))
-		{
-			vector desireddir, olddir, newdir, desiredorigin, goal;
-			float f = WEP_CVAR(WEP_DEVASTATOR, guideratedelay);
-			if (f)
-				f = bound(0, (time - this.pushltime) / f, 1);
-			else
-				f = 1;
-
-			vector md = this.realowner.(weaponentity).movedir;
-			vector dv = v_right * -md.y + v_up * md.z;
-
-			if (!W_DualWielding(this.realowner))
-				dv = '0 0 0'; // don't override!
-
-			velspeed = vlen(this.velocity);
-
-			makevectors(this.realowner.v_angle);
-			desireddir = WarpZone_RefSys_TransformVelocity(this.realowner, this, v_forward);
-			desiredorigin = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs + dv);
-			olddir = normalize(this.velocity);
-
-			// now it gets tricky... we want to move like some curve to approximate the target direction
-			// but we are limiting the rate at which we can turn!
-			goal = desiredorigin + ((this.origin - desiredorigin) * desireddir + WEP_CVAR(WEP_DEVASTATOR, guidegoal)) * desireddir;
-			newdir = W_Devastator_SteerTo(olddir, normalize(goal - this.origin), cos(WEP_CVAR(WEP_DEVASTATOR, guiderate) * f * frametime * DEG2RAD));
-
-			this.velocity = newdir * velspeed;
-			this.angles = vectoangles(this.velocity);
-
-			if (!this.count)
-			{
-				Send_Effect(EFFECT_ROCKET_GUIDE, this.origin, this.velocity, 1);
-				// TODO add a better sound here
-				sound(this.realowner, CH_WEAPON_B, SND_DEVASTATOR_MODE, VOL_BASE, ATTN_NORM);
-				this.count = 1;
-			}
-		}
+			W_GuideProjectile(this, weaponentity,
+				WEP_CVAR(WEP_DEVASTATOR, guiderate),
+				WEP_CVAR(WEP_DEVASTATOR, guideratedelay),
+				WEP_CVAR(WEP_DEVASTATOR, guidegoal),
+				WEP_CVAR(WEP_DEVASTATOR, guidedelay),
+				EFFECT_ROCKET_GUIDE, SND_DEVASTATOR_MODE, VOL_BASE); // TODO: add a better sound here
 
 		if (this.rl_detonate_later)
 			W_Devastator_RemoteExplode(this, weaponentity);
 	}
 
-	if (this.csqcprojectile_clientanimate == 0)
+	if (WEP_CVAR(WEP_DEVASTATOR, speedaccel) || WEP_CVAR(WEP_DEVASTATOR, guiderate))
 		UpdateCSQCProjectile(this);
 }
 
@@ -327,13 +264,15 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(WEP_DEVASTATOR, lifetime);
-	missile.rl_detonate_later = (fire & 2); // allow instant detonation
+	missile.rl_detonate_later = boolean(fire & 2); // allow instant detonation
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
 
-	CSQCProjectile(missile, WEP_CVAR(WEP_DEVASTATOR, guiderate) == 0 && WEP_CVAR(WEP_DEVASTATOR, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound
+	CSQCProjectile(missile, fabs(WEP_CVAR(WEP_DEVASTATOR, guiderate)) <= 30, PROJECTILE_ROCKET, false); // because of fly sound
+	// Network velocity for the trail only if the guiding isn't strong,
+	// or else the trail clearly goes off path (backwards)
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
@@ -471,11 +410,11 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 		{
 			W_Devastator_Attack(thiswep, actor, weaponentity, fire);
 			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_DEVASTATOR, animtime), w_ready);
-			actor.(weaponentity).rl_release = 0;
+			actor.(weaponentity).rl_release = false;
 		}
 	}
 	else
-		actor.(weaponentity).rl_release = 1;
+		actor.(weaponentity).rl_release = true;
 
 	if ((fire & 2)
 	&& actor.(weaponentity).m_switchweapon == thiswep)
@@ -496,7 +435,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 
 METHOD(Devastator, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 {
-	actor.(weaponentity).rl_release = 1;
+	actor.(weaponentity).rl_release = true;
 }
 
 METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
@@ -517,7 +456,7 @@ METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor, .entity wea
 	}
 	#endif
 	#if 0
-	if (actor.rl_release == 0)
+	if (!actor.rl_release)
 	{
 		LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE", actor.rl_release, GetResource(actor, thiswep.ammo_type), WEP_CVAR(WEP_DEVASTATOR, ammo));
 		return true;
@@ -547,7 +486,7 @@ METHOD(Devastator, wr_resetplayer, void(entity thiswep, entity actor))
 	{
 		.entity weaponentity = weaponentities[slot];
 		actor.(weaponentity).lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
-		actor.(weaponentity).rl_release = 0;
+		actor.(weaponentity).rl_release = true;
 	}
 }
 

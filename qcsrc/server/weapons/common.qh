@@ -8,6 +8,8 @@ bool autocvar_g_projectiles_keep_owner;
 float autocvar_sv_strengthsound_antispam_refire_threshold;
 float autocvar_sv_strengthsound_antispam_time;
 
+
+// Helper weapon functions
 bool W_DualWielding(entity player);
 void W_GiveWeapon (entity e, float wep);
 void W_PlayStrengthSound(entity player);
@@ -27,6 +29,9 @@ float W_SeekOutEnemy(entity this, float speed_decel, float speed_accel, float sp
 .float dmg_last;
 .float teleport_time; // reused field, as the time the damage started
 void W_DamageOverTime_Think(entity this, float duration, float duration_power, float damage, float edgedamage, float rad, float force, entity cantbe, float think_delay);
+
+void W_GuideProjectile(entity this, .entity weaponentity, float guide_rate, float guide_rate_delay, float guide_goal, float guide_delay, entity eff, entity snd, float vol);
+
 
 .float misc_bulletcounter;
 
