@@ -35,6 +35,12 @@ void target_speaker_use(entity this, entity actor, entity trigger)
 	_sound(this.spawnflags & SPEAKER_ACTIVATOR ? actor : this, CH_TRIGGER_SINGLE, snd, VOL_BASE * this.volume, this.atten);
 }
 
+void target_speaker_think(entity this)
+{
+	_sound(this, CH_AMBIENT_SINGLE, this.noise, VOL_BASE * this.volume, this.atten);
+	this.nextthink = time + this.wait + this.rnd * crandom();
+}
+
 void target_speaker_reset(entity this)
 {
 	this.state = this.spawnflags & SPEAKER_LOOPED_ON;
@@ -76,7 +82,8 @@ Multiple identical looping sounds will just increase volume without any speed co
 */
 spawnfunc(target_speaker)
 {
-	// TODO: wait and random (just, HOW? random is not a field)
+	G_SpawnFloat("wait", 0, this, wait);
+	G_SpawnFloat("random", 0, this, rnd);
 
 	if (!this.noise)
 	{
@@ -93,7 +100,8 @@ spawnfunc(target_speaker)
 
 	if(!this.atten)
 	{
-		if (this.spawnflags == SPEAKER_GLOBAL) // Q3 looped and activator sounds are never global
+		if (this.spawnflags == SPEAKER_GLOBAL // Q3 looped and activator sounds are never global
+		&& (!this.wait || !this.rnd)) // nor are randomly auto-triggering ones
 		{
 			if (!Q3COMPAT_COMMON)
 				LOG_WARN("target_speaker uses legacy spawnflag GLOBAL (BIT(2)), please set atten to -1 instead");
@@ -104,7 +112,7 @@ spawnfunc(target_speaker)
 			&& !(this.spawnflags & (SPEAKER_LOOPED_ON | SPEAKER_LOOPED_OFF)))
 				this.atten = ATTEN_NORM;
 			else
-				this.atten = ATTEN_STATIC;
+				this.atten = ATTEN_IDLE;
 		}
 	}
 	else if(this.atten < 0)
@@ -112,6 +120,16 @@ spawnfunc(target_speaker)
 
 	if(!this.volume)
 		this.volume = 1;
+
+	// In Q3 setting "random" + "wait" enables the auto-triggering feature,
+	// normal triggering is possible as well.
+	// Controlled by SVQC thinking so everyone hears it at the same time (unlike in Q3).
+	if (this.wait && this.rnd
+	&& !(this.spawnflags & (SPEAKER_LOOPED_ON | SPEAKER_LOOPED_OFF)))
+	{
+		setthink(this, target_speaker_think);
+		this.nextthink = time + 5 + this.rnd * crandom(); // Q3 just plays it immediately
+	}
 
 	if(this.targetname != "")
 	{
@@ -132,7 +150,7 @@ spawnfunc(target_speaker)
 	{
 		objerror(this, "This sound entity can never be activated");
 	}
-	else if (!q3compat)
+	else if ((!this.wait || !this.rnd) && !q3compat)
 	{
 		// Quake/Nexuiz fallback
 		ambientsound (this.origin, this.noise, VOL_BASE * this.volume, this.atten);
