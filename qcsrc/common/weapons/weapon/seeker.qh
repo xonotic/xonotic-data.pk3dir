@@ -99,6 +99,11 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, tag_ammo, float, NONE) \
 		P(class, prefix, tag_animtime, float, NONE) \
 		P(class, prefix, tag_damageforcescale, float, NONE) \
+		P(class, prefix, tag_guidedelay, float, NONE) \
+		P(class, prefix, tag_guidegoal, float, NONE) \
+		P(class, prefix, tag_guideratedelay, float, NONE) \
+		P(class, prefix, tag_guiderate, float, NONE) \
+		P(class, prefix, tag_guidestop, float, NONE) \
 		P(class, prefix, tag_health, float, NONE) \
 		P(class, prefix, tag_lifetime, float, NONE) \
 		P(class, prefix, tag_refire, float, NONE) \
@@ -120,8 +125,10 @@ REGISTER_WEAPON(SEEKER, NEW(Seeker));
 SPAWNFUNC_WEAPON(weapon_seeker, WEP_SEEKER)
 
 #ifdef SVQC
-.entity tag_target, wps_tag_tracker;
+.entity tag_target;
+.entity wps_tag_tracker;
 .float tag_time;
+.bool tag_release;
 
 IntrusiveList g_seeker_trackers;
 STATIC_INIT(g_seeker_trackers)
