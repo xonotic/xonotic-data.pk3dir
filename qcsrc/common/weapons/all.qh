@@ -503,6 +503,7 @@ string W_Guide_DPS_onlyOne_andDirectHit(string name, string fire);
 string W_Guide_DPS(string name, string pri, string sec);
 string W_Guide_DPS_bothMultishot(string name, string pri, string sec);
 string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, string shots, string refire2, bool sec_variable);
+string W_Guide_DPS_MachineGun(string name, string pri, string sec, string other, string shots, string refire2, bool sec_variable);
 string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots);
 string W_Guide_DPS_Seeker(string name, string pri, string sec, string other, string shots);
 string W_Guide_DPS_onlySecondary(string name, string sec);
