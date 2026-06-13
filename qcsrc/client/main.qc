@@ -1064,10 +1064,10 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 	}
 	bool welcome_msg_too = ReadByte();
 	if (welcome_msg_too)
-		net_handle_ServerWelcome();
+		net_handle_ServerWelcome(); // executes cl_hook_mutator_* hooks too
 	return = true;
 	Scoreboard_InitScores();
-	Gametype_Init();
+	Gametype_Init(); // executes cl_hook_gamestart_* hooks
 }
 
 NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
@@ -1327,12 +1327,7 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-string translate_modifications(string s)
-{
-	return build_mutator_list(s);
-}
-
-string translate_weaponarena(string s)
+string build_weaponarena_list(string s)
 {
 	if (s == "") return s;
 	if (s == "All Weapons Arena") return _("All Weapons Arena");
@@ -1407,8 +1402,8 @@ bool net_handle_ServerWelcome()
 	MapInfo_Map_author = flags & 8 ? ReadString() : "";
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
-	string modifications = translate_modifications(ReadString());
-	string weaponarena_list = translate_weaponarena(ReadString());
+	string modifications = build_mutator_list(ReadString()); // executes cl_hook_mutator_* hooks too
+	string weaponarena_list = build_weaponarena_list(ReadString());
 	string cache_mutatormsg = ReadString();
 	string motd = ReadString();
 
