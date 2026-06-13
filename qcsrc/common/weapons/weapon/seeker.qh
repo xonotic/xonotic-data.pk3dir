@@ -98,6 +98,7 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, tag_ammo, float, NONE) \
 		P(class, prefix, tag_animtime, float, NONE) \
+		P(class, prefix, tag_damage, float, NONE) \
 		P(class, prefix, tag_damageforcescale, float, NONE) \
 		P(class, prefix, tag_guidedelay, float, NONE) \
 		P(class, prefix, tag_guidegoal, float, NONE) \
