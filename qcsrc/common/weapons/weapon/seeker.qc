@@ -444,11 +444,15 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
 
-	vector dir;
-	dir = normalize(this.realowner.origin - this.origin);
-
 	this.event_damage = func_null;
 	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
+	Damage(toucher, this, this.realowner,
+		WEP_CVAR(WEP_SEEKER, tag_damage),
+		this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SECONDARY,
+		this.weaponentity_fld,
+		this.origin,
+		'0 0 0'
+	);
 
 	if (toucher.takedamage == DAMAGE_AIM && !IS_DEAD(toucher))
 	{
@@ -465,26 +469,26 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 		else
 		{
 			//sprint(this.realowner, strcat("You just tagged ^2", toucher.netname, "^7 with a tracking device!\n"));
-			entity e = new(tag_tracker);
-			e.weaponentity_fld = this.weaponentity_fld;
-			e.cnt = WEP_CVAR(WEP_SEEKER, missile_count);
-			e.owner = this.owner;
-			e.realowner = this.realowner;
-			IL_PUSH(g_seeker_trackers, e);
+			entity tracker = new(tag_tracker);
+			tracker.weaponentity_fld = this.weaponentity_fld;
+			tracker.cnt = WEP_CVAR(WEP_SEEKER, missile_count);
+			tracker.owner = this.owner;
+			tracker.realowner = this.realowner;
+			IL_PUSH(g_seeker_trackers, tracker);
 
 			if (WEP_CVAR(WEP_SEEKER, type) == 1)
 			{
-				e.tag_target = toucher;
-				e.tag_time = time;
-				setthink(e, W_Seeker_Tracker_Think);
+				tracker.tag_target = toucher;
+				tracker.tag_time = time;
+				setthink(tracker, W_Seeker_Tracker_Think);
 			}
 			else
 			{
-				e.enemy = toucher;
-				setthink(e, W_Seeker_Vollycontroller_Think);
+				tracker.enemy = toucher;
+				setthink(tracker, W_Seeker_Vollycontroller_Think);
 			}
 
-			e.nextthink = time;
+			tracker.nextthink = time;
 		}
 
 		if (WEP_CVAR(WEP_SEEKER, type) == 1)
@@ -550,12 +554,13 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 		setthink(missile, SUB_Remove);
 	}
 
-	missile.weaponentity_fld = weaponentity;
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = 50;
 	settouch(missile, W_Seeker_Tag_Touch);
 	set_movetype(missile, MOVETYPE_FLY);
+	missile.projectiledeathtype = thiswep.m_id;
+	missile.weaponentity_fld = weaponentity;
 
 	missile.takedamage = DAMAGE_YES;
 	missile.event_damage = W_Seeker_Tag_Damage;
@@ -781,7 +786,7 @@ METHOD(Seeker, describe, string(Seeker this))
 	PAR(_("The %s primary fire deals quite a lot of damage when a tag lands, although it requires skill to aim effectively. "
 	      "The secondary fire is only useful in close range combat, and sometimes the explosives can damage yourself too."), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));
-	PAR(W_Guide_DPS_primaryMultishot(this.netname, "missile", "flac", "missile_count", "tag_refire"));
+	PAR(W_Guide_DPS_Seeker(this.netname, "missile", "flac", "tag", "missile_count"));
 	return PAGE_TEXT;
 }
 

@@ -860,8 +860,9 @@ string W_Guide_Keybinds(Weapon wep)
 
 #define COLORED_DAMAGE(dmg) strcat("^9", dmg, "^7")
 
-#define DPS_ONE(mode) sprintf(_("(DPS: %.2f)"), mode##rft <= 0 ? 1337 : stof(mode##dmg_s) / mode##rft)
-#define DPS_MUL(mode) sprintf(_("(DPS: %.2f)"), mode##rft <= 0 ? 1337 : stof(mode##dmg_s) / mode##rft * stof(mode##shots_s))
+#define DPS_ONE(mode)    sprintf(_("(DPS: %.2f)"), mode##rft <= 0 ? 1337 : stof(mode##dmg_s) / mode##rft)
+#define DPS_MUL(mode)    sprintf(_("(DPS: %.2f)"), mode##rft <= 0 ? 1337 : stof(mode##dmg_s) / mode##rft * stof(mode##shots_s))
+#define DPS_SEEKER(mode) sprintf(_("(DPS: %.2f)"), mode##rft <= 0 ? 1337 : (stof(mode##dmg_s) * stof(mode##shots_s) + mode##extra) / mode##rft)
 
 #define pri_str _("primary")
 #define sec_str _("secondary")
@@ -869,7 +870,8 @@ string W_Guide_Keybinds(Weapon wep)
 #define _IT_SHOOTS_MSG()       strcat("\n* ", sprintf(_("It shoots %s shots doing %s damage each"), shots_s, COLORED_DAMAGE(dmg_s)), " ", DPS_MUL())
 #define _DOES_MSG(mode)        strcat("\n* ", sprintf(_("The %s does %s damage"), mode##str, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_ONE(mode))
 #define _DOES_PERSEC_MSG(mode) strcat("\n* ", sprintf(_("The %s does %s damage per second"), mode##str, COLORED_DAMAGE(mode##dmg_s)))
-#define _SHOOTS_MSG(mode)      strcat("\n* ", sprintf(_("The %s shoots %s shots doing %s damage each"),    mode##str, mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_MUL(mode))
+#define _SHOOTS_MSG(mode)      strcat("\n* ", sprintf(_("The %s shoots %s shots doing %s damage each"), mode##str, mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_MUL(mode))
+#define _SEEKER_MSG(mode)      strcat("\n* ", sprintf(_("The %s does %s damage then shoots %s shots doing %s damage each"), mode##str, COLORED_DAMAGE(mode##extra_s), mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_SEEKER(mode))
 #define _SHOOTS_UPTO_MSG(mode) strcat("\n* ", sprintf(_("The %s shoots up to %s shots doing %s damage each"), mode##str, mode##shots_s, COLORED_DAMAGE(mode##dmg_s)), " ", DPS_MUL(mode))
 
 // We could use the *_MSG macros directly but we use these because they are more intuitive and readable
@@ -883,6 +885,7 @@ string W_Guide_Keybinds(Weapon wep)
 #define THE_SECONDARY_SHOOTS()      _SHOOTS_MSG(sec_)
 #define THE_SECONDARY_SHOOTS_UPTO() _SHOOTS_UPTO_MSG(sec_)
 #define THE_SECONDARY_DOES_PERSEC() _DOES_PERSEC_MSG(sec_)
+#define SEEKER_PRIMARY_SHOOTS()     _SEEKER_MSG(pri_)
 
 // One function for each translatable string
 
@@ -970,7 +973,7 @@ string W_Guide_DPS_secondaryMultishot(string name, string pri, string sec, strin
 		(sec_variable ? THE_SECONDARY_SHOOTS_UPTO() : THE_SECONDARY_SHOOTS())
 	);
 }
-string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots, string refire2)
+string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string shots)
 {
 	const string wepbal_s = strcat("g_balance_", name, "_");
 	const string pri_dmg_s   =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
@@ -978,11 +981,26 @@ string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string 
 	const string pri_shots_s =      cvar_defstring(strcat(wepbal_s, shots));
 	const string sec_dmg_s   =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
 	const float sec_rft      = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
-	const float num_shots = stof(pri_shots_s);
-	if (refire2 != "")
-		pri_rft = (num_shots - 1) * pri_rft + stof(cvar_defstring(strcat(wepbal_s, refire2)));
 	return strcat(_("Default damage stats:"),
 		THE_PRIMARY_SHOOTS(),
+		THE_SECONDARY_DOES()
+	);
+}
+string W_Guide_DPS_Seeker(string name, string pri, string sec, string other, string shots)
+{
+	const string wepbal_s = strcat("g_balance_", name, "_");
+	if (stof(cvar_defstring(strcat(wepbal_s, "type"))) == 1)
+		return W_Guide_DPS(name, pri, other);
+
+	const string pri_dmg_s   =      cvar_defstring(strcat(wepbal_s, pri, "_damage"));
+	float pri_rft            = stof(cvar_defstring(strcat(wepbal_s, other, "_refire")));
+	const string pri_shots_s =      cvar_defstring(strcat(wepbal_s, shots));
+	const string pri_extra_s =      cvar_defstring(strcat(wepbal_s, other, "_damage"));
+	const string sec_dmg_s   =      cvar_defstring(strcat(wepbal_s, sec, "_damage"));
+	const float sec_rft      = stof(cvar_defstring(strcat(wepbal_s, sec, "_refire")));
+	const float pri_extra    = stof(pri_extra_s);
+	return strcat(_("Default damage stats:"),
+		(pri_extra ? SEEKER_PRIMARY_SHOOTS() : THE_PRIMARY_SHOOTS()),
 		THE_SECONDARY_DOES()
 	);
 }
