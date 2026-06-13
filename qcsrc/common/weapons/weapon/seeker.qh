@@ -47,7 +47,7 @@ CLASS(Seeker, Weapon)
 #endif
 /* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
 /* refname   */ ATTRIB(Seeker, netname, string, "seeker");
-/* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
+/* wepname   */ ATTRIB(Seeker, m_name, string, _("Seeker"));
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
