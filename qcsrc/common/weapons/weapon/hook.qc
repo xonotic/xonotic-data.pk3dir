@@ -2,41 +2,32 @@
 
 #ifdef SVQC
 
+const float HOOK_SECONDARY_DELAY = 0.0625; // (1/16) exact multiple of default frametime 0.015625 (1/64)
 void W_Hook_ExplodeThink(entity this)
 {
+	// NOTE: W_Electro_ExplodeComboThink uses similar code, please keep them in sync
 	float dt = time - this.teleport_time;
+
 	float dmg_remaining_next = bound(0, 1 - dt / WEP_CVAR_SEC(WEP_HOOK, duration), 1) ** WEP_CVAR_SEC(WEP_HOOK, power);
 
 	float f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
 
 	RadiusDamage(this, this.realowner,
-		f * this.dmg,
-		f * this.dmg_edge,
-		this.dmg_radius,
+		f * WEP_CVAR_SEC(WEP_HOOK, damage),
+		f * WEP_CVAR_SEC(WEP_HOOK, edgedamage),
+		WEP_CVAR_SEC(WEP_HOOK, radius),
 		this.realowner,
 		NULL,
-		f * this.dmg_force,
+		f * WEP_CVAR_SEC(WEP_HOOK, force),
 		this.projectiledeathtype,
 		this.weaponentity_fld,
 		NULL
 	);
 	this.projectiledeathtype |= HITTYPE_SPAM;
-	#if 0
-	RadiusDamage(this, NULL,
-		f * this.dmg,
-		f * this.dmg_edge,
-		this.dmg_radius,
-		NULL,
-		NULL,
-		f * this.dmg_force,
-		this.projectiledeathtype,
-		NULL
-	);
-	#endif
 
 	if (dt < WEP_CVAR_SEC(WEP_HOOK, duration))
-		this.nextthink = time + 0.05; // soon
+		this.nextthink = time + HOOK_SECONDARY_DELAY;
 	else
 		delete(this);
 }
@@ -48,11 +39,7 @@ void W_Hook_Explode2(entity this)
 	this.effects |= EF_NODRAW;
 
 	setthink(this, W_Hook_ExplodeThink);
-	this.nextthink = time;
-	this.dmg = WEP_CVAR_SEC(WEP_HOOK, damage);
-	this.dmg_edge = WEP_CVAR_SEC(WEP_HOOK, edgedamage);
-	this.dmg_radius = WEP_CVAR_SEC(WEP_HOOK, radius);
-	this.dmg_force = WEP_CVAR_SEC(WEP_HOOK, force);
+	this.nextthink = time + HOOK_SECONDARY_DELAY;
 	this.teleport_time = time;
 	this.dmg_last = 1;
 	set_movetype(this, MOVETYPE_NONE);

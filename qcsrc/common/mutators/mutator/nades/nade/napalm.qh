@@ -38,3 +38,7 @@ CLASS(NapalmNade, Nade)
 	ATTRIB(NapalmNade, impulse, int, 2);
 #endif
 ENDCLASS(NapalmNade)
+
+#ifdef SVQC
+.vector fireball_impactvec;
+#endif
