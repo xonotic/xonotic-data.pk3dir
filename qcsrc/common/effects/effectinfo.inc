@@ -9281,7 +9281,7 @@ DEF(shotgun_woosh);
 SUB(shotgun_woosh) {
 	MY(airfriction) = 2;
 	MY(alpha_min) = 32;
-	MY(alpha_max) = 192;
+	MY(alpha_max) = 96;
 	MY(alpha_fade) = 512;
 	MY(bounce) = 0.100000;
 	MY(color_min) = "0x111111";
