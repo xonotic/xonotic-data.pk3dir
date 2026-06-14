@@ -763,7 +763,6 @@ MUTATOR_HOOKFUNCTION(nb, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	nb_DropBall(player);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)

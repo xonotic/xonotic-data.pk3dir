@@ -383,8 +383,6 @@ void lms_RemovePlayer(entity player)
 				}
 				GameRules_scoring_add(player, LMS_LIVES, -pl_lives);
 			}
-			player.frags = FRAGS_SPECTATOR;
-			TRANSMUTE(Observer, player);
 			INGAME_STATUS_CLEAR(player);
 			player.lms_spectate = false;
 			CS(player).killcount = FRAGS_SPECTATOR;
@@ -415,14 +413,17 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 	bool is_forced = M_ARGV(1, bool);
 
-	if (!IS_PLAYER(player))
-		return true;
+	if (!player.frags) // init
+	{
+		player.frags = FRAGS_SPECTATOR; // don't be on the scoreboard yet
+		return true; // resetting at init can end match before it starts
+	}
+	if (player.frags == FRAGS_PLAYER_OUT_OF_GAME) // eliminated
+		return true; // prevent team reset (and spec notification)
 
 	if (warmup_stage || time <= game_starttime)
 	{
 		GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
-		player.frags = FRAGS_SPECTATOR;
-		TRANSMUTE(Observer, player);
 		INGAME_STATUS_CLEAR(player);
 	}
 	else
@@ -432,13 +433,6 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 		if (!GameRules_scoring_add(player, LMS_RANK, 0))
 			lms_RemovePlayer(player);
 	}
-	return true;  // prevent team reset
-}
-
-MUTATOR_HOOKFUNCTION(lms, ClientConnect)
-{
-	entity player = M_ARGV(0, entity);
-	player.frags = FRAGS_SPECTATOR;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
