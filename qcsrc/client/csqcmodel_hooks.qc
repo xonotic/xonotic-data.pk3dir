@@ -545,6 +545,7 @@ void CSQCModel_Effects_PostUpdate(entity this)
 .int snd_looping;
 void CSQCModel_Effects_Apply(entity this)
 {
+	float dt = bound(0, frametime, 0.1);
 	int eff = this.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
 	int tref = this.csqcmodel_traileffect;
 
@@ -553,27 +554,28 @@ void CSQCModel_Effects_Apply(entity this)
 	this.traileffect = 0;
 
 	float pl_alpha = (!this.alpha ? 1 : this.alpha);
-	if(eff & EF_BRIGHTFIELD)
+	if (eff & EF_BRIGHTFIELD)
 		tref = EFFECT_TR_NEXUIZPLASMA.m_id;
 	// ignoring EF_MUZZLEFLASH
-	if((eff & EF_NODRAW) || pl_alpha < 0)
+	if ((eff & EF_NODRAW) || pl_alpha < 0)
 		this.drawmask = 0;
-	if(eff & EF_ADDITIVE)
+	if (eff & EF_ADDITIVE)
 		this.renderflags |= RF_ADDITIVE;
 	// ignoring EF_NOGUNBOB
-	if(eff & EF_FULLBRIGHT)
+	if (eff & EF_FULLBRIGHT)
 		this.renderflags |= RF_FULLBRIGHT;
-	if(pl_alpha > 0)
+
+	if (pl_alpha > 0)
 	{
-		if(eff & EF_BLUE)
+		if (eff & EF_BLUE)
 			adddynamiclight(this.origin, 200 * pl_alpha, '0.15 0.15 1.5');
-		if(eff & EF_RED)
+		if (eff & EF_RED)
 			adddynamiclight(this.origin, 200 * pl_alpha, '1.5 0.15 0.15');
-		if(eff & EF_BRIGHTLIGHT)
+		if (eff & EF_BRIGHTLIGHT)
 			adddynamiclight(this.origin, 400 * pl_alpha, '3 3 3');
-		if(eff & EF_DIMLIGHT)
+		if (eff & EF_DIMLIGHT)
 			adddynamiclight(this.origin, 200 * pl_alpha, '1.5 1.5 1.5');
-		if(eff & EF_FLAME)
+		if (eff & EF_FLAME)
 		{
 			particles_alphamin = particles_alphamax = pl_alpha; // scale by player alpha
 			// XONRELEASE TODO: xonotic-v0.9.0 after release remove the ef_shock_num check
@@ -582,10 +584,10 @@ void CSQCModel_Effects_Apply(entity this)
 			if (ef_shock_num >= 0) // in the old version of EF_FLAME the light was spawned by boxparticles
 				adddynamiclight2(this.origin + '0 0 10', 200 * particles_alphamin, '1 0.35 0', 6, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
 			int ef_flame_num = particleeffectnum(EFFECT_EF_FLAME);
-			boxparticles(ef_flame_num, this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
-			//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
+			boxparticles(ef_flame_num, this, this.absmin, this.absmax, this.velocity, this.velocity, dt, PARTICLES_USEALPHA);
+			//pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', dt);
 		}
-		if(eff & EF_SHOCK)
+		if (eff & EF_SHOCK)
 		{
 			particles_alphamin = particles_alphamax = pl_alpha; // scale by player alpha
 			// XONRELEASE TODO: xonotic-v0.9.0 after release remove the ef_shock_num check
@@ -594,10 +596,10 @@ void CSQCModel_Effects_Apply(entity this)
 				adddynamiclight2(this.origin, 50 * particles_alphamin, '3.1 4.4 10', 10, "", PFLAGS_FULLDYNAMIC); // no PFLAGS_CORONA, it looks bad
 			else
 				ef_shock_num = particleeffectnum(EFFECT_ARC_LIGHTNING);
-			boxparticles(ef_shock_num, this, this.absmin, this.absmax, '0 0 0', '0 0 0', bound(0, frametime, 0.1), PARTICLES_USEALPHA);
-			//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', bound(0, frametime, 0.1));
+			boxparticles(ef_shock_num, this, this.absmin, this.absmax, '0 0 0', '0 0 0', dt, PARTICLES_USEALPHA);
+			//pointparticles(EFFECT_ARC_LIGHTNING, this.origin, '0 0 0', dt);
 		}
-		if(eff & EF_SPEED)
+		if (eff & EF_SPEED)
 		{
 			float speed = vlen(this.velocity);
 			if (speed > 0)
@@ -615,8 +617,8 @@ void CSQCModel_Effects_Apply(entity this)
 					if (ef_speed_num >= 0)
 					{
 						// NOTE: to make this a proper trail the old foot_*_org will need to be stored, however it looks fine as-is
-						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_L_org - dir, foot_L_org + dir, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
-						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_R_org - dir, foot_R_org + dir, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
+						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_L_org - dir, foot_L_org + dir, dt, PARTICLES_USEALPHA);
+						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, foot_R_org - dir, foot_R_org + dir, dt, PARTICLES_USEALPHA);
 					}
 					// No fallback since nothing looks similar, light will still draw though
 					adddynamiclight(foot_L_org, 45 * particles_alphamin, STATUSEFFECT_Speed.m_color);
@@ -626,38 +628,47 @@ void CSQCModel_Effects_Apply(entity this)
 				{
 					vector org = this.origin + 0.5 * (this.mins + this.maxs); // center
 					if (ef_speed_num >= 0)
-						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, org - dir, org + dir, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
-						//pointparticles(EFFECT_EF_SPEED, org, '0 0 0', bound(0, frametime, 0.1));
+						WarpZone_TrailParticles_WithMultiplier(this, ef_speed_num, org - dir, org + dir, dt, PARTICLES_USEALPHA);
+						//pointparticles(EFFECT_EF_SPEED, org, '0 0 0', dt);
 					adddynamiclight(org, 45 * particles_alphamin, STATUSEFFECT_Speed.m_color);
 				}
 			}
 		}
-		if(eff & EF_STARDUST)
+		if (eff & EF_STARDUST)
 		{
 			particles_alphamin = particles_alphamax = pl_alpha; // scale by player alpha
-			boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, bound(0, frametime, 0.1), PARTICLES_USEALPHA);
-			//pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
+			boxparticles(particleeffectnum(EFFECT_EF_STARDUST), this, this.absmin, this.absmax, this.velocity, this.velocity, dt, PARTICLES_USEALPHA);
+			//pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', dt);
 		}
 	}
-	if(eff & EF_NOSHADOW)
+
+	if (eff & EF_NOSHADOW)
 		this.renderflags |= RF_NOSHADOW;
-	if(eff & EF_NODEPTHTEST)
+	if (eff & EF_NODEPTHTEST)
 		this.renderflags |= RF_DEPTHHACK;
 	// ignoring EF_SELECTABLE
-	if(eff & EF_DOUBLESIDED)
+	if (eff & EF_DOUBLESIDED)
 		this.effects |= EF_DOUBLESIDED;
-	if(eff & EF_NOSELFSHADOW)
+	if (eff & EF_NOSELFSHADOW)
 		this.effects |= EF_NOSELFSHADOW;
-	if(eff & EF_DYNAMICMODELLIGHT)
+	if (eff & EF_DYNAMICMODELLIGHT)
 		this.renderflags |= RF_DYNAMICMODELLIGHT;
 	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
-	if(this.csqcmodel_modelflags & MF_ROCKET)
-		tref = EFFECT_TR_ROCKET.m_id;
-	if(this.csqcmodel_modelflags & MF_GRENADE)
-		tref = EFFECT_TR_GRENADE.m_id;
-	if(this.csqcmodel_modelflags & MF_GIB)
-		tref = EFFECT_TR_BLOOD.m_id;
-	if(this.csqcmodel_modelflags & MF_ROTATE)
+
+	if (false)
+		;
+#define TRAIL_FROM_MODEL(modelflag, trailent) \
+	else if (this.csqcmodel_modelflags & (modelflag)) \
+		tref = EFFECT_##trailent.m_id
+	TRAIL_FROM_MODEL(MF_TRACER3, TR_VORESPIKE);
+	TRAIL_FROM_MODEL(MF_TRACER2, TR_KNIGHTSPIKE);
+	TRAIL_FROM_MODEL(MF_ZOMGIB,  TR_SLIGHTBLOOD);
+	TRAIL_FROM_MODEL(MF_TRACER,  TR_WIZSPIKE);
+	TRAIL_FROM_MODEL(MF_GIB,     TR_BLOOD);
+	TRAIL_FROM_MODEL(MF_GRENADE, TR_GRENADE);
+	TRAIL_FROM_MODEL(MF_ROCKET,  TR_ROCKET);
+#undef TRAIL_FROM_MODEL
+	if (this.csqcmodel_modelflags & MF_ROTATE)
 	{
 		// This will be hard to replace with MAKE_VECTORS because it's called as part of the predraw function
 		// as documented in csprogs.h in the engine. The globals can then be read in many places in the engine.
@@ -665,29 +676,21 @@ void CSQCModel_Effects_Apply(entity this)
 		this.renderflags |= RF_USEAXIS;
 		makevectors(this.angles + '0 100 0' * fmod(time, 3.6));
 	}
-	if(this.csqcmodel_modelflags & MF_TRACER)
-		tref = EFFECT_TR_WIZSPIKE.m_id;
-	if(this.csqcmodel_modelflags & MF_ZOMGIB)
-		tref = EFFECT_TR_SLIGHTBLOOD.m_id;
-	if(this.csqcmodel_modelflags & MF_TRACER2)
-		tref = EFFECT_TR_KNIGHTSPIKE.m_id;
-	if(this.csqcmodel_modelflags & MF_TRACER3)
-		tref = EFFECT_TR_VORESPIKE.m_id;
 
 	this.traileffect = tref;
 
-	if(this.drawmask)
+	if (this.drawmask)
 		Projectile_DrawTrail(this, this.origin);
 	else
 		Projectile_ResetTrail(this, this.origin);
 
-	if(this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+	if (this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
 		this.renderflags |= RF_ADDITIVE;
 		// also special in CSQCPlayer_GlowMod_Apply
 
-	if(this.csqcmodel_modelflags & MF_ROCKET)
+	if (this.csqcmodel_modelflags & MF_ROCKET)
 	{
-		if(!this.snd_looping)
+		if (!this.snd_looping)
 		{
 			sound(this, CH_TRIGGER_SINGLE, SND_JETPACK_FLY, VOL_BASE, autocvar_cl_jetpack_attenuation);
 			this.snd_looping = CH_TRIGGER_SINGLE;
@@ -695,7 +698,7 @@ void CSQCModel_Effects_Apply(entity this)
 	}
 	else
 	{
-		if(this.snd_looping)
+		if (this.snd_looping)
 		{
 			sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_cl_jetpack_attenuation);
 			this.snd_looping = 0;
