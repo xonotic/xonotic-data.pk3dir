@@ -2455,8 +2455,7 @@ bool PlayerThink(entity this)
 		this.dualwielding_prev = dualwielding;
 	}
 
-	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
-	//if(frametime)
+	if (frametime)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -2465,10 +2464,7 @@ bool PlayerThink(entity this)
 				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
-	}
 
-	if (frametime)
-	{
 		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
