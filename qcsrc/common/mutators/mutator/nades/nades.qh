@@ -1,8 +1,9 @@
 #pragma once
 
+#include "net.qh"
 #include <common/teams.qh>
 #ifndef SVQC
-#include <common/util.qh> // for icon_path_from_HUDskin
+	#include <common/util.qh> // for icon_path_from_HUDskin
 #endif
 
 REGISTRY(Nades, BITS(4))
