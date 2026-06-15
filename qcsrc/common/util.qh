@@ -7,6 +7,8 @@ void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, 
 #endif
 
 #ifdef GAMEQC
+#define CENTER_OF_ENT(ent) ((ent).origin + '0 0 0.5' * ((ent).mins.z + (ent).maxs.z))
+
 /*
 ==================
 findbetterlocation
