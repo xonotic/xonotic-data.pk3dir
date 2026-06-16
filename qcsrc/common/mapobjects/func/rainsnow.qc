@@ -103,14 +103,12 @@ void Draw_RainSnow(entity this)
 	float drawdist = ((this.fade_end) ? this.fade_end : autocvar_cl_rainsnow_maxdrawdist);
 	vector maxdist = '1 1 1' * drawdist;
 
-	vector effbox_min = vec_to_max(view_origin - maxdist, this.origin + this.mins);
-	vector effbox_max = vec_to_min(view_origin + maxdist, this.origin + this.maxs);
-
-	vector mysize = effbox_max - effbox_min;
-	float mycount = bound(1, 0.1 * this.count * (mysize.x / 1024) * (mysize.y / 1024), 65535);
-
 	if(boxesoverlap(view_origin - maxdist, view_origin + maxdist, this.absmin, this.absmax)) // optimisation: don't render any rain if the player is outside the view distance
 	{
+		vector effbox_min = vec_to_max(view_origin - maxdist, this.origin + this.mins);
+		vector effbox_max = vec_to_min(view_origin + maxdist, this.origin + this.maxs);
+		vector mysize = effbox_max - effbox_min;
+		float mycount = bound(1, 0.1 * this.count * (mysize.x / 1024) * (mysize.y / 1024), 65535);
 		if(this.state == RAINSNOW_RAIN)
     		te_particlerain(effbox_min, effbox_max, this.velocity, floor(mycount * drawframetime + random()), this.glow_color);
     	else
