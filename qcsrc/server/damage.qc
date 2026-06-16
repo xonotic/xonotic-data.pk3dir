@@ -1095,7 +1095,7 @@ void Fire_ApplyDamage(entity e)
 		IL_EACH(g_damagedbycontents, it.damagedbycontents && it != e,
 		{
 			if (!IS_DEAD(it) && it.takedamage && !IS_INDEPENDENT_PLAYER(it)
-			&& boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
+			&& boxesoverlap(e.absmin - '1 1 1', e.absmax + '1 1 1', it.absmin, it.absmax))
 			{
 				t = autocvar_g_balance_firetransfer_time * (fireendtime - time);
 				d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
