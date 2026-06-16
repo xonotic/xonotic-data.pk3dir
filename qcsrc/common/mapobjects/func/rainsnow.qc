@@ -39,17 +39,12 @@ spawnfunc(func_rain)
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this, true);
 	if (!this.cnt)
-	{
 		this.cnt = 12;
-	}
 	if (!this.count)
 		this.count = 2000;
 	// relative to absolute particle count
 	//this.count = 0.1 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
-	if (this.count < 1)
-		this.count = 1;
-	if(this.count > 65535)
-		this.count = 65535;
+	this.count = bound(1, this.count, 65535);
 
 	this.state = RAINSNOW_RAIN;
 
@@ -79,17 +74,12 @@ spawnfunc(func_snow)
 	this.solid = SOLID_NOT;
 	SetBrushEntityModel(this, true);
 	if (!this.cnt)
-	{
 		this.cnt = 12;
-	}
 	if (!this.count)
 		this.count = 2000;
 	// relative to absolute particle count
 	//this.count = 0.1 * this.count * (this.size_x / 1024) * (this.size_y / 1024);
-	if (this.count < 1)
-		this.count = 1;
-	if(this.count > 65535)
-		this.count = 65535;
+	this.count = bound(1, this.count, 65535);
 
 	this.state = RAINSNOW_SNOW;
 
@@ -103,16 +93,16 @@ void Draw_RainSnow(entity this)
 	float drawdist = ((this.fade_end) ? this.fade_end : autocvar_cl_rainsnow_maxdrawdist);
 	vector maxdist = '1 1 1' * drawdist;
 
-	if(boxesoverlap(view_origin - maxdist, view_origin + maxdist, this.absmin, this.absmax)) // optimisation: don't render any rain if the player is outside the view distance
+	if (boxesoverlap(view_origin - maxdist, view_origin + maxdist, this.absmin, this.absmax)) // optimisation: don't render any rain if the player is outside the view distance
 	{
 		vector effbox_min = vec_to_max(view_origin - maxdist, this.origin + this.mins);
 		vector effbox_max = vec_to_min(view_origin + maxdist, this.origin + this.maxs);
 		vector mysize = effbox_max - effbox_min;
 		float mycount = bound(1, 0.1 * this.count * (mysize.x / 1024) * (mysize.y / 1024), 65535);
-		if(this.state == RAINSNOW_RAIN)
-    		te_particlerain(effbox_min, effbox_max, this.velocity, floor(mycount * drawframetime + random()), this.glow_color);
-    	else
-    		te_particlesnow(effbox_min, effbox_max, this.velocity, floor(mycount * drawframetime + random()), this.glow_color);
+		if (this.state == RAINSNOW_RAIN)
+			te_particlerain(effbox_min, effbox_max, this.velocity, floor(mycount * drawframetime + random()), this.glow_color);
+		else
+			te_particlesnow(effbox_min, effbox_max, this.velocity, floor(mycount * drawframetime + random()), this.glow_color);
 	}
 }
 
@@ -130,12 +120,13 @@ NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
 
 	this.mins    = -0.5 * this.maxs;
 	this.maxs    =  0.5 * this.maxs;
-	this.origin  = this.origin - this.mins;
+	this.origin -= this.mins;
 
 	this.solid = SOLID_NOT; // before setorigin/setsize to prevent area grid linking
 	setorigin(this, this.origin);
 	setsize(this, this.mins, this.maxs);
-	if (isnew) IL_PUSH(g_drawables, this);
+	if (isnew)
+		IL_PUSH(g_drawables, this);
 	this.draw = Draw_RainSnow;
 }
 #endif
