@@ -13,8 +13,8 @@ float warpzone_warpzones_exist;
 float warpzone_cameras_exist;
 
 .float warpzone_isboxy;
-.vector warpzone_transform; ///< Both a warpzone property, and set on entities found by WarpZone_FindRadius
-.vector warpzone_shift;     ///< Both a warpzone property, and set on entities found by WarpZone_FindRadius
+.vector warpzone_transform; ///< Both a warpzone property, and set on entities found by WarpZone_SearchInRadius
+.vector warpzone_shift;     ///< Both a warpzone property, and set on entities found by WarpZone_SearchInRadius
 .vector warpzone_origin;
 .vector warpzone_angles;
 .vector warpzone_forward;
@@ -50,14 +50,19 @@ void WarpZone_TrailParticles(entity own, float eff, vector org, vector end);
 void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags);
 #endif
 
-// .warpzone_transform and .warpzone_shift are also set on entities found by WarpZone_FindRadius
+// .warpzone_transform and .warpzone_shift are also set on entities found by WarpZone_SearchInRadius
 .vector WarpZone_findradius_dist;
 .vector WarpZone_findradius_nearest;
 // also set: warpzone parameters, so WarpZone_TransformOrigin can transform vectors from blast's to victim's system
 .vector WarpZone_findradius_findorigin;
 .float WarpZone_findradius_findradius;
+USING(WarpZone_FindRadius_cond_callback_t, bool(entity e)); // called on every entity found by WarpZone_SearchInRadius
+/// Modified findradius aware of warpzones, that only includes entities that meet the "cb" criteria.
+/// Most useful if lineofsight, when searching with very specific criteria, or over a range likely to contain many entities.
+entity WarpZone_SearchInRadius(vector org, float radius, bool needlineofsight, WarpZone_FindRadius_cond_callback_t cb);
+noref entity WarpZone_SearchInRadius_otherent; ///< Free to use in the callback
 /// Modified findradius aware of warpzones
-entity WarpZone_FindRadius(vector org, float radius, bool needlineofsight);
+#define WarpZone_FindRadius(org, radius, needlineofsight) WarpZone_SearchInRadius(org, radius, needlineofsight, func_null)
 
 float WarpZone_PlaneDist(entity wz, vector v);
 float WarpZone_TargetPlaneDist(entity wz, vector v);
