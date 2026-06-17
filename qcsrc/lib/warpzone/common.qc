@@ -595,6 +595,8 @@ bool WarpZoneLib_BadEntity(entity e)
 
 	return false;
 }
+#define WarpZoneLib_BadEntity_WithCondCallback(e, cb) (WarpZoneLib_BadEntity(e) \
+	|| (cb && (e).classname != "trigger_warpzone" && !cb(e))) /* warpzones are never bad entities */
 
 .entity enemy;
 .float WarpZone_findradius_hit;
@@ -608,12 +610,13 @@ void _WarpZone_FindRadius_Recurse(
 	/** how to untransform (victim to blast system) */
 	vector transform,
 	vector shift,
-	bool needlineofsight)
+	bool needlineofsight,
+	WarpZone_FindRadius_cond_callback_t cb)
 {
 	if (rad <= 0)
 		return;
 	entity wz = NULL;
-	FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity(it),
+	FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity_WithCondCallback(it, cb),
 	{
 		vector p = WarpZoneLib_NearestPointOnBox(it.origin + it.mins, it.origin + it.maxs, org0);
 		if (needlineofsight)
@@ -647,7 +650,7 @@ void _WarpZone_FindRadius_Recurse(
 	});
 	for (entity e = wz; e; e = e.WarpZone_findradius_next)
 	{
-		if (WarpZoneLib_BadEntity(e))
+		if (WarpZoneLib_BadEntity(e)) // no need for cond callback, since e will always be a trigger_warpzone
 			continue;
 
 		vector org0_new = WarpZone_TransformOrigin(e, org);
@@ -661,12 +664,13 @@ void _WarpZone_FindRadius_Recurse(
 			bound(0, rad - vlen(org_new - org0_new), rad - 8),
 			org0_new,
 			transform_new, shift_new,
-			needlineofsight);
+			needlineofsight,
+			cb);
 		e.WarpZone_findradius_hit = 0;
 		e.enemy.WarpZone_findradius_hit = 0;
 	}
 }
-entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
+entity WarpZone_SearchInRadius(vector org, float rad, bool needlineofsight, WarpZone_FindRadius_cond_callback_t cb)
 {
 	bool simple_findradius = true;
 	// use simple findradius if no warpzone is touching the box of side 2 * rad and center org
@@ -692,7 +696,7 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 		FOREACH_LIST(list, chain, true,
 		{
 			// remove bad elements from this list while iterating
-			if (WarpZoneLib_BadEntity(it) || it.classname == "warpzone_refsys")
+			if (WarpZoneLib_BadEntity_WithCondCallback(it, cb) || it.classname == "warpzone_refsys")
 				bad = true;
 			else
 			{
@@ -724,7 +728,7 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 	}
 	else
 	{
-		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
+		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight, cb);
 		list_first = findchainfloat(WarpZone_findradius_hit, 1);
 		FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
 	}
