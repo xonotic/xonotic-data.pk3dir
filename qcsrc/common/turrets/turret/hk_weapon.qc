@@ -262,7 +262,7 @@ bool hk_is_valid_target(entity this, entity proj, entity targ)
 	if ((targ.flags & FL_PROJECTILE) && this.target_select_missilebias < 0) // Missile
 		return false;
 
-	if (SAME_TEAM(targ, this) || SAME_TEAM(this, targ.owner)) // Team check
+	if (TURRET_SAME_TEAM(targ, this) || TURRET_SAME_TEAM(this, targ.owner)) // Team check
 		return false;
 
 	return true;
