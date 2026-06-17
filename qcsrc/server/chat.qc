@@ -3,6 +3,7 @@
 #include <common/gametypes/_mod.qh>
 #include <common/mapobjects/target/location.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -12,7 +13,6 @@
 #include <server/command/common.qh>
 #include <server/gamelog.qh>
 #include <server/main.qh>
-#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/weapons/tracing.qh>
 #include <server/world.qh>

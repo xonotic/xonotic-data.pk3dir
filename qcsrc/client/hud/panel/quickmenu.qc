@@ -2,8 +2,8 @@
 
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
-#include <client/mapvoting.qh>
 #include <common/ent_cs.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <client/view.qh>
 
