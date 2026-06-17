@@ -1,12 +1,12 @@
-#include "mapvoting.qh"
+#include "intermission.qh"
 
 #include <common/mapinfo.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/util.qh>
 #include <server/bot/api.qh>
 #include <server/bot/default/cvars.qh>
 #include <server/campaign.qh>
 #include <server/client.qh>
-#include <server/mapvoting.qh>
 #include <server/scores_rules.qh>
 #include <server/world.qh>
 
