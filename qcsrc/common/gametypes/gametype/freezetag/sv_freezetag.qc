@@ -582,6 +582,7 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 		it.freezetag_frozen_timeout = -1;
 		PutClientInServer(it);
 		it.freezetag_frozen_timeout = 0;
+		STAT(REVIVE_PROGRESS, it) = 0;
 	});
 	freezetag_count_alive_players();
 	return true;
