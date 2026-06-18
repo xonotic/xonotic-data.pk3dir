@@ -696,6 +696,7 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 
 			it.WarpZone_findradius_nearest = p;
 			it.WarpZone_findradius_dist = org - p;
+			WarpZone_Accumulator_Clear(it); // reset .warpzone_transform and .warpzone_shift
 
 			prev_good_ent = it;
 		});
