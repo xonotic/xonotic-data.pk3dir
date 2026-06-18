@@ -604,6 +604,7 @@ bool WarpZoneLib_BadEntity(entity e, WarpZone_FindRadius_cond_callback_t cb)
 }
 
 .entity enemy;
+entity _WarpZone_FindRadius_goodents_first;
 entity _WarpZone_FindRadius_badents_first;
 float _WarpZone_FindRadius_nomonsters;
 var WarpZone_FindRadius_cond_callback_t _WarpZone_FindRadius_cond_cb;
@@ -652,6 +653,7 @@ void _WarpZone_FindRadius_Recurse(
 		{
 			it.WarpZone_findradius_next = wz;
 			wz = it;
+			it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
 			it.enemy.WarpZone_findradius_dist = '0 0 0'; // we don't want to go through this zone ever again
 			it.enemy.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
 		}
@@ -659,8 +661,13 @@ void _WarpZone_FindRadius_Recurse(
 		{
 			it.warpzone_transform = transform;
 			it.warpzone_shift = shift;
+			if (it.WarpZone_findradius_hit != WarpZone_FindRadius_Hit_GOOD) // add to good ents chain if not already in it
+			{
+				it.chain = _WarpZone_FindRadius_goodents_first; // fine to use .chain since FOREACH_ENTITY_RADIUS doesn't use it
+				_WarpZone_FindRadius_goodents_first = it;
+				it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
+			}
 		}
-		it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
 	});
 	for (entity e = wz; e; e = e.WarpZone_findradius_next)
 	{
@@ -693,14 +700,13 @@ entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone
 		});
 	}
 
-	entity list_first;
 	if (simple_findradius)
 	{
-		entity prev_good_ent = NULL;
+		entity prev_goodent = NULL;
 		vector p = '0 0 0';
 		bool bad = false;
-		list_first = findradius(org, rad);
-		FOREACH_LIST(list, chain, true,
+		_WarpZone_FindRadius_goodents_first = findradius(org, rad);
+		FOREACH_LIST(_WarpZone_FindRadius_goodents, chain, true,
 		{
 			// remove bad elements from this list while iterating
 			if (WarpZoneLib_BadEntity(it, cb))
@@ -718,10 +724,10 @@ entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone
 
 			if (bad) // remove from list, re-link
 			{
-				if (prev_good_ent)
-					prev_good_ent.chain = it.chain;
+				if (prev_goodent)
+					prev_goodent.chain = it.chain;
 				else
-					list_first = list_first.chain;
+					_WarpZone_FindRadius_goodents_first = _WarpZone_FindRadius_goodents_first.chain;
 				bad = false;
 				continue;
 			}
@@ -730,20 +736,20 @@ entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone
 			it.WarpZone_findradius_dist = org - p;
 			WarpZone_Accumulator_Clear(it); // reset .warpzone_transform and .warpzone_shift
 
-			prev_good_ent = it;
+			prev_goodent = it;
 		});
 	}
 	else
 	{
 		_WarpZone_FindRadius_nomonsters = nomonsters;
 		_WarpZone_FindRadius_cond_cb = cb;
-		_WarpZone_FindRadius_badents_first = NULL;
+		_WarpZone_FindRadius_goodents_first = NULL;
+		_WarpZone_FindRadius_badents_first  = NULL;
 		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0');
-		list_first = findchainfloat(WarpZone_findradius_hit, WarpZone_FindRadius_Hit_GOOD);
-		FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
-		FOREACH_LIST(_WarpZone_FindRadius_badents, WarpZone_findradius_next, true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
+		FOREACH_LIST(_WarpZone_FindRadius_goodents, chain,                    true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
+		FOREACH_LIST(_WarpZone_FindRadius_badents,  WarpZone_findradius_next, true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
 	}
-	return list_first;
+	return _WarpZone_FindRadius_goodents_first;
 }
 
 .entity WarpZone_refsys;
