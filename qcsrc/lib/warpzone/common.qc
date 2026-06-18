@@ -633,8 +633,8 @@ void _WarpZone_FindRadius_Recurse(
 
 		it.WarpZone_findradius_nearest = p;
 		it.WarpZone_findradius_dist = org0 - p;
-		it.WarpZone_findradius_findorigin = org;
-		it.WarpZone_findradius_findradius = rad;
+		//it.WarpZone_findradius_findorigin = org;
+		//it.WarpZone_findradius_findradius = rad;
 		if (is_warpzone)
 		{
 			it.WarpZone_findradius_next = wz;

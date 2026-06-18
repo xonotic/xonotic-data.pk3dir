@@ -60,8 +60,8 @@ void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, v
 .vector WarpZone_findradius_dist;
 .vector WarpZone_findradius_nearest;
 // also set: warpzone parameters, so WarpZone_TransformOrigin can transform vectors from blast's to victim's system
-.vector WarpZone_findradius_findorigin;
-.float WarpZone_findradius_findradius;
+//.vector WarpZone_findradius_findorigin;
+//.float WarpZone_findradius_findradius;
 USING(WarpZone_FindRadius_cond_callback_t, bool(entity e)); // called on every entity found by WarpZone_SearchInRadius
 /// Modified findradius aware of warpzones, that only includes entities that meet the "cb" criteria.
 /// Most useful if lineofsight, when searching with very specific criteria, or over a range likely to contain many entities.
