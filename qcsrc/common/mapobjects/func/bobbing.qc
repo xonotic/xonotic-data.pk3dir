@@ -70,6 +70,9 @@ spawnfunc(func_bobbing)
 	else // Z
 		this.movedir = '0 0 1' * this.height;
 
+	if (q3compat)
+		this.angles = '0 0 0'; // Q3 ignores it
+
 	if (!InitMovingBrushTrigger(this))
 		return;
 	SetBrushEntityModel2(this); // TODO: when CSQC movers are enabled move model2 ents to CSQC
