@@ -58,6 +58,10 @@ METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor, .entit
 	return true;
 }
 
+bool M_Wyvern_Attack_Fireball_Explode_cond(entity e)
+{
+	return (e != WarpZone_SearchInRadius_otherent && e.takedamage == DAMAGE_AIM);
+}
 void M_Wyvern_Attack_Fireball_Explode(entity this)
 {
 	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
@@ -76,8 +80,9 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 		NULL
 	);
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_wyvern_attack_fireball_radius, it.takedamage == DAMAGE_AIM && it != own,
-		Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype));
+	WarpZone_SearchInRadius_otherent = this;
+	for (entity head = WarpZone_SearchInRadius(this.origin, autocvar_g_monster_wyvern_attack_fireball_radius, MOVE_NOTHING, M_Wyvern_Attack_Fireball_Explode_cond); head; head = head.chain)
+		Fire_AddDamage(head, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
 
 	delete(this);
 }

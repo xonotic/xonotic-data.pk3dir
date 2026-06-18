@@ -84,6 +84,11 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 	}
 }
 
+bool M_Spider_Attack_Web_Explode_cond(entity e)
+{
+	return (e != WarpZone_SearchInRadius_otherent && e.takedamage && e.monsterdef != MON_SPIDER
+		&& !IS_DEAD(e) && GetResource(e, RES_HEALTH) > 0);
+}
 void M_Spider_Attack_Web_Explode(entity this)
 {
 	if (!this)
@@ -102,8 +107,9 @@ void M_Spider_Attack_Web_Explode(entity this)
 		NULL
 	);
 
-	FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && it.monsterdef != MON_SPIDER,
-		StatusEffects_apply(STATUSEFFECT_Webbed, it, time + autocvar_g_monster_spider_attack_web_damagetime, 0));
+	WarpZone_SearchInRadius_otherent = this;
+	for (entity head = WarpZone_SearchInRadius(this.origin, 25, MOVE_NOTHING, M_Spider_Attack_Web_Explode_cond); head; head = head.chain)
+		StatusEffects_apply(STATUSEFFECT_Webbed, head, time + autocvar_g_monster_spider_attack_web_damagetime, 0);
 
 	delete(this);
 }
