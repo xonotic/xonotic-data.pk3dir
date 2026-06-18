@@ -574,15 +574,22 @@ vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 // despite there actually being line of sight if only the trace was adjusted slightly
 #define WarpZoneLib_NearestPointOnBox(mi, ma, org) NearestPointOnBoundingBox(mi, ma, org)
 
+.int WarpZone_findradius_hit;
+const int WarpZone_FindRadius_Hit_UNSEEN  = 0;
+const int WarpZone_FindRadius_Hit_GOOD    = 1;
+const int WarpZone_FindRadius_Hit_BAD     = 2;
 /// Blacklist of entities that WarpZone_FindRadius doesn't care about
-bool WarpZoneLib_BadEntity(entity e)
+bool WarpZoneLib_BadEntity(entity e, WarpZone_FindRadius_cond_callback_t cb)
 {
+	if (e.WarpZone_findradius_hit != WarpZone_FindRadius_Hit_UNSEEN) // also account for caching
+		return (e.WarpZone_findradius_hit == WarpZone_FindRadius_Hit_BAD); // either BAD or GOOD
 	if (is_pure(e))
 		return true;
 
 	string s = e.classname;
 	switch (s)
 	{
+		case "warpzone_refsys": // ignore, especially: do not overwrite the refsys parameters
 		case "weaponentity":
 		case "exteriorweaponentity":
 		case "sprite_waypoint":
@@ -600,13 +607,13 @@ bool WarpZoneLib_BadEntity(entity e)
 	if (startsWith(s, "info_"))
 		return true;
 
-	return false;
+	return (cb && !cb(e));
 }
-#define WarpZoneLib_BadEntity_WithCondCallback(e, cb) (WarpZoneLib_BadEntity(e) \
-	|| (cb && (e).classname != "trigger_warpzone" && !cb(e))) /* warpzones are never bad entities */
 
 .entity enemy;
-.float WarpZone_findradius_hit;
+entity _WarpZone_FindRadius_badents_first;
+float _WarpZone_FindRadius_nomonsters;
+var WarpZone_FindRadius_cond_callback_t _WarpZone_FindRadius_cond_cb;
 .entity WarpZone_findradius_next;
 void _WarpZone_FindRadius_Recurse(
 	/** blast origin of current search */
@@ -616,65 +623,65 @@ void _WarpZone_FindRadius_Recurse(
 	vector org0,
 	/** how to untransform (victim to blast system) */
 	vector transform,
-	vector shift,
-	float nomonsters,
-	WarpZone_FindRadius_cond_callback_t cb)
+	vector shift)
 {
 	if (rad <= 0)
 		return;
 	entity wz = NULL;
-	FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity_WithCondCallback(it, cb),
+	FOREACH_ENTITY_RADIUS(org, rad, it.WarpZone_findradius_hit != WarpZone_FindRadius_Hit_BAD, // exclude entities we already know are bad
 	{
-		vector p = WarpZoneLib_NearestPointOnBox(it.origin + it.mins, it.origin + it.maxs, org0);
-		if (nomonsters != MOVE_NOTHING)
+		bool is_warpzone = (it.classname == "trigger_warpzone");
+		if (!is_warpzone // warpzones are never bad entities
+		&& WarpZoneLib_BadEntity(it, _WarpZone_FindRadius_cond_cb))
 		{
-			traceline(org, p, nomonsters, it);
+			it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_BAD;
+			it.WarpZone_findradius_next = _WarpZone_FindRadius_badents_first;
+			// use .WarpZone_findradius_next so that .chain isn't changed on entities not included in the returned list_first
+			_WarpZone_FindRadius_badents_first = it;
+			continue;
+		}
+
+		vector p = WarpZoneLib_NearestPointOnBox(it.origin + it.mins, it.origin + it.maxs, org0);
+		if (it.WarpZone_findradius_hit == WarpZone_FindRadius_Hit_GOOD && vlen2(it.WarpZone_findradius_dist) <= vlen2(org0 - p))
+			continue;
+		if (_WarpZone_FindRadius_nomonsters != MOVE_NOTHING)
+		{
+			traceline(org, p, _WarpZone_FindRadius_nomonsters, it);
 			if (trace_fraction < 1)
 				continue;
 		}
-		if (!it.WarpZone_findradius_hit || vlen2(it.WarpZone_findradius_dist) > vlen2(org0 - p))
+
+		it.WarpZone_findradius_nearest = p;
+		it.WarpZone_findradius_dist = org0 - p;
+		it.WarpZone_findradius_findorigin = org;
+		it.WarpZone_findradius_findradius = rad;
+		if (is_warpzone)
 		{
-			it.WarpZone_findradius_nearest = p;
-			it.WarpZone_findradius_dist = org0 - p;
-			it.WarpZone_findradius_findorigin = org;
-			it.WarpZone_findradius_findradius = rad;
-			if (it.classname == "warpzone_refsys") // ignore, especially: do not overwrite the refsys parameters
-				continue;
-			if (it.classname == "trigger_warpzone")
-			{
-				it.WarpZone_findradius_next = wz;
-				wz = it;
-				it.enemy.WarpZone_findradius_dist = '0 0 0'; // we don't want to go through this zone ever again
-				it.enemy.WarpZone_findradius_hit = 1;
-			}
-			else // entity we'll include in the list
-			{
-				it.warpzone_transform = transform;
-				it.warpzone_shift = shift;
-			}
-			it.WarpZone_findradius_hit = 1;
+			it.WarpZone_findradius_next = wz;
+			wz = it;
+			it.enemy.WarpZone_findradius_dist = '0 0 0'; // we don't want to go through this zone ever again
+			it.enemy.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
 		}
+		else // entity we'll include in the list
+		{
+			it.warpzone_transform = transform;
+			it.warpzone_shift = shift;
+		}
+		it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
 	});
 	for (entity e = wz; e; e = e.WarpZone_findradius_next)
 	{
-		if (WarpZoneLib_BadEntity(e)) // no need for cond callback, since e will always be a trigger_warpzone
-			continue;
-
 		vector org0_new = WarpZone_TransformOrigin(e, org);
-		traceline(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
+		traceline(e.warpzone_targetorigin, org0_new, _WarpZone_FindRadius_nomonsters, e);
 		vector org_new = trace_endpos;
 
-		vector transform_new = AnglesTransform_Multiply(e.warpzone_transform, transform);
-		vector shift_new = AnglesTransform_Multiply_GetPostShift(e.warpzone_transform, e.warpzone_shift, transform, shift);
 		_WarpZone_FindRadius_Recurse(
 			org_new,
-			bound(0, rad - vlen(org_new - org0_new), rad - 8),
+			rad - max(8, vlen(org_new - org0_new)),
 			org0_new,
-			transform_new, shift_new,
-			nomonsters,
-			cb);
-		e.WarpZone_findradius_hit = 0;
-		e.enemy.WarpZone_findradius_hit = 0;
+			AnglesTransform_Multiply(e.warpzone_transform, transform), // new transform
+			AnglesTransform_Multiply_GetPostShift(e.warpzone_transform, e.warpzone_shift, transform, shift)); // new shift
+		e.WarpZone_findradius_hit = e.enemy.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN;
 	}
 }
 entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone_FindRadius_cond_callback_t cb)
@@ -703,7 +710,7 @@ entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone
 		FOREACH_LIST(list, chain, true,
 		{
 			// remove bad elements from this list while iterating
-			if (WarpZoneLib_BadEntity_WithCondCallback(it, cb) || it.classname == "warpzone_refsys")
+			if (WarpZoneLib_BadEntity(it, cb))
 				bad = true;
 			else
 			{
@@ -735,9 +742,13 @@ entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone
 	}
 	else
 	{
-		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', nomonsters, cb);
-		list_first = findchainfloat(WarpZone_findradius_hit, 1);
-		FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
+		_WarpZone_FindRadius_nomonsters = nomonsters;
+		_WarpZone_FindRadius_cond_cb = cb;
+		_WarpZone_FindRadius_badents_first = NULL;
+		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0');
+		list_first = findchainfloat(WarpZone_findradius_hit, WarpZone_FindRadius_Hit_GOOD);
+		FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
+		FOREACH_LIST(_WarpZone_FindRadius_badents, WarpZone_findradius_next, true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
 	}
 	return list_first;
 }
