@@ -671,7 +671,7 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 		FOREACH_LIST(list, chain, true,
 		{
 			// remove bad elements from this list while iterating
-			if (WarpZoneLib_BadEntity(it))
+			if (WarpZoneLib_BadEntity(it) || it.classname == "warpzone_refsys")
 			{
 				if (!prev_good_ent)
 					list_first = list_first.chain;
