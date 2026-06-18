@@ -93,46 +93,6 @@ bool W_Fireball_LaserPlay_cond(entity e)
 		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent))
 		&& !STAT(FROZEN, e) && !StatusEffects_active(STATUSEFFECT_Frozen, e));
 }
-void W_Fireball_LaserPlay(entity this, float rad, float damage, float edgedamage, float burntime)
-{
-	if (damage <= 0)
-		return;
-
-	// NOTE: napalm_damage uses similar code, please keep them in sync
-	RandomSelection_Init();
-	entity last = NULL;
-	float last_dist = 0;
-	// optimize code by comparing squared distances and avoiding vlen and sqrt calls as much as possible
-	float rad2 = rad * rad;
-	WarpZone_SearchInRadius_otherent = this;
-	for (entity e = WarpZone_SearchInRadius(this.origin, rad, MOVE_NOMONSTERS, W_Fireball_LaserPlay_cond); e; e = e.chain)
-	{
-		vector p = e.origin;
-		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
-		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
-		p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
-		float dist2 = vlen2(WarpZone_UnTransformOrigin(e, this.origin) - p);
-		if (dist2 < rad2)
-		{
-			e.fireball_impactvec = p;
-			last = e;
-			last_dist = sqrt(dist2); // won't be recalculated if this entity is the only or last one found
-			RandomSelection_AddEnt(e, 1 / (1 + last_dist), !StatusEffects_active(STATUSEFFECT_Burning, e));
-		}
-	}
-	if (RandomSelection_chosen_ent)
-	{
-		float dist;
-		if (RandomSelection_chosen_ent == last)
-			dist = last_dist; // already calculated
-		else
-			dist = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
-		dist = damage + (edgedamage - damage) * (dist / rad);
-		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, dist * burntime, burntime, this.projectiledeathtype | HITTYPE_BOUNCE);
-		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.fireball_impactvec - this.origin, 1);
-	}
-}
 
 void W_Fireball_Think(entity this)
 {
@@ -144,11 +104,12 @@ void W_Fireball_Think(entity this)
 		return;
 	}
 
-	W_Fireball_LaserPlay(this,
+	W_LaserPlay(this,
 		WEP_CVAR_PRI(WEP_FIREBALL, laserradius),
 		WEP_CVAR_PRI(WEP_FIREBALL, laserdamage),
 		WEP_CVAR_PRI(WEP_FIREBALL, laseredgedamage),
-		WEP_CVAR_PRI(WEP_FIREBALL, laserburntime));
+		WEP_CVAR_PRI(WEP_FIREBALL, laserburntime),
+		W_Fireball_LaserPlay_cond);
 
 	this.nextthink = time + 0.1;
 }
@@ -266,11 +227,12 @@ void W_Fireball_Firemine_Think(entity this)
 			this.cnt = 0;
 	}
 
-	W_Fireball_LaserPlay(this,
+	W_LaserPlay(this,
 		WEP_CVAR_SEC(WEP_FIREBALL, laserradius),
 		WEP_CVAR_SEC(WEP_FIREBALL, laserdamage),
 		WEP_CVAR_SEC(WEP_FIREBALL, laseredgedamage),
-		WEP_CVAR_SEC(WEP_FIREBALL, laserburntime));
+		WEP_CVAR_SEC(WEP_FIREBALL, laserburntime),
+		W_Fireball_LaserPlay_cond);
 
 	this.nextthink = time + 0.1;
 }

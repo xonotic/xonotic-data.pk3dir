@@ -175,3 +175,60 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 		UpdateCSQCProjectile(this);
 	return false;
 }
+
+
+vector W_LaserPlay_last_hit_org;
+vector W_LaserPlay_end_org;
+void W_LaserPlay_trace_callback(vector start, vector hit, vector end)
+{
+	if (end == W_LaserPlay_end_org) // must be the final trace segment
+		return;
+	W_LaserPlay_last_hit_org = hit;
+	Send_Effect(EFFECT_FIREBALL_LASER, start, hit - start, 1);
+	//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), start, hit);
+}
+/// Randomly chooses a player within the radius to shoot a laser towards
+void W_LaserPlay(entity this, float rad, float damage, float edgedamage, float burntime, WarpZone_FindRadius_cond_callback_t cb)
+{
+	if (damage <= 0 && edgedamage <= 0)
+		return;
+
+	RandomSelection_Init();
+	entity last = NULL;
+	float rad2 = rad * rad;
+	WarpZone_SearchInRadius_otherent = this;
+	for (entity e = WarpZone_SearchInRadius(this.origin, rad, MOVE_NOMONSTERS, cb); e; e = e.chain)
+	{
+		// adjust the hit location to be a random position inside the entity's bbox
+		vector p = e.origin + e.mins;
+		p.x += random() * (e.maxs.x - e.mins.x);
+		p.y += random() * (e.maxs.y - e.mins.y);
+		p.z += random() * (e.maxs.z - e.mins.z);
+		float dist2 = vlen2(this.origin - WarpZone_UnTransformOrigin(e, p));
+		if (dist2 <= rad2) // there's a chance this is false, so we optimize by only calling sqrt if true
+		{
+			e.dest = p;
+			e.dmg_radius = sqrt(dist2);
+			last = e;
+			RandomSelection_AddEnt(e, 1 / (1 + e.dmg_radius), !StatusEffects_active(STATUSEFFECT_Burning, e));
+		}
+	}
+	if (RandomSelection_chosen_ent)
+	{
+		float dist = damage + (edgedamage - damage) * (RandomSelection_chosen_ent.dmg_radius / rad);
+		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, dist * burntime, burntime, this.projectiledeathtype | HITTYPE_BOUNCE);
+
+		// WarpZone_TraceLine_ThroughZone with callback to draw the line-effect through zones on the way to the end,
+		// but then for the final segment draw towards .dest instead of the trace's end (.WarpZone_findradius_nearest).
+		// This is probably the best we can do
+		W_LaserPlay_last_hit_org = this.origin;
+		if (RandomSelection_chosen_ent.warpzone_transform != '0 0 0' || RandomSelection_chosen_ent.warpzone_shift != '0 0 0')
+		{
+			W_LaserPlay_end_org = RandomSelection_chosen_ent.WarpZone_findradius_nearest;
+			WarpZone_TraceLine_ThroughZone(this.origin, WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, W_LaserPlay_end_org),
+				MOVE_NOTHING, NULL, NULL, W_LaserPlay_trace_callback);
+		}
+		Send_Effect(EFFECT_FIREBALL_LASER, W_LaserPlay_last_hit_org, RandomSelection_chosen_ent.dest - W_LaserPlay_last_hit_org, 1);
+		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.dest);
+	}
+}
