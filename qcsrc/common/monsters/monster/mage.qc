@@ -240,49 +240,49 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 
 void M_Mage_Defend_Heal(entity this)
 {
-	bool washealed = false;
-
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_mage_heal_range, M_Mage_Defend_Heal_Check(this, it),
-	{
-		washealed = true;
-		entity fx = EFFECT_Null;
-		if (IS_PLAYER(it))
+	bool was_healed = false;
+	for (entity fx, head = WarpZone_FindRadius(this.origin, autocvar_g_monster_mage_heal_range, false); head; head = head.chain)
+		if (M_Mage_Defend_Heal_Check(this, head))
 		{
-			switch (this.skin)
+			was_healed = true;
+			fx = EFFECT_Null;
+			if (IS_PLAYER(head))
 			{
-				case 0:
-					Heal(it, this, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_health_regenstable);
-					fx = EFFECT_HEALING;
-					break;
-				case 1:
-					if (GetResource(it, RES_CELLS))    GiveResourceWithLimit(it, RES_CELLS,   1, autocvar_g_pickup_cells_max);
-					if (GetResource(it, RES_ROCKETS))  GiveResourceWithLimit(it, RES_ROCKETS, 1, autocvar_g_pickup_rockets_max);
-					if (GetResource(it, RES_SHELLS))   GiveResourceWithLimit(it, RES_SHELLS,  2, autocvar_g_pickup_shells_max);
-					if (GetResource(it, RES_BULLETS))  GiveResourceWithLimit(it, RES_BULLETS, 5, autocvar_g_pickup_nails_max);
-					// TODO: fuel?
-					fx = EFFECT_AMMO_REGEN;
-					break;
-				case 2:
-					if (GetResource(it, RES_ARMOR) < autocvar_g_balance_armor_regenstable)
-					{
-						GiveResourceWithLimit(it, RES_ARMOR, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_armor_regenstable);
-						fx = EFFECT_ARMOR_REPAIR;
-					}
-					break;
+				switch (this.skin)
+				{
+					case 0:
+						Heal(head, this, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_health_regenstable);
+						fx = EFFECT_HEALING;
+						break;
+					case 1:
+						if (GetResource(head, RES_CELLS))    GiveResourceWithLimit(head, RES_CELLS,   1, autocvar_g_pickup_cells_max);
+						if (GetResource(head, RES_ROCKETS))  GiveResourceWithLimit(head, RES_ROCKETS, 1, autocvar_g_pickup_rockets_max);
+						if (GetResource(head, RES_SHELLS))   GiveResourceWithLimit(head, RES_SHELLS,  2, autocvar_g_pickup_shells_max);
+						if (GetResource(head, RES_BULLETS))  GiveResourceWithLimit(head, RES_BULLETS, 5, autocvar_g_pickup_nails_max);
+						// TODO: fuel?
+						fx = EFFECT_AMMO_REGEN;
+						break;
+					case 2:
+						if (GetResource(head, RES_ARMOR) < autocvar_g_balance_armor_regenstable)
+						{
+							GiveResourceWithLimit(head, RES_ARMOR, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_armor_regenstable);
+							fx = EFFECT_ARMOR_REPAIR;
+						}
+						break;
+				}
+
+				Send_Effect(fx, head.origin, vec2(head.velocity), 5);
 			}
-
-			Send_Effect(fx, it.origin, vec2(it.velocity), 5);
+			else
+			{
+				Send_Effect(EFFECT_HEALING, head.origin, vec2(head.velocity), 5);
+				Heal(head, this, autocvar_g_monster_mage_heal_allies, RES_LIMIT_NONE);
+				if (!(head.spawnflags & MONSTERFLAG_INVINCIBLE) && head.sprite)
+					WaypointSprite_UpdateHealth(head.sprite, GetResource(head, RES_HEALTH));
+			}
 		}
-		else
-		{
-			Send_Effect(EFFECT_HEALING, it.origin, vec2(it.velocity), 5);
-			Heal(it, this, autocvar_g_monster_mage_heal_allies, RES_LIMIT_NONE);
-			if (!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
-				WaypointSprite_UpdateHealth(it.sprite, GetResource(it, RES_HEALTH));
-		}
-	});
 
-	if (washealed)
+	if (was_healed)
 	{
 		setanim(this, this.anim_melee, true, true, true);
 		this.attack_finished_single[0] = time + autocvar_g_monster_mage_heal_delay;
@@ -421,32 +421,21 @@ spawnfunc(monster_mage)
 METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
 {
 	TC(Mage, thismon);
-	bool need_help = false;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it != actor,
-	{
-		if (vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range)
-		&& M_Mage_Defend_Heal_Check(actor, it))
+	entity head = WarpZone_FindRadius(actor.origin, autocvar_g_monster_mage_heal_range, false);
+	bool should_heal = false;
+	for (; head; head = head.chain)
+		if (M_Mage_Defend_Heal_Check(actor, head)
+		&& head != actor
+		&& (IS_PLAYER(head) || IS_MONSTER(head)))
 		{
-			need_help = true;
+			should_heal = true; // heal ourself if it'd also help a nearby friend, even if we don't need healing
 			break;
 		}
-	});
-
-	if (!need_help)
-		IL_EACH(g_monsters, it != actor,
-		{
-			if (vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range)
-			&& M_Mage_Defend_Heal_Check(actor, it))
-			{
-				need_help = true;
-				break;
-			}
-		});
 
 	if (random() < 0.5
 	&& time >= actor.attack_finished_single[0]
-	&& (GetResource(actor, RES_HEALTH) < autocvar_g_monster_mage_heal_minhealth || need_help))
+	&& (GetResource(actor, RES_HEALTH) < autocvar_g_monster_mage_heal_minhealth || should_heal))
 		M_Mage_Defend_Heal(actor);
 
 	if (random() < 0.5

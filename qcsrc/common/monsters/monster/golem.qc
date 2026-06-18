@@ -53,6 +53,10 @@ void M_Golem_Attack_Swing(entity this)
 
 #include <common/effects/qc/_mod.qh>
 
+void Draw_Golem_Lightning_trace_callback(vector start, vector hit, vector end)
+{
+	te_csqc_lightningarc(start, hit);
+}
 void M_Golem_Attack_Lightning_Explode(entity this, entity directhitentity)
 {
 	sound(this, CH_SHOTS, SND_MON_GOLEM_LIGHTNING_IMPACT, VOL_BASE, ATTEN_NORM);
@@ -78,17 +82,19 @@ void M_Golem_Attack_Lightning_Explode(entity this, entity directhitentity)
 		directhitentity
 	);
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_golem_attack_lightning_radius_zap, it != this.realowner && it.takedamage,
-	{
-		te_csqc_lightningarc(this.origin, it.origin);
-		Damage(it, this, this.realowner,
-			autocvar_g_monster_golem_attack_lightning_damage_zap * MONSTER_SKILLMOD(this),
-			DEATH_MONSTER_GOLEM_ZAP.m_id,
-			DMG_NOWEP,
-			it.origin,
-			'0 0 0'
-		);
-	});
+	for (entity head = WarpZone_FindRadius(this.origin, autocvar_g_monster_golem_attack_lightning_radius_zap, false); head; head = head.chain)
+		if (head != this.realowner && head.takedamage)
+		{
+			WarpZone_TraceLine_ThroughZone(this.origin, WarpZone_UnTransformOrigin(head, head.WarpZone_findradius_nearest),
+				MOVE_NOTHING, NULL, NULL, Draw_Golem_Lightning_trace_callback);
+			Damage(head, this, this.realowner,
+				autocvar_g_monster_golem_attack_lightning_damage_zap * MONSTER_SKILLMOD(this),
+				DEATH_MONSTER_GOLEM_ZAP.m_id,
+				DMG_NOWEP,
+				head.WarpZone_findradius_nearest,
+				'0 0 0'
+			);
+		}
 
 	setthink(this, SUB_Remove);
 	this.nextthink = time + 0.2;
