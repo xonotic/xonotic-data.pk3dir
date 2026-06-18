@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-05 07:22+0200\n"
+"POT-Creation-Date: 2026-06-18 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Yotta Mxt, 2023\n"
 "Language-Team: Spanish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -188,7 +188,7 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Pulsa ^3%s^1 para unirte"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
-#: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1390
+#: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1385
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:82
 #: qcsrc/common/notifications/all.qh:451
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
@@ -1071,7 +1071,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1058
 #: qcsrc/client/hud/panel/scoreboard.qc:1072
 #: qcsrc/client/hud/panel/scoreboard.qc:1143
-#: qcsrc/client/hud/panel/scoreboard.qc:1152 qcsrc/common/util.qc:431
+#: qcsrc/client/hud/panel/scoreboard.qc:1152 qcsrc/common/util.qc:443
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1149,7 +1149,7 @@ msgstr "^7Pulsa ^3%s^7 para seleccionar un equipo específico"
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d^7jugadores"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1419
+#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1414
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:42
 msgid "Map:"
 msgstr "Mapa:"
@@ -1319,158 +1319,120 @@ msgstr "mph"
 msgid "knots"
 msgstr "nudos"
 
-#: qcsrc/client/main.qc:1338
+#: qcsrc/client/main.qc:1333
 msgid "All Weapons Arena"
 msgstr "Arena con todas las Armas"
 
-#: qcsrc/client/main.qc:1339
+#: qcsrc/client/main.qc:1334
 msgid "All Available Weapons Arena"
 msgstr "Todas las Armas Disponibles en la Arena"
 
-#: qcsrc/client/main.qc:1340
+#: qcsrc/client/main.qc:1335
 msgid "Most Weapons Arena"
 msgstr "Arena con la mayoría de las Armas"
 
-#: qcsrc/client/main.qc:1341
+#: qcsrc/client/main.qc:1336
 msgid "Most Available Weapons Arena"
 msgstr "La mayoría de Armas Disponibles en la Arena"
 
-#: qcsrc/client/main.qc:1344 qcsrc/client/main.qc:1358
+#: qcsrc/client/main.qc:1339 qcsrc/client/main.qc:1353
 msgid "No Weapons Arena"
 msgstr "Sin Armas en la Arena"
 
-#: qcsrc/client/main.qc:1356
+#: qcsrc/client/main.qc:1351
 #, c-format
 msgid "%s Arena"
 msgstr "%s Arena"
 
-#: qcsrc/client/main.qc:1367 qcsrc/client/main.qc:1372
+#: qcsrc/client/main.qc:1362 qcsrc/client/main.qc:1367
 #, c-format
 msgid "This is %s"
 msgstr "Esta es la versión %s"
 
-#: qcsrc/client/main.qc:1368
+#: qcsrc/client/main.qc:1363
 msgid "Your client version is outdated."
 msgstr "Tu versión de cliente está desactualizada."
 
-#: qcsrc/client/main.qc:1369
+#: qcsrc/client/main.qc:1364
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### NO PODRÁS JUGAR EN ESTE SERVIDOR ###"
 
-#: qcsrc/client/main.qc:1370
+#: qcsrc/client/main.qc:1365
 msgid "Please update!"
 msgstr "¡Por favor, actualice!"
 
-#: qcsrc/client/main.qc:1373
+#: qcsrc/client/main.qc:1368
 msgid "This server is using an outdated Xonotic version."
 msgstr "Este servidor está usando una versión desactualizada de Xonotic."
 
-#: qcsrc/client/main.qc:1374
+#: qcsrc/client/main.qc:1369
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### ESTE SERVIDOR ES INCOMPATIBLE Y POR LO TANTO, NO PODRÁS ENTRAR ###"
 
-#: qcsrc/client/main.qc:1376
+#: qcsrc/client/main.qc:1371
 #, c-format
 msgid "Welcome to %s"
 msgstr "Bienvenido a %s"
 
-#: qcsrc/client/main.qc:1392 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1387 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Nivel %d:"
 
-#: qcsrc/client/main.qc:1394
+#: qcsrc/client/main.qc:1389
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGPulsa ^F2%s^BG para entrar en el juego"
 
-#: qcsrc/client/main.qc:1417
+#: qcsrc/client/main.qc:1412
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:37
 msgid "Gametype:"
 msgstr "Modo de juego:"
 
-#: qcsrc/client/main.qc:1421
+#: qcsrc/client/main.qc:1416
 msgid "by:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1425
+#: qcsrc/client/main.qc:1420
 msgid "This match supports"
 msgstr "Esta partida soporta "
 
-#: qcsrc/client/main.qc:1427
+#: qcsrc/client/main.qc:1422
 #, c-format
 msgid "%d players"
 msgstr "%d jugadores"
 
-#: qcsrc/client/main.qc:1429
+#: qcsrc/client/main.qc:1424
 #, c-format
 msgid "%d to %d players"
 msgstr "de %d a %d jugadores"
 
-#: qcsrc/client/main.qc:1431
+#: qcsrc/client/main.qc:1426
 #, c-format
 msgid "%d players maximum"
 msgstr "Máximo %djugadores"
 
-#: qcsrc/client/main.qc:1433
+#: qcsrc/client/main.qc:1428
 #, c-format
 msgid "%d players minimum"
 msgstr "Mínimo %d jugadores"
 
-#: qcsrc/client/main.qc:1438
+#: qcsrc/client/main.qc:1433
 msgid "Active modifications:"
 msgstr "Modificaciones activas:"
 
-#: qcsrc/client/main.qc:1441
+#: qcsrc/client/main.qc:1436
 msgid "Special gameplay tips:"
 msgstr "Consejos especiales del juego:"
 
-#: qcsrc/client/main.qc:1448
+#: qcsrc/client/main.qc:1443
 msgid "Server's message"
 msgstr "Mensaje del servidor"
 
-#: qcsrc/client/main.qc:1535
+#: qcsrc/client/main.qc:1530
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (sin asignar)"
-
-#: qcsrc/client/mapvoting.qc:80
-msgid " (1 vote)"
-msgstr " (1 voto)"
-
-#: qcsrc/client/mapvoting.qc:82
-#, c-format
-msgid " (%d votes)"
-msgstr " (%d votos)"
-
-#: qcsrc/client/mapvoting.qc:340
-msgid "Don't care"
-msgstr "No importa"
-
-#: qcsrc/client/mapvoting.qc:379
-#, c-format
-msgid "Suggested by: %s"
-msgstr ""
-
-#: qcsrc/client/mapvoting.qc:460
-msgid "Decide the gametype"
-msgstr "Elige el modo de juego"
-
-#: qcsrc/client/mapvoting.qc:460
-msgid "Vote for a map"
-msgstr "Vota un mapa"
-
-#: qcsrc/client/mapvoting.qc:653
-msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
-msgstr "mv_mapdownload: ^3¡No deberías usar este comando por tu cuenta!"
-
-#: qcsrc/client/mapvoting.qc:665
-msgid "^1Error:^7 Couldn't find pak index."
-msgstr "^1Error:^7 No se pudo encontrar el índice pak."
-
-#: qcsrc/client/mapvoting.qc:676
-msgid "Requesting preview..."
-msgstr "Solicitando vista previa..."
 
 #: qcsrc/client/view.qc:1010
 msgid "Nade timer"
@@ -2407,11 +2369,49 @@ msgstr "Límite de bajas:"
 msgid "The amount of frags needed before the match will end"
 msgstr "Cantidad de bajas necesarias antes de que termine el combate"
 
-#: qcsrc/common/minigames/cl_minigames.qc:285
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:43
+msgid " (1 vote)"
+msgstr " (1 voto)"
+
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:45
+#, c-format
+msgid " (%d votes)"
+msgstr " (%d votos)"
+
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:301
+msgid "Don't care"
+msgstr "No importa"
+
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:340
+#, c-format
+msgid "Suggested by: %s"
+msgstr ""
+
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:421
+msgid "Decide the gametype"
+msgstr "Elige el modo de juego"
+
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:421
+msgid "Vote for a map"
+msgstr "Vota un mapa"
+
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:605
+msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
+msgstr "mv_mapdownload: ^3¡No deberías usar este comando por tu cuenta!"
+
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:617
+msgid "^1Error:^7 Couldn't find pak index."
+msgstr "^1Error:^7 No se pudo encontrar el índice pak."
+
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:628
+msgid "Requesting preview..."
+msgstr "Solicitando vista previa..."
+
+#: qcsrc/common/minigames/cl_minigames.qc:300
 msgid "Spectators:"
 msgstr ""
 
-#: qcsrc/common/minigames/cl_minigames.qc:421
+#: qcsrc/common/minigames/cl_minigames.qc:436
 msgid "It's your turn"
 msgstr "Es tu turno"
 
@@ -2832,7 +2832,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
-#: qcsrc/common/util.qc:309
+#: qcsrc/common/util.qc:320
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
 msgid "Blood loss"
 msgstr "Pérdida de sangre"
@@ -2936,11 +2936,11 @@ msgstr "Suerte"
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qc:30
 #, c-format
 msgid ""
-"The %s buff greatly increases your item pickup range, collecting nearby "
-"items for you while the buff is active."
+"The %s buff increases your item pickup range, collecting nearby items for "
+"you while the buff is active."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:11
+#: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:10
 msgid "Magnet"
 msgstr "Imán"
 
@@ -3011,7 +3011,7 @@ msgid "In some sense, this is the opposite of the %s buff."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
-#: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:306
+#: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:317
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
 msgid "Vampire"
 msgstr "Vampiro"
@@ -3039,7 +3039,7 @@ msgid ""
 "powerup. This adds an extra layer of stealth and strategy to gameplay."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:302
+#: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:313
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
 msgid "Cloaked"
 msgstr "Translúcido"
@@ -3145,7 +3145,7 @@ msgstr ""
 msgid "Some other mutators like %s enable this by default."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:295
+#: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:306
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
 msgid "Dodging"
 msgstr "Esquivar"
@@ -3171,7 +3171,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/hook/hook.qc:12
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:12
-#: qcsrc/common/weapons/weapon/hook.qc:434
+#: qcsrc/common/weapons/weapon/hook.qc:419
 msgid "hook"
 msgstr ""
 
@@ -3188,7 +3188,7 @@ msgstr ""
 msgid "Note that it is overridden by the %s mutator."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:303
+#: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:314
 msgid "Hook"
 msgstr "Gancho"
 
@@ -3225,7 +3225,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qh:5
-#: qcsrc/common/util.qc:296
+#: qcsrc/common/util.qc:307
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
 msgid "InstaGib"
 msgstr "InstaGib"
@@ -3348,7 +3348,7 @@ msgstr ""
 msgid "Monster grenade"
 msgstr "Granada de Monstruo"
 
-#: qcsrc/common/mutators/mutator/nades/nade/napalm.qc:166
+#: qcsrc/common/mutators/mutator/nades/nade/napalm.qc:176
 #, c-format
 msgid ""
 "The %s detonates after a short delay, spreading fiery napalm globs around in "
@@ -3446,7 +3446,7 @@ msgstr ""
 msgid "This mutator is enabled by default in %s."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:83 qcsrc/common/util.qc:318
+#: qcsrc/common/mutators/mutator/nades/nades.qh:83 qcsrc/common/util.qc:329
 #: qcsrc/menu/xonotic/guide/guide.qh:16
 msgid "Nades"
 msgstr "Granadas"
@@ -3471,7 +3471,7 @@ msgid "The current %s weapons are:"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
-#: qcsrc/common/util.qc:297
+#: qcsrc/common/util.qc:308
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
 msgid "New Toys"
 msgstr "Nuevos juguetes"
@@ -3484,7 +3484,7 @@ msgid ""
 "and ammo pickups are also removed from the map."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:298
+#: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:309
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
 msgid "NIX"
 msgstr "NIX"
@@ -3514,7 +3514,7 @@ msgid "Note that it overrides the %s mutator, since they use the same bind."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
-#: qcsrc/common/util.qc:319
+#: qcsrc/common/util.qc:330
 msgid "Offhand blaster"
 msgstr "Blaster improvisado"
 
@@ -3574,7 +3574,7 @@ msgid "Overkill Heavy MachineGun"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:168
-#: qcsrc/common/weapons/weapon/machinegun.qc:421
+#: qcsrc/common/weapons/weapon/machinegun.qc:445
 #, c-format
 msgid "The %s quickly fires bullets with a small degree of spread."
 msgstr ""
@@ -3648,7 +3648,7 @@ msgid "Overkill Shotgun"
 msgstr "Escopeta Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/overkill.qh:5
-#: qcsrc/common/util.qc:312 qcsrc/menu/xonotic/guide/pages.qc:171
+#: qcsrc/common/util.qc:323 qcsrc/menu/xonotic/guide/pages.qc:171
 msgid "Overkill"
 msgstr "Overkill"
 
@@ -3659,7 +3659,7 @@ msgid ""
 "Without this mutator, players normally drop only their equipped weapon."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:307
+#: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:318
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
 msgid "Piñata"
 msgstr "Piñata"
@@ -3718,7 +3718,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
-#: qcsrc/common/util.qc:310
+#: qcsrc/common/util.qc:321
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
 msgid "Jetpack"
 msgstr "Mochila propulsora"
@@ -3789,7 +3789,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
-#: qcsrc/common/util.qc:299
+#: qcsrc/common/util.qc:310
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
 #: qcsrc/menu/xonotic/guide/pages.qc:72 qcsrc/menu/xonotic/guide/pages.qc:123
 msgid "Rocket Flying"
@@ -3824,7 +3824,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
-#: qcsrc/common/util.qc:315
+#: qcsrc/common/util.qc:326
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Touch explode"
 msgstr "Contacto explosivo"
@@ -3858,7 +3858,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
-#: qcsrc/common/util.qc:316
+#: qcsrc/common/util.qc:327
 msgid "Wall jumping"
 msgstr "Saltar muros"
 
@@ -7040,418 +7040,418 @@ msgstr "Torreta Walker"
 msgid "Walker"
 msgstr "Walker"
 
-#: qcsrc/common/util.qc:300
+#: qcsrc/common/util.qc:311
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
 msgid "Invincible Projectiles"
 msgstr "Proyectiles indestructibles"
 
-#: qcsrc/common/util.qc:301
+#: qcsrc/common/util.qc:312
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:116
 msgid "Low gravity"
 msgstr "Gravedad reducida"
 
-#: qcsrc/common/util.qc:304
+#: qcsrc/common/util.qc:315
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:94
 msgid "Midair"
 msgstr "En el aire"
 
-#: qcsrc/common/util.qc:305
+#: qcsrc/common/util.qc:316
 msgid "Melee only Arena"
 msgstr "Sólo Pelea de cuerpo a cuerpo en la Arena"
 
-#: qcsrc/common/util.qc:308
+#: qcsrc/common/util.qc:319
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:164
 msgid "Weapons stay"
 msgstr "Las armas permanecen"
 
-#: qcsrc/common/util.qc:311
+#: qcsrc/common/util.qc:322
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
 #: qcsrc/menu/xonotic/guide/guide.qh:15
 msgid "Buffs"
 msgstr "Mejoras"
 
-#: qcsrc/common/util.qc:313
+#: qcsrc/common/util.qc:324
 msgid "No powerups"
 msgstr "Sin poderes"
 
-#: qcsrc/common/util.qc:314 qcsrc/menu/xonotic/guide/guide.qh:14
+#: qcsrc/common/util.qc:325 qcsrc/menu/xonotic/guide/guide.qh:14
 msgid "Powerups"
 msgstr "Poderes"
 
-#: qcsrc/common/util.qc:317
+#: qcsrc/common/util.qc:328
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:223
 msgid "No start weapons"
 msgstr "Iniciar sin armas"
 
-#: qcsrc/common/util.qc:1567
+#: qcsrc/common/util.qc:1579
 msgid "Male"
 msgstr "Masculino"
 
-#: qcsrc/common/util.qc:1568
+#: qcsrc/common/util.qc:1580
 msgid "Female"
 msgstr "Femenino"
 
-#: qcsrc/common/util.qc:1569
+#: qcsrc/common/util.qc:1581
 msgid "Undisclosed"
 msgstr "Desconocido"
 
-#: qcsrc/common/util.qc:1616
+#: qcsrc/common/util.qc:1628
 msgid "<KEY NOT FOUND>"
 msgstr "<KEY NOT FOUND>"
 
-#: qcsrc/common/util.qc:1617
+#: qcsrc/common/util.qc:1629
 msgid "<UNKNOWN KEYNUM>"
 msgstr "<UNKNOWN KEYNUM>"
 
-#: qcsrc/common/util.qc:1622
+#: qcsrc/common/util.qc:1634
 msgid "TAB"
 msgstr "TAB"
 
-#: qcsrc/common/util.qc:1623 qcsrc/common/util.qc:1694
+#: qcsrc/common/util.qc:1635 qcsrc/common/util.qc:1706
 #, c-format
 msgid "ENTER"
 msgstr "ENTRAR"
 
-#: qcsrc/common/util.qc:1624
+#: qcsrc/common/util.qc:1636
 msgid "ESCAPE"
 msgstr "ESCAPE"
 
-#: qcsrc/common/util.qc:1625
+#: qcsrc/common/util.qc:1637
 msgid "SPACE"
 msgstr "ESPACIO"
 
-#: qcsrc/common/util.qc:1627
+#: qcsrc/common/util.qc:1639
 msgid "BACKSPACE"
 msgstr "RETROCESO"
 
-#: qcsrc/common/util.qc:1628 qcsrc/common/util.qc:1685
+#: qcsrc/common/util.qc:1640 qcsrc/common/util.qc:1697
 #, c-format
 msgid "UPARROW"
 msgstr "FLECHAARRIBA"
 
-#: qcsrc/common/util.qc:1629 qcsrc/common/util.qc:1680
+#: qcsrc/common/util.qc:1641 qcsrc/common/util.qc:1692
 #, c-format
 msgid "DOWNARROW"
 msgstr "FLECHAABAJO"
 
-#: qcsrc/common/util.qc:1630 qcsrc/common/util.qc:1682
+#: qcsrc/common/util.qc:1642 qcsrc/common/util.qc:1694
 #, c-format
 msgid "LEFTARROW"
 msgstr "FLECHAIZQUIERDA"
 
-#: qcsrc/common/util.qc:1631 qcsrc/common/util.qc:1683
+#: qcsrc/common/util.qc:1643 qcsrc/common/util.qc:1695
 #, c-format
 msgid "RIGHTARROW"
 msgstr "FLECHADERECHA"
 
-#: qcsrc/common/util.qc:1633
+#: qcsrc/common/util.qc:1645
 msgid "ALT"
 msgstr "ALT"
 
-#: qcsrc/common/util.qc:1634
+#: qcsrc/common/util.qc:1646
 msgid "CTRL"
 msgstr "CTRL"
 
-#: qcsrc/common/util.qc:1635
+#: qcsrc/common/util.qc:1647
 msgid "SHIFT"
 msgstr "SHIFT"
 
-#: qcsrc/common/util.qc:1637 qcsrc/common/util.qc:1678
+#: qcsrc/common/util.qc:1649 qcsrc/common/util.qc:1690
 #, c-format
 msgid "INS"
 msgstr "INS"
 
-#: qcsrc/common/util.qc:1638 qcsrc/common/util.qc:1688
+#: qcsrc/common/util.qc:1650 qcsrc/common/util.qc:1700
 #, c-format
 msgid "DEL"
 msgstr "SUPR"
 
-#: qcsrc/common/util.qc:1639 qcsrc/common/util.qc:1681
+#: qcsrc/common/util.qc:1651 qcsrc/common/util.qc:1693
 #, c-format
 msgid "PGDN"
 msgstr "AVPÁG"
 
-#: qcsrc/common/util.qc:1640 qcsrc/common/util.qc:1686
+#: qcsrc/common/util.qc:1652 qcsrc/common/util.qc:1698
 #, c-format
 msgid "PGUP"
 msgstr "REPÁG"
 
-#: qcsrc/common/util.qc:1641 qcsrc/common/util.qc:1684
+#: qcsrc/common/util.qc:1653 qcsrc/common/util.qc:1696
 #, c-format
 msgid "HOME"
 msgstr "INICIO"
 
-#: qcsrc/common/util.qc:1642 qcsrc/common/util.qc:1679
+#: qcsrc/common/util.qc:1654 qcsrc/common/util.qc:1691
 #, c-format
 msgid "END"
 msgstr "FIN"
 
-#: qcsrc/common/util.qc:1644
+#: qcsrc/common/util.qc:1656
 msgid "PAUSE"
 msgstr "PAUSA"
 
-#: qcsrc/common/util.qc:1646
+#: qcsrc/common/util.qc:1658
 msgid "NUMLOCK"
 msgstr "BLOQNUM"
 
-#: qcsrc/common/util.qc:1647
+#: qcsrc/common/util.qc:1659
 msgid "CAPSLOCK"
 msgstr "BLOQMAYÚS"
 
-#: qcsrc/common/util.qc:1648
+#: qcsrc/common/util.qc:1660
 msgid "SCROLLOCK"
 msgstr "BLOQDES"
 
-#: qcsrc/common/util.qc:1650
+#: qcsrc/common/util.qc:1662
 msgid "SEMICOLON"
 msgstr "PUNTOYCOMA"
 
-#: qcsrc/common/util.qc:1651
+#: qcsrc/common/util.qc:1663
 msgid "TILDE"
 msgstr "TILDE"
 
-#: qcsrc/common/util.qc:1652
+#: qcsrc/common/util.qc:1664
 msgid "BACKQUOTE"
 msgstr "ACENTOGRAVE"
 
-#: qcsrc/common/util.qc:1653
+#: qcsrc/common/util.qc:1665
 msgid "QUOTE"
 msgstr "COMILLA"
 
-#: qcsrc/common/util.qc:1654
+#: qcsrc/common/util.qc:1666
 msgid "APOSTROPHE"
 msgstr "APÓSTROFE"
 
-#: qcsrc/common/util.qc:1655
+#: qcsrc/common/util.qc:1667
 msgid "BACKSLASH"
 msgstr "BARRAINVERSA"
 
-#: qcsrc/common/util.qc:1663
+#: qcsrc/common/util.qc:1675
 #, c-format
 msgid "F%d"
 msgstr "F%d"
 
-#: qcsrc/common/util.qc:1673
+#: qcsrc/common/util.qc:1685
 #, c-format
 msgid "KP_%d"
 msgstr "TN_%d"
 
-#: qcsrc/common/util.qc:1678 qcsrc/common/util.qc:1679
-#: qcsrc/common/util.qc:1680 qcsrc/common/util.qc:1681
-#: qcsrc/common/util.qc:1682 qcsrc/common/util.qc:1683
-#: qcsrc/common/util.qc:1684 qcsrc/common/util.qc:1685
-#: qcsrc/common/util.qc:1686 qcsrc/common/util.qc:1687
-#: qcsrc/common/util.qc:1688 qcsrc/common/util.qc:1689
 #: qcsrc/common/util.qc:1690 qcsrc/common/util.qc:1691
 #: qcsrc/common/util.qc:1692 qcsrc/common/util.qc:1693
 #: qcsrc/common/util.qc:1694 qcsrc/common/util.qc:1695
+#: qcsrc/common/util.qc:1696 qcsrc/common/util.qc:1697
+#: qcsrc/common/util.qc:1698 qcsrc/common/util.qc:1699
+#: qcsrc/common/util.qc:1700 qcsrc/common/util.qc:1701
+#: qcsrc/common/util.qc:1702 qcsrc/common/util.qc:1703
+#: qcsrc/common/util.qc:1704 qcsrc/common/util.qc:1705
+#: qcsrc/common/util.qc:1706 qcsrc/common/util.qc:1707
 #, c-format
 msgid "KP_%s"
 msgstr "TN_%s"
 
-#: qcsrc/common/util.qc:1687
+#: qcsrc/common/util.qc:1699
 #, c-format
 msgid "PERIOD"
 msgstr "PUNTO"
 
-#: qcsrc/common/util.qc:1689
+#: qcsrc/common/util.qc:1701
 #, c-format
 msgid "DIVIDE"
 msgstr "DIVIDIR"
 
-#: qcsrc/common/util.qc:1690
+#: qcsrc/common/util.qc:1702
 #, c-format
 msgid "SLASH"
 msgstr "BARRA"
 
-#: qcsrc/common/util.qc:1691
+#: qcsrc/common/util.qc:1703
 #, c-format
 msgid "MULTIPLY"
 msgstr "MULTIPLICAR"
 
-#: qcsrc/common/util.qc:1692
+#: qcsrc/common/util.qc:1704
 #, c-format
 msgid "MINUS"
 msgstr "MENOS"
 
-#: qcsrc/common/util.qc:1693
+#: qcsrc/common/util.qc:1705
 #, c-format
 msgid "PLUS"
 msgstr "MÁS"
 
-#: qcsrc/common/util.qc:1695
+#: qcsrc/common/util.qc:1707
 #, c-format
 msgid "EQUALS"
 msgstr "IGUAL"
 
-#: qcsrc/common/util.qc:1700
+#: qcsrc/common/util.qc:1712
 msgid "PRINTSCREEN"
 msgstr "CAPTURADEPANTALLA"
 
-#: qcsrc/common/util.qc:1703
+#: qcsrc/common/util.qc:1715
 #, c-format
 msgid "MOUSE%d"
 msgstr "RATÓN%d"
 
-#: qcsrc/common/util.qc:1705
+#: qcsrc/common/util.qc:1717
 msgid "MWHEELUP"
 msgstr "RRUEDAARRIBA"
 
-#: qcsrc/common/util.qc:1706
+#: qcsrc/common/util.qc:1718
 msgid "MWHEELDOWN"
 msgstr "RRUEDAABAJO"
 
-#: qcsrc/common/util.qc:1709
+#: qcsrc/common/util.qc:1721
 #, c-format
 msgid "JOY%d"
 msgstr "JOY%d"
 
-#: qcsrc/common/util.qc:1712
+#: qcsrc/common/util.qc:1724
 #, c-format
 msgid "AUX%d"
 msgstr "AUX%d"
 
-#: qcsrc/common/util.qc:1719
+#: qcsrc/common/util.qc:1731
 #, c-format
 msgid "DPAD_UP"
 msgstr "CRUCETA_ARRIBA"
 
-#: qcsrc/common/util.qc:1719 qcsrc/common/util.qc:1720
-#: qcsrc/common/util.qc:1721 qcsrc/common/util.qc:1722
-#: qcsrc/common/util.qc:1723 qcsrc/common/util.qc:1724
-#: qcsrc/common/util.qc:1725 qcsrc/common/util.qc:1726
-#: qcsrc/common/util.qc:1727 qcsrc/common/util.qc:1728
-#: qcsrc/common/util.qc:1729 qcsrc/common/util.qc:1730
 #: qcsrc/common/util.qc:1731 qcsrc/common/util.qc:1732
 #: qcsrc/common/util.qc:1733 qcsrc/common/util.qc:1734
 #: qcsrc/common/util.qc:1735 qcsrc/common/util.qc:1736
 #: qcsrc/common/util.qc:1737 qcsrc/common/util.qc:1738
+#: qcsrc/common/util.qc:1739 qcsrc/common/util.qc:1740
+#: qcsrc/common/util.qc:1741 qcsrc/common/util.qc:1742
+#: qcsrc/common/util.qc:1743 qcsrc/common/util.qc:1744
+#: qcsrc/common/util.qc:1745 qcsrc/common/util.qc:1746
+#: qcsrc/common/util.qc:1747 qcsrc/common/util.qc:1748
+#: qcsrc/common/util.qc:1749 qcsrc/common/util.qc:1750
 #, c-format
 msgid "X360_%s"
 msgstr "X360_%s"
 
-#: qcsrc/common/util.qc:1720
+#: qcsrc/common/util.qc:1732
 #, c-format
 msgid "DPAD_DOWN"
 msgstr "CRUCETA_ABAJO"
 
-#: qcsrc/common/util.qc:1721
+#: qcsrc/common/util.qc:1733
 #, c-format
 msgid "DPAD_LEFT"
 msgstr "CRUCETA_IZQUIERDA"
 
-#: qcsrc/common/util.qc:1722
+#: qcsrc/common/util.qc:1734
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr "CRUCETA_DERECHA"
 
-#: qcsrc/common/util.qc:1723
+#: qcsrc/common/util.qc:1735
 #, c-format
 msgid "START"
 msgstr "INICIO"
 
-#: qcsrc/common/util.qc:1724
+#: qcsrc/common/util.qc:1736
 #, c-format
 msgid "BACK"
 msgstr "ATRÁS"
 
-#: qcsrc/common/util.qc:1725
+#: qcsrc/common/util.qc:1737
 #, c-format
 msgid "LEFT_THUMB"
 msgstr "PULGAR_IZQUIERDO"
 
-#: qcsrc/common/util.qc:1726
+#: qcsrc/common/util.qc:1738
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr "PULGAR_DERECHO"
 
-#: qcsrc/common/util.qc:1727
+#: qcsrc/common/util.qc:1739
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr "HOMBRO_IZQUIERDO"
 
-#: qcsrc/common/util.qc:1728
+#: qcsrc/common/util.qc:1740
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr "HOMBRO_DERECHO"
 
-#: qcsrc/common/util.qc:1729
+#: qcsrc/common/util.qc:1741
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr "GATILLO_IZQUIERDO"
 
-#: qcsrc/common/util.qc:1730
+#: qcsrc/common/util.qc:1742
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr "GATILLO_DERECHO"
 
-#: qcsrc/common/util.qc:1731
+#: qcsrc/common/util.qc:1743
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr "PULGAR_IZQUIERDO_ARRIBA"
 
-#: qcsrc/common/util.qc:1732
+#: qcsrc/common/util.qc:1744
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr "PULGAR_IZQUIERDO_ABAJO"
 
-#: qcsrc/common/util.qc:1733
+#: qcsrc/common/util.qc:1745
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr "PULGAR_IZQUIERDO_IZQUIERDA"
 
-#: qcsrc/common/util.qc:1734
+#: qcsrc/common/util.qc:1746
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr "PULGAR_IZQUIERDO_DERECHA"
 
-#: qcsrc/common/util.qc:1735
+#: qcsrc/common/util.qc:1747
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr "PULGAR_DERECHO_ARRIBA"
 
-#: qcsrc/common/util.qc:1736
+#: qcsrc/common/util.qc:1748
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr "PULGAR_DERECHO_ABAJO"
 
-#: qcsrc/common/util.qc:1737
+#: qcsrc/common/util.qc:1749
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr "PULGAR_DERECHO_IZQUIERDA"
 
-#: qcsrc/common/util.qc:1738
+#: qcsrc/common/util.qc:1750
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr "PULGAR_DERECHO_DERECHA"
 
-#: qcsrc/common/util.qc:1748 qcsrc/common/util.qc:1749
-#: qcsrc/common/util.qc:1750 qcsrc/common/util.qc:1751
+#: qcsrc/common/util.qc:1760 qcsrc/common/util.qc:1761
+#: qcsrc/common/util.qc:1762 qcsrc/common/util.qc:1763
 #, c-format
 msgid "JOY_%s"
 msgstr "JOY_%s"
 
-#: qcsrc/common/util.qc:1748
+#: qcsrc/common/util.qc:1760
 #, c-format
 msgid "UP"
 msgstr "ARRIBA"
 
-#: qcsrc/common/util.qc:1749
+#: qcsrc/common/util.qc:1761
 #, c-format
 msgid "DOWN"
 msgstr "ABAJO"
 
-#: qcsrc/common/util.qc:1750
+#: qcsrc/common/util.qc:1762
 #, c-format
 msgid "LEFT"
 msgstr "IZQUIERDA"
 
-#: qcsrc/common/util.qc:1751
+#: qcsrc/common/util.qc:1763
 #, c-format
 msgid "RIGHT"
 msgstr "DERECHA"
 
-#: qcsrc/common/util.qc:1757
+#: qcsrc/common/util.qc:1769
 #, c-format
 msgid "MIDINOTE%d"
 msgstr "NOTAMIDI%d"
@@ -7653,27 +7653,27 @@ msgstr ""
 msgid "The combo adds an extra %s damage"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qc:1442
+#: qcsrc/common/weapons/weapon/arc.qc:1446
 #, c-format
 msgid ""
 "The %s fires a continuous beam of electricity, steadily dealing damage to "
 "any enemies that cross its path."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qc:1443
+#: qcsrc/common/weapons/weapon/arc.qc:1447
 msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qc:1444
+#: qcsrc/common/weapons/weapon/arc.qc:1448
 #, c-format
 msgid ""
 "It consumes %s ammo, steadily churning through your supply to maintain the "
 "stream."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qc:1445
+#: qcsrc/common/weapons/weapon/arc.qc:1449
 #, c-format
 msgid ""
 "The %s is quite a versatile weapon, however it is more effective at close to "
@@ -7819,14 +7819,14 @@ msgstr ""
 msgid "Devastator"
 msgstr "Devastador"
 
-#: qcsrc/common/weapons/weapon/electro.qc:754
+#: qcsrc/common/weapons/weapon/electro.qc:761
 #, c-format
 msgid ""
 "The %s shoots electric balls forwards, dealing some splash damage when they "
 "burst on impact."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/electro.qc:755
+#: qcsrc/common/weapons/weapon/electro.qc:762
 #, c-format
 msgid ""
 "The secondary fire launches orbs that are influenced by gravity, so they can "
@@ -7835,12 +7835,12 @@ msgid ""
 "forced to burst in a \"combo\" if a primary fire ball bursts near them."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/electro.qc:758
+#: qcsrc/common/weapons/weapon/electro.qc:765
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/electro.qc:759
+#: qcsrc/common/weapons/weapon/electro.qc:766
 #, c-format
 msgid ""
 "The %s is one of the best spam weapons to use in crowded areas, since combos "
@@ -7853,28 +7853,28 @@ msgstr ""
 msgid "Electro"
 msgstr "Electro"
 
-#: qcsrc/common/weapons/weapon/fireball.qc:432
+#: qcsrc/common/weapons/weapon/fireball.qc:449
 #, c-format
 msgid ""
 "The %s supercharges then fires a massive fireball in a straight line, "
 "dealing heaps of splash damage over a large radius on impact."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:433
+#: qcsrc/common/weapons/weapon/fireball.qc:450
 msgid ""
 "The secondary fire launches flaming balls that set nearby players alight."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:434
+#: qcsrc/common/weapons/weapon/fireball.qc:451
 msgid "It is a superweapon, so isn't often found in game."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:435
+#: qcsrc/common/weapons/weapon/fireball.qc:452
 #: qcsrc/common/weapons/weapon/porto.qc:423
 msgid "It doesn't require ammo, but it is destroyed after some time."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:436
+#: qcsrc/common/weapons/weapon/fireball.qc:453
 #, c-format
 msgid ""
 "Since the %s takes a moment to charge and the fireball travels slowly, using "
@@ -7959,27 +7959,27 @@ msgstr ""
 msgid "Heavy Laser Assault Cannon"
 msgstr "Heavy Laser Assault Cannon"
 
-#: qcsrc/common/weapons/weapon/hook.qc:429
+#: qcsrc/common/weapons/weapon/hook.qc:414
 #, c-format
 msgid ""
 "The %s is a unique weapon, firing a chain forwards which pulls you in once "
 "it latches onto something."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:430
+#: qcsrc/common/weapons/weapon/hook.qc:415
 msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:431
+#: qcsrc/common/weapons/weapon/hook.qc:416
 #, c-format
 msgid ""
 "It usually requires %s ammo to work, consuming it both when initially firing "
 "the hook, and after a couple seconds as it reels you in."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:432
+#: qcsrc/common/weapons/weapon/hook.qc:417
 #, c-format
 msgid ""
 "The %s allows reaching previously unreachable places on maps and zooming "
@@ -7987,7 +7987,7 @@ msgid ""
 "escapes possible."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:434
+#: qcsrc/common/weapons/weapon/hook.qc:419
 #, c-format
 msgid ""
 "It isn't available very often on maps, unless the %s mutator is active, in "
@@ -7999,21 +7999,21 @@ msgstr ""
 msgid "Grappling Hook"
 msgstr "Gancho de agarre"
 
-#: qcsrc/common/weapons/weapon/machinegun.qc:422
+#: qcsrc/common/weapons/weapon/machinegun.qc:446
 msgid ""
 "The secondary fire fires a quick burst of bullets faster than the primary "
 "fire and with no spread, but there's a short delay until it can be used "
 "again."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/machinegun.qc:423
+#: qcsrc/common/weapons/weapon/machinegun.qc:447
 #, c-format
 msgid ""
 "It consumes %s ammo for each bullet shot, until the whole magazine is "
 "emptied."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/machinegun.qc:424
+#: qcsrc/common/weapons/weapon/machinegun.qc:448
 #, c-format
 msgid ""
 "The %s can be used in a lot of situations, and it works particularly well at "
@@ -8022,7 +8022,7 @@ msgid ""
 "range."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/machinegun.qh:33
+#: qcsrc/common/weapons/weapon/machinegun.qh:34
 msgid "MachineGun"
 msgstr "Ametralladora"
 
@@ -8161,7 +8161,7 @@ msgstr ""
 msgid "Rifle"
 msgstr "Rifle"
 
-#: qcsrc/common/weapons/weapon/seeker.qc:679
+#: qcsrc/common/weapons/weapon/seeker.qc:681
 #, c-format
 msgid ""
 "The %s is a unique weapon, firing a \"tag\" which then launches a few homing "
@@ -8169,18 +8169,18 @@ msgid ""
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/seeker.qc:681
+#: qcsrc/common/weapons/weapon/seeker.qc:683
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/seeker.qc:682
+#: qcsrc/common/weapons/weapon/seeker.qc:684
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/seeker.qc:683
+#: qcsrc/common/weapons/weapon/seeker.qc:685
 #, c-format
 msgid ""
 "The %s primary fire deals quite a lot of damage when a tag lands, although "
