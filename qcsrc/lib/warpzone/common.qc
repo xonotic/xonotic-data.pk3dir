@@ -672,7 +672,7 @@ void _WarpZone_FindRadius_Recurse(
 	for (entity e = wz; e; e = e.WarpZone_findradius_next)
 	{
 		vector org0_new = WarpZone_TransformOrigin(e, org);
-		traceline(e.warpzone_targetorigin, org0_new, _WarpZone_FindRadius_nomonsters, e);
+		traceline(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
 		vector org_new = trace_endpos;
 
 		_WarpZone_FindRadius_Recurse(
@@ -686,8 +686,8 @@ void _WarpZone_FindRadius_Recurse(
 }
 entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone_FindRadius_cond_callback_t cb)
 {
-	bool simple_findradius = true;
-	// use simple findradius if no warpzone is touching the box of side 2 * rad and center org
+	bool nearby_warpzones = false;
+	// use FOREACH_ENTITY_RADIUS if no warpzone is touching the box of side 2 * rad and center org
 	// which includes the sphere of radius rad and center org
 	if (warpzone_warpzones_exist)
 	{
@@ -695,60 +695,39 @@ entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone
 		vector boxmax = vec3(org.x + rad, org.y + rad, org.z + rad);
 		IL_EACH(g_warpzones, boxesoverlap(it.absmin, it.absmax, boxmin, boxmax),
 		{
-			simple_findradius = false;
+			nearby_warpzones = true;
 			break;
 		});
 	}
 
-	if (simple_findradius)
+	_WarpZone_FindRadius_goodents_first = NULL;
+	if (nearby_warpzones)
 	{
-		entity prev_goodent = NULL;
-		vector p = '0 0 0';
-		bool bad = false;
-		_WarpZone_FindRadius_goodents_first = findradius(org, rad);
-		FOREACH_LIST(_WarpZone_FindRadius_goodents, chain, true,
-		{
-			// remove bad elements from this list while iterating
-			if (WarpZoneLib_BadEntity(it, cb))
-				bad = true;
-			else
-			{
-				p = NearestPointOnBoundingBox(it.origin + it.mins, it.origin + it.maxs, org);
-				if (nomonsters != MOVE_NOTHING)
-				{
-					traceline(org, p, nomonsters, it);
-					if (trace_fraction < 1)
-						bad = true;
-				}
-			}
-
-			if (bad) // remove from list, re-link
-			{
-				if (prev_goodent)
-					prev_goodent.chain = it.chain;
-				else
-					_WarpZone_FindRadius_goodents_first = _WarpZone_FindRadius_goodents_first.chain;
-				bad = false;
-				continue;
-			}
-
-			it.WarpZone_findradius_nearest = p;
-			it.WarpZone_findradius_dist = org - p;
-			WarpZone_Accumulator_Clear(it); // reset .warpzone_transform and .warpzone_shift
-
-			prev_goodent = it;
-		});
-	}
-	else
-	{
+		_WarpZone_FindRadius_badents_first = NULL;
 		_WarpZone_FindRadius_nomonsters = nomonsters;
 		_WarpZone_FindRadius_cond_cb = cb;
-		_WarpZone_FindRadius_goodents_first = NULL;
-		_WarpZone_FindRadius_badents_first  = NULL;
 		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0');
 		FOREACH_LIST(_WarpZone_FindRadius_goodents, chain,                    true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
 		FOREACH_LIST(_WarpZone_FindRadius_badents,  WarpZone_findradius_next, true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
 	}
+	else // cheaper than _WarpZone_FindRadius_Recurse
+		FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity(it, cb),
+		{
+			vector p = NearestPointOnBoundingBox(it.origin + it.mins, it.origin + it.maxs, org);
+			if (nomonsters != MOVE_NOTHING)
+			{
+				traceline(org, p, nomonsters, it);
+				if (trace_fraction < 1)
+					continue;
+			}
+
+			it.chain = _WarpZone_FindRadius_goodents_first; // fine to use .chain since FOREACH_ENTITY_RADIUS doesn't use it
+			_WarpZone_FindRadius_goodents_first = it;
+			it.WarpZone_findradius_nearest = p;
+			it.WarpZone_findradius_dist = org - p;
+			WarpZone_Accumulator_Clear(it); // reset .warpzone_transform and .warpzone_shift
+		});
+
 	return _WarpZone_FindRadius_goodents_first;
 }
 
