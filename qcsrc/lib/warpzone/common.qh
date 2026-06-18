@@ -35,6 +35,8 @@ void WarpZone_MakeAllOther();
 #define MOVE_NOTHING -1
 entity WarpZone_trace_forent; ///< Temp, callback is allowed to change it
 USING(WarpZone_trace_callback_t, void(vector start, vector hit, vector end)); // Called on every elementary trace
+WarpZone_trace_callback_t te_csqc_trace_callback;
+var void te_csqc_trace_callback_func(vector start, vector hit);
 entity WarpZone_trace_transform; ///< Transform accumulator during a trace
 entity WarpZone_trace_firstzone; ///< First warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
 entity WarpZone_trace_lastzone; ///< First warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
