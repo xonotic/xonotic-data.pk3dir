@@ -77,6 +77,6 @@ REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 SPAWNFUNC_WEAPON(weapon_fireball, WEP_FIREBALL)
 
 #ifdef SVQC
-.vector fireball_impactvec;
+.float dmg_radius; // reused field, as the distance the laser damage occurs over
 .float fireball_primarytime;
 #endif
