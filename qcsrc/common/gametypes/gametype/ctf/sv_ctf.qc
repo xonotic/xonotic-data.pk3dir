@@ -2425,6 +2425,12 @@ MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 		{ ctf_Handle_Throw(player, NULL, DROP_NORMAL); }
 }
 
+bool ctf_Pass_cond(entity e)
+{
+	return (IS_PLAYER(e) && !IS_DEAD(e) && !IS_INDEPENDENT_PLAYER(e)
+		&& e != WarpZone_SearchInRadius_otherent && SAME_TEAM(e, WarpZone_SearchInRadius_otherent)
+		&& !e.speedrunning && !e.vehicle);
+}
 MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || game_stopped) return;
@@ -2436,49 +2442,43 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 		// pass the flag to a teammate
 		if(autocvar_g_ctf_pass && player.flagcarried.classname != "phantomflag")
 		{
-			entity head, closest_target = NULL;
-			head = WarpZone_FindRadius(player.origin, autocvar_g_ctf_pass_radius, true);
-
-			while(head) // find the closest acceptable target to pass to
+			WarpZone_SearchInRadius_otherent = player;
+			entity head = WarpZone_SearchInRadius(player.origin, autocvar_g_ctf_pass_radius, MOVE_NOMONSTERS, ctf_Pass_cond);
+			entity closest_target = NULL;
+			for (; head; head = head.chain) // find the closest acceptable target to pass to
 			{
-				if(IS_PLAYER(head) && !IS_DEAD(head) && !IS_INDEPENDENT_PLAYER(head))
-				if(head != player && SAME_TEAM(head, player))
-				if(!head.speedrunning && !head.vehicle)
-				{
-					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
-					vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
-					vector passer_center = CENTER_OR_VIEWOFS(player);
+				// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
+				vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
+				vector passer_center = CENTER_OR_VIEWOFS(player);
 
-					if(ctf_CheckPassDirection(head_center, passer_center, player.v_angle, head.WarpZone_findradius_nearest))
+				if(ctf_CheckPassDirection(head_center, passer_center, player.v_angle, head.WarpZone_findradius_nearest))
+				{
+					if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried && head.flagcarried.classname != "phantomflag")
 					{
-						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried && head.flagcarried.classname != "phantomflag")
+						if(IS_BOT_CLIENT(head))
 						{
-							if(IS_BOT_CLIENT(head))
-							{
-								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
-								ctf_Handle_Throw(head, player, DROP_PASS);
-							}
-							else
-							{
-								Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_CTF_PASS_REQUESTED, player.netname);
-								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
-							}
-							player.throw_antispam = time + autocvar_g_ctf_pass_wait;
-							return true;
+							Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
+							ctf_Handle_Throw(head, player, DROP_PASS);
 						}
-						else if(player.flagcarried && !head.flagcarried)
+						else
 						{
-							if(closest_target)
-							{
-								vector closest_target_center = WarpZone_UnTransformOrigin(closest_target, CENTER_OR_VIEWOFS(closest_target));
-								if(vlen2(passer_center - head_center) < vlen2(passer_center - closest_target_center))
-									{ closest_target = head; }
-							}
-							else { closest_target = head; }
+							Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_CTF_PASS_REQUESTED, player.netname);
+							Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
 						}
+						player.throw_antispam = time + autocvar_g_ctf_pass_wait;
+						return true;
+					}
+					else if(player.flagcarried && !head.flagcarried)
+					{
+						if(closest_target)
+						{
+							vector closest_target_center = WarpZone_UnTransformOrigin(closest_target, CENTER_OR_VIEWOFS(closest_target));
+							if(vlen2(passer_center - head_center) < vlen2(passer_center - closest_target_center))
+								{ closest_target = head; }
+						}
+						else { closest_target = head; }
 					}
 				}
-				head = head.chain;
 			}
 
 			if(closest_target) { ctf_Handle_Throw(player, closest_target, DROP_PASS); return true; }
