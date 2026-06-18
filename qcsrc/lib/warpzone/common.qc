@@ -450,6 +450,13 @@ void WarpZone_TrailParticles(entity own, float eff, vector org, vector end)
 	WarpZone_TraceLine_ThroughZone(org, end, MOVE_NOMONSTERS, NULL, NULL, WarpZone_TrailParticles_trace_callback);
 }
 
+/// Callback function for WarpZone_TraceBox_ThroughZone, for use with te_csqc_* functions.
+/// Must set te_csqc_trace_callback_func first
+void te_csqc_trace_callback(vector start, vector hit, vector end)
+{
+	te_csqc_trace_callback_func(start, hit);
+}
+
 #ifdef CSQC
 float WarpZone_TrailParticles_trace_callback_f;
 float WarpZone_TrailParticles_trace_callback_flags;
