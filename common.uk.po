@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-18 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Kostiantyn Tsebro, 2026\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -1488,7 +1488,7 @@ msgid ""
 "Objects have waypoints which show their health and position, and they're "
 "destroyed by shooting them with any weapon."
 msgstr ""
-"Об'єкти мають точку шляху, які показують їхній стан та розташування, а також "
+"Об'єкти мають маркери, які показують їхній стан та розташування, а також "
 "вони можуть бути зруйнованою будь-якою зброєю."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:8
@@ -1611,7 +1611,7 @@ msgstr ""
 "повернений на свою базу, або в іншому випадку чекатиме, поки автоматично не "
 "повернеться. Якщо всі прапори будуть утримані, після певного часу почнеться "
 "\"патова ситуація\", в якому всі носії прапору будуть виявлені на радарі та "
-"з маршрутними точками."
+"з маркерами."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:13
 #, c-format
@@ -2018,12 +2018,19 @@ msgid ""
 "health and armor do not regenerate, similar to gametypes like %s. Similarly, "
 "item pickups don't spawn on the map."
 msgstr ""
+"%s - це режим гри \"кожен сам за себе\", в якому всі гравці починають із "
+"певною кількістю життів і вибувають із матчу, щойно втрачають їх усі. Гравці "
+"з'являються зі всією доступною зброєю, максимальним запасом здоров'я та "
+"броні, які не регенеруються, що подібно до режиму %s. Так само не "
+"з'являються на мапі предмети для підбору."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:13
 msgid ""
 "Hiding is sometimes a viable strategy since if you can't be found you can't "
 "lose lives, but often you become a vulnerable target once discovered."
 msgstr ""
+"Ховатися є іноді вигідною стратегією, оскільки Вас не можна знайти і не "
+"втрачаєте своє життя, але часто становитеся вразливою цілею після виявлення."
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:14
 #, c-format
@@ -2033,6 +2040,11 @@ msgid ""
 "to prevent hiding too much. Players who aren't in the lead steal a small "
 "percentage of health when they attack leaders, like in the %s mutator."
 msgstr ""
+"Гравці, які лідирують щонайменше на 2 життя, починають світитися та над "
+"їхніми головами періодично на кілька секунд з'являється маркер, видиме для "
+"всіх інших, що заважає їм постійно ховатися. Гравці, які не лідирують, під "
+"час атак на лідерів крадуть невеликий відсоток їхнього здоров'я, як у "
+"мутаторі %s. "
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qh:11
 msgid "Last Man Standing"
@@ -3398,7 +3410,7 @@ msgstr "викинути зброю / кинути гранату"
 #: qcsrc/common/mutators/mutator/nades/cl_nades.qc:78
 #, c-format
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
-msgstr ""
+msgstr "^3гранати^8 увімкнено, натисніть ^3%s^8 для використання"
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:80
 #, c-format
@@ -3418,7 +3430,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:24
 msgid "Ammo grenade"
-msgstr ""
+msgstr "Граната набоїв"
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:142
 #, c-format
@@ -3435,7 +3447,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/darkness.qh:22
 msgid "Darkness grenade"
-msgstr ""
+msgstr "Граната темряви"
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qc:70
 #, c-format
@@ -3447,7 +3459,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:24
 msgid "Entrap grenade"
-msgstr ""
+msgstr "Граната пастки"
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qc:64
 #, c-format
@@ -3460,7 +3472,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qh:24
 msgid "Heal grenade"
-msgstr ""
+msgstr "Лікувальна граната"
 
 #: qcsrc/common/mutators/mutator/nades/nade/ice.qc:118
 #, c-format
@@ -3473,7 +3485,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/ice.qh:22
 msgid "Ice grenade"
-msgstr ""
+msgstr "Крижана граната"
 
 #: qcsrc/common/mutators/mutator/nades/nade/monster.qc:27
 #, c-format
@@ -3483,7 +3495,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/monster.qh:21
 msgid "Monster grenade"
-msgstr ""
+msgstr "Граната з монстром"
 
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qc:176
 #, c-format
@@ -3495,7 +3507,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:32
 msgid "Napalm grenade"
-msgstr ""
+msgstr "Напалмова граната"
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:26
 #, c-format
@@ -3504,6 +3516,9 @@ msgid ""
 "players. If other nade types are destroyed before they detonate, they "
 "instead explode similar to this, without doing their special effects."
 msgstr ""
+"(Нормальна) %s вибухає після невеличкої затримки, завдаючи шкоди навколишнім "
+"гравцям. Якщо інші види гранат зруйновано перед їхнєю детонацією, вони "
+"вибухають схожим образом без особливих ефектів."
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #, c-format
@@ -3515,7 +3530,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:17
 msgid "Grenade"
-msgstr ""
+msgstr "Граната"
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qc:46
 #, c-format
@@ -3527,7 +3542,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:19
 msgid "Spawn grenade"
-msgstr ""
+msgstr "Граната з відродженням"
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:51
 #, c-format
@@ -3540,16 +3555,18 @@ msgid ""
 "A common use of this nade is saving yourself from the void in space maps, "
 "however mastering this is very tricky."
 msgstr ""
+"Зазвичай таку гранату використовують, щоб врятуватися від падіння в "
+"порожнечу в космічних картах, проте опанувати цю навичку дуже складно."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:53
 msgid ""
 "If this grenade is destroyed by an attacker, it will deal some damage to "
 "them."
-msgstr ""
+msgstr "Якщо цю гранату зруйновано нападником, вона пошкодить власника."
 
 #: qcsrc/common/mutators/mutator/nades/nade/translocate.qh:19
 msgid "Translocate grenade"
-msgstr ""
+msgstr "Граната-телепорт"
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qc:53
 #, c-format
@@ -3561,7 +3578,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:24
 msgid "Veil grenade"
-msgstr ""
+msgstr "Граната-невидимка"
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:49
 #, c-format
@@ -3586,7 +3603,7 @@ msgstr "Цей мутатор активовано за замовчування
 #: qcsrc/common/mutators/mutator/nades/nades.qh:83 qcsrc/common/util.qc:329
 #: qcsrc/menu/xonotic/guide/guide.qh:16
 msgid "Nades"
-msgstr ""
+msgstr "Гранати"
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
 #, c-format
@@ -3605,13 +3622,13 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
 #, c-format
 msgid "The current %s weapons are:"
-msgstr ""
+msgstr "Наразі зброя типу %s така:"
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
 #: qcsrc/common/util.qc:308
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
 msgid "New Toys"
-msgstr "Нові цяцьки"
+msgstr "Нові забавки"
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -3653,7 +3670,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
 #: qcsrc/common/util.qc:330
 msgid "Offhand blaster"
-msgstr ""
+msgstr "Бластер нашвидкуруч"
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:173
 #, c-format
@@ -4001,7 +4018,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr "Маршрутна точка"
+msgstr "Маркер"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
@@ -4021,11 +4038,11 @@ msgstr "Заморожений!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:11
 msgid "Reviving"
-msgstr ""
+msgstr "Розморожується"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
-msgstr ""
+msgstr "Предмет"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 msgid "Checkpoint"
@@ -4060,7 +4077,7 @@ msgstr "Носій прапору"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "White base"
-msgstr ""
+msgstr "База білих"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Red base"
@@ -4072,11 +4089,11 @@ msgstr "База синіх"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Yellow base"
-msgstr ""
+msgstr "База жовтих"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Pink base"
-msgstr ""
+msgstr "База рожевих"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:30
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
@@ -4096,7 +4113,7 @@ msgstr "Ворожий носій"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
 msgid "Return flag here"
-msgstr ""
+msgstr "Сюди повернути прапор"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
@@ -4162,7 +4179,7 @@ msgstr "Транспорт"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:79
 msgid "Intruder!"
-msgstr ""
+msgstr "Зловмисник!"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:81
 msgid "Tagged"
@@ -4179,7 +4196,7 @@ msgstr "^1Повідомлення сервера:"
 
 #: qcsrc/common/notifications/all.inc:237
 msgid "^F4NOTE: ^BGChat is currently disabled on this server"
-msgstr ""
+msgstr "^F4ПРИМІТКА: ^BGЧат наразі вимкнено на цьому сервері"
 
 #: qcsrc/common/notifications/all.inc:238
 msgid "^F4NOTE: ^BGSpectator chat is not sent to players during the match"
@@ -4187,15 +4204,15 @@ msgstr "^F4ПРИМІТКА: ^BGГравці не бачать чат спост
 
 #: qcsrc/common/notifications/all.inc:239
 msgid "^F4NOTE: ^BGPrivate chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4ПРИМІТКА: ^BGОсобистий чат наразі вимкнено на цьому сервері"
 
 #: qcsrc/common/notifications/all.inc:240
 msgid "^F4NOTE: ^BGSpectator chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4ПРИМІТКА: ^BGЧат спостерігачів наразі вимкнено на цьому сервері"
 
 #: qcsrc/common/notifications/all.inc:241
 msgid "^F4NOTE: ^BGTeam chat is currently disabled on this server"
-msgstr ""
+msgstr "^F4ПРИМІТКА: ^BGКомандний чат наразі вимкнено на цьому сервері"
 
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
@@ -4324,19 +4341,21 @@ msgstr "^F2Кидається монета... Результат: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr ""
+msgstr "^BGУ вас недостатньо палива для ^F1Джетпака"
 
 #: qcsrc/common/notifications/all.inc:271
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
 msgstr ""
+"^F2У вас немає UID, налаштування суперглядача не будуть збережені або "
+"відновлені"
 
 #: qcsrc/common/notifications/all.inc:273
 msgid "^F1Round already started, you will join the game in the next round"
-msgstr ""
+msgstr "^F1Раунд вже розпочався, Ви приєднаєтеся в наступному раунді"
 
 #: qcsrc/common/notifications/all.inc:274
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2Ви спостерігатимете з наступного раунду"
 
 #: qcsrc/common/notifications/all.inc:276
 msgid "^F2Match is restarting..."
@@ -4353,27 +4372,27 @@ msgstr "%s гравців необхідно для початку матчу."
 #: qcsrc/common/notifications/all.inc:564
 #: qcsrc/common/notifications/all.inc:565
 msgid "^F4Countdown stopped!"
-msgstr ""
+msgstr "^F4Відлік часу зупинено!"
 
 #: qcsrc/common/notifications/all.inc:278
 #: qcsrc/common/notifications/all.inc:565
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "Команди незбалансовані."
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 burned at the mercy of ^BG%s^K1's Inferno buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 згорів на милість бафа Інферно від ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot thanks to ^BG%s^K1's Inferno buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 було загаряче завдяки бафу Інферно від ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 felt the karma of ^BG%s^K1's Vengeance buff %s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 відчув силу карми бафа Помсти від ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
@@ -4388,17 +4407,17 @@ msgstr "^BG%s%s^K1 був утоплений ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:284
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 був опущений на землю ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 було вбито з висоти завдяки ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
-msgstr "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
+msgstr "^BG%s%s^K1 було загаряче від вогню ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:285
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 був спалений ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 згорів до хрусткої корки завдяки ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:286
 #, c-format
@@ -4408,37 +4427,37 @@ msgstr "^BG%s%s^K1 був засмажений ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:287
 #, c-format
 msgid "^BG%s%s^K1 was pushed in front of a monster by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був кинутий на повалу монстру від ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:288
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
-msgstr "^BG%s%s^K1 був підірваний гранатою ^BG%s^K1 %s%s"
+msgstr "^BG%s%s^K1 підірвався від гранати ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:289
 #, c-format
 msgid "^BG%s%s^K1 couldn't find the light in ^BG%s^K1's Darkness Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 не зміг знайти світло в Гранаті Темноти від ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:290
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 не вилікувався від Лікувальної Гранати ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:291
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 підірвався від Крижаної Гранати ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:292
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 підійшов занадто близько до вибуху від напалму%s%s"
 
 #: qcsrc/common/notifications/all.inc:292
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 згорів на смерть від Напалмової Гранати ^BG%s ^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:293
 #, c-format
@@ -4640,30 +4659,30 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:330
 #, c-format
 msgid "^BG%s^K1 was given kung fu lessons by a Zombie%s%s"
-msgstr ""
+msgstr "^BG%s^K1 дали уроки кунг-фу від Зомбі%s%s"
 
 #: qcsrc/common/notifications/all.inc:331
 #: qcsrc/common/notifications/all.inc:332
 #: qcsrc/common/notifications/all.inc:334
 #, c-format
 msgid "^BG%s^K1 mastered the art of self-nading%s%s"
-msgstr "^BG%s^K1 може майстерно вбити себе власною гранатою%s%s"
+msgstr "^BG%s^K1 навчився прийому самопідриву власною гранатою%s%s"
 
 #: qcsrc/common/notifications/all.inc:333
 #, c-format
 msgid "^BG%s^K1's Healing Nade didn't quite heal them%s%s"
-msgstr ""
+msgstr "^K1Лікувальна Граната від ^BG%s^K1 не сильно вилікувала його%s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid ""
 "^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s"
-msgstr ""
+msgstr "^BG%s^K1 вирішив переглянути результати самопідриву з напалмом%s%s"
 
 #: qcsrc/common/notifications/all.inc:335
 #, c-format
 msgid "^BG%s^K1 was burned to death by their own Napalm Nade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 згорів на смерть від своєї Напалмової Гранати%s%s"
 
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
@@ -4673,7 +4692,7 @@ msgstr "^BG%s^K1 загинув%s%s. Який сенс жити без набо�
 #: qcsrc/common/notifications/all.inc:336
 #, c-format
 msgid "^BG%s^K1 ran out of ammo%s%s"
-msgstr "^BG%s^K1 використав усі патрони%s%s"
+msgstr "^BG%s^K1 залишився без набоїв%s%s"
 
 #: qcsrc/common/notifications/all.inc:337
 #, c-format
@@ -5598,7 +5617,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:558
 msgid "^F4You are now alone!"
-msgstr "^F4Останній герой!"
+msgstr "^F4Ви залишилися самі!"
 
 #: qcsrc/common/notifications/all.inc:560
 msgid "^BGYou are attacking!"
@@ -5611,7 +5630,7 @@ msgstr "^BGВи захищаєтесь!"
 #: qcsrc/common/notifications/all.inc:562
 #, c-format
 msgid "^BGObjective destroyed in ^F4%s^BG!"
-msgstr ""
+msgstr "^BGЦіль зруйновано в ^F4%s^BG!"
 
 #: qcsrc/common/notifications/all.inc:566
 msgid "^BGBegin!"
@@ -5632,7 +5651,7 @@ msgstr "^F4Раунд не може початися"
 
 #: qcsrc/common/notifications/all.inc:574
 msgid "^F2Don't camp!"
-msgstr "^F2Не кемперіть!"
+msgstr "^F2Не ховайтесь!"
 
 #: qcsrc/common/notifications/all.inc:578
 msgid ""
@@ -5646,7 +5665,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:579
 msgid "^BGThis flag is currently inactive"
-msgstr ""
+msgstr "^BGЦей прапор наразі неактивовано"
 
 #: qcsrc/common/notifications/all.inc:580
 msgid ""
@@ -5679,7 +5698,7 @@ msgstr "^BG%s^BG передав ^TC^TT^BG прапор до %s"
 #: qcsrc/common/notifications/all.inc:585
 #, c-format
 msgid "^BG%s^BG passed the flag to %s"
-msgstr ""
+msgstr "^BG%s^BG передав прапор до %s"
 
 #: qcsrc/common/notifications/all.inc:586
 #, c-format
@@ -5689,17 +5708,17 @@ msgstr "^BGВи отримали ^TC^TT^BG прапор від %s"
 #: qcsrc/common/notifications/all.inc:587
 #, c-format
 msgid "^BGYou received the flag from %s"
-msgstr ""
+msgstr "^BGВи отримали прапор від %s"
 
 #: qcsrc/common/notifications/all.inc:588
 #, c-format
 msgid "^BGPress ^F2%s^BG to receive the flag from %s^BG"
-msgstr ""
+msgstr "^BGНатисніть ^F2%s^BG, щоб отримати прапор від %s^BG"
 
 #: qcsrc/common/notifications/all.inc:589
 #, c-format
 msgid "^BGRequesting %s^BG to pass you the flag"
-msgstr "^BGПросить %s^BG передати вам прапор"
+msgstr "^BGВи просите у %s^BG передати вам прапор"
 
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
@@ -5709,15 +5728,15 @@ msgstr "^BGВи передали ^TC^TT^BG прапор до %s"
 #: qcsrc/common/notifications/all.inc:591
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr ""
+msgstr "^BGВи передали прапор до %s"
 
 #: qcsrc/common/notifications/all.inc:592
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr "^BGВи отримали ^TC^TT^BG прапор!"
+msgstr "^BGВи взяли ^TC^TT^BG прапор!"
 
 #: qcsrc/common/notifications/all.inc:593
 msgid "^BGYou got the flag!"
-msgstr ""
+msgstr "^BGВи взяли прапор!"
 
 #: qcsrc/common/notifications/all.inc:594
 #, c-format
@@ -5794,7 +5813,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:610
 #: qcsrc/common/notifications/all.inc:756
 msgid "^BGEnemies can now see you on radar!"
-msgstr ""
+msgstr "^BGВороги бачуть Вас на радарі!"
 
 #: qcsrc/common/notifications/all.inc:611
 msgid "^BGYou returned the ^TC^TT^BG flag!"
@@ -5836,32 +5855,32 @@ msgstr "^K1%sВи програли очко ^BG%s"
 #: qcsrc/common/notifications/all.inc:626
 #, c-format
 msgid "^K3%sYou burned ^BG%s"
-msgstr ""
+msgstr "^K3%sВи спалили ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:628
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr ""
+msgstr "^K1%sВас спалили ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:635
 #, c-format
 msgid "^K3%sYou froze ^BG%s"
-msgstr ""
+msgstr "^K3%sВи заморозили ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:637
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr ""
+msgstr "^K1%sВас заморозили ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:644
 #, c-format
 msgid "^K1%sYou typefragged ^BG%s"
-msgstr "^K1%sВи фрагнули ^BG%s^K1 на чаті!"
+msgstr "^K1%sВи фрагнули ^BG%s^K1 на чаті"
 
 #: qcsrc/common/notifications/all.inc:645
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr "^K1%sВи виграли очко у ^BG%s^K1 поки він писав"
+msgstr "^K1%sВи виграли бал у ^BG%s^K1 на чаті"
 
 #: qcsrc/common/notifications/all.inc:646
 #, c-format
@@ -5871,16 +5890,16 @@ msgstr "^K1%sВас фрагнув ^BG%s^K1 на чаті!"
 #: qcsrc/common/notifications/all.inc:647
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing"
-msgstr ""
+msgstr "^K1%sВи програли бал у ^BG%s^K1 на чаті"
 
 #: qcsrc/common/notifications/all.inc:653
 #, c-format
 msgid "^BGPress ^F2%s^BG again to toss the nade!"
-msgstr ""
+msgstr "^BGНатисніть ^F2%s^BG знову, щоб кинути гранату!"
 
 #: qcsrc/common/notifications/all.inc:654
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr ""
+msgstr "^F2Ви отримали ^K1БОНУСНУ ГРАНАТУ^F2!"
 
 #: qcsrc/common/notifications/all.inc:656
 #, c-format
@@ -5893,15 +5912,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:657
 msgid "^K1You were punished for attacking your teammates!"
-msgstr ""
+msgstr "^K1Вас було покарано через атаки на союзників!"
 
 #: qcsrc/common/notifications/all.inc:658
 msgid "^K1Die camper!"
-msgstr "^K1Помри, кемпер!"
+msgstr "^K1Помри, кемпере!"
 
 #: qcsrc/common/notifications/all.inc:658
 msgid "^K1Reconsider your tactics, camper!"
-msgstr "^K1Знайди собі кращу тактику, кемпер!"
+msgstr "^K1Знайдіть кращу тактику, кемпере!"
 
 #: qcsrc/common/notifications/all.inc:659
 msgid "^K1You unfairly eliminated yourself!"
@@ -5914,7 +5933,7 @@ msgstr "^K1Вас %s"
 
 #: qcsrc/common/notifications/all.inc:661
 msgid "^K1You couldn't catch your breath!"
-msgstr "^K1Ви не змогли перевести дух!"
+msgstr "^K1Вам не вистачило повітря!"
 
 #: qcsrc/common/notifications/all.inc:662
 msgid "^K1You hit the ground with a crunch!"
@@ -5942,11 +5961,11 @@ msgstr "^K1Ви не витримали жар!"
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1You need to watch out for monsters!"
-msgstr ""
+msgstr "^K1Вам варто стерегтися монстрів!"
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1You were killed by a monster!"
-msgstr ""
+msgstr "^K1Вас вбив монстр!"
 
 #: qcsrc/common/notifications/all.inc:667
 msgid "^K1Tastes like chicken!"
@@ -5958,11 +5977,11 @@ msgstr "^K1Ви забули повернути чеку на місце!"
 
 #: qcsrc/common/notifications/all.inc:668
 msgid "^K1Hanging around a napalm explosion is bad!"
-msgstr ""
+msgstr "^K1Гуляти поряд з вибухом напалму погано!"
 
 #: qcsrc/common/notifications/all.inc:669
 msgid "^K1Your Healing Nade is a bit defective"
-msgstr ""
+msgstr "^K1Ваша Лікувальна Граната бракована"
 
 #: qcsrc/common/notifications/all.inc:670
 msgid "^K1You are respawning for running out of ammo..."
@@ -6072,22 +6091,22 @@ msgstr "^K1Дивіться під ноги!"
 #: qcsrc/common/notifications/all.inc:691
 #, c-format
 msgid "^K1Traitor! You betrayed teammate ^BG%s"
-msgstr ""
+msgstr "^K1Зрадник! Ви зрадили союзника ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:691
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr ""
+msgstr "^K1Зрадник! Ви вбили союзника ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:692
 #, c-format
 msgid "^K1You were betrayed by teammate ^BG%s"
-msgstr ""
+msgstr "^K1Вас зрадив союзник ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:692
 #, c-format
 msgid "^K1You were team killed by ^BG%s"
-msgstr ""
+msgstr "^K1Вас вбив союзник ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:694
 msgid ""
@@ -6175,11 +6194,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:722
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr ""
+msgstr "^BGВи взяли ^F1генератор Палива"
 
 #: qcsrc/common/notifications/all.inc:723
 msgid "^BGYou got the ^F1Jetpack"
-msgstr ""
+msgstr "^BGВи взяли ^F1Джетпак"
 
 #: qcsrc/common/notifications/all.inc:731
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
@@ -6294,11 +6313,11 @@ msgstr "^BGВи починаєте з ^TC^TT ключем"
 
 #: qcsrc/common/notifications/all.inc:755
 msgid "^BGYou have no lives left, you must wait until the next match"
-msgstr ""
+msgstr "^BGУ Вас більше немає життів, почекайте до наступного матчу"
 
 #: qcsrc/common/notifications/all.inc:757
 msgid "^BGLeaders can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGВороги тепер бачуть лідерів на радарі!"
 
 #: qcsrc/common/notifications/all.inc:759
 msgid "^BGYour weapon has been downgraded until you find some ammo!"
@@ -6466,6 +6485,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Ви змушені спостерігати і більше не дозволено грати, тому що Вас "
+"заблокували на цьому сервері"
 
 #: qcsrc/common/notifications/all.inc:800
 msgid "^F2The race is over, finish your lap!"
@@ -6473,7 +6494,7 @@ msgstr "^F2Гонка закінчилася, завершуйте своє ко
 
 #: qcsrc/common/notifications/all.inc:802
 msgid "^BGSequence completed!"
-msgstr ""
+msgstr "^BGПослідовність виконано!"
 
 #: qcsrc/common/notifications/all.inc:803
 msgid "^BGThere are more to go..."
@@ -6583,19 +6604,19 @@ msgstr "додатковий режим вогню"
 #: qcsrc/common/notifications/all.qh:441
 #, c-format
 msgid "%d points"
-msgstr ""
+msgstr "%d балів"
 
 #: qcsrc/common/notifications/all.qh:441
 msgid "1 point"
-msgstr ""
+msgstr "1 бал"
 
 #: qcsrc/common/notifications/all.qh:449
 msgid "drop flag"
-msgstr ""
+msgstr "скинути прапор"
 
 #: qcsrc/common/notifications/all.qh:450
 msgid "throw nade"
-msgstr ""
+msgstr "кинути гранату"
 
 #: qcsrc/common/notifications/all.qh:487
 #, c-format
@@ -6605,7 +6626,7 @@ msgstr "%s^K1 здійснив ПОТРІЙНИЙ ФРАГ!"
 #: qcsrc/common/notifications/all.qh:487
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
-msgstr "%s^K1 здійснив ПОТРІЙНИЙ РАХУНОК!"
+msgstr "%s^K1 здійснив ПОТРІЙНИЙ БАЛ!"
 
 #: qcsrc/common/notifications/all.qh:487
 msgid "TRIPLE FRAG!"
@@ -6614,7 +6635,7 @@ msgstr "ПОТРІЙНЕ ВБИВСТВО!"
 #: qcsrc/common/notifications/all.qh:488
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
-msgstr "%s^K1 здійснив П'ЯТЬ РАХУНКІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив П'ЯТЬ БАЛІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:488
 #, c-format
@@ -6628,7 +6649,7 @@ msgstr "ЛЮТЬ!"
 #: qcsrc/common/notifications/all.qh:489
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
-msgstr "%s^K1 здійснив ДЕСЯТЬ РАХУНКІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив ДЕСЯТЬ БАЛІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:489
 #, c-format
@@ -6647,7 +6668,7 @@ msgstr "%s^K1 почав ПОГРОМ!"
 #: qcsrc/common/notifications/all.qh:490
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
-msgstr "%s^K1 здійснив П'ЯТНАДЦЯТЬ РАХУНКІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив П'ЯТНАДЦЯТЬ БАЛІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:490
 msgid "MAYHEM!"
@@ -6661,7 +6682,7 @@ msgstr "%s^K1 став БЕРСЕРКОМ!"
 #: qcsrc/common/notifications/all.qh:491
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
-msgstr "%s^K1 здійснив ДВАДЦЯТЬ РАХУНКІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив ДВАДЦЯТЬ БАЛІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:491
 msgid "BERSERKER!"
@@ -6675,7 +6696,7 @@ msgstr "%s^K1 завдав ПОБОЇЩЕ!"
 #: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
-msgstr "%s^K1 здійснив ДВАДЦЯТЬ П'ЯТЬ РАХУНКІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив ДВАДЦЯТЬ П'ЯТЬ БАЛІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:492
 msgid "CARNAGE!"
@@ -6684,7 +6705,7 @@ msgstr "ПОБОЇЩЕ!"
 #: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
-msgstr "%s^K1 здійснив ТРИДЦЯТЬ РАХУНКІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив ТРИДЦЯТЬ БАЛІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:493
 #, c-format
@@ -6726,7 +6747,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:523 qcsrc/common/notifications/all.qh:533
 #, c-format
 msgid "%d score spree!"
-msgstr "%d серія рахунків!"
+msgstr "%d серія балів!"
 
 #: qcsrc/common/notifications/all.qh:532
 #, c-format
@@ -6739,7 +6760,7 @@ msgstr "Перша кров!"
 
 #: qcsrc/common/notifications/all.qh:542
 msgid "First score!"
-msgstr "Перший рахунок!"
+msgstr "Перший бал!"
 
 #: qcsrc/common/notifications/all.qh:544
 msgid "First casualty!"
@@ -6757,7 +6778,7 @@ msgstr "%s^K1 здобув %d фрагів поспіль!"
 #: qcsrc/common/notifications/all.qh:585
 #, c-format
 msgid "%s^K1 made %d scores in a row!"
-msgstr "%s^K1 здобув %d рахунків поспіль!"
+msgstr "%s^K1 здобув %d балів поспіль!"
 
 #: qcsrc/common/notifications/all.qh:599
 #, c-format
@@ -6767,7 +6788,7 @@ msgstr "%s^K1 пролив першу кров!"
 #: qcsrc/common/notifications/all.qh:600
 #, c-format
 msgid "%s^K1 got the first score!"
-msgstr "%s^K1 отримав перший рахунок!"
+msgstr "%s^K1 отримав перший бал!"
 
 #: qcsrc/common/notifications/all.qh:612
 #, c-format
@@ -6777,7 +6798,7 @@ msgstr ", зупиняючи череду %d фрагів"
 #: qcsrc/common/notifications/all.qh:613
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ", зупиняючи череду %d рахунків"
+msgstr ", зупиняючи череду %d балів"
 
 #: qcsrc/common/notifications/all.qh:622
 #, c-format
@@ -6787,7 +6808,7 @@ msgstr ", втрачаючи череду %d фрагів"
 #: qcsrc/common/notifications/all.qh:623
 #, c-format
 msgid ", losing their %d score spree"
-msgstr ", втрачаючи череду %d рахунків"
+msgstr ", втрачаючи череду %d балів"
 
 #: qcsrc/common/notifications/all.qh:638
 #, c-format
@@ -6881,21 +6902,23 @@ msgid ""
 "The %s is a mobile turret that rolls around, attacking its targets when they "
 "enter its line of sight."
 msgstr ""
+"%s - це мобільна турель, яка їздить навколо та атакує своїх ворогів, щойно "
+"вони потрапляють у її поле зору. "
 
 #: qcsrc/common/turrets/turret/ewheel.qc:253
 #, c-format
 msgid ""
 "It attacks by shooting laser beams similar to those of the %s, from both of "
 "its two cannons."
-msgstr ""
+msgstr "Вона стріляє лазерні промені, з яких %s стріляє, з обох її гармат."
 
 #: qcsrc/common/turrets/turret/ewheel.qh:17
 msgid "eWheel Turret"
-msgstr ""
+msgstr "Турель єКоліщатка"
 
 #: qcsrc/common/turrets/turret/ewheel_weapon.qh:7
 msgid "eWheel"
-msgstr ""
+msgstr "єКоліщатко"
 
 #: qcsrc/common/turrets/turret/flac.qc:29
 #, c-format
@@ -6903,6 +6926,9 @@ msgid ""
 "The %s is a turret similar to flak cannons, instead firing anti-projectile "
 "flak shells to take down projectiles fired by its targets."
 msgstr ""
+"%s - це турель, схожа на зенітну гармату, яка натомість стріляє "
+"протиракетними осколковими снарядами, щоб збивати снаряди, випущені її "
+"цілями."
 
 #: qcsrc/common/turrets/turret/flac.qc:30
 #, c-format
@@ -6910,14 +6936,17 @@ msgid ""
 "The shells it shoots target projectiles such as the %s secondary fire "
 "grenade, %s secondary fire balls, %s rockets, and other missiles."
 msgstr ""
+"Снаряди, які вона стріляє, наводяться на снаряди цілей, як-от гранати "
+"вторинного вогню від зброї %s, кульки від зброї %s, ракети від зброї %s, та "
+"інші снаряди."
 
 #: qcsrc/common/turrets/turret/flac.qh:15
 msgid "FLAC Cannon"
-msgstr ""
+msgstr "Гармата Зенітної Турелі FLAC"
 
 #: qcsrc/common/turrets/turret/flac_weapon.qh:7
 msgid "FLAC"
-msgstr ""
+msgstr "Зенітна Турель FLAC"
 
 #: qcsrc/common/turrets/turret/fusionreactor.qc:64
 #, c-format
@@ -6933,11 +6962,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/fusionreactor.qc:66
 msgid "This is the only turret that doesn't directly attack its targets."
-msgstr ""
+msgstr "Це єдина турель яка безпосередньо не атакує мішені."
 
 #: qcsrc/common/turrets/turret/fusionreactor.qh:13
 msgid "Fusion Reactor"
-msgstr ""
+msgstr "Термоядерний Реактор"
 
 #: qcsrc/common/turrets/turret/hellion.qc:34
 #, c-format
@@ -6954,11 +6983,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/hellion.qh:15
 msgid "Hellion Missile Turret"
-msgstr ""
+msgstr "Снаряд Турелі Розбишаки"
 
 #: qcsrc/common/turrets/turret/hellion_weapon.qh:7
 msgid "Hellion"
-msgstr ""
+msgstr "Розбишака"
 
 #: qcsrc/common/turrets/turret/hk.qc:55
 #, c-format
@@ -6970,11 +6999,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/hk.qh:17
 msgid "Hunter-Killer Turret"
-msgstr ""
+msgstr "Турель Ловча-Винищувача"
 
 #: qcsrc/common/turrets/turret/hk_weapon.qh:7
 msgid "Hunter-Killer"
-msgstr ""
+msgstr "Ловець-Винищувач"
 
 #: qcsrc/common/turrets/turret/machinegun.qc:28
 #, c-format
@@ -6985,11 +7014,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/machinegun.qh:15
 msgid "Machinegun Turret"
-msgstr ""
+msgstr "Турель Кулемета"
 
 #: qcsrc/common/turrets/turret/machinegun_weapon.qh:7
 msgid "Machinegun"
-msgstr ""
+msgstr "Кулемет"
 
 #: qcsrc/common/turrets/turret/mlrs.qc:39
 #, c-format
@@ -7006,11 +7035,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/mlrs.qh:15
 msgid "MLRS Turret"
-msgstr ""
+msgstr "Турель РСЗВ"
 
 #: qcsrc/common/turrets/turret/mlrs_weapon.qh:7
 msgid "MLRS"
-msgstr ""
+msgstr "РСЗВ"
 
 #: qcsrc/common/turrets/turret/phaser.qc:57
 #, c-format
@@ -7029,11 +7058,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/phaser.qh:15
 msgid "Phaser Cannon"
-msgstr ""
+msgstr "Гармата Фейзера"
 
 #: qcsrc/common/turrets/turret/phaser_weapon.qh:7
 msgid "Phaser"
-msgstr ""
+msgstr "Фейзер"
 
 #: qcsrc/common/turrets/turret/plasma.qc:66
 #, c-format
@@ -7049,7 +7078,7 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/plasma.qh:15
 msgid "Plasma Cannon"
-msgstr ""
+msgstr "Гармата Плазми"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qc:55
 #, c-format
@@ -7066,11 +7095,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:8
 msgid "Dual plasma"
-msgstr ""
+msgstr "Подвійна Плазма"
 
 #: qcsrc/common/turrets/turret/plasma_dual.qh:22
 msgid "Dual Plasma Cannon"
-msgstr ""
+msgstr "Гармата Подвійної Плазми"
 
 #: qcsrc/common/turrets/turret/plasma_weapon.qh:7
 msgid "Plasma"
@@ -7093,7 +7122,7 @@ msgstr ""
 #: qcsrc/common/turrets/turret/tesla.qh:15
 #: qcsrc/common/turrets/turret/tesla_weapon.qh:7
 msgid "Tesla Coil"
-msgstr ""
+msgstr "Котушка Тесли"
 
 #: qcsrc/common/turrets/turret/walker.qc:649
 #, c-format
@@ -7110,11 +7139,11 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/walker.qh:17
 msgid "Walker Turret"
-msgstr ""
+msgstr "Турель Крокувача"
 
 #: qcsrc/common/turrets/turret/walker_weapon.qh:7
 msgid "Walker"
-msgstr ""
+msgstr "Крокувач"
 
 #: qcsrc/common/util.qc:311
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
@@ -7641,6 +7670,7 @@ msgstr "Спалах раптора"
 #, c-format
 msgid "The %s vehicle walks and jumps around, and takes only one rider."
 msgstr ""
+"Транспорт %s може ходити та стрибати навколо, та приймає лише одного пілота."
 
 #: qcsrc/common/vehicles/vehicle/spiderbot.qc:672
 msgid "It can jump from very high altitudes while protecting the rider."
@@ -7674,7 +7704,7 @@ msgstr "Ви прив'язали цю зброю до: %s."
 #: qcsrc/common/weapons/all.qc:895
 #, c-format
 msgid "(DPS: %.2f)"
-msgstr ""
+msgstr "(DPS: %.2f)"
 
 #: qcsrc/common/weapons/all.qc:868
 #, c-format
@@ -7722,7 +7752,7 @@ msgstr "Пряме влучання завдає %s шкоди"
 #: qcsrc/common/weapons/all.qc:1020
 #, c-format
 msgid "(total DPS: %.2f)"
-msgstr ""
+msgstr "(повний DPS: %.2f)"
 
 #: qcsrc/common/weapons/all.qc:1025
 #, c-format
@@ -7758,7 +7788,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/arc.qh:38
 msgid "Arc"
-msgstr ""
+msgstr "Дуга"
 
 #: qcsrc/common/weapons/weapon/blaster.qc:167
 #, c-format
@@ -7799,7 +7829,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/blaster.qh:32
 msgid "Blaster"
-msgstr ""
+msgstr "Бластер"
 
 #: qcsrc/common/weapons/weapon/crylink.qc:613
 #, c-format
@@ -7850,7 +7880,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/crylink.qh:36
 msgid "Crylink"
-msgstr "Crylink"
+msgstr "Крайлінк"
 
 #: qcsrc/common/weapons/weapon/devastator.qc:587
 #, c-format
@@ -7893,7 +7923,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/devastator.qh:36
 msgid "Devastator"
-msgstr ""
+msgstr "Спустошувач"
 
 #: qcsrc/common/weapons/weapon/electro.qc:761
 #, c-format
@@ -7927,7 +7957,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/electro.qh:37
 msgid "Electro"
-msgstr "Electro"
+msgstr "Електро"
 
 #: qcsrc/common/weapons/weapon/fireball.qc:449
 #, c-format
@@ -7960,7 +7990,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/fireball.qh:38
 msgid "Fireball"
-msgstr "Fireball"
+msgstr "Фаєрбол"
 
 #: qcsrc/common/weapons/weapon/hagar.qc:510
 #, c-format
@@ -7993,7 +8023,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/hagar.qh:41
 msgid "Hagar"
-msgstr "Hagar"
+msgstr "Гаґар"
 
 #: qcsrc/common/weapons/weapon/hlac.qc:245
 #, c-format
@@ -8073,7 +8103,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/hook.qh:36
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
 msgid "Grappling Hook"
-msgstr "Гак"
+msgstr "Абордажний Гак"
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:446
 msgid ""
@@ -8100,7 +8130,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:34
 msgid "MachineGun"
-msgstr ""
+msgstr "Кулемет"
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:553
 #, c-format
@@ -8132,7 +8162,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:38
 msgid "Mine Layer"
-msgstr "Міноукладчик"
+msgstr "Міноукладач"
 
 #: qcsrc/common/weapons/weapon/mortar.qc:398
 #, c-format
@@ -8193,7 +8223,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/porto.qh:36
 msgid "Port-O-Launch"
-msgstr "Port-O-Launch"
+msgstr "Порт-А-Ломет"
 
 #: qcsrc/common/weapons/weapon/rifle.qc:249
 #, c-format
@@ -8223,7 +8253,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/rifle.qc:253
 msgid "zoom"
-msgstr ""
+msgstr "наближення"
 
 #: qcsrc/common/weapons/weapon/rifle.qc:254
 #: qcsrc/common/weapons/weapon/vortex.qc:372
@@ -8254,7 +8284,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/seeker.qc:684
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
-msgstr ""
+msgstr "Споживає тип набоїв %s, навіть коли мітка не попала."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:685
 #, c-format
@@ -8266,7 +8296,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
 msgid "T.A.G. Seeker"
-msgstr "Шукач T.A.G."
+msgstr "Т.Е.Ґ. Переслідувач"
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
@@ -8324,7 +8354,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/tuba.qh:39
 #, no-c-format
 msgid "@!#%'n Tuba"
-msgstr "@!#%'а Туба"
+msgstr "@!#%на Туба"
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:440
 #, c-format
@@ -8353,20 +8383,21 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/vaporizer.qc:444
 #, c-format
 msgid "It consumes some %s ammo with each shot."
-msgstr ""
+msgstr "Споживає трохи набоїв типу %s за постріл."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qh:35
 msgid "Vaporizer"
-msgstr ""
+msgstr "Випаровувач"
 
 #: qcsrc/common/weapons/weapon/vortex.qc:368
 msgid "The secondary fire zooms in when held, allowing for ease of aiming."
 msgstr ""
+"При утриманні вторинного режиму діє наближення для спрощеного прицілювання."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:369
 #, c-format
 msgid "It consumes %s ammo for each shot."
-msgstr ""
+msgstr "Споживає тип набоїв %s за постріл."
 
 #: qcsrc/common/weapons/weapon/vortex.qc:370
 #, c-format
@@ -8379,7 +8410,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/vortex.qh:36
 msgid "Vortex"
-msgstr ""
+msgstr "Вихор"
 
 #: qcsrc/lib/counting.qh:9
 #, c-format
@@ -8399,12 +8430,12 @@ msgstr "CI_FIR^%d рік"
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr "CI_SEC^%d років"
+msgstr "CI_SEC^%d роки"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "CI_THI^%d years"
-msgstr "CI_THI^%d років"
+msgstr "CI_THI^%d роки"
 
 #: qcsrc/lib/counting.qh:16
 #, c-format
@@ -8424,17 +8455,17 @@ msgstr "CI_ZER^%d тижнів"
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr "CI_FIR^%d тижнів"
+msgstr "CI_FIR^%d тиждень"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr "CI_SEC^%d тижнів"
+msgstr "CI_SEC^%d тижня"
 
 #: qcsrc/lib/counting.qh:24
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr "CI_THI^%d тижнів"
+msgstr "CI_THI^%d тижня"
 
 #: qcsrc/lib/counting.qh:25
 #, c-format
@@ -8459,12 +8490,12 @@ msgstr "CI_FIR^%d день"
 #: qcsrc/lib/counting.qh:32
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr "CI_SEC^%d днів"
+msgstr "CI_SEC^%d дня"
 
 #: qcsrc/lib/counting.qh:33
 #, c-format
 msgid "CI_THI^%d days"
-msgstr "CI_THI^%d днів"
+msgstr "CI_THI^%d дня"
 
 #: qcsrc/lib/counting.qh:34
 #, c-format
@@ -8489,12 +8520,12 @@ msgstr "CI_FIR^%d година"
 #: qcsrc/lib/counting.qh:41
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr "CI_SEC^%d годин"
+msgstr "CI_SEC^%d години"
 
 #: qcsrc/lib/counting.qh:42
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr "CI_THI^%d годин"
+msgstr "CI_THI^%d години"
 
 #: qcsrc/lib/counting.qh:43
 #, c-format
@@ -8519,12 +8550,12 @@ msgstr "CI_FIR^%d хвилина"
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr "CI_SEC^%d хвилин"
+msgstr "CI_SEC^%d хвилини"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr "CI_THI^%d хвилин"
+msgstr "CI_THI^%d хвилини"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
@@ -8549,12 +8580,12 @@ msgstr "CI_FIR^%d секунда"
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr "CI_SEC^%d секунд"
+msgstr "CI_SEC^%d секунди"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr "CI_THI^%d секунд"
+msgstr "CI_THI^%d секунди"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
@@ -8564,41 +8595,41 @@ msgstr "CI_MUL^%d секунд"
 #: qcsrc/lib/counting.qh:78
 #, c-format
 msgid "%dst"
-msgstr ""
+msgstr "%d-й"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%d-й"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%d-й"
 
 #: qcsrc/lib/counting.qh:83
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%d-й"
 
 #: qcsrc/lib/oo.qh:350
 msgid "No description"
-msgstr ""
+msgstr "Немає опису"
 
 #: qcsrc/lib/string.qh:187
 #, c-format
 msgid "%d days, %02d:%02d:%02d"
-msgstr ""
+msgstr "%d днів, %02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:188
 #, c-format
 msgid "%02d:%02d:%02d"
-msgstr ""
+msgstr "%02d:%02d:%02d"
 
 #: qcsrc/lib/string.qh:489
 #, c-format
 msgid "%.*f%%"
-msgstr ""
+msgstr "%.*f%%"
 
 #: qcsrc/menu/item/listbox.qc:414
 #, c-format
@@ -9549,7 +9580,7 @@ msgstr "Чистий"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qh:6
 msgid "Score Panel"
-msgstr "Панель рахунку"
+msgstr "Панель Рахунку"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "Centered on:"
@@ -11531,11 +11562,11 @@ msgstr "Маршрутні точки"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:68
 msgid "Display waypoint markers for objectives on the map"
-msgstr "Відображувати маршрутні точки цілей на мапі"
+msgstr "Відображувати маркери цілей на мапі"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:69
 msgid "Show various gametype specific waypoints"
-msgstr "Показувати специфічні вказівки режимів"
+msgstr "Показувати специфічні маркери режимів"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139

@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-18 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2026\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -1403,7 +1403,7 @@ msgstr "Режим игры:"
 
 #: qcsrc/client/main.qc:1416
 msgid "by:"
-msgstr "от:"
+msgstr "Автор:"
 
 #: qcsrc/client/main.qc:1420
 msgid "This match supports"
@@ -3251,6 +3251,8 @@ msgid ""
 "The %s buff increases your item pickup range, collecting nearby items for "
 "you while the buff is active."
 msgstr ""
+"Бонус %s увеличивает радиус поднятия предметов, автоматически собирая для "
+"вас всё, что находится рядом, пока он активен."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:10
 msgid "Magnet"
@@ -12220,7 +12222,7 @@ msgstr "Отображать маршруты до целей на арене"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:69
 msgid "Show various gametype specific waypoints"
-msgstr "Показывать различные отметки, определяемые видом игры"
+msgstr "Показывать специфические для режима игры ориентиры"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
@@ -13529,9 +13531,10 @@ msgid ""
 "settings. Xonotic is highly customizable and there are tons of servers out "
 "there that run with lightly or highly modified settings."
 msgstr ""
-"Обратите внимание, что это руководство описывает поведение игры по умолчанию "
-"с базовыми настройками. Xonotic высоконастраиваема, и существует множество "
-"серверов со слегка или сильно изменёнными настройками."
+"Обратите внимание: это руководство описывает поведение игры по умолчанию, со "
+"стандартными настройками. Xonotic очень гибок в настройке, и в сети "
+"существует огромное количество серверов, работающих как с незначительно, так "
+"и с сильно изменёнными параметрами."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:27
 #, c-format
@@ -13640,7 +13643,7 @@ msgid ""
 "Some of the statistics are available in-game on your player profile, while "
 "the rest are accessible at %s."
 msgstr ""
-"Часть статистики доступна в игре в вашем профиле игрока, а остальная — по "
+"Часть статистики доступна в игре в вашем профиле игрока, а остальное — по "
 "адресу %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:65
@@ -13677,7 +13680,7 @@ msgstr "Крайлинк-бег"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
-msgstr "Прыжки по пандусу"
+msgstr "Прыжок с рампы"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:80
 msgid ""
