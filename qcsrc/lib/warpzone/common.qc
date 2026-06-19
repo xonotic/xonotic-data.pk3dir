@@ -20,10 +20,8 @@ void WarpZone_Accumulator_AddTransform(entity acc, vector t, vector s)
 	acc.warpzone_transform = tr;
 	acc.warpzone_shift = st;
 }
-void WarpZone_Accumulator_Add(entity acc, entity wz)
-{
-	WarpZone_Accumulator_AddTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
-}
+#define WarpZone_Accumulator_Add(acc, wz) \
+	WarpZone_Accumulator_AddTransform(acc, (wz).warpzone_transform, (wz).warpzone_shift)
 void WarpZone_Accumulator_AddInverseTransform(entity acc, vector t, vector s)
 {
 	vector tt = AnglesTransform_Invert(t);
@@ -31,10 +29,8 @@ void WarpZone_Accumulator_AddInverseTransform(entity acc, vector t, vector s)
 	WarpZone_Accumulator_AddTransform(acc, tt, ss);
 	// yes, this probably can be done simpler... but this way is "obvious" :)
 }
-void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
-{
-	WarpZone_Accumulator_AddInverseTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
-}
+#define WarpZone_Accumulator_AddInverse(acc, wz) \
+	WarpZone_Accumulator_AddInverseTransform(acc, (wz).warpzone_transform, (wz).warpzone_shift)
 
 vector WarpZone_camera_transform(entity this, vector org, vector ang)
 {
@@ -179,10 +175,8 @@ void WarpZone_Trace_InitTransform()
 		WarpZone_trace_transform = new_pure(warpzone_trace_transform);
 	WarpZone_Accumulator_Clear(WarpZone_trace_transform);
 }
-void WarpZone_Trace_AddTransform(entity wz)
-{
-	WarpZone_Accumulator_Add(WarpZone_trace_transform, wz);
-}
+#define WarpZone_Trace_AddTransform(wz) \
+	WarpZone_Accumulator_Add(WarpZone_trace_transform, wz)
 
 /// Traces a box from `org` to `end`, shifting & transforming each time it goes through a warpzone.
 /// Hence it only ends at `end` if it didn't hit something along the way AND it went through no warpzones
@@ -336,16 +330,6 @@ LABEL(fail)
 	v_up = vu;
 }
 
-void WarpZone_TraceBox(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent)
-{
-	WarpZone_TraceBox_ThroughZone(org, mi, ma, end, nomonsters, forent, NULL, func_null);
-}
-
-void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent)
-{
-	WarpZone_TraceBox(org, '0 0 0', '0 0 0', end, nomonsters, forent);
-}
-
 /// Traces tossing `e`, shifting & transforming each time it goes through a warpzone.
 void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
@@ -450,11 +434,6 @@ LABEL(fail)
 	// restore old entity data (caller just uses trace_endpos, WarpZone_tracetoss_velocity and the transform)
 	e.velocity = v0;
 	e.origin = o0;
-}
-
-void WarpZone_TraceToss(entity e, entity forent)
-{
-	WarpZone_TraceToss_ThroughZone(e, forent, NULL, func_null);
 }
 
 entity WarpZone_TrailParticles_trace_callback_own;
@@ -770,20 +749,12 @@ void WarpZone_RefSys_AddTransform(entity me, vector t, vector s)
 	WarpZone_RefSys_CheckCreate(me);
 	WarpZone_Accumulator_AddTransform(me.WarpZone_refsys, t, s);
 }
-void WarpZone_RefSys_Add(entity me, entity wz)
-{
-	WarpZone_RefSys_AddTransform(me, wz.warpzone_transform, wz.warpzone_shift);
-}
 void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s)
 {
 	if (t == '0 0 0' && s == '0 0 0')
 		return;
 	WarpZone_RefSys_CheckCreate(me);
 	WarpZone_Accumulator_AddInverseTransform(me.WarpZone_refsys, t, s);
-}
-void WarpZone_RefSys_AddInverse(entity me, entity wz)
-{
-	WarpZone_RefSys_AddInverseTransform(me, wz.warpzone_transform, wz.warpzone_shift);
 }
 .vector WarpZone_refsys_incremental_shift;
 .vector WarpZone_refsys_incremental_transform;
