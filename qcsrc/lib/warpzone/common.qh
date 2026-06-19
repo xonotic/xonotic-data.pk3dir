@@ -40,10 +40,14 @@ entity WarpZone_trace_firstzone; ///< First warpzone hit by a trace (can differ 
 entity WarpZone_trace_lastzone; ///< First warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
 vector WarpZone_tracetoss_velocity; ///< Ending velocity of a tracetoss (post-transform)
 float WarpZone_tracetoss_time; ///< Duration of toss (approximate)
-void WarpZone_TraceBox(vector org, vector min, vector max, vector end, float nomonsters, entity forent);
+
 void WarpZone_TraceBox_ThroughZone(vector org, vector min, vector max, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb);
-void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent);
-void WarpZone_TraceToss(entity e, entity forent);
+#define WarpZone_TraceBox(org, mi, ma, end, nomonsters, forent) \
+	WarpZone_TraceBox_ThroughZone(org, mi, ma, end, nomonsters, forent, NULL, func_null)
+#define WarpZone_TraceLine(org, end, nomonsters, forent) \
+	WarpZone_TraceBox(org, '0 0 0', '0 0 0', end, nomonsters, forent)
+#define WarpZone_TraceToss(e, forent) \
+	WarpZone_TraceToss_ThroughZone(e, forent, NULL, func_null)
 void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb);
 void WarpZone_TrailParticles(entity own, float eff, vector org, vector end);
 #ifdef CSQC
@@ -77,8 +81,10 @@ vector WarpZone_UnTransformVAngles(entity wz, vector v);
 
 // reference systems (chained warpzone transforms)
 void WarpZone_RefSys_Clear(entity me); // R := id
-void WarpZone_RefSys_Add(entity me, entity wz); // me.R := wz me.R
-void WarpZone_RefSys_AddInverse(entity me, entity wz); // me.R := wz^-1 me.R
+#define WarpZone_RefSys_Add(me, wz) /* me.R := wz me.R */ \
+	WarpZone_RefSys_AddTransform(me, (wz).warpzone_transform, (wz).warpzone_shift)
+#define WarpZone_RefSys_AddInverse(me, wz) /* me.R := wz^-1 me.R */ \
+	WarpZone_RefSys_AddInverseTransform(me, (wz).warpzone_transform, (wz).warpzone_shift)
 void WarpZone_RefSys_AddTransform(entity me, vector t, vector s); // me.R := [t s] me.R
 void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s); // me.R := [t s]^-1 me.R
 
