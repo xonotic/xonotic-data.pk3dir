@@ -9,6 +9,15 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freezetime)
 	//Drop_Special_Items(frost_target);
 }
 
+float nade_current_freeze_time;
+bool nade_ice_think_cond(entity e)
+{
+	return (e != WarpZone_SearchInRadius_otherent && e.takedamage
+		&& (IS_PLAYER(e) || IS_MONSTER(e))
+		&& !IS_DEAD(e) && GetResource(e, RES_HEALTH) > 0 && nade_current_freeze_time > 0
+		&& (!e.revival_time || (time - e.revival_time) >= 1.5)
+		&& !STAT(FROZEN, e) && !StatusEffects_active(STATUSEFFECT_Frozen, e));
+}
 void nade_ice_think(entity this)
 {
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
@@ -52,23 +61,21 @@ void nade_ice_think(entity this)
 		Send_Effect(EFFECT_ICEFIELD, this.origin, '0 0 0', 1);
 	}
 
-	float current_freeze_time = this.ltime - time - 0.1;
-
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_ice_radius, it != this && it.takedamage
-	&& (IS_PLAYER(it) || IS_MONSTER(it)) && !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_freeze_time > 0
-	&& (!it.revival_time || ((time - it.revival_time) >= 1.5))
-	&& !STAT(FROZEN, it) && !StatusEffects_active(STATUSEFFECT_Frozen, it),
+	nade_current_freeze_time = this.ltime - this.nextthink;
+	WarpZone_SearchInRadius_otherent = this;
+	entity head = WarpZone_SearchInRadius(this.origin, autocvar_g_nades_ice_radius, MOVE_NOTHING, nade_ice_think_cond);
+	for (; head; head = head.chain)
 	{
 		switch (autocvar_g_nades_ice_teamcheck)
 		{
 			case 0:  break; // affect everyone
-			default: 
-			case 2:  if (SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
+			default:
+			case 2:  if (SAME_TEAM(head, this.realowner)) continue; // don't affect teammates
 			         // fall through (check case 1 condition too)
-			case 1:  if (it == this.realowner) continue; // don't affect the player who threw the nade
+			case 1:  if (head == this.realowner) continue; // don't affect the player who threw the nade
 		}
-		nade_ice_freeze(this, it, current_freeze_time);
-	});
+		nade_ice_freeze(this, head, nade_current_freeze_time);
+	}
 }
 
 void nade_ice_boom(entity this)
