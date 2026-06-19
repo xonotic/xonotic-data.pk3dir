@@ -79,8 +79,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	{
 		head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_DEVASTATOR, remote_jump_radius), false);
 		for (; head; head = head.chain)
-			if (head.takedamage && head == this.realowner
-			&& vdist(this.origin - head.WarpZone_findradius_nearest, <=, WEP_CVAR(WEP_DEVASTATOR, remote_jump_radius)))
+			if (head.takedamage && head == this.realowner)
 			{
 				// we handled this as a rocketjump :)
 				handled_as_rocketjump = true;
@@ -139,16 +138,20 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 
 void W_Devastator_RemoteExplode(entity this, .entity weaponentity)
 {
-	if (!IS_DEAD(this.realowner)
-	&& this.realowner.(weaponentity).lastrocket)
+	if (IS_DEAD(this.realowner)
+	|| !this.realowner.(weaponentity).lastrocket)
+		return;
+
+	bool do_explode;
+	if (this.spawnshieldtime >= 0)
+		do_explode = (time >= this.spawnshieldtime); // timer
+	else
 	{
-		if ((this.spawnshieldtime >= 0)
-			? (time >= this.spawnshieldtime) // timer
-			: vdist(NearestPointOnBox(this.realowner, this.origin) - this.origin, >, WEP_CVAR(WEP_DEVASTATOR, remote_radius))) // safety device
-		{
-			W_Devastator_DoRemoteExplode(this, weaponentity);
-		}
+		vector transformed_org = WarpZone_RefSys_TransformOrigin(this, this.realowner, this.origin);
+		do_explode = vdist(NearestPointOnBox(this.realowner, transformed_org) - transformed_org, >, WEP_CVAR(WEP_DEVASTATOR, remote_radius)); // safety device
 	}
+	if (do_explode)
+		W_Devastator_DoRemoteExplode(this, weaponentity);
 }
 
 vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)
