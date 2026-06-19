@@ -52,18 +52,16 @@ void walker_melee_do_dmg(entity this)
 {
 	makevectors(this.angles);
 
-	for (entity e = findradius(this.origin + v_forward * 128, 32); e; e = e.chain)
-	{
+	for (entity e = WarpZone_FindRadius(this.origin + v_forward * 128, 32, false); e; e = e.chain)
 		if (turret_validate_target(this, e, this.target_validate_flags)
 		&& e != this && e.owner != this)
 			Damage(e, this, this,
 				autocvar_g_turrets_unit_walker_melee_damage,
 				DEATH_TURRET_WALK_MELEE.m_id,
 				DMG_NOWEP,
-				'0 0 0',
-				v_forward * autocvar_g_turrets_unit_walker_melee_force
+				e.WarpZone_findradius_nearest,
+				WarpZone_TransformVelocity(e, v_forward * autocvar_g_turrets_unit_walker_melee_force)
 			);
-	}
 }
 
 void walker_setnoanim(entity this)
@@ -377,13 +375,13 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 			{
 				if (it.animflag != ANIM_NO)
 				{
-					traceline(it.origin + '0 0 64', it.origin + '0 0 64' + v_forward * 128, MOVE_NORMAL, it);
+					WarpZone_TraceLine(it.origin + '0 0 64', it.origin + '0 0 64' + v_forward * 128, MOVE_NORMAL, it);
 
 					if (trace_fraction != 1.0)
 						it.tur_head.idletime = -1337;
 					else
 					{
-						traceline(trace_endpos, trace_endpos - '0 0 256', MOVE_NORMAL, it);
+						WarpZone_TraceLine(trace_endpos, trace_endpos - '0 0 256', MOVE_NORMAL, it);
 						if (trace_fraction == 1.0)
 							it.tur_head.idletime = -1337;
 					}
