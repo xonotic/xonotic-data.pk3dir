@@ -53,7 +53,10 @@ void trigger_teleport_use(entity this, entity actor, entity trigger);
 		if(deathmax.y < telefragmax.y) deathmax.y = telefragmax.y; \
 		if(deathmax.z < telefragmax.z) deathmax.z = telefragmax.z; \
 	} \
-	float deathradius = max(vlen(_org - deathmin), vlen(_org - deathmax)); \
+	/* check vlen2 to reduce vlen calls */ \
+	float deathradius = (vlen2(_org - deathmin) > vlen2(_org - deathmax) \
+		? vlen(_org - deathmin) \
+		: vlen(_org - deathmax)); \
 	for (entity head = findradius(_org, deathradius); head; head = head.chain) \
 		if (head != player && head.takedamage && boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
 
