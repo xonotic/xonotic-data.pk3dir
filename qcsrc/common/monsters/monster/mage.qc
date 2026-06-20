@@ -177,10 +177,11 @@ void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 
 void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 {
+	entity own = this.realowner;
 	if (WarpZone_Projectile_Touch(this, toucher))
 	{
 		if (wasfreed(this))
-			this.realowner.mage_spike = NULL;
+			own.mage_spike = NULL;
 		return;
 	}
 
@@ -189,15 +190,16 @@ void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 
 .float wait;
 
-// copied from W_Seeker_Think
+// copied from W_Seeker_Missile_Think
 void M_Mage_Attack_Spike_Think(entity this)
 {
 	if (time > this.ltime
 	|| (this.enemy && GetResource(this.enemy, RES_HEALTH) <= 0)
-	|| !this.owner || GetResource(this.owner, RES_HEALTH) <= 0)
+	|| (!this.realowner || GetResource(this.realowner, RES_HEALTH) <= 0))
 	{
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 		M_Mage_Attack_Spike_Explode(this, NULL);
+		return;
 	}
 
 	float spd = vlen(this.velocity);
