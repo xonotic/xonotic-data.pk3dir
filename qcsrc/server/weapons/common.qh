@@ -22,6 +22,8 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 .vector dest; // reused field, as the adjusted hit location
 void W_LaserPlay(entity this, float rad, float damage, float edgedamage, float burntime, WarpZone_FindRadius_cond_callback_t cb);
 
+float W_SeekOutEnemy(entity this, float speed_decel, float speed_accel, float speed_max, float turn_rate, bool smart, float smart_mindist, float smart_trace_min, float smart_trace_max);
+
 .float misc_bulletcounter;
 
 .int projectiledeathtype;
