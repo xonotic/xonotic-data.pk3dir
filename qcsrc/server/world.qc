@@ -1934,8 +1934,10 @@ WepSet weapons_devall()
 WepSet weapons_most()
 {
 	WepSet ret = '0 0 0';
-	FOREACH(Weapons, it != WEP_Null, {
-		if ((it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN)))
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		if (!(it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SUPERWEAPON)))
+		if ((it.spawnflags & WEP_FLAG_NORMAL) || cvar("g_new_toys"))
 			ret |= it.m_wepset;
 	});
 	return ret;
