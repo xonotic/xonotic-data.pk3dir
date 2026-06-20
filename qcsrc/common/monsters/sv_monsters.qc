@@ -82,8 +82,10 @@ void monster_makevectors(entity this, entity targ)
 {
 	if (IS_MONSTER(this))
 	{
-		vector v = targ.origin + (targ.mins + targ.maxs) * 0.5;
-		this.v_angle = vectoangles(v - (this.origin + this.view_ofs));
+		vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
+		targ_origin = WarpZone_RefSys_TransformOrigin(targ, this, targ_origin);
+
+		this.v_angle = vectoangles(targ_origin - (this.origin + this.view_ofs));
 		this.v_angle.x = -this.v_angle.x;
 	}
 
@@ -217,7 +219,7 @@ void monster_changeteam(entity this, int newteam)
 void Monster_Delay_Action(entity this)
 {
 	// TODO: also allow monsters to cancel attacks (flinching)
-	if (Monster_ValidTarget(this.owner, this.owner.enemy, false, false))
+	if (Monster_ValidTarget(this.owner, this.owner.enemy, false, true))
 	{
 		monster_makevectors(this.owner, this.owner.enemy);
 		this.monster_delayedfunc(this.owner);
