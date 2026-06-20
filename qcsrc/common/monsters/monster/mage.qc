@@ -153,8 +153,6 @@ void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 	M_Mage_Attack_Spike_Explode(this, toucher);
 }
 
-.float wait;
-
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think(entity this)
 {
@@ -166,46 +164,15 @@ void M_Mage_Attack_Spike_Think(entity this)
 		M_Mage_Attack_Spike_Explode(this, NULL);
 	}
 
-	float spd = vlen(this.velocity);
-	spd = bound(
-		spd - autocvar_g_monster_mage_attack_spike_decel * frametime,
+	W_SeekOutEnemy(this,
+		autocvar_g_monster_mage_attack_spike_decel,
+		autocvar_g_monster_mage_attack_spike_accel,
 		autocvar_g_monster_mage_attack_spike_speed_max,
-		spd + autocvar_g_monster_mage_attack_spike_accel * frametime
-	);
-
-	if (this.enemy != NULL
-	&&  this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy))
-		this.enemy = NULL;
-
-	if (this.enemy != NULL)
-	{
-		entity e = this.enemy;
-		vector eorg = 0.5 * (e.absmin + e.absmax);
-		float turnrate = autocvar_g_monster_mage_attack_spike_turnrate; // how fast to turn
-		vector desireddir = normalize(eorg - this.origin);
-		vector olddir = normalize(this.velocity); // get my current direction
-
-		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
-		if (autocvar_g_monster_mage_attack_spike_smart && vdist(eorg - this.origin, >, autocvar_g_monster_mage_attack_spike_smart_mindist))
-		{
-			// Is it a better idea (shorter distance) to trace to the target itself?
-			if (vlen2(this.origin + olddir * this.wait) < vlen2(eorg - this.origin))
-				traceline(this.origin, this.origin + olddir * this.wait, false, this);
-			else
-				traceline(this.origin, eorg, false, this);
-
-			// Setup adaptive tracelength
-			this.wait = bound(autocvar_g_monster_mage_attack_spike_smart_trace_min, vlen(this.origin - trace_endpos), autocvar_g_monster_mage_attack_spike_smart_trace_max);
-
-			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
-			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
-		}
-
-		vector newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
-		this.velocity = newdir * spd; // make me fly in the new direction at my flight speed
-	}
-
-	///////////////
+		autocvar_g_monster_mage_attack_spike_turnrate,
+		autocvar_g_monster_mage_attack_spike_smart,
+		autocvar_g_monster_mage_attack_spike_smart_mindist,
+		autocvar_g_monster_mage_attack_spike_smart_trace_min,
+		autocvar_g_monster_mage_attack_spike_smart_trace_max);
 
 	//this.angles = vectoangles(this.velocity); // turn model in the new flight direction
 	this.nextthink = time;// + 0.05; // csqc projectiles
@@ -216,7 +183,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 {
 	makevectors(this.angles);
 
-	entity missile = new(M_Mage_Attack_Spike);
+	entity missile = WarpZone_RefSys_SpawnSameRefSys(this);
 	missile.owner = missile.realowner = this;
 	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;
