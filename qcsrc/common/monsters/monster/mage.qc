@@ -275,14 +275,14 @@ void M_Mage_Defend_Heal(entity this)
 {
 	bool washealed = false;
 
-	entity it = WarpZone_FindRadius(this.origin, autocvar_g_monster_mage_heal_range, true);
-	while(it)
+	entity head = WarpZone_FindRadius(this.origin, autocvar_g_monster_mage_heal_range, true);
+	while(head)
 	{
+		entity it = head;
+		head = head.chain;
+
 		if (!M_Mage_Defend_Heal_Check(this, it))
-		{
-			it = it.chain;
 			continue;
-		}
 		washealed = true;
 		entity fx = EFFECT_Null;
 		if (IS_PLAYER(it))
@@ -319,8 +319,6 @@ void M_Mage_Defend_Heal(entity this)
 			if (!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
 				WaypointSprite_UpdateHealth(it.sprite, GetResource(it, RES_HEALTH));
 		}
-
-		it = it.chain;
 	}
 
 	if (washealed)
@@ -405,6 +403,7 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 	this.lastteleporttime = time;
 	this.lastteleport_origin = from;
 	BITXOR_ASSIGN(this.effects, EF_TELEPORT_BIT);
+	WarpZone_RefSys_Copy(this, this.enemy);
 }
 
 void M_Mage_Defend_Shield(entity this)
