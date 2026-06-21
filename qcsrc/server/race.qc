@@ -1144,33 +1144,14 @@ void target_checkpoint_setup(entity this)
 	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
 
-	// if this is targeted, then it probably isn't a trigger
-	bool is_trigger = this.targetname == "";
-
-	if(is_trigger)
-		EXACTTRIGGER_INIT;
-
-	this.use = checkpoint_use;
-	if (is_trigger && !(this.spawnflags & 1))
-		settouch(this, checkpoint_touch);
-
-	vector org = this.origin;
-
-	// bots should only pathfind to this if it is a valid touchable trigger
-	if(is_trigger)
+	if (this.targetname == "")
 	{
-		org = (this.absmin + this.absmax) * 0.5;
-		tracebox(org, PL_MIN_CONST, PL_MAX_CONST, org - '0 0 1' * (org.z - this.absmin.z), MOVE_NORMAL, this);
-		waypoint_spawnforitem_force(this, trace_endpos);
-		this.nearestwaypointtimeout = -1;
+		string s = sprintf("^3%s without a targetname at %v", this.classname, this.origin);
+		objerror(this, s); // s = macro workaround (origin is always '0 0 0' otherwise)
 	}
 
-	if(this.message == "")
-		this.message = "went backwards";
-	if (this.message2 == "")
-		this.message2 = "was pushed backwards by";
-	if (this.race_penalty_reason == "")
-		this.race_penalty_reason = "missing a checkpoint";
+	this.spawnflags = 0;
+	this.use = checkpoint_use;
 
 	if(this.classname == "target_startTimer")
 		this.race_checkpoint = 0;
@@ -1190,15 +1171,10 @@ void target_checkpoint_setup(entity this)
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-spawnfunc(target_checkpoint)
-{
-	// xonotic defrag entity
-	target_checkpoint_setup(this);
-}
-
-// compatibility entity names
+// Q3DF entity names
 spawnfunc(target_startTimer) { target_checkpoint_setup(this); }
 spawnfunc(target_stopTimer) { target_checkpoint_setup(this); }
+spawnfunc(target_checkpoint) { target_checkpoint_setup(this); }
 
 void race_AbandonRaceCheck(entity p)
 {
