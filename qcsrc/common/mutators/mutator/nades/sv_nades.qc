@@ -5,6 +5,7 @@
 #include <common/mutators/mutator/overkill/okmachinegun.qh>
 #include <common/mutators/mutator/overkill/okshotgun.qh>
 #include <server/command/common.qh>
+#include <lib/warpzone/common.qh>
 
 .float nade_time_primed;
 
@@ -529,9 +530,12 @@ Nade Nades_GetType(string ntype)
 
 void spawn_held_nade(entity player, entity nowner, float ntime, string ntype, string pntype)
 {
-	entity n = new(nade), fn = new(fake_nade);
-
 	Nade def = Nades_GetType(ntype);
+
+	entity n = new(nade);
+	if (def == NADE_TYPE_TRANSLOCATE)
+		WarpZone_RefSys_Copy(n, nowner);
+	entity fn = new(fake_nade);
 
 	n.pokenade_type = pntype;
 
