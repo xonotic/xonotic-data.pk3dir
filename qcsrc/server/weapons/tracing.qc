@@ -548,7 +548,8 @@ void fireBullet(entity this, .entity weaponentity, vector start, vector dir, flo
 
 void crosshair_trace(entity pl)
 {
-	traceline_antilag(pl, CS(pl).cursor_trace_start, CS(pl).cursor_trace_start + normalize(CS(pl).cursor_trace_endpos - CS(pl).cursor_trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
+	vector trace_start = CS(pl).cursor_trace_start;
+	traceline_antilag(pl, trace_start, trace_start + normalize(CS(pl).cursor_trace_endpos - trace_start) * max_shot_distance, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
 void crosshair_trace_plusvisibletriggers(entity pl)
