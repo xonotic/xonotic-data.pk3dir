@@ -228,113 +228,126 @@ bool Headshot(entity targ, entity ent, vector start, vector end)
 	return trace_hits_box(start, end, headmins, headmaxs);
 }
 
+.int WarpZone_findradius_hit;
+entity FireRailgunBullet_cb_this;
+/// Updates the nearest point of the beam to each player, with the new segment from `start` to `hit`
+void FireRailgunBullet_cb(vector start, vector hit, vector end)
+{
+	vector dir, nearest;
+	float length2;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != FireRailgunBullet_cb_this
+	&& !(IS_SPEC(it) && it.enemy == FireRailgunBullet_cb_this), // not when spectating the shooter
+	{
+		dir = hit - start;
+		length2 = vlen2(dir);
+		nearest = (length2)
+			? start + dir * bound(0, ((it.origin - start) * dir) / length2, 1)
+			: start;
+		// Above is equivalent to the standard closest approach method `start + dir * bound(0, (it.origin - start) * dir, length)`,
+		// but avoids the sqrt needed to calculate `length`
+		if (!it.WarpZone_findradius_hit || vlen2(it.origin - nearest) < vlen2(it.origin - it.WarpZone_findradius_nearest)) // this segment went closer to the player
+		{
+			// Here we reuse .WarpZone_findradius_nearest as the beam's nearest point to the player, and .WarpZone_findradius_hit for whether it's been set yet
+			// They're safe to reuse since WarpZone_TraceBox_ThroughZone (called by the tracebox_antilag_force_wz below) doesn't set them
+			// Just need to remember to clear .WarpZone_findradius_hit later
+			it.WarpZone_findradius_nearest = nearest;
+			it.WarpZone_findradius_hit = 1;
+		}
+	});
+}
 void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector dir = normalize(end - start);
 	vector force = dir * bforce;
+	end += dir; // go a little bit into the wall because we need to hit this wall later
 
-	// go a little bit into the wall because we need to hit this wall later
-	end += dir;
-
-	float totaldmg = 0;
 	bool headshot = false; // indicates that one of the targets hit was a headshot
 
-	// trace multiple times until we hit a wall, each obstacle will be made
+	// Trace multiple times until we hit a wall, each obstacle will be made
 	// non-solid so we can hit the next, while doing this we spawn effects and
 	// note down which entities were hit so we can damage them later
 	entity o = this;
-	while (1)
+	FireRailgunBullet_cb_this = this;
+	do
 	{
-		if (CS(this).antilag_debug)
-			WarpZone_traceline_antilag (this, start, end, false, o, CS(this).antilag_debug);
-		else
-			WarpZone_traceline_antilag (this, start, end, false, o, ANTILAG_LATENCY(this));
+		tracebox_antilag_force_wz(this, start, '0 0 0', '0 0 0', end, false, o,
+			(CS(this).antilag_debug ? CS(this).antilag_debug : ANTILAG_LATENCY(this)),
+			true, FireRailgunBullet_cb);
 		if (o && WarpZone_trace_firstzone)
 		{
 			o = NULL;
 			continue;
 		}
 
-		if (trace_ent.solid == SOLID_BSP)
-			Damage_DamageInfo(trace_endpos, bdamage, 0, 0,
-				WarpZone_TransformVelocity(WarpZone_trace_transform, force),
-				deathtype, trace_ent.species, this);
-
-		// if it is NULL we can't hurt it so stop now
+		// If it is NULL we can't hurt it so stop now
 		if (trace_ent == NULL || trace_fraction == 1)
 			break;
 
 		if (headshot_notify && !headshot && Headshot(trace_ent, this, start, end))
 			headshot = true;
 
-		// make the entity non-solid so we can hit the next one
+		// Make the entity non-solid so we can hit the next one
 		IL_PUSH(g_railgunhit, trace_ent);
 		trace_ent.railgunhit = true;
 		trace_ent.railgunhitloc = trace_endpos;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
 		trace_ent.railgunforce = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
-
-		// stop if this is a wall
 		if (trace_ent.solid == SOLID_BSP)
-			break;
+			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, trace_ent.railgunforce, deathtype, trace_ent.species, this);
 
-		// make the entity non-solid
-		trace_ent.solid = SOLID_NOT;
+		if (trace_ent.solid == SOLID_BSP) // stop if this is a wall
+			break;
+		trace_ent.solid = SOLID_NOT; // make the entity non-solid
 	}
+	while (true);
 
 	vector endpoint = trace_endpos;
 	entity endent = trace_ent;
 	float endq3surfaceflags = trace_dphitq3surfaceflags;
 
-	// find all the entities the railgun hit and restore their solid state
+	// Find all the entities the railgun hit and restore their solid state
 	IL_EACH(g_railgunhit, it.railgunhit, it.solid = it.railgunhitsolidbackup);
 
-	// Find all players the beam passed close by (even those hit)
-	float length = vlen(endpoint - start);
+	// Play the sound for all players (even those hit)
 	entity pseudoprojectile = NULL;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this,
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this && !(IS_SPEC(it) && it.enemy == this),
 	{
-		// not when spectating the shooter
-		if (IS_SPEC(it) && it.enemy == this)
-			continue;
-
-		// nearest point on the beam
-		vector beampos = start + dir * bound(0, (it.origin - start) * dir, length);
-
 		if (!pseudoprojectile)
 			pseudoprojectile = new(pseudoprojectile); // we need this so the sound uses the "entchannel4" volume
 
 		msg_entity = it;
-		// we want this to be very loud when close but fall off quickly -> using max base volume and high attenuation
-		soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_IDLE, 0);
+		// We want this to be very loud when close but fall off quickly -> using max base volume and high attenuation
+		soundtoat(MSG_ONE, pseudoprojectile, it.WarpZone_findradius_nearest, CH_SHOTS, SND(NEXWHOOSH_RANDOM()), VOL_BASEVOICE, ATTEN_IDLE, 0);
+		it.WarpZone_findradius_hit = 0; // reset the field we reused; no need to reset .WarpZone_findradius_nearest
 	});
 	if (pseudoprojectile)
 		delete(pseudoprojectile);
 
-	// find all the entities the railgun hit and hurt them
+	// Find all the entities the railgun hit and hurt them
+	float total_dmg = 0;
+	float foff, ffs;
 	IL_EACH(g_railgunhit, it.railgunhit,
 	{
-		// removal from the list is handled below
-
-		float foff = ExponentialFalloff(mindist, maxdist, halflifedist, it.railgundistance);
-		float ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, it.railgundistance);
+		foff = ExponentialFalloff(mindist, maxdist,      halflifedist, it.railgundistance);
+		ffs  = ExponentialFalloff(mindist, maxdist, forcehalflifedist, it.railgundistance);
 
 		if (accuracy_isgooddamage(this, it))
-			totaldmg += bdamage * foff;
+			total_dmg += bdamage * foff;
 
-		// apply the damage
 		if (it.takedamage)
 		{
+			// Apply the damage
 			Damage(it, this, this, bdamage * foff, deathtype, weaponentity, it.railgunhitloc, it.railgunforce * ffs);
 			if (it.solid == SOLID_SLIDEBOX)
 				Damage_DamageInfo(it.railgunhitloc, bdamage * foff, 0, 0,
 					bforce * ffs * normalize(it.railgunforce), deathtype, it.species, this);
 		}
 
+		// Reset fields before the list is cleared
+		it.railgunhit = false;
 		it.railgunhitloc = '0 0 0';
 		it.railgunhitsolidbackup = SOLID_NOT;
-		it.railgunhit = false;
 		it.railgundistance = 0;
 	});
 
@@ -343,9 +356,9 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 	if (headshot)
 		Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_HEADSHOT);
 
-	// calculate hits and fired shots for hitscan
+	// Calculate hits and fired shots for hitscan
 	if (this.(weaponentity))
-		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, totaldmg), 0); // add to hit
+		accuracy_add(this, this.(weaponentity).m_weapon, 0, min(bdamage, total_dmg), 0); // add to hit
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
