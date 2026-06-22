@@ -87,7 +87,7 @@ void beam_think(entity this)
 		0.75,
 		DEATH_TURRET_PHASER.m_id
 	);
-	this.scale = vlen(actor.tur_shotorg - trace_endpos) / 256;
+	this.scale = vlen(actor.tur_shotorg - WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos)) / 256;
 }
 
 #endif // SVQC
