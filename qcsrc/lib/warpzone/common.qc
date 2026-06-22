@@ -732,12 +732,14 @@ entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone
 }
 
 .entity WarpZone_refsys;
-/// Garbage collect unused reference systems
-void WarpZone_RefSys_GC(entity this)
+// called when an entity is deleted with delete() / remove()
+// or when a player disconnects
+ACCUMULATE
+void ONREMOVE(entity this)
 {
-	this.nextthink = time + 1;
-	if (this.owner.WarpZone_refsys != this)
-		delete(this);
+    // remove WarpZone_refsys object attached to 'this'
+    if (this.WarpZone_refsys && this.WarpZone_refsys.owner == this)
+		delete(this.WarpZone_refsys);
 }
 void WarpZone_RefSys_CheckCreate(entity me)
 {
@@ -745,8 +747,6 @@ void WarpZone_RefSys_CheckCreate(entity me)
 		return;
 	me.WarpZone_refsys = new(warpzone_refsys);
 	me.WarpZone_refsys.owner = me;
-	setthink(me.WarpZone_refsys, WarpZone_RefSys_GC);
-	me.WarpZone_refsys.nextthink = time + 1;
 	WarpZone_Accumulator_Clear(me.WarpZone_refsys);
 }
 void WarpZone_RefSys_Clear(entity me)
