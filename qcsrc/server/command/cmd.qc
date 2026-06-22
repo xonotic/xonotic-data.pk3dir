@@ -677,13 +677,13 @@ void ClientCommand_join(entity caller, int request, int argc)
 			}
 
 			// TEAMNUMBERS_THAT_ARENT_STUPID FIXME: 0 and -1 mean different things to different funcs
-			float team_num = Team_ColorToTeam(argv(1));
-			if (team_num == -1) // invalid
+			int team_num = Team_ColorToTeam(argv(1));
+			int team_index = Team_TeamToIndex(team_num);
+			if (team_num == -1 || team_index > AVAILABLE_TEAMS) // invalid or unavailable
 			{
 				sprint(caller, sprintf("^7There's no \"%s\" team!\n", argv(1)));
 				return;
 			}
-			int team_index = Team_TeamToIndex(team_num);
 
 			// players queued to change teams may leave the queue by selecting their current team or autoselect
 			if (caller.team > 0 && caller.wants_join && (!team_num || caller.team == team_num))
@@ -708,18 +708,32 @@ void ClientCommand_join(entity caller, int request, int argc)
 					}
 					return;
 				}
+			}
 
-				entity balance = TeamBalance_CheckAllowedTeams(caller);
-				if (!TeamBalance_IsTeamAllowed(balance, team_index))
+			// Must come before STRONGERTEAM so we see FORCEDTEAM instead when applicable.
+			int forced_team_index = Player_GetForcedTeamIndex(caller);
+			if (forced_team_index != TEAM_FORCE_DEFAULT)
+			{
+				if (forced_team_index == TEAM_FORCE_SPECTATOR)
 				{
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
-					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_TEAMCHANGE_NOTALLOWED);
-					TeamBalance_Destroy(balance);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, INFO_JOIN_PREVENT_FORCEDSPEC);
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CENTER_JOIN_PREVENT_FORCEDSPEC);
 					return;
 				}
+				else if (team_index > 0 && team_index != forced_team_index)
+				{
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_INFO, APP_TEAM_NUM(Team_IndexToTeam(forced_team_index), INFO_TEAMCHANGE_FORCEDTEAM));
+					Send_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(forced_team_index), CENTER_TEAMCHANGE_FORCEDTEAM));
+					return;
+				}
+			}
+
+			if (team_num)
+			{
 				if (autocvar_g_balance_teams_prevent_imbalance && !warmup_stage
 				&& (!autocvar_g_balance_teams_queue || caller.team > 0))
 				{
+					entity balance = TeamBalance_CheckAllowedTeams(caller);
 					TeamBalance_GetTeamCounts(balance, caller);
 					if ((Team_IndexToBit(Team_TeamToIndex(team_num)) & TeamBalance_FindBestTeams(balance, caller, true)) == 0)
 					{
@@ -728,8 +742,8 @@ void ClientCommand_join(entity caller, int request, int argc)
 						TeamBalance_Destroy(balance);
 						return;
 					}
+					TeamBalance_Destroy(balance);
 				}
-				TeamBalance_Destroy(balance);
 			}
 
 			if (joinAllowed(caller, team_num ? team_index : -1))

@@ -1086,16 +1086,11 @@ void GameCommand_moveplayer(int request, int argc)
 							continue;
 						}
 
-						// set up
-						int save = Player_GetForcedTeamIndex(client);
-						Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
-
 						// find the team to move the player to
 						int team_num = Team_ColorToTeam(destination);
 						entity balance;
 						if (team_num == client.team)  // already on the destination team
 						{
-							// keep the forcing undone
 							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already on the ",
 								Team_ColoredFullName(team_num), ".");
 							continue;
@@ -1109,7 +1104,6 @@ void GameCommand_moveplayer(int request, int argc)
 						{
 							balance = TeamBalance_CheckAllowedTeams(client);
 						}
-						Player_SetForcedTeamIndex(client, save);
 
 						// Check to see if the destination team is even available
 						int team_id = Team_TeamToIndex(team_num);
@@ -1135,7 +1129,6 @@ void GameCommand_moveplayer(int request, int argc)
 						TeamBalance_Destroy(balance);
 
 						// If so, lets continue and finally move the player
-						Player_SetForcedTeamIndex(client, TEAM_FORCE_DEFAULT);
 						if (MoveToTeam(client, team_id, 6))
 						{
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
