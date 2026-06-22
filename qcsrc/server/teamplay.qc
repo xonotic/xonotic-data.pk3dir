@@ -892,14 +892,12 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 		});
 
-		// deduct bots that would leave if a player joined their team, distributing the deductions between teams
-		// bones_was_here: not sure if it's safe to apply this to .m_num_players so using .m_num_players_net
-		for (int i = 1, bots_todo = bots_would_leave; bots_todo > 0 && i <= AVAILABLE_TEAMS; ++i)
+		// Deduct bots that would leave if a player joined their team;
+		// to ensure a player can join we aim to deduct at least one from each team which has some.
+		for (int i = 1, bots_maxperteam = ceil(bots_would_leave / AVAILABLE_TEAMS); i <= AVAILABLE_TEAMS; ++i)
 		{
 			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
-			int to_remove = min(team_ent.m_num_bots, ceil(bots_todo / AVAILABLE_TEAMS));
-			team_ent.m_num_players_net -= to_remove;
-			bots_todo -= to_remove;
+			team_ent.m_num_players_net -= min(team_ent.m_num_bots, bots_maxperteam);
 		}
 
 		// Calculate inverse-variance weighted mean skill ratings,
