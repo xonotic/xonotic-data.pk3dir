@@ -391,7 +391,7 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
 	bool headshot = false; // indicates that one of the hit targets was a headshot
 	for (;;)
 	{
-		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, false, WarpZone_trace_forent, NULL, fireBullet_trace_callback);
+		WarpZone_TraceLine_ThroughZone(start, end, false, WarpZone_trace_forent, NULL, fireBullet_trace_callback);
 		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 		start = trace_endpos;

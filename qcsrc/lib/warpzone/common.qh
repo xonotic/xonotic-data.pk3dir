@@ -42,6 +42,8 @@ vector WarpZone_tracetoss_velocity; ///< Ending velocity of a tracetoss (post-tr
 float WarpZone_tracetoss_time; ///< Duration of toss (approximate)
 
 void WarpZone_TraceBox_ThroughZone(vector org, vector min, vector max, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb);
+#define WarpZone_TraceLine_ThroughZone(org, end, nomonsters, forent, zone, cb) \
+	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, nomonsters, forent, zone, cb)
 #define WarpZone_TraceBox(org, mi, ma, end, nomonsters, forent) \
 	WarpZone_TraceBox_ThroughZone(org, mi, ma, end, nomonsters, forent, NULL, func_null)
 #define WarpZone_TraceLine(org, end, nomonsters, forent) \
