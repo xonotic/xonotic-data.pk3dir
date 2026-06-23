@@ -79,6 +79,7 @@ const int FL_SPAWNING                     = BIT(17);
 const int FL_PICKUPITEMS                  = BIT(18);
 const int FL_DUCKED                       = BIT(19);
 const int FL_ONSLICK                      = BIT(20);
+const int FL_STATICOWNER                  = BIT(21);
 
 // initialization stages
 const int INITPRIO_FIRST                  = 0;

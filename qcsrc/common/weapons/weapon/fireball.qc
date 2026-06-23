@@ -250,13 +250,13 @@ void W_Fireball_Firemine_Think(entity this)
 		return;
 	}
 
-	// make it "hot" once it leaves its owner
+	// Make it "hot" once it leaves its owner: can touch the owner, but won't do laserplay
 	if (this.owner)
 	{
-		if (vdist(this.origin - this.owner.origin - this.owner.view_ofs, >, WEP_CVAR_SEC(WEP_FIREBALL, laserradius)))
+		vector owner_view_origin = WarpZone_RefSys_TransformOrigin(this.owner, this, this.owner.origin + this.owner.view_ofs);
+		if (vdist(this.origin - owner_view_origin, >, WEP_CVAR_SEC(WEP_FIREBALL, laserradius)))
 		{
-			++this.cnt;
-			if (this.cnt == 3)
+			if (++this.cnt == 3)
 				this.owner = NULL;
 		}
 		else
@@ -311,7 +311,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 
 	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
-	entity proj = new(grenade);
+	entity proj = WarpZone_RefSys_SpawnSameRefSys(actor);
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(WEP_FIREBALL, damage);
@@ -328,7 +328,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	W_SetupProjVelocity_UP_SEC(proj, WEP_FIREBALL);
 
 	proj.angles = vectoangles(proj.velocity);
-	proj.flags = FL_PROJECTILE;
+	proj.flags = FL_PROJECTILE | FL_STATICOWNER;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
