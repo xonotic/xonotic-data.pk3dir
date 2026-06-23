@@ -13,6 +13,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 	if (fire & 1)
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1))
 	{
+		float prev_shot_speed = actor.shot_speed;
 		if (isPlayer)
 		{
 			turret_initparams(actor);
@@ -51,6 +52,8 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 		soundat(actor, trace_endpos, CH_SHOTS, SND(PhaserTurretAttack_IMPACT), VOL_BASE, ATTEN_NORM);
 		if (!isPlayer && actor.tur_head.frame == 0)
 			actor.tur_head.frame = 1;
+		if (isPlayer)
+			actor.shot_speed = prev_shot_speed;
 	}
 }
 
