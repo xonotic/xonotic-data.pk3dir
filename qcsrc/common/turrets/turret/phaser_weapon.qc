@@ -31,6 +31,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 		beam.cnt = time + actor.shot_speed;
 		beam.shot_spread = time + 2;
 		beam.nextthink = time;
+		beam.realowner = actor;
 		beam.owner = actor;
 		beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / frametime);
 		beam.scale = actor.target_range / 256;
@@ -55,7 +56,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
 void beam_think(entity this)
 {
-	entity actor = this.owner;
+	entity actor = this.realowner;
 	if (time > this.cnt || IS_DEAD(actor))
 	{
 		actor.attack_finished_single[0] = time + actor.shot_refire;
