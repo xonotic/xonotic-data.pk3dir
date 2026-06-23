@@ -64,14 +64,13 @@ METHOD(BallStealer, wr_checkammo2, bool(BallStealer this, entity actor, .entity 
 void W_Nexball_Think(entity this)
 {
 	//dprint("W_Nexball_Think\n");
-	//vector new_dir = steerlib_arrive(this.enemy.origin, 2500);
-	vector new_dir = normalize(this.enemy.origin + '0 0 50' - this.origin);
-	vector old_dir = normalize(this.velocity);
+	//vector new_dir = steerlib_arrive(WarpZone_RefSys_TransformOrigin(this.enemy, this, this.enemy.origin), 2500);
 	float _speed = vlen(this.velocity);
-	vector new_vel = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
-	//vector new_vel = (new_dir * autocvar_g_nexball_safepass_turnrate
+	vector old_dir = this.velocity * (1 / _speed);
+	vector new_dir = normalize(WarpZone_RefSys_TransformOrigin(this.enemy, this, this.enemy.origin + '0 0 50') - this.origin);
 
-	this.velocity = new_vel;
+	this.velocity = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
+	//this.velocity = new_dir * autocvar_g_nexball_safepass_turnrate;
 
 	this.nextthink = time;
 }
