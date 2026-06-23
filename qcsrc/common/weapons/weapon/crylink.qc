@@ -302,6 +302,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	for (int counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
+		WarpZone_RefSys_Copy(proj, actor);
 		proj.dtor = W_Crylink_DeleteLink;
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
@@ -401,6 +402,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	for (int counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
+		WarpZone_RefSys_Copy(proj, actor);
 		proj.dtor = W_Crylink_DeleteLink;
 		proj.weaponentity_fld = weaponentity;
 		proj.reset = W_Crylink_Reset;
