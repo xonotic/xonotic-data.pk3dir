@@ -77,7 +77,7 @@ void turret_hellion_missile_think(entity this)
 		turret_projectile_explode(this);
 
 	// Predict enemy position
-	float itime = vlen(this.enemy.origin - this.origin) / vlen(this.velocity);
+	float itime = sqrt(vlen2(this.enemy.origin - this.origin) / vlen2(this.velocity));
 	vector pre_pos = this.enemy.origin + this.enemy.velocity * itime;
 
 	pre_pos = (pre_pos + this.enemy.origin) * 0.5;

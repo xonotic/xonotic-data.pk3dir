@@ -94,7 +94,7 @@ void turret_hk_missile_think(entity this)
 
 		// Get data on enemy position
 		vector pre_pos = this.enemy.origin
-			+ this.enemy.velocity * min(vlen(this.enemy.origin - this.origin) / vlen(this.velocity), 0.5);
+			+ this.enemy.velocity * min(sqrt(vlen2(this.enemy.origin - this.origin) / vlen2(this.velocity)), 0.5);
 
 		traceline(this.origin, pre_pos, true, this.enemy);
 		ve = normalize(pre_pos - this.origin);

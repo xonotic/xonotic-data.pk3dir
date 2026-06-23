@@ -102,7 +102,7 @@ void racer_rocket_tracker(entity this)
 	float newvel = oldvel + this.lip;
 	makevectors(vectoangles(olddir));
 
-	float time_to_impact = min(vlen(this.enemy.origin - this.origin) / vlen(this.velocity), 1);
+	float time_to_impact = min(sqrt(vlen2(this.enemy.origin - this.origin) / vlen2(this.velocity)), 1);
 	vector predicted_origin = this.enemy.origin + this.enemy.velocity * time_to_impact;
 
 	traceline(this.origin, this.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, this);
