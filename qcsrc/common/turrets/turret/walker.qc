@@ -73,7 +73,7 @@ void walker_setnoanim(entity this)
 }
 void walker_rocket_explode(entity this)
 {
-	RadiusDamage(this, this.owner,
+	RadiusDamage(this, this.realowner,
 		autocvar_g_turrets_unit_walker_rocket_damage,
 		0,
 		autocvar_g_turrets_unit_walker_rocket_radius,
@@ -98,7 +98,7 @@ void walker_rocket_damage(entity this, entity inflictor, entity attacker, float 
 	this.velocity += vforce;
 
 	if (GetResource(this, RES_HEALTH) <= 0)
-		W_PrepareExplosionByDamage(this, this.owner, walker_rocket_explode);
+		W_PrepareExplosionByDamage(this, this.realowner, walker_rocket_explode);
 }
 
 #define WALKER_ROCKET_MOVE(s) \
@@ -213,6 +213,7 @@ void walker_fire_rocket(entity this, vector org)
 	sound(this, CH_WEAPON_A, SND_TUR_WALKER_FIRE, VOL_BASE, ATTEN_NORM);
 	setsize(rocket, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
+	rocket.realowner         = this;
 	rocket.owner             = this;
 	rocket.bot_dodge         = true;
 	rocket.bot_dodgerating   = 50;

@@ -220,6 +220,7 @@ void turret_construct(entity this, bool isNew)
 		setattachment(this.tur_head, this, "tag_head");
 
 	this.tur_head.classname  = "turret_head";
+	this.tur_head.realowner  = this;
 	this.tur_head.owner      = this;
 	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
 	set_movetype(this, MOVETYPE_NOCLIP);
