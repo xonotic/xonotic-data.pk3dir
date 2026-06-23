@@ -309,7 +309,8 @@ void WarpZone_PostTeleportPlayer_Callback(entity e)
 		anticheat_fixangle(e);
 #endif
 	// "disown" projectiles after teleport
-	if (e.owner && e.owner == e.realowner)
+	if (e.owner && e.owner == e.realowner
+	&& !(e.flags & FL_STATICOWNER))
 	{
 	#ifdef SVQC
 		if (!(e.flags & FL_PROJECTILE))
