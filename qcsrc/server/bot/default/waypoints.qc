@@ -618,7 +618,7 @@ void waypoint_spawn_fromeditor(entity pl, bool at_crosshair, bool is_jump_wp, bo
 		{
 			vector item_org = (it.absmin + it.absmax) * 0.5;
 			item_org.z = it.absmin.z - PL_MIN_CONST.z;
-			if (vlen(item_org - org) < 20)
+			if (vdist(item_org - org, <, 20))
 			{
 				org = item_org;
 				break;
