@@ -768,7 +768,7 @@ bool trigger_push_test(entity this, entity item)
 				return r;
 			}
 			if (!(boxesoverlap(this.absmin, this.absmax + eZ * 50, trace_endpos + PL_MIN_CONST, trace_endpos + PL_MAX_CONST)))
-				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity), e);
+				waypoint_spawnforteleporter(this, trace_endpos, sqrt(vlen2(trace_endpos - org) / vlen2(e.velocity)), e);
 			delete(e);
 		}
 		else if (item)

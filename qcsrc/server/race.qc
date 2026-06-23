@@ -1380,7 +1380,7 @@ float race_GetFractionalLapCount(entity e)
 			o1 = (it.absmin + it.absmax) * 0.5;
 			if(o0 == o1)
 				continue;
-			fraction = bound(0.0001, vlen(e.origin - o1) / vlen(o0 - o1), 1);
+			fraction = bound(0.0001, sqrt(vlen2(e.origin - o1) / vlen2(o0 - o1)), 1);
 			if(fraction < bestfraction)
 				bestfraction = fraction;
 		});

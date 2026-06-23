@@ -347,7 +347,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		tracetoss(e, WarpZone_trace_forent);
 		if (cb)
 			cb(e.origin, trace_endpos, trace_endpos);
-		dt = vlen(e.origin - o0) / vlen(e.velocity);
+		dt = sqrt(vlen2(e.origin - o0) / vlen2(e.velocity));
 		WarpZone_tracetoss_time += dt;
 		e.velocity.z -= dt * g;
 		WarpZone_tracetoss_velocity = e.velocity;
@@ -391,7 +391,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		tracetoss(e, WarpZone_trace_forent);
 		if (cb)
 			cb(e.origin, trace_endpos, trace_endpos);
-		dt = vlen(trace_endpos - e.origin) / vlen(e.velocity);
+		dt = sqrt(vlen2(trace_endpos - e.origin) / vlen2(e.velocity));
 		WarpZone_tracetoss_time += dt;
 		e.origin = trace_endpos;
 		e.velocity.z -= dt * g;
@@ -420,7 +420,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		// we got warped, so let's step back a bit
 		e.velocity = -e.velocity;
 		tracetoss(e, WarpZone_trace_forent);
-		dt = vlen(trace_endpos - e.origin) / vlen(e.velocity);
+		dt = sqrt(vlen2(trace_endpos - e.origin) / vlen2(e.velocity));
 		WarpZone_tracetoss_time -= dt;
 		e.origin = trace_endpos;
 		e.velocity = -e.velocity;
