@@ -65,29 +65,30 @@ void W_OverkillRocketPropelledChainsaw_Think(entity this)
 
 	float myspeed = vlen(this.velocity);
 	float myspeed_accel = myspeed * sys_frametime;
-	vector mydir = normalize(this.velocity);
+	vector mydir = this.velocity * (1 / myspeed);
 
-	tracebox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
+	WarpZone_TraceBox(this.origin, this.mins, this.maxs, this.origin + mydir * (2 * myspeed_accel), MOVE_NORMAL, this);
 	if (IS_PLAYER(trace_ent))
 	{
+		float hit_damage = WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage2);
 		if (accuracy_isgooddamage(this.realowner, trace_ent))
 		{
 			if (this.m_chainsaw_damage == 0) // first hit
 			{
 				// The fired damage of the explosion is already counted in the statistics (when launching the chainsaw).
 				// We remove it here so that a direct hit that passes through and doesn't damage anything by the explosion later is still 100%.
-				float fired_damage = WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage2) - WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage);
-				float hit_damage = WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage2);
+				float fired_damage = hit_damage - WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage);
 				accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), fired_damage, hit_damage, 0); // add to fired and hit
 			}
-			this.m_chainsaw_damage += WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage2);
+			this.m_chainsaw_damage += hit_damage;
 		}
+		vector hitloc = WarpZone_TransformOrigin(this, this.origin);
 		Damage(trace_ent, this, this.realowner,
-			WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage2),
+			hit_damage,
 			this.projectiledeathtype,
 			this.weaponentity_fld,
-			this.origin,
-			normalize(this.origin - trace_ent.origin) * WEP_CVAR_PRI(WEP_OVERKILL_RPC, force)
+			hitloc,
+			normalize(hitloc - trace_ent.origin) * WEP_CVAR_PRI(WEP_OVERKILL_RPC, force)
 		);
 	}
 
