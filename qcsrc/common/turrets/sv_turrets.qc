@@ -415,25 +415,20 @@ void turret_projectile_explode(entity this)
 	this.event_damage = func_null;
 
 #ifdef TURRET_DEBUG
-	float d = RadiusDamage(this, this.owner,
-#else
-	RadiusDamage(this, this.realowner,
+	this.realowner.tur_debug_dmg_t_f += this.realowner.shot_dmg;
+	this.realowner.tur_debug_dmg_t_h += 
 #endif
-		this.owner.shot_dmg,
+	RadiusDamage(this, this.realowner,
+		this.realowner.shot_dmg,
 		0,
-		this.owner.shot_radius,
+		this.realowner.shot_radius,
 		this,
 		NULL,
-		this.owner.shot_force,
+		this.realowner.shot_force,
 		this.projectiledeathtype,
 		DMG_NOWEP,
 		NULL
 	);
-#ifdef TURRET_DEBUG
-	this.owner.tur_debug_dmg_t_h += d;
-	this.owner.tur_debug_dmg_t_f += this.owner.shot_dmg;
-#endif
-
 	delete(this);
 }
 
@@ -449,7 +444,7 @@ void turret_projectile_damage(entity this, entity inflictor, entity attacker, fl
 	TakeResource(this, RES_HEALTH, damage);
 	//this.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
 	if (GetResource(this, RES_HEALTH) <= 0)
-		W_PrepareExplosionByDamage(this, this.owner, turret_projectile_explode);
+		W_PrepareExplosionByDamage(this, this.realowner, turret_projectile_explode);
 }
 
 entity turret_projectile(entity actor, Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)
@@ -1353,6 +1348,7 @@ bool turret_initialize(entity this, Turret tur)
 
 	this.tur_head.netname     = this.tur_head.classname;
 	this.tur_head.team        = this.team;
+	this.tur_head.realowner   = this;
 	this.tur_head.owner       = this;
 	this.tur_head.takedamage  = DAMAGE_NO;
 	this.tur_head.solid       = SOLID_NOT;
