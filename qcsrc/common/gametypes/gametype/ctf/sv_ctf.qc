@@ -251,7 +251,7 @@ bool ctf_CheckPassDirection(vector head_center, vector passer_center, vector pas
 		spreadlimit = (autocvar_g_ctf_pass_radius ? min(1, (vlen(passer_center - nearest_on_line) / autocvar_g_ctf_pass_radius)) : 1);
 		spreadlimit = (autocvar_g_ctf_pass_directional_min * (1 - spreadlimit) + autocvar_g_ctf_pass_directional_max * spreadlimit);
 
-		if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(head_center - passer_center) - v_forward) * RAD2DEG) <= 90))
+		if(spreadlimit && (distance_from_line <= spreadlimit) && vdist(normalize(head_center - passer_center) - v_forward, <=, 90 * DEG2RAD))
 			{ return true; }
 		else
 			{ return false; }
