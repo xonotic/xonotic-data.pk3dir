@@ -554,10 +554,11 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 	}
 
 
-	if (it.origin != it.oldorigin)
+	if (it.origin != it.oldorigin || it.velocity != it.oldvelocity)
 		it.SendFlags |= TNSF_MOVE;
 
 	it.oldorigin = it.origin;
+	it.oldvelocity = it.velocity;
 	turrets_setframe(it, it.animflag, false);
 }
 METHOD(WalkerTurret, tr_death, void(WalkerTurret this, entity it))
