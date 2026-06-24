@@ -114,14 +114,7 @@ void W_Nexball_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 	if (!ball)
 		return;
 
-	W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: use ballstealer weapon here? we don't want duplicates in the scoreboard
-	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, NULL);
-	if (trace_startsolid)
-	{
-		if (STAT(NB_METERSTART, actor))
-			STAT(NB_METERSTART, actor) = 0; // Shot failed, hide the power meter
-		return;
-	}
+	W_SetupShot_ProjectileSize(actor, weaponentity, BALL_MINS, BALL_MAXS, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: use ballstealer weapon here? we don't want duplicates in the scoreboard
 
 	// Calculate multiplier
 	float mul;
@@ -148,7 +141,7 @@ void W_Nexball_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	if (actor.ballcarried.enemy)
 	{
 		entity _ball = actor.ballcarried;
-		W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id | HITTYPE_SECONDARY); // TODO: use the ball stealer weapon here? probably don't want duplicates
+		W_SetupShot_ProjectileSize(actor, weaponentity, BALL_MINS, BALL_MAXS, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id | HITTYPE_SECONDARY); // TODO: use the ball stealer weapon here? probably don't want duplicates
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32, _ball));
 		setthink(_ball, W_Nexball_Think);
 		_ball.nextthink = time;

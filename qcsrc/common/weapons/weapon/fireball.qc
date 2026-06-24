@@ -171,10 +171,12 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-void W_Fireball_AttackEffect(entity actor, .entity weaponentity, float i, vector f_diff)
+void W_Fireball_AttackEffect(entity actor, .entity weaponentity, int bullet_count)
 {
+	vector old_movedir = actor.(weaponentity).movedir;
+	actor.(weaponentity).movedir += W_SetupShot_GetAlternatingOffset(bullet_count);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0, WEP_FIREBALL.m_id); // TODO: probably doesn't need deathtype, just a prefire effect
-	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
+	actor.(weaponentity).movedir = old_movedir;
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
 
@@ -186,25 +188,25 @@ void W_Fireball_Attack1_Frame4(Weapon thiswep, entity actor, .entity weaponentit
 
 void W_Fireball_Attack1_Frame3(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 0, '+1.25 +3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 3);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_FIREBALL, animtime), W_Fireball_Attack1_Frame4);
 }
 
 void W_Fireball_Attack1_Frame2(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 0, '-1.25 +3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 2);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_FIREBALL, animtime), W_Fireball_Attack1_Frame3);
 }
 
 void W_Fireball_Attack1_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 1, '+1.25 -3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 1);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_FIREBALL, animtime), W_Fireball_Attack1_Frame2);
 }
 
 void W_Fireball_Attack1_Frame0(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 0, '-1.25 -3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 0);
 	sound(actor, CH_WEAPON_SINGLE, SND_FIREBALL_PREFIRE2, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_FIREBALL, animtime), W_Fireball_Attack1_Frame1);
 }
@@ -254,28 +256,10 @@ void W_Fireball_Firemine_Touch(entity this, entity toucher)
 
 void W_Fireball_Attack2(entity actor, .entity weaponentity)
 {
-	vector f_diff;
-
-	float c = actor.(weaponentity).bulletcounter % 4;
-	switch (c)
-	{
-		case 0:
-			f_diff = '-1.25 -3.75 0';
-			break;
-		case 1:
-			f_diff = '+1.25 -3.75 0';
-			break;
-		case 2:
-			f_diff = '-1.25 +3.75 0';
-			break;
-		case 3:
-		default:
-			f_diff = '+1.25 +3.75 0';
-			break;
-	}
+	vector old_movedir = actor.(weaponentity).movedir;
+	actor.(weaponentity).movedir += W_SetupShot_GetAlternatingOffset(actor.(weaponentity).bulletcounter);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_FIREBALL, damage), WEP_FIREBALL.m_id | HITTYPE_SECONDARY);
-	traceline(w_shotorg, w_shotorg + f_diff.x * v_up + f_diff.y * v_right, MOVE_NORMAL, actor);
-	w_shotorg = trace_endpos;
+	actor.(weaponentity).movedir = old_movedir;
 
 	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 

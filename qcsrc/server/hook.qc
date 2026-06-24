@@ -314,11 +314,11 @@ void FireGrapplingHook(entity actor, .entity weaponentity)
 		return;
 
 	int s = W_GunAlign(actor.(weaponentity), STAT(GUNALIGN, actor)) - 1;
-	vector oldmovedir = actor.(weaponentity).movedir;
-	actor.(weaponentity).movedir = hook_shotorigin[s];
+	vector old_movedir = actor.(weaponentity).movedir;
+	actor.(weaponentity).movedir += hook_shotorigin[s];
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', true, 0, SND_HOOK_FIRE, CH_WEAPON_B, 0, WEP_HOOK.m_id);
+	actor.(weaponentity).movedir = old_movedir;
 	W_MuzzleFlash(WEP_HOOK, actor, weaponentity, w_shotorg, '0 0 0');
-	actor.(weaponentity).movedir = oldmovedir;
 
 	entity missile = new(grapplinghook);
 	WarpZone_RefSys_Copy(missile, actor);
