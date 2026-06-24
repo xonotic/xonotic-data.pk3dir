@@ -11,28 +11,29 @@ void target_speaker_use(entity this, entity actor, entity trigger)
 		return;
 	}
 
-	string snd;
 	if(substring(this.noise, 0, 1) == "*")
 	{
-		var .string sample = GetVoiceMessageSampleField(substring(this.noise, 1, -1));
-		if(GetPlayerSoundSampleField_notFound)
-			snd = SND(Null);
-		else if(actor.(sample) == "")
-			snd = SND(Null);
-		else
+		entity psnd = GetPlayerSound(substring(this.noise, 1, -1));
+		if (psnd && actor.(psnd.m_playersoundfld) != "")
 		{
-			tokenize_console(actor.(sample));
+			string snd;
+			tokenize_console(actor.(psnd.m_playersoundfld));
 			float n = stof(argv(1));
 			if(n > 0)
 				snd = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
 			else
-				snd = strcat(argv(0), ".wav"); // randomization
+				snd = strcat(argv(0), ".wav");
+
+			if (psnd.instanceOfVoiceMessage) // perhaps this should support TEAMRADIO?
+				_sound(actor, CH_VOICE, snd, VOL_BASEVOICE * this.volume, this.atten);
+			else // PAIN: usually it'll be Q3's *falling1.wav
+				_sound(actor, CH_PAIN_SINGLE, snd, VOL_BASE * this.volume, this.atten);
 		}
 	}
+	else if (this.spawnflags & SPEAKER_ACTIVATOR && actor)
+		_sound(actor, CH_PLAYER_SINGLE, this.noise, VOL_BASE * this.volume, this.atten);
 	else
-		snd = this.noise;
-
-	_sound(this.spawnflags & SPEAKER_ACTIVATOR ? actor : this, CH_TRIGGER_SINGLE, snd, VOL_BASE * this.volume, this.atten);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE * this.volume, this.atten);
 }
 
 void target_speaker_think(entity this)
@@ -92,9 +93,29 @@ spawnfunc(target_speaker)
 	}
 
 	if (substring(this.noise, 0, 1) == "*")
+	{
 		// Q3: force all client reletive sounds to be "activator" speakers that
 		// play on the entity that activates it
 		this.spawnflags |= SPEAKER_ACTIVATOR;
+
+		// Match Q3 filenames to registered player sounds
+		switch (this.noise)
+		{
+			case "*death1.wav":    this.noise = "*death";   break;
+			case "*death2.wav":    this.noise = "*death";   break;
+			case "*death3.wav":    this.noise = "*death";   break;
+			case "*drown.wav":     this.noise = "*drown";   break;
+			case "*fall1.wav":     this.noise = "*fall";    break;
+			case "*falling1.wav":  this.noise = "*falling"; break;
+			case "*gasp.wav":      this.noise = "*gasp";    break;
+			case "*jump1.wav":     this.noise = "*jump";    break;
+			case "*pain100_1.wav": this.noise = "*pain100"; break;
+			case "*pain25_1.wav":  this.noise = "*pain25";  break;
+			case "*pain50_1.wav":  this.noise = "*pain50";  break;
+			case "*pain75_1.wav":  this.noise = "*pain75";  break;
+			case "*taunt.wav":     this.noise = "*taunt";   break;
+		}
+	}
 	else
 		precache_sound(this.noise);
 
