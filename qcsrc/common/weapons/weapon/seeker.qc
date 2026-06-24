@@ -131,13 +131,15 @@ void W_Seeker_Missile_Animate(entity this)
 }
 */
 
-void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, vector f_diff, entity m_target)
+void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, entity m_target, int bullet_count)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_SEEKER, missile_ammo), weaponentity);
 
 	makevectors(actor.v_angle);
+	vector offset = (bullet_count > 0 ? W_SetupShot_GetAlternatingOffset(bullet_count) : '0 0 0');
+	actor.(weaponentity).movedir += offset;
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0, ((m_target != NULL) ? thiswep.m_id | HITTYPE_SECONDARY : thiswep.m_id));
-	w_shotorg += f_diff;
+	actor.(weaponentity).movedir -= offset;
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	//actor.detornator = false;
@@ -224,25 +226,10 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_SEEKER, flac_ammo), weaponentity);
 
-	vector f_diff;
-	switch (actor.(weaponentity).bulletcounter % 4)
-	{
-		case 0:
-			f_diff = '-1.25 -3.75 0';
-			break;
-		case 1:
-			f_diff = '+1.25 -3.75 0';
-			break;
-		case 2:
-			f_diff = '-1.25 +3.75 0';
-			break;
-		case 3:
-		default:
-			f_diff = '+1.25 +3.75 0';
-			break;
-	}
+	vector offset = W_SetupShot_GetAlternatingOffset(actor.(weaponentity).bulletcounter);
+	actor.(weaponentity).movedir += offset;
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FLAC_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_SEEKER, flac_damage), thiswep.m_id | HITTYPE_SECONDARY);
-	w_shotorg += f_diff;
+	actor.(weaponentity).movedir -= offset;
 
 	// uses hagar effects!
 	W_MuzzleFlash(WEP_HAGAR, actor, weaponentity, w_shotorg, w_shotdir);
@@ -313,7 +300,7 @@ void W_Seeker_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		}
 	});
 
-	W_Seeker_Fire_Missile(thiswep, actor, weaponentity, '0 0 0', closest);
+	W_Seeker_Fire_Missile(thiswep, actor, weaponentity, closest, -1);
 }
 
 void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seeker_Attack
@@ -335,24 +322,7 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	entity oldenemy = own.enemy;
 	own.enemy = this.enemy;
-
-	switch (own.cnt % 4)
-	{
-		case 0:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 -3.75 0', own.enemy); // TODO
-			break;
-		case 1:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '+1.25 -3.75 0', own.enemy); // TODO
-			break;
-		case 2:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 +3.75 0', own.enemy); // TODO
-			break;
-		case 3:
-		default:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '+1.25 +3.75 0', own.enemy); // TODO
-			break;
-	}
-
+	W_Seeker_Fire_Missile(thiswep, own, weaponentity, own.enemy, own.cnt);
 	own.enemy = oldenemy;
 }
 
