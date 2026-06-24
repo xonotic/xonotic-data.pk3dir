@@ -192,23 +192,36 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	WarpZone_trace_firstzone = NULL;
 	WarpZone_trace_lastzone = NULL;
 	WarpZone_Trace_InitTransform();
-	if (!warpzone_warpzones_exist)
+
+	bool nearby_warpzones = false;
+	// use tracebox if no warpzone is touching the box the entity would be traced through
+	if (warpzone_warpzones_exist)
 	{
-		if (nomonsters == MOVE_NOTHING)
+		vector boxmin = mi;
+		vector boxmax = ma;
+	#define CHOOSE_AXIS(axis) \
+		if (org.axis < end.axis) {  boxmin.axis += org.axis;  boxmax.axis += end.axis;  } \
+		else                     {  boxmin.axis += end.axis;  boxmax.axis += org.axis;  }
+		CHOOSE_AXIS(x);
+		CHOOSE_AXIS(y);
+		CHOOSE_AXIS(z);
+	#undef CHOOSE_AXIS
+		/* Above is equivalent to the following, but more efficient
+		 *     boxmin += vec_to_min(org, end);
+		 *     boxmax += vec_to_max(org, end);
+		 */
+		IL_EACH(g_warpzones, boxesoverlap(it.absmin, it.absmax, boxmin, boxmax),
 		{
-			trace_endpos = end;
-			trace_fraction = 1;
-			if (cb)
-				cb(org, trace_endpos, end);
-			return;
-		}
-		else
-		{
-			tracebox(org, mi, ma, end, nomonsters, WarpZone_trace_forent);
-			if (cb)
-				cb(org, trace_endpos, end);
-			return;
-		}
+			nearby_warpzones = true;
+			break;
+		});
+	}
+	if (!nearby_warpzones)
+	{
+		tracebox(org, mi, ma, end, nomonsters, WarpZone_trace_forent);
+		if (cb)
+			cb(org, trace_endpos, end);
+		return;
 	}
 
 	vector vf = v_forward;
