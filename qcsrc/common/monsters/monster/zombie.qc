@@ -14,16 +14,29 @@ float autocvar_g_monster_zombie_speed_stop;
 float autocvar_g_monster_zombie_speed_run;
 float autocvar_g_monster_zombie_speed_walk;
 
+void M_Zombie_Attack_Slam(entity this)
+{
+	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage * 1.25, this.attack_range, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
+}
+
+void M_Zombie_Attack_Punch(entity this)
+{
+	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage, this.attack_range, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
+}
+
+void M_Zombie_Attack_Spin(entity this)
+{
+	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage * 0.5, this.attack_range * 0.75, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
+}
+
 void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
 {
 	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
 
-	vector angles_face;
-
 	if (toucher.takedamage)
 	{
-		angles_face = vectoangles(this.moveto - this.origin);
+		vector angles_face = vectoangles(this.moveto - this.origin);
 		angles_face = normalize(angles_face) * autocvar_g_monster_zombie_attack_leap_force;
 		Damage(toucher, this, this.realowner,
 			autocvar_g_monster_zombie_attack_leap_damage * MONSTER_SKILLMOD(this),
@@ -33,12 +46,12 @@ void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
 			angles_face
 		);
 		settouch(this, Monster_Touch); // instantly turn it off to stop damage spam
-		this.state = 0;
+		this.state = MONSTER_STATE_NORMAL;
 	}
 
 	if (trace_dphitcontents)
 	{
-		this.state = 0;
+		this.state = MONSTER_STATE_NORMAL;
 		settouch(this, Monster_Touch);
 	}
 }
@@ -55,7 +68,7 @@ void M_Zombie_Defend_Block_End(entity this)
 bool M_Zombie_Defend_Block(entity this)
 {
 	SetResourceExplicit(this, RES_ARMOR, 0.9);
-	this.state = MONSTER_ATTACK_MELEE; // freeze monster
+	this.state = MONSTER_STATE_NOMOVE; // freeze monster
 	this.attack_finished_single[0] = time + 2.1;
 	this.anim_finished = this.attack_finished_single[0];
 	setanim(this, this.anim_blockstart, false, true, true);
@@ -71,23 +84,48 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			if (random() < 0.3 && GetResource(actor, RES_HEALTH) < 75 && GetResource(actor.enemy, RES_HEALTH) > 10)
+			if (random() < 0.3 && GetResource(actor, RES_HEALTH) < 75 && GetResource(targ, RES_HEALTH) > 10)
 				return M_Zombie_Defend_Block(actor);
 
 			float anim_chance = random();
 			vector chosen_anim;
 			if (anim_chance < 0.33)
+			{
+				// big slam
+				Monster_Delay(actor, 1, 0.7, M_Zombie_Attack_Slam);
 				chosen_anim = actor.anim_melee1;
+				if (IS_MONSTER(actor))
+					actor.state = MONSTER_STATE_NOMOVE;
+			}
 			else if (anim_chance < 0.66)
+			{
+				// spinning attack
+				Monster_Delay(actor, 2, 0.25, M_Zombie_Attack_Spin);
 				chosen_anim = actor.anim_melee2;
+			}
 			else
+			{
+				// multiple punches
+				Monster_Delay(actor, 2, 0.5, M_Zombie_Attack_Punch);
 				chosen_anim = actor.anim_melee3;
+				if (IS_MONSTER(actor))
+					actor.state = MONSTER_STATE_NOMOVE;
+			}
 
-			return Monster_Attack_Melee(actor, actor.enemy, autocvar_g_monster_zombie_attack_melee_damage, chosen_anim, actor.attack_range, autocvar_g_monster_zombie_attack_melee_delay, DEATH_MONSTER_ZOMBIE_MELEE.m_id, true);
+			setanim(actor, chosen_anim, false, true, true);
+			actor.anim_finished = actor.animstate_endtime;
+
+			actor.attack_finished_single[0] = time + autocvar_g_monster_zombie_attack_melee_delay;
+
+			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
+		{
+			if(vdist(targ.origin - actor.origin, <, actor.attack_range * 2))
+				return false;
 			makevectors(actor.angles);
 			return Monster_Attack_Leap(actor, actor.anim_shoot, M_Zombie_Attack_Leap_Touch, v_forward * autocvar_g_monster_zombie_attack_leap_speed + '0 0 200', autocvar_g_monster_zombie_attack_leap_delay);
+		}
 	}
 	return false;
 }
@@ -109,7 +147,7 @@ METHOD(Zombie, mr_pain, float(Zombie this, entity actor, float damage_take, enti
 {
 	TC(Zombie, this);
 	actor.pain_finished = time + 0.34;
-	if (time >= actor.spawn_time)
+	if (time >= actor.spawn_time && actor.state != MONSTER_STATE_NOMOVE)
 		setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
 	return damage_take;
 }
@@ -136,8 +174,8 @@ METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
 	actor.anim_pain1 = animfixfps(actor, '20 1 2', none); // 0.5 seconds
 	actor.anim_pain2 = animfixfps(actor, '22 1 2', none); // 0.5 seconds
 	actor.anim_melee1 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-	actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-	actor.anim_melee3 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+	actor.anim_melee2 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+	actor.anim_melee3 = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
 	actor.anim_shoot = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
 	actor.anim_run = animfixfps(actor, '27 1 1', none);
 	actor.anim_blockstart = animfixfps(actor, '8 1 1', none);
@@ -155,9 +193,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 	if (!actor.speed2)     actor.speed2 = autocvar_g_monster_zombie_speed_run;
 	if (!actor.stopspeed)  actor.stopspeed = autocvar_g_monster_zombie_speed_stop;
 
-	if (actor.spawnflags & MONSTERFLAG_NORESPAWN)
-		actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
-
+	actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
 	actor.spawnflags &= ~MONSTERFLAG_APPEAR; // once it's appeared, it will respawn quickly, we don't want it to appear
 
 	actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
@@ -167,6 +203,7 @@ METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 	StatusEffects_apply(STATUSEFFECT_SpawnShield, actor, actor.spawn_time, 0);
 	actor.respawntime = 0.2;
 	actor.damageforcescale = 0.0001; // no push while spawning
+	actor.species = SPECIES_HUMAN;
 
 	setanim(actor, actor.anim_spawn, false, true, true);
 	actor.spawn_time = actor.animstate_endtime;

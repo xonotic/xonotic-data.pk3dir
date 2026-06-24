@@ -406,7 +406,10 @@ MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
 MUTATOR_HOOKABLE(MonsterMove, EV_MonsterMove);
 
 /** called when a monster looks for another target */
-MUTATOR_HOOKABLE(MonsterFindTarget, EV_NO_ARGS);
+#define EV_MonsterFindTarget(i, o) \
+    /** monster */       i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(MonsterFindTarget, EV_MonsterFindTarget);
 
 /**
  * called when validating a monster's target

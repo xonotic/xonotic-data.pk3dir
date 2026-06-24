@@ -5,11 +5,14 @@ float autocvar_g_monster_wyvern_health;
 string autocvar_g_monster_wyvern_loot = "cells";
 float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
-float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_damagetime;
+float autocvar_g_monster_wyvern_attack_fireball_delay = 4;
+float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_force;
 float autocvar_g_monster_wyvern_attack_fireball_radius;
 float autocvar_g_monster_wyvern_attack_fireball_speed;
+float autocvar_g_monster_wyvern_attack_melee_damage = 25;
+float autocvar_g_monster_wyvern_attack_melee_delay = 2;
 float autocvar_g_monster_wyvern_speed_stop;
 float autocvar_g_monster_wyvern_speed_run;
 float autocvar_g_monster_wyvern_speed_walk;
@@ -23,13 +26,19 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 {
 	TC(WyvernAttack, thiswep);
 	if (fire & 1)
-	if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2))
+	if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_wyvern_attack_fireball_delay))
 	{
 		monster_makevectors(actor, actor.enemy);
 		if (IS_PLAYER(actor))
 			W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0, DEATH_MONSTER_WYVERN.m_id);
+
+		vector shotorg = actor.origin + actor.view_ofs + v_forward * 14;
 		if (IS_MONSTER(actor))
-			actor.attack_finished_single[0] = actor.anim_finished = time + 1.2;
+		{
+			int shotidx = gettagindex(actor, "WyvernJaw_Down");
+			if (shotidx)
+				shotorg = gettaginfo(actor, shotidx);
+		}
 
 		entity missile = new(WyvernAttack);
 		missile.owner = missile.realowner = actor;
@@ -37,7 +46,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		set_movetype(missile, MOVETYPE_FLYMISSILE);
 		missile.projectiledeathtype = DEATH_MONSTER_WYVERN.m_id;
 		setsize(missile, '-6 -6 -6', '6 6 6');
-		setorigin(missile, actor.origin + actor.view_ofs + v_forward * 14);
+		setorigin(missile, shotorg);
 		missile.flags = FL_PROJECTILE;
 		IL_PUSH(g_projectiles, missile);
 		IL_PUSH(g_bot_dodge, missile);
@@ -56,6 +65,11 @@ METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor, .entit
 {
 	TC(WyvernAttack, this);
 	return true;
+}
+
+void M_Wyvern_Attack_Slash(entity this)
+{
+	Monster_Attack_Melee(this, autocvar_g_monster_wyvern_attack_melee_damage, this.attack_range, DEATH_MONSTER_WYVERN_MELEE.m_id);
 }
 
 void M_Wyvern_Attack_Fireball_Explode(entity this)
@@ -103,16 +117,24 @@ bool M_Wyvern_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	switch (attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
-		case MONSTER_ATTACK_RANGED:
-			Monster_Delay(actor, 0, 1, M_Wyvern_Attack_Fireball);
-			//actor.anim_finished = time + 1.2;
-			setanim(actor, actor.anim_shoot, false, true, true);
-			if (actor.animstate_endtime > time)
-				actor.anim_finished = actor.animstate_endtime;
-			else
-				actor.anim_finished = time + 1.2;
-			actor.attack_finished_single[0] = actor.anim_finished + 0.2;
+		{
+			Monster_Delay(actor, 1, 0.7, M_Wyvern_Attack_Slash);
+
+			setanim(actor, actor.anim_melee, false, true, true);
+			actor.anim_finished = actor.animstate_endtime;
+
+			actor.attack_finished_single[0] = time + autocvar_g_monster_wyvern_attack_melee_delay;
 			return true;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			Monster_Delay(actor, 0, 1.2, M_Wyvern_Attack_Fireball);
+			setanim(actor, actor.anim_shoot, false, true, true);
+			actor.anim_finished = actor.animstate_endtime;
+
+			actor.attack_finished_single[0] = time + autocvar_g_monster_wyvern_attack_fireball_delay;
+			return true;
+		}
 	}
 	return false;
 }
@@ -132,7 +154,7 @@ METHOD(Wyvern, mr_deadthink, bool(Wyvern this, entity actor))
 {
 	TC(Wyvern, this);
 	if (IS_ONGROUND(actor))
-		setanim(actor, actor.anim_die2, true, false, false);
+		setanim(actor, actor.anim_die2, false, true, false);
 	return true;
 }
 
@@ -140,7 +162,7 @@ METHOD(Wyvern, mr_pain, float(Wyvern this, entity actor, float damage_take, enti
 {
 	TC(Wyvern, this);
 	actor.pain_finished = time + 0.5;
-	setanim(actor, actor.anim_pain1, true, true, false);
+	setanim(actor, actor.anim_pain1, true, false, false);
 	return damage_take;
 }
 
@@ -175,7 +197,7 @@ METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
 METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 {
 	TC(Wyvern, this);
-	if (!GetResource(this, RES_HEALTH))
+	if (!GetResource(actor, RES_HEALTH))
 		SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_wyvern_health);
 	if (!actor.speed)             actor.speed = autocvar_g_monster_wyvern_speed_walk;
 	if (!actor.speed2)            actor.speed2 = autocvar_g_monster_wyvern_speed_run;
@@ -184,6 +206,8 @@ METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
 
 	actor.monster_loot = autocvar_g_monster_wyvern_loot;
 	actor.monster_attackfunc = M_Wyvern_Attack;
+
+	actor.species = SPECIES_ANIMAL;
 
 	return true;
 }
