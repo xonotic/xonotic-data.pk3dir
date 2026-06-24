@@ -309,7 +309,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd pointparticles <effectname> <position> <velocity> <countmultiplier>\n");
+			sprint(this, "Usage:^3 [sv_cheats 1; restart;] cmd pointparticles <effectname> <position> <velocity> <countmultiplier>\n");
 			sprint(this, "  Where <position> is a number from 0 to 1 representing distance on the crosshair line,\n");
 			sprint(this, "  and <velocity> is a vector \"x y z\"\n");
 			break;
@@ -317,8 +317,6 @@ float CheatCommand(entity this, int argc)
 			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 2)
 			{
-				// arguments:
-				//   effectname
 				effectnum = _particleeffectnum(argv(1));
 				makevectors(this.v_angle); // W_SetupShot uses v_forward
 				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0, 0);
@@ -327,7 +325,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage: sv_cheats 1; restart; cmd trailparticles <effectname>\n");
+			sprint(this, "Usage:^3 [sv_cheats 1; restart;] cmd trailparticles <effectname>\n");
 			break;
 		case "make":
 			IS_CHEAT(this, 0, argc, 0);
@@ -373,7 +371,7 @@ float CheatCommand(entity this, int argc)
 			}
 			else
 			{
-				sprint(this, "Usage:^3 sv_cheats 1; restart; cmd make <modelname> <mode>\n");
+				sprint(this, "Usage:^3 [sv_cheats 1; restart;] cmd make <modelname> <mode>\n");
 				sprint(this, "  where <mode> can be 0, 1 or 2\n");
 			}
 			break;
@@ -385,7 +383,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd penalty <duration> <reason>))\n");
+			sprint(this, "Usage:^3 [sv_cheats 1; restart;] cmd penalty <duration> <reason>\n");
 			break;
 		case "dragbox_spawn": {
 			IS_CHEAT(this, 0, argc, 0);
@@ -510,7 +508,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_setcnt <cnt>\n");
+			sprint(this, "Usage:^3 [sv_cheats 1; restart;] cmd dragbox_setcnt <cnt>\n");
 			break;
 		case "drag_save":
 			IS_CHEAT(this, 0, argc, 0);
@@ -530,7 +528,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_save <filename>\n");
+			sprint(this, "Usage:^3 [sv_cheats 1; restart;] cmd dragbox_save <filename>\n");
 			break;
 		case "drag_saveraceent":
 			IS_CHEAT(this, 0, argc, 0);
@@ -599,7 +597,7 @@ float CheatCommand(entity this, int argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(this, "Usage:^3 sv_cheats 1; restart; cmd dragbox_save <filename>\n");
+			sprint(this, "Usage:^3 [sv_cheats 1; restart;] cmd dragbox_save <filename>\n");
 			break;
 		case "drag_clear":
 			IS_CHEAT(this, 0, argc, 0);
