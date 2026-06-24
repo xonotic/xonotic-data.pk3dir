@@ -42,11 +42,12 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	}
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	vector view_org = ent.origin + ent.view_ofs;
 	if (antilag)
-		WarpZone_traceline_antilag(NULL, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+		WarpZone_traceline_antilag(NULL, view_org, view_org + s_forward * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 		// passing NULL, because we do NOT want it to touch dphitcontentsmask
 	else
-		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
+		WarpZone_TraceLine(view_org, view_org + s_forward * range, MOVE_NOMONSTERS, ent);
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	vector forward = v_forward;
@@ -58,8 +59,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	v_up = up;
 
 	// un-adjust trueaim if shotend is too close
-	if (vdist(w_shotend - (ent.origin + ent.view_ofs), <, autocvar_g_trueaim_minrange))
-		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
+	if (vdist(w_shotend - view_org, <, autocvar_g_trueaim_minrange))
+		w_shotend = view_org + s_forward * autocvar_g_trueaim_minrange;
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
@@ -74,33 +75,24 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//print(sprintf("offset of %s: %v\n", ent.(weaponentity).m_weapon.netname, md));
 	vector dv = right * -md.y + up * md.z;
 
-	w_shotorg = ent.origin + ent.view_ofs;
+	w_shotorg = view_org;
 
+	// FIXME: account for warpzones
 	// move the shotorg sideways and vertically as much as requested if possible
 	if (antilag)
-	{
-		if (CS(ent).antilag_debug)
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, CS(ent).antilag_debug);
-		else
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-	}
+		tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent, (CS(ent).antilag_debug ? CS(ent).antilag_debug : ANTILAG_LATENCY(ent)));
 	else
 		tracebox(w_shotorg, mi, ma, w_shotorg + dv, MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos;
 
 	// now move the shotorg forward as much as requested if possible
 	if (antilag)
-	{
-		if (CS(ent).antilag_debug)
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + forward * (md.x + nudge), MOVE_NORMAL, ent, CS(ent).antilag_debug);
-		else
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + forward * (md.x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-	}
+		tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + forward * (md.x + nudge), MOVE_NORMAL, ent, (CS(ent).antilag_debug ? CS(ent).antilag_debug : ANTILAG_LATENCY(ent)));
 	else
 		tracebox(w_shotorg, mi, ma, w_shotorg + forward * (md.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - forward * nudge;
 
-	//print(sprintf("w_shotorg %v\n\n", w_shotorg - (ent.origin + ent.view_ofs)));
+	//print(sprintf("w_shotorg %v\n\n", w_shotorg - view_org));
 
 	// calculate the shotdir from the chosen shotorg
 	if (W_DualWielding(ent))
@@ -119,7 +111,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 			traceline(w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent);
 			if (!trace_ent.takedamage)
 			{
-				traceline_antilag_force (ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+				traceline_antilag_force(ent, w_shotorg, w_shotorg + w_shotdir * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 				if (trace_ent.takedamage && IS_PLAYER(trace_ent))
 				{
 					entity e = trace_ent;
@@ -169,6 +161,17 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 	//if (w_shotend != prevend) printf("SERVER: shotEND differs: %s - %s\n", vtos(w_shotend), vtos(prevend));
 	//if (w_shotorg != prevorg) printf("SERVER: shotORG differs: %s - %s\n", vtos(w_shotorg), vtos(prevorg));
 	//if (w_shotdir != prevdir) printf("SERVER: shotDIR differs: %s - %s\n", vtos(w_shotdir), vtos(prevdir));
+}
+
+vector W_SetupShot_GetAlternatingOffset(int bullet_count)
+{
+	bullet_count &= 1 | 2;
+	vector offset = '0 37.5 -12.5';
+	if (bullet_count & 2)
+		offset.y = -offset.y;
+	if (bullet_count & 1)
+		offset.z = -offset.z;
+	return offset;
 }
 
 vector W_CalculateProjectileVelocity(entity actor, vector pvelocity, vector mvelocity, float forceAbsolute)

@@ -791,12 +791,7 @@ float RadiusDamageForSource(
 							vector mi = '0 0 0', ma = '0 0 0';
 
 							if (IS_CLIENT(targ)) // no antilag for non-clients!
-							{
-								if (CS(targ).antilag_debug)
-									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, CS(targ).antilag_debug);
-								else
-									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, ANTILAG_LATENCY(targ));
-							}
+								tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, (CS(targ).antilag_debug ? CS(targ).antilag_debug : ANTILAG_LATENCY(targ));
 							else
 								tracebox(center, mi, ma, center + dv, MOVE_NORMAL, targ);
 
