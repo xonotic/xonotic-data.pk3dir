@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorCloakedTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorCloakedTab, fill, void(entity));
+	ATTRIB(XonoticMutatorCloakedTab, title, string, _("Cloaked"));
+	ATTRIB(XonoticMutatorCloakedTab, message, string, "g_cloaked");
+	METHOD(XonoticMutatorCloakedTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorCloakedTab)
+entity makeXonoticMutatorCloakedTab();

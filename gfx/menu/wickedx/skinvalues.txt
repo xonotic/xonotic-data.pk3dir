@@ -226,6 +226,14 @@ ALPHA_KEYGRABBER_KEYS           0.7
 COLOR_KEYGRABBER_KEYS_IMMUTABLE '0.5 0.5 0.5'
 ALPHA_KEYGRABBER_KEYS_IMMUTABLE 0.7
 
+// item: mutators
+COLOR_MUTATORS_TITLES           '1 1 1'
+ALPHA_MUTATORS_TITLES           1
+COLOR_MUTATORS_ENTRIES          '1 1 1'
+ALPHA_MUTATORS_ENTRIES          0.7
+COLOR_MUTATORS_DISABLED         '0.5 0.5 0.5'
+ALPHA_MUTATORS_DISABLED         0.7
+
 // item: player color button
 //   uses "colorbutton" images
 
