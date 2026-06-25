@@ -26,6 +26,7 @@
 #include <lib/warpzone/common.qh>
 #include <server/bot/api.qh>
 #include <server/client.qh>
+#include <server/clientkill.qh>
 #include <server/gamelog.qh>
 #include <server/hook.qh>
 #include <server/items/items.qh>
@@ -135,7 +136,7 @@ void Obituary_SpecialDeath(
 		return;
 	}
 
-	if (g_cts && deathtype == DEATH_KILL.m_id)
+	if ((g_cts || notif_target.killindicator_teamchange == -2) && deathtype == DEATH_KILL.m_id)
 		return; // TODO: somehow put this in CTS gametype file!
 
 	Notification death_message = (msg_from_ent)
@@ -496,23 +497,16 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	float mirrordamage = 0;
 	float mirrorforce = 0;
 
-	if (deathtype == DEATH_KILL.m_id || deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
+	if (deathtype == DEATH_KILL.m_id || deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id || damage == INFINITY)
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if (IS_PLAYER(targ) && targ.vehicle)
 			vehicles_exit(targ.vehicle, VHEF_RELEASE);
 
-		// These are ALWAYS lethal
-		// No damage modification here
-		// Instead, prepare the victim for their death...
-		if (deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
-		{
-			SetResourceExplicit(targ, RES_ARMOR, 0);
-			SetResourceExplicit(targ, RES_HEALTH, 0.9); // this is < 1
-		}
+		SetResourceExplicit(targ, RES_ARMOR, 0);
 		StatusEffects_remove(STATUSEFFECT_SpawnShield, targ, STATUSEFFECT_REMOVE_CLEAR);
 		targ.flags &= ~FL_GODMODE;
-		damage = 100000;
+		damage = INFINITY;
 	}
 	else if (deathtype == DEATH_MIRRORDAMAGE.m_id || deathtype == DEATH_NOAMMO.m_id)
 	{

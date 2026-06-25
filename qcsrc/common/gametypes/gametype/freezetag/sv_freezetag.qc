@@ -472,7 +472,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	// let the player die, they will be automatically frozen when they respawn
 	// it fixes a bug where you both really die (gibbing) and get frozen
 	// if you succeed changing team through the menu
-	if (frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
+	if (frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id || frag_target.killindicator_teamchange == -2)
 	{
 		freezetag_Add_Score(frag_target, frag_attacker);
 		freezetag_count_alive_players();

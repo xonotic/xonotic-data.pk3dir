@@ -39,22 +39,20 @@ void ClientKill_Now(entity this)
 	{
 		vehicles_exit(this.vehicle, VHEF_RELEASE);
 		if (!this.killindicator_teamchange)
-		{
 			this.vehicle_health = -1;
-			Damage(this, this, this, 1 , DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
-		}
 	}
 
 	if (this.killindicator && !wasfreed(this.killindicator))
 		delete(this.killindicator);
-
 	this.killindicator = NULL;
+
+	// SetPlayerTeam() kills if team changes, (auto-)selecting the current team shouldn't kill.
+	if (this.killindicator_teamchange == -2 || this.killindicator_teamchange == 0)
+	if (IS_PLAYER(this) && !IS_DEAD(this))
+		Damage(this, this, this, INFINITY, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 
 	if (this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
-	// SetPlayerTeam() already killed if team changed, auto-selecting the current team shouldn't kill.
-	else if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
-		Damage(this, this, this, 100000, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 
 	// now I am sure the player IS dead
 }
