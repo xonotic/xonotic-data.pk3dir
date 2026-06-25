@@ -271,14 +271,8 @@ bool lms_AddPlayer(entity player)
 		if(lives <= 0)
 			GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
 	}
-	else
-	{
-		if(GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
-		{
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
-			return false;
-		}
-	}
+	else if (GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
+		return false;
 	return true;
 }
 
@@ -288,7 +282,10 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	if (!warmup_stage && (IS_BOT_CLIENT(player) || CS(player).jointime != time))
 	{
 		if (GameRules_scoring_add(player, LMS_RANK, 0) || !lms_AddPlayer(player))
+		{
 			TRANSMUTE(Observer, player);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
+		}
 	}
 }
 
@@ -389,12 +386,6 @@ void lms_RemovePlayer(entity player)
 		}
 		if (autocvar_g_lms_leader_lives_diff > 0)
 			lms_UpdateLeaders();
-	}
-
-	if (CS(player).killcount != FRAGS_SPECTATOR)
-	{
-		if (GameRules_scoring_add(player, LMS_RANK, 0) > 0)
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 	}
 }
 
@@ -610,6 +601,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 			});
 			frag_target.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			GameRules_scoring_add(frag_target, LMS_RANK, pl_cnt);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, frag_target.netname);
 		}
 	}
 	M_ARGV(2, float) = 0; // frag score
