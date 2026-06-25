@@ -294,7 +294,8 @@ bool SetPlayerTeam(entity player, int team_index, int type)
 
 	if (team_index != old_team_index)
 	{
-		KillPlayerForTeamChange(player);
+		if (!IS_DEAD(player))
+			Damage(player, player, player, INFINITY, DEATH_TEAMCHANGE.m_id, DMG_NOWEP, player.origin, '0 0 0');
 		PlayerScore_Clear(player);
 
 		if (!IS_BOT_CLIENT(player))
@@ -1230,20 +1231,6 @@ void LogTeamChange(float player_id, float team_number, int type)
 		return;
 	}
 	GameLogEcho(sprintf(":team:%d:%d:%d", player_id, team_number, type));
-}
-
-void KillPlayerForTeamChange(entity player)
-{
-	if (IS_DEAD(player))
-	{
-		return;
-	}
-	if (MUTATOR_CALLHOOK(Player_ChangeTeamKill, player) == true)
-	{
-		return;
-	}
-	Damage(player, player, player, 100000, DEATH_TEAMCHANGE.m_id, DMG_NOWEP,
-		player.origin, '0 0 0');
 }
 
 bool TeamBalance_IsTeamAllowedInternal(entity balance, int index)
