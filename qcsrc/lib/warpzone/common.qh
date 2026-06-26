@@ -59,10 +59,10 @@ void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, v
 USING(WarpZone_FindRadius_cond_callback_t, bool(entity e)); // called on every entity found by WarpZone_SearchInRadius
 /// Modified findradius aware of warpzones, that only includes entities that meet the "cb" criteria.
 /// Most useful if lineofsight, when searching with very specific criteria, or over a range likely to contain many entities.
-entity WarpZone_SearchInRadius(vector org, float radius, bool needlineofsight, WarpZone_FindRadius_cond_callback_t cb);
+entity WarpZone_SearchInRadius(vector org, float radius, float nomonsters, WarpZone_FindRadius_cond_callback_t cb);
 noref entity WarpZone_SearchInRadius_otherent; ///< Free to use in the callback
 /// Modified findradius aware of warpzones
-#define WarpZone_FindRadius(org, radius, needlineofsight) WarpZone_SearchInRadius(org, radius, needlineofsight, func_null)
+#define WarpZone_FindRadius(org, radius, needlineofsight) WarpZone_SearchInRadius(org, radius, ((needlineofsight) ? MOVE_NOMONSTERS : MOVE_NOTHING), func_null)
 
 float WarpZone_PlaneDist(entity wz, vector v);
 float WarpZone_TargetPlaneDist(entity wz, vector v);

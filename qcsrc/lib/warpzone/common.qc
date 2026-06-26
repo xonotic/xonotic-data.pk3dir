@@ -617,7 +617,7 @@ void _WarpZone_FindRadius_Recurse(
 	/** how to untransform (victim to blast system) */
 	vector transform,
 	vector shift,
-	bool needlineofsight,
+	float nomonsters,
 	WarpZone_FindRadius_cond_callback_t cb)
 {
 	if (rad <= 0)
@@ -626,9 +626,9 @@ void _WarpZone_FindRadius_Recurse(
 	FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity_WithCondCallback(it, cb),
 	{
 		vector p = WarpZoneLib_NearestPointOnBox(it.origin + it.mins, it.origin + it.maxs, org0);
-		if (needlineofsight)
+		if (nomonsters != MOVE_NOTHING)
 		{
-			traceline(org, p, MOVE_NOMONSTERS, it);
+			traceline(org, p, nomonsters, it);
 			if (trace_fraction < 1)
 				continue;
 		}
@@ -671,13 +671,13 @@ void _WarpZone_FindRadius_Recurse(
 			bound(0, rad - vlen(org_new - org0_new), rad - 8),
 			org0_new,
 			transform_new, shift_new,
-			needlineofsight,
+			nomonsters,
 			cb);
 		e.WarpZone_findradius_hit = 0;
 		e.enemy.WarpZone_findradius_hit = 0;
 	}
 }
-entity WarpZone_SearchInRadius(vector org, float rad, bool needlineofsight, WarpZone_FindRadius_cond_callback_t cb)
+entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone_FindRadius_cond_callback_t cb)
 {
 	bool simple_findradius = true;
 	// use simple findradius if no warpzone is touching the box of side 2 * rad and center org
@@ -708,9 +708,9 @@ entity WarpZone_SearchInRadius(vector org, float rad, bool needlineofsight, Warp
 			else
 			{
 				p = NearestPointOnBoundingBox(it.origin + it.mins, it.origin + it.maxs, org);
-				if (needlineofsight)
+				if (nomonsters != MOVE_NOTHING)
 				{
-					traceline(org, p, MOVE_NOMONSTERS, it);
+					traceline(org, p, nomonsters, it);
 					if (trace_fraction < 1)
 						bad = true;
 				}
@@ -735,7 +735,7 @@ entity WarpZone_SearchInRadius(vector org, float rad, bool needlineofsight, Warp
 	}
 	else
 	{
-		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight, cb);
+		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', nomonsters, cb);
 		list_first = findchainfloat(WarpZone_findradius_hit, 1);
 		FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
 	}
