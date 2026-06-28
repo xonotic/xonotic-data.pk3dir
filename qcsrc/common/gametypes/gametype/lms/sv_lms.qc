@@ -432,7 +432,7 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 		if (!GameRules_scoring_add(player, LMS_RANK, 0))
 			lms_RemovePlayer(player);
 	}
-	return true;  // prevent team reset
+	return true; // don't clear .frags
 }
 
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)
