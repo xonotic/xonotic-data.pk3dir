@@ -1304,7 +1304,7 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, entity client
 		return TEAMS_COMPARE_LESS;
 	if (team_a_size > team_b_size)
 		return TEAMS_COMPARE_GREATER;
-	if (!use_score)
+	if (!use_score || !team_a_size)
 		return TEAMS_COMPARE_EQUAL;
 
 // Compare skill and score together as team strength.
