@@ -35,13 +35,6 @@ void ClientKill_Now_TeamChange(entity this)
 
 void ClientKill_Now(entity this)
 {
-	if (this.vehicle)
-	{
-		vehicles_exit(this.vehicle, VHEF_RELEASE);
-		if (!this.killindicator_teamchange)
-			this.vehicle_health = -1;
-	}
-
 	if (this.killindicator && !wasfreed(this.killindicator))
 		delete(this.killindicator);
 	this.killindicator = NULL;
