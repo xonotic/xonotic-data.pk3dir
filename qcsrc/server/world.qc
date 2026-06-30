@@ -2010,30 +2010,26 @@ void readplayerstartcvars()
 		case "extended_available":
 			g_weaponarena_type = WEPARENA_EXTENDED_AVAILABLE;
 			g_weaponarena_weapons = weapons_extended();
-
 			// this needs to run after weaponsInMapAll is initialized
-			InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+			InitializeEntity(NULL, weaponarena_available_update, INITPRIO_SETLOCATION);
 			break;
 		case "all_available":
 			g_weaponarena_type = WEPARENA_ALL_AVAILABLE;
 			g_weaponarena_weapons = weapons_all();
-
 			// this needs to run after weaponsInMapAll is initialized
-			InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+			InitializeEntity(NULL, weaponarena_available_update, INITPRIO_SETLOCATION);
 			break;
 		case "devall_available":
 			g_weaponarena_type = WEPARENA_DEVALL_AVAILABLE;
 			g_weaponarena_weapons = weapons_devall();
-
 			// this needs to run after weaponsInMapAll is initialized
-			InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+			InitializeEntity(NULL, weaponarena_available_update, INITPRIO_SETLOCATION);
 			break;
 		case "standard_available": case "most_available":
 			g_weaponarena_type = WEPARENA_STANDARD_AVAILABLE;
 			g_weaponarena_weapons = weapons_standard();
-
 			// this needs to run after weaponsInMapAll is initialized
-			InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+			InitializeEntity(NULL, weaponarena_available_update, INITPRIO_SETLOCATION);
 			break;
 		case "none":
 			g_weaponarena_type = WEPARENA_NONE;
@@ -2334,23 +2330,27 @@ void DropToFloor_QC(entity this)
 		end.z -= 256; // Quake, QuakeWorld
 	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NOMONSTERS, this);
 
-	if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2 && (trace_allsolid || trace_fraction == 1)) // Quake
+	if (autocvar_sv_mapformat_is_quake3 || autocvar_sv_mapformat_is_quake2)
 	{
-		// Quake games just delete badly placed items (and misc_explobox)...
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY
+		|| (trace_startsolid && (trace_fraction == 1 || Q3COMPAT_COMMON)))
+		{
+			LOG_WARNF("DropToFloor_QC at \"%v\": \"%s\" fell out of the world", this.origin, this.classname);
+			delete(this);
+			return;
+		}
+	}
+	else if (trace_allsolid || trace_fraction == 1) // Quake
+	{
+		// Quake just deletes badly placed items (and misc_explobox)...
 		if (this.flags & FL_ITEM)
 		{
 			LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): DELETING badly placed item \"%s\"", this.origin, this.classname);
 			delete(this);
 			return;
 		}
-		// ...not monsters though...
+		// ...not monsters though.
 		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake compat): badly placed entity \"%s\"", this.origin, this.classname);
-	}
-	else if ((Q3COMPAT_COMMON || autocvar_sv_mapformat_is_quake2) && trace_startsolid) // Q3, Q2
-	{
-		// ...but we can't do that on Q3 maps like jamdm1
-		// because our tracebox hits things Q3's trace doesn't (patches?).
-		LOG_WARNF("DropToFloor_QC at \"%v\" (Quake 3 compat): badly placed entity \"%s\"", this.origin, this.classname);
 	}
 
 	/* NOTE: sv_gameplayfix_droptofloorstartsolid (fallback from tracebox to traceline) isn't implemented.
