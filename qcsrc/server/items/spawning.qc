@@ -27,32 +27,28 @@ bool Item_IsDefinitionAllowed(entity definition)
 bool Item_Initialise(entity item)
 {
 	if (item.lifetime >= 0)
-	{
 		ITEM_SET_LOOT(item, true);
+	if (ITEM_IS_LOOT(item))
 		item.pickup_anyway = true; // these are ALWAYS pickable
-	}
 
 	if (item.itemdef) // no search required
-	{
-		if (item.itemdef.instanceOfWeapon)
-			weapon_defaultspawnfunc(item, item.itemdef);
-		else
-			StartItem(item, item.itemdef);
-	}
+		StartItem(item);
 	else // fall back to classname search
 	{
 		FOREACH(Weapons, it.m_canonical_spawnfunc == item.classname,
 		{
-			weapon_defaultspawnfunc(item, it);
+			item.itemdef = it;
 			goto classname_found;
 		});
 		FOREACH(Items, it.m_canonical_spawnfunc == item.classname,
 		{
-			StartItem(item, it);
+			item.itemdef = it;
 			goto classname_found;
 		});
-		LOG_FATALF("Invalid classname: %s", item.classname);
+		LOG_WARNF("Item_Initialise: invalid item classname \"%s\"", item.classname);
+		return false;
 		LABEL(classname_found)
+		StartItem(item);
 	}
 
 	if (wasfreed(item))
