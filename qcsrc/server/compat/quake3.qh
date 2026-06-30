@@ -29,7 +29,8 @@ bool DoesQ3ARemoveThisEntity(entity this);
 	spawnfunc(classname) \
 	{ \
 		__VA_OPT__(this.count *= (__VA_ARGS__);) \
-		weapon_defaultspawnfunc(this, xonwep); \
+		this.itemdef = xonwep; \
+		InitializeEntity(this, StartItem, INITPRIO_DROPTOFLOOR); \
 	}
 
 // Weapon & ammo
