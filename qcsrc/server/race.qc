@@ -876,26 +876,11 @@ bool race_waypointsprite_visible_for_player(entity this, entity player, entity v
 		return false;
 }
 
-void defrag_waypointsprites(entity targeted, entity checkpoint, int recursionlevel)
+void defrag_waypointsprites(entity targeted, entity checkpoint)
 {
 	// bones_was_here: spawn a waypoint for every entity with a bmodel
 	// that directly or indirectly targets this checkpoint
 	// (anything a player could touch or shoot to activate this cp)
-
-	// spam a few warnings so that larger link chain loops can be found
-	if (recursionlevel > 400)
-	{
-		LOG_WARNF("df cp wp loop: ^4\"target\" ^3\"%s\"^7, ^4\"targetname\" ^3\"%s\"^7",
-			targeted.classname,
-			targeted.targetname);
-	}
-	// avoid a stack overflow
-	if (recursionlevel > 420)
-	{
-		LOG_WARNF("Aborted creating defrag checkpoint waypointsprites for ^2%s^7 due to a loop",
-			checkpoint.classname);
-		return;
-	}
 
 	entity s = WP_RaceCheckpoint;
 	if (checkpoint.classname == "target_startTimer")
@@ -912,8 +897,17 @@ void defrag_waypointsprites(entity targeted, entity checkpoint, int recursionlev
 			t.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 		}
 
-		if (t.targetname && t != checkpoint)
-			defrag_waypointsprites(t, checkpoint, ++recursionlevel);
+		if (t.loopdetector & 2)
+		{
+			if (!autocvar_sv_dedicated)
+				LOG_WARNF("MAP BUG: target field of %s \"%s\" loops back to %s \"%s\"\n", t.classname, t.targetname, targeted.classname, targeted.targetname);
+		}
+		else if (t.targetname)
+		{
+			targeted.loopdetector |= 2;
+			defrag_waypointsprites(t, checkpoint);
+			targeted.loopdetector &= ~2;
+		}
 	}
 }
 
@@ -1013,7 +1007,7 @@ void trigger_race_checkpoint_verify(entity this)
 		if (defrag_ents) {
 			IL_EACH(g_race_targets, it.classname == "target_checkpoint" || it.classname == "target_startTimer" || it.classname == "target_stopTimer",
 			{
-				defrag_waypointsprites(it, it, 0);
+				defrag_waypointsprites(it, it);
 
 				if(it.classname == "target_checkpoint") {
 					if(it.race_checkpoint == -2)
@@ -1144,33 +1138,14 @@ void target_checkpoint_setup(entity this)
 	if(!g_race && !g_cts) { delete(this); return; }
 	defrag_ents = 1;
 
-	// if this is targeted, then it probably isn't a trigger
-	bool is_trigger = this.targetname == "";
-
-	if(is_trigger)
-		EXACTTRIGGER_INIT;
-
-	this.use = checkpoint_use;
-	if (is_trigger && !(this.spawnflags & 1))
-		settouch(this, checkpoint_touch);
-
-	vector org = this.origin;
-
-	// bots should only pathfind to this if it is a valid touchable trigger
-	if(is_trigger)
+	if (this.targetname == "")
 	{
-		org = (this.absmin + this.absmax) * 0.5;
-		tracebox(org, PL_MIN_CONST, PL_MAX_CONST, org - '0 0 1' * (org.z - this.absmin.z), MOVE_NORMAL, this);
-		waypoint_spawnforitem_force(this, trace_endpos);
-		this.nearestwaypointtimeout = -1;
+		string s = sprintf("^3%s without a targetname at %v", this.classname, this.origin);
+		objerror(this, s); // s = macro workaround (origin is always '0 0 0' otherwise)
 	}
 
-	if(this.message == "")
-		this.message = "went backwards";
-	if (this.message2 == "")
-		this.message2 = "was pushed backwards by";
-	if (this.race_penalty_reason == "")
-		this.race_penalty_reason = "missing a checkpoint";
+	this.spawnflags = 0;
+	this.use = checkpoint_use;
 
 	if(this.classname == "target_startTimer")
 		this.race_checkpoint = 0;
@@ -1190,15 +1165,10 @@ void target_checkpoint_setup(entity this)
 	InitializeEntity(this, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-spawnfunc(target_checkpoint)
-{
-	// xonotic defrag entity
-	target_checkpoint_setup(this);
-}
-
-// compatibility entity names
+// Q3DF entity names
 spawnfunc(target_startTimer) { target_checkpoint_setup(this); }
 spawnfunc(target_stopTimer) { target_checkpoint_setup(this); }
+spawnfunc(target_checkpoint) { target_checkpoint_setup(this); }
 
 void race_AbandonRaceCheck(entity p)
 {

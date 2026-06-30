@@ -32,8 +32,6 @@ bool isPushable(entity e)
 	return false;
 }
 
-void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
-
 void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 void DelayThink(entity this)
@@ -285,10 +283,9 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 //
 // kill the killtagets
 //
-	s = this.killtarget;
-	if (s != "")
+	if (this.killtarget != "")
 	{
-		for(entity t = NULL; (t = find(t, targetname, s)); )
+		for(entity t = NULL; (t = find(t, targetname, this.killtarget)); )
 			delete(t);
 	}
 #endif
@@ -300,6 +297,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 	if(this.target_random)
 		RandomSelection_Init();
 
+	.string tfield;
 	for(int i = 0; i < 4; ++i)
 	{
 		if(skiptargets & BIT(i + 1))
@@ -307,16 +305,24 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		switch(i)
 		{
 			default:
-			case 0: s = this.target; break;
-			case 1: s = this.target2; break;
-			case 2: s = this.target3; break;
-			case 3: s = this.target4; break;
+			case 0: tfield = target; break;
+			case 1: tfield = target2; break;
+			case 2: tfield = target3; break;
+			case 3: tfield = target4; break;
 		}
-		if (s != "")
+		if (this.(tfield) != "")
 		{
-			for(entity t = NULL; (t = find(t, targetname, s)); )
+			for(entity t = NULL; (t = find(t, targetname, this.(tfield))); )
 			{
-				if(t != this && t.use && (t.sub_target_used != time || !preventReuse))
+				if (t.loopdetector & 1) // t is already using its targets!
+				{
+					#ifdef SVQC
+					if (!autocvar_sv_dedicated)
+						LOG_WARNF("MAP BUG: target field of %s \"%s\" loops back to %s \"%s\"\n", this.classname, this.targetname, t.classname, t.targetname);
+					#endif
+					this.(tfield) = string_null; // break loop to shallower point so map works as intended without spamming every time
+				}
+				else if(t != this && t.use && (t.sub_target_used != time || !preventReuse))
 				{
 					if(this.target_random)
 					{
@@ -324,7 +330,9 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 					}
 					else
 					{
+						this.loopdetector |= 1;
 						t.use(t, actor, this);
+						this.loopdetector &= ~1;
 						if(preventReuse)
 							t.sub_target_used = time;
 					}
@@ -335,7 +343,9 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 
 	if(this.target_random && RandomSelection_chosen_ent)
 	{
+		this.loopdetector |= 1;
 		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
+		this.loopdetector &= ~1;
 		if(preventReuse)
 			RandomSelection_chosen_ent.sub_target_used = time;
 	}
