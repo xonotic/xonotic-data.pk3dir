@@ -11,59 +11,25 @@ void multi_wait(entity this)
 	{
 		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
-		this.solid = SOLID_BBOX;
 	}
 }
 
-
 // the trigger was just touched/killed/used
-// this.enemy should be set to the activator so it can be held through a delay
-// so wait for the delay time before firing
-void multi_trigger(entity this, bool exacttrigger)
+void multi_trigger(entity this, entity actor, entity trigger)
 {
-	if((this.spawnflags & ONLY_PLAYERS) && !IS_PLAYER(this.enemy))
-	{
-		return; // only players
-	}
-
-	// In Q3 .wait <= 0 is forever,
-	// in Xonotic .wait == -1 means forever and == -2 means don't wait at all.
-	if (IS_GAMETYPE(CTS) && IS_CLIENT(this.enemy))
-	{
-		// check the client-specific trigger time
-		int cnum = etof(this.enemy);
-		if (buf_getsize(this.triggertimes) >= cnum) // buffer slot exists
-		{
-			float triggertime = stof(bufstr_get(this.triggertimes, cnum - 1));
-			if (this.enemy.spawn_time <= triggertime) // havn't respawned since triggering
-			{
-				if ((this.wait <= 0 && (q3compat || this.wait >= -1)) // wait forever (until respawn in CTS)
-				|| triggertime + this.wait > time) // too soon
-					return;
-			}
-		}
-	}
-	else if (this.nextthink > time)
-		return;		// allready been triggered
-
-	if (exacttrigger)
-		EXACTTRIGGER_TOUCH(this, this.enemy);
-
 	if (this.noise && this.noise != "")
-	{
-		_sound (this.enemy, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
-	}
+		_sound (actor, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
 	// don't trigger again until reset
 	this.takedamage = DAMAGE_NO;
 
-	SUB_UseTargets(this, this.enemy, this.goalentity);
+	SUB_UseTargets(this, actor, trigger);
 
-	if (IS_GAMETYPE(CTS) && IS_CLIENT(this.enemy))
+	if (IS_GAMETYPE(CTS) && IS_CLIENT(actor))
 	{
 		// store the client-specific trigger time
 		string triggertime = sprintf("%15.14g", time); // 16b, perfect precision until timelimit_max @ <= 512hz (32768 sec)
-		int cnum = etof(this.enemy);
+		int cnum = etof(actor);
 		int bsize = buf_getsize(this.triggertimes);
 		if (bsize >= cnum) // already got a slot
 			bufstr_set(this.triggertimes, cnum - 1, triggertime);
@@ -73,107 +39,136 @@ void multi_trigger(entity this, bool exacttrigger)
 	else if (this.wait > 0)
 	{
 		setthink(this, multi_wait);
-		this.nextthink = time + this.wait;
+		this.nextthink = time + this.wait + this.rnd * crandom();
 	}
 	else if (this.wait < -1 && !q3compat) // xon maps only: no waiting
 	{
 		multi_wait(this); // waiting finished
 	}
-	else
+	else // wait indefinitely
 	{
-		if (IS_GAMETYPE(CTS)) // client-specific .wait timers
-			this.nextthink = stof("inf"); // clients can trigger again after respawning, disabled for other touchers
+		if (IS_GAMETYPE(CTS)) // uses client-specific .wait timers above
+			this.nextthink = stof("inf"); // disabled for non-client touchers
 		else
 		{
-			// we can't just delete(this) here, because this is a touch function
-			// called while C code is looping through area links...
-			settouch(this, func_null);
+			if (this.solid == SOLID_TRIGGER)
+			{
+				this.solid = SOLID_NOT;
+				setorigin(this, this.origin);
+			}
 			this.use = func_null;
 		}
 	}
 }
 
+bool multi_conds(entity this, entity actor)
+{
+	if (q3compat)
+	{
+		if (AVAILABLE_TEAMS == 2)
+		// This feature isn't mentioned in entities.def but it's in the source.
+		// Xonotic has given these spawnflags other meanings.
+		if(((this.spawnflags & 1) && actor.team != NUM_TEAM_1) // not on red
+		|| ((this.spawnflags & 2) && actor.team != NUM_TEAM_2)) // not on blue
+			return false;
+	}
+	else
+	{
+		if (this.team)
+		if (((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != actor.team))
+			return false;
+
+		if ((this.spawnflags & ONLY_PLAYERS) && !IS_PLAYER(actor))
+			return false;
+	}
+
+	// In Q3 .wait <= 0 is forever,
+	// in Xonotic .wait == -1 means forever and == -2 means don't wait at all.
+	if (IS_GAMETYPE(CTS) && IS_CLIENT(actor))
+	{
+		// check the client-specific trigger time
+		int cnum = etof(actor);
+		if (buf_getsize(this.triggertimes) >= cnum) // buffer slot exists
+		{
+			float triggertime = stof(bufstr_get(this.triggertimes, cnum - 1));
+			if (actor.spawn_time <= triggertime) // havn't respawned since triggering
+			{
+				if ((this.wait <= 0 && (q3compat || this.wait >= -1)) // wait forever (until respawn in CTS)
+				|| triggertime + this.wait + this.rnd * crandom() > time) // too soon
+					return false;
+			}
+		}
+	}
+	else if (this.nextthink > time)
+		return false;		// allready been triggered
+
+	return true;
+}
+
 void multi_use(entity this, entity actor, entity trigger)
 {
-	this.goalentity = trigger;
-	this.enemy = actor;
-	multi_trigger(this, false);
+	if (multi_conds(this, actor))
+		multi_trigger(this, actor, trigger);
 }
 
 void multi_touch(entity this, entity toucher)
 {
-	if(!q3compat && !(this.spawnflags & ALL_ENTITIES) && !toucher.iscreature)
+	if (!q3compat)
 	{
+		if (!(this.spawnflags & ALL_ENTITIES) && !toucher.iscreature)
+			return;
+
+		// if the trigger has an angles field, check player's facing direction
+		if (this.movedir != '0 0 0')
+		{
+			makevectors (toucher.angles);
+			if (v_forward * this.movedir < 0)
+				return;		// not facing the right way
+		}
+
+		// if the trigger has pressed keys, check that the player is pressing those keys
+		if (this.pressedkeys && IS_PLAYER(toucher)) // only for players
+		if (!(CS(toucher).pressedkeys & this.pressedkeys))
+			return;
+	}
+
+	if (!multi_conds(this, toucher))
 		return;
-	}
 
-	if (q3compat && AVAILABLE_TEAMS == 2)
-	{
-		// This feature isn't mentioned in entities.def but it's in the source.
-		// Xonotic has given these spawnflags other meanings.
-		if(((this.spawnflags & 1) && toucher.team != NUM_TEAM_1) // not on red
-		|| ((this.spawnflags & 2) && toucher.team != NUM_TEAM_2)) // not on blue
-			return;
-	}
-	else if (this.team)
-	{
-		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != toucher.team))
-		{
-			return;
-		}
-	}
+	EXACTTRIGGER_TOUCH(this, toucher);
 
-	// if the trigger has an angles field, check player's facing direction
-	if (this.movedir != '0 0 0')
-	{
-		makevectors (toucher.angles);
-		if (v_forward * this.movedir < 0)
-			return;		// not facing the right way
-	}
-
-	// if the trigger has pressed keys, check that the player is pressing those keys
-	if(this.pressedkeys && IS_PLAYER(toucher)) // only for players
-	{
-		if(!(CS(toucher).pressedkeys & this.pressedkeys))
-		{
-			return;
-		}
-	}
-
-	this.enemy = toucher;
-	this.goalentity = toucher;
-	multi_trigger(this, true);
+	multi_trigger(this, toucher, toucher);
 }
 
 void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(!this.takedamage)
+	if (!this.takedamage)
 		return;
-	if(this.spawnflags & NOSPLASH)
+	if (this.spawnflags & NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	if(this.team)
-		if(((this.spawnflags & INVERT_TEAMS) == 0) == (this.team != attacker.team))
-			return;
+
+	if (!multi_conds(this, attacker))
+		return;
+
 	TakeResource(this, RES_HEALTH, damage);
 	if (GetResource(this, RES_HEALTH) <= 0)
-	{
-		this.enemy = attacker;
-		this.goalentity = inflictor;
-		multi_trigger(this, false);
-	}
+		multi_trigger(this, attacker, inflictor);
 }
 
 void multi_reset(entity this)
 {
-	if (q3compat || !(this.spawnflags & SPAWNFLAG_NOTOUCH))
-		settouch(this, multi_touch);
 	if (this.max_health)
 	{
 		SetResourceExplicit(this, RES_HEALTH, this.max_health);
 		this.takedamage = DAMAGE_YES;
-		this.solid = SOLID_BBOX;
 	}
+	else if (q3compat || !(this.spawnflags & SPAWNFLAG_NOTOUCH))
+	{
+		this.solid = SOLID_TRIGGER;
+		setorigin(this, this.origin);
+	}
+
 	setthink(this, func_null);
 	this.nextthink = 0;
 	this.team = this.team_saved;
@@ -206,17 +201,19 @@ spawnfunc(trigger_multiple)
 	if(this.noise && this.noise != "")
 		precache_sound(this.noise);
 
-	if (q3compat)
+	if (!this.wait)
 	{
-		if (!this.wait)
-		{
-			string s = GetField_fullspawndata(this, "wait", false);
-			if (!s || s == "") // it's really not set ("0" or "foo" waits forever)
-				this.wait = 0.5;
-		}
+		if (q3compat)
+			G_SpawnFloat("wait", 0.5, this, wait); // "0" or "foo" waits forever like < 0
+		else
+			this.wait = 0.2;
 	}
-	else if (!this.wait)
-		this.wait = 0.2;
+	G_SpawnFloat("random", 0, this, rnd);
+	if (this.rnd >= this.wait && this.wait >= 0)
+	{
+		this.rnd = this.wait - FRAMETIME_Q3;
+		LOG_WARNF("trigger_multiple has random >= wait\n");
+	}
 
 	this.use = multi_use;
 

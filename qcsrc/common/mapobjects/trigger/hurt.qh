@@ -1,6 +1,11 @@
 #pragma once
 
 #ifdef SVQC
+const int HURT_START_OFF = BIT(0);
+const int HURT_TOGGLE = BIT(1);
+const int HURT_SILENT = BIT(2); // not implemented as we have no trigger_hurt sound yet
+const int HURT_NO_PROTECTION = BIT(3); // not implemented as it's mostly useless
+                                       // (Q3 comments are wrong: doesn't bypass armour or powerups, only god mode)
 const int HURT_SLOW = BIT(4);
 
 bool tracebox_hits_trigger_hurt(vector start, vector e_min, vector e_max, vector end);
