@@ -1,6 +1,13 @@
 #include "napalm.qh"
 
 #ifdef SVQC
+bool napalm_damage_cond(entity e)
+{
+	return (e.takedamage == DAMAGE_AIM
+		&& (e != WarpZone_SearchInRadius_otherent.realowner || autocvar_g_nades_napalm_selfdamage)
+		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent))
+		&& !STAT(FROZEN, e));
+}
 void napalm_damage(entity this, float rad, float damage, float edgedamage, float burntime)
 {
 	if (damage < 0)
@@ -12,25 +19,22 @@ void napalm_damage(entity this, float rad, float damage, float edgedamage, float
 	float last_dist = 0;
 	// optimize code by comparing squared distances and avoiding vlen and sqrt calls as much as possible
 	float rad2 = rad * rad;
-	for (entity e = WarpZone_FindRadius(this.origin, rad, true); e; e = e.chain)
-		if (e.takedamage == DAMAGE_AIM
-		&& (this.realowner != e || autocvar_g_nades_napalm_selfdamage)
-		&& (!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
-		&& !STAT(FROZEN, e))
+	WarpZone_SearchInRadius_otherent = this;
+	for (entity e = WarpZone_SearchInRadius(this.origin, rad, MOVE_NOMONSTERS, napalm_damage_cond); e; e = e.chain)
+	{
+		vector p = e.origin;
+		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
+		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
+		p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
+		float dist2 = vlen2(WarpZone_UnTransformOrigin(e, this.origin) - p);
+		if (dist2 < rad2)
 		{
-			vector p = e.origin;
-			p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
-			p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
-			p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
-			float dist2 = vlen2(WarpZone_UnTransformOrigin(e, this.origin) - p);
-			if (dist2 < rad2)
-			{
-				e.fireball_impactvec = p;
-				last = e;
-				last_dist = sqrt(dist2); // won't be recalculated if this entity is the only or last one found
-				RandomSelection_AddEnt(e, 1 / (1 + last_dist), !StatusEffects_active(STATUSEFFECT_Burning, e));
-			}
+			e.fireball_impactvec = p;
+			last = e;
+			last_dist = sqrt(dist2); // won't be recalculated if this entity is the only or last one found
+			RandomSelection_AddEnt(e, 1 / (1 + last_dist), !StatusEffects_active(STATUSEFFECT_Burning, e));
 		}
+	}
 	if (RandomSelection_chosen_ent)
 	{
 		float dist;
