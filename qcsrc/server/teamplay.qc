@@ -332,23 +332,13 @@ bool MoveToTeam(entity client, int team_index, int type)
 	//PrintToChatAll(sprintf("MoveToTeam: %s, %f", client.netname, team_index));
 	int lockteams_backup = lockteams;  // backup any team lock
 	lockteams = 0;  // disable locked teams
-	if (!SetPlayerTeam(client, team_index, type))
-	{
-		lockteams = lockteams_backup;  // restore the team lock
-		return false;
-	}
+	return = SetPlayerTeam(client, team_index, type);
 	lockteams = lockteams_backup;  // restore the team lock
-	return true;
 }
 
 bool Player_HasRealForcedTeam(entity player)
 {
-	return player.team_forced > TEAM_FORCE_DEFAULT;
-}
-
-int Player_GetForcedTeamIndex(entity player)
-{
-	return player.team_forced;
+	return Player_GetForcedTeamIndex(player) > TEAM_FORCE_DEFAULT;
 }
 
 void Player_SetForcedTeamIndex(entity player, int team_index)
@@ -376,115 +366,58 @@ void Player_SetForcedTeamIndex(entity player, int team_index)
 	}
 }
 
-void Player_DetermineForcedTeam(entity player)
+int Player_GetForcedTeamIndex(entity player)
 {
+	// NB: this is intended to work in !teamplay too
+
+	if (player.team_forced != TEAM_FORCE_DEFAULT)
+		return player.team_forced; // internally forced spec set by minigames etc wins
+
 	if (autocvar_g_campaign)
 	{
 		if (IS_REAL_CLIENT(player)) // only players, not bots
 		{
 			if (Team_IsValidIndex(autocvar_g_campaign_forceteam))
-			{
-				player.team_forced = autocvar_g_campaign_forceteam;
-			}
+				return autocvar_g_campaign_forceteam;
 			else
-			{
-				player.team_forced = TEAM_FORCE_DEFAULT;
-			}
+				return TEAM_FORCE_DEFAULT;
 		}
 	}
 	else if (PlayerInList(player, autocvar_g_forced_team_red))
-	{
-		player.team_forced = 1;
-	}
+		return 1;
 	else if (PlayerInList(player, autocvar_g_forced_team_blue))
-	{
-		player.team_forced = 2;
-	}
+		return 2;
 	else if (PlayerInList(player, autocvar_g_forced_team_yellow))
-	{
-		player.team_forced = 3;
-	}
+		return 3;
 	else if (PlayerInList(player, autocvar_g_forced_team_pink))
-	{
-		player.team_forced = 4;
-	}
+		return 4;
 	else
 	{
 		switch (autocvar_g_forced_team_otherwise)
 		{
 			case "red":
-			{
-				player.team_forced = 1;
-				break;
-			}
+				return 1;
 			case "blue":
-			{
-				player.team_forced = 2;
-				break;
-			}
+				return 2;
 			case "yellow":
-			{
-				player.team_forced = 3;
-				break;
-			}
+				return 3;
 			case "pink":
-			{
-				player.team_forced = 4;
-				break;
-			}
+				return 4;
 			case "spectate":
 			case "spectator":
-			{
-				player.team_forced = TEAM_FORCE_SPECTATOR;
-				break;
-			}
-			default:
-			{
-				player.team_forced = TEAM_FORCE_DEFAULT;
-				break;
-			}
+				return TEAM_FORCE_SPECTATOR;
 		}
 	}
-	if (!teamplay && Player_HasRealForcedTeam(player))
-	{
-		player.team_forced = TEAM_FORCE_DEFAULT;
-	}
+	return TEAM_FORCE_DEFAULT;
 }
 
 void TeamBalance_JoinBestTeam(entity player)
 {
 	//PrintToChatAll(sprintf("TeamBalance_JoinBestTeam: %s", player.netname));
-	if (!teamplay)
-	{
-		return;
-	}
-	if (player.bot_forced_team)
-	{
-		return;
-	}
 	entity balance = TeamBalance_CheckAllowedTeams(player);
-	if (Player_HasRealForcedTeam(player))
-	{
-		int forced_team_index = player.team_forced;
-		bool is_team_allowed = TeamBalance_IsTeamAllowedInternal(balance,
-			forced_team_index);
-		TeamBalance_Destroy(balance);
-		if (!is_team_allowed)
-		{
-			return;
-		}
-		if (!SetPlayerTeam(player, forced_team_index, TEAM_CHANGE_AUTO))
-		{
-			return;
-		}
-		return;
-	}
 	int best_team_index = TeamBalance_FindBestTeam(balance, player, true);
 	TeamBalance_Destroy(balance);
-	if (!SetPlayerTeam(player, best_team_index, TEAM_CHANGE_AUTO))
-	{
-		return;
-	}
+	SetPlayerTeam(player, best_team_index, TEAM_CHANGE_AUTO);
 }
 
 entity TeamBalance_CheckAllowedTeams(entity for_whom)
@@ -583,15 +516,10 @@ entity TeamBalance_CheckAllowedTeams(entity for_whom)
 	}
 
 	// if player has a forced team, ONLY allow that one
-	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
-	{
-		if (for_whom.team_forced == i &&
-			TeamBalance_IsTeamAllowedInternal(balance, i))
-		{
-			TeamBalance_BanTeamsExcept(balance, i);
-			break;
-		}
-	}
+	int i = Player_GetForcedTeamIndex(for_whom);
+	if (i != TEAM_FORCE_DEFAULT)
+		TeamBalance_BanTeamsExcept(balance, i);
+
 	balance.m_team_balance_state = TEAM_BALANCE_TEAMS_CHECKED;
 	return balance;
 }
@@ -867,8 +795,9 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			int team_num = it.killindicator_teamchange > 0 ? it.killindicator_teamchange : it.team;
 			if (team_num <= 0)
 			{
-				if (Player_HasRealForcedTeam(it)) // Do we really need this? Probably not.
-					team_num = Team_IndexToTeam(it.team_forced); // reserve the spot
+				int forced_team_index = Player_GetForcedTeamIndex(it);
+				if (forced_team_index > TEAM_FORCE_DEFAULT) // Do we really need this? Probably not.
+					team_num = Team_IndexToTeam(forced_team_index); // reserve the spot
 				else
 					continue;
 			}
@@ -892,14 +821,12 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 		});
 
-		// deduct bots that would leave if a player joined their team, distributing the deductions between teams
-		// bones_was_here: not sure if it's safe to apply this to .m_num_players so using .m_num_players_net
-		for (int i = 1, bots_todo = bots_would_leave; bots_todo > 0 && i <= AVAILABLE_TEAMS; ++i)
+		// Deduct bots that would leave if a player joined their team;
+		// to ensure a player can join we aim to deduct at least one from each team which has some.
+		for (int i = 1, bots_maxperteam = ceil(bots_would_leave / AVAILABLE_TEAMS); i <= AVAILABLE_TEAMS; ++i)
 		{
 			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
-			int to_remove = min(team_ent.m_num_bots, ceil(bots_todo / AVAILABLE_TEAMS));
-			team_ent.m_num_players_net -= to_remove;
-			bots_todo -= to_remove;
+			team_ent.m_num_players_net -= min(team_ent.m_num_bots, bots_maxperteam);
 		}
 
 		// Calculate inverse-variance weighted mean skill ratings,
@@ -971,19 +898,15 @@ int TeamBalance_FindBestTeam(entity balance, entity player, bool ignore_player)
 	{
 		LOG_FATAL("Team balance entity is not initialized.");
 	}
+
 	// count how many players are in each team
-	if (ignore_player)
-	{
-		TeamBalance_GetTeamCounts(balance, player);
-	}
-	else
-	{
-		TeamBalance_GetTeamCounts(balance, NULL);
-	}
+	TeamBalance_GetTeamCounts(balance, ignore_player ? player : NULL);
+
 	int team_bits = TeamBalance_FindBestTeams(balance, player, true);
 	if (team_bits == 0)
 	{
-		LOG_FATALF("No teams available for %s\n", GetGametype());
+		LOG_WARNF("BUG or MISCONFIGURATION: No teams available for %s\n", player.netname);
+		return -1; // only spec
 	}
 
 	// don't punish players for UI mistakes by changing teams randomly when already on a best team
@@ -1033,7 +956,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 		// This picks the team(s) whose weighted mean skill differs the most from the joining player's skill,
 		// unless they're all close enough in which case it picks smaller team(s).
 		// Warmup-only as it must unbalance team sizes in extreme cases, swaps needed should be minimal.
-		if (warmup_stage && autocvar_sv_teamnagger && autocvar_g_balance_teams_skill)
+		if (warmup_stage && autocvar_sv_teamnagger && autocvar_g_balance_teams_skill && IS_REAL_CLIENT(player))
 		{
 			if (!player_skill_mu)
 			{
@@ -1049,17 +972,15 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 			team_i_z = fabs(team_i_z);
 			team_p_z = fabs(team_p_z);
 
-			int team_i_size = IS_REAL_CLIENT(player) ? team_i.m_num_players_net : team_i.m_num_players;
-			int team_p_size = IS_REAL_CLIENT(player) ? team_p.m_num_players_net : team_p.m_num_players;
-
-			if ((!significant && team_i_size < team_p_size)
-			|| ((significant || team_i_size == team_p_size) && team_i_z > team_p_z))
+			// NB: if bots were to use this code they'd need .m_num_players instead of .m_num_players_net
+			if ((!significant && team_i.m_num_players_net < team_p.m_num_players_net)
+			|| ((significant || team_i.m_num_players_net == team_p.m_num_players_net) && team_i_z > team_p_z))
 			{
 				team_bits = Team_IndexToBit(i);
 				previous_team = i;
 			}
 			else if (team_i_z == team_p_z // unlikely with humans, normal with all bots
-			&& team_i_size == team_p_size)
+			&& team_i.m_num_players_net == team_p.m_num_players_net)
 			{
 				team_bits |= Team_IndexToBit(i);
 				previous_team = i;

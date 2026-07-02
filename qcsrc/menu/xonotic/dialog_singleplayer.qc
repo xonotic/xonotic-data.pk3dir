@@ -172,7 +172,7 @@ void XonoticSingleplayerDialog_fill(entity me)
 		me.TDempty(me, me.columns * 1/13);
 		me.TD(me, 1, me.columns * 5/13, e = makeXonoticLeaveMatchButton('0 0 0', 0));
 		me.TDempty(me, me.columns * 1/13);
-		me.TD(me, 1, me.columns * 5/13, e = makeXonoticButton(_("Play campaign!"), '0 0 0'));
+		me.TD(me, 1, me.columns * 5/13, e = makeXonoticButton(_("Play campaign!"), '0 1 0'));
 			e.onClick = CampaignList_LoadMap;
 			e.onClickEntity = me.campaignBox;
 }
