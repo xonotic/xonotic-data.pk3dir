@@ -293,39 +293,36 @@ void teleport_findtarget(entity this)
 
 entity Teleport_Find(vector mi, vector ma)
 {
-	IL_EACH(g_teleporters, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL),
-	{
-		return it;
-	});
+	IL_EACH(g_teleporters, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL), return it);
 	return NULL;
 }
 
-void WarpZone_PostTeleportPlayer_Callback(entity pl)
+void WarpZone_PostTeleportPlayer_Callback(entity e)
 {
+	// e isn't necessarily a player
 #ifdef SVQC
-	makevectors(pl.angles);
-	Reset_ArcBeam(pl, v_forward);
-	UpdateCSQCProjectileAfterTeleport(pl);
-	UpdateItemAfterTeleport(pl);
-    if (IS_PLAYER(pl)) anticheat_fixangle(pl);
+	makevectors(e.angles);
+	Reset_ArcBeam(e, v_forward);
+	UpdateCSQCProjectileAfterTeleport(e);
+	UpdateItemAfterTeleport(e);
+	if (IS_PLAYER(e))
+		anticheat_fixangle(e);
 #endif
 	// "disown" projectiles after teleport
-	if(pl.owner)
-	if(pl.owner == pl.realowner)
+	if (e.owner && e.owner == e.realowner
+	&& !(e.flags & FL_STATICOWNER))
 	{
 	#ifdef SVQC
-		if(!(pl.flags & FL_PROJECTILE))
-	#elif defined(CSQC)
-		if(!(pl.flags & BIT(15))) // FL_PROJECTILE
+		if (!(e.flags & FL_PROJECTILE))
+	#elifdef CSQC
+		if (!(e.flags & BIT(15))) // FL_PROJECTILE
 	#endif
-			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".");
-		pl.owner = NULL;
+			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", e.classname, ".");
+		e.owner = NULL;
 	}
-	if(IS_PLAYER(pl))
-	{
+#ifdef SVQC
+	if (IS_PLAYER(e))
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
-	#ifdef SVQC
-		pl.oldvelocity = pl.velocity;
-	#endif
-	}
+		e.oldvelocity = e.velocity;
+#endif
 }

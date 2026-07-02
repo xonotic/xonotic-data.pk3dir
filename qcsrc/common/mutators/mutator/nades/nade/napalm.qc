@@ -1,47 +1,46 @@
 #include "napalm.qh"
 
 #ifdef SVQC
+bool napalm_damage_cond(entity e)
+{
+	return (e.takedamage == DAMAGE_AIM
+		&& (e != WarpZone_SearchInRadius_otherent.realowner || autocvar_g_nades_napalm_selfdamage)
+		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent))
+		&& !STAT(FROZEN, e));
+}
 void napalm_damage(entity this, float rad, float damage, float edgedamage, float burntime)
 {
-	if (damage < 0)
+	// NOTE: W_Fireball_LaserPlay uses similar code, please keep them in sync
+	if (damage <= 0)
 		return;
 
-	// NOTE: W_Fireball_LaserPlay uses similar code, please keep them in sync
 	RandomSelection_Init();
 	entity last = NULL;
-	float last_dist = 0;
-	// optimize code by comparing squared distances and avoiding vlen and sqrt calls as much as possible
 	float rad2 = rad * rad;
-	for (entity e = WarpZone_FindRadius(this.origin, rad, true); e; e = e.chain)
-		if (e.takedamage == DAMAGE_AIM
-		&& (this.realowner != e || autocvar_g_nades_napalm_selfdamage)
-		&& (!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
-		&& !STAT(FROZEN, e))
+	WarpZone_SearchInRadius_otherent = this;
+	for (entity e = WarpZone_SearchInRadius(this.origin, rad, MOVE_NOMONSTERS, napalm_damage_cond); e; e = e.chain)
+	{
+		// adjust the hit location to be at the entity's center plus some randomness
+		vector p = e.origin + e.mins;
+		p.x += random() * (e.maxs.x - e.mins.x);
+		p.y += random() * (e.maxs.y - e.mins.y);
+		p.z += random() * (e.maxs.z - e.mins.z);
+		float dist2 = vlen2(this.origin - WarpZone_UnTransformOrigin(e, p));
+		if (dist2 <= rad2) // there's a chance this is false, so we optimize by only calling sqrt if true
 		{
-			vector p = e.origin;
-			p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
-			p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
-			p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
-			float dist2 = vlen2(WarpZone_UnTransformOrigin(e, this.origin) - p);
-			if (dist2 < rad2)
-			{
-				e.fireball_impactvec = p;
-				last = e;
-				last_dist = sqrt(dist2); // won't be recalculated if this entity is the only or last one found
-				RandomSelection_AddEnt(e, 1 / (1 + last_dist), !StatusEffects_active(STATUSEFFECT_Burning, e));
-			}
+			e.WarpZone_findradius_nearest = p; // store the new location here since this field isn't needed anymore
+			e.dmg_radius = sqrt(dist2);
+			last = e;
+			RandomSelection_AddEnt(e, 1 / (1 + e.dmg_radius), !StatusEffects_active(STATUSEFFECT_Burning, e));
 		}
+	}
 	if (RandomSelection_chosen_ent)
 	{
-		float dist;
-		if (RandomSelection_chosen_ent == last)
-			dist = last_dist; // already calculated
-		else
-			dist = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
-		dist = damage + (edgedamage - damage) * (dist / rad);
+		float dist = damage + (edgedamage - damage) * (RandomSelection_chosen_ent.dmg_radius / rad);
 		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, dist * burntime, burntime, this.projectiledeathtype);
-		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.fireball_impactvec - this.origin, 1);
+		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.WarpZone_findradius_nearest);
+		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.WarpZone_findradius_nearest - this.origin, 1);
+		// NOTE: effect can't work through warpzones since WarpZone_TraceLine isn't guaranteed to reach the adjusted .WarpZone_findradius_nearest
 	}
 }
 

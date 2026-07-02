@@ -76,8 +76,9 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 		NULL
 	);
 
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_wyvern_attack_fireball_radius, it.takedamage == DAMAGE_AIM && it != own,
-		Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype));
+	for (entity head = WarpZone_FindRadius(this.origin, autocvar_g_monster_wyvern_attack_fireball_radius, false); head; head = head.chain)
+		if (head != own && head.takedamage == DAMAGE_AIM)
+			Fire_AddDamage(head, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
 
 	delete(this);
 }

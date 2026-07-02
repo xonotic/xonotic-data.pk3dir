@@ -330,7 +330,7 @@ void Draw_GrapplingHook(entity this)
 	Draw_GrapplingHook_trace_callback_rnd = offset;
 	Draw_GrapplingHook_trace_callback_rgb = rgb;
 	Draw_GrapplingHook_trace_callback_a = intensity;
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, MOVE_NOTHING, NULL, NULL, Draw_GrapplingHook_trace_callback);
+	WarpZone_TraceLine_ThroughZone(a, b, MOVE_NOTHING, NULL, NULL, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
 	vector atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);

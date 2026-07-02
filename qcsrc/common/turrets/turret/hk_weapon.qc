@@ -66,7 +66,7 @@ void turret_hk_missile_think(entity this)
 	if (!this.enemy)
 	{
 		// in this case, the lighter check is to validate it first, and check distance if it is valid
-		IL_EACH(g_damagedbycontents, hk_is_valid_target(this.owner, this, it),
+		IL_EACH(g_damagedbycontents, hk_is_valid_target(this.realowner, this, it),
 		{
 			if (vdist(it.origin, >, 5000))
 				continue;
@@ -86,7 +86,7 @@ void turret_hk_missile_think(entity this)
 	if (this.enemy)
 	{
 		// Close enougth to do decent damage?
-		if (vdist(this.origin - this.enemy.origin, <=, (this.owner.shot_radius * 0.25)))
+		if (vdist(this.origin - this.enemy.origin, <=, (this.realowner.shot_radius * 0.25)))
 		{
 			turret_projectile_explode(this);
 			return;
@@ -94,7 +94,7 @@ void turret_hk_missile_think(entity this)
 
 		// Get data on enemy position
 		vector pre_pos = this.enemy.origin
-			+ this.enemy.velocity * min(vlen(this.enemy.origin - this.origin) / vlen(this.velocity), 0.5);
+			+ this.enemy.velocity * min(sqrt(vlen2(this.enemy.origin - this.origin) / vlen2(this.velocity)), 0.5);
 
 		traceline(this.origin, pre_pos, true, this.enemy);
 		ve = normalize(pre_pos - this.origin);

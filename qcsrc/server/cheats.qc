@@ -301,7 +301,7 @@ float CheatCommand(entity this, int argc)
 			if(argc == 5)
 			{
 				f = stof(argv(2));
-				crosshair_trace(this);
+				crosshair_trace(this); // particles can't go through warpzones
 				start = (1-f) * this.origin + f * trace_endpos;
 				end = stov(argv(3));
 				f = stof(argv(4));
@@ -320,8 +320,7 @@ float CheatCommand(entity this, int argc)
 				effectnum = _particleeffectnum(argv(1));
 				makevectors(this.v_angle); // W_SetupShot uses v_forward
 				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0, 0);
-				traceline(w_shotorg, w_shotorg + w_shotdir * max_shot_distance, MOVE_NORMAL, this);
-				__trailparticles(this, effectnum, w_shotorg, trace_endpos);
+				WarpZone_TrailParticles(this, effectnum, w_shotorg, w_shotorg + w_shotdir * max_shot_distance);
 				DID_CHEAT();
 				break;
 			}
@@ -334,11 +333,9 @@ float CheatCommand(entity this, int argc)
 				f = stof(argv(2));
 				makevectors(this.v_angle); // W_SetupShot uses v_forward
 				W_SetupShot(this, weaponentities[0], false, false, SND_Null, CH_WEAPON_A, 0, 0);
-				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, this);
+				WarpZone_TraceLine(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NOMONSTERS, this);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
-				{
 					sprint(this, "cannot make stuff there (bad surface)\n");
-				}
 				else
 				{
 					entity e = new(func_breakable);
@@ -356,7 +353,7 @@ float CheatCommand(entity this, int argc)
 					// now, is it valid?
 					if(f == 0)
 					{
-						tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_NORMAL, e);
+						tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_NOMONSTERS, e);
 						if(trace_startsolid)
 						{
 							delete(e);
@@ -402,12 +399,14 @@ float CheatCommand(entity this, int argc)
 			setmodel(e.aiment, MDL_MARKER);
 			e.aiment.skin = 0;
 			setsize(e.aiment, '0 0 0', '0 0 0');
+			vector view_org = this.origin + this.view_ofs;
 			if(argc == 4)
 				setorigin(e.aiment, stov(argv(2)));
 			else
 			{
-				crosshair_trace(this);
+				WarpZone_crosshair_trace(this);
 				setorigin(e.aiment, trace_endpos);
+				view_org = WarpZone_TransformOrigin(WarpZone_trace_transform, view_org);
 			}
 
 			e.enemy = new(dragbox_corner_2);
@@ -415,7 +414,7 @@ float CheatCommand(entity this, int argc)
 			setmodel(e.enemy, MDL_MARKER);
 			e.enemy.skin = 1;
 			setsize(e.enemy, '0 0 0', '0 0 0');
-			end = normalize(this.origin + this.view_ofs - e.aiment.origin);
+			end = normalize(view_org - e.aiment.origin);
 			end.x = (end.x > 0) * 2 - 1;
 			end.y = (end.y > 0) * 2 - 1;
 			end.z = (end.z > 0) * 2 - 1;
@@ -452,8 +451,8 @@ float CheatCommand(entity this, int argc)
 				setorigin(e, stov(argv(2)));
 			else
 			{
-				crosshair_trace(this);
-				setorigin(e, trace_endpos + normalize(this.origin + this.view_ofs - trace_endpos));
+				WarpZone_crosshair_trace(this);
+				setorigin(e, trace_endpos + normalize(WarpZone_TransformOrigin(WarpZone_trace_transform, this.origin + this.view_ofs) - trace_endpos));
 				move_out_of_solid(e);
 			}
 
@@ -471,7 +470,8 @@ float CheatCommand(entity this, int argc)
 		case "drag_remove":
 			IS_CHEAT(this, 0, argc, 0);
 			RandomSelection_Init();
-			crosshair_trace(this);
+			WarpZone_crosshair_trace(this);
+			// FIXME: vlens aren't warpzone-aware
 			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
@@ -493,7 +493,8 @@ float CheatCommand(entity this, int argc)
 			if(argc == 2)
 			{
 				RandomSelection_Init();
-				crosshair_trace(this);
+				WarpZone_crosshair_trace(this);
+				// FIXME: vlens aren't warpzone-aware
 				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 					RandomSelection_AddEnt(e, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
@@ -720,7 +721,7 @@ float CheatFrame(entity this)
 			{
 				// use cheat dragging if cheats are enabled
 				//if(Drag_IsDragging(this))
-					//crosshair_trace_plusvisibletriggers(this);
+					//WarpZone_crosshair_trace_plusvisibletriggers(this);
 				Drag(this, true, true);
 			}
 			else

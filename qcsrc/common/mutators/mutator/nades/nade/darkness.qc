@@ -46,21 +46,22 @@ void nade_darkness_think(entity this)
 		Send_Effect(EFFECT_DARKFIELD, this.origin, '0 0 0', 1);
 	}
 
-	float current_dark_time = this.ltime - time - 0.1;
-
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_darkness_radius, it != this && it.takedamage
-	&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0 && IS_REAL_CLIENT(it),
-	{
-		switch (autocvar_g_nades_darkness_teamcheck)
+	entity head = WarpZone_FindRadius(this.origin, autocvar_g_nades_darkness_radius, false);
+	float current_dark_time = this.ltime - this.nextthink;
+	for (; head; head = head.chain)
+		if (head != this && head.takedamage
+		&& !IS_DEAD(head) && GetResource(head, RES_HEALTH) > 0 && current_dark_time > 0 && IS_REAL_CLIENT(head))
 		{
-			case 0:  break; // affect everyone
-			default:
-			case 2:  if (SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
-			         // fall through (check case 1 condition too)
-			case 1:  if (it == this.realowner) continue; // don't affect the player who threw the nade
+			switch (autocvar_g_nades_darkness_teamcheck)
+			{
+				case 0:  break; // affect everyone
+				default:
+				case 2:  if (SAME_TEAM(head, this.realowner)) continue; // don't affect teammates
+				         // fall through (check case 1 condition too)
+				case 1:  if (head == this.realowner) continue; // don't affect the player who threw the nade
+			}
+			STAT(NADE_DARKNESS_TIME, head) = this.nextthink;
 		}
-		STAT(NADE_DARKNESS_TIME, it) = time + 0.1;
-	});
 }
 
 void nade_darkness_boom(entity this)

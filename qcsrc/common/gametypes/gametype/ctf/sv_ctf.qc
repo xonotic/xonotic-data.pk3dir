@@ -201,62 +201,63 @@ void ctf_FlagcarrierWaypoints(entity player)
 
 void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnrate)
 {
-	float current_distance = vlen((('1 0 0' * to.x) + ('0 1 0' * to.y)) - (('1 0 0' * from.x) + ('0 1 0' * from.y))); // for the sake of this check, exclude Z axis
-	float initial_height = min(autocvar_g_ctf_pass_arc_max, (flag.pass_distance * tanh(autocvar_g_ctf_pass_arc)));
-	float current_height = (initial_height * min(1, (current_distance / flag.pass_distance)));
+	float current_distance = vlen(vec2(to.x - from.x, to.y - from.y)); // for the sake of this check, exclude Z axis
+	float initial_height = min(autocvar_g_ctf_pass_arc_max, flag.pass_distance * tanh(autocvar_g_ctf_pass_arc));
+	float current_height = initial_height * min(1, current_distance / flag.pass_distance);
 	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
 
-	vector targpos;
-	if(current_height) // make sure we can actually do this arcing path
+	vector targpos = to;
+	if (current_height) // make sure we can actually do this arcing path
 	{
-		targpos = (to + ('0 0 1' * current_height));
+		targpos.z += current_height;
 		WarpZone_TraceLine(flag.origin, targpos, MOVE_NOMONSTERS, flag);
-		if(trace_fraction < 1)
+		if (trace_fraction < 1)
 		{
 			//print("normal arc line failed, trying to find new pos...");
 			WarpZone_TraceLine(to, targpos, MOVE_NOMONSTERS, flag);
-			targpos = (trace_endpos + eZ * FLAG_PASS_ARC_OFFSET_Z);
+			targpos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+			targpos.z += FLAG_PASS_ARC_OFFSET_Z;
 			WarpZone_TraceLine(flag.origin, targpos, MOVE_NOMONSTERS, flag);
-			if(trace_fraction < 1) { targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
-			/*else { print(" ^3SUCCESS^7, using new arc line.\n"); } */
+			if (trace_fraction < 1)
+			{ targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
+			/*else
+				print(" ^3SUCCESS^7, using new arc line.\n");*/
 		}
 	}
-	else { targpos = to; }
 
-	//flag.angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
+	//flag.angles = normalize(eY * (to.y - from.y));
 
 	vector desired_direction = normalize(targpos - from);
-	if(turnrate) { flag.velocity = (normalize(normalize(flag.velocity) + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); }
-	else { flag.velocity = (desired_direction * autocvar_g_ctf_pass_velocity); }
+	flag.velocity = (turnrate)
+		? normalize(normalize(flag.velocity) + desired_direction * autocvar_g_ctf_pass_turnrate) * autocvar_g_ctf_pass_velocity
+		: desired_direction * autocvar_g_ctf_pass_velocity;
 }
 
 bool ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
 {
-	if(autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
+	if (autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
 	{
 		// directional tracing only
 		float spreadlimit;
 		makevectors(passer_angle);
 
 		// find the closest point on the enemy to the center of the attack
+		vector dist = head_center - passer_center;
 		float h; // hypotenuse, which is the distance between attacker to head
 		float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
+		h = vlen(dist);
+		a = dist * v_forward;
 
-		h = vlen(head_center - passer_center);
-		a = h * (normalize(head_center - passer_center) * v_forward);
-
-		vector nearest_on_line = (passer_center + a * v_forward);
+		vector nearest_on_line = passer_center + a * v_forward;
 		float distance_from_line = vlen(nearest_to_passer - nearest_on_line);
 
-		spreadlimit = (autocvar_g_ctf_pass_radius ? min(1, (vlen(passer_center - nearest_on_line) / autocvar_g_ctf_pass_radius)) : 1);
-		spreadlimit = (autocvar_g_ctf_pass_directional_min * (1 - spreadlimit) + autocvar_g_ctf_pass_directional_max * spreadlimit);
+		spreadlimit = (autocvar_g_ctf_pass_radius ? min(1, a / autocvar_g_ctf_pass_radius) : 1);
+		spreadlimit = autocvar_g_ctf_pass_directional_min * (1 - spreadlimit) + autocvar_g_ctf_pass_directional_max * spreadlimit;
 
-		if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(head_center - passer_center) - v_forward) * RAD2DEG) <= 90))
-			{ return true; }
-		else
-			{ return false; }
+		return (spreadlimit && distance_from_line <= spreadlimit
+			&& vdist(dist * (1 / h) - v_forward, <=, 90 * DEG2RAD));
 	}
-	else { return true; }
+	return true;
 }
 
 
@@ -529,9 +530,9 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 			// findradius has already put wzn ... wz1 into receiver's warpzone parameters!
 			WarpZone_RefSys_Copy(flag, receiver);
 			WarpZone_RefSys_AddInverse(flag, receiver); // wz1^-1 ... wzn^-1 receiver
-			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, flag, (0.5 * (receiver.absmin + receiver.absmax))); // this is target origin as seen by the flag
+			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, flag, 0.5 * (receiver.absmin + receiver.absmax)); // this is target origin as seen by the flag
 
-			flag.pass_distance = vlen((('1 0 0' * targ_origin.x) + ('0 1 0' * targ_origin.y)) - (('1 0 0' *  player.origin.x) + ('0 1 0' *  player.origin.y))); // for the sake of this check, exclude Z axis
+			flag.pass_distance = vlen(vec2(targ_origin.x - player.origin.x, targ_origin.y - player.origin.y)); // for the sake of this check, exclude Z axis
 			ctf_CalculatePassVelocity(flag, targ_origin, player.origin, false);
 
 			// main
@@ -1101,7 +1102,7 @@ void ctf_FlagThink(entity this)
 
 		case FLAG_PASSING:
 		{
-			vector targ_origin = ((this.pass_target.absmin + this.pass_target.absmax) * 0.5);
+			vector targ_origin = (this.pass_target.absmin + this.pass_target.absmax) * 0.5;
 			targ_origin = WarpZone_RefSys_TransformOrigin(this.pass_target, this, targ_origin); // origin of target as seen by the flag (us)
 			WarpZone_TraceLine(this.origin, targ_origin, MOVE_NOMONSTERS, this);
 
@@ -2425,6 +2426,12 @@ MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 		{ ctf_Handle_Throw(player, NULL, DROP_NORMAL); }
 }
 
+bool ctf_Pass_cond(entity e)
+{
+	return (IS_PLAYER(e) && !IS_DEAD(e) && !IS_INDEPENDENT_PLAYER(e)
+		&& e != WarpZone_SearchInRadius_otherent && SAME_TEAM(e, WarpZone_SearchInRadius_otherent)
+		&& !e.speedrunning && !e.vehicle);
+}
 MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || game_stopped) return;
@@ -2436,52 +2443,50 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 		// pass the flag to a teammate
 		if(autocvar_g_ctf_pass && player.flagcarried.classname != "phantomflag")
 		{
-			entity head, closest_target = NULL;
-			head = WarpZone_FindRadius(player.origin, autocvar_g_ctf_pass_radius, true);
-
-			while(head) // find the closest acceptable target to pass to
+			WarpZone_SearchInRadius_otherent = player;
+			entity head = WarpZone_SearchInRadius(player.origin, autocvar_g_ctf_pass_radius, MOVE_NOMONSTERS, ctf_Pass_cond);
+			entity closest = NULL;
+			float head_dist2, closest_dist2 = 0;
+			for (; head; head = head.chain) // find the closest acceptable target to pass to
 			{
-				if(IS_PLAYER(head) && !IS_DEAD(head) && !IS_INDEPENDENT_PLAYER(head))
-				if(head != player && SAME_TEAM(head, player))
-				if(!head.speedrunning && !head.vehicle)
-				{
-					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
-					vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
-					vector passer_center = CENTER_OR_VIEWOFS(player);
+				// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in damage.qc)
+				vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
+				vector passer_center = CENTER_OR_VIEWOFS(player);
 
-					if(ctf_CheckPassDirection(head_center, passer_center, player.v_angle, head.WarpZone_findradius_nearest))
+				if (ctf_CheckPassDirection(head_center, passer_center, player.v_angle, WarpZone_UnTransformOrigin(head, head.WarpZone_findradius_nearest)))
+				{
+					if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried && head.flagcarried.classname != "phantomflag")
 					{
-						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried && head.flagcarried.classname != "phantomflag")
+						if(IS_BOT_CLIENT(head))
 						{
-							if(IS_BOT_CLIENT(head))
-							{
-								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
-								ctf_Handle_Throw(head, player, DROP_PASS);
-							}
-							else
-							{
-								Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_CTF_PASS_REQUESTED, player.netname);
-								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
-							}
-							player.throw_antispam = time + autocvar_g_ctf_pass_wait;
-							return true;
+							Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
+							ctf_Handle_Throw(head, player, DROP_PASS);
 						}
-						else if(player.flagcarried && !head.flagcarried)
+						else
 						{
-							if(closest_target)
-							{
-								vector closest_target_center = WarpZone_UnTransformOrigin(closest_target, CENTER_OR_VIEWOFS(closest_target));
-								if(vlen2(passer_center - head_center) < vlen2(passer_center - closest_target_center))
-									{ closest_target = head; }
-							}
-							else { closest_target = head; }
+							Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_CTF_PASS_REQUESTED, player.netname);
+							Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
+						}
+						player.throw_antispam = time + autocvar_g_ctf_pass_wait;
+						return true;
+					}
+					else if(player.flagcarried && !head.flagcarried)
+					{
+						head_dist2 = vlen2(passer_center - head_center);
+						if (!closest || head_dist2 < closest_dist2) // new closest
+						{
+							closest_dist2 = head_dist2;
+							closest = head;
 						}
 					}
 				}
-				head = head.chain;
 			}
 
-			if(closest_target) { ctf_Handle_Throw(player, closest_target, DROP_PASS); return true; }
+			if (closest)
+			{
+				ctf_Handle_Throw(player, closest, DROP_PASS);
+				return true;
+			}
 		}
 
 		// throw the flag in front of you

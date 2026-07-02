@@ -13,14 +13,14 @@ float warpzone_warpzones_exist;
 float warpzone_cameras_exist;
 
 .float warpzone_isboxy;
-.vector warpzone_shift;
+.vector warpzone_transform; ///< Both a warpzone property, and set on entities found by WarpZone_SearchInRadius
+.vector warpzone_shift;     ///< Both a warpzone property, and set on entities found by WarpZone_SearchInRadius
 .vector warpzone_origin;
 .vector warpzone_angles;
 .vector warpzone_forward;
 .vector warpzone_targetorigin;
 .vector warpzone_targetangles;
 .vector warpzone_targetforward;
-.vector warpzone_transform;
 .float warpzone_fadestart;
 .float warpzone_fadeend;
 void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang);
@@ -33,30 +33,44 @@ void WarpZone_MakeAllSolid();
 void WarpZone_MakeAllOther();
 
 #define MOVE_NOTHING -1
-entity WarpZone_trace_forent; // temp, callback is allowed to change it
-USING(WarpZone_trace_callback_t, void(vector start, vector hit, vector end)); // called on every elementary trace
-var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
-entity WarpZone_trace_transform; // transform accumulator during a trace
-entity WarpZone_trace_firstzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
-entity WarpZone_trace_lastzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
-vector WarpZone_tracetoss_velocity; // ending velocity of a tracetoss (post-transform)
-float WarpZone_tracetoss_time; // duration of toss (approximate)
-void WarpZone_TraceBox(vector org, vector min, vector max, vector end, float nomonsters, entity forent);
+entity WarpZone_trace_forent; ///< Temp, callback is allowed to change it
+USING(WarpZone_trace_callback_t, void(vector start, vector hit, vector end)); // Called on every elementary trace
+WarpZone_trace_callback_t te_csqc_trace_callback;
+var void te_csqc_trace_callback_func(vector start, vector hit);
+entity WarpZone_trace_transform; ///< Transform accumulator during a trace
+entity WarpZone_trace_firstzone; ///< First warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
+entity WarpZone_trace_lastzone; ///< First warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
+vector WarpZone_tracetoss_velocity; ///< Ending velocity of a tracetoss (post-transform)
+float WarpZone_tracetoss_time; ///< Duration of toss (approximate)
+
 void WarpZone_TraceBox_ThroughZone(vector org, vector min, vector max, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb);
-void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent);
-void WarpZone_TraceToss(entity e, entity forent);
+#define WarpZone_TraceLine_ThroughZone(org, end, nomonsters, forent, zone, cb) \
+	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, nomonsters, forent, zone, cb)
+#define WarpZone_TraceBox(org, mi, ma, end, nomonsters, forent) \
+	WarpZone_TraceBox_ThroughZone(org, mi, ma, end, nomonsters, forent, NULL, func_null)
+#define WarpZone_TraceLine(org, end, nomonsters, forent) \
+	WarpZone_TraceBox(org, '0 0 0', '0 0 0', end, nomonsters, forent)
+#define WarpZone_TraceToss(e, forent) \
+	WarpZone_TraceToss_ThroughZone(e, forent, NULL, func_null)
 void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb);
 void WarpZone_TrailParticles(entity own, float eff, vector org, vector end);
 #ifdef CSQC
 void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags);
 #endif
 
+// .warpzone_transform and .warpzone_shift are also set on entities found by WarpZone_SearchInRadius
 .vector WarpZone_findradius_dist;
 .vector WarpZone_findradius_nearest;
 // also set: warpzone parameters, so WarpZone_TransformOrigin can transform vectors from blast's to victim's system
-.vector WarpZone_findradius_findorigin;
-.float WarpZone_findradius_findradius;
-entity WarpZone_FindRadius(vector org, float radius, float needlineofsight);
+//.vector WarpZone_findradius_findorigin;
+//.float WarpZone_findradius_findradius;
+USING(WarpZone_FindRadius_cond_callback_t, bool(entity e)); // called on every entity found by WarpZone_SearchInRadius
+/// Modified findradius aware of warpzones, that only includes entities that meet the "cb" criteria.
+/// Most useful if lineofsight, when searching with very specific criteria, or over a range likely to contain many entities.
+entity WarpZone_SearchInRadius(vector org, float radius, float nomonsters, WarpZone_FindRadius_cond_callback_t cb);
+noref entity WarpZone_SearchInRadius_otherent; ///< Free to use in the callback
+/// Modified findradius aware of warpzones
+#define WarpZone_FindRadius(org, radius, needlineofsight) WarpZone_SearchInRadius(org, radius, ((needlineofsight) ? MOVE_NOMONSTERS : MOVE_NOTHING), func_null)
 
 float WarpZone_PlaneDist(entity wz, vector v);
 float WarpZone_TargetPlaneDist(entity wz, vector v);
@@ -71,8 +85,10 @@ vector WarpZone_UnTransformVAngles(entity wz, vector v);
 
 // reference systems (chained warpzone transforms)
 void WarpZone_RefSys_Clear(entity me); // R := id
-void WarpZone_RefSys_Add(entity me, entity wz); // me.R := wz me.R
-void WarpZone_RefSys_AddInverse(entity me, entity wz); // me.R := wz^-1 me.R
+#define WarpZone_RefSys_Add(me, wz) /* me.R := wz me.R */ \
+	WarpZone_RefSys_AddTransform(me, (wz).warpzone_transform, (wz).warpzone_shift)
+#define WarpZone_RefSys_AddInverse(me, wz) /* me.R := wz^-1 me.R */ \
+	WarpZone_RefSys_AddInverseTransform(me, (wz).warpzone_transform, (wz).warpzone_shift)
 void WarpZone_RefSys_AddTransform(entity me, vector t, vector s); // me.R := [t s] me.R
 void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s); // me.R := [t s]^-1 me.R
 
@@ -114,5 +130,5 @@ int WarpZoneLib_MoveOutOfSolid(entity e);
 bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher, bool touchfunc);
 
 // WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH(e, t) if (!WarpZoneLib_ExactTrigger_Touch((e), (t), true)) return // intended for use in touch funcs
+#define EXACTTRIGGER_TOUCH(e, t) if (!WarpZoneLib_ExactTrigger_Touch((e), (t), true)) return /* intended for use in touch funcs */
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init(this, true)

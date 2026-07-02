@@ -2613,6 +2613,11 @@ void ObserverOrSpectatorThink(entity this)
 		this.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
+bool PlayerUseKey_EnterVehicle_cond(entity e)
+{
+	return (IS_VEHICLE(e) && !IS_DEAD(e) && e.takedamage != DAMAGE_NO
+		&& (!e.owner || ((e.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(e.owner, WarpZone_SearchInRadius_otherent))));
+}
 void PlayerUseKey(entity this)
 {
 	if (!IS_PLAYER(this))
@@ -2630,29 +2635,23 @@ void PlayerUseKey(entity this)
 	{
 		if(!game_stopped && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 		{
-			entity head, closest_target = NULL;
-			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
-
-			while(head) // find the closest acceptable target to enter
+			WarpZone_SearchInRadius_otherent = this;
+			entity head = WarpZone_SearchInRadius(this.origin, autocvar_g_vehicles_enter_radius, MOVE_NOMONSTERS, PlayerUseKey_EnterVehicle_cond);
+			entity closest = NULL;
+			float head_dist2, closest_dist2 = 0;
+			for (; head; head = head.chain) // find the closest acceptable target to enter
 			{
-				if(IS_VEHICLE(head) && !IS_DEAD(head) && head.takedamage != DAMAGE_NO)
-				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this)))
+				head_dist2 = vlen2(this.origin - WarpZone_UnTransformOrigin(head, head.origin));
+				if (!closest || head_dist2 < closest_dist2) // new closest
 				{
-					if(closest_target)
-					{
-						if(vlen2(this.origin - head.origin) < vlen2(this.origin - closest_target.origin))
-							closest_target = head;
-					}
-					else
-						closest_target = head;
+					closest_dist2 = head_dist2;
+					closest = head;
 				}
-
-				head = head.chain;
 			}
 
-			if(closest_target)
+			if (closest)
 			{
-				vehicles_enter(this, closest_target);
+				vehicles_enter(this, closest);
 				return;
 			}
 		}
@@ -2954,20 +2953,19 @@ void PlayerFrame (entity this)
 	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
 	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 	{
-		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
-		{
-			if(!it.owner)
+		for (entity head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, false); head; head = head.chain)
+			if (IS_VEHICLE(head) && !IS_DEAD(head) && head.takedamage != DAMAGE_NO)
 			{
-				if(!it.team || SAME_TEAM(this, it))
-					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
-				else if(autocvar_g_vehicles_steal)
-					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+				if (!head.owner)
+				{
+					if (!head.team || SAME_TEAM(this, head))
+						Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
+					else if (autocvar_g_vehicles_steal)
+						Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+				}
+				else if ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this))
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
 			}
-			else if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
-			{
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
-			}
-		});
 
 		this.last_vehiclecheck = time + 1;
 	}

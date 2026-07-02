@@ -355,7 +355,7 @@ void spiderbot_exit(entity this, int eject)
 	{
 		if (vdist(this.velocity, >, autocvar_g_vehicle_spiderbot_speed_strafe))
 		{
-			player.velocity = normalize(this.velocity) * vlen(this.velocity);
+			player.velocity = this.velocity;
 			player.velocity.z += 200;
 			spot = this.origin + v_forward * 128 + '0 0 64';
 			spot = vehicles_findgoodexit(this, player, spot);

@@ -40,5 +40,5 @@ CLASS(NapalmNade, Nade)
 ENDCLASS(NapalmNade)
 
 #ifdef SVQC
-.vector fireball_impactvec;
+.float dmg_radius; // reused field, as the distance the laser damage occurs over
 #endif

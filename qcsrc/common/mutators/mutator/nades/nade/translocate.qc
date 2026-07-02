@@ -1,6 +1,8 @@
 #include "translocate.qh"
 
 #ifdef SVQC
+#include <lib/warpzone/common.qh>
+
 void nade_translocate_boom(entity this)
 {
 	if (this.realowner.vehicle)
@@ -14,15 +16,20 @@ void nade_translocate_boom(entity this)
 		return;
 	}
 
-	vector locout = this.origin + '0 0 1' * (1 - this.realowner.mins.z - 24);
+	vector locout = this.origin;
+	locout.z += 1 - this.realowner.mins.z - 24;
 	tracebox(locout, this.realowner.mins, this.realowner.maxs, locout, MOVE_NOMONSTERS, this.realowner);
 	locout = trace_endpos;
 
 	makevectors(this.realowner.angles);
+	vector forward = v_forward;
 
 	MUTATOR_CALLHOOK(PortalTeleport, this.realowner);
 
-	TeleportPlayer(this, this.realowner, locout, this.realowner.angles, v_forward * vlen(this.realowner.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+	TeleportPlayer(this, this.realowner, locout,
+		WarpZone_RefSys_TransformAngles(this.realowner, this, this.realowner.angles),
+		WarpZone_RefSys_TransformVelocity(this.realowner, this, forward * vlen(this.realowner.velocity)),
+		'0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 }
 
 bool nade_translocate_DestroyDamage(entity this, entity attacker)

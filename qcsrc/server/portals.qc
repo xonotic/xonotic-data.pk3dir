@@ -132,7 +132,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player, entity portal_owne
 	// first shift it ON the plane if needed
 	planeshift = ((teleporter.enemy.origin - to) * v_forward) + PlayerEdgeDistance(player, v_forward) + 1;
 	/*
-	if(planeshift > 0 && (newvel * v_forward) > vlen(newvel) * 0.01)
+	if(planeshift > 0 && vdist(newvel, <, (newvel * v_forward) * 100))
 		// if we can't, let us not do the planeshift and do somewhat incorrect transformation in the end
 		to += newvel * (planeshift / (newvel * v_forward));
 	else
@@ -253,7 +253,7 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 	delta = dist / distpersec;
 	v = eorg - evel * delta - porg;
 	v -= pnorm * (pnorm * v);
-	return vlen(v) < psize;
+	return vdist(v, <, psize);
 #else
 	return 1;
 #endif

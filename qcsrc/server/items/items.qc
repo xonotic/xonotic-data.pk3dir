@@ -1157,12 +1157,13 @@ void StartItem(entity this, entity def)
 
 		if(autocvar_spawn_debug >= 2)
 		{
-			// why not flags & fl_item?
-			FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
-				LOG_TRACE("XXX Found duplicated item: ", def.m_name, vtos(this.origin));
-				LOG_TRACE(" vs ", it.netname, vtos(it.origin));
-				error("Mapper sucks.");
-			});
+			for (entity head = WarpZone_FindRadius(this.origin, 3, false); head; head = head.chain)
+				if (head.is_item) // why not flags & fl_item?
+				{
+					LOG_TRACE("XXX Found duplicated item: ", def.m_name, vtos(this.origin));
+					LOG_TRACE(" vs ", head.netname, vtos(head.origin));
+					error("Mapper sucks.");
+				}
 			this.is_item = true;
 		}
 
@@ -1249,36 +1250,33 @@ int group_count = 1;
 
 void setItemGroup(entity this)
 {
-	if(!IS_SMALL(this.itemdef) || ITEM_IS_LOOT(this))
+	if (!IS_SMALL(this.itemdef) || ITEM_IS_LOOT(this))
 		return;
 
-	FOREACH_ENTITY_RADIUS(this.origin, 120, (it != this) && IS_SMALL(it.itemdef),
-	{
-		if(!this.item_group)
+	for (entity head = WarpZone_FindRadius(this.origin, 120, false); head; head = head.chain)
+		if (IS_SMALL(head.itemdef) && head != this)
 		{
-			if(!it.item_group)
+			if (!this.item_group)
 			{
-				it.item_group = group_count;
-				++group_count;
-			}
-			this.item_group = it.item_group;
-		}
-		else // spawning item is already part of a item_group X
-		{
-			if(!it.item_group)
-				it.item_group = this.item_group;
-			else if(it.item_group != this.item_group) // found an item near the spawning item that is part of a different item_group Y
-			{
-				int grY = it.item_group;
-				// move all items of item_group Y to item_group X
-				IL_EACH(g_items, IS_SMALL(it.itemdef),
+				if (!head.item_group)
 				{
-					if(it.item_group == grY)
-						it.item_group = this.item_group;
-				});
+					head.item_group = group_count;
+					++group_count;
+				}
+				this.item_group = head.item_group;
+			}
+			else // spawning item is already part of a item_group X
+			{
+				if (!head.item_group)
+					head.item_group = this.item_group;
+				else if (head.item_group != this.item_group) // found an item near the spawning item that is part of a different item_group Y
+				{
+					int grY = head.item_group;
+					// move all items of item_group Y to item_group X
+					IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == grY, it.item_group = this.item_group);
+				}
 			}
 		}
-	});
 }
 
 void setItemGroupCount()

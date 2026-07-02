@@ -1,6 +1,11 @@
 #include "swapper.qh"
 
 #ifdef SVQC
+bool buff_Swapper_cond(entity e)
+{
+	return (IS_PLAYER(e) && DIFF_TEAM(e, WarpZone_SearchInRadius_otherent)
+		&& !IS_DEAD(e) && !STAT(FROZEN, e) && !e.vehicle);
+}
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {
 	if (MUTATOR_RETURNVALUE || game_stopped)
@@ -10,20 +15,19 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	if (!StatusEffects_active(BUFF_SWAPPER, player))
 		return;
 
-	entity head = WarpZone_FindRadius(player.origin, autocvar_g_buffs_swapper_range, false);
+	WarpZone_SearchInRadius_otherent = player;
+	entity head = WarpZone_SearchInRadius(player.origin, autocvar_g_buffs_swapper_range, MOVE_NOTHING, buff_Swapper_cond);
 	entity closest = NULL;
-	float head_dist2, best_dist2 = autocvar_g_buffs_swapper_range ** 2;
+	float head_dist2, closest_dist2 = 0;
 	for (; head; head = head.chain)
-		if (IS_PLAYER(head) && DIFF_TEAM(head, player)
-		&& !IS_DEAD(head) && !STAT(FROZEN, head) && !head.vehicle)
+	{
+		head_dist2 = vlen2(head.WarpZone_findradius_dist);
+		if (!closest || head_dist2 < closest_dist2) // new closest
 		{
-			head_dist2 = vlen2(head.WarpZone_findradius_dist);
-			if (head_dist2 < best_dist2)
-			{
-				best_dist2 = head_dist2;
-				closest = head;
-			}
+			closest_dist2 = head_dist2;
+			closest = head;
 		}
+	}
 	if (closest == NULL)
 		return;
 

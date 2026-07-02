@@ -34,8 +34,8 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
 		entity missile = turret_projectile(actor, SND_HellionAttack_FIRE, 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
 		te_explosion(missile.origin);
 		setthink(missile, turret_hellion_missile_think);
+		missile.max_health     = missile.nextthink;
 		missile.nextthink      = time;
-		missile.max_health     = time + 9;
 		missile.tur_aimpos     = randomvec() * 128;
 		missile.missile_flags  = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
 		if (!isPlayer)
@@ -62,7 +62,7 @@ void turret_hellion_missile_think(entity this)
 		// Turn model
 		this.angles = vectoangles(this.velocity);
 
-		if (vdist(this.origin - this.owner.origin, >, (this.owner.shot_radius * 5)))
+		if (vdist(this.origin - this.realowner.origin, >, (this.realowner.shot_radius * 5)))
 			turret_projectile_explode(this);
 
 		// Accelerate
@@ -73,11 +73,11 @@ void turret_hellion_missile_think(entity this)
 	}
 
 	// Enemy in range?
-	if (vdist(this.origin - this.enemy.origin, <, this.owner.shot_radius * 0.2))
+	if (vdist(this.origin - this.enemy.origin, <, this.realowner.shot_radius * 0.2))
 		turret_projectile_explode(this);
 
 	// Predict enemy position
-	float itime = vlen(this.enemy.origin - this.origin) / vlen(this.velocity);
+	float itime = sqrt(vlen2(this.enemy.origin - this.origin) / vlen2(this.velocity));
 	vector pre_pos = this.enemy.origin + this.enemy.velocity * itime;
 
 	pre_pos = (pre_pos + this.enemy.origin) * 0.5;
