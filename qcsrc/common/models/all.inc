@@ -81,11 +81,11 @@ MODEL(PROJECTILE_FIREBALL,              "null");
 // fireball secondary
 MODEL(PROJECTILE_FIREMINE,              "null");
 
-MODEL(PROJECTILE_TAG,                   "models/laser.mdl");
+MODEL(PROJECTILE_SEEKER_TAG,            "models/laser.mdl");
 
-MODEL(PROJECTILE_FLAC,                  "models/hagarmissile.mdl");
+MODEL(PROJECTILE_SEEKER_FLAC,           "models/hagarmissile.mdl");
 
-MODEL(PROJECTILE_SEEKER,                "models/tagrocket.md3");
+MODEL(PROJECTILE_SEEKER_MISSILE,        "models/tagrocket.md3");
 
 MODEL(PROJECTILE_MAGE_SPIKE,            "models/ebomb.mdl");
 MODEL(PROJECTILE_GOLEM_LIGHTNING,       "models/ebomb.mdl");
