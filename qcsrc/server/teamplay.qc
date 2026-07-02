@@ -892,14 +892,12 @@ void TeamBalance_GetTeamCounts(entity balance, entity ignore)
 			}
 		});
 
-		// deduct bots that would leave if a player joined their team, distributing the deductions between teams
-		// bones_was_here: not sure if it's safe to apply this to .m_num_players so using .m_num_players_net
-		for (int i = 1, bots_todo = bots_would_leave; bots_todo > 0 && i <= AVAILABLE_TEAMS; ++i)
+		// Deduct bots that would leave if a player joined their team;
+		// to ensure a player can join we aim to deduct at least one from each team which has some.
+		for (int i = 1, bots_maxperteam = ceil(bots_would_leave / AVAILABLE_TEAMS); i <= AVAILABLE_TEAMS; ++i)
 		{
 			entity team_ent = TeamBalance_GetTeamFromIndex(balance, i);
-			int to_remove = min(team_ent.m_num_bots, ceil(bots_todo / AVAILABLE_TEAMS));
-			team_ent.m_num_players_net -= to_remove;
-			bots_todo -= to_remove;
+			team_ent.m_num_players_net -= min(team_ent.m_num_bots, bots_maxperteam);
 		}
 
 		// Calculate inverse-variance weighted mean skill ratings,
@@ -1033,7 +1031,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 		// This picks the team(s) whose weighted mean skill differs the most from the joining player's skill,
 		// unless they're all close enough in which case it picks smaller team(s).
 		// Warmup-only as it must unbalance team sizes in extreme cases, swaps needed should be minimal.
-		if (warmup_stage && autocvar_sv_teamnagger && autocvar_g_balance_teams_skill)
+		if (warmup_stage && autocvar_sv_teamnagger && autocvar_g_balance_teams_skill && IS_REAL_CLIENT(player))
 		{
 			if (!player_skill_mu)
 			{
@@ -1049,17 +1047,15 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 			team_i_z = fabs(team_i_z);
 			team_p_z = fabs(team_p_z);
 
-			int team_i_size = IS_REAL_CLIENT(player) ? team_i.m_num_players_net : team_i.m_num_players;
-			int team_p_size = IS_REAL_CLIENT(player) ? team_p.m_num_players_net : team_p.m_num_players;
-
-			if ((!significant && team_i_size < team_p_size)
-			|| ((significant || team_i_size == team_p_size) && team_i_z > team_p_z))
+			// NB: if bots were to use this code they'd need .m_num_players instead of .m_num_players_net
+			if ((!significant && team_i.m_num_players_net < team_p.m_num_players_net)
+			|| ((significant || team_i.m_num_players_net == team_p.m_num_players_net) && team_i_z > team_p_z))
 			{
 				team_bits = Team_IndexToBit(i);
 				previous_team = i;
 			}
 			else if (team_i_z == team_p_z // unlikely with humans, normal with all bots
-			&& team_i_size == team_p_size)
+			&& team_i.m_num_players_net == team_p.m_num_players_net)
 			{
 				team_bits |= Team_IndexToBit(i);
 				previous_team = i;
@@ -1308,7 +1304,7 @@ int TeamBalance_CompareTeamsInternal(entity team_a, entity team_b, entity client
 		return TEAMS_COMPARE_LESS;
 	if (team_a_size > team_b_size)
 		return TEAMS_COMPARE_GREATER;
-	if (!use_score)
+	if (!use_score || !team_a_size)
 		return TEAMS_COMPARE_EQUAL;
 
 // Compare skill and score together as team strength.
