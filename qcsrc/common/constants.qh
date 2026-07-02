@@ -1,8 +1,9 @@
 #pragma once
 
-const int FRAGS_PLAYER             = 0;
-const int FRAGS_SPECTATOR          = -666;
-const int FRAGS_PLAYER_OUT_OF_GAME = -616;
+const int FRAGS_PLAYER             = -1; ///< not 0 because all fields are initially 0
+const int FRAGS_PLAYER_NONSOLID    = -616; ///< independent player
+const int FRAGS_SPECTATOR          = -666; ///< engine expects this value
+const int FRAGS_PLAYER_OUT_OF_GAME = -669; ///< still shown with a score and/or a team, but currently forced to spec/observe
 
 ///////////////////////////
 // cvar constants

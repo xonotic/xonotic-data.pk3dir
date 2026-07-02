@@ -195,11 +195,6 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
-	else
-		player.frags = FRAGS_SPECTATOR;
-
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 }
