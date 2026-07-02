@@ -436,7 +436,7 @@ bool PlayerJump(entity this)
 	// velocity bounds.  Final velocity is bound between (jumpheight *
 	// min + jumpheight) and (jumpheight * max + jumpheight);
 
-	if (!isnan(PHYS_JUMPSPEEDCAP_MIN(this)))
+	if (PHYS_JUMPSPEEDCAP_MIN(this) >= 0)
 	{
 		float minjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MIN(this);
 
@@ -444,7 +444,7 @@ bool PlayerJump(entity this)
 			mjumpheight += minjumpspeed - this.velocity_z;
 	}
 
-	if (!isnan(PHYS_JUMPSPEEDCAP_MAX(this)))
+	if (PHYS_JUMPSPEEDCAP_MAX(this) >= 0)
 	{
 		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
 		tracebox(this.origin + '0 0 0.01', this.mins, this.maxs, this.origin - '0 0 0.01', MOVE_NORMAL, this);
