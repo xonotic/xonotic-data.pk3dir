@@ -294,7 +294,8 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_DEVASTATOR_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_DEVASTATOR, damage), thiswep.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity missile = new(rocket);
+	WarpZone_RefSys_Copy(missile, actor);
 	missile.weaponentity_fld = weaponentity;
 	missile.owner = missile.realowner = actor;
 	actor.(weaponentity).lastrocket = missile;
@@ -303,7 +304,6 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	else
 		missile.spawnshieldtime = -1; // NOTE: proximity based when rocket jumping
 	missile.pushltime = time + WEP_CVAR(WEP_DEVASTATOR, guidedelay);
-	missile.classname = "rocket";
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = WEP_CVAR(WEP_DEVASTATOR, damage) * 2; // * 2 because it can be detonated inflight which makes it even more dangerous
 

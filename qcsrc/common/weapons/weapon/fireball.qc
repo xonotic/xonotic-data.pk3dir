@@ -137,7 +137,8 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 
 	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
-	entity proj = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity proj = new(plasma_prim);
+	WarpZone_RefSys_Copy(proj, actor);
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(WEP_FIREBALL, damage);
@@ -278,7 +279,8 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 
 	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
-	entity proj = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity proj = new(grenade);
+	WarpZone_RefSys_Copy(proj, actor);
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(WEP_FIREBALL, damage);
