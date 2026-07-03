@@ -183,7 +183,8 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 {
 	makevectors(this.angles);
 
-	entity missile = WarpZone_RefSys_SpawnSameRefSys(this);
+	entity missile = new(M_Mage_Attack_Spike);
+	WarpZone_RefSys_Copy(missile, this);
 	missile.owner = missile.realowner = this;
 	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;

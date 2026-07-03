@@ -142,7 +142,8 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 
 	//actor.detornator = false;
 
-	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity missile = new(seeker_missile);
+	WarpZone_RefSys_Copy(missile, actor);
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = WEP_CVAR(WEP_SEEKER, missile_damage);
@@ -457,7 +458,8 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_TAG_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_SEEKER, missile_damage) * WEP_CVAR(WEP_SEEKER, missile_count), thiswep.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY);
 
-	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity missile = new(seeker_tag);
+	WarpZone_RefSys_Copy(missile, actor);
 	missile.weaponentity_fld = weaponentity;
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
