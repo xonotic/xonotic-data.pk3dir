@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-18 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2026\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -1435,6 +1435,7 @@ msgstr "defuit in creatione curl handle"
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
+"%s est manuum ludi modus in quo altera manus irrumpit, altera manus prohibet."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:9
 msgid ""
@@ -1446,12 +1447,20 @@ msgid ""
 "teams switch roles and the new attacking team wins only if they destroy the "
 "main object within the time the other team took to do it."
 msgstr ""
+"Manui irrumpenti necesse est res in harena delere, ut novae portae viaeque "
+"ad plures res aperiantur, usque ad rem principalem delendam. At manui "
+"prohibenti necesse est eas res servare, et vincit si satis diu prohibet ne "
+"altera manus rem principalem deleat. Si ea res principalis deletur, dehinc "
+"tempus secundum luditur in quo duae manus inter se opera commutant, et manus "
+"nunc irrumpens vincet si celerius quam altera manus rem principalem delebit."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:12
 msgid ""
 "Objects have waypoints which show their health and position, and they're "
 "destroyed by shooting them with any weapon."
 msgstr ""
+"Rerum loci et integritates indicantur, et eas res quibusque armis delere "
+"potes."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:8
 msgid "Assault"
@@ -1487,18 +1496,26 @@ msgid ""
 "life per round. There are no pickups available on the map in %s, making the "
 "gameplay fast-paced and focused on combat."
 msgstr ""
+"%s est manuum ludi modus totiens lusus, in quo ludentes cum omnibus armis "
+"praesentibus nascuntur, sanitates et armaturas maximas habent, sed singulas "
+"vitas in quoque tempore habent. Cum est %s, non sunt in harena res "
+"colligendae, propterea intersunt pernicitas et dimicatio."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:10
 msgid ""
 "Rounds start with a ten second grace period where weapons cannot be fired, "
 "so it's a good opportunity to group up with your team."
 msgstr ""
+"In cuiusque temporis initium, decem secunda, arma emittere non possunt, ita "
+"prodest collegas tum congregare."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:11
 msgid ""
 "The match ends once a team reaches a certain number of rounds won, or has a "
 "considerable lead over the other team."
 msgstr ""
+"Ludus finietur cum una manus quendam numerum temporum vicerit vel alteram "
+"manum multo antecesserit."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:12
 msgid ""
@@ -1506,6 +1523,9 @@ msgid ""
 "fellow teammates and pay attention to any callouts from them. Team "
 "coordination is key!"
 msgstr ""
+"Quam ob rem ludentes singulas vitas in quoque tempore habent, opus est te "
+"colligere cum collegis et animum ad evocantes attendere. Coniunctum opus "
+"maxime interest!"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Clan Arena"
@@ -1537,12 +1557,18 @@ msgid ""
 "captured if your own flag is also home in its base, so it's important to "
 "collect your flag after it's dropped."
 msgstr ""
+"%s est manuum ludi modus totiens lusus, in quo ludentes vexillum hostium "
+"rapiunt et ad basem suam ferunt ut id capiant. Vexillum capere potes modo si "
+"vexillum vestrum in basi vestra est, propterea prodest referre vexillum "
+"vestrum cum amittitur."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:10
 msgid ""
 "The game is won once a team reaches a certain number of \"caps\" (captures), "
 "or has a considerable lead over the other team."
 msgstr ""
+"Ludus finietur cum una manus quendam numerum \"caps\" (captuum) effecerit "
+"vel alteram manum multo antecesserit."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:11
 msgid ""
@@ -1552,6 +1578,11 @@ msgid ""
 "\"stalemate\" will initiate and all flag carriers (\"fc\"s) will be exposed "
 "on the radar and with waypoints."
 msgstr ""
+"Si vexillum in spatium vacuum vel laqueum mortiferum amittitur, ad basem "
+"statim refertur; si vexillum diu non tangitur, ad basem item sua sponte "
+"refertur. Si omnia vexilla tenentur, post quoddam tempus proclamatur "
+"\"morari\" et omnes vexilliferi (\"vp\") detectro et locorum indicibus "
+"patefiunt."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:13
 #, c-format
@@ -1563,6 +1594,11 @@ msgid ""
 "important, especially to let teammates know if you see the enemy flag "
 "carrier."
 msgstr ""
+"Cum est %s, prodest pernicitas, quia quantum difficilius est hostes te "
+"laedere, tantum facilius est te fugere cum vexillo a basi hostium. Praecipue "
+"prodest quoque a basi prohibere, quoniam hostes vexillum vestrum capere non "
+"possunt si id non rapiunt. Etiam prodest cum collegis bene colloqui, "
+"praesertim de hoste vexillifero docere si eum vides."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:11
 msgid "Capture the Flag"
@@ -1629,12 +1665,17 @@ msgid ""
 "you respawn with only the starter weapons, so any you collected will have to "
 "be picked up again."
 msgstr ""
+"%s est ludi modus planus, in quo quisque ludens contra omnes ludit, et "
+"vincit quis rationem maximam habet. Cum moreris, modo cum quibusdam armis "
+"initii renasceris, itaque alia quae cepisti capere iterum tibi opus est."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:13
 msgid ""
 "Scoring is quite simple, fragging an opponent adds one to your score, and "
 "fragging yourself subtracts one."
 msgstr ""
+"Rationes faciles sunt: cum inimicum interficis, rationi semel additur, at, "
+"cum te interficis, ratio semel minuitur."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:14
 #, c-format
@@ -1643,6 +1684,8 @@ msgid ""
 "contested since they sometimes have the power to make or break a game, so "
 "making good use of them is important."
 msgstr ""
+"Potestates harenis saepe continentur, ut %s et %s, quae totiens litigiosae "
+"sunt quoniam per eas ludum subvertere potes, itaque prodest bene eis uti."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qh:8
 msgid "Deathmatch"
@@ -1695,6 +1738,9 @@ msgid ""
 "%s is a 1-vs-1 arena battle to decide the winner, essentially a 2-player "
 "version of %s, making it one of the most competitive gametypes."
 msgstr ""
+"%s est pugna inter duos ut utrum victorem esse decernant, id quod potes "
+"dicere %s cum duobus ludentibus esse, est igitur ludi modus eximiae "
+"contentionis."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:13
 #, c-format
@@ -1705,6 +1751,10 @@ msgid ""
 "with the best item control is often the winner, so this is a key aspect to "
 "master."
 msgstr ""
+"Quoniam ludentes soli ludunt, res praecipuae ut %s et %s litigiosissimae "
+"sunt, quas saepe \"rentur\" tempus scriptum videndo cum capiuntur ut iterum "
+"oriri praevideant. Ludens qui melius collectionem utilium tenet saepe "
+"vincit, itaque hoc discere opus est."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:16
 msgid ""
@@ -1712,11 +1762,14 @@ msgid ""
 "health, so it is a good opportunity to search the map for them to pick up an "
 "easy frag and continue your streak."
 msgstr ""
+"Cum adversarium interficis, is cum paucis armis mediaque sanitate "
+"renascitur, et tum tibi prodest harenam peragrare et eum insequi ut facilius "
+"interficere repetas."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #, c-format
 msgid "%s is often played with %s rules."
-msgstr ""
+msgstr "%s saepe luditur %s praeceptis."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
@@ -2198,17 +2251,19 @@ msgstr "Manuum Tumultus"
 #: qcsrc/common/items/item/ammo.qc:11
 #, c-format
 msgid "The %s ammo type is used by the:"
-msgstr ""
+msgstr "Missilium genus %s pertinet ad:"
 
 #: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
 #, c-format
 msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
 msgstr ""
+"In optione ordinaria, res colligenda %s missilia continet, plus quam %s "
+"autem tenere non potes."
 
 #: qcsrc/common/items/item/ammo.qc:25
 #, c-format
 msgid "The %s ammo type is used by the %s."
-msgstr ""
+msgstr "Missilium genus %s ad %s pertinet."
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
@@ -2233,7 +2288,7 @@ msgstr "Ligna"
 #: qcsrc/common/items/item/armor.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s armor."
-msgstr ""
+msgstr "In optione ordinaria, res colligenda %s partes armaturae continet."
 
 #: qcsrc/common/items/item/armor.qc:13
 #, c-format
@@ -2241,6 +2296,8 @@ msgid ""
 "The %s provides you a small amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"%s tibi paulam armaturam praebet, ut vulnera subeundo te servet dum "
+"consumatur."
 
 #: qcsrc/common/items/item/armor.qc:23
 #, c-format
@@ -2248,6 +2305,8 @@ msgid ""
 "The %s provides you a medium amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"%s tibi mediocrem armaturam praebet, ut vulnera subeundo te servet dum "
+"consumatur."
 
 #: qcsrc/common/items/item/armor.qc:33
 #, c-format
@@ -2255,6 +2314,8 @@ msgid ""
 "The %s provides you a large amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"%s tibi magnam armaturam praebet, ut vulnera subeundo te servet dum "
+"consumatur."
 
 #: qcsrc/common/items/item/armor.qc:43
 #, c-format
@@ -2262,6 +2323,8 @@ msgid ""
 "The %s provides you a huge amount of armor when picked up, protecting you "
 "from damage by absorbing incoming hits until it is depleted."
 msgstr ""
+"%s tibi ingentem armaturam praebet, ut vulnera subeundo te servet dum "
+"consumatur."
 
 #: qcsrc/common/items/item/armor.qc:45 qcsrc/common/items/item/health.qc:45
 #, c-format
@@ -2269,6 +2332,8 @@ msgid ""
 "It tends to be one of the most highly contested items on a map, particularly "
 "in gametypes like %s."
 msgstr ""
+"Ex rebus colligendis in harena saepe litigiosissima est, praesertim in ludi "
+"modis ut %s."
 
 #: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
@@ -2289,7 +2354,7 @@ msgstr "Armatura maxima"
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
 msgid "By default, the pickup gives you %s health."
-msgstr ""
+msgstr "In optione ordinaria, res colligenda %s partes sanitatis continet."
 
 #: qcsrc/common/items/item/health.qc:13
 #, c-format
@@ -2297,6 +2362,7 @@ msgid ""
 "The %s restores a small amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"%s tibi paulam partem sanitatis reddit, ut in sanatione vulnerum iuvaris."
 
 #: qcsrc/common/items/item/health.qc:23
 #, c-format
@@ -2304,6 +2370,7 @@ msgid ""
 "The %s restores a medium amount of health when picked up, helping you "
 "recover from damage taken during combat."
 msgstr ""
+"%s tibi mediocrem partem sanitatis reddit, ut in sanatione vulnerum iuvaris."
 
 #: qcsrc/common/items/item/health.qc:33
 #, c-format
@@ -2311,6 +2378,7 @@ msgid ""
 "The %s restores a large amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"%s tibi magnam partem sanitatis reddit, ut in sanatione vulnerum iuvaris."
 
 #: qcsrc/common/items/item/health.qc:43
 #, c-format
@@ -2318,6 +2386,7 @@ msgid ""
 "The %s restores a huge amount of health when picked up, helping you recover "
 "from damage taken during combat."
 msgstr ""
+"%s tibi ingentem partem sanitatis reddit, ut in sanatione vulnerum iuvaris."
 
 #: qcsrc/common/items/item/health.qh:44
 msgid "Small health"
@@ -2798,6 +2867,8 @@ msgid ""
 "%s is a mutator in which players below a certain health threshold (for "
 "example 25) will suffer blood loss."
 msgstr ""
+"%s est mutatio in qua sanguinem mittit quis sanitatem minorem quam quendam "
+"numerum (exempli gratia 25) habet."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qc:77
 msgid ""
@@ -2805,6 +2876,9 @@ msgid ""
 "rapidly takes away health points until they either die or gain enough health "
 "to go above the health threshold."
 msgstr ""
+"Cum sanguinem mittit, is ludens torpet et lentissime graditur et crebro "
+"partes sanitatis perdit donec moriatur aut sanitatem restituendo illum "
+"numerum excedat."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
 #: qcsrc/common/util.qc:320
@@ -2926,6 +3000,8 @@ msgid ""
 "The %s buff increases your item pickup range, collecting nearby items for "
 "you while the buff is active."
 msgstr ""
+"Cum firmamen %s a te habetur, res colligendas paulo longius colligis, etiam "
+"si eas non tangas."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:10
 msgid "Magnet"
