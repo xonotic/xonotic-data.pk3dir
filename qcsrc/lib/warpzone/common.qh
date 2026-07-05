@@ -70,7 +70,7 @@ USING(WarpZone_FindRadius_cond_callback_t, bool(entity e)); // called on every e
 entity WarpZone_SearchInRadius(vector org, float radius, float nomonsters, WarpZone_FindRadius_cond_callback_t cb);
 noref entity WarpZone_SearchInRadius_otherent; ///< Free to use in the callback
 /// Modified findradius aware of warpzones
-#define WarpZone_FindRadius(org, radius, needlineofsight) WarpZone_SearchInRadius(org, radius, ((needlineofsight) ? MOVE_NOMONSTERS : MOVE_NOTHING), func_null)
+#define WarpZone_FindRadius(org, radius) WarpZone_SearchInRadius(org, radius, MOVE_NOTHING, func_null)
 
 float WarpZone_PlaneDist(entity wz, vector v);
 float WarpZone_TargetPlaneDist(entity wz, vector v);
