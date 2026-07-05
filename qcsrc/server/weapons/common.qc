@@ -280,3 +280,34 @@ float W_SeekOutEnemy(entity this,
 	this.velocity = newdir * spd; // make me fly in the new direction at my flight speed
 	return dist;
 }
+
+/// Applies damage over time, called within a think function
+void W_DamageOverTime_Think(entity this,
+	float duration, float duration_power,
+	float damage, float edgedamage, float rad, float force,
+	entity cantbe, float think_delay)
+{
+	float dt = time - this.teleport_time;
+	float dmg_remaining_next = bound(0, 1 - dt / duration, 1) ** duration_power;
+
+	float f = this.dmg_last - dmg_remaining_next;
+	this.dmg_last = dmg_remaining_next;
+
+	RadiusDamage(this, this.realowner,
+		f * damage,
+		f * edgedamage,
+		rad,
+		cantbe,
+		NULL,
+		f * force,
+		this.projectiledeathtype,
+		this.weaponentity_fld,
+		NULL
+	);
+	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
+
+	if (dt < duration)
+		this.nextthink = time + think_delay;
+	else
+		delete(this);
+}

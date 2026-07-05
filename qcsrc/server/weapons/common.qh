@@ -24,6 +24,10 @@ void W_LaserPlay(entity this, float rad, float damage, float edgedamage, float b
 
 float W_SeekOutEnemy(entity this, float speed_decel, float speed_accel, float speed_max, float turn_rate, bool smart, float smart_mindist, float smart_trace_min, float smart_trace_max);
 
+.float dmg_last;
+.float teleport_time; // reused field, as the time the damage started
+void W_DamageOverTime_Think(entity this, float duration, float duration_power, float damage, float edgedamage, float rad, float force, entity cantbe, float think_delay);
+
 .float misc_bulletcounter;
 
 .int projectiledeathtype;
