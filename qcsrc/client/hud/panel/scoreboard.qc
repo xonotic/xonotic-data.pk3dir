@@ -434,7 +434,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 					team_name = "auto";
 				else
 					team_name = Static_Team_ColorName(scoreboard_selected_team.team);
-				localcmd(sprintf("cmd selectteam %s; cmd join\n", team_name));
+				localcmd(sprintf("cmd join %s\n", team_name));
 				HUD_Scoreboard_UI_Disable();
 			}
 			else if (scoreboard_selected_player)
