@@ -117,31 +117,15 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 const float ELECTRO_COMBO_OVERTIME_DELAY = 0.0625; // (1/16) exact multiple of default frametime 0.015625 (1/64)
 void W_Electro_ExplodeComboThink(entity this)
 {
-	// NOTE: W_Hook_ExplodeThink uses similar code, please keep them in sync
-	float dt = time - this.teleport_time;
-
-	float dmg_remaining_next = bound(0, 1 - dt / WEP_CVAR(WEP_ELECTRO, combo_duration), 1);
-
-	float f = this.dmg_last - dmg_remaining_next;
-	this.dmg_last = dmg_remaining_next;
-
-	RadiusDamage(this, this.realowner,
-		f * WEP_CVAR(WEP_ELECTRO, combo_damage),
-		f * WEP_CVAR(WEP_ELECTRO, combo_edgedamage),
+	W_DamageOverTime_Think(this,
+		WEP_CVAR(WEP_ELECTRO, combo_duration),
+		1,
+		WEP_CVAR(WEP_ELECTRO, combo_damage),
+		WEP_CVAR(WEP_ELECTRO, combo_edgedamage),
 		WEP_CVAR(WEP_ELECTRO, combo_radius),
-		NULL,
-		NULL,
 		0,
-		this.projectiledeathtype,
-		this.weaponentity_fld,
-		NULL
-	);
-	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
-
-	if (dt < WEP_CVAR(WEP_ELECTRO, combo_duration))
-		this.nextthink = time + ELECTRO_COMBO_OVERTIME_DELAY;
-	else
-		delete(this);
+		NULL,
+		ELECTRO_COMBO_OVERTIME_DELAY);
 }
 
 void W_Electro_Orb_ExplodeOverTime(entity this)
