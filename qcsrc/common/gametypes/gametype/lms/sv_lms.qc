@@ -271,14 +271,8 @@ bool lms_AddPlayer(entity player)
 		if(lives <= 0)
 			GameRules_scoring_add(player, LMS_LIVES, LMS_NewPlayerLives());
 	}
-	else
-	{
-		if(GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
-		{
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
-			return false;
-		}
-	}
+	else if (GameRules_scoring_add(player, LMS_LIVES, 0) <= 0)
+		return false;
 	return true;
 }
 
@@ -288,7 +282,10 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	if (!warmup_stage && (IS_BOT_CLIENT(player) || CS(player).jointime != time))
 	{
 		if (GameRules_scoring_add(player, LMS_RANK, 0) || !lms_AddPlayer(player))
+		{
 			TRANSMUTE(Observer, player);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
+		}
 	}
 }
 
@@ -383,20 +380,12 @@ void lms_RemovePlayer(entity player)
 				}
 				GameRules_scoring_add(player, LMS_LIVES, -pl_lives);
 			}
-			player.frags = FRAGS_SPECTATOR;
-			TRANSMUTE(Observer, player);
 			INGAME_STATUS_CLEAR(player);
 			player.lms_spectate = false;
 			CS(player).killcount = FRAGS_SPECTATOR;
 		}
 		if (autocvar_g_lms_leader_lives_diff > 0)
 			lms_UpdateLeaders();
-	}
-
-	if (CS(player).killcount != FRAGS_SPECTATOR)
-	{
-		if (GameRules_scoring_add(player, LMS_RANK, 0) > 0)
-			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 	}
 }
 
@@ -415,14 +404,17 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 	bool is_forced = M_ARGV(1, bool);
 
-	if (!IS_PLAYER(player))
-		return true;
+	if (!player.frags) // init
+	{
+		player.frags = FRAGS_SPECTATOR; // don't be on the scoreboard yet
+		return true; // resetting at init can end match before it starts
+	}
+	if (player.frags == FRAGS_PLAYER_OUT_OF_GAME) // eliminated
+		return true; // prevent team reset (and spec notification)
 
 	if (warmup_stage || time <= game_starttime)
 	{
 		GameRules_scoring_add(player, LMS_LIVES, -GameRules_scoring_add(player, LMS_LIVES, 0));
-		player.frags = FRAGS_SPECTATOR;
-		TRANSMUTE(Observer, player);
 		INGAME_STATUS_CLEAR(player);
 	}
 	else
@@ -432,13 +424,6 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 		if (!GameRules_scoring_add(player, LMS_RANK, 0))
 			lms_RemovePlayer(player);
 	}
-	return true;  // prevent team reset
-}
-
-MUTATOR_HOOKFUNCTION(lms, ClientConnect)
-{
-	entity player = M_ARGV(0, entity);
-	player.frags = FRAGS_SPECTATOR;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
@@ -616,6 +601,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 			});
 			frag_target.frags = FRAGS_PLAYER_OUT_OF_GAME;
 			GameRules_scoring_add(frag_target, LMS_RANK, pl_cnt);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, frag_target.netname);
 		}
 	}
 	M_ARGV(2, float) = 0; // frag score

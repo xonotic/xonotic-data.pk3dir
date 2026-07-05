@@ -731,7 +731,7 @@ int WantEventchase(entity this, bool want_vehiclechase)
 {
 	if(autocvar_cl_orthoview)
 		return 0;
-	if(STAT(GAME_STOPPED) || intermission)
+	if((STAT(GAME_STOPPED) || intermission) && spectatee_status != -1)
 		return 1;
 	if(this.viewloc)
 		return 1;

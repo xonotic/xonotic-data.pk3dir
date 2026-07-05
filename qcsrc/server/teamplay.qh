@@ -289,10 +289,6 @@ entity TeamBalance_GetPlayerForTeamSwitch(int source_team_index,
 
 void LogTeamChange(float player_id, float team_number, int type);
 
-/// \brief Kills player as a result of team change.
-/// \param[in,out] player Player to kill.
-void KillPlayerForTeamChange(entity player);
-
 /// \brief Returns whether the team change to the specified team is allowed.
 /// \param[in] balance Team balance entity.
 /// \param[in] index Index of the team.
