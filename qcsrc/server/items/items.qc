@@ -1157,7 +1157,7 @@ void StartItem(entity this, entity def)
 
 		if(autocvar_spawn_debug >= 2)
 		{
-			for (entity head = WarpZone_FindRadius(this.origin, 3, false); head; head = head.chain)
+			for (entity head = WarpZone_FindRadius(this.origin, 3); head; head = head.chain)
 				if (head.is_item) // why not flags & fl_item?
 				{
 					LOG_TRACE("XXX Found duplicated item: ", def.m_name, vtos(this.origin));
