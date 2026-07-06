@@ -506,6 +506,11 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				if(this.colormap > 0)
 					this.colormod = colormapPaletteColor(this.colormap & 0x0F, true);
 				break;
+			case PROJECTILE_MAGE_SPIKE:
+				loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
+				this.mins = '-3 -3 -3';
+				this.maxs = '3 3 3';
+				break;
 			default:
 				break;
 		}

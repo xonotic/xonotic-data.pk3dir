@@ -376,7 +376,6 @@ void reset_map(bool is_fake_round_start)
 			accuracy_reset(it); // for spectators too because weapon accuracy is persistent
 		if (!IS_PLAYER(it))
 			continue;
-		player_powerups_remove_all(it, true);
 		entity store = PS(it);
 		if (store)
 		{
@@ -411,6 +410,7 @@ void reset_map(bool is_fake_round_start)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
+			player_powerups_remove_all(it, true);
 			// PlayerScore_Clear(it);
 			CS(it).killcount = 0;
 			// stop the player from moving so that they stand still once they get respawned

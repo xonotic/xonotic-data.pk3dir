@@ -106,7 +106,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, RandomItems_GetRandomItemClassName)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
+MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem, CBC_ORDER_LAST)
 {
 	M_ARGV(1, string) = "vaporizer_cells";
 }
