@@ -500,3 +500,158 @@ void debug_text_3d_fn(vector pos, string msg, float align, float duration, vecto
 }
 
 #endif // SVQC
+
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_BOX)
+#endif
+
+#ifdef CSQC
+// in these 2 macros checking components of v4 is redundant
+#define FACE_ON_PLANE(z) (v1.z == v2.z && v2.z == v3.z)
+
+#define SHRINK_FACE(x, y) \
+	{ \
+		mn = min(v1.x, v2.x, v3.x); \
+		if (v1.x == mn) v1.x += border_width; else v1.x -= border_width; \
+		if (v2.x == mn) v2.x += border_width; else v2.x -= border_width; \
+		if (v3.x == mn) v3.x += border_width; else v3.x -= border_width; \
+		if (v4.x == mn) v4.x += border_width; else v4.x -= border_width; \
+		mn = min(v1.y, v2.y, v3.y); \
+		if (v1.y == mn) v1.y += border_width; else v1.y -= border_width; \
+		if (v2.y == mn) v2.y += border_width; else v2.y -= border_width; \
+		if (v3.y == mn) v3.y += border_width; else v3.y -= border_width; \
+		if (v4.y == mn) v4.y += border_width; else v4.y -= border_width; \
+	}
+
+/// Draws face of a bbox
+/// border_width == 0 : no border
+/// border_width > 0  : border width
+/// border_width < 0  : empty border width (faster than using borders)
+void DrawFace(vector v1, vector v2, vector v3, vector v4, vector col, float alp, float border_width)
+{
+	if (border_width)
+	{
+		float draw_border = false;
+		if (border_width < 0)
+			border_width = -border_width; // empty borders
+		else
+			draw_border = true;
+
+		// save original face coordinates
+		vector b1 = v1;
+		vector b2 = v2;
+		vector b3 = v3;
+		vector b4 = v4;
+
+		// shrink face (modifies v1, v2, v3, v4)
+		float mn;
+		     if (FACE_ON_PLANE(z)) SHRINK_FACE(x, y)
+		else if (FACE_ON_PLANE(y)) SHRINK_FACE(z, x)
+		else if (FACE_ON_PLANE(x)) SHRINK_FACE(y, z)
+
+		if (draw_border)
+		{
+			// fill area between face coordinates and shrinked face coordinates
+			float border_alp = alp + 0.4;
+			DrawFace(b1, v1, v2, b2, col, border_alp, 0);
+			DrawFace(b2, v2, v3, b3, col, border_alp, 0);
+			DrawFace(b3, v3, v4, b4, col, border_alp, 0);
+			DrawFace(b4, v4, v1, b1, col, border_alp, 0);
+		}
+	}
+	R_BeginPolygon("", DRAWFLAG_NORMAL, false);
+	R_PolygonVertex(v1, '0 0 0', col, alp);
+	R_PolygonVertex(v2, '1 0 0', col, alp);
+	R_PolygonVertex(v3, '1 1 0', col, alp);
+	R_PolygonVertex(v4, '0 1 0', col, alp);
+	R_EndPolygon();
+}
+
+void debug_box_draw(entity this)
+{
+	if (time > this.cnt)
+	{
+		remove(this);
+		return;
+	}
+
+	// bottom coordinates
+	vector v0 = this.mins;
+	vector v1 = this.mins; v1.x = this.maxs.x;
+	vector v2 = this.mins; v2.x = this.maxs.x; v2.y = this.maxs.y;
+	vector v3 = this.mins; v3.y = this.maxs.y;
+
+	// top coordinates
+	vector v4 = this.maxs; v4.x = this.mins.x; v4.y = this.mins.y;
+	vector v5 = this.maxs; v5.y = this.mins.y;
+	vector v6 = this.maxs;
+	vector v7 = this.maxs; v7.x = this.mins.x;
+
+	// box
+	float border_width = this.count;
+	DrawFace(v0, v1, v2, v3, this.colormod, this.alpha, border_width); // bottom
+	DrawFace(v4, v5, v6, v7, this.colormod, this.alpha, border_width); // top
+	DrawFace(v0, v1, v5, v4, this.colormod, this.alpha, border_width); // front
+	DrawFace(v1, v2, v6, v5, this.colormod, this.alpha, border_width); // right
+	DrawFace(v2, v3, v7, v6, this.colormod, this.alpha, border_width); // back
+	DrawFace(v3, v0, v4, v7, this.colormod, this.alpha, border_width); // left
+};
+
+NET_HANDLE(ENT_CLIENT_BOX, bool isnew)
+{
+	this.mins = ReadVector();
+	this.maxs = ReadVector();
+	this.origin = (this.mins + this.maxs) * 0.5;
+	this.colormod.x = ReadByte() / 255;
+	this.colormod.y = ReadByte() / 255;
+	this.colormod.z = ReadByte() / 255;
+	this.alpha = ReadByte() / 255;
+	this.count = ReadFloat(); // border_width
+	this.cnt = time + ReadFloat(); // duration
+
+	setorigin(this, this.origin);
+	setsize(this, this.mins, this.maxs);
+
+	this.draw = debug_box_draw;
+	if (isnew) IL_PUSH(g_drawables, this);
+
+	return true;
+}
+#endif // CSQC
+
+#ifdef SVQC
+
+bool debug_box_send(entity this, entity to, float sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_BOX);
+	WriteVector(MSG_ENTITY, this.absmin);
+	WriteVector(MSG_ENTITY, this.absmax);
+	WriteByte(MSG_ENTITY, this.color.x * 255);
+	WriteByte(MSG_ENTITY, this.color.y * 255);
+	WriteByte(MSG_ENTITY, this.color.z * 255);
+	WriteByte(MSG_ENTITY, this.alpha * 255);
+	WriteFloat(MSG_ENTITY, this.count); // border_width
+	WriteFloat(MSG_ENTITY, this.cnt); // duration
+	return true;
+}
+
+void debug_box(vector box_mins, vector box_maxs, vector col, float alp, float border_width, float seconds)
+{
+	if (box_maxs.x <= box_mins.x + 1
+	 || box_maxs.y <= box_mins.y + 1
+	 || box_maxs.z <= box_mins.z + 1)
+		return; // backwards mins/maxs not allowed
+
+	entity this = new(debug_box);
+
+	this.origin = (box_mins + box_maxs) * 0.5;
+	setorigin(this, this.origin);
+	setsize(this, box_mins - this.origin, box_maxs - this.origin);
+	this.color = col;
+	this.alpha = bound(0.05, alp, 0.6);
+	this.count = border_width;
+	this.cnt = (seconds <= 0 ? 3 : seconds); // duration
+
+	Net_LinkEntity(this, false, this.cnt, debug_box_send);
+}
+#endif // SVQC

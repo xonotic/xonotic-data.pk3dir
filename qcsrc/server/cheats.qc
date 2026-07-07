@@ -3,6 +3,7 @@
 #include "weapons/tracing.qh"
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
+#include <common/debug.qh>
 #include <common/effects/all.qh>
 #include <common/items/_mod.qh>
 #include <common/mapobjects/func/breakable.qh>
@@ -296,6 +297,22 @@ float CheatCommand(entity this, int argc)
 		float effectnum, f;
 		vector start, end;
 
+		case "bbox":
+			IS_CHEAT(this, 0, argc, 0);
+			if(argc == 7)
+			{
+				vector box_mins = stov(argv(1));
+				vector box_maxs = stov(argv(2));
+				vector color = stov(argv(3));
+				float alpha = stof(argv(4));
+				float border_width = stof(argv(5));
+				float seconds = stof(argv(6));
+				debug_box(box_mins, box_maxs, color, alpha, border_width, seconds);
+				DID_CHEAT();
+				break;
+			}
+			sprint(this, "Usage:^3 [sv_cheats 1; restart;] cmd bbox <absmin> <absmax> <color> <alpha> <border_width> <seconds>\n");
+			break;
 		case "pointparticles":
 			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 5)
