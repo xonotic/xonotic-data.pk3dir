@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: zerowhy . <anymailz@tutanota.com>, 2021\n"
+"Last-Translator: yy0zz, 2021-2026\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/pt_BR/)\n"
 "Language: pt_BR\n"
@@ -5306,7 +5306,7 @@ msgstr "^BG%s^F3 está jogando agora na equipe ^TC^TT"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate or observe at this time."
-msgstr ""
+msgstr "^K1Você só pode assistir ou observar neste momento."
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -5586,12 +5586,12 @@ msgstr "^F1Sobreviventes^BG vencem a rodada"
 #: qcsrc/common/notifications/all.inc:468
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on ^TC^TT^K2 team which seems fine."
-msgstr ""
+msgstr "^K2Você já está na equipe ^TC^TT^K2 o que parece bom."
 
 #: qcsrc/common/notifications/all.inc:469
 #: qcsrc/common/notifications/all.inc:824
 msgid "^K2You may only join ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Você só pode entrar na equipe ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:470
 #: qcsrc/common/notifications/all.inc:825

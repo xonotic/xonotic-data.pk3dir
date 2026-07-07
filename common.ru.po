@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Темак, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2026\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -3602,7 +3602,7 @@ msgid ""
 "The %s powerup acts as armor in %s. If a player is shot while having one or "
 "more extra lives, they will survive the shot but suffer strong knockback."
 msgstr ""
-"Усилитель %s выполняет роль брони в режиме %s. Получив удар, игрок с "
+"Усилитель %s выполняет роль брони в режиме %s. Получив урон, игрок с "
 "дополнительными жизнями не погибнет, но будет отброшен с большой силой."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:29
@@ -5328,7 +5328,7 @@ msgstr "^BG%s^F3 теперь играет в команде ^TC^TT"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate or observe at this time."
-msgstr ""
+msgstr "^K1Вы можете только наблюдать или смотреть в данный момент."
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -5601,12 +5601,12 @@ msgstr "^F1Выжившие^BG победили в раунде"
 #: qcsrc/common/notifications/all.inc:468
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on ^TC^TT^K2 team which seems fine."
-msgstr ""
+msgstr "^K2Вы уже в команде ^TC^TT^K2, и это нормально."
 
 #: qcsrc/common/notifications/all.inc:469
 #: qcsrc/common/notifications/all.inc:824
 msgid "^K2You may only join ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Вы можете присоединиться только к команде ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:470
 #: qcsrc/common/notifications/all.inc:825
@@ -8262,7 +8262,7 @@ msgid ""
 msgstr ""
 "%s всегда доступен, поэтому его часто используют сразу после возрождения, но "
 "им трудно овладеть при стрельбе на средней и дальней дистанции. В отличие от "
-"другого оружия, %s может напрямую поражать другие снаряды."
+"прочих пушек, %s может напрямую поражать другие снаряды."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:172
 #, c-format
@@ -10535,7 +10535,7 @@ msgstr "Проигрыватель музыки"
 
 #: qcsrc/menu/xonotic/dialog_media.qh:6
 msgid "Media"
-msgstr "Архив"
+msgstr "Медиатека"
 
 #: qcsrc/menu/xonotic/dialog_media.qh:8
 msgid ""
@@ -12058,7 +12058,7 @@ msgstr "Эффекты бликов вокруг определённых ист
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:207
 msgid "Fade coronas according to visibility"
-msgstr "Постепенно скрывать короны исходя из их видимости"
+msgstr "Плавно скрывать короны по степени видимости"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:208
 msgid "Corona fading using occlusion queries"
@@ -13529,7 +13529,7 @@ msgid ""
 "trying it out in practice."
 msgstr ""
 "Это руководство охватывает основы, которые нужно знать об оружии, предметах "
-"и других аспектах игры, но большая часть знаний придёт из практики."
+"и других аспектах игры, но большая часть знаний придёт с опытом."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:25
 msgid ""
