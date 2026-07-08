@@ -559,12 +559,15 @@ void DrawFace(vector v1, vector v2, vector v3, vector v4, vector col, float alp,
 			DrawFace(b4, v4, v1, b1, col, border_alp, 0);
 		}
 	}
-	R_BeginPolygon("", DRAWFLAG_NORMAL, false);
-	R_PolygonVertex(v1, '0 0 0', col, alp);
-	R_PolygonVertex(v2, '1 0 0', col, alp);
-	R_PolygonVertex(v3, '1 1 0', col, alp);
-	R_PolygonVertex(v4, '0 1 0', col, alp);
-	R_EndPolygon();
+	if (alp > 0)
+	{
+		R_BeginPolygon("", DRAWFLAG_NORMAL, false);
+		R_PolygonVertex(v1, '0 0 0', col, alp);
+		R_PolygonVertex(v2, '1 0 0', col, alp);
+		R_PolygonVertex(v3, '1 1 0', col, alp);
+		R_PolygonVertex(v4, '0 1 0', col, alp);
+		R_EndPolygon();
+	}
 }
 
 void debug_box_draw(entity this)
@@ -635,6 +638,7 @@ bool debug_box_send(entity this, entity to, float sf)
 	return true;
 }
 
+/// if alp == 0 and border_width > 0 draws only borders
 void debug_box(vector box_mins, vector box_maxs, vector col, float alp, float border_width, float box_shrink, float seconds)
 {
 	if (box_shrink > 0)
@@ -654,7 +658,7 @@ void debug_box(vector box_mins, vector box_maxs, vector col, float alp, float bo
 	setorigin(this, this.origin);
 	setsize(this, box_mins - this.origin, box_maxs - this.origin);
 	this.color = col;
-	this.alpha = bound(0.05, alp, 0.6);
+	this.alpha = bound((border_width > 0 ? 0 : 0.05), alp, 0.6);
 	this.count = border_width;
 	this.cnt = (seconds <= 0 ? 3 : seconds); // duration
 
