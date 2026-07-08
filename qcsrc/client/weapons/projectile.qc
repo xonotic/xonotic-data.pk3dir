@@ -342,7 +342,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		this.traileffect = 0;
 		switch (this.csqcprojectile_type)
 		{
-#define HANDLE(id) case PROJECTILE_##id: setmodel(this, MDL_PROJECTILE_##id);
+		#define HANDLE(id) case PROJECTILE_##id: setmodel(this, MDL_PROJECTILE_##id);
 			HANDLE(ELECTRO)            this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
 			HANDLE(ROCKET)             this.traileffect = EFFECT_TR_ROCKET.m_id; this.scale = 2; break;
 			HANDLE(CRYLINK)            this.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
@@ -351,9 +351,9 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(GRENADE)            this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(GRENADE_BOUNCING)   this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(MINE)               this.traileffect = EFFECT_TR_GRENADE.m_id; break;
-			HANDLE(BLASTER)            this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(BLASTER)            this.traileffect = EFFECT_BLASTER.m_id; break;
 			HANDLE(ARC_BOLT)           this.traileffect = EFFECT_TR_WIZSPIKE.m_id; break;
-			HANDLE(HLAC)               this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(HLAC)               this.traileffect = EFFECT_GREEN_HLAC.m_id; break;
 			HANDLE(PORTO_RED)          this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
 			HANDLE(PORTO_BLUE)         this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
 			HANDLE(HOOKBOMB)           this.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
@@ -361,9 +361,18 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(HAGAR_BOUNCING)     this.traileffect = EFFECT_HAGAR_ROCKET.m_id; this.scale = 0.75; break;
 			HANDLE(FIREBALL)           this.modelindex = 0; this.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
 			HANDLE(FIREMINE)           this.modelindex = 0; this.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
-			HANDLE(TAG)                this.traileffect = EFFECT_TR_ROCKET.m_id; break;
-			HANDLE(FLAC)               this.scale = 0.4; this.traileffect = EFFECT_FLAC_TRAIL.m_id; break;
-			HANDLE(SEEKER)             this.traileffect = EFFECT_SEEKER_TRAIL.m_id; break;
+			HANDLE(SEEKER_FLAC)        this.scale = 0.4; this.traileffect = EFFECT_SEEKER_FLAC.m_id; break;
+			HANDLE(SEEKER_MISSILE)     this.traileffect = EFFECT_SEEKER_MISSILE.m_id; break;
+			HANDLE(SEEKER_TAG)
+				// XONRELEASE TODO: xonotic-v0.9.0 post-release remove this caching & fallback, use SEEKER_TAG
+				// See also common/weapons/weapon/seeker.qc.
+				static int tag_eff_m_id;
+				if (!tag_eff_m_id)
+					tag_eff_m_id = ((particleeffectnum(EFFECT_SEEKER_TAG) < 0)
+						? EFFECT_TR_ROCKET // compatible with Xonotic v0.8.6 or lower
+						: EFFECT_SEEKER_TAG).m_id;
+				this.traileffect = tag_eff_m_id;
+				break;
 
 			HANDLE(MAGE_SPIKE)         this.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
 			HANDLE(GOLEM_LIGHTNING)    this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
@@ -382,7 +391,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(RPC)                this.traileffect = EFFECT_TR_ROCKET.m_id; break;
 
 			HANDLE(ROCKETMINSTA_LASER) this.traileffect = EFFECT_ROCKETMINSTA_LASER.m_id; break;
-#undef HANDLE
+		#undef HANDLE
 			default:
 				if (MUTATOR_CALLHOOK(Ent_Projectile, this))
 					break;
@@ -400,7 +409,11 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 		switch (this.csqcprojectile_type)
 		{
-			case PROJECTILE_ELECTRO:
+		#define HANDLE(id) case PROJECTILE_##id:
+			HANDLE(BLASTER)
+			HANDLE(HLAC)
+				break;
+			HANDLE(ELECTRO)
 				// only new engines support sound moving with object
 				loopsound(this, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
@@ -410,17 +423,17 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.bouncefactor = WEP_CVAR_SEC(WEP_ELECTRO, bouncefactor);
 				this.bouncestop = WEP_CVAR_SEC(WEP_ELECTRO, bouncestop);
 				break;
-			case PROJECTILE_RPC:
-			case PROJECTILE_ROCKET:
+			HANDLE(RPC)
+			HANDLE(ROCKET)
 				loopsound(this, CH_SHOTS_SINGLE, SND_DEVASTATOR_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				break;
-			case PROJECTILE_GRENADE:
+			HANDLE(GRENADE)
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				break;
-			case PROJECTILE_GRENADE_BOUNCING:
+			HANDLE(GRENADE_BOUNCING)
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				set_movetype(this, MOVETYPE_BOUNCE);
@@ -428,84 +441,84 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.bouncefactor = WEP_CVAR(WEP_MORTAR, bouncefactor);
 				this.bouncestop = WEP_CVAR(WEP_MORTAR, bouncestop);
 				break;
-			case PROJECTILE_GOLEM_LIGHTNING:
+			HANDLE(GOLEM_LIGHTNING)
 				this.mins = '-8 -8 -8';
 				this.maxs = '8 8 8';
 				this.scale = 2.5;
 				this.avelocity = randomvec() * 720;
 				break;
-			case PROJECTILE_MINE:
+			HANDLE(MINE)
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				this.glowmod = colormapPaletteColor(this.colormap & 0x0F, true);
 				break;
-			case PROJECTILE_PORTO_RED:
+			HANDLE(PORTO_RED)
 				this.colormod = '2 1 1';
 				this.alphamod = 0.5;
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
-			case PROJECTILE_PORTO_BLUE:
+			HANDLE(PORTO_BLUE)
 				this.colormod = '1 1 2';
 				this.alphamod = 0.5;
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
-			case PROJECTILE_HAGAR_BOUNCING:
+			HANDLE(HAGAR_BOUNCING)
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
-			case PROJECTILE_CRYLINK_BOUNCING:
+			HANDLE(CRYLINK_BOUNCING)
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
-			case PROJECTILE_FIREBALL:
+			HANDLE(FIREBALL)
 				loopsound(this, CH_SHOTS_SINGLE, SND_FIREBALL_FLY2, VOL_BASE, ATTEN_NORM);
 				this.mins = '-16 -16 -16';
 				this.maxs = '16 16 16';
 				break;
-			case PROJECTILE_FIREMINE:
+			HANDLE(FIREMINE)
 				loopsound(this, CH_SHOTS_SINGLE, SND_FIREBALL_FLY, VOL_BASE, ATTEN_NORM);
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
-			case PROJECTILE_TAG:
+			HANDLE(SEEKER_TAG)
 				this.mins = '-2 -2 -2';
 				this.maxs = '2 2 2';
 				break;
-			case PROJECTILE_FLAC:
+			HANDLE(SEEKER_FLAC)
 				this.mins = '-2 -2 -2';
 				this.maxs = '2 2 2';
 				break;
-			case PROJECTILE_SEEKER:
+			HANDLE(SEEKER_MISSILE)
 				loopsound(this, CH_SHOTS_SINGLE, SND_SEEKER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
-			case PROJECTILE_ARC_BOLT:
+			HANDLE(ARC_BOLT)
 				set_movetype(this, MOVETYPE_BOUNCE);
 				settouch(this, func_null);
 				break;
-			case PROJECTILE_RAPTORBOMB:
+			HANDLE(RAPTORBOMB)
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				break;
-			case PROJECTILE_RAPTORBOMBLET:
+			HANDLE(RAPTORBOMBLET)
+			HANDLE(RAPTORCANNON)
 				break;
-			case PROJECTILE_RAPTORCANNON:
-				break;
-			case PROJECTILE_SPIDERROCKET:
+			HANDLE(SPIDERROCKET)
 				loopsound(this, CH_SHOTS_SINGLE, SND_VEH_SPIDERBOT_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
-			case PROJECTILE_WAKIROCKET:
+			HANDLE(WAKIROCKET)
 				loopsound(this, CH_SHOTS_SINGLE, SND_VEH_RACER_ROCKET_FLY, VOL_BASE, ATTEN_NORM);
 				break;
-			case PROJECTILE_ROCKETMINSTA_LASER:
-				if(this.colormap > 0)
+			HANDLE(ROCKETMINSTA_LASER)
+				if (this.colormap > 0)
 					this.colormod = colormapPaletteColor(this.colormap & 0x0F, true);
 				break;
+		#undef HANDLE
 			default:
 				break;
 		}

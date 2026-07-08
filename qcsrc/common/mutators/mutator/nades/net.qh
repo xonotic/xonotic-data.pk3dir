@@ -12,4 +12,9 @@ const int SF_NADEORB_RADIUS_FLOAT    = BIT(1);
 .float animstate_entime;
 .float height;
 #endif
+
+#ifdef SVQC
+/// Network nade effect data to player
+void nade_Effect(entity player, entity eff, int eff_cnt);
+#endif
 #endif // GAMEQC

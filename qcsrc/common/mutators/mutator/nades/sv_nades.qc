@@ -57,25 +57,6 @@ void nade_spawn(entity _nade)
 }
 
 
-void nades_orb_think(entity this)
-{
-	if (time >= this.ltime)
-	{
-		delete(this);
-		return;
-	}
-
-	this.nextthink = time;
-
-	if (time >= this.nade_special_time)
-	{
-		this.nade_special_time = time + 0.05;
-		this.nade_show_particles = true;
-	}
-	else
-		this.nade_show_particles = false;
-}
-
 entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad)
 {
 	// NOTE: this function merely places an orb
@@ -103,9 +84,8 @@ entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad)
 	Net_LinkEntity(orb, true, 0, orb_send);
 
 	orb.reset = SUB_Remove;
-
-	setthink(orb, nades_orb_think);
-	orb.nextthink = time;
+	setthink(orb, SUB_Remove);
+	orb.nextthink = orb.ltime;
 
 	return orb;
 }
@@ -149,7 +129,7 @@ void nade_boom(entity this)
 #undef SET_NADE_EFFECT
 
 	if (expef)
-		Send_Effect_Except(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, NULL);
+		Send_Effect_Core(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, -1, -1, -1, NULL);
 
 	sound(this, CH_SHOTS_SINGLE, SND_Null,          VOL_BASE, ATTEN_NORM);
 	sound(this, CH_SHOTS,        SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
