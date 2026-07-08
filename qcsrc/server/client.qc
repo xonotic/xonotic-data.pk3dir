@@ -2157,11 +2157,17 @@ int GetPlayerLimit()
 {
 	if(g_duel)
 		return 2; // TODO: this workaround is needed since the mutator hook from duel can't be activated before the gametype is loaded (e.g. switching modes via gametype vote screen)
+
 	// don't return map_maxplayers during intermission as it would interfere with MapHasRightSize()
-	int player_limit = (autocvar_g_maxplayers >= 0 || intermission_running) ? autocvar_g_maxplayers : map_maxplayers;
-	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
-	player_limit = M_ARGV(0, int);
-	return player_limit < maxclients && player_limit > 0 ? player_limit : 0;
+	int player_limit = autocvar_g_maxplayers > 0 ? autocvar_g_maxplayers : maxclients;
+	if (!intermission_running)
+	{
+		if (autocvar_g_maxplayers == -1 && map_maxplayers > 0)
+			player_limit = map_maxplayers;
+		MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
+		player_limit = M_ARGV(0, int);
+	}
+	return bound(0, player_limit, maxclients);
 }
 
 /**
@@ -2192,7 +2198,7 @@ int nJoinAllowed(entity this)
 
 	int player_limit = GetPlayerLimit();
 
-	int free_slots = max(0, (player_limit ? player_limit : maxclients) - currentlyPlaying);
+	int free_slots = max(0, player_limit - currentlyPlaying);
 	if (this || maxclients - totalClients) // don't add bot slots in the getstatus case if nobody can connect
 		free_slots += bots_would_leave;
 	if (!this) // getstatus case
