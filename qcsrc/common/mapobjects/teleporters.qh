@@ -52,7 +52,7 @@ void trigger_teleport_use(entity this, entity actor, entity trigger);
 		if(deathmax.y < telefragmax.y) deathmax.y = telefragmax.y; \
 		if(deathmax.z < telefragmax.z) deathmax.z = telefragmax.z; \
 	} \
-	debug_box(deathmin, deathmax, '0 0 1', 0.1, 1, 0); \
+	debug_box(deathmin, deathmax, '0 0 1', 0.1, 1, 0, 0); \
 	for (entity head = findbox(deathmin, deathmax); head; head = head.chain) \
 		if (head != player && head.takedamage)
 

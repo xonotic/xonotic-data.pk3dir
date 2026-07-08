@@ -635,8 +635,14 @@ bool debug_box_send(entity this, entity to, float sf)
 	return true;
 }
 
-void debug_box(vector box_mins, vector box_maxs, vector col, float alp, float border_width, float seconds)
+void debug_box(vector box_mins, vector box_maxs, vector col, float alp, float border_width, float box_shrink, float seconds)
 {
+	if (box_shrink > 0)
+	{
+		box_mins += box_shrink * '1 1 1';
+		box_maxs -= box_shrink * '1 1 1';
+	}
+
 	if (box_maxs.x <= box_mins.x + 1
 	 || box_maxs.y <= box_mins.y + 1
 	 || box_maxs.z <= box_mins.z + 1)

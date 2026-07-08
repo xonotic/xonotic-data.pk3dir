@@ -307,7 +307,7 @@ float CheatCommand(entity this, int argc)
 				float alpha = stof(argv(4));
 				float border_width = stof(argv(5));
 				float seconds = stof(argv(6));
-				debug_box(box_mins, box_maxs, color, alpha, border_width, seconds);
+				debug_box(box_mins, box_maxs, color, alpha, border_width, 0, seconds);
 				DID_CHEAT();
 				break;
 			}

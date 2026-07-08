@@ -1,5 +1,6 @@
 #include "race.qh"
 
+#include <common/debug.qh>
 #include <common/deathtypes/all.qh>
 #include <common/gametypes/_mod.qh>
 #include <common/gametypes/rules.qh>
@@ -907,6 +908,8 @@ void defrag_waypointsprites(entity targeted, entity checkpoint, int recursionlev
 	{
 		if (t.modelindex)
 		{
+			// shrink box by 0.5 otherwise faces may overlap world geometry and cause z-fight issues
+			debug_box(t.absmin, t.absmax, '1 0 1', 0.1, 2, 0.5, FLOAT_MAX);
 			WaypointSprite_SpawnFixed(s, (t.absmin + t.absmax) * 0.5, t, sprite, RADARICON_NONE);
 			t.sprite.realowner = checkpoint;
 			t.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
@@ -1119,6 +1122,8 @@ spawnfunc(trigger_race_checkpoint)
 
 	if(!this.race_penalty)
 	{
+		debug_box(this.absmin, this.absmax, '1 0 1', 0.1, 2, 0.5, FLOAT_MAX);
+
 		if(this.race_checkpoint)
 			WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, this, sprite, RADARICON_NONE);
 		else
