@@ -1363,7 +1363,7 @@ msgstr "### 此伺服器不相容，無法加入 ###"
 #: qcsrc/client/main.qc:1371
 #, c-format
 msgid "Welcome to %s"
-msgstr "歡迎來到%s"
+msgstr "歡迎來到 %s"
 
 #: qcsrc/client/main.qc:1387 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
@@ -4319,7 +4319,7 @@ msgstr "^F2丟擲硬幣...結果：%s^F2！"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr "^BG你的^F1噴氣揹包^BG沒有任何燃料"
+msgstr "^BG你的^F1噴氣揹包^BG沒有燃料"
 
 #: qcsrc/common/notifications/all.inc:271
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -4962,7 +4962,7 @@ msgstr "^BG%s^F3 加入^TC^TT隊^BG遊戲"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate or observe at this time."
-msgstr ""
+msgstr "^K1你現在只能觀戰。"
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -5224,12 +5224,12 @@ msgstr "^F1倖存者^BG贏得此局！"
 #: qcsrc/common/notifications/all.inc:468
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on ^TC^TT^K2 team which seems fine."
-msgstr ""
+msgstr "^K2你已在^TC^TT隊^K2，隊伍平衡。"
 
 #: qcsrc/common/notifications/all.inc:469
 #: qcsrc/common/notifications/all.inc:824
 msgid "^K2You may only join ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2你只能加入^TC^TT隊^K2！"
 
 #: qcsrc/common/notifications/all.inc:470
 #: qcsrc/common/notifications/all.inc:825

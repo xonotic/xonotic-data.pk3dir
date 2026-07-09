@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Kostiantyn Tsebro, 2026\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -3416,6 +3416,11 @@ msgid ""
 "while in contact with a wall, allowing quick speed gain if done repeatedly "
 "against a long wall."
 msgstr ""
+"%s - це мутатор, який дозволяє виконувати ухилення, спрощуючи уникнення атак "
+"у ближньому бою. Якщо його увімкнено, то під час перебування на землі "
+"подвійне натискання клавіші руху зробить ривок у відповідному напрямку. Так "
+"само працює при контакті зі стіною, дозволяючи швидко набирати швидкість, "
+"якщо повторювати цю дію вздовж довгій стіні."
 
 #: qcsrc/common/mutators/mutator/dodging/dodging.qc:13
 #, c-format
@@ -3436,7 +3441,7 @@ msgstr "допоміжний гак"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3абордажний гак^8 активовано, натисніть ^3%s^8 для використання"
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:11
 #, c-format
@@ -3444,6 +3449,9 @@ msgid ""
 "The %s mutator gives all players a %s as their offhand weapon, used with %s. "
 "It has unlimited ammo, but the ordinary secondary fire can't be used."
 msgstr ""
+"Мутатор %s дає всім гравцям %s як допоміжну зброю, яку можна використовувати "
+"за допомогою клавіші %s. Гак не використовує набої, проте його звичний "
+"вторинний вогонь буде відсутній."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:12
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
@@ -3459,11 +3467,14 @@ msgid ""
 "at their enemies at the same time, opening up more gameplay possibilities "
 "than the regular %s."
 msgstr ""
+"Оскільки він видається як допоміжний, гравці можуть переміщатися з його "
+"допомогою та стріляти у ворогів одночасно, розкриваючи більше можливостей "
+"геймплею, ніж звичайний %s. "
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:14
 #, c-format
 msgid "Note that it is overridden by the %s mutator."
-msgstr ""
+msgstr "Зауважте, що він перевизначений мутатором %s."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:314
 msgid "Hook"
@@ -3476,6 +3487,9 @@ msgid ""
 "instead giving players the %s, which immediately frags players in a single "
 "shot, hence the name \"InstaGib.\""
 msgstr ""
+"%s - це мутатор, який прибирає всю зброю та її точки появи з мапи, натомість "
+"видає гравцям %s, який відразу вбиває гравців з одного пострілу, звідси й "
+"назва \"ІнстаҐіб\"."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:17
 #, c-format
@@ -3484,6 +3498,9 @@ msgid ""
 "after 10 seconds if you run out of ammo. Ammo (%s) can be picked up on the "
 "map often, or collected from dropped %s guns."
 msgstr ""
+"Точне прицілювання та економія набоїв є важливою, тому що ви самозруйнуєтеся "
+"після 10 секунд як тільки у вас закінчаться набої. Набої (%s) часто можна "
+"підібрати на мапі, або зібрати з кинутої зброї %s."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:19
 #, c-format
@@ -3492,6 +3509,9 @@ msgid ""
 "picked up (total extra lives is displayed as armor). Other powerups often "
 "present on maps include %s and %s."
 msgstr ""
+"Часто на мапах з'являється %s, який рятує вас від вбивства при підборі "
+"(загальна кількість життів відображена як кількість броні). Також на мапі "
+"з'являються інші підсилювачі, включаючи %s та %s."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:21
 #, c-format
@@ -3500,6 +3520,9 @@ msgid ""
 "of gametypes but particularly %s. Sometimes it's enabled alongside other "
 "mutators such as %s for added movement possibilities."
 msgstr ""
+"Це доволі поширений мутатор на багатьох серверах, який добре поєднується з "
+"більшістю режимами ігор, особливо з режимом %s. Іноді його вмикають разом з "
+"іншими мутаторами, як-от %s для більших можливостей руху."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qh:5
 #: qcsrc/common/util.qc:307
@@ -3513,6 +3536,7 @@ msgid ""
 "The %s is sometimes present on maps when %s is enabled, providing ammo for "
 "the %s."
 msgstr ""
+"%s іноді з'являються на мапі під час мутатора %s, надаючи набої зброї %s."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qc:19
 #, c-format
@@ -3520,10 +3544,12 @@ msgid ""
 "The %s powerup acts as armor in %s. If a player is shot while having one or "
 "more extra lives, they will survive the shot but suffer strong knockback."
 msgstr ""
+"%s діє як броня в %s. Якщо в гравця влучають, коли він має одну чи більше "
+"додаткових життів, він переживе постріл, але зазнає сильного відкидання."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:29
 msgid "Vaporizer ammo"
-msgstr "Набої випаровувача"
+msgstr "Набої Випаровувача"
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:57
 #: qcsrc/common/mutators/mutator/instagib/items.qh:60
@@ -3548,6 +3574,9 @@ msgid ""
 "orb they will recover ammo, and if enemies enter the sphere they will lose "
 "ammo."
 msgstr ""
+"%s вибухає після короткої затримки, створюючи сферу навколо місця вибуху на "
+"декілька секунд. Якщо ваші союзники увійдуть в цю сферу, вони отримають "
+"набої, а вороги - втратять свої набої."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:82
 #, c-format
@@ -3555,6 +3584,8 @@ msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
 "inside the orb, so you don't need to reload."
 msgstr ""
+"Подібно до бафу %s, магазини вашої зброї залишаються повними під час "
+"перебування у сфері, тож вам не потрібно перезаряджатися."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:24
 msgid "Ammo grenade"
@@ -3586,6 +3617,9 @@ msgid ""
 "point where it detonated for several seconds. Players and projectiles that "
 "enter the sphere will be slowed down, including yourself."
 msgstr ""
+"%s вибухає після короткої затримки, створюючи сферу навколо місця вибуху на "
+"декілька секунд. Гравці та снаряди, що потрапляють у цю сферу, "
+"сповільнюються, зокрема й ви самі."
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:24
 msgid "Entrap grenade"
@@ -3599,6 +3633,9 @@ msgid ""
 "members enter the orb they will recover health, and if enemies enter the "
 "sphere they will be harmed."
 msgstr ""
+"%s вибухає після короткої затримки, створюючи сферу навколо місця вибуху на "
+"декілька секунд. Якщо ваші союзники увійдуть в цю сферу, вони вилікуються, а "
+"вороги - зазнають шкоди."
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qh:24
 msgid "Heal grenade"
@@ -3612,6 +3649,10 @@ msgid ""
 "players can't move or shoot, leaving them vulnerable to damage, but if left "
 "too long they'll unfreeze and run away!"
 msgstr ""
+"%s вибухає після короткої затримки, заморожуючи на декілька секунд будь-яких "
+"ворогів, які потрапили під радіус вибуху. Під час заморозки гравці не можуть "
+"рухатися чи стріляти, що робить їх вразливими до шкоди, але якщо залишити "
+"надовго, вони розморозяться та втечуть!"
 
 #: qcsrc/common/mutators/mutator/nades/nade/ice.qh:22
 msgid "Ice grenade"
@@ -3636,6 +3677,9 @@ msgid ""
 "a fountain. The napalm fire balls burn for a while, and damage players who "
 "get too close."
 msgstr ""
+"%s вибухає після невеличкої затримки, розбризкуючи навколо фонтан вогняних "
+"згустків напалму. Ці вогняні кулі горять деякий час і завдають шкоди "
+"гравцям, які опинилися занадто близько."
 
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:32
 msgid "Napalm grenade"
@@ -3658,6 +3702,8 @@ msgid ""
 "Make sure you remember to throw it with %s, or else it will blow up in your "
 "hands!"
 msgstr ""
+"Переконайтеся у тому, що ви пам'ятаєте як кинути гранату через %s, інакше "
+"вона вибухне в ваших руках!"
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:17
@@ -3671,6 +3717,9 @@ msgid ""
 "where it detonated. It is useful for cases where you want to go back to some "
 "point on the map after you die."
 msgstr ""
+"%s вибухає після короткої затримки, тимчасово змінюючи вашу точку появи в "
+"місце вибуху. Вона корисна для випадків, коли вам потрібно повернутися до "
+"певної точки на мапі після смерті."
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qh:19
 msgid "Spawn grenade"
@@ -3707,9 +3756,9 @@ msgid ""
 "point where it detonated for several seconds. Players inside the orb will be "
 "invisible to those outside it."
 msgstr ""
-"%s вибухає після невеличкої затримки, тимчасово створюючи сферу навколо "
-"місця вибуху на декілька секунд. Гравці всередині сфери будуть невидимими "
-"для тих, хто за межами сфери."
+"%s вибухає після невеличкої затримки, створюючи сферу навколо місця вибуху "
+"на декілька секунд. Гравці всередині сфери будуть невидимими для тих, хто за "
+"межами сфери."
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:24
 msgid "Veil grenade"
@@ -3722,6 +3771,9 @@ msgid ""
 "thrown by pressing %s twice. If the %s and %s mutators are disabled, they "
 "can also be thrown by holding then releasing %s."
 msgstr ""
+"Мутатор %s дає всім гравцям допоміжну гранату, які можна звести та кинути "
+"подвійним натисканням клавіші %s. Якщо мутатори %s та %s вимкнено, гранати "
+"також можна кидати, утримуючи та відпускаючи клавішу %s. "
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:51
 msgid ""
@@ -3729,6 +3781,9 @@ msgid ""
 "configuration options for this mutator, so they may act a little differently "
 "depending on the server you play on."
 msgstr ""
+"Існує багато типів гранат на вибір, а також безліч налаштувань для цього "
+"мутатора, тому вони можуть поводитися трохи інакше залежно від сервера, на "
+"якому ви граєте."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:53
 #, c-format
@@ -5123,7 +5178,7 @@ msgstr "^BG%s^F3 зараз грає у ^TC^TT команді"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate or observe at this time."
-msgstr ""
+msgstr "^K1Наразі ви можете лише спостерігати "
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -5396,12 +5451,12 @@ msgstr "^F1Уцілілі^BG виграють раунд"
 #: qcsrc/common/notifications/all.inc:468
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on ^TC^TT^K2 team which seems fine."
-msgstr ""
+msgstr "^K2Ви вже у команді ^TC^TT^K2, що цілком нормально."
 
 #: qcsrc/common/notifications/all.inc:469
 #: qcsrc/common/notifications/all.inc:824
 msgid "^K2You may only join ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Вам можна лише грати за команду ^TC^TT^K2! "
 
 #: qcsrc/common/notifications/all.inc:470
 #: qcsrc/common/notifications/all.inc:825
@@ -5590,81 +5645,81 @@ msgstr "^BG%s^K1 заскочив на власні ВИЛА%s%s"
 #: qcsrc/common/notifications/all.inc:507
 #, c-format
 msgid "^BG%s%s^K1 was caught in ^BG%s^K1's Hook gravity bomb%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 попав під гравітаційну бомбу Гака ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:508
 #, c-format
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Klein Bottle%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 помер від класної гри ^BG%s^K1 на @!#%%ій пляшці Клейна%s%s"
 
 #: qcsrc/common/notifications/all.inc:509
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle%s%s"
-msgstr ""
+msgstr "^BG%s^K1 нашкодив свої вуха під час гри на @!#%%ій пляшці Клейна%s%s"
 
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був підстрелений з Кулемета ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був продірявлений із Кулемета ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #: qcsrc/common/notifications/all.inc:843
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
-msgstr ""
+msgstr "^BGВи не можете встановити більше ніж ^F2%s^BG мін одночасно"
 
 #: qcsrc/common/notifications/all.inc:513
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's mine%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 опинився під міну ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:514
 #, c-format
 msgid "^BG%s^K1 forgot about their mine%s%s"
-msgstr ""
+msgstr "^BG%s^K1 забув про свою міну%s%s"
 
 #: qcsrc/common/notifications/all.inc:515
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 опинився під гранати Мортири ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:516
 #, c-format
 msgid "^BG%s%s^K1 ate ^BG%s^K1's Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 з'їв гранату Мортири ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:517
 #, c-format
 msgid "^BG%s^K1 didn't see their own Mortar grenade%s%s"
-msgstr ""
+msgstr "^BG%s^K1 не побачив свою же гранату Мортири%s%s"
 
 #: qcsrc/common/notifications/all.inc:518
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their own Mortar%s%s"
-msgstr ""
+msgstr "^BG%s^K1 підірвався від своєї же Мортири%s%s"
 
 #: qcsrc/common/notifications/all.inc:519
 #, c-format
 msgid "^BG%s%s^K1 was torn to bits by ^BG%s^K1's Overkill Heavy MachineGun%s%s"
 msgstr ""
-"^BG%s%s^K1 був рознесений на шматки від Оверкіл Важкого Кулемета ^BG%s^K1%s%s"
+"^BG%s%s^K1 був рознесений на шматки з Оверкіл Важкого Кулемета ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:520
 #, c-format
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
-msgstr "^BG%s%s^K1 був продірявлений від Оверкіл Кулемета ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 був продірявлений із Оверкіл Кулемета ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:521
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Overkill Nex%s%s"
-msgstr "^BG%s%s^K1 був випарований від Оверкіл Некса ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 був випарований із Оверкіл Некса ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:522
 #, c-format
@@ -5696,77 +5751,77 @@ msgstr "^BG%s^K1 підірвався від своєї ж Оверкіл Рак
 #: qcsrc/common/notifications/all.inc:527
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Overkill Shotgun%s%s"
-msgstr "^BG%s%s^K1 був розстріляний від Оверкіл Рушниці ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 був розстріляний з Оверкіл Рушниці ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:528
 #, c-format
 msgid "^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був підстрелений з Гвинтівки ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:529
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 загинув під зливою куль із Гвинтівки ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:530
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 не зміг сховатися від зливи куль із Гвинтівки ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:531
 #, c-format
 msgid "^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 Не зміг сховатися від Гвинтівки ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:532
 #, c-format
 msgid "^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був розгачений ракетами Переслідувача ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:533
 #, c-format
 msgid "^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був наздогнаний Переслідувачем ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:534
 #, c-format
 msgid "^BG%s^K1 played with tiny Seeker rockets%s%s"
-msgstr ""
+msgstr "^BG%s^K1 награвся з крихітними ракетами Переслідувача%s%s"
 
 #: qcsrc/common/notifications/all.inc:535
 #, c-format
 msgid "^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був розстріляний з Рушниці ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:536
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 добре відлупцював ^BG%s^K1 з великої Рушниці%s%s"
 
 #: qcsrc/common/notifications/all.inc:537
 #, c-format
 msgid "^BG%s^K1 is now thinking with portals%s%s"
-msgstr ""
+msgstr "^BG%s^K1 тепер мислить порталами%s%s"
 
 #: qcsrc/common/notifications/all.inc:538
 #, c-format
 msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 помер від класної гри ^BG%s^K1 на @!#%%ій Тубі%s%s"
 
 #: qcsrc/common/notifications/all.inc:539
 #, c-format
 msgid "^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"
-msgstr ""
+msgstr "^BG%s^K1 нашкодив свої вуха під час гри на @!#%%ій Тубі%s%s"
 
 #: qcsrc/common/notifications/all.inc:540
 #, c-format
 msgid "^BG%s%s^K1 has been sublimated by ^BG%s^K1's Vaporizer%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був розщеплений Випаровувачем ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:541
 #, c-format
 msgid "^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 був випарований із Вихора ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:560
 msgid "^F4You are now alone!"
@@ -5894,12 +5949,12 @@ msgstr "^BGВи взяли прапор!"
 #: qcsrc/common/notifications/all.inc:596
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr ""
+msgstr "^BGВи підібрали прапор %sкоманди^BG, поверніть його!"
 
 #: qcsrc/common/notifications/all.inc:597
 #, c-format
 msgid "^BGYou got the %senemy^BG's flag, return it!"
-msgstr ""
+msgstr "^BGВи підібрали %sворожий прапор^BG, поверніть його!"
 
 #: qcsrc/common/notifications/all.inc:598
 #, c-format
@@ -8212,7 +8267,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/hlac.qh:35
 msgid "Heavy Laser Assault Cannon"
-msgstr "Важка Ірраціональна Лазерна Арматура"
+msgstr "Важка Імпульсна Лазерна Арматура"
 
 #: qcsrc/common/weapons/weapon/hook.qc:414
 #, c-format
