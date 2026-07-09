@@ -94,6 +94,7 @@ STATIC_INIT(g_railgunhit)
 
 .float railgundistance;
 .vector railgunforce;
+.vector railgunforcedir;
 void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype);
 
 entity fireBullet_trace_callback_eff;
