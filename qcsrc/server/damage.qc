@@ -723,14 +723,9 @@ float RadiusDamageForSource(
 	float stat_damagedone = 0;
 	float total_damage_to_creatures = 0;
 
-	vector force;
 	if (!(deathtype & HITTYPE_SOUND)) // do not send bandwidth-hogging radial spam attacks
 	{
-		force = inflictorvelocity;
-		if (force == '0 0 0')
-			force = '0 0 -1';
-		else
-			force = normalize(force);
+		vector force = inflictorvelocity != '0 0 0' ? normalize(inflictorvelocity) : '0 0 0';
 		if (forceintensity >= 0)
 			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity, force, deathtype, 0, attacker);
 		else
@@ -817,7 +812,7 @@ float RadiusDamageForSource(
 					print("\n");
 					*/
 
-					force = normalize(center - inflictororigin_wz);
+					vector force = normalize(center - inflictororigin_wz);
 					force *= (finaldmg / max(coredamage, edgedamage)) * forceintensity;
 					hitloc = nearest;
 
