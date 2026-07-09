@@ -36,6 +36,7 @@ void skeleton_loadinfo(entity e)
 	e.fixbone = 0;
 	if(get_model_parameters(e.model, e.skin))
 	{
+		e.species = get_model_parameters_species;
 		if(get_model_parameters_bone_upperbody)
 			e.bone_upperbody = gettagindex(e, get_model_parameters_bone_upperbody);
 		if(e.bone_upperbody)

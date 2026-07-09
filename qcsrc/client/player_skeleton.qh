@@ -12,3 +12,4 @@ classfield(Skeleton) .int bone_weapon;
 classfield(Skeleton) .float bone_aim[MAX_AIM_BONES];
 classfield(Skeleton) .float bone_aimweight[MAX_AIM_BONES];
 classfield(Skeleton) .float fixbone;
+classfield(Skeleton) .float species;
