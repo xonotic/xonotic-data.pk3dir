@@ -544,8 +544,10 @@ void cvar_changes_init()
 		BADPREFIX("sv_ready_restart_");
 		BADCVAR("sv_teamnagger");
 
-		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
-		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "standard");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "standard_available");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "extended");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "extended_available");
 
 		// mutators that announce themselves properly to the server browser
 		BADCVAR("g_instagib");
@@ -1929,11 +1931,22 @@ WepSet weapons_devall()
 	return ret;
 }
 
-WepSet weapons_most()
+WepSet weapons_standard()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
 		if ((it.spawnflags & WEP_FLAG_NORMAL) && !(it.spawnflags & (WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN)))
+			ret |= it.m_wepset;
+	});
+	return ret;
+}
+
+WepSet weapons_extended()
+{
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		if (!(it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SUPERWEAPON)))
 			ret |= it.m_wepset;
 	});
 	return ret;
@@ -1985,9 +1998,20 @@ void readplayerstartcvars()
 		g_weaponarena_list = "Dev All Weapons Arena";
 		g_weaponarena_weapons = weapons_devall();
 		break;
-	case "most":
-		g_weaponarena_list = "Most Weapons Arena";
-		g_weaponarena_weapons = weapons_most();
+	case "standard": case "most":
+		g_weaponarena_list = "Standard Weapons Arena";
+		g_weaponarena_weapons = weapons_standard();
+		break;
+	case "extended":
+		g_weaponarena_list = "Extended Weapons Arena";
+		g_weaponarena_weapons = weapons_extended();
+		break;
+	case "extended_available":
+		g_weaponarena_list = "Extended Available Weapons Arena";
+		g_weaponarena_weapons = weapons_extended();
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "all_available":
 		g_weaponarena_list = "All Available Weapons Arena";
@@ -2003,9 +2027,9 @@ void readplayerstartcvars()
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
-	case "most_available":
-		g_weaponarena_list = "Most Available Weapons Arena";
-		g_weaponarena_weapons = weapons_most();
+	case "standard_available": case "most_available":
+		g_weaponarena_list = "Standard Available Weapons Arena";
+		g_weaponarena_weapons = weapons_standard();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
