@@ -1422,7 +1422,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage)
+vector healtharmor_applydamage(float h, float a, float armorblock, int deathtype, float damage)
 {
 	vector v;
 	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
@@ -1430,7 +1430,7 @@ vector healtharmor_applydamage(float a, float armorblock, int deathtype, float d
 	if (deathtype & HITTYPE_ARMORPIERCE)
 		armorblock = 0;
 	v.y = bound(0, damage * armorblock, a); // save
-	v.x = bound(0, damage - v.y, damage); // take
+	v.x = bound(0, damage - v.y, h); // take
 	v.z = 0;
 	return v;
 }

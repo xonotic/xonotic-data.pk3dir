@@ -8,7 +8,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 	entity frag_target = M_ARGV(2, entity);
 	if (!StatusEffects_active(BUFF_VAMPIRE, frag_attacker))
 		return;
-	float health_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
+	float health_take = M_ARGV(4, float);
 
 	if (!StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target)
 	&& frag_target != frag_attacker
