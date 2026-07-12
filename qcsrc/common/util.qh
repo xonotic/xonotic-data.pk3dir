@@ -166,7 +166,7 @@ string records_reply[10];
 
 #ifdef GAMEQC
 vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
-vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage); // returns vector: take, save, 0
+vector healtharmor_applydamage(float h, float a, float armorblock, int deathtype, float damage); // returns vector: take, save, 0
 #endif
 
 string getcurrentmod();
