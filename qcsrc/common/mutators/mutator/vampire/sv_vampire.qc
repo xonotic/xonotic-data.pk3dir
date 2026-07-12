@@ -11,8 +11,8 @@ MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
 	// NOTE: vampire buff PlayerDamage_SplitHealthArmor code is similar
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	float health_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
-	float armor_take = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
+	float health_take = M_ARGV(4, float);
+	float armor_take = M_ARGV(5, float);
 	float damage_take = (autocvar_g_vampire_use_total_damage) ? health_take + armor_take : health_take;
 
 	if (!StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target)

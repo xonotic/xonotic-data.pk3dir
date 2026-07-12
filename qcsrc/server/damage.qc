@@ -503,7 +503,6 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if (IS_PLAYER(targ) && targ.vehicle)
 			vehicles_exit(targ.vehicle, VHEF_RELEASE);
 
-		SetResourceExplicit(targ, RES_ARMOR, 0);
 		StatusEffects_remove(STATUSEFFECT_SpawnShield, targ, STATUSEFFECT_REMOVE_CLEAR);
 		targ.flags &= ~FL_GODMODE;
 		damage = INFINITY;
@@ -556,7 +555,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 							if (autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(GetResource(attacker, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
+								vector v = healtharmor_applydamage(GetResource(attacker, RES_HEALTH), GetResource(attacker, RES_ARMOR),
+								                                   autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
 								attacker.dmg_take += v.x;
 								attacker.dmg_save += v.y;
 								attacker.dmg_inflictor = inflictor;
@@ -566,7 +566,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 							if (autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(GetResource(targ, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+								vector v = healtharmor_applydamage(GetResource(targ, RES_HEALTH), GetResource(targ, RES_ARMOR),
+								                                   autocvar_g_balance_armor_blockpercent, deathtype, damage);
 								targ.dmg_take += v.x;
 								targ.dmg_save += v.y;
 								targ.dmg_inflictor = inflictor;
