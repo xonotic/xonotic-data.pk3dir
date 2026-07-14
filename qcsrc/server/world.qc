@@ -544,8 +544,10 @@ void cvar_changes_init()
 		BADPREFIX("sv_ready_restart_");
 		BADCVAR("sv_teamnagger");
 
-		BADPRESUFFIXVALUE("g_", "_weaponarena", "most");
-		BADPRESUFFIXVALUE("g_", "_weaponarena", "most_available");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "standard");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "standard_available");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "extended");
+		BADPRESUFFIXVALUE("g_", "_weaponarena", "extended_available");
 
 		// mutators that announce themselves properly to the server browser
 		BADCVAR("g_instagib");
@@ -1929,7 +1931,7 @@ WepSet weapons_devall()
 	return ret;
 }
 
-WepSet weapons_most()
+WepSet weapons_standard()
 {
 	WepSet ret = '0 0 0';
 	FOREACH(Weapons, it != WEP_Null, {
@@ -1939,43 +1941,22 @@ WepSet weapons_most()
 	return ret;
 }
 
-void weaponarena_available_all_update(entity this)
+WepSet weapons_extended()
 {
-	if (weaponsInMapAll)
+	WepSet ret = '0 0 0';
+	FOREACH(Weapons, it != WEP_Null,
 	{
-		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & weapons_all());
-	}
-	else
-	{
-		// if no weapons are available on the map, just fall back to all weapons arena
-		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_all();
-	}
+		if (!(it.spawnflags & (WEP_FLAG_HIDDEN | WEP_FLAG_SUPERWEAPON)))
+			ret |= it.m_wepset;
+	});
+	return ret;
 }
 
-void weaponarena_available_devall_update(entity this)
+void weaponarena_available_update(entity this)
 {
 	if (weaponsInMapAll)
-	{
-		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | weaponsInMapAll;
-	}
-	else
-	{
-		// if no weapons are available on the map, just fall back to devall weapons arena
-		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_devall();
-	}
-}
-
-void weaponarena_available_most_update(entity this)
-{
-	if (weaponsInMapAll)
-	{
-		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & weapons_most());
-	}
-	else
-	{
-		// if no weapons are available on the map, just fall back to most weapons arena
-		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_most();
-	}
+		start_weapons = warmup_start_weapons = g_weaponarena_weapons = weapons_start() | (weaponsInMapAll & g_weaponarena_weapons);
+	// if no weapons are available on the map, just fall back to the full version of the configured set
 }
 
 void readplayerstartcvars()
@@ -1996,7 +1977,7 @@ void readplayerstartcvars()
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
-	g_weaponarena = 0;
+	g_weaponarena = 1;
 	g_weaponarena_weapons = '0 0 0';
 
 	string s = cvar_string("g_weaponarena");
@@ -2004,64 +1985,60 @@ void readplayerstartcvars()
 	MUTATOR_CALLHOOK(SetWeaponArena, s);
 	s = M_ARGV(0, string);
 
-	if (s == "0" || s == "")
+	switch (s)
 	{
-		// no arena
-	}
-	else if (s == "off")
-	{
-		// forcibly turn off weaponarena
-	}
-	else if (s == "all" || s == "1")
-	{
-		g_weaponarena = 1;
+	case "0": case "": case "off":
+		g_weaponarena = 0;
+		break;
+	case "all": case "1":
 		g_weaponarena_list = "All Weapons Arena";
 		g_weaponarena_weapons = weapons_all();
-	}
-	else if (s == "devall")
-	{
-		g_weaponarena = 1;
+		break;
+	case "devall":
 		g_weaponarena_list = "Dev All Weapons Arena";
 		g_weaponarena_weapons = weapons_devall();
-	}
-	else if (s == "most")
-	{
-		g_weaponarena = 1;
-		g_weaponarena_list = "Most Weapons Arena";
-		g_weaponarena_weapons = weapons_most();
-	}
-	else if (s == "all_available")
-	{
-		g_weaponarena = 1;
+		break;
+	case "standard": case "most":
+		g_weaponarena_list = "Standard Weapons Arena";
+		g_weaponarena_weapons = weapons_standard();
+		break;
+	case "extended":
+		g_weaponarena_list = "Extended Weapons Arena";
+		g_weaponarena_weapons = weapons_extended();
+		break;
+	case "extended_available":
+		g_weaponarena_list = "Extended Available Weapons Arena";
+		g_weaponarena_weapons = weapons_extended();
+
+		// this needs to run after weaponsInMapAll is initialized
+		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+		break;
+	case "all_available":
 		g_weaponarena_list = "All Available Weapons Arena";
+		g_weaponarena_weapons = weapons_all();
 
 		// this needs to run after weaponsInMapAll is initialized
-		InitializeEntity(NULL, weaponarena_available_all_update, INITPRIO_FINDTARGET);
-	}
-	else if (s == "devall_available")
-	{
-		g_weaponarena = 1;
+		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+		break;
+	case "devall_available":
 		g_weaponarena_list = "Dev All Available Weapons Arena";
+		g_weaponarena_weapons = weapons_devall();
 
 		// this needs to run after weaponsInMapAll is initialized
-		InitializeEntity(NULL, weaponarena_available_devall_update, INITPRIO_FINDTARGET);
-	}
-	else if (s == "most_available")
-	{
-		g_weaponarena = 1;
-		g_weaponarena_list = "Most Available Weapons Arena";
+		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+		break;
+	case "standard_available": case "most_available":
+		g_weaponarena_list = "Standard Available Weapons Arena";
+		g_weaponarena_weapons = weapons_standard();
 
 		// this needs to run after weaponsInMapAll is initialized
-		InitializeEntity(NULL, weaponarena_available_most_update, INITPRIO_FINDTARGET);
-	}
-	else if (s == "none")
-	{
-		g_weaponarena = 1;
+		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
+		break;
+	case "none":
 		g_weaponarena_list = "No Weapons Arena";
-	}
-	else
+		break;
+	default:
 	{
-		g_weaponarena = 1;
 		float t = tokenize_console(s);
 		g_weaponarena_list = "";
 		for (int j = 0; j < t; ++j)
@@ -2078,7 +2055,7 @@ void readplayerstartcvars()
 			g_weaponarena_list = substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3);
 		else // no valid weapon found
 			g_weaponarena_list = "No Weapons Arena";
-	}
+	}}
 
 	if (g_weaponarena)
 	{
