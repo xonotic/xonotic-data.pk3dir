@@ -112,8 +112,6 @@ void traceline_antilag(entity source, vector v1, vector v2, float nomonst, entit
 
 void WarpZone_crosshair_trace(entity pl);
 
-void WarpZone_traceline_antilag(entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
-
 IntrusiveList g_ctrace_changed;
 STATIC_INIT(g_ctrace_changed)
 {

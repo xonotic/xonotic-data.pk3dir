@@ -62,6 +62,10 @@ void W_Devastator_Explode_think(entity this)
 	W_Devastator_Explode(this, NULL);
 }
 
+bool W_Devastator_DoRemoteExplode_cond(entity e)
+{
+	return (e.takedamage && e == WarpZone_SearchInRadius_otherent);
+}
 void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 {
 	W_Devastator_Unregister(this);
@@ -77,10 +81,10 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 
 	if (allow_rocketjump && WEP_CVAR(WEP_DEVASTATOR, remote_jump_radius))
 	{
-		head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_DEVASTATOR, remote_jump_radius), false);
+		WarpZone_SearchInRadius_otherent = this.realowner;
+		head = WarpZone_SearchInRadius(this.origin, WEP_CVAR(WEP_DEVASTATOR, remote_jump_radius), MOVE_NOTHING, W_Devastator_DoRemoteExplode_cond);
 		for (; head; head = head.chain)
-			if (head.takedamage && head == this.realowner
-			&& vdist(this.origin - head.WarpZone_findradius_nearest, <=, WEP_CVAR(WEP_DEVASTATOR, remote_jump_radius)))
+			if (vdist(this.origin - head.WarpZone_findradius_nearest, <=, WEP_CVAR(WEP_DEVASTATOR, remote_jump_radius)))
 			{
 				// we handled this as a rocketjump :)
 				handled_as_rocketjump = true;

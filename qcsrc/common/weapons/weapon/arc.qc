@@ -1033,16 +1033,7 @@ void Draw_ArcBeam(entity this)
 			i / segments
 		);
 
-		WarpZone_TraceBox_ThroughZone(
-			last_origin,
-			'0 0 0',
-			'0 0 0',
-			new_origin,
-			MOVE_NORMAL,
-			NULL,
-			NULL,
-			Draw_ArcBeam_callback
-		);
+		WarpZone_TraceLine_ThroughZone(last_origin, new_origin, MOVE_NORMAL, NULL, NULL, Draw_ArcBeam_callback);
 
 		last_origin = trace_endpos;
 
