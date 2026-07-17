@@ -145,7 +145,7 @@ int TrueAimCheck(entity wepent)
 #if 0
 	// FIXME WHY DOES THIS NOT WORK FOR THE ROCKET LAUNCHER?
 	// or rather, I know why, but see no fix
-	if (vlen(trace_endpos - trueaimpoint) > vlen(ma) + vlen(mi) + 1)
+	if (vdist(trace_endpos - trueaimpoint, >, vlen(ma) + vlen(mi) + 1))
 		// yes, this is an ugly hack... but it seems good enough to find out whether the test hits the same place as the initial trace
 		return SHOTTYPE_HITOBSTRUCTION;
 #endif

@@ -57,7 +57,7 @@ void VaporizerBeam_Draw(entity this)
 	Draw_VaporizerBeam_trace_callback_rnd = 0;
 	Draw_VaporizerBeam_trace_callback_rgb = rgb;
 	Draw_VaporizerBeam_trace_callback_a = bound(0, fail, 1);
-	WarpZone_TraceBox_ThroughZone(this.vorg1, '0 0 0', '0 0 0', this.vorg2, MOVE_NOTHING, NULL, NULL, Draw_VaporizerBeam_trace_callback);
+	WarpZone_TraceLine_ThroughZone(this.vorg1, this.vorg2, MOVE_NOTHING, NULL, NULL, Draw_VaporizerBeam_trace_callback);
 	Draw_VaporizerBeam_trace_callback_tex = string_null;
 
 	/*if (!MUTATOR_CALLHOOK(Particles_VaporizerBeam, this.vorg1, this.vorg2))

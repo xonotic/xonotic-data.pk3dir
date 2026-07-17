@@ -1,21 +1,24 @@
 #include "magnet.qh"
 
 #ifdef SVQC
+bool buff_Magnet_cond(entity e)
+{
+	return (e.itemdef // this (intentionally) doesn't include buffs -- they use .buffdef not .itemdef
+		&& gettouch(e));
+}
 METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 {
 	if (IS_PLAYER(actor))
 	{
-		entity next, head = WarpZone_FindRadius(
+		entity next, head = WarpZone_SearchInRadius(
 			actor.origin + actor.view_ofs,  // line from eyes
 			autocvar_g_buffs_magnet_range,
-			true                            // require line of sight
-		);
+			MOVE_NOMONSTERS,                // require line of sight
+			buff_Magnet_cond);
 		for (; head; head = next)
 		{
 			next = head.chain; // save next entity in case head is deleted (or head.chain changed) by gettouch(head)
-			if (head.itemdef // this (intentionally) doesn't include buffs -- they use .buffdef not .itemdef
-			&&  gettouch(head))
-				gettouch(head)(head, actor);
+			gettouch(head)(head, actor);
 		}
 	}
 

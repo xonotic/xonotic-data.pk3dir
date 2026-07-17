@@ -86,6 +86,13 @@ void W_Fireball_TouchExplode(entity this, entity toucher)
 	W_Fireball_Explode(this, toucher);
 }
 
+bool W_Fireball_LaserPlay_cond(entity e)
+{
+	return (e.takedamage == DAMAGE_AIM
+		&& e != WarpZone_SearchInRadius_otherent.realowner && !IS_INDEPENDENT_PLAYER(e)
+		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent))
+		&& !STAT(FROZEN, e) && !StatusEffects_active(STATUSEFFECT_Frozen, e));
+}
 void W_Fireball_LaserPlay(entity this, float rad, float damage, float edgedamage, float burntime)
 {
 	if (damage <= 0)
@@ -97,14 +104,9 @@ void W_Fireball_LaserPlay(entity this, float rad, float damage, float edgedamage
 	float last_dist = 0;
 	// optimize code by comparing squared distances and avoiding vlen and sqrt calls as much as possible
 	float rad2 = rad * rad;
-	for (entity e = WarpZone_FindRadius(this.origin, rad, true); e; e = e.chain)
+	WarpZone_SearchInRadius_otherent = this;
+	for (entity e = WarpZone_SearchInRadius(this.origin, rad, MOVE_NOMONSTERS, W_Fireball_LaserPlay_cond); e; e = e.chain)
 	{
-		if (STAT(FROZEN, e) || StatusEffects_active(STATUSEFFECT_Frozen, e)
-		|| e == this.realowner || IS_INDEPENDENT_PLAYER(e)
-		|| e.takedamage != DAMAGE_AIM
-		|| (IS_PLAYER(e) && this.realowner && SAME_TEAM(e, this)))
-			continue;
-
 		vector p = e.origin;
 		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
 		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
