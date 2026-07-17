@@ -27,9 +27,11 @@ METHOD(StrengthStatusEffect, m_apply, void(StatusEffect this, entity actor, floa
 }
 METHOD(StrengthStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
+    SUPER(StrengthStatusEffect).m_tick(this, actor);
+    if(!this.m_active(this, actor))
+        return;
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     actor.effects |= (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-    SUPER(StrengthStatusEffect).m_tick(this, actor);
 }
 #endif // SVQC
 #ifdef CSQC
