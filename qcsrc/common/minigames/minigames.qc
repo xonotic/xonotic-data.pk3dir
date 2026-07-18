@@ -8,6 +8,15 @@ entity minigame_get_descriptor(string id)
 	return NULL;
 }
 
+entity minigame_get_owner(int id)
+{
+	entity e = NULL;
+	while( (e = findfloat(e, minigame_id, id)) )
+		if ( e.classname == "minigame" )
+			return e;
+	return NULL;
+}
+
 // Get letter index of a tile name
 int minigame_tile_letter(string id)
 {
@@ -87,6 +96,8 @@ void minigame_server_sendflags(entity ent, int mgflags)
 entity msle_spawn(entity minigame_session, entity e)
 {
 	e.owner = minigame_session;
+	e.minigame_id = minigame_session.minigame_id;
+	e.descriptor = minigame_session.descriptor;
 	e.minigame_autoclean = 1;
 	#ifdef SVQC
 		setcefc(e, minigame_CheckSend);
@@ -126,7 +137,7 @@ int minigame_count_players(entity minigame)
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
 	e = NULL;
-	while( (e = findentity(e,owner,minigame)) )
+	while( (e = findfloat(e,minigame_id,minigame.minigame_id)) )
 		if ( e.classname == "minigame_player" )
 #endif
 		++pl_num;

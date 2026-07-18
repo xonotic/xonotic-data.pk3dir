@@ -17,7 +17,7 @@ const int PS_TILE_SIZE = 8;
 entity ps_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
 	return NULL;
@@ -26,7 +26,7 @@ entity ps_find_piece(entity minig, string tile)
 bool ps_draw(entity minigame)
 {
 	entity e = NULL;
-	while( ( e = findentity(e,owner,minigame) ) )
+	while( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if( e.classname == "minigame_board_piece" )
 		{
 			return true;
@@ -76,7 +76,7 @@ bool ps_winning_piece(entity minigame)
 	//int letter = minigame_tile_letter(piece.netname);
 
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minigame) ) )
+	while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" )
 		{
 			int number = minigame_tile_number(e.netname);
@@ -232,7 +232,7 @@ int ps_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);

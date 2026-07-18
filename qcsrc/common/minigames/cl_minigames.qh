@@ -100,12 +100,21 @@ void minigame_prompt();
 
 #define FOREACH_MINIGAME_ENTITY(entityvar) \
 	entityvar=NULL; \
-	while( (entityvar = findentity(entityvar,owner,active_minigame)) )
+	while( (entityvar = findfloat(entityvar,minigame_id,active_minigame.minigame_id)) )
 
 
 REGISTRY(Minigames, BITS(4))
 REGISTER_REGISTRY(Minigames)
 REGISTRY_CHECK(Minigames)
+// enable to sort minigames alphabetically
+#if 0
+REGISTRY_SORT(Minigames)
+
+STATIC_INIT(Minigames_renumber)
+{
+	FOREACH(Minigames, true, it.m_id = i);
+}
+#endif
 
 REGISTRY_DEFINE_GET(Minigames, NULL)
 #define REGISTER_MINIGAME(name,nicename) \
