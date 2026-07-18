@@ -486,13 +486,12 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(6, float);
-	float frag_damage = M_ARGV(7, float);
-	float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
-	float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
+	float damage_take = M_ARGV(4, float);
+	float damage_save = M_ARGV(5, float);
 
-	float excess = max(0, frag_damage - damage_take - damage_save);
+	float realdmg = damage_take + damage_save;
 
-	if (autocvar_g_ca_damage2score <= 0 || frag_damage - excess == 0) return;
+	if (autocvar_g_ca_damage2score <= 0 || realdmg == 0) return;
 
 	entity scorer = NULL;
 	float scorer_damage = 0;
@@ -500,9 +499,9 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 	if (IS_PLAYER(frag_attacker))
 	{
 		if (DIFF_TEAM(frag_target, frag_attacker))
-			scorer_damage = frag_damage - excess;
+			scorer_damage = realdmg;
 		else // friendly fire
-			scorer_damage = -(frag_damage - excess);
+			scorer_damage = -realdmg;
 
 		scorer = frag_attacker;
 	}
@@ -521,7 +520,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 			frag_deathtype == DEATH_SLIME.m_id ||
 			frag_deathtype == DEATH_SWAMP.m_id)
 		{
-			scorer_damage = -(frag_damage - excess);
+			scorer_damage = -realdmg;
 			scorer = frag_target;
 		}
 	}

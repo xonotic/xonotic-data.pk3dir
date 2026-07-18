@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024\n"
+"Last-Translator: k9er, 2024-2026\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -5246,7 +5246,7 @@ msgstr "^BG%s^F3 is now playing on the ^TC^TT team"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate or observe at this time."
-msgstr ""
+msgstr "^K1You may only spectate or observe at this time."
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -5518,12 +5518,12 @@ msgstr "^F1Survivors^BG win the round"
 #: qcsrc/common/notifications/all.inc:468
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on ^TC^TT^K2 team which seems fine."
-msgstr ""
+msgstr "^K2You're already on ^TC^TT^K2 team which seems fine."
 
 #: qcsrc/common/notifications/all.inc:469
 #: qcsrc/common/notifications/all.inc:824
 msgid "^K2You may only join ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2You may only join ^TC^TT^K2 team!"
 
 #: qcsrc/common/notifications/all.inc:470
 #: qcsrc/common/notifications/all.inc:825

@@ -2628,6 +2628,11 @@ void ObserverOrSpectatorThink(entity this)
 		this.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
+bool PlayerUseKey_EnterVehicle_cond(entity e)
+{
+	return (IS_VEHICLE(e) && !IS_DEAD(e) && e.takedamage != DAMAGE_NO
+		&& (!e.owner || ((e.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(e.owner, WarpZone_SearchInRadius_otherent))));
+}
 void PlayerUseKey(entity this)
 {
 	if (!IS_PLAYER(this))
@@ -2645,24 +2650,18 @@ void PlayerUseKey(entity this)
 	{
 		if(!game_stopped && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 		{
-			entity head, closest_target = NULL;
-			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
-
-			while(head) // find the closest acceptable target to enter
+			WarpZone_SearchInRadius_otherent = this;
+			entity head = WarpZone_SearchInRadius(this.origin, autocvar_g_vehicles_enter_radius, MOVE_NOMONSTERS, PlayerUseKey_EnterVehicle_cond);
+			entity closest_target = NULL;
+			for (; head; head = head.chain) // find the closest acceptable target to enter
 			{
-				if(IS_VEHICLE(head) && !IS_DEAD(head) && head.takedamage != DAMAGE_NO)
-				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this)))
+				if(closest_target)
 				{
-					if(closest_target)
-					{
-						if(vlen2(this.origin - head.origin) < vlen2(this.origin - closest_target.origin))
-							closest_target = head;
-					}
-					else
+					if(vlen2(this.origin - head.origin) < vlen2(this.origin - closest_target.origin))
 						closest_target = head;
 				}
-
-				head = head.chain;
+				else
+					closest_target = head;
 			}
 
 			if(closest_target)

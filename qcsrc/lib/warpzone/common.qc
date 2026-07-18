@@ -20,10 +20,8 @@ void WarpZone_Accumulator_AddTransform(entity acc, vector t, vector s)
 	acc.warpzone_transform = tr;
 	acc.warpzone_shift = st;
 }
-void WarpZone_Accumulator_Add(entity acc, entity wz)
-{
-	WarpZone_Accumulator_AddTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
-}
+#define WarpZone_Accumulator_Add(acc, wz) \
+	WarpZone_Accumulator_AddTransform(acc, (wz).warpzone_transform, (wz).warpzone_shift)
 void WarpZone_Accumulator_AddInverseTransform(entity acc, vector t, vector s)
 {
 	vector tt = AnglesTransform_Invert(t);
@@ -31,15 +29,13 @@ void WarpZone_Accumulator_AddInverseTransform(entity acc, vector t, vector s)
 	WarpZone_Accumulator_AddTransform(acc, tt, ss);
 	// yes, this probably can be done simpler... but this way is "obvious" :)
 }
-void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
-{
-	WarpZone_Accumulator_AddInverseTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
-}
+#define WarpZone_Accumulator_AddInverse(acc, wz) \
+	WarpZone_Accumulator_AddInverseTransform(acc, (wz).warpzone_transform, (wz).warpzone_shift)
 
 vector WarpZone_camera_transform(entity this, vector org, vector ang)
 {
-	if (this.warpzone_fadestart)
-	if (vdist(org - this.origin - 0.5 * (this.mins + this.maxs), >, this.warpzone_fadeend + 400))
+	if (this.warpzone_fadestart
+	&& vdist(org - this.origin - 0.5 * (this.mins + this.maxs), >, this.warpzone_fadeend + 400))
 		return org;
 		// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
 		// unneeded on client, on server this helps a lot
@@ -76,8 +72,8 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 vector WarpZone_Camera_camera_transform(entity this, vector org, vector ang)
 {
 	// a fixed camera view
-	if (this.warpzone_fadestart)
-	if (vdist(org - this.origin - 0.5 * (this.mins + this.maxs), >, this.warpzone_fadeend + 400))
+	if (this.warpzone_fadestart
+	&& vdist(org - this.origin - 0.5 * (this.mins + this.maxs), >, this.warpzone_fadeend + 400))
 		return org;
 		// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
 		// unneeded on client, on server this helps a lot
@@ -92,8 +88,6 @@ void WarpZone_Camera_SetUp(entity e, vector my_org, vector my_ang) // we assume 
 	e.warpzone_angles = my_ang;
 	setcamera_transform(e, WarpZone_Camera_camera_transform);
 }
-
-.entity enemy;
 
 float WarpZoneLib_BoxTouchesBrush_Recurse(vector mi, vector ma, entity e, entity ig)
 {
@@ -158,24 +152,21 @@ float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig)
 entity WarpZone_Find(vector mi, vector ma)
 {
 	// if we are near any warpzone planes - MOVE AWAY (work around nearclip)
-	if (!warpzone_warpzones_exist)
-		return NULL;
-	IL_EACH(g_warpzones, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL), return it);
+	if (warpzone_warpzones_exist)
+		IL_EACH(g_warpzones, WarpZoneLib_BoxTouchesBrush(mi, ma, it, NULL), return it);
 	return NULL;
 }
 
 void WarpZone_MakeAllSolid()
 {
-	if (!warpzone_warpzones_exist)
-		return;
-	IL_EACH(g_warpzones, true, it.solid = SOLID_BSP);
+	if (warpzone_warpzones_exist)
+		IL_EACH(g_warpzones, true, it.solid = SOLID_BSP);
 }
 
 void WarpZone_MakeAllOther()
 {
-	if (!warpzone_warpzones_exist)
-		return;
-	IL_EACH(g_warpzones, true, it.solid = SOLID_TRIGGER);
+	if (warpzone_warpzones_exist)
+		IL_EACH(g_warpzones, true, it.solid = SOLID_TRIGGER);
 }
 
 void WarpZone_Trace_InitTransform()
@@ -184,44 +175,61 @@ void WarpZone_Trace_InitTransform()
 		WarpZone_trace_transform = new_pure(warpzone_trace_transform);
 	WarpZone_Accumulator_Clear(WarpZone_trace_transform);
 }
-void WarpZone_Trace_AddTransform(entity wz)
-{
-	WarpZone_Accumulator_Add(WarpZone_trace_transform, wz);
-}
+#define WarpZone_Trace_AddTransform(wz) \
+	WarpZone_Accumulator_Add(WarpZone_trace_transform, wz)
 
+/// Traces a box from `org` to `end`, shifting & transforming each time it goes through a warpzone.
+/// Hence it only ends at `end` if it didn't hit something along the way AND it went through no warpzones
 void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
-	float nomonsters_adjusted;
-	float frac, sol, i;
-	float contentshack;
-
 	WarpZone_trace_forent = forent;
 	WarpZone_trace_firstzone = NULL;
 	WarpZone_trace_lastzone = NULL;
 	WarpZone_Trace_InitTransform();
-	if (!warpzone_warpzones_exist)
+
+	bool nearby_warpzones = false;
+	// use tracebox if no warpzone is touching the box the entity would be traced through
+	if (warpzone_warpzones_exist)
+	{
+		vector boxmin = mi;
+		vector boxmax = ma;
+	#define CHOOSE_AXIS(axis) \
+		if (org.axis < end.axis) {  boxmin.axis += org.axis;  boxmax.axis += end.axis;  } \
+		else                     {  boxmin.axis += end.axis;  boxmax.axis += org.axis;  }
+		CHOOSE_AXIS(x);
+		CHOOSE_AXIS(y);
+		CHOOSE_AXIS(z);
+	#undef CHOOSE_AXIS
+		/* Above is equivalent to the following, but more efficient
+		 *     boxmin += vec_to_min(org, end);
+		 *     boxmax += vec_to_max(org, end);
+		 */
+		IL_EACH(g_warpzones, boxesoverlap(it.absmin, it.absmax, boxmin, boxmax),
+		{
+			nearby_warpzones = true;
+			break;
+		});
+	}
+	if (!nearby_warpzones)
 	{
 		if (nomonsters == MOVE_NOTHING)
 		{
 			trace_endpos = end;
 			trace_fraction = 1;
-			if (cb)
-				cb(org, trace_endpos, end);
-			return;
 		}
 		else
-		{
 			tracebox(org, mi, ma, end, nomonsters, WarpZone_trace_forent);
-			if (cb)
-				cb(org, trace_endpos, end);
-			return;
-		}
+
+		if (cb)
+			cb(org, trace_endpos, end);
+		return;
 	}
 
 	vector vf = v_forward;
 	vector vr = v_right;
 	vector vu = v_up;
 
+	float nomonsters_adjusted;
 	switch (nomonsters)
 	{
 		case MOVE_WORLDONLY:
@@ -232,11 +240,13 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			nomonsters_adjusted = nomonsters;
 			break;
 	}
-	if ((contentshack = (WarpZone_trace_forent.dphitcontentsmask && !(WarpZone_trace_forent.dphitcontentsmask & DPCONTENTS_SOLID))))
+	bool contents_hack = (WarpZone_trace_forent.dphitcontentsmask && !(WarpZone_trace_forent.dphitcontentsmask & DPCONTENTS_SOLID));
+	if (contents_hack)
 		BITSET_ASSIGN(WarpZone_trace_forent.dphitcontentsmask, DPCONTENTS_SOLID);
 
 	// if starting in warpzone, first transform
 	entity wz = WarpZone_Find(org + mi, org + ma);
+	float sol;
 	if (wz)
 	{
 		WarpZone_trace_firstzone = wz;
@@ -255,8 +265,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	}
 	WarpZone_MakeAllSolid();
 	sol = -1;
-	frac = 0;
-	i = 16;
+	float frac = 0;
+	float i = 16;
 	for (;;)
 	{
 		if (--i < 1)
@@ -278,7 +288,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		{
 			if (nomonsters == MOVE_NOTHING
 			|| (nomonsters == MOVE_WORLDONLY && trace_ent)
-			|| (contentshack && (trace_dphitcontents & WarpZone_trace_forent.dphitcontentsmask) == DPCONTENTS_SOLID))
+			|| (contents_hack && (trace_dphitcontents & WarpZone_trace_forent.dphitcontentsmask) == DPCONTENTS_SOLID))
 			{
 				// continue the trace, ignoring this hit (we only care for warpzones)
 				org = trace_endpos + normalize(end - org);
@@ -312,7 +322,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	}
 	WarpZone_MakeAllOther();
 LABEL(fail)
-	if (contentshack)
+	if (contents_hack)
 		BITCLR_ASSIGN(WarpZone_trace_forent.dphitcontentsmask, DPCONTENTS_SOLID);
 	trace_startsolid = sol;
 	v_forward = vf;
@@ -320,22 +330,12 @@ LABEL(fail)
 	v_up = vu;
 }
 
-void WarpZone_TraceBox(vector org, vector mi, vector ma, vector end, float nomonsters, entity forent)
-{
-	WarpZone_TraceBox_ThroughZone(org, mi, ma, end, nomonsters, forent, NULL, WarpZone_trace_callback_t_null);
-}
-
-void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent)
-{
-	WarpZone_TraceBox(org, '0 0 0', '0 0 0', end, nomonsters, forent);
-}
-
+/// Traces tossing `e`, shifting & transforming each time it goes through a warpzone.
 void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb)
 {
 	vector o0 = e.origin;
 	vector v0 = e.velocity;
-	float g = PHYS_GRAVITY(NULL) * e.gravity;
-	float dt, i;
+	float dt, i, g = PHYS_GRAVITY(NULL) * e.gravity;
 
 	WarpZone_trace_forent = forent;
 	WarpZone_trace_firstzone = NULL;
@@ -347,9 +347,9 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		tracetoss(e, WarpZone_trace_forent);
 		if (cb)
 			cb(e.origin, trace_endpos, trace_endpos);
-		dt = vlen(e.origin - o0) / vlen(e.velocity);
+		dt = sqrt(vlen2(e.origin - o0) / vlen2(e.velocity));
 		WarpZone_tracetoss_time += dt;
-		e.velocity_z -= dt * g;
+		e.velocity.z -= dt * g;
 		WarpZone_tracetoss_velocity = e.velocity;
 		e.velocity = v0;
 		return;
@@ -391,10 +391,10 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		tracetoss(e, WarpZone_trace_forent);
 		if (cb)
 			cb(e.origin, trace_endpos, trace_endpos);
-		dt = vlen(trace_endpos - e.origin) / vlen(e.velocity);
+		dt = sqrt(vlen2(trace_endpos - e.origin) / vlen2(e.velocity));
 		WarpZone_tracetoss_time += dt;
 		e.origin = trace_endpos;
-		e.velocity_z -= dt * g;
+		e.velocity.z -= dt * g;
 		if (trace_fraction >= 1)
 			break;
 		if (trace_ent.classname != "trigger_warpzone")
@@ -420,7 +420,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		// we got warped, so let's step back a bit
 		e.velocity = -e.velocity;
 		tracetoss(e, WarpZone_trace_forent);
-		dt = vlen(trace_endpos - e.origin) / vlen(e.velocity);
+		dt = sqrt(vlen2(trace_endpos - e.origin) / vlen2(e.velocity));
 		WarpZone_tracetoss_time -= dt;
 		e.origin = trace_endpos;
 		e.velocity = -e.velocity;
@@ -436,11 +436,6 @@ LABEL(fail)
 	e.origin = o0;
 }
 
-void WarpZone_TraceToss(entity e, entity forent)
-{
-	WarpZone_TraceToss_ThroughZone(e, forent, NULL, WarpZone_trace_callback_t_null);
-}
-
 entity WarpZone_TrailParticles_trace_callback_own;
 float WarpZone_TrailParticles_trace_callback_eff;
 void WarpZone_TrailParticles_trace_callback(vector from, vector endpos, vector to)
@@ -452,7 +447,7 @@ void WarpZone_TrailParticles(entity own, float eff, vector org, vector end)
 {
 	WarpZone_TrailParticles_trace_callback_own = own;
 	WarpZone_TrailParticles_trace_callback_eff = eff;
-	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, MOVE_NOMONSTERS, NULL, NULL, WarpZone_TrailParticles_trace_callback);
+	WarpZone_TraceLine_ThroughZone(org, end, MOVE_NOMONSTERS, NULL, NULL, WarpZone_TrailParticles_trace_callback);
 }
 
 #ifdef CSQC
@@ -469,35 +464,37 @@ void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, v
 	WarpZone_TrailParticles_trace_callback_eff = eff;
 	WarpZone_TrailParticles_trace_callback_f = f;
 	WarpZone_TrailParticles_trace_callback_flags = boxflags | PARTICLES_DRAWASTRAIL;
-	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, MOVE_NOMONSTERS, NULL, NULL, WarpZone_TrailParticles_WithMultiplier_trace_callback);
+	WarpZone_TraceLine_ThroughZone(org, end, MOVE_NOMONSTERS, NULL, NULL, WarpZone_TrailParticles_WithMultiplier_trace_callback);
 }
 #endif
 
-float WarpZone_PlaneDist(entity wz, vector v)
+float WarpZone_PlaneDist(entity wz, vector p)
 {
-	return (v - wz.warpzone_origin) * wz.warpzone_forward;
+	return (p - wz.warpzone_origin) * wz.warpzone_forward;
 }
 
-float WarpZone_TargetPlaneDist(entity wz, vector v)
+float WarpZone_TargetPlaneDist(entity wz, vector p)
 {
-	return (v - wz.warpzone_targetorigin) * wz.warpzone_targetforward;
+	return (p - wz.warpzone_targetorigin) * wz.warpzone_targetforward;
 }
-
-vector WarpZone_TransformOrigin(entity wz, vector v)
+/// Transforms origin `org` across warpzone `wz`.
+/// For example, this'd give you the origin a projectile will have after it crosses the warpzone
+vector WarpZone_TransformOrigin(entity wz, vector org)
 {
-	return wz.warpzone_shift + AnglesTransform_Apply(wz.warpzone_transform, v);
+	return wz.warpzone_shift + AnglesTransform_Apply(wz.warpzone_transform, org);
 }
-
-vector WarpZone_TransformVelocity(entity wz, vector v)
+/// Transforms velocity `v` across warpzone `wz`.
+/// For example, this can give you the updated `v_forward` after crossing the warpzone
+vector WarpZone_TransformVelocity(entity wz, vector vel)
 {
-	return AnglesTransform_Apply(wz.warpzone_transform, v);
+	return AnglesTransform_Apply(wz.warpzone_transform, vel);
 }
-
-vector WarpZone_TransformAngles(entity wz, vector v)
+/// Transforms angle `v` across warpzone `wz`
+vector WarpZone_TransformAngles(entity wz, vector ang)
 {
-	return AnglesTransform_ApplyToAngles(wz.warpzone_transform, v);
+	return AnglesTransform_ApplyToAngles(wz.warpzone_transform, ang);
 }
-
+/// Transforms v_angle `ang` across warpzone `wz`
 vector WarpZone_TransformVAngles(entity wz, vector ang)
 {
 #ifdef KEEP_ROLL
@@ -516,21 +513,24 @@ vector WarpZone_TransformVAngles(entity wz, vector ang)
 	return ang;
 }
 
-vector WarpZone_UnTransformOrigin(entity wz, vector v)
+/// Transforms origin `org` backwards through warpzone `wz`, as the inverse of WarpZone_TransformOrigin.
+/// E.g., WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos):
+///   Returns the endpoint of a warpzone-aware trace, as if the trace had never gone through warpzones
+vector WarpZone_UnTransformOrigin(entity wz, vector org)
 {
-	return AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), v - wz.warpzone_shift);
+	return AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), org - wz.warpzone_shift);
 }
-
-vector WarpZone_UnTransformVelocity(entity wz, vector v)
+/// Transforms angle `vel` backwards through warpzone `wz`, as the inverse of WarpZone_TransformVelocity.
+vector WarpZone_UnTransformVelocity(entity wz, vector vel)
 {
-	return AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), v);
+	return AnglesTransform_Apply(AnglesTransform_Invert(wz.warpzone_transform), vel);
 }
-
-vector WarpZone_UnTransformAngles(entity wz, vector v)
+/// Transforms angle `ang` backwards through warpzone `wz`, as the inverse of WarpZone_TransformAngles.
+vector WarpZone_UnTransformAngles(entity wz, vector ang)
 {
-	return AnglesTransform_ApplyToAngles(AnglesTransform_Invert(wz.warpzone_transform), v);
+	return AnglesTransform_ApplyToAngles(AnglesTransform_Invert(wz.warpzone_transform), ang);
 }
-
+/// Transforms v_angle `ang` backwards through warpzone `wz`, as the inverse of WarpZone_TransformVAngles.
 vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 {
 #ifdef KEEP_ROLL
@@ -549,15 +549,26 @@ vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 	return ang;
 }
 
-// blacklist of entities that WarpZone_FindRadius doesn't care about
-bool WarpZoneLib_BadEntity(entity e)
+// FIXME: the nearest bounding box point can be unreachable via trace,
+// despite there actually being line of sight if only the trace was adjusted slightly
+#define WarpZoneLib_NearestPointOnBox(mi, ma, org) NearestPointOnBoundingBox(mi, ma, org)
+
+.int WarpZone_findradius_hit;
+const int WarpZone_FindRadius_Hit_UNSEEN  = 0;
+const int WarpZone_FindRadius_Hit_GOOD    = 1;
+const int WarpZone_FindRadius_Hit_BAD     = 2;
+/// Blacklist of entities that WarpZone_FindRadius doesn't care about
+bool WarpZoneLib_BadEntity(entity e, WarpZone_FindRadius_cond_callback_t cb)
 {
+	if (e.WarpZone_findradius_hit != WarpZone_FindRadius_Hit_UNSEEN) // also account for caching
+		return (e.WarpZone_findradius_hit == WarpZone_FindRadius_Hit_BAD); // either BAD or GOOD
 	if (is_pure(e))
 		return true;
-	string s = e.classname;
 
+	string s = e.classname;
 	switch (s)
 	{
+		case "warpzone_refsys": // ignore, especially: do not overwrite the refsys parameters
 		case "weaponentity":
 		case "exteriorweaponentity":
 		case "sprite_waypoint":
@@ -570,17 +581,21 @@ bool WarpZoneLib_BadEntity(entity e)
 		case "":
 			return true;
 	}
-
 	if (startsWith(s, "target_"))
 		return true;
 	if (startsWith(s, "info_"))
 		return true;
-	return false;
+
+	return (cb && !cb(e));
 }
 
-.float WarpZone_findradius_hit;
+.entity enemy;
+entity _WarpZone_FindRadius_goodents_first;
+entity _WarpZone_FindRadius_badents_first;
+float _WarpZone_FindRadius_nomonsters;
+var WarpZone_FindRadius_cond_callback_t _WarpZone_FindRadius_cond_cb;
 .entity WarpZone_findradius_next;
-void WarpZone_FindRadius_Recurse(
+void _WarpZone_FindRadius_Recurse(
 	/** blast origin of current search */
 	vector org,
 	float rad,
@@ -588,70 +603,77 @@ void WarpZone_FindRadius_Recurse(
 	vector org0,
 	/** how to untransform (victim to blast system) */
 	vector transform,
-	vector shift,
-	bool needlineofsight)
+	vector shift)
 {
 	if (rad <= 0)
 		return;
 	entity wz = NULL;
-	FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity(it),
+	FOREACH_ENTITY_RADIUS(org, rad, it.WarpZone_findradius_hit != WarpZone_FindRadius_Hit_BAD, // exclude entities we already know are bad
 	{
-		vector p = NearestPointOnBoundingBox(it.origin + it.mins, it.origin + it.maxs, org0);
-		if (needlineofsight)
+		bool is_warpzone = (it.classname == "trigger_warpzone");
+		if (!is_warpzone // warpzones are never bad entities
+		&& WarpZoneLib_BadEntity(it, _WarpZone_FindRadius_cond_cb))
 		{
-			traceline(org, p, MOVE_NOMONSTERS, it);
+			it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_BAD;
+			it.WarpZone_findradius_next = _WarpZone_FindRadius_badents_first;
+			// use .WarpZone_findradius_next so that .chain isn't changed on entities not included in the returned list_first
+			_WarpZone_FindRadius_badents_first = it;
+			continue;
+		}
+
+		vector p = WarpZoneLib_NearestPointOnBox(it.origin + it.mins, it.origin + it.maxs, org0);
+		if (it.WarpZone_findradius_hit == WarpZone_FindRadius_Hit_GOOD && vlen2(it.WarpZone_findradius_dist) <= vlen2(org0 - p))
+			continue;
+		if (_WarpZone_FindRadius_nomonsters != MOVE_NOTHING)
+		{
+			traceline(org, p, _WarpZone_FindRadius_nomonsters, it);
 			if (trace_fraction < 1)
 				continue;
 		}
-		if (!it.WarpZone_findradius_hit || vlen2(it.WarpZone_findradius_dist) > vlen2(org0 - p))
+
+		it.WarpZone_findradius_nearest = p;
+		it.WarpZone_findradius_dist = org0 - p;
+		//it.WarpZone_findradius_findorigin = org;
+		//it.WarpZone_findradius_findradius = rad;
+		if (is_warpzone)
 		{
-			it.WarpZone_findradius_nearest = p;
-			it.WarpZone_findradius_dist = org0 - p;
-			it.WarpZone_findradius_findorigin = org;
-			it.WarpZone_findradius_findradius = rad;
-			if (it.classname == "warpzone_refsys")
-				; // ignore, especially: do not overwrite the refsys parameters
-			else if (it.classname == "trigger_warpzone")
+			it.WarpZone_findradius_next = wz;
+			wz = it;
+			it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
+			it.enemy.WarpZone_findradius_dist = '0 0 0'; // we don't want to go through this zone ever again
+			it.enemy.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
+		}
+		else // entity we'll include in the list
+		{
+			it.warpzone_transform = transform;
+			it.warpzone_shift = shift;
+			if (it.WarpZone_findradius_hit != WarpZone_FindRadius_Hit_GOOD) // add to good ents chain if not already in it
 			{
-				it.WarpZone_findradius_next = wz;
-				wz = it;
-				it.WarpZone_findradius_hit = 1;
-				it.enemy.WarpZone_findradius_dist = '0 0 0'; // we don't want to go through this zone ever again
-				it.enemy.WarpZone_findradius_hit = 1;
-			}
-			else
-			{
-				it.warpzone_transform = transform;
-				it.warpzone_shift = shift;
-				it.WarpZone_findradius_hit = 1;
+				it.chain = _WarpZone_FindRadius_goodents_first; // fine to use .chain since FOREACH_ENTITY_RADIUS doesn't use it
+				_WarpZone_FindRadius_goodents_first = it;
+				it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_GOOD;
 			}
 		}
 	});
 	for (entity e = wz; e; e = e.WarpZone_findradius_next)
 	{
-		if (WarpZoneLib_BadEntity(e))
-			continue;
-
 		vector org0_new = WarpZone_TransformOrigin(e, org);
 		traceline(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
 		vector org_new = trace_endpos;
 
-		vector transform_new = AnglesTransform_Multiply(e.warpzone_transform, transform);
-		vector shift_new = AnglesTransform_Multiply_GetPostShift(e.warpzone_transform, e.warpzone_shift, transform, shift);
-		WarpZone_FindRadius_Recurse(
+		_WarpZone_FindRadius_Recurse(
 			org_new,
-			bound(0, rad - vlen(org_new - org0_new), rad - 8),
+			rad - max(8, vlen(org_new - org0_new)),
 			org0_new,
-			transform_new, shift_new,
-			needlineofsight);
-		e.WarpZone_findradius_hit = 0;
-		e.enemy.WarpZone_findradius_hit = 0;
+			AnglesTransform_Multiply(e.warpzone_transform, transform), // new transform
+			AnglesTransform_Multiply_GetPostShift(e.warpzone_transform, e.warpzone_shift, transform, shift)); // new shift
+		e.WarpZone_findradius_hit = e.enemy.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN;
 	}
 }
-entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
+entity WarpZone_SearchInRadius(vector org, float rad, float nomonsters, WarpZone_FindRadius_cond_callback_t cb)
 {
-	bool simple_findradius = true;
-	// use simple findradius if no warpzone is touching the box of side 2 * rad and center org
+	bool nearby_warpzones = false;
+	// use FOREACH_ENTITY_RADIUS if no warpzone is touching the box of side 2 * rad and center org
 	// which includes the sphere of radius rad and center org
 	if (warpzone_warpzones_exist)
 	{
@@ -659,114 +681,88 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 		vector boxmax = vec3(org.x + rad, org.y + rad, org.z + rad);
 		IL_EACH(g_warpzones, boxesoverlap(it.absmin, it.absmax, boxmin, boxmax),
 		{
-			simple_findradius = false;
+			nearby_warpzones = true;
 			break;
 		});
 	}
 
-	if (simple_findradius)
+	_WarpZone_FindRadius_goodents_first = NULL;
+	if (nearby_warpzones)
 	{
-		entity prev_good_ent = NULL;
-		entity list_first = findradius(org, rad);
-		FOREACH_LIST(list, chain, true,
+		_WarpZone_FindRadius_badents_first = NULL;
+		_WarpZone_FindRadius_nomonsters = nomonsters;
+		_WarpZone_FindRadius_cond_cb = cb;
+		_WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0');
+		FOREACH_LIST(_WarpZone_FindRadius_goodents, chain,                    true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
+		FOREACH_LIST(_WarpZone_FindRadius_badents,  WarpZone_findradius_next, true, it.WarpZone_findradius_hit = WarpZone_FindRadius_Hit_UNSEEN);
+	}
+	else // cheaper than _WarpZone_FindRadius_Recurse
+		FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity(it, cb),
 		{
-			// remove bad elements from this list while iterating
-			if (WarpZoneLib_BadEntity(it) || it.classname == "warpzone_refsys")
-			{
-				if (!prev_good_ent)
-					list_first = list_first.chain;
-				else
-					prev_good_ent.chain = it.chain;
-				continue;
-			}
-
 			vector p = NearestPointOnBoundingBox(it.origin + it.mins, it.origin + it.maxs, org);
-			if (needlineofsight)
+			if (nomonsters != MOVE_NOTHING)
 			{
-				traceline(org, p, MOVE_NOMONSTERS, it);
+				traceline(org, p, nomonsters, it);
 				if (trace_fraction < 1)
-				{
-					if (!prev_good_ent)
-						list_first = list_first.chain;
-					else
-						prev_good_ent.chain = it.chain;
 					continue;
-				}
 			}
 
+			it.chain = _WarpZone_FindRadius_goodents_first; // fine to use .chain since FOREACH_ENTITY_RADIUS doesn't use it
+			_WarpZone_FindRadius_goodents_first = it;
 			it.WarpZone_findradius_nearest = p;
 			it.WarpZone_findradius_dist = org - p;
 			WarpZone_Accumulator_Clear(it); // reset .warpzone_transform and .warpzone_shift
-
-			prev_good_ent = it;
 		});
-		return list_first;
-	}
 
-	WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
-	entity list_first = findchainfloat(WarpZone_findradius_hit, 1);
-	FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
-	return list_first;
+	return _WarpZone_FindRadius_goodents_first;
 }
 
 .entity WarpZone_refsys;
-void WarpZone_RefSys_GC(entity this)
+// called when an entity is deleted with delete() / remove()
+// or when a player disconnects
+ACCUMULATE
+void ONREMOVE(entity this)
 {
-	// garbage collect unused reference systems
-	this.nextthink = time + 1;
-	if (this.owner.WarpZone_refsys != this)
-		delete(this);
+    // remove WarpZone_refsys object attached to 'this'
+    if (this.WarpZone_refsys && this.WarpZone_refsys.owner == this)
+		delete(this.WarpZone_refsys);
 }
 void WarpZone_RefSys_CheckCreate(entity me)
 {
-	if (me.WarpZone_refsys.owner != me)
-	{
-		me.WarpZone_refsys = new(warpzone_refsys);
-		me.WarpZone_refsys.owner = me;
-		setthink(me.WarpZone_refsys, WarpZone_RefSys_GC);
-		me.WarpZone_refsys.nextthink = time + 1;
-		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
-	}
+	if (me.WarpZone_refsys.owner == me)
+		return;
+	me.WarpZone_refsys = new(warpzone_refsys);
+	me.WarpZone_refsys.owner = me;
+	WarpZone_Accumulator_Clear(me.WarpZone_refsys);
 }
 void WarpZone_RefSys_Clear(entity me)
 {
-	if (me.WarpZone_refsys)
-	{
-		delete(me.WarpZone_refsys);
-		me.WarpZone_refsys = NULL;
-	}
+	if (!me.WarpZone_refsys)
+		return;
+	delete(me.WarpZone_refsys);
+	me.WarpZone_refsys = NULL;
 }
 void WarpZone_RefSys_AddTransform(entity me, vector t, vector s)
 {
-	if (t != '0 0 0' || s != '0 0 0')
-	{
-		WarpZone_RefSys_CheckCreate(me);
-		WarpZone_Accumulator_AddTransform(me.WarpZone_refsys, t, s);
-	}
-}
-void WarpZone_RefSys_Add(entity me, entity wz)
-{
-	WarpZone_RefSys_AddTransform(me, wz.warpzone_transform, wz.warpzone_shift);
+	if (t == '0 0 0' && s == '0 0 0')
+		return;
+	WarpZone_RefSys_CheckCreate(me);
+	WarpZone_Accumulator_AddTransform(me.WarpZone_refsys, t, s);
 }
 void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s)
 {
-	if (t != '0 0 0' || s != '0 0 0')
-	{
-		WarpZone_RefSys_CheckCreate(me);
-		WarpZone_Accumulator_AddInverseTransform(me.WarpZone_refsys, t, s);
-	}
-}
-void WarpZone_RefSys_AddInverse(entity me, entity wz)
-{
-	WarpZone_RefSys_AddInverseTransform(me, wz.warpzone_transform, wz.warpzone_shift);
+	if (t == '0 0 0' && s == '0 0 0')
+		return;
+	WarpZone_RefSys_CheckCreate(me);
+	WarpZone_Accumulator_AddInverseTransform(me.WarpZone_refsys, t, s);
 }
 .vector WarpZone_refsys_incremental_shift;
 .vector WarpZone_refsys_incremental_transform;
 void WarpZone_RefSys_AddIncrementally(entity me, entity ref)
 {
 	//vector t, s;
-	if (me.WarpZone_refsys_incremental_transform == ref.WarpZone_refsys.warpzone_transform)
-	if (me.WarpZone_refsys_incremental_shift == ref.WarpZone_refsys.warpzone_shift)
+	if (me.WarpZone_refsys_incremental_transform == ref.WarpZone_refsys.warpzone_transform
+	&&  me.WarpZone_refsys_incremental_shift == ref.WarpZone_refsys.warpzone_shift)
 		return;
 	WarpZone_Accumulator_AddInverseTransform(me.WarpZone_refsys, me.WarpZone_refsys_incremental_transform, me.WarpZone_refsys_incremental_shift);
 	WarpZone_Accumulator_Add(me.WarpZone_refsys, ref.WarpZone_refsys);
@@ -778,6 +774,9 @@ void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref)
 	me.WarpZone_refsys_incremental_shift = ref.WarpZone_refsys.warpzone_shift;
 	me.WarpZone_refsys_incremental_transform = ref.WarpZone_refsys.warpzone_transform;
 }
+/// Transform origin `org` in `from`'s reference into `to`'s reference.
+/// E.g., WarpZone_RefSys_TransformOrigin(receiver, flag, receiver.origin + receiver.view_ofs):
+///   Returns `receiver`'s view origin as seen by `flag`
 vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org)
 {
 	if (from.WarpZone_refsys)
@@ -786,6 +785,7 @@ vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org)
 		org = WarpZone_TransformOrigin(to.WarpZone_refsys, org);
 	return org;
 }
+/// Transform velocity `vel` in `from`'s reference into `to`'s reference
 vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel)
 {
 	if (from.WarpZone_refsys)
@@ -794,6 +794,7 @@ vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel)
 		vel = WarpZone_TransformVelocity(to.WarpZone_refsys, vel);
 	return vel;
 }
+/// Transform angle `ang` in `from`'s reference into `to`'s reference
 vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang)
 {
 	if (from.WarpZone_refsys)
@@ -802,6 +803,7 @@ vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang)
 		ang = WarpZone_TransformAngles(to.WarpZone_refsys, ang);
 	return ang;
 }
+/// Transform v_angle `ang` in `from`'s reference into `to`'s reference
 vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang)
 {
 	if (from.WarpZone_refsys)
@@ -810,6 +812,8 @@ vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang)
 		ang = WarpZone_TransformVAngles(to.WarpZone_refsys, ang);
 	return ang;
 }
+/// Copies the warpzone reference of `from` onto `me`.
+/// In other words, makes it be "on the same side of the warpzones"
 void WarpZone_RefSys_Copy(entity me, entity from)
 {
 	if (from.WarpZone_refsys)
@@ -821,6 +825,9 @@ void WarpZone_RefSys_Copy(entity me, entity from)
 	else
 		WarpZone_RefSys_Clear(me);
 }
+/// Spawns an entity in the same warpzone reference as `me`, and sets up its reference.
+/// Used when you need to spawn en entity, set up the reference system,
+/// and you know you're setting its origin "on the same side of the warpzones" as `me`
 entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 {
 	entity e = spawn();
@@ -849,16 +856,13 @@ bool WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher, bool touchfunc)
 
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 {
-	const float eps = 0.0625;
+	const float eps = 1/16; // 0.0625
 	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
 	if (trace_startsolid)
 		return;
 	if (trace_fraction < 1)
-	{
-		// hit something
-		// adjust origin in the other direction...
+		// hit something, adjust origin in the other direction...
 		setorigin(e, e.origin - by * (1 - trace_fraction));
-	}
 }
 
 int WarpZoneLib_MoveOutOfSolid(entity e)
@@ -876,12 +880,12 @@ int WarpZoneLib_MoveOutOfSolid(entity e)
 	vector m1 = e.maxs;
 	e.mins = '0 0 0';
 	e.maxs = '0 0 0';
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m0.x); e.mins_x = m0.x;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m1.x); e.maxs_x = m1.x;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m0.y); e.mins_y = m0.y;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m1.y); e.maxs_y = m1.y;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m0.z); e.mins_z = m0.z;
-	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m1.z); e.maxs_z = m1.z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m0.x);  e.mins.x = m0.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m1.x);  e.maxs.x = m1.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m0.y);  e.mins.y = m0.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m1.y);  e.maxs.y = m1.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m0.z);  e.mins.z = m0.z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m1.z);  e.maxs.z = m1.z;
 	setorigin(e, e.origin);
 
 	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);

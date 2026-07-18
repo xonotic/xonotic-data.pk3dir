@@ -3801,6 +3801,8 @@ msgid ""
 "The %s mutator, enabled by default, allows the spawning of new gimmicky "
 "weapons, sometimes replacing a core weapon."
 msgstr ""
+"Мутатор %s, увімкнений за замовчуванням, дозволяє появу новій нетиповій "
+"зброї, іноді замість основної зброї. "
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:30
 #, c-format
@@ -3808,17 +3810,19 @@ msgid ""
 "Since these weapons can't spawn in %s and %s, the %s mutator can't be "
 "enabled concurrently."
 msgstr ""
+"Оскільки така зброя не з'являється в режимах %s та %s, мутатор %s не можна "
+"увімкнути одночасно."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
 #, c-format
 msgid "The current %s weapons are:"
-msgstr "Наразі зброя типу %s така:"
+msgstr "Наразі %s - це така зброя:"
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
 #: qcsrc/common/util.qc:308
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
 msgid "New Toys"
-msgstr "Нові забавки"
+msgstr "Нові Забавки"
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -3827,6 +3831,9 @@ msgid ""
 "After some time the weapon is reselected, and this repeats forever. Weapon "
 "and ammo pickups are also removed from the map."
 msgstr ""
+"%s - це мутатор, який видає всім гравцям однакову випадкову зброю. Через "
+"деякий час зброя змінюється, і так по колу. Також зброю та набої прибрано з "
+"мапи."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:309
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
@@ -3836,7 +3843,7 @@ msgstr "NIX"
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
 msgid "^3offhand blaster^8 is enabled, press ^3%s^8 to use it"
-msgstr ""
+msgstr "^3допоміжний бластер^8 активовано, натисніть ^3%s^8 для використання"
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:11
 #, c-format
@@ -3844,6 +3851,9 @@ msgid ""
 "The %s mutator gives all players a %s as their offhand weapon, used with %s. "
 "It can be fired at any time, but the ordinary secondary fire can't be used."
 msgstr ""
+"Мутатор %s дає всім гравцям %s як допоміжну зброю, яку можна використовувати "
+"за допомогою клавіші %s. З нього можна стріляти в будь-який момент, проте "
+"його звичний вторинний вогонь буде відсутній."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:13
 #, c-format
@@ -3851,11 +3861,15 @@ msgid ""
 "Since it's given as an offhand, you can fire it at the same time as the "
 "ordinary %s while laser jumping to achieve even more height."
 msgstr ""
+"Оскільки він є другорядною зброєю, з нього можна стріляти одночасно зі "
+"звичайною зброєю %s під час лазер-джампу, щоб злетіти ще вище."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:14
 #, c-format
 msgid "Note that it overrides the %s mutator, since they use the same bind."
 msgstr ""
+"Зауважте, що він перевизначає мутатор %s, оскільки в них діє однакова "
+"клавіша."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
 #: qcsrc/common/util.qc:330
@@ -3868,6 +3882,8 @@ msgid ""
 "The %s is a superweapon that rapidly fires harmful bullets with a small "
 "degree of spread."
 msgstr ""
+"%s - це суперзброя, яка стрімко стріляє небезпечними кулями з невеликим "
+"розсіюванням."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:174
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:169
@@ -3879,6 +3895,8 @@ msgid ""
 "Like with all %s weapons, the secondary fire shoots a laser which doesn't "
 "damage or push enemies, but can be used to push yourself around."
 msgstr ""
+"Як і у всієї %s зброї, вторинний вогонь випускає лазер, який не шкодить і не "
+"відштовхує ворогів, але здатний відштовхнути вас самих."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:175
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:256
@@ -3886,6 +3904,8 @@ msgid ""
 "It is a superweapon found on some maps, meaning that it breaks down after "
 "some time."
 msgstr ""
+"Суперзброю можна знайти в деяких мапах, що означає те, що вона зламається "
+"через деякий час."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:176
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:170
@@ -3897,6 +3917,9 @@ msgid ""
 "amount of it in %s. It has a limited magazine size, so needs reloading after "
 "several shots."
 msgstr ""
+"Основний вогонь використовує набої типу %s, хоча в режимі %s ви з'являється "
+"з їхньою нескінченною кількістю. Він має обмежений об'єм магазина, тому "
+"після декількох пострілів потрібне перезаряджання."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:178
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:172
@@ -3905,6 +3928,8 @@ msgid ""
 "The %s can be used in a lot of situations, and it works particularly well at "
 "long ranges since the bullets pierce the sky instantaneously."
 msgstr ""
+"%s можна використовувати в різних ситуаціях, і чудово працює на великих "
+"відстанях, оскільки кулі миттєво пронизують небо."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:179
 #, c-format
@@ -3912,6 +3937,8 @@ msgid ""
 "Since its bullets deal a lot more damage than the %s bullets, it is often "
 "heavily contested when it spawns in."
 msgstr ""
+"Оскільки його кулі шкодять більше ніж кулі зброї %s, за нього часто точиться "
+"запекла боротьба після появи."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:35
 msgid "Overkill Heavy MachineGun"
@@ -3921,7 +3948,7 @@ msgstr "Оверкіл Важкий Кулемет"
 #: qcsrc/common/weapons/weapon/machinegun.qc:445
 #, c-format
 msgid "The %s quickly fires bullets with a small degree of spread."
-msgstr ""
+msgstr "%s швидко стріляє кулями з невеликим розсіюванням."
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:32
 msgid "Overkill MachineGun"
@@ -3934,6 +3961,8 @@ msgid ""
 "The %s fires harmful beams of energy that traverse the map instantaneously "
 "and deal a significant chunk of damage on impact."
 msgstr ""
+"%s стріляє небезпечними променями енергії, які миттєво перетинають через всю "
+"мапу та при влучанні завдають значну частину шкоди."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:361
 #, c-format
@@ -3941,6 +3970,8 @@ msgid ""
 "Since it is the only %s weapon with no spread, the %s stands out at long "
 "ranges."
 msgstr ""
+"Оскільки це єдина %s зброя без розсіювання, %s виділяється серед великих "
+"відстаней."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:33
 msgid "Overkill Nex"
@@ -3953,6 +3984,8 @@ msgid ""
 "chainsaw which explodes on impact, dealing a lot of splash damage to any "
 "players close by."
 msgstr ""
+"Як і підказує назва, %s - ця суперзброя стріляє ракетою-бензопилою, яка "
+"вибухає при влучанні, завдаючи значної шкоди по площі всім гравцям поблизу."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:257
 #, c-format
@@ -3960,6 +3993,8 @@ msgid ""
 "The primary fire consumes %s ammo, although you spawn with an infinite "
 "amount of it in %s."
 msgstr ""
+"Основний вогонь використовує набої типу %s, хоча в режимі %s ви з'являється "
+"з їхньою нескінченною кількістю."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:258
 #, c-format
@@ -3967,6 +4002,8 @@ msgid ""
 "Since it is the only %s weapon which deals splash damage, the %s is a good "
 "choice of weapon for attacking groups of enemies."
 msgstr ""
+"Оскільки це єдина %s зброя, яка завдає шкоди по площі, %s є чудовим вибором "
+"для атаки на групи ворогів."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qh:35
 msgid "Overkill Rocket Propelled Chainsaw"
@@ -3978,6 +4015,8 @@ msgid ""
 "The %s fires a single shotgun round which spreads into multiple pellets upon "
 "exiting the barrel, dealing a deadly blow if up close."
 msgstr ""
+"%s випускає дробовий набій, що розлітається на кілька кульок після виходу з "
+"дула, завдаючи смертельного удару зблизька."
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:133
 #: qcsrc/common/weapons/weapon/shotgun.qc:424
@@ -3986,6 +4025,8 @@ msgid ""
 "The %s damage drops off quickly as the range increases, so it is only useful "
 "for close combat or sometimes medium range combat."
 msgstr ""
+"Шкода від зброї %s стрімко падає з більшою відстанню, тому вона корисна лише "
+"в близькому або, зрідка, в середньому бою."
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:28
 msgid "Overkill Shotgun"
@@ -4002,6 +4043,8 @@ msgid ""
 "%s is a mutator that makes players drop all their weapons when they die. "
 "Without this mutator, players normally drop only their equipped weapon."
 msgstr ""
+"%s - це мутатор, з яким після смерті гравців випадає вся їхня зброя. Без "
+"цього мутатора, з них випадає лише поточна зброя."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:318
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
@@ -4014,6 +4057,8 @@ msgid ""
 "The %s powerup regenerates %s needed for the %s until the powerup expires, "
 "so you can continue flying around for longer."
 msgstr ""
+"Підсилювач %s відновлює %s, яке %s використовує, доки триває дія "
+"підсилювача, тож ви зможете літати довше."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:21
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:54
@@ -4021,7 +4066,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:40
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
 msgid "Since it is a powerup, it will drop if you die while holding it."
-msgstr ""
+msgstr "Оскільки це підсилювач, він випадає, якщо ви помрете з ним."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qh:33
 msgid "Fuel regenerator"
@@ -4038,6 +4083,8 @@ msgid ""
 "making it more difficult for enemies to see you. This powerup is often "
 "present in %s."
 msgstr ""
+"Підсилювач %s робить вас прозорим, поки він активний, а ворогам стане "
+"складніше вас бачити. Цей підсилювач часто зустрічається в режимі %s."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qh:50
@@ -4052,6 +4099,8 @@ msgid ""
 "providing increased mobility, maneuverability, and the ability to reach "
 "higher ground."
 msgstr ""
+"Підсилювач %s дозволяє вам ненадовго літати навколо мапи, надаючи більшу "
+"рухливість, маневровість, та можливість досягати вищі позиції."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qc:21
 #, c-format
@@ -4059,6 +4108,8 @@ msgid ""
 "It consumes %s ammo while operating, so make sure you don't run out when "
 "you're high up!"
 msgstr ""
+"Під час дії використовується %s, тож стежте, щоб цей запас не закінчився, "
+"коли ви будете високо вгорі!"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
@@ -4074,6 +4125,8 @@ msgid ""
 "expires, having a compounding effect with armor. It also makes you more "
 "resistant to knockback."
 msgstr ""
+"Підсилювач %s значно знижує отриману шкоду, поки він активний, поєднуючи "
+"свій ефект із бронею. Він також робить вас стійкішими до відкидання."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -4088,6 +4141,8 @@ msgid ""
 "regeneration speed while the powerup is active. However, it also makes you a "
 "bit more vulnerable to incoming attacks."
 msgstr ""
+"Підсилювач %s підвищує швидкість руху, атаки, та регенерації здоров'я, поки "
+"він активний. Водночас робить вас вразливішим до ворожої шкоди."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:48
 #: qcsrc/common/mutators/mutator/powerups/powerup/speed.qh:51
@@ -4102,12 +4157,16 @@ msgid ""
 "The %s powerup greatly increases the damage you deal, until the powerup "
 "expires. It also increases the knockback that your attacks deal."
 msgstr ""
+"Підсилювач %s значно підвищує нанесену шкоду, поки він активний. Він також "
+"підвищує силу відкидання від ваших атак."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
 msgid ""
 "The damage and knockback you deal to yourself also increases but by a "
 "smaller amount."
 msgstr ""
+"Шкода та відкидання, які ви завдаєте собі, також збільшується, але не так "
+"сильно."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:59
 #, c-format
@@ -4116,6 +4175,8 @@ msgid ""
 "allow you to easily dominate a map, so it's often highly contested when it "
 "spawns in."
 msgstr ""
+"%s - один із найбажаніших предметів, оскільки дозволяє легко домінувати на "
+"мапі, тож за нього після появи точиться запекла боротьба."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:47
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qh:50
@@ -4131,6 +4192,10 @@ msgid ""
 "hitbox, so they can give you a much larger speed boost, also allowing flying "
 "around the map."
 msgstr ""
+"Мутатор %s прибирає невеличку затримку при миттєвому підриві ракети зброї %s "
+"після пострілу. Це дозволяє підривати ракети значно ближче до вашого "
+"хітбоксу, що дає набагато більше прискорення і навіть дозволяє літати над "
+"мапою."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
 #: qcsrc/common/util.qc:310
@@ -4167,12 +4232,14 @@ msgid ""
 "This is a nice way to add some silly fun to a server, but it also does allow "
 "for the use of new tactics in some gametypes."
 msgstr ""
+"Це чудовий спосіб додати трохи веселощів на сервер, який водночас дозволяє "
+"використовувати нові тактики в деяких ігрових режимах."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
 #: qcsrc/common/util.qc:326
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Touch explode"
-msgstr "Вибух при торканні гравців"
+msgstr "Вибух при Зіткненні"
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
 #, c-format
@@ -4181,6 +4248,9 @@ msgid ""
 "However, unlike the normal %s buff, when this mutator is enabled players' "
 "health can go way above the usual limit of 200."
 msgstr ""
+"Мутатор %s дає всім гравцям версію бафу %s з постійною дією. Однак, на "
+"відміну від звичайного бафу %s, за цього мутатора здоров'я гравців може "
+"піднятися значно вище ліміту у 200 одиниць."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #, c-format
@@ -4188,6 +4258,8 @@ msgid ""
 "Additionally the amount of health players get is equal to the damage they "
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
+"Крім того, кількість отриманого здоров'я дорівнює кількості нанесеної шкоди, "
+"чого немає зазвичай в бафі %s."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
 #, c-format
@@ -4195,12 +4267,17 @@ msgid ""
 "%s is a mutator that enables jumping off walls for added mobility. To do a "
 "wall jump, tap %s when against a wall."
 msgstr ""
+"%s - це мутатор, який дозволяє відштовхуватися від стін для більшої "
+"рухливості. Щоб зробити такий стрибок, натисність %s, перебуваючи впритул до "
+"стіни."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
 msgid ""
 "This mutator adds a bit of versatility, allowing for more dynamic and "
 "unpredictable movement."
 msgstr ""
+"Цей мутатор додає трохи універсальності, роблячи пересування динамічнішим та "
+"непередбачуванішим."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
 #: qcsrc/common/util.qc:327
@@ -4791,7 +4868,7 @@ msgstr "^BG%s^K1 із тріском вдарився об землю%s%s"
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
 msgid "^BG%s^K1 became a bit too crispy%s%s"
-msgstr "^BG%s^K1 став занадто хрустким%s%s"
+msgstr "^BG%s^K1 занадто захрустів%s%s"
 
 #: qcsrc/common/notifications/all.inc:320
 #, c-format
@@ -5970,58 +6047,58 @@ msgstr "^BG%sПротивник (^BG%s%s)^BG захопив ваш прапор!
 #: qcsrc/common/notifications/all.inc:606
 #, c-format
 msgid "^BGThe %senemy^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sпротивник^BG взяв прапор! Поверніть його!"
 
 #: qcsrc/common/notifications/all.inc:601
 #: qcsrc/common/notifications/all.inc:607
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sпротивник (^BG%s%s)^BG взяв прапор! Поверніть його!"
 
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
 msgid "^BGThe %senemy^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sпротивник^BG взяв свій прапор! Поверніть його!"
 
 #: qcsrc/common/notifications/all.inc:603
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sпротивник (^BG%s%s)^BG взяв свій прапор! Поверніть його!"
 
 #: qcsrc/common/notifications/all.inc:604
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sпротивник^BG взяв ^TC^TT^BG прапор! Поверніть його!"
 
 #: qcsrc/common/notifications/all.inc:605
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sпротивник (^BG%s%s)^BG взяв ^TC^TT^BG прапор! Поверніть його!"
 
 #: qcsrc/common/notifications/all.inc:608
 #, c-format
 msgid "^BGYour %steammate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGВаш %sсоюзник^BG взяв ^TC^TT^BG прапор! Захищайте його!"
 
 #: qcsrc/common/notifications/all.inc:609
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGВаш %sсоюзник (^BG%s%s)^BG взяв ^TC^TT^BG прапор! Захищайте його!"
 
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
 msgid "^BGYour %steammate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGВаш %sсоюзник^BG взяв прапор! Захищайте його!"
 
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGВаш %sсоюзник (^BG%s%s)^BG взяв прапор! Захищайте його!"
 
 #: qcsrc/common/notifications/all.inc:612
 #: qcsrc/common/notifications/all.inc:759
 msgid "^BGEnemies can now see you on radar!"
-msgstr "^BGВороги бачуть Вас на радарі!"
+msgstr "^BGВороги бачуть вас на радарі!"
 
 #: qcsrc/common/notifications/all.inc:613
 msgid "^BGYou returned the ^TC^TT^BG flag!"
@@ -6029,12 +6106,11 @@ msgstr "^BGВи повернули ^TC^TT^BG прапор!"
 
 #: qcsrc/common/notifications/all.inc:614
 msgid "^BGStalemate! Enemies can now see you on radar!"
-msgstr "^BGПатова ситуація! Противники тепер можуть бачити вас на радарі!"
+msgstr "^BGПатова ситуація! Вороги тепер бачать вас на радарі!"
 
 #: qcsrc/common/notifications/all.inc:615
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
-msgstr ""
-"^BGПатова ситуація! Противники тепер можуть бачити носіїв прапорів на радарі!"
+msgstr "^BGПатова ситуація! Вороги тепер бачать носіїв прапорів на радарі!"
 
 #: qcsrc/common/notifications/all.inc:619
 #, c-format
@@ -6058,7 +6134,7 @@ msgstr "^K1%sВас фрагнув ^BG%s"
 #: qcsrc/common/notifications/all.inc:640
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s"
-msgstr "^K1%sВи програли очко ^BG%s"
+msgstr "^K1%sВи програли очко у ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:628
 #, c-format
@@ -6068,7 +6144,7 @@ msgstr "^K3%sВи спалили ^BG%s"
 #: qcsrc/common/notifications/all.inc:630
 #, c-format
 msgid "^K1%sYou were burned by ^BG%s"
-msgstr "^K1%sВас спалили ^BG%s"
+msgstr "^K1%sВас спалив ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:637
 #, c-format
@@ -6078,7 +6154,7 @@ msgstr "^K3%sВи заморозили ^BG%s"
 #: qcsrc/common/notifications/all.inc:639
 #, c-format
 msgid "^K1%sYou were frozen by ^BG%s"
-msgstr "^K1%sВас заморозили ^BG%s"
+msgstr "^K1%sВас заморозив ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:646
 #, c-format
@@ -6088,12 +6164,12 @@ msgstr "^K1%sВи фрагнули ^BG%s^K1 на чаті"
 #: qcsrc/common/notifications/all.inc:647
 #, c-format
 msgid "^K1%sYou scored against ^BG%s^K1 while they were typing"
-msgstr "^K1%sВи виграли бал у ^BG%s^K1 на чаті"
+msgstr "^K1%sВи виграли очко у ^BG%s^K1 на чаті"
 
 #: qcsrc/common/notifications/all.inc:648
 #, c-format
 msgid "^K1%sYou were typefragged by ^BG%s"
-msgstr "^K1%sВас фрагнув ^BG%s^K1 на чаті!"
+msgstr "^K1%sВас фрагнув ^BG%s^K1 на чаті"
 
 #: qcsrc/common/notifications/all.inc:649
 #, c-format
@@ -6149,11 +6225,11 @@ msgstr "^K1Ви із тріском вдарились об землю!"
 
 #: qcsrc/common/notifications/all.inc:665
 msgid "^K1You felt a little too hot!"
-msgstr "K1Вам стало занадто гаряче!"
+msgstr "K1Ви підсмажилися!"
 
 #: qcsrc/common/notifications/all.inc:665
 msgid "^K1You got a little bit too crispy!"
-msgstr "^K1Ви стали занадто хрустким!"
+msgstr "^K1Ви занадто захрустіли!"
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1You fragged yourself!"
@@ -6189,7 +6265,7 @@ msgstr "^K1Гуляти поряд з вибухом напалму погано
 
 #: qcsrc/common/notifications/all.inc:671
 msgid "^K1Your Healing Nade is a bit defective"
-msgstr "^K1Ваша Лікувальна Граната бракована"
+msgstr "^K1Ваша Лікувальна Граната трохи бракована"
 
 #: qcsrc/common/notifications/all.inc:672
 msgid "^K1You are respawning for running out of ammo..."
@@ -6201,7 +6277,7 @@ msgstr "^K1Вас вбито за витрату всіх набоїв..."
 
 #: qcsrc/common/notifications/all.inc:673
 msgid "^K1You grew too old without taking your medicine"
-msgstr "^K1Без ліків ви швидко зістарились"
+msgstr "^K1Ви померли від старості без своїх ліків"
 
 #: qcsrc/common/notifications/all.inc:673
 msgid "^K1You need to preserve your health"
@@ -6213,7 +6289,7 @@ msgstr "^K1Ви перетворилися на падаючу зірку!"
 
 #: qcsrc/common/notifications/all.inc:675
 msgid "^K1You melted away in slime!"
-msgstr "^K1Ви розтанули у слизі!"
+msgstr "^K1Ви розплавилися у слизі!"
 
 #: qcsrc/common/notifications/all.inc:676
 msgid "^K1You committed suicide!"
@@ -6246,19 +6322,19 @@ msgstr "^K1Вас фрагнула турель!"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^K1You had an unfortunate run in with an eWheel turret!"
-msgstr "^K1Вам не пощастило зустрітися з туреллю eWheel!"
+msgstr "^K1Вам не пощастило зустрітися з туреллю єКоліщатка!"
 
 #: qcsrc/common/notifications/all.inc:681
 msgid "^K1You were fragged by an eWheel turret!"
-msgstr "^K1Вас фрагнула турель eWheel!"
+msgstr "^K1Вас фрагнула турель єКоліщатка!"
 
 #: qcsrc/common/notifications/all.inc:682
 msgid "^K1You had an unfortunate run in with a Walker turret!"
-msgstr "^K1Вам не пощастило зустрітися з туреллю Walker!"
+msgstr "^K1Вам не пощастило зустрітися з туреллю Крокувача!"
 
 #: qcsrc/common/notifications/all.inc:682
 msgid "^K1You were fragged by a Walker turret!"
-msgstr "^K1Вас фрагнула турель Walker!"
+msgstr "^K1Вас фрагнула турель Крокувача!"
 
 #: qcsrc/common/notifications/all.inc:683
 msgid "^K1You got caught in the blast of a Bumblebee explosion!"
@@ -6270,15 +6346,15 @@ msgstr "^K1Вас розчавила машина!"
 
 #: qcsrc/common/notifications/all.inc:685
 msgid "^K1You were caught in a Raptor cluster bomb!"
-msgstr "^K1Ви опинилися біля кластерної бомби Раптора!"
+msgstr "^K1Вас знищили кластерні бомби Раптора!"
 
 #: qcsrc/common/notifications/all.inc:686
 msgid "^K1You got caught in the blast of a Raptor explosion!"
-msgstr "^K1Ви загинули у вибуху Раптора!"
+msgstr "^K1Ви опинилися під вибух Раптора!"
 
 #: qcsrc/common/notifications/all.inc:687
 msgid "^K1You got caught in the blast of a Spiderbot explosion!"
-msgstr "^K1Ви загинули у вибуху Робопавука!"
+msgstr "^K1Ви опинилися під вибух Робопавука!"
 
 #: qcsrc/common/notifications/all.inc:688
 msgid "^K1You were blasted to bits by a Spiderbot rocket!"
@@ -6286,7 +6362,7 @@ msgstr "^K1Вас рознесло на шматки ракетами Робоп
 
 #: qcsrc/common/notifications/all.inc:689
 msgid "^K1You got caught in the blast of a Racer explosion!"
-msgstr "K1Ви загинули у вибуху Спринтера!"
+msgstr "K1Ви опинилися під вибух Спринтера!"
 
 #: qcsrc/common/notifications/all.inc:690
 msgid "^K1You couldn't find shelter from a Racer rocket!"
@@ -6344,52 +6420,52 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:700
 #, c-format
 msgid "^BGYou need %s^BG!"
-msgstr ""
+msgstr "^BGВам потрібно %s^BG!"
 
 #: qcsrc/common/notifications/all.inc:701
 #, c-format
 msgid "^BGYou also need %s^BG!"
-msgstr ""
+msgstr "^BGВам також потрібно %s^BG! "
 
 #: qcsrc/common/notifications/all.inc:702
 msgid "^BGDoor unlocked!"
-msgstr ""
+msgstr "^BGДвері розблоковані!"
 
 #: qcsrc/common/notifications/all.inc:704
 #, c-format
 msgid "^F2Extra lives taken: ^K1%s"
-msgstr ""
+msgstr "^F2Взято додаткових життів: ^K1%s"
 
 #: qcsrc/common/notifications/all.inc:706
 #, c-format
 msgid "^K3You revived ^BG%s"
-msgstr "K3Ви оживили ^BG%s"
+msgstr "K3Ви розморозили ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:707
 msgid "^K3You revived yourself"
-msgstr "^K3Ви оживили себе"
+msgstr "^K3Ви розморозилися"
 
 #: qcsrc/common/notifications/all.inc:708
 #, c-format
 msgid "^K3You were revived by ^BG%s"
-msgstr "K3Вас оживив ^BG%s"
+msgstr "K3Вас розморозив ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:709
 #, c-format
 msgid "^BGYou were automatically revived after %s seconds"
-msgstr ""
+msgstr "^BGВи автоматично розморозилися після %s секунд"
 
 #: qcsrc/common/notifications/all.inc:711
 msgid "^BGThe generator is under attack!"
-msgstr ""
+msgstr "^BGГенератор під атакою!"
 
 #: qcsrc/common/notifications/all.inc:713
 msgid "^TC^TT^BG team loses the round"
-msgstr ""
+msgstr "^TC^TT^BG команда програє раунд"
 
 #: qcsrc/common/notifications/all.inc:717
 msgid "^K1You froze yourself"
-msgstr "^K1Ви заморозили самі себе"
+msgstr "^K1Ви заморозилися"
 
 #: qcsrc/common/notifications/all.inc:718
 msgid "^K1Round already started, you spawn as frozen"
@@ -6398,7 +6474,7 @@ msgstr "^K1Раунд вже почався, ви починаєте вже за
 #: qcsrc/common/notifications/all.inc:720
 #, c-format
 msgid "^K1A %s has arrived!"
-msgstr ""
+msgstr "^K1%s прийшов!"
 
 #: qcsrc/common/notifications/all.inc:724
 msgid "^BGYou got the ^F1Fuel regenerator"
@@ -6413,25 +6489,25 @@ msgid ""
 "^K1No spawnpoints available!\n"
 "Hope your team can fix it..."
 msgstr ""
-"^K1Жодна точка відродження недоступна!\n"
+"^K1Жодна точка появи недоступна!\n"
 "Надійтесь на свою команду..."
 
 #: qcsrc/common/notifications/all.inc:734
 msgid "^K1You aren't allowed to play because you are banned in this server"
-msgstr ""
+msgstr "^K1Вам не дозволено грати, тому що ви заблоковані на цьому сервері"
 
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 спочатку оберіть вашу бажану команду."
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Ви зараз граєте за команду ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:736
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGВи зараз граєте за команду ^TC^TT^BG!"
 
 #: qcsrc/common/notifications/all.inc:738
 #, c-format
@@ -6444,7 +6520,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:739
 msgid "^K1Cannot join given minigame session!"
-msgstr ""
+msgstr "^K1Неможливо приєднатися до цієї мінігри!"
 
 #: qcsrc/common/notifications/all.inc:740
 msgid ""
@@ -6456,20 +6532,20 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^BGYou're queued to join any available team."
-msgstr ""
+msgstr "^BGВи в черзі на приєднання до будь-якої команди."
 
 #: qcsrc/common/notifications/all.inc:742
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGВи в черзі на приєднання до ^TC^TT^BG команди."
 
 #: qcsrc/common/notifications/all.inc:743
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 спочатку обрав ^TC^TT^K2."
 
 #: qcsrc/common/notifications/all.inc:743
 msgid "^K2You're queued to join any available team."
-msgstr ""
+msgstr "^K2Ви в черзі на приєднання до будь-якої команди."
 
 #: qcsrc/common/notifications/all.inc:744
 msgid "^K1Your Xonotic version is incompatible with the server's version!"
@@ -6477,7 +6553,7 @@ msgstr "^K1Ваша версія Xonotic несумісна з версією с
 
 #: qcsrc/common/notifications/all.inc:748
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BGВи заволоділи м'ячем"
 
 #: qcsrc/common/notifications/all.inc:749
 msgid "^BGGet the ball to score points for frags!"
@@ -6496,7 +6572,7 @@ msgid ""
 "^BGAll keys are in ^TC^TT team^BG's hands!\n"
 "Interfere ^F4NOW^BG!"
 msgstr ""
-"^BGВсі ключі зараз у руках ^TC^TT команди!^BG\n"
+"^BGВсі ключі зараз у руках команди ^TC^TT^BG!\n"
 "Ви маєте зупинити їх ^F4НЕГАЙНО^BG!"
 
 #: qcsrc/common/notifications/all.inc:753
@@ -6565,50 +6641,54 @@ msgstr "^F2Поточна зброя: ^F1%s"
 #: qcsrc/common/notifications/all.inc:770
 #, c-format
 msgid "^BGYou captured %s^BG control point"
-msgstr ""
+msgstr "^BGВи захопили контрольну точку %s"
 
 #: qcsrc/common/notifications/all.inc:771
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGВи захопили контрольну точку"
 
 #: qcsrc/common/notifications/all.inc:772
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr ""
+msgstr "^TC^TT^BG команда захопила контрольну точку %s"
 
 #: qcsrc/common/notifications/all.inc:773
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "^TC^TT^BG команда захопила контрольну точку"
 
 #: qcsrc/common/notifications/all.inc:774
 msgid "^BGThis control point currently cannot be captured"
-msgstr ""
+msgstr "^BGЦю контрольну точку наразі не можна захопити"
 
 #: qcsrc/common/notifications/all.inc:775
 msgid ""
 "^BGThe enemy generator cannot be destroyed yet\n"
 "^F2Capture some control points to unshield it"
 msgstr ""
+"^BGВорожий генератор поки що не можна зруйнувати\n"
+"^F2Захопіть контрольні точки, щоб зняти щит"
 
 #: qcsrc/common/notifications/all.inc:776
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
-msgstr ""
+msgstr "^TCворожий^BG генератор залишився без щита!"
 
 #: qcsrc/common/notifications/all.inc:777
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
 msgstr ""
+"^K1Ваш генератор НЕ захищено!\n"
+"^BGПерезахопіть контрольні точки, щоб захистити його!"
 
 #: qcsrc/common/notifications/all.inc:778
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
-msgstr ""
+msgstr "^BGНатисніть ^F2%s^BG для телепортації"
 
 #: qcsrc/common/notifications/all.inc:779
 #, c-format
 msgid "^BGTeleporting disabled for %s"
-msgstr ""
+msgstr "^BGТелепортація вимкнена для %s"
 
 #: qcsrc/common/notifications/all.inc:781
 msgid ""
@@ -6634,6 +6714,11 @@ msgid ""
 "The more control points your team holds,\n"
 "the faster the enemy generator decays"
 msgstr ""
+"^F2Почався ^F4ДОДАТКОВИЙ ЧАС^F2!\n"
+"\n"
+"Генератори почали руйнуватися.\n"
+"Чим більше під Вашим контролем точок,\n"
+"тим швидше руйнується ворожий генератор"
 
 #: qcsrc/common/notifications/all.inc:783
 #, c-format
@@ -6641,20 +6726,20 @@ msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "^BGAdded ^F4%s^BG to the game!"
 msgstr ""
-"^F2Йде ^F4ДОДАТКОВИЙ ЧАС^F2!\n"
+"^F2Почався ^F4ДОДАТКОВИЙ ЧАС^F2!\n"
 "^BGДодано ^F4%s^BG у гру!"
 
 #: qcsrc/common/notifications/all.inc:785
 msgid "^K1In^BG-portal created"
-msgstr ""
+msgstr "^BGПортал ^K1входу^BG створено"
 
 #: qcsrc/common/notifications/all.inc:786
 msgid "^F3Out^BG-portal created"
-msgstr ""
+msgstr "^BGПортал ^F3виходу^BG створено"
 
 #: qcsrc/common/notifications/all.inc:787
 msgid "^F1Portal creation failed"
-msgstr ""
+msgstr "^F1Помилка створення порталу"
 
 #: qcsrc/common/notifications/all.inc:789
 msgid "^F2Strength infuses your weapons with devastating power"
@@ -6729,11 +6814,11 @@ msgstr "^F2Ви отримали суперзброю"
 msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
-msgstr ""
+msgstr "^BGВи ^K1мисливець^BG! Знищіть уцілілих, не викликаючи підозр!"
 
 #: qcsrc/common/notifications/all.inc:819
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BGВи ^F1уцілілий^BG! Виявіть та знищіть мисливців!"
 
 #: qcsrc/common/notifications/all.inc:822
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
@@ -6758,36 +6843,41 @@ msgstr "^F4Тайм-аут закінчиться через ^COUNT"
 #: qcsrc/common/notifications/all.inc:834
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter/exit the vehicle"
-msgstr ""
+msgstr "^BGНатисніть ^F2%s^BG щоб увійти/вийти з транспорту"
 
 #: qcsrc/common/notifications/all.inc:835
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the vehicle gunner"
-msgstr ""
+msgstr "^BGНатисніть ^F2%s^BG, щоб сісти за турель транспорту"
 
 #: qcsrc/common/notifications/all.inc:836
 #, c-format
 msgid "^BGPress ^F2%s^BG to steal this vehicle"
-msgstr ""
+msgstr "^BGНатисніть ^F2%s^BG, щоб вкрасти цей транспорт"
 
 #: qcsrc/common/notifications/all.inc:837
 msgid ""
 "^F2The enemy is stealing one of your vehicles!\n"
 "^F4Stop them!"
 msgstr ""
+"^F2Ворог викрадає ваш транспорт!\n"
+"^F4Зупиніть їх!"
 
 #: qcsrc/common/notifications/all.inc:838
 msgid "^F2Intruder detected, disabling shields!"
-msgstr ""
+msgstr "^F2Виявлено порушника, щити відключено!"
 
 #: qcsrc/common/notifications/all.inc:840
 msgid ""
 "^K1You aren't allowed to call a vote because you are banned in this server"
 msgstr ""
+"^K1Вам не дозволено проводити голосування, тому що ви заблоковані на цьому "
+"сервері"
 
 #: qcsrc/common/notifications/all.inc:841
 msgid "^K1You aren't allowed to vote because you are banned in this server"
 msgstr ""
+"^K1Вам не дозволено голосувати, тому що ви заблоковані на цьому сервері"
 
 #: qcsrc/common/notifications/all.qh:429 qcsrc/common/notifications/all.qh:430
 #: qcsrc/common/notifications/all.qh:431
@@ -6808,11 +6898,11 @@ msgstr "додатковий режим вогню"
 #: qcsrc/common/notifications/all.qh:441
 #, c-format
 msgid "%d points"
-msgstr "%d балів"
+msgstr "%d очків"
 
 #: qcsrc/common/notifications/all.qh:441
 msgid "1 point"
-msgstr "1 бал"
+msgstr "1 очко"
 
 #: qcsrc/common/notifications/all.qh:449
 msgid "drop flag"
@@ -6895,7 +6985,7 @@ msgstr "БЕРСЕРК!"
 #: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 inflicts CARNAGE!"
-msgstr "%s^K1 завдав ПОБОЇЩЕ!"
+msgstr "%s^K1 влаштовує ПОБОЇЩЕ!"
 
 #: qcsrc/common/notifications/all.qh:492
 #, c-format
@@ -6964,7 +7054,7 @@ msgstr "Перша кров!"
 
 #: qcsrc/common/notifications/all.qh:542
 msgid "First score!"
-msgstr "Перший бал!"
+msgstr "Перше очко! "
 
 #: qcsrc/common/notifications/all.qh:544
 msgid "First casualty!"
@@ -6992,7 +7082,7 @@ msgstr "%s^K1 пролив першу кров!"
 #: qcsrc/common/notifications/all.qh:600
 #, c-format
 msgid "%s^K1 got the first score!"
-msgstr "%s^K1 отримав перший бал!"
+msgstr "%s^K1 отримав перше очко!"
 
 #: qcsrc/common/notifications/all.qh:612
 #, c-format
@@ -7002,7 +7092,7 @@ msgstr ", зупиняючи череду %d фрагів"
 #: qcsrc/common/notifications/all.qh:613
 #, c-format
 msgid ", ending their %d score spree"
-msgstr ", зупиняючи череду %d балів"
+msgstr ", зупиняючи череду %d очків"
 
 #: qcsrc/common/notifications/all.qh:622
 #, c-format
@@ -7012,7 +7102,7 @@ msgstr ", втрачаючи череду %d фрагів"
 #: qcsrc/common/notifications/all.qh:623
 #, c-format
 msgid ", losing their %d score spree"
-msgstr ", втрачаючи череду %d балів"
+msgstr ", втрачаючи череду %d очків"
 
 #: qcsrc/common/notifications/all.qh:638
 #, c-format
@@ -7177,6 +7267,8 @@ msgstr "Термоядерний Реактор"
 msgid ""
 "The %s fires homing missiles similar to those of the %s towards its targets."
 msgstr ""
+"%s стріляє самонавідними снарядами, які схожі до ракет зі зброї %s, в "
+"напрямку мішені."
 
 #: qcsrc/common/turrets/turret/hellion.qc:35
 #, c-format
@@ -7184,6 +7276,8 @@ msgid ""
 "Although the missiles usually deal less damage than a %s rocket, the %s has "
 "two cannons so it can dish out quite the punch."
 msgstr ""
+"Хоча снаряди зазвичай завдають меншу шкоду, ніж ракета зі зброї %s, %s має "
+"дві гармати, тож може видати потужний залп."
 
 #: qcsrc/common/turrets/turret/hellion.qh:15
 msgid "Hellion Missile Turret"
@@ -7362,11 +7456,11 @@ msgstr "Низька гравітація"
 #: qcsrc/common/util.qc:315
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:94
 msgid "Midair"
-msgstr "Midair"
+msgstr "Повітряний Бій"
 
 #: qcsrc/common/util.qc:316
 msgid "Melee only Arena"
-msgstr "Арена лише з ближньою зброєю"
+msgstr "Арена лише з Ближньою Зброєю"
 
 #: qcsrc/common/util.qc:319
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:164
@@ -7414,12 +7508,12 @@ msgstr "<НЕВІДОМИЙ КОД КЛАВІШІ>"
 
 #: qcsrc/common/util.qc:1634
 msgid "TAB"
-msgstr "ТАБ"
+msgstr "TAB"
 
 #: qcsrc/common/util.qc:1635 qcsrc/common/util.qc:1706
 #, c-format
 msgid "ENTER"
-msgstr "ЕНТЕР"
+msgstr "ENTER"
 
 #: qcsrc/common/util.qc:1636
 msgid "ESCAPE"
@@ -7431,27 +7525,27 @@ msgstr "ПРОБІЛ"
 
 #: qcsrc/common/util.qc:1639
 msgid "BACKSPACE"
-msgstr "БЕКСПЕЙС"
+msgstr "BACKSPACE"
 
 #: qcsrc/common/util.qc:1640 qcsrc/common/util.qc:1697
 #, c-format
 msgid "UPARROW"
-msgstr "СТРІЛКА ВГОРУ"
+msgstr "СТРІЛКА_ВГОРУ"
 
 #: qcsrc/common/util.qc:1641 qcsrc/common/util.qc:1692
 #, c-format
 msgid "DOWNARROW"
-msgstr "СТРІЛКА ВНИЗ"
+msgstr "СТРІЛКА_ВНИЗ"
 
 #: qcsrc/common/util.qc:1642 qcsrc/common/util.qc:1694
 #, c-format
 msgid "LEFTARROW"
-msgstr "СТРІЛКА ВЛІВО"
+msgstr "СТРІЛКА_ВЛІВО"
 
 #: qcsrc/common/util.qc:1643 qcsrc/common/util.qc:1695
 #, c-format
 msgid "RIGHTARROW"
-msgstr "СТРІЛКА ВПРАВО"
+msgstr "СТРІЛКА_ВПРАВО"
 
 #: qcsrc/common/util.qc:1645
 msgid "ALT"
@@ -7463,7 +7557,7 @@ msgstr "CTRL"
 
 #: qcsrc/common/util.qc:1647
 msgid "SHIFT"
-msgstr "ШИФТ"
+msgstr "SHIFT"
 
 #: qcsrc/common/util.qc:1649 qcsrc/common/util.qc:1690
 #, c-format
@@ -7497,7 +7591,7 @@ msgstr "END"
 
 #: qcsrc/common/util.qc:1656
 msgid "PAUSE"
-msgstr "ПАУЗА"
+msgstr "PAUSE"
 
 #: qcsrc/common/util.qc:1658
 msgid "NUMLOCK"
@@ -7513,7 +7607,7 @@ msgstr "SCROLLOCK"
 
 #: qcsrc/common/util.qc:1662
 msgid "SEMICOLON"
-msgstr "КРАПКА З КОМОЮ"
+msgstr "КРАПКА_З_КОМОЮ"
 
 #: qcsrc/common/util.qc:1663
 msgid "TILDE"
@@ -7521,7 +7615,7 @@ msgstr "ТИЛЬДА"
 
 #: qcsrc/common/util.qc:1664
 msgid "BACKQUOTE"
-msgstr "ЗВОРОТНИЙ АПОСТРОФ"
+msgstr "ЗВОРОТНИЙ_АПОСТРОФ"
 
 #: qcsrc/common/util.qc:1665
 msgid "QUOTE"
@@ -7533,7 +7627,7 @@ msgstr "АПОСТРОФ"
 
 #: qcsrc/common/util.qc:1667
 msgid "BACKSLASH"
-msgstr "ЗВОРОТНІЙ СЛЕШ"
+msgstr "ЗВОРОТНІЙ_СЛЕШ"
 
 #: qcsrc/common/util.qc:1675
 #, c-format
@@ -7566,7 +7660,7 @@ msgstr "КРАПКА"
 #: qcsrc/common/util.qc:1701
 #, c-format
 msgid "DIVIDE"
-msgstr "КОСА РИСКА"
+msgstr "КОСА_РИСКА"
 
 #: qcsrc/common/util.qc:1702
 #, c-format
@@ -7600,30 +7694,30 @@ msgstr "PRINTSCREEN"
 #: qcsrc/common/util.qc:1715
 #, c-format
 msgid "MOUSE%d"
-msgstr "%d КНОПКА МИШІ"
+msgstr "%d_КНОПКА_МИШІ"
 
 #: qcsrc/common/util.qc:1717
 msgid "MWHEELUP"
-msgstr "Прокручування вгору"
+msgstr "ПРОКРУЧУВАННЯ_ВГОРУ"
 
 #: qcsrc/common/util.qc:1718
 msgid "MWHEELDOWN"
-msgstr "Прокручування вниз"
+msgstr "ПРОКРУЧУВАННЯ_ВНИЗ"
 
 #: qcsrc/common/util.qc:1721
 #, c-format
 msgid "JOY%d"
-msgstr "%d КНОПКА ДЖОЙСТИКА"
+msgstr "%d_КНОПКА_ДЖОЙСТИКА"
 
 #: qcsrc/common/util.qc:1724
 #, c-format
 msgid "AUX%d"
-msgstr "%d ДОДАТКОВА КНОПКА"
+msgstr "%d_ДОДАТКОВА_КНОПКА"
 
 #: qcsrc/common/util.qc:1731
 #, c-format
 msgid "DPAD_UP"
-msgstr "ХРЕСТ ВГОРУ"
+msgstr "ХРЕСТ_ВГОРУ"
 
 #: qcsrc/common/util.qc:1731 qcsrc/common/util.qc:1732
 #: qcsrc/common/util.qc:1733 qcsrc/common/util.qc:1734
@@ -7642,17 +7736,17 @@ msgstr "X360_%s"
 #: qcsrc/common/util.qc:1732
 #, c-format
 msgid "DPAD_DOWN"
-msgstr "ХРЕСТ ВНИЗ"
+msgstr "ХРЕСТ_ВНИЗ"
 
 #: qcsrc/common/util.qc:1733
 #, c-format
 msgid "DPAD_LEFT"
-msgstr "ХРЕСТ ВЛІВО"
+msgstr "ХРЕСТ_ВЛІВО"
 
 #: qcsrc/common/util.qc:1734
 #, c-format
 msgid "DPAD_RIGHT"
-msgstr "ХРЕСТ ВПРАВО"
+msgstr "ХРЕСТ_ВПРАВО"
 
 #: qcsrc/common/util.qc:1735
 #, c-format
@@ -7667,78 +7761,78 @@ msgstr "BACK"
 #: qcsrc/common/util.qc:1737
 #, c-format
 msgid "LEFT_THUMB"
-msgstr "ЛІВИЙ СТІК"
+msgstr "ЛІВИЙ_СТІК"
 
 #: qcsrc/common/util.qc:1738
 #, c-format
 msgid "RIGHT_THUMB"
-msgstr "ПРАВИЙ СТІК"
+msgstr "ПРАВИЙ_СТІК"
 
 #: qcsrc/common/util.qc:1739
 #, c-format
 msgid "LEFT_SHOULDER"
-msgstr "ЛІВИЙ БАМПЕР"
+msgstr "ЛІВИЙ_БАМПЕР"
 
 #: qcsrc/common/util.qc:1740
 #, c-format
 msgid "RIGHT_SHOULDER"
-msgstr "ПРАВИЙ БАМПЕР"
+msgstr "ПРАВИЙ_БАМПЕР"
 
 #: qcsrc/common/util.qc:1741
 #, c-format
 msgid "LEFT_TRIGGER"
-msgstr "ЛІВИЙ ТРИГЕР"
+msgstr "ЛІВИЙ_ТРИГЕР"
 
 #: qcsrc/common/util.qc:1742
 #, c-format
 msgid "RIGHT_TRIGGER"
-msgstr "ПРАВИЙ ТРИГЕР"
+msgstr "ПРАВИЙ_ТРИГЕР"
 
 #: qcsrc/common/util.qc:1743
 #, c-format
 msgid "LEFT_THUMB_UP"
-msgstr "ЛІВИЙ СТІК ВГОРУ"
+msgstr "ЛІВИЙ_СТІК_ВГОРУ"
 
 #: qcsrc/common/util.qc:1744
 #, c-format
 msgid "LEFT_THUMB_DOWN"
-msgstr "ЛІВИЙ СТІК ВНИЗ"
+msgstr "ЛІВИЙ_СТІК_ВНИЗ"
 
 #: qcsrc/common/util.qc:1745
 #, c-format
 msgid "LEFT_THUMB_LEFT"
-msgstr "ЛІВИЙ СТІК ВЛІВО"
+msgstr "ЛІВИЙ_СТІК_ВЛІВО"
 
 #: qcsrc/common/util.qc:1746
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
-msgstr "ЛІВИЙ СТІК ВПРАВО"
+msgstr "ЛІВИЙ_СТІК_ВПРАВО"
 
 #: qcsrc/common/util.qc:1747
 #, c-format
 msgid "RIGHT_THUMB_UP"
-msgstr "ПРАВИЙ СТІК ВГОРУ"
+msgstr "ПРАВИЙ_СТІК_ВГОРУ"
 
 #: qcsrc/common/util.qc:1748
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
-msgstr "ПРАВИЙ СТІК ВНИЗ"
+msgstr "ПРАВИЙ_СТІК_ВНИЗ"
 
 #: qcsrc/common/util.qc:1749
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
-msgstr "ПРАВИЙ СТІК ВЛІВО"
+msgstr "ПРАВИЙ_СТІК_ВЛІВО"
 
 #: qcsrc/common/util.qc:1750
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
-msgstr "ПРАВИЙ СТІК ВПРАВО"
+msgstr "ПРАВИЙ_СТІК_ВПРАВО"
 
 #: qcsrc/common/util.qc:1760 qcsrc/common/util.qc:1761
 #: qcsrc/common/util.qc:1762 qcsrc/common/util.qc:1763
 #, c-format
 msgid "JOY_%s"
-msgstr "%s ДЖОЙСТИКА"
+msgstr "%s_ДЖОЙСТИКА"
 
 #: qcsrc/common/util.qc:1760
 #, c-format
@@ -8851,75 +8945,75 @@ msgstr "Вибрати"
 #: qcsrc/menu/menu.qc:520
 #, c-format
 msgid "^3%s^7 not equal to \"%s\""
-msgstr ""
+msgstr "^3%s^7 не дорівнює \"%s\""
 
 #: qcsrc/menu/menu.qc:525
 #, c-format
 msgid "^3%s^7 in range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 у діапазоні від \"%s\" до \"%s\""
 
 #: qcsrc/menu/menu.qc:527
 #, c-format
 msgid "^3%s^7 outside range \"%s\" to \"%s\""
-msgstr ""
+msgstr "^3%s^7 за діапазоном від \"%s\" до \"%s\""
 
 #: qcsrc/menu/menu.qc:556
 msgid "Has special requirements"
-msgstr ""
+msgstr "Має особливі вимоги"
 
 #: qcsrc/menu/menu.qc:559
 #, c-format
 msgid "Requires ^3%s^7 not equal to \"%s^7\""
-msgstr ""
+msgstr "Потребує ^3%s^7 не дорівнювати \"%s^7\""
 
 #: qcsrc/menu/menu.qc:571
 #, c-format
 msgid "Requires %s, %s, and %s"
-msgstr ""
+msgstr "Потребує %s, %s, та %s"
 
 #: qcsrc/menu/menu.qc:571
 #, c-format
 msgid "Requires %s, %s, or %s"
-msgstr ""
+msgstr "Потребує %s, %s, або %s"
 
 #: qcsrc/menu/menu.qc:574
 #, c-format
 msgid "Requires %s and %s"
-msgstr ""
+msgstr "Потребує %s та %s"
 
 #: qcsrc/menu/menu.qc:574
 #, c-format
 msgid "Requires %s or %s"
-msgstr ""
+msgstr "Потребує %s або %s"
 
 #: qcsrc/menu/menu.qc:577
 #, c-format
 msgid "Requires %s"
-msgstr ""
+msgstr "Потребує %s"
 
 #: qcsrc/menu/xonotic/credits.qc:7
 msgid "Core Team"
-msgstr ""
+msgstr "Основна Команда"
 
 #: qcsrc/menu/xonotic/credits.qc:16
 msgid "Extended Team"
-msgstr ""
+msgstr "Додаткова Команда"
 
 #: qcsrc/menu/xonotic/credits.qc:35
 msgid "Website"
-msgstr ""
+msgstr "Вебсайт"
 
 #: qcsrc/menu/xonotic/credits.qc:41
 msgid "Stats"
-msgstr ""
+msgstr "Статистика"
 
 #: qcsrc/menu/xonotic/credits.qc:45
 msgid "Art"
-msgstr ""
+msgstr "Творчість"
 
 #: qcsrc/menu/xonotic/credits.qc:53
 msgid "Animation"
-msgstr ""
+msgstr "Анімація"
 
 #: qcsrc/menu/xonotic/credits.qc:57
 msgid "Campaign"
@@ -8927,188 +9021,188 @@ msgstr "Кампанія"
 
 #: qcsrc/menu/xonotic/credits.qc:62
 msgid "Level Design"
-msgstr ""
+msgstr "Дизайн рівнів"
 
 #: qcsrc/menu/xonotic/credits.qc:87
 msgid "Music / Sound FX"
-msgstr ""
+msgstr "Музика / Звуки FX"
 
 #: qcsrc/menu/xonotic/credits.qc:103
 msgid "Game Code"
-msgstr ""
+msgstr "Код Гри"
 
 #: qcsrc/menu/xonotic/credits.qc:122
 msgid "Marketing / PR"
-msgstr ""
+msgstr "Маркетинг / PR"
 
 #: qcsrc/menu/xonotic/credits.qc:128
 msgid "Legal"
-msgstr ""
+msgstr "Юридична Підтримка"
 
 #: qcsrc/menu/xonotic/credits.qc:133
 msgid "Game Engine"
-msgstr ""
+msgstr "Ігровий Рушій"
 
 #: qcsrc/menu/xonotic/credits.qc:137
 msgid "Engine Additions"
-msgstr ""
+msgstr "Доповнення Рушія"
 
 #: qcsrc/menu/xonotic/credits.qc:144
 msgid "Compiler"
-msgstr ""
+msgstr "Компілятор"
 
 #: qcsrc/menu/xonotic/credits.qc:151
 msgid "Translators"
-msgstr ""
+msgstr "Перекладачі"
 
 #: qcsrc/menu/xonotic/credits.qc:153
 msgid "Asturian"
-msgstr ""
+msgstr "Астурійська"
 
 #: qcsrc/menu/xonotic/credits.qc:159
 msgid "Belarusian"
-msgstr ""
+msgstr "Білоруська"
 
 #: qcsrc/menu/xonotic/credits.qc:163
 msgid "Bulgarian"
-msgstr ""
+msgstr "Болгарська"
 
 #: qcsrc/menu/xonotic/credits.qc:174
 msgid "Chinese (China)"
-msgstr ""
+msgstr "Китайська (Китай)"
 
 #: qcsrc/menu/xonotic/credits.qc:191
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Китайська (Гонконг)"
 
 #: qcsrc/menu/xonotic/credits.qc:204
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "Китайська (Тайвань)"
 
 #: qcsrc/menu/xonotic/credits.qc:223
 msgid "Czech"
-msgstr ""
+msgstr "Чеська"
 
 #: qcsrc/menu/xonotic/credits.qc:238
 msgid "Dutch"
-msgstr ""
+msgstr "Нідерландська"
 
 #: qcsrc/menu/xonotic/credits.qc:247
 msgid "English (Australia)"
-msgstr ""
+msgstr "Англійська (Австралія)"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "English (United Kingdom)"
-msgstr ""
+msgstr "Англійська (Сполучене Королівство)"
 
 #: qcsrc/menu/xonotic/credits.qc:259
 msgid "Finnish"
-msgstr ""
+msgstr "Фінська"
 
 #: qcsrc/menu/xonotic/credits.qc:272
 msgid "French"
-msgstr ""
+msgstr "Французька"
 
 #: qcsrc/menu/xonotic/credits.qc:288
 msgid "Galician"
-msgstr ""
+msgstr "Галицька"
 
 #: qcsrc/menu/xonotic/credits.qc:292
 msgid "German"
-msgstr ""
+msgstr "Німецька"
 
 #: qcsrc/menu/xonotic/credits.qc:310
 msgid "Greek"
-msgstr ""
+msgstr "Грецька"
 
 #: qcsrc/menu/xonotic/credits.qc:322
 msgid "Hungarian"
-msgstr ""
+msgstr "Угорська"
 
 #: qcsrc/menu/xonotic/credits.qc:333
 msgid "Indonesian"
-msgstr ""
+msgstr "Індонезійська"
 
 #: qcsrc/menu/xonotic/credits.qc:338
 msgid "Irish"
-msgstr ""
+msgstr "Ірландська"
 
 #: qcsrc/menu/xonotic/credits.qc:341
 msgid "Italian"
-msgstr ""
+msgstr "Італійська"
 
 #: qcsrc/menu/xonotic/credits.qc:351
 msgid "Japanese"
-msgstr ""
+msgstr "Японська"
 
 #: qcsrc/menu/xonotic/credits.qc:360
 msgid "Kazakh"
-msgstr ""
+msgstr "Казахська"
 
 #: qcsrc/menu/xonotic/credits.qc:363
 msgid "Korean"
-msgstr ""
+msgstr "Корейська"
 
 #: qcsrc/menu/xonotic/credits.qc:369
 msgid "Latin"
-msgstr ""
+msgstr "Латинська"
 
 #: qcsrc/menu/xonotic/credits.qc:372
 msgid "Polish"
-msgstr ""
+msgstr "Польська"
 
 #: qcsrc/menu/xonotic/credits.qc:401
 msgid "Portuguese"
-msgstr ""
+msgstr "Португальська"
 
 #: qcsrc/menu/xonotic/credits.qc:411
 msgid "Portuguese (Brazil)"
-msgstr ""
+msgstr "Португальська (Бразилія)"
 
 #: qcsrc/menu/xonotic/credits.qc:421
 msgid "Romanian"
-msgstr ""
+msgstr "Румунська"
 
 #: qcsrc/menu/xonotic/credits.qc:432
 msgid "Russian"
-msgstr "Московська"
+msgstr "Російська"
 
 #: qcsrc/menu/xonotic/credits.qc:458
 msgid "Serbian"
-msgstr ""
+msgstr "Сербська"
 
 #: qcsrc/menu/xonotic/credits.qc:465
 msgid "Spanish"
-msgstr ""
+msgstr "Іспанська"
 
 #: qcsrc/menu/xonotic/credits.qc:489
 msgid "Swedish"
-msgstr ""
+msgstr "Шведська"
 
 #: qcsrc/menu/xonotic/credits.qc:496
 msgid "Turkish"
-msgstr ""
+msgstr "Турецька"
 
 #: qcsrc/menu/xonotic/credits.qc:511
 msgid "Ukrainian"
-msgstr "Солов'їна"
+msgstr "Українська"
 
 #: qcsrc/menu/xonotic/credits.qc:523
 msgid "Past Contributors"
-msgstr ""
+msgstr "Колишні Учасники"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:24
 #, c-format
 msgid "%d results"
-msgstr ""
+msgstr "%d результатів"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:24
 msgid "1 result"
-msgstr ""
+msgstr "1 результат"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:118
 msgid "forced to be saved to config.cfg"
-msgstr ""
+msgstr "примусово буде збережено в config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:124 qcsrc/menu/xonotic/cvarlist.qc:134
 msgid "will not be saved"
@@ -9128,7 +9222,7 @@ msgstr "налаштування рушія"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:143
 msgid "read only"
-msgstr "тільки читання"
+msgstr "тільки для читання"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:37
@@ -9238,7 +9332,7 @@ msgstr "Керування"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:62
 #: qcsrc/menu/xonotic/dialog_media.qc:12
 msgid "Guide"
-msgstr ""
+msgstr "Посібник"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:64
 msgid "Quick menu"
@@ -9260,12 +9354,12 @@ msgstr "Показувати тільки поточний тип боєприп
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Noncurrent opacity:"
-msgstr ""
+msgstr "Неактивна прозорість:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
 msgid "Noncurrent scale:"
-msgstr ""
+msgstr "Неактивний масштаб:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:37
 msgid "Align icon:"
@@ -9324,7 +9418,7 @@ msgstr "Тривалість життя повідомлень:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:30
 #: qcsrc/menu/xonotic/slider_sbfadetime.qc:15
 msgid "FADESPEED^Instant"
-msgstr ""
+msgstr "Миттєво"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:18
@@ -9333,11 +9427,11 @@ msgstr "Масштаб шрифту:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:40
 msgid "Bold font scale:"
-msgstr ""
+msgstr "Розмір жирного шрифту:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:45
 msgid "Title font scale:"
-msgstr ""
+msgstr "Розмір шрифту заголовка:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:50
 msgid "Flip messages order"
@@ -9359,7 +9453,7 @@ msgstr "По центру"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qh:6
 msgid "Centerprint Panel"
-msgstr ""
+msgstr "Панель Центру Сповіщень"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:18
 msgid "Chat size:"
@@ -9371,7 +9465,7 @@ msgstr "Тривалість чату:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:27
 msgid "LIFETIME^Infinite"
-msgstr ""
+msgstr "Нескінченно"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:30
 msgid "Chat beep sound"
@@ -9383,31 +9477,31 @@ msgstr "Панель чату"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qc:21
 msgid "Flip checkpoint order"
-msgstr ""
+msgstr "Поміняти місцями порядок контрольних точок"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_checkpoints.qh:6
 msgid "Checkpoints Panel"
-msgstr ""
+msgstr "Панель Контрольних Точок"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:17
 msgid "FPS:"
-msgstr ""
+msgstr "FPS:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:20
 msgid "Use an averaging algorithm"
-msgstr ""
+msgstr "Використовувати усереднюючий алгоритм"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
 msgid "Decimal places:"
-msgstr ""
+msgstr "Десяткові знаки:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
-msgstr "Панель інформації рушія"
+msgstr "Панель Інформації Рушія"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:18
 msgid "Combine health and armor"
-msgstr ""
+msgstr "Об'єднати здоров'я та броню"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:20
 msgid "Flip health and armor positions"
@@ -9468,35 +9562,35 @@ msgstr "Вимкнути"
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 msgid "Enable spectating"
-msgstr ""
+msgstr "Вмикати при спостереженні"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even in warmup"
-msgstr ""
+msgstr "Вмикати навіть в розминці"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "Відношення тексту та іконок:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:34
 msgid "Reduced"
-msgstr ""
+msgstr "Зменшено"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:38
 msgid "Hide spawned items"
-msgstr ""
+msgstr "Сховати з'явлені предмети"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:40
 msgid "Hide big armor and health"
-msgstr ""
+msgstr "Сховати велику броню та аптечку"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:42
 msgid "Dynamic size"
-msgstr ""
+msgstr "Динамічний розмір"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
-msgstr ""
+msgstr "Панель Таймеру Предметів"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:23
@@ -9509,11 +9603,11 @@ msgstr "РЕЖИМ ГРИ^%s:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
 msgid "Show icons"
-msgstr ""
+msgstr "Показувати іконки"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qh:6
 msgid "Mod Icons Panel"
-msgstr "Панель іконок модів"
+msgstr "Панель Іконок Модів"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qc:19
 msgid "Entry lifetime:"
@@ -9536,21 +9630,21 @@ msgstr "Панель сповіщень"
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
 #: qcsrc/menu/xonotic/util.qc:728
 msgid "Enable"
-msgstr ""
+msgstr "Вмикати"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
 msgid "Enable even observing"
-msgstr ""
+msgstr "Вмикати навіть під час спостереження"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:20
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:35
 msgid "Enable only in Race/CTS"
-msgstr "Вмикати лише у Перегонках/Перегонках з етапами"
+msgstr "Вмикати лише у Перегонках/CTS"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 msgid "Flip speed/acceleration positions"
-msgstr "Поміняти місцями позиції швидкості та акселерації"
+msgstr "Поміняти місцями позиції швидкості та прискорення"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:49
@@ -9559,15 +9653,15 @@ msgstr "Смуга статусу"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:30
 msgid "None"
-msgstr ""
+msgstr "Немає"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:32
 msgid "Acceleration"
-msgstr ""
+msgstr "Для Прискорення"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:33
 msgid "Both"
-msgstr ""
+msgstr "Для обох"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:52
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:120
@@ -9584,11 +9678,11 @@ msgstr "Найвища швидкість"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:71
 msgid "Jump speed"
-msgstr ""
+msgstr "Швидкість стрибка"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:78
 msgid "Show speed unit"
-msgstr ""
+msgstr "Показувати одиниці швидкості"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:84
 msgid "Acceleration:"
@@ -9604,7 +9698,7 @@ msgstr "Панель фізики"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:35
 msgid "Icon size scale:"
-msgstr ""
+msgstr "Масштаб розміру іконок:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
@@ -9617,19 +9711,19 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:89
 #, c-format
 msgid "%sx"
-msgstr ""
+msgstr "%sx"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:42
 msgid "Show timer:"
-msgstr ""
+msgstr "Показувати таймер:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:48
 msgid "Spectating"
-msgstr ""
+msgstr "Спостерігання"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr ""
+msgstr "Панель Підборів"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -9638,7 +9732,7 @@ msgstr "Панель підсилень"
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:18
 msgid "Always enable"
-msgstr ""
+msgstr "Завжди вмикати"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
@@ -9646,7 +9740,7 @@ msgstr "Примусовий аспект:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:27
 msgid "Show attack keys"
-msgstr ""
+msgstr "Показувати клавіші атаки"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qh:6
 msgid "Pressed Keys Panel"
@@ -9654,15 +9748,15 @@ msgstr "Панель натиснутих клавіш"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:26
 msgid "Translate commands"
-msgstr ""
+msgstr "Перекладати команди"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
 msgid "Use the server's quickmenu"
-msgstr ""
+msgstr "Використовувати серверне меню"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
-msgstr ""
+msgstr "Панель Швидкого Меню"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
@@ -9670,7 +9764,7 @@ msgstr "Панель таймера перегонки"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Enable in team games"
-msgstr ""
+msgstr "Вмикати в командних режимах"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:24
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
@@ -9683,7 +9777,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
 #: qcsrc/menu/xonotic/util.qc:764
 msgid "Opacity:"
-msgstr ""
+msgstr "Прозорість:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:61
@@ -9731,7 +9825,7 @@ msgstr "Масштаб:"
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:71
 #, c-format
 msgid "%s qu"
-msgstr ""
+msgstr "%s qu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:45
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:80
@@ -9760,7 +9854,7 @@ msgstr "Ніколи із зумом"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:57
 msgid "Maximized radar:"
-msgstr ""
+msgstr "Розширений радар:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qh:6
 msgid "Radar Panel"
@@ -9789,35 +9883,35 @@ msgstr "Панель Рахунку"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:41
 msgid "Centered on:"
-msgstr ""
+msgstr "Центровано на:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:42
 msgid "View angle"
-msgstr ""
+msgstr "Кут огляду"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:43
 msgid "Velocity angle"
-msgstr ""
+msgstr "Кут швидкості"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:45
 msgid "Style:"
-msgstr ""
+msgstr "Стиль:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:48
 msgid "STYL^Basic"
-msgstr ""
+msgstr "Базовий"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:50
 msgid "Gradient"
-msgstr ""
+msgstr "Градієнт"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:53
 msgid "Range:"
-msgstr ""
+msgstr "Діапазон:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:57
 msgid "Dynamic"
-msgstr ""
+msgstr "Динамічний"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:61
 msgid "Strafe bar:"
@@ -9885,11 +9979,11 @@ msgstr "Показувати час що минув"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:20
 msgid "Secondary timer:"
-msgstr ""
+msgstr "Вторинний таймер:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:25
 msgid "Swapped"
-msgstr ""
+msgstr "Поміняти місцями"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qh:6
 msgid "Timer Panel"
@@ -9897,7 +9991,7 @@ msgstr "Панель таймеру"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Opacity after voting:"
-msgstr ""
+msgstr "Прозорість після голосування:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -9917,7 +10011,7 @@ msgstr "Немає"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:33
 msgid "Opacity"
-msgstr ""
+msgstr "Прозорість"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:34
 msgid "Slide"
@@ -9946,7 +10040,7 @@ msgstr "Клавішею"
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:64
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:49
 msgid "Name"
-msgstr ""
+msgstr "Ім'я"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:75
 msgid "Show Ammo"
@@ -9958,11 +10052,11 @@ msgstr "Показувати влучність"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:79
 msgid "Ammo bar opacity:"
-msgstr ""
+msgstr "Прозорість смуги набоїв:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:86
 msgid "Ammo bar color:"
-msgstr "Колір смуги боєприпасів:"
+msgstr "Колір смуги набоїв:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qh:6
 msgid "Weapons Panel"

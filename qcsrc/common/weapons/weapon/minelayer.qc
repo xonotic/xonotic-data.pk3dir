@@ -135,6 +135,10 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	delete(this);
 }
 
+bool W_MineLayer_CheckSameTeam_cond(entity e)
+{
+	return SAME_TEAM(e, WarpZone_SearchInRadius_otherent);
+}
 void W_MineLayer_RemoteExplode(entity this)
 {
 	if (IS_DEAD(this.realowner))
@@ -151,10 +155,10 @@ void W_MineLayer_RemoteExplode(entity this)
 		 * disabling it currently allows Mine Layer-flying, even more powerful than rocket-flying
 		 * ... even without Rocket Flying mutator enabled
 		 */
-		entity head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, remote_radius), false);
+		WarpZone_SearchInRadius_otherent = this.realowner;
+		entity head = WarpZone_SearchInRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, remote_radius), MOVE_NOTHING, W_MineLayer_CheckSameTeam_cond);
 		for (; head; head = head.chain)
-			if (SAME_TEAM(head, this.realowner))
-				return;
+			return;
 	}
 
 	W_MineLayer_DoRemoteExplode(this);
@@ -165,10 +169,10 @@ void W_MineLayer_ProximityExplode(entity this)
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until they're at a safe distance
 	if (WEP_CVAR(WEP_MINE_LAYER, protection) && this.mine_explodeanyway == 0)
 	{
-		entity head = WarpZone_FindRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius), false);
+		WarpZone_SearchInRadius_otherent = this.realowner;
+		entity head = WarpZone_SearchInRadius(this.origin, WEP_CVAR(WEP_MINE_LAYER, radius), MOVE_NOTHING, W_MineLayer_CheckSameTeam_cond);
 		for (; head; head = head.chain)
-			if (SAME_TEAM(head, this.realowner))
-				return;
+			return;
 	}
 
 	this.mine_time = 0;
@@ -182,6 +186,11 @@ int W_MineLayer_Count(entity e, .entity weaponentity)
 	return minecount;
 }
 
+bool W_MineLayer_Think_cond(entity e)
+{
+	return (IS_PLAYER(e) && !IS_DEAD(e) && !STAT(FROZEN, e) && !IS_INDEPENDENT_PLAYER(e)
+		&& DIFF_TEAM(e, WarpZone_SearchInRadius_otherent)); // don't trigger for team mates
+}
 void W_MineLayer_Think(entity this)
 {
 	this.nextthink = time;
@@ -215,20 +224,19 @@ void W_MineLayer_Think(entity this)
 	float time_edge = WEP_CVAR(WEP_MINE_LAYER, proximity_time_edge);
 	float proxrad = WEP_CVAR(WEP_MINE_LAYER, proximity_radius);
 	float new_mine_time;
-	entity head = WarpZone_FindRadius(this.origin, proxrad, false);
+	WarpZone_SearchInRadius_otherent = this.realowner;
+	entity head = WarpZone_SearchInRadius(this.origin, proxrad, MOVE_NOTHING, W_MineLayer_Think_cond);
 	for (; head; head = head.chain)
-		if (IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head) && !IS_INDEPENDENT_PLAYER(head)
-		&& DIFF_TEAM(head, this.realowner)) // don't trigger for team mates
-		{
-			if (!this.mine_time) // don't repeat the sound
-				spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
-			// scale from time_edge to time_core based on how close the player is to the mine
-			new_mine_time = time + time_core;
-			if (time_edge != time_core)
-				new_mine_time += (time_edge - time_core) * vlen(head.WarpZone_findradius_dist) / proxrad;
-			if (!this.mine_time || this.mine_time > new_mine_time) // choose the earliest explosion time
-				this.mine_time = new_mine_time;
-		}
+	{
+		if (!this.mine_time) // don't repeat the sound
+			spamsound(this, CH_SHOTS, SND_MINE_TRIGGER, VOL_BASE, ATTN_NORM);
+		// scale from time_edge to time_core based on how close the player is to the mine
+		new_mine_time = time + time_core;
+		if (time_edge != time_core)
+			new_mine_time += (time_edge - time_core) * vlen(head.WarpZone_findradius_dist) / proxrad;
+		if (!this.mine_time || this.mine_time > new_mine_time) // choose the earliest explosion time
+			this.mine_time = new_mine_time;
+	}
 
 	// explode if it's time to
 	if (this.mine_time && time >= this.mine_time)

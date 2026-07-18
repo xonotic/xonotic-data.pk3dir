@@ -1088,7 +1088,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	|| (deathtype == DEATH_FALL.m_id && this.draggedby != NULL))
 		return;
 
-	vector v = healtharmor_applydamage(100, GetResource(this, RES_ARMOR) / 100, deathtype, damage);
+	vector v = healtharmor_applydamage(GetResource(this, RES_HEALTH), 100, GetResource(this, RES_ARMOR) / 100, deathtype, damage);
 	float take = v.x;
 	//float save = v.y;
 

@@ -503,7 +503,6 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 		if (IS_PLAYER(targ) && targ.vehicle)
 			vehicles_exit(targ.vehicle, VHEF_RELEASE);
 
-		SetResourceExplicit(targ, RES_ARMOR, 0);
 		StatusEffects_remove(STATUSEFFECT_SpawnShield, targ, STATUSEFFECT_REMOVE_CLEAR);
 		targ.flags &= ~FL_GODMODE;
 		damage = INFINITY;
@@ -556,7 +555,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 							if (autocvar_g_mirrordamage_virtual)
 							{
-								vector v  = healtharmor_applydamage(GetResource(attacker, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
+								vector v = healtharmor_applydamage(GetResource(attacker, RES_HEALTH), GetResource(attacker, RES_ARMOR),
+								                                   autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
 								attacker.dmg_take += v.x;
 								attacker.dmg_save += v.y;
 								attacker.dmg_inflictor = inflictor;
@@ -566,7 +566,8 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 
 							if (autocvar_g_friendlyfire_virtual)
 							{
-								vector v = healtharmor_applydamage(GetResource(targ, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+								vector v = healtharmor_applydamage(GetResource(targ, RES_HEALTH), GetResource(targ, RES_ARMOR),
+								                                   autocvar_g_balance_armor_blockpercent, deathtype, damage);
 								targ.dmg_take += v.x;
 								targ.dmg_save += v.y;
 								targ.dmg_inflictor = inflictor;
@@ -699,7 +700,17 @@ void Damage(entity targ, entity inflictor, entity attacker, float damage, int de
 	}
 }
 
-// Returns total damage applied to creatures
+entity RadiusDamageForSource_cond_inflictor;
+entity RadiusDamageForSource_cond_cantbe;
+entity RadiusDamageForSource_cond_mustbe;
+bool RadiusDamageForSource_cond_inflictorselfdamage;
+bool RadiusDamageForSource_cond(entity targ)
+{
+	return ((targ != RadiusDamageForSource_cond_inflictor || RadiusDamageForSource_cond_inflictorselfdamage)
+		&& (((RadiusDamageForSource_cond_cantbe != targ) && !RadiusDamageForSource_cond_mustbe) || RadiusDamageForSource_cond_mustbe == targ)
+		&& targ.takedamage);
+}
+/// Returns total damage applied to creatures
 float RadiusDamageForSource(
 	entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker,
 	float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe,
@@ -737,185 +748,188 @@ float RadiusDamageForSource(
 			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
 	}
 
-	entity targ = WarpZone_FindRadius(inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, false);
+	RadiusDamageForSource_cond_inflictor = inflictor;
+	RadiusDamageForSource_cond_cantbe = cantbe;
+	RadiusDamageForSource_cond_mustbe = mustbe;
+	RadiusDamageForSource_cond_inflictorselfdamage = inflictorselfdamage;
+	entity targ = WarpZone_SearchInRadius(inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, MOVE_NOTHING, RadiusDamageForSource_cond);
 	for (; targ; targ = targ.chain)
-		if ((targ != inflictor || inflictorselfdamage)
-		&& (((cantbe != targ) && !mustbe) || mustbe == targ)
-		&& targ.takedamage)
+	{
+		// calculate distance from nearest point on target to nearest point on inflictor
+		// instead of origin to ensure full damage on impacts
+
+		vector nearest = targ.WarpZone_findradius_nearest;
+
+		// optimize code by getting inflictororigin_wz from WarpZone_FindRadius calculations instead of
+		//vector inflictororigin_wz = WarpZone_TransformOrigin(targ, inflictororigin);
+
+		vector inflictororigin_wz = targ.WarpZone_findradius_nearest + targ.WarpZone_findradius_dist;
+		vector inflictornearest = NearestPointOnBoundingBox(
+			inflictororigin_wz + inflictor.mins, inflictororigin_wz + inflictor.maxs, nearest);
+		vector diff = inflictornearest - nearest;
+
+		// round up a little on the damage to ensure full damage on impacts
+		// and turn the distance into a fraction of the radius
+		float dist = max(0, vlen(diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS));
+		if (dist > rad)
+			continue;
+
+
+		float f = (rad > 0) ? 1 - (dist / rad) : 1;
+		// at this point f can't be < 0 or > 1
+		float finaldmg = coredamage * f + edgedamage * (1 - f);
+		if (finaldmg <= 0)
+			continue;
+
+
+		vector hitloc;
+		float a, c;
+
+		// if it's a player, use the view origin as reference
+		vector center = CENTER_OR_VIEWOFS(targ);
+
+		if (autocvar_g_player_damageplayercenter)
 		{
-			// calculate distance from nearest point on target to nearest point on inflictor
-			// instead of origin to ensure full damage on impacts
-
-			vector nearest = targ.WarpZone_findradius_nearest;
-
-			// optimize code by getting inflictororigin_wz from WarpZone_FindRadius calculations instead of
-			//vector inflictororigin_wz = WarpZone_TransformOrigin(targ, inflictororigin);
-
-			vector inflictororigin_wz = targ.WarpZone_findradius_nearest + targ.WarpZone_findradius_dist;
-			vector inflictornearest = NearestPointOnBoundingBox(
-				inflictororigin_wz + inflictor.mins, inflictororigin_wz + inflictor.maxs, nearest);
-			vector diff = inflictornearest - nearest;
-
-			// round up a little on the damage to ensure full damage on impacts
-			// and turn the distance into a fraction of the radius
-			float dist = max(0, vlen(diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS));
-			if (dist <= rad)
+			if (targ != attacker) // always use target's bbox centerpoint
+				center = targ.origin + ((targ.mins + targ.maxs) * 0.5);
+			else // targ == attacker
 			{
-				float f = (rad > 0) ? 1 - (dist / rad) : 1;
-				// at this point f can't be < 0 or > 1
-				float finaldmg = coredamage * f + edgedamage * (1 - f);
-				if (finaldmg > 0)
+			#if 0
+				// code stolen from W_SetupShot_Dir_ProjectileSize_Range()
+				vector md = targ.(weaponentity).movedir;
+				vector dv = v_right * -md.y + v_up * md.z;
+				vector mi = '0 0 0', ma = '0 0 0';
+
+				if (IS_CLIENT(targ)) // no antilag for non-clients!
 				{
-					vector hitloc;
-					float a, c;
-
-					// if it's a player, use the view origin as reference
-					vector center = CENTER_OR_VIEWOFS(targ);
-
-					if (autocvar_g_player_damageplayercenter)
-					{
-						if (targ != attacker) // always use target's bbox centerpoint
-							center = targ.origin + ((targ.mins + targ.maxs) * 0.5);
-						else // targ == attacker
-						{
-						#if 0
-							// code stolen from W_SetupShot_Dir_ProjectileSize_Range()
-							vector md = targ.(weaponentity).movedir;
-							vector dv = v_right * -md.y + v_up * md.z;
-							vector mi = '0 0 0', ma = '0 0 0';
-
-							if (IS_CLIENT(targ)) // no antilag for non-clients!
-							{
-								if (CS(targ).antilag_debug)
-									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, CS(targ).antilag_debug);
-								else
-									tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, ANTILAG_LATENCY(targ));
-							}
-							else
-								tracebox(center, mi, ma, center + dv, MOVE_NORMAL, targ);
-
-							center.z = trace_endpos.z;
-						#else
-							// very cheap way but it skips move into solid checks which is fine most of the time for now AFAIK
-							// this should only really be an issue with some rare edge cases where
-							// shot origin was prevented from going into a ceiling but it still explodes at the ceiling
-							// shot origin wasn't raised as high as possible and the shooter gets upwards knockback
-							// TL;DR: no bugs if vertical shot origin is always within player bbox
-							center.z += targ.(weaponentity).movedir.z;
-						#endif
-						}
-					}
-
-					/* debug prints
-					print(sprintf("origin  vec %v\n", targ.origin));
-					print(sprintf("movedir vec %v\n", targ.(weaponentity).movedir));
-					print(sprintf("old def vec %v\n", CENTER_OR_VIEWOFS(targ)));
-					print(sprintf("origin+vofs %v\n", targ.origin + targ.view_ofs));
-					print(sprintf("bbox center %v\n", (targ.origin + ((targ.mins + targ.maxs) * 0.5))));
-					print(sprintf("center  vec %v\n", center));
-					print(sprintf("shotorg vec %v\n", w_shotorg));
-					print("\n");
-					*/
-
-					force = normalize(center - inflictororigin_wz);
-					force *= (finaldmg / max(coredamage, edgedamage)) * forceintensity;
-					hitloc = nearest;
-
-					// apply special force scalings
-					if (forcexyzscale.x)
-						force.x *= forcexyzscale.x;
-					if (forcexyzscale.y)
-						force.y *= forcexyzscale.y;
-					if (forcexyzscale.z)
-						force.z *= forcexyzscale.z;
-
-					if (targ != directhitentity)
-					{
-						float hits;
-						float total;
-						float hitratio;
-						float mininv_f, mininv_d;
-
-						// test line of sight to multiple positions on box,
-						// and do damage if any of them hit
-						hits = 0;
-
-						// we know: max stddev of hitratio = 1 / (2 * sqrt(n))
-						// so for a given max stddev:
-						// n = (1 / (2 * max stddev of hitratio))^2
-
-						mininv_d = (finaldmg * (1-tfloordmg)) / autocvar_g_throughfloor_damage_max_stddev;
-						mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
-
-						if (autocvar_g_throughfloor_debug)
-							LOG_INFOF("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
-
-						total = 0.25 * (max(mininv_f, mininv_d) ** 2);
-
-						if (autocvar_g_throughfloor_debug)
-							LOG_INFOF(" steps=%f", total);
-
-						if (IS_PLAYER(targ))
-							total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
-						else
-							total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
-
-						if (autocvar_g_throughfloor_debug)
-							LOG_INFOF(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total)));
-
-						for (c = 0; c < total; ++c)
-						{
-							//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
-							WarpZone_TraceLine(inflictororigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
-							if (trace_fraction == 1 || trace_ent == targ)
-							{
-								++hits;
-								if (hits > 1)
-									hitloc += nearest;
-								else
-									hitloc = nearest;
-							}
-							nearest.x = targ.origin.x + targ.mins.x + random() * targ.size.x;
-							nearest.y = targ.origin.y + targ.mins.y + random() * targ.size.y;
-							nearest.z = targ.origin.z + targ.mins.z + random() * targ.size.z;
-						}
-
-						nearest = hitloc * (1 / max(1, hits));
-						hitratio = hits / total;
-						a = bound(0, tfloordmg + (1 - tfloordmg) * hitratio, 1);
-						finaldmg *= a;
-						a = bound(0, tfloorforce + (1 - tfloorforce) * hitratio, 1);
-						force *= a;
-
-						if (autocvar_g_throughfloor_debug)
-							LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
-
-						/*if (targ == attacker)
-						{
-							print("hits ", ftos(hits), " / ", ftos(total));
-							print(" finaldmg ", ftos(finaldmg), " force ", ftos(vlen(force)));
-							print(" (", vtos(force), ") (", ftos(a), ")\n");
-						}*/
-					}
-
-					if (finaldmg || force)
-					{
-						if (targ.iscreature)
-						{
-							total_damage_to_creatures += finaldmg;
-
-							if (accuracy_isgooddamage(attacker, targ))
-								stat_damagedone += finaldmg;
-						}
-
-						if (targ == directhitentity || DEATH_ISSPECIAL(deathtype))
-							Damage(targ, inflictor, attacker, finaldmg, deathtype, weaponentity, nearest, force);
-						else
-							Damage(targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, weaponentity, nearest, force);
-					}
+					if (CS(targ).antilag_debug)
+						tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, CS(targ).antilag_debug);
+					else
+						tracebox_antilag(targ, center, mi, ma, center + dv, MOVE_NORMAL, targ, ANTILAG_LATENCY(targ));
 				}
+				else
+					tracebox(center, mi, ma, center + dv, MOVE_NORMAL, targ);
+
+				center.z = trace_endpos.z;
+			#else
+				// very cheap way but it skips move into solid checks which is fine most of the time for now AFAIK
+				// this should only really be an issue with some rare edge cases where
+				// shot origin was prevented from going into a ceiling but it still explodes at the ceiling
+				// shot origin wasn't raised as high as possible and the shooter gets upwards knockback
+				// TL;DR: no bugs if vertical shot origin is always within player bbox
+				center.z += targ.(weaponentity).movedir.z;
+			#endif
 			}
 		}
+
+		/* debug prints
+		print(sprintf("origin  vec %v\n", targ.origin));
+		print(sprintf("movedir vec %v\n", targ.(weaponentity).movedir));
+		print(sprintf("old def vec %v\n", CENTER_OR_VIEWOFS(targ)));
+		print(sprintf("origin+vofs %v\n", targ.origin + targ.view_ofs));
+		print(sprintf("bbox center %v\n", (targ.origin + ((targ.mins + targ.maxs) * 0.5))));
+		print(sprintf("center  vec %v\n", center));
+		print(sprintf("shotorg vec %v\n", w_shotorg));
+		print("\n");
+		*/
+
+		force = normalize(center - inflictororigin_wz);
+		force *= (finaldmg / max(coredamage, edgedamage)) * forceintensity;
+		hitloc = nearest;
+
+		// apply special force scalings
+		if (forcexyzscale.x)
+			force.x *= forcexyzscale.x;
+		if (forcexyzscale.y)
+			force.y *= forcexyzscale.y;
+		if (forcexyzscale.z)
+			force.z *= forcexyzscale.z;
+
+		if (targ != directhitentity)
+		{
+			float hits;
+			float total;
+			float hitratio;
+			float mininv_f, mininv_d;
+
+			// test line of sight to multiple positions on box,
+			// and do damage if any of them hit
+			hits = 0;
+
+			// we know: max stddev of hitratio = 1 / (2 * sqrt(n))
+			// so for a given max stddev:
+			// n = (1 / (2 * max stddev of hitratio))^2
+
+			mininv_d = (finaldmg * (1-tfloordmg)) / autocvar_g_throughfloor_damage_max_stddev;
+			mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
+
+			if (autocvar_g_throughfloor_debug)
+				LOG_INFOF("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
+
+			total = 0.25 * (max(mininv_f, mininv_d) ** 2);
+
+			if (autocvar_g_throughfloor_debug)
+				LOG_INFOF(" steps=%f", total);
+
+			if (IS_PLAYER(targ))
+				total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
+			else
+				total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
+
+			if (autocvar_g_throughfloor_debug)
+				LOG_INFOF(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total)));
+
+			for (c = 0; c < total; ++c)
+			{
+				//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
+				WarpZone_TraceLine(inflictororigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
+				if (trace_fraction == 1 || trace_ent == targ)
+				{
+					++hits;
+					if (hits > 1)
+						hitloc += nearest;
+					else
+						hitloc = nearest;
+				}
+				nearest.x = targ.origin.x + targ.mins.x + random() * targ.size.x;
+				nearest.y = targ.origin.y + targ.mins.y + random() * targ.size.y;
+				nearest.z = targ.origin.z + targ.mins.z + random() * targ.size.z;
+			}
+
+			nearest = hitloc * (1 / max(1, hits));
+			hitratio = hits / total;
+			a = bound(0, tfloordmg + (1 - tfloordmg) * hitratio, 1);
+			finaldmg *= a;
+			a = bound(0, tfloorforce + (1 - tfloorforce) * hitratio, 1);
+			force *= a;
+
+			if (autocvar_g_throughfloor_debug)
+				LOG_INFOF(" D=%f F=%f", finaldmg, vlen(force));
+
+			/*if (targ == attacker)
+			{
+				print("hits ", ftos(hits), " / ", ftos(total));
+				print(" finaldmg ", ftos(finaldmg), " force ", ftos(vlen(force)));
+				print(" (", vtos(force), ") (", ftos(a), ")\n");
+			}*/
+		}
+
+		if (finaldmg || force)
+		{
+			if (targ.iscreature)
+			{
+				total_damage_to_creatures += finaldmg;
+
+				if (accuracy_isgooddamage(attacker, targ))
+					stat_damagedone += finaldmg;
+			}
+
+			if (targ == directhitentity || DEATH_ISSPECIAL(deathtype))
+				Damage(targ, inflictor, attacker, finaldmg, deathtype, weaponentity, nearest, force);
+			else
+				Damage(targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, weaponentity, nearest, force);
+		}
+	}
 
 	RadiusDamage_running = false;
 
