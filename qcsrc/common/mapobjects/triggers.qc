@@ -1,4 +1,7 @@
 #include "triggers.qh"
+#ifdef SVQC
+#include <server/command/vote.qh> // for .reset
+#endif
 
 bool isPushable(entity e)
 {
@@ -247,6 +250,9 @@ match (string)this.target and call their .use function
 
 void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventReuse, int skiptargets)
 {
+	string s;
+
+#ifdef SVQC
 //
 // check for a delay
 //
@@ -256,6 +262,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		entity t = new_pure(DelayedUse);
 		t.nextthink = time + this.delay;
 		setthink(t, DelayThink);
+		t.reset = builtin_remove;
 		t.enemy = actor;
 		t.message = this.message;
 		t.killtarget = this.killtarget;
@@ -267,12 +274,9 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		return;
 	}
 
-	string s;
-
 //
 // print the message
 //
-#ifdef SVQC
 	if(this)
 	if(IS_PLAYER(actor) && this.message != "")
 	if(IS_REAL_CLIENT(actor))
