@@ -1991,51 +1991,51 @@ void readplayerstartcvars()
 		g_weaponarena = 0;
 		break;
 	case "all": case "1":
-		g_weaponarena_list = "All Weapons Arena";
+		g_weaponarena_list = "all";
 		g_weaponarena_weapons = weapons_all();
 		break;
 	case "devall":
-		g_weaponarena_list = "Dev All Weapons Arena";
+		g_weaponarena_list = "devall";
 		g_weaponarena_weapons = weapons_devall();
 		break;
 	case "standard": case "most":
-		g_weaponarena_list = "Standard Weapons Arena";
+		g_weaponarena_list = "standard";
 		g_weaponarena_weapons = weapons_standard();
 		break;
 	case "extended":
-		g_weaponarena_list = "Extended Weapons Arena";
+		g_weaponarena_list = "extended";
 		g_weaponarena_weapons = weapons_extended();
 		break;
 	case "extended_available":
-		g_weaponarena_list = "Extended Available Weapons Arena";
+		g_weaponarena_list = "extended_available";
 		g_weaponarena_weapons = weapons_extended();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "all_available":
-		g_weaponarena_list = "All Available Weapons Arena";
+		g_weaponarena_list = "all_available";
 		g_weaponarena_weapons = weapons_all();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "devall_available":
-		g_weaponarena_list = "Dev All Available Weapons Arena";
+		g_weaponarena_list = "devall_available";
 		g_weaponarena_weapons = weapons_devall();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "standard_available": case "most_available":
-		g_weaponarena_list = "Standard Available Weapons Arena";
+		g_weaponarena_list = "standard_available";
 		g_weaponarena_weapons = weapons_standard();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "none":
-		g_weaponarena_list = "No Weapons Arena";
+		g_weaponarena_list = "none";
 		break;
 	default:
 	{
