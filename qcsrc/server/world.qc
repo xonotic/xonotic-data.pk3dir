@@ -712,16 +712,35 @@ void InitGameplayMode()
 	VoteReset(false);
 
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
+	// also sets MapInfo_Map_fog
 	get_mi_min_max(1);
-	// assign reflectively to avoid "assignment to world" warning
-	for (int i = 0, done = 0, n = numentityfields(); i < n; ++i)
+
+	if (!cvar_value_issafe(world.fog))
 	{
-		string k = entityfieldname(i);
-		vector v = (k == "mins") ? mi_min : (k == "maxs") ? mi_max : '0 0 0';
-		if (v)
+		if (MapInfo_Map_fog == "")
+			MapInfo_Map_fog = string_null; // clear world.fog
+		LOG_WARN("The current map contains a potentially harmful fog setting, ignored");
+	}
+	else if (MapInfo_Map_fog == "none")
+		MapInfo_Map_fog = string_null;
+
+	// assign reflectively to avoid "assignment to world" warning
+	for (int i = 0, done = 0, n = numentityfields(); i < n && done < 3; ++i)
+	{
+		switch (entityfieldname(i))
 		{
-			putentityfieldstring(i, world, sprintf("%v", v));
-			if (++done == 2) break;
+			case "fog":
+				if (MapInfo_Map_fog != "" || !MapInfo_Map_fog)
+					putentityfieldstring(i, world, MapInfo_Map_fog);
+				++done;
+				continue;
+			case "mins":
+				putentityfieldstring(i, world, sprintf("%v", mi_min));
+				++done;
+				continue;
+			case "maxs":
+				putentityfieldstring(i, world, sprintf("%v", mi_max));
+				++done;
 		}
 	}
 	// currently, NetRadiant's limit is 131072 qu for each side
@@ -733,18 +752,6 @@ void InitGameplayMode()
 	MapInfo_LoadMapSettings(mapname);
 	GameRules_teams(false);
 
-	if (!cvar_value_issafe(world.fog))
-	{
-		LOG_INFO("The current map contains a potentially harmful fog setting, ignored");
-		world.fog = string_null;
-	}
-	if(MapInfo_Map_fog != "")
-	{
-		if(MapInfo_Map_fog == "none")
-			world.fog = string_null;
-		else
-			world.fog = strzone(MapInfo_Map_fog);
-	}
 	clientstuff = strzone(MapInfo_Map_clientstuff);
 
 	MapInfo_ClearTemps();
