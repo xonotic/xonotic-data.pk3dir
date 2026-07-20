@@ -304,49 +304,52 @@ void W_Seeker_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_Seeker_Fire_Missile(thiswep, actor, weaponentity, closest, -1);
 }
 
-void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seeker_Attack
-{
-	--this.cnt;
-
-	Weapon thiswep = WEP_SEEKER;
-	.entity weaponentity = this.weaponentity_fld;
-	if (this.cnt <= -1
-	|| IS_DEAD(this.realowner)
-	|| (!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_SEEKER, missile_ammo))
-	|| this.realowner.(weaponentity).m_switchweapon != thiswep)
-	{
-		delete(this);
-		return;
-	}
-
-	this.nextthink = time + WEP_CVAR(WEP_SEEKER, missile_delay) * W_WeaponRateFactor(this.realowner);
-
-	entity own = this.realowner;
-
-	entity oldenemy = own.enemy;
-	own.enemy = this.enemy;
-	W_Seeker_Fire_Missile(thiswep, own, weaponentity, own.enemy, own.cnt);
-	own.enemy = oldenemy;
-}
-
 void W_Seeker_Tracker_Think(entity this)
 {
 	.entity weaponentity = this.weaponentity_fld;
-	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
-	if (IS_DEAD(this.realowner) || IS_DEAD(this.tag_target)
-	|| this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER
-	|| time > this.tag_time + WEP_CVAR(WEP_SEEKER, tag_tracker_lifetime))
+
+	if ((this.count & 1) // type 0 and 2: will fire missiles
+	&& time >= this.pushltime)
 	{
-		if (this)
+		Weapon thiswep = WEP_SEEKER;
+		if (this.cnt <= 0
+		|| IS_DEAD(this.realowner)
+		|| (!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_SEEKER, missile_ammo))
+		|| this.realowner.(weaponentity).m_switchweapon != thiswep)
+			this.count &= ~1; // stop firing
+		else
 		{
-			WaypointSprite_Kill(this.tag_target.wps_tag_tracker);
-			delete(this);
+			this.pushltime = time + WEP_CVAR(WEP_SEEKER, missile_delay) * W_WeaponRateFactor(this.realowner);
+			if (!(this.count & 2))
+				this.nextthink = this.pushltime;
+
+			entity own = this.realowner;
+			entity oldenemy = own.enemy;
+			own.enemy = this.enemy;
+			--this.cnt;
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, own.enemy, own.cnt);
+			own.enemy = oldenemy;
 		}
-		return;
 	}
 
-	// Update the think method information
-	this.nextthink = time;
+	if (this.count & 2) // type 1 and 2: will track
+	{
+		// stop tracking if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
+		if (IS_DEAD(this.realowner) || IS_DEAD(this.tag_target)
+		|| this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER
+		|| time > this.tag_time + WEP_CVAR(WEP_SEEKER, tag_tracker_lifetime))
+		{
+			WaypointSprite_Kill(this.tag_target.wps_tag_tracker);
+			this.count &= ~2; // stop tracking
+			if (this.count & 1)
+				this.nextthink = this.pushltime;
+		}
+		else
+			this.nextthink = time;
+	}
+
+	if (!(this.count & (1 | 2))) // no longer tracking or firing missiles
+		delete(this);
 }
 
 // ============================
@@ -403,13 +406,16 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 		.entity weaponentity = this.weaponentity_fld;
 		entity tag = W_Seeker_Tagged_Info(this.realowner, weaponentity, toucher);
 
+		int tag_type = (WEP_CVAR(WEP_SEEKER, type) + 1);
+		bool will_track    = (tag_type & 2); // type 1 and 2: will track
+		bool fire_missiles = (tag_type & 1); // type 0 and 2: will fire missiles
 		if (tag != NULL)
 		{
-			if (toucher.wps_tag_tracker && WEP_CVAR(WEP_SEEKER, type) == 1) // don't attach another waypointsprite without killing the old one first
+			if (toucher.wps_tag_tracker && will_track) // don't attach another waypointsprite without killing the old one first
 				WaypointSprite_Kill(toucher.wps_tag_tracker);
 			tag.tag_time = time;
 		}
-		else
+		if (tag == NULL || fire_missiles)
 		{
 			//sprint(this.realowner, strcat("You just tagged ^2", toucher.netname, "^7 with a tracking device!\n"));
 			entity tracker = new(tag_tracker);
@@ -417,27 +423,28 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 			tracker.weaponentity_fld = this.weaponentity_fld;
 			tracker.owner = this.owner;
 			tracker.realowner = this.realowner;
+			tracker.count = tag_type;
 			IL_PUSH(g_seeker_trackers, tracker);
 
-			if (WEP_CVAR(WEP_SEEKER, type) == 1)
+			if (will_track)
 			{
 				tracker.tag_target = toucher;
 				tracker.tag_time = time;
-				setthink(tracker, W_Seeker_Tracker_Think);
 			}
-			else
+			if (fire_missiles)
 			{
 				tracker.cnt = WEP_CVAR(WEP_SEEKER, missile_count);
 				if (!this.count)
 					--tracker.cnt;
 				tracker.enemy = toucher;
-				setthink(tracker, W_Seeker_Vollycontroller_Think);
+				tracker.pushltime = time; // fire the first immediately
 			}
 
+			setthink(tracker, W_Seeker_Tracker_Think);
 			tracker.nextthink = time;
 		}
 
-		if (WEP_CVAR(WEP_SEEKER, type) == 1)
+		if (will_track)
 		{
 			WaypointSprite_Spawn(WP_Seeker, WEP_CVAR(WEP_SEEKER, tag_tracker_lifetime), 0, toucher, '0 0 64', this.realowner, 0, toucher, wps_tag_tracker, true, RADARICON_TAGGED);
 			WaypointSprite_UpdateRule(toucher.wps_tag_tracker, 0, SPRITERULE_DEFAULT);
@@ -503,7 +510,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.pushltime = 0; // is 0 if the tag can't be guided
 	int proj_type = PROJECTILE_SEEKER_TAG;
 
-	bool delay_last = (WEP_CVAR(WEP_SEEKER, missile_count_lastdelay) > 0 && WEP_CVAR(WEP_SEEKER, type) != 1);
+	bool delay_last = (WEP_CVAR(WEP_SEEKER, missile_count_lastdelay) > 0 && ((WEP_CVAR(WEP_SEEKER, type) + 1) & 1));
 	bool can_guide = (WEP_CVAR(WEP_SEEKER, tag_guiderate) > 0);
 	if (delay_last || can_guide)
 	{
