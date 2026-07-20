@@ -68,6 +68,7 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, missile_ammo, float, NONE) \
 		P(class, prefix, missile_animtime, float, NONE) \
 		P(class, prefix, missile_count, float, NONE) \
+		P(class, prefix, missile_count_lastdelay, float, NONE) \
 		P(class, prefix, missile_damageforcescale, float, NONE) \
 		P(class, prefix, missile_damage, float, NONE) \
 		P(class, prefix, missile_decel, float, NONE) \
@@ -128,7 +129,7 @@ SPAWNFUNC_WEAPON(weapon_seeker, WEP_SEEKER)
 #ifdef SVQC
 .entity tag_target;
 .entity wps_tag_tracker;
-.float tag_time;
+.float tag_time; ///< seeker_tag: time when the tag was fired; tag_tracker: time when tracking started
 .bool tag_release;
 
 IntrusiveList g_seeker_trackers;
