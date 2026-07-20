@@ -37,7 +37,7 @@ void W_Seeker_Missile_Touch(entity this, entity toucher)
 
 void W_Seeker_Missile_Think(entity this)
 {
-	if (time > this.cnt)
+	if (time > this.ltime)
 	{
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 		W_Seeker_Missile_Explode(this, NULL);
@@ -80,8 +80,8 @@ void W_Seeker_Missile_Think(entity this)
 	if (IS_DEAD(this.enemy))
 	{
 		this.enemy = NULL;
-		this.cnt = time + 1 + (random() * 4);
-		this.nextthink = this.cnt;
+		this.ltime = time + 1 + (random() * 4);
+		this.nextthink = this.ltime;
 		return;
 	}
 
@@ -154,7 +154,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, e
 	settouch(missile, W_Seeker_Missile_Touch);
 	missile.event_damage = W_Seeker_Missile_Damage;
 	missile.nextthink = time; // + 0.2; // + cvar("g_balance_seeker_missile_activate_delay");
-	missile.cnt = time + WEP_CVAR(WEP_SEEKER, missile_lifetime);
+	missile.ltime = time + WEP_CVAR(WEP_SEEKER, missile_lifetime);
 	missile.enemy = m_target;
 	missile.scale = 2;
 	missile.takedamage = DAMAGE_YES;
@@ -309,8 +309,10 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	Weapon thiswep = WEP_SEEKER;
 	.entity weaponentity = this.weaponentity_fld;
-	if ((!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_SEEKER, missile_ammo))
-	|| this.cnt <= -1 || IS_DEAD(this.realowner) || this.realowner.(weaponentity).m_switchweapon != thiswep)
+	if (this.cnt <= -1
+	|| IS_DEAD(this.realowner)
+	|| (!(this.realowner.items & IT_UNLIMITED_AMMO) && GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_SEEKER, missile_ammo))
+	|| this.realowner.(weaponentity).m_switchweapon != thiswep)
 	{
 		delete(this);
 		return;
@@ -330,8 +332,9 @@ void W_Seeker_Tracker_Think(entity this)
 {
 	.entity weaponentity = this.weaponentity_fld;
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
-	if (IS_DEAD(this.realowner) || IS_DEAD(this.tag_target) || this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER
-	|| (time > this.tag_time + WEP_CVAR(WEP_SEEKER, tag_tracker_lifetime)))
+	if (IS_DEAD(this.realowner) || IS_DEAD(this.tag_target)
+	|| this.realowner.(weaponentity).m_switchweapon != WEP_SEEKER
+	|| time > this.tag_time + WEP_CVAR(WEP_SEEKER, tag_tracker_lifetime))
 	{
 		if (this)
 		{
@@ -411,7 +414,6 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 			entity tracker = new(tag_tracker);
 			WarpZone_RefSys_Copy(toucher, this); // toucher is in the same reference as the tag, since the tag hit the toucher
 			tracker.weaponentity_fld = this.weaponentity_fld;
-			tracker.cnt = WEP_CVAR(WEP_SEEKER, missile_count);
 			tracker.owner = this.owner;
 			tracker.realowner = this.realowner;
 			IL_PUSH(g_seeker_trackers, tracker);
@@ -424,6 +426,9 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 			}
 			else
 			{
+				tracker.cnt = WEP_CVAR(WEP_SEEKER, missile_count);
+				if (!this.count)
+					--tracker.cnt;
 				tracker.enemy = toucher;
 				setthink(tracker, W_Seeker_Vollycontroller_Think);
 			}
@@ -450,6 +455,19 @@ void W_Seeker_Tag_Think(entity this)
 		return;
 	}
 	this.nextthink = time;
+
+	if (!this.count && time - this.move_time >= WEP_CVAR(WEP_SEEKER, missile_count_lastdelay))
+	{
+		// Now all missiles will be fired, update the effects and play a sound
+		this.count = 1;
+		UpdateCSQCProjectileType(this, PROJECTILE_SEEKER_TAG);
+		sound(this.realowner, CH_WEAPON_B, SND_HAGAR_LOAD, VOL_BASE * 0.5, ATTN_NORM); // TODO: add a better sound here
+		if (!this.pushltime)
+			this.nextthink = this.ltime;
+	}
+
+	if (!this.pushltime)
+		return;
 
 	// laser guided
 	.entity weaponentity = this.weaponentity_fld;
@@ -479,17 +497,33 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 
 	entity missile = new(seeker_tag);
 	WarpZone_RefSys_Copy(missile, actor);
-	if (WEP_CVAR(WEP_SEEKER, tag_guiderate) > 0)
+	missile.ltime = time + WEP_CVAR(WEP_SEEKER, tag_lifetime);
+	missile.count = 1; // whether all missiles will be fired
+	missile.pushltime = 0; // is 0 if the tag can't be guided
+	int proj_type = PROJECTILE_SEEKER_TAG;
+
+	bool delay_last = (WEP_CVAR(WEP_SEEKER, missile_count_lastdelay) > 0 && WEP_CVAR(WEP_SEEKER, type) != 1);
+	bool can_guide = (WEP_CVAR(WEP_SEEKER, tag_guiderate) > 0);
+	if (delay_last || can_guide)
 	{
-		actor.(weaponentity).lasttag = missile;
-		missile.pushltime = time + WEP_CVAR(WEP_SEEKER, tag_guidedelay);
-		missile.ltime = time + WEP_CVAR(WEP_SEEKER, tag_lifetime);
-		missile.nextthink = time;
+		if (delay_last)
+		{
+			proj_type = PROJECTILE_SEEKER_TAG_START;
+			missile.count = 0;
+			missile.move_time = time;
+			missile.nextthink = time + WEP_CVAR(WEP_SEEKER, missile_count_lastdelay);
+		}
+		if (can_guide)
+		{
+			actor.(weaponentity).lasttag = missile;
+			missile.pushltime = time + WEP_CVAR(WEP_SEEKER, tag_guidedelay);
+			missile.nextthink = time; // override delay_last's nextthink
+		}
 		setthink(missile, W_Seeker_Tag_Think);
 	}
 	else
 	{
-		missile.nextthink = time + WEP_CVAR(WEP_SEEKER, tag_lifetime);
+		missile.nextthink = missile.ltime;
 		setthink(missile, SUB_Remove);
 	}
 
@@ -519,7 +553,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupProjVelocity_PRE(missile, WEP_SEEKER, tag_);
 	missile.angles = vectoangles(missile.velocity);
 
-	CSQCProjectile(missile, fabs(WEP_CVAR(WEP_SEEKER, tag_guiderate)) <= 30, PROJECTILE_SEEKER_TAG, false); // has sound
+	CSQCProjectile(missile, fabs(WEP_CVAR(WEP_SEEKER, tag_guiderate)) <= 30, proj_type, false); // has sound
 	// Network velocity for the trail only if the guiding isn't strong,
 	// or else the trail clearly goes off path (backwards)
 

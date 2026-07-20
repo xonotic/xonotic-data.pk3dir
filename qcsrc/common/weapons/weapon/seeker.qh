@@ -68,6 +68,7 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, missile_ammo, float, NONE) \
 		P(class, prefix, missile_animtime, float, NONE) \
 		P(class, prefix, missile_count, float, NONE) \
+		P(class, prefix, missile_count_lastdelay, float, NONE) \
 		P(class, prefix, missile_damageforcescale, float, NONE) \
 		P(class, prefix, missile_damage, float, NONE) \
 		P(class, prefix, missile_decel, float, NONE) \
