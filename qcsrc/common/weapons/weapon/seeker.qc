@@ -37,10 +37,11 @@ void W_Seeker_Missile_Touch(entity this, entity toucher)
 
 void W_Seeker_Missile_Think(entity this)
 {
-	if (time > this.ltime)
+	if (time >= this.ltime)
 	{
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 		W_Seeker_Missile_Explode(this, NULL);
+		return;
 	}
 
 	float dist = W_SeekOutEnemy(this,
