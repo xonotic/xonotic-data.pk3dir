@@ -92,6 +92,7 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, missile_speed_z, float, NONE) \
 		P(class, prefix, missile_spread, float, NONE) \
 		P(class, prefix, missile_turnrate, float, NONE) \
+		P(class, prefix, mode, float, NONE) \
 		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
@@ -112,7 +113,6 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, tag_speed, float, NONE) \
 		P(class, prefix, tag_spread, float, NONE) \
 		P(class, prefix, tag_tracker_lifetime, float, NONE) \
-		P(class, prefix, type, float, NONE) \
 		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
