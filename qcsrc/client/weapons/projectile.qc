@@ -373,6 +373,16 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 						: EFFECT_SEEKER_TAG).m_id;
 				this.traileffect = tag_eff_m_id;
 				break;
+			HANDLE(SEEKER_TAG_START)
+				// XONRELEASE TODO: xonotic-v0.9.0 post-release remove this caching & fallback, use SEEKER_TAG_START
+				// See also common/weapons/weapon/seeker.qc.
+				static int tag_start_eff_m_id;
+				if (!tag_start_eff_m_id)
+					tag_start_eff_m_id = ((particleeffectnum(EFFECT_SEEKER_TAG_START) < 0)
+						? EFFECT_TR_GRENADE // compatible with Xonotic v0.8.6 or lower
+						: EFFECT_SEEKER_TAG_START).m_id;
+				this.traileffect = tag_start_eff_m_id;
+				break;
 
 			HANDLE(MAGE_SPIKE)         this.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
 			HANDLE(GOLEM_LIGHTNING)    this.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
@@ -484,6 +494,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;
+			HANDLE(SEEKER_TAG_START)
 			HANDLE(SEEKER_TAG)
 				this.mins = '-2 -2 -2';
 				this.maxs = '2 2 2';
