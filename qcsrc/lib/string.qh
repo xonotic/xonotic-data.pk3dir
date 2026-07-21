@@ -4,8 +4,8 @@
 #include "sort.qh"
 #include "oo.qh"
 
-// this is not exactly 16KiB (16384 bytes) because one byte is reserved for the \0 terminator
-#define VM_TEMPSTRING_MAXSIZE 16383
+// this is not exactly 16KiB (16384 bytes) because strlen() excludes the \0 terminator
+#define VM_TEMPSTRING_MAXLEN 16383
 
 // string logic
 //

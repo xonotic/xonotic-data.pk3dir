@@ -344,7 +344,7 @@ void cvar_changes_init()
 				cvar_changes = "// this server runs at modified server settings:\n";
 
 			cvar_changes = strcat(cvar_changes, k, " \"", v, "\" // \"", d, "\"\n");
-			if(strlen(cvar_changes) >= VM_TEMPSTRING_MAXSIZE)
+			if(strlen(cvar_changes) >= VM_TEMPSTRING_MAXLEN)
 			{
 				cvar_changes = "// too many settings have been changed to show them here\n";
 				adding = 0;
@@ -568,7 +568,7 @@ void cvar_changes_init()
 				cvar_purechanges = "// this server runs at modified gameplay settings:\n";
 
 			cvar_purechanges = strcat(cvar_purechanges, k, " \"", v, "\" // \"", d, "\"\n");
-			if(strlen(cvar_purechanges) >= VM_TEMPSTRING_MAXSIZE)
+			if(strlen(cvar_purechanges) >= VM_TEMPSTRING_MAXLEN)
 			{
 				cvar_purechanges = "// too many settings have been changed to show them here\n";
 				pureadding = 0;
