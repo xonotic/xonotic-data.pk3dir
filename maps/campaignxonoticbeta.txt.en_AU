@@ -1,0 +1,45 @@
+//campaign:Xonotic Campaign
+//translators: k9er
+//"game","mapname","bots","skill","fraglimit","timelimit","mutator-sets","description","long description"
+//fraglimit: Score limit + lead limit, use "default" to leave the implicit value in effect, leave unset for no limit. eg: 50, 30+5, +10, 0+default
+//timelimit: Match duration in minutes, use "default" to leave the implicit value in effect, leave unset for no limit.
+"dm","boil","5","2","10",,,"Deathmatch: Boil","Welcome to Xonotic!\nWe'll start off easy with Deathmatch against 5 bots on Boil.\nXonotic is mainly a multiplayer game, but before jumping into online games it might be a good idea to practice a bit versus bots."
+"tdm","stormkeep","5","2",,"5",,"Team Deathmatch: Stormkeep","Next we'll try some 3v3 Team Deathmatch on Stormkeep.\nYou'll have to do your best for five minutes, because the team with the highest score is going to be the winning team!"
+"mayhem","warfare","5","2",,"5",,"Mayhem: Warfare","Free For All Mayhem for five minutes!\nIn this gametype, you spawn with all weapons and a full health and armour stack. Self-damage is off, the player who deals the most damage and gets the most frags wins the game!"
+"ctf","dance","9","3","3",,,"Capture the Flag: Dance","In CTF you have to take the other team's flag and bring it back to your base, over your own flag. 3 captures to win."
+"dm","finalrage","6","3","15",,,"Deathmatch: Final Rage","Again a DM match, but the bots are slightly better now."
+"dom","atelier","11","4","50",,,"Domination: Atelier","Defend the control points and kill intruders to win."
+"kh","runningmanctf","5","5","500",,,"Key Hunt: Running Man","Every team holds a key. You have to collect them (kill their carriers and pick them up) and meet with the other key carriers in your team."
+"ctf","geoplanetary","13","5","5",,,"Capture the Flag: Geoplanetary","Another crowded CTF experience before you jump into multiplayer games."
+"dm","darkzone","4","5","15",,"g_instagib 1","[Special] Deathmatch: Darkzone","InstaGib! Everyone has one weapon - the Vaporizer.\nYour opponents will die instantly if you shoot them with it (unless they picked up an 'Extra Life' powerup)."
+"ctf","vorix","11","6","5",,"g_grappling_hook 1","[Special] Capture the Flag: Vorix","Grappling Hook: Press 'e' (default key) or MOUSE5 to use it. Shoot at walls and it will pull you in quickly."
+//"rc","leave_em_behind","0","0","2400",,,"Race: Leave'em behind","It's a race, so run as fast as you can! You can try to boost yourself with the Blaster (weapon 1) if you shoot at the wall or under your feet. Also hold your jump key to gain speed ('bunnyhopping').\nTo proceed you need to get a time under 24 seconds."
+"dm","solarium","8","6","15",,"g_nix 1","[Special] Deathmatch: Solarium","NIX: In this mutator everyone will spawn with the same weapon, but the weapon will change randomly after some time."
+"ft","erbium","5","6","5",,,"Freeze Tag: Erbium","If you get fragged you will be frozen. You revive teammates by standing close to them for a few seconds. A round is over if an entire team is frozen."
+"lms","opium","6","6","5",,,"Last Man Standing: Opium","You will have 5 lives in this gametype and the goal is to not run out of lives before the others do!"
+"tdm","afterslime","5","7","20",,"sv_gravity 200","[Special] Team Deathmatch: Afterslime","Another TDM match.\nThough, we lowered the gravity a little bit."
+"ctf","go","5","7","5",,,"Capture the Flag: Go","Another CTF map in space, with a little more skilled bots this time. Watch your step and don't fall into the void!"
+"tka","runningman","5","7","15",,,"Team Keepaway: Running Man","Pick up the ball with your team and frag the opposing team while holding it!\nHint: You can shoot through warpzones!"
+//"nb","nexballarena","5","7","5",,,"Nexball: Nexball Arena","This is similar to soccer. You move the ball if you hit it, so try to push it into the opponent's goal. First team who can score 5 goals wins!"
+"kh","silentsiege","8","8","600",,,"Key Hunt: Silent Siege","Key Hunt one more time! Get 600 points to win."
+"ca","bromine","5","8","5",,,"Clan Arena: Bromine","This is a round-based gametype. Self-damage is off but if you die, you have to wait for the next round. The last team with players still alive wins the round!"
+"ctf","implosion","7","8","5",,"g_jetpack 1","[Special] Capture the Flag: Implosion","Jetpack: Press jump (default key 'space') while already in the air to use the Jetpack and enjoy flying around!"
+"as","techassault","7","8",,,"g_campaign_forceteam 1","Assault: Techassault","You are in the attacking team and you have to destroy all objects. There will be new rooms/ways if you destroy an object."
+"tmayhem","trident","7","8",,"5",,"Team Mayhem: Trident","In this gametype, you spawn with all weapons and a full health and armour stack. Self-damage is off, the team who deals the most damage and gets the most frags wins the game!"
+//"cts","courtfun","0","0","6000",,,"Race CTS: Courtfun","Race CTS (Complete the Stage) is similar to the Race gametype, just that you only need to reach the finish once in CTS. You have to beat it within 1 minute though."
+"ft","xoylent","5","8","5",,,"Freeze Tag: Xoylent","Another match of Freeze Tag. You can revive teammates by standing close to them for a few seconds."
+"ons","runningmanctf","7","8","1","10",,"Onslaught: Running Man","Onslaught: Touch a connected but uncaptured checkpoint to start building it. Destroy connected opposing team checkpoints to uncapture them and touch to capture. Destroy the opposing team's core to win!"
+"ctf","catharsis","9","9","5",,,"Capture the Flag: Catharsis","CTF versus a team consisting of the hardest bots so far! 5 captures to win."
+"dm","stormkeep","5","9","15",,"g_new_toys_autoreplace 2; g_cloaked 1","[Special] Deathmatch: Stormkeep","New Toys: In this mutator some fancy weapons like the Mine Layer, the Heavy Laser Assault Cannon (HLAC) or the T.A.G. Seeker will spawn.\nYou will also experience another mutator: Cloaked (almost invisible players)."
+"ctf","space-elevator","7","10","3",,"g_instagib 1; g_grappling_hook 1","[Special] Capture the Flag: Space-Elevator","InstaGib in CTF this time. Also you will experience here how to play with the off-hand Grappling Hook (press 'e' or MOUSE5 to use it)!"
+"duel","fuse","1","10",,"5","g_forced_respawn 1","[Special] Duel: Fuse","This time you will face only 1 bot - a so-called 'Duel'. Duel is very popular in multiplayer."
+"ca","warfare","5","10","5",,"g_vampire 1; g_vampire_factor 0.75; g_balance_health_limit 400; g_ca_start_health 400; g_ca_start_armor 0","[Special] Clan Arena: Warfare","Vampire mutator enabled, you heal by dealing damage!\nThe last team with players still alive wins the round!"
+"dm","glowplant","5","11","20",,,"[FINAL] Deathmatch: Glow Plant","In this final match you have to beat 5 of the most skilled bots. You need to get 20 frags to win and complete the campaign! After this you should be ready for fights versus real people."
+"mayhem","stormkeep","9","11","300",,"g_weaponarena devastator; g_mayhem_selfdamage 1","[Bonus] Mayhem: Stormkeep","SURPRISE!\nWelcome to the ROCKET HELL!\nOnly the Devastator will be available here. Self-damage has been enabled - don't blow yourself up! Have fun!"
+// Dr. Jaska: fix bot weapon priority and weapon balance before enabling full weapon arsenal for this one
+"mayhem","trident","6","1337",,"5","g_weaponarena \"blaster mortar crylink devastator \"","[END GAME] Mayhem: Trident","SURPRISE!\nWelcome to unhinged Free For All Mayhem!\nBonus stage with truly evil superbots you're not expected to beat without years of experience and full combat mastery."
+
+// rc & cts disabled, since we hide these gametypes
+
+// note that currently any cvars changed in mutator-sets must be accessed in code using the cvar() function (or autocvar aliases to that), otherwise they will not work
+// see https://gitlab.com/xonotic/xonotic-data.pk3dir/issues/1976 for details

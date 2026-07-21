@@ -20,7 +20,7 @@
 "tdm","afterslime","5","7","20",,"sv_gravity 200","[Spécial] Match à Mort en Équipe : Afterslime","Une autre partie de TDM (match à mort en équipe).\nCependant, nous avons un peu réduit la gravité."
 "ctf","go","5","7","5",,,"Capture de Drapeau : Go","Une autre carte de CTF dans l'espace, avec des bots un peu plus habiles cette fois. Attention à ne pas tomber dans le vide !"
 "tka","runningman","5","7","15",,,"Gardez-la-Balle en équipe : Running Man","Ramassez la balle avec votre équipe et fraggez l'équipe adverse tout en la conservant ! Astuce : vous pouvez tirer à travers les warpzones !"
-//"nb","nexballarena","5","7","5",,,"Nexball: Nexball Arena","This is similar to football now. You move the ball if you hit it, so try to push it into the opponents goal. First team who can score 5 goals wins!"
+//"nb","nexballarena","5","7","5",,,"Nexball: Nexball Arena","This is similar to soccer now. You move the ball if you hit it, so try to push it into the opponent's goal. First team who can score 5 goals wins!"
 "kh","silentsiege","8","8","600",,,"Chasse aux Clés : Silent Siege","Chasse aux clés une fois de plus ! Obtenez 600 points pour gagner."
 "ca","bromine","5","8","5",,,"Clan Arena : Bromine","Il s'agit d'un mode de jeu basé sur des manches. Les dommages auto-infligés sont désactivés, mais si vous mourez, vous devez attendre le prochain tour. La dernière équipe dont les joueurs sont encore en vie remporte la manche !"
 "ctf","implosion","7","8","5",,"g_jetpack 1","[Spécial] Capture de Drapeau : Implosion","Jetpack : Appuyez sur Sauter (touche par défaut 'ESPACE') lorsque vous êtes déjà en l'air pour utiliser le Jetpack et vous amuser à voler !"
