@@ -22,8 +22,10 @@ float buff_Medic_CalculateSurviveDamage(float frag_damage, float health)
 
 METHOD(MedicBuff, m_tick, void(StatusEffect this, entity actor))
 {
-	buff_Effect(actor, EFFECT_HEALING, CENTER_OF_ENT(actor), vec2(actor.velocity), 1, true);
 	SUPER(MedicBuff).m_tick(this, actor);
+	if(!this.m_active(this, actor))
+		return;
+	buff_Effect(actor, EFFECT_HEALING, CENTER_OF_ENT(actor), vec2(actor.velocity), 1, true);
 }
 #endif // SVQC
 #ifdef MENUQC

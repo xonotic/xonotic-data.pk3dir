@@ -60,12 +60,14 @@ METHOD(Frozen, m_remove, void(StatusEffect this, entity actor, int removal_type)
 }
 METHOD(Frozen, m_tick, void(StatusEffect this, entity actor))
 {
+    SUPER(Frozen).m_tick(this, actor);
+    if(!this.m_active(this, actor))
+        return;
     if(STAT(FROZEN, actor) || (actor.waterlevel && actor.watertype == CONTENT_LAVA))
     {
         this.m_remove(this, actor, STATUSEFFECT_REMOVE_NORMAL);
         return;
     }
-    SUPER(Frozen).m_tick(this, actor);
 }
 #endif
 #ifdef CSQC
