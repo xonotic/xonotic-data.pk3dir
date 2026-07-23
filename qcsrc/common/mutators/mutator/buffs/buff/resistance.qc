@@ -8,8 +8,10 @@ float buff_Resistance_CalculateDamage(float frag_damage)
 
 METHOD(ResistanceBuff, m_tick, void(StatusEffect this, entity actor))
 {
-	buff_Effect(actor, EFFECT_ARMOR_REPAIR, CENTER_OF_ENT(actor), vec2(actor.velocity), 1, true);
 	SUPER(ResistanceBuff).m_tick(this, actor);
+	if(!this.m_active(this, actor))
+		return;
+	buff_Effect(actor, EFFECT_ARMOR_REPAIR, CENTER_OF_ENT(actor), vec2(actor.velocity), 1, true);
 }
 #endif // SVQC
 #ifdef MENUQC

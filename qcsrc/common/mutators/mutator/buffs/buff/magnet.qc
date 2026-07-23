@@ -8,6 +8,9 @@ bool buff_Magnet_cond(entity e)
 }
 METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 {
+	SUPER(MagnetBuff).m_tick(this, actor);
+	if(!this.m_active(this, actor))
+		return;
 	if (IS_PLAYER(actor))
 	{
 		entity next, head = WarpZone_SearchInRadius(
@@ -24,7 +27,6 @@ METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 
 	vector vel = randomvec() * 75;
 	buff_Effect(actor, EFFECT_MAGNET, CENTER_OF_ENT(actor) - vel, vel, 1, true); // needs countabsolute 1, spawning more requires calling buff_Effect repeatedly but that uses more bandwidth
-	SUPER(MagnetBuff).m_tick(this, actor);
 }
 #endif // SVQC
 #ifdef MENUQC

@@ -23,6 +23,9 @@ float buff_Inferno_CalculateDamage(float frag_damage)
 
 METHOD(InfernoBuff, m_tick, void(StatusEffect this, entity actor))
 {
+	SUPER(InfernoBuff).m_tick(this, actor);
+	if(!this.m_active(this, actor))
+		return;
 	if (time >= actor.buff_effect_delay && autocvar_g_buffs_effects) // prevent unnecessary calculations
 	{
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
@@ -56,8 +59,6 @@ METHOD(InfernoBuff, m_tick, void(StatusEffect this, entity actor))
 
 		buff_Effect(actor, EFFECT_RAGE, org, vec2(actor.velocity), 1, true); // particles block view so hide
 	}
-
-	SUPER(InfernoBuff).m_tick(this, actor);
 }
 #endif // SVQC
 #ifdef MENUQC

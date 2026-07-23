@@ -2,9 +2,6 @@
 
 #include <common/mutators/mutator/status_effects/all.qh>
 
-#ifdef SVQC
-//void Shock_ApplyDamage(entity e);
-#endif
 #ifdef GAMEQC
 SOUND(Stunned_Remove, "onslaught/ons_spark1");
 #endif
