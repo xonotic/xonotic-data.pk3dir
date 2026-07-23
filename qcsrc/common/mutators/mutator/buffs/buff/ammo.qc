@@ -44,6 +44,9 @@ METHOD(AmmoBuff, m_remove, void(StatusEffect this, entity actor, int removal_typ
 }
 METHOD(AmmoBuff, m_tick, void(StatusEffect this, entity actor))
 {
+	SUPER(AmmoBuff).m_tick(this, actor);
+	if(!this.m_active(this, actor))
+		return;
 	if (IS_PLAYER(actor))
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -53,7 +56,6 @@ METHOD(AmmoBuff, m_tick, void(StatusEffect this, entity actor))
 		}
 
 	buff_Effect(actor, EFFECT_AMMO_REGEN, CENTER_OF_ENT(actor), vec2(actor.velocity), 1, true);
-	SUPER(AmmoBuff).m_tick(this, actor);
 }
 #endif // SVQC
 #ifdef MENUQC
