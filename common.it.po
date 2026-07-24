@@ -3249,6 +3249,8 @@ msgid ""
 "The %s buff increases your item pickup range, collecting nearby items for "
 "you while the buff is active."
 msgstr ""
+"Il buff %s aumenta il raggio di raccolta degli oggetti, raccogliendo gli "
+"oggetti vicini per te mentre il buff è attivo."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:10
 msgid "Magnet"
@@ -3494,7 +3496,7 @@ msgstr "rampino immediato"
 #: qcsrc/common/mutators/mutator/hook/cl_hook.qc:12
 #, c-format
 msgid "^3grappling hook^8 is enabled, press ^3%s^8 to use it"
-msgstr "^8l'^3uncino^8 è abilitato, premi ^3%s^8 per usarlo"
+msgstr "^8Il ^3rampino^8 è abilitato, premi ^3%s^8 per usarlo"
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:11
 #, c-format
@@ -3884,7 +3886,7 @@ msgstr "Le correnti armi %s sono:"
 #: qcsrc/common/util.qc:308
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
 msgid "New Toys"
-msgstr "Nuovi giocattoli"
+msgstr "Nuovi attrezzi"
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -4273,7 +4275,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
 #: qcsrc/menu/xonotic/guide/pages.qc:72 qcsrc/menu/xonotic/guide/pages.qc:123
 msgid "Rocket Flying"
-msgstr "Volando coi razzi"
+msgstr "Volare coi razzi"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -4311,7 +4313,7 @@ msgstr ""
 #: qcsrc/common/util.qc:326
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
 msgid "Touch explode"
-msgstr "Tocco esplode"
+msgstr "Esplodi al tocco"
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
 #, c-format
@@ -5364,7 +5366,7 @@ msgstr "^BG%s^F3 ora sta giocando nella ^TCsquadra ^TT"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate or observe at this time."
-msgstr ""
+msgstr "^K1Puoi solo fare da spettatore o osservare in questo momento."
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -5651,12 +5653,12 @@ msgstr "^BGI ^K1sopravvissuti^BG vincono il round"
 #: qcsrc/common/notifications/all.inc:468
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on ^TC^TT^K2 team which seems fine."
-msgstr ""
+msgstr "^K2Sei già nella squadra ^TC^TT^K2 che sembra vada bene."
 
 #: qcsrc/common/notifications/all.inc:469
 #: qcsrc/common/notifications/all.inc:824
 msgid "^K2You may only join ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Puoi unirti solo alla squadra ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:470
 #: qcsrc/common/notifications/all.inc:825
@@ -11114,7 +11116,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Allow maps to spawn additional weapons (new toys)"
-msgstr "Permetti alle mappe di fornire le armi aggiuntive (new toys)"
+msgstr "Permetti alle mappe di fornire le armi aggiuntive (nuovi attrezzi)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
 msgid "Replacement:"
