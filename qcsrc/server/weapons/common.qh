@@ -1,5 +1,7 @@
 #pragma once
 
+#include <lib/warpzone/common.qh>
+
 int autocvar_g_projectiles_damage;
 int autocvar_g_projectiles_interact;
 bool autocvar_g_projectiles_keep_owner;
@@ -15,6 +17,16 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) 
 void adaptor_think2use_hittype_splash(entity this);
 
 bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher);
+
+.float dmg_radius; // reused field, as the distance the laser damage occurs over
+.vector dest; // reused field, as the adjusted hit location
+void W_LaserPlay(entity this, float rad, float damage, float edgedamage, float burntime, WarpZone_FindRadius_cond_callback_t cb);
+
+float W_SeekOutEnemy(entity this, float speed_decel, float speed_accel, float speed_max, float turn_rate, bool smart, float smart_mindist, float smart_trace_min, float smart_trace_max);
+
+.float dmg_last;
+.float teleport_time; // reused field, as the time the damage started
+void W_DamageOverTime_Think(entity this, float duration, float duration_power, float damage, float edgedamage, float rad, float force, entity cantbe, float think_delay);
 
 .float misc_bulletcounter;
 

@@ -2,6 +2,11 @@
 
 #ifdef SVQC
 
+bool W_Fireball_Explode_cond(entity e)
+{
+	return (e != WarpZone_SearchInRadius_otherent.realowner && e.takedamage == DAMAGE_AIM && !IS_INDEPENDENT_PLAYER(e)
+		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent)));
+}
 void W_Fireball_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
@@ -24,47 +29,44 @@ void W_Fireball_Explode(entity this, entity directhitentity)
 	if (GetResource(this.realowner, RES_HEALTH) + GetResource(this.realowner, RES_ARMOR) >= d
 	&& !this.cnt)
 	{
-		float dist;
-		float points;
-		vector dir;
-
 		modeleffect_spawn("models/sphere/sphere.md3", 0, 0, this.origin, '0 0 0', '0 0 0', '0 0 0', 0, WEP_CVAR_PRI(WEP_FIREBALL, bfgradius), 0.2, 0.05, 0.25);
 
 		// 2. bfg effect
-		// NOTE: this cannot be made warpzone aware by design. So, better intentionally ignore warpzones here.
-		for (entity e = findradius(this.origin, WEP_CVAR_PRI(WEP_FIREBALL, bfgradius)); e; e = e.chain)
-			if (e != this.realowner && e.takedamage == DAMAGE_AIM && !IS_INDEPENDENT_PLAYER(e)
-			&& (!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this)))
-			{
+		// Apply bfg damage to enemies within the radius who can trace to the fireball and the fireball's .realowner
+		// k9er: why trace to the fireball's .realowner? it prevents damage if the .realowner goes around a corner, but why?
+		WarpZone_SearchInRadius_otherent = this;
+		entity e = WarpZone_SearchInRadius(this.origin, WEP_CVAR_PRI(WEP_FIREBALL, bfgradius), MOVE_NORMAL, W_Fireball_Explode_cond);
+		vector force_dir, realowner_org;
+		float points, dist;
+		for (; e; e = e.chain)
+		{
+			// we can trace from the fireball, but can we trace to the eyes of the player who shot the fireball?
+			realowner_org = WarpZone_RefSys_TransformOrigin(this.realowner, this, this.realowner.origin + this.realowner.view_ofs);
+			WarpZone_TraceLine(e.WarpZone_findradius_nearest, WarpZone_TransformOrigin(e, realowner_org), MOVE_NORMAL, e);
+			if (trace_ent != this.realowner
+			&& (/* trace_startsolid || */ trace_fraction != 1))
+				continue;
 
-				// can we see fireball?
-				traceline(e.origin + e.view_ofs, this.origin, MOVE_NORMAL, e);
-				if (/* trace_startsolid || */ trace_fraction != 1) // startsolid should be never happening anyway
-					continue;
-				// can we see player who shot fireball?
-				traceline(e.origin + e.view_ofs, this.realowner.origin + this.realowner.view_ofs, MOVE_NORMAL, e);
-				if (trace_ent != this.realowner)
-				if (/* trace_startsolid || */ trace_fraction != 1)
-					continue;
-				dist = vlen(this.origin - e.origin - e.view_ofs);
-				points = 1 - sqrt(dist / WEP_CVAR_PRI(WEP_FIREBALL, bfgradius));
-				if (points <= 0)
-					continue;
-				dir = normalize(e.origin + e.view_ofs - this.origin);
+			dist = vlen(e.WarpZone_findradius_dist);
+			// k9er: all this just to use different RadiusDamage falloff and require line of sight to .realowner??
+			points = 1 - sqrt(dist / WEP_CVAR_PRI(WEP_FIREBALL, bfgradius));
+			if (points <= 0) // should never occur
+				continue;
+			force_dir = e.WarpZone_findradius_dist * 1 / -dist;
 
-				if (accuracy_isgooddamage(this.realowner, e))
-					accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(WEP_FIREBALL, bfgdamage) * points, 0); // add to hit
+			if (accuracy_isgooddamage(this.realowner, e))
+				accuracy_add(this.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(WEP_FIREBALL, bfgdamage) * points, 0); // add to hit
 
-				Damage(e, this, this.realowner,
-					WEP_CVAR_PRI(WEP_FIREBALL, bfgdamage) * points,
-					this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH,
-					this.weaponentity_fld,
-					e.origin + e.view_ofs,
-					WEP_CVAR_PRI(WEP_FIREBALL, bfgforce) * dir
-				);
+			Damage(e, this, this.realowner,
+				WEP_CVAR_PRI(WEP_FIREBALL, bfgdamage) * points,
+				this.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH,
+				this.weaponentity_fld,
+				e.WarpZone_findradius_nearest,
+				WEP_CVAR_PRI(WEP_FIREBALL, bfgforce) * force_dir
+			);
 
-				Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -dir, 1);
-			}
+			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.WarpZone_findradius_nearest, -force_dir, 1);
+		}
 	}
 
 	delete(this);
@@ -93,46 +95,6 @@ bool W_Fireball_LaserPlay_cond(entity e)
 		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent))
 		&& !STAT(FROZEN, e) && !StatusEffects_active(STATUSEFFECT_Frozen, e));
 }
-void W_Fireball_LaserPlay(entity this, float rad, float damage, float edgedamage, float burntime)
-{
-	if (damage <= 0)
-		return;
-
-	// NOTE: napalm_damage uses similar code, please keep them in sync
-	RandomSelection_Init();
-	entity last = NULL;
-	float last_dist = 0;
-	// optimize code by comparing squared distances and avoiding vlen and sqrt calls as much as possible
-	float rad2 = rad * rad;
-	WarpZone_SearchInRadius_otherent = this;
-	for (entity e = WarpZone_SearchInRadius(this.origin, rad, MOVE_NOMONSTERS, W_Fireball_LaserPlay_cond); e; e = e.chain)
-	{
-		vector p = e.origin;
-		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
-		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
-		p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
-		float dist2 = vlen2(WarpZone_UnTransformOrigin(e, this.origin) - p);
-		if (dist2 < rad2)
-		{
-			e.fireball_impactvec = p;
-			last = e;
-			last_dist = sqrt(dist2); // won't be recalculated if this entity is the only or last one found
-			RandomSelection_AddEnt(e, 1 / (1 + last_dist), !StatusEffects_active(STATUSEFFECT_Burning, e));
-		}
-	}
-	if (RandomSelection_chosen_ent)
-	{
-		float dist;
-		if (RandomSelection_chosen_ent == last)
-			dist = last_dist; // already calculated
-		else
-			dist = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
-		dist = damage + (edgedamage - damage) * (dist / rad);
-		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, dist * burntime, burntime, this.projectiledeathtype | HITTYPE_BOUNCE);
-		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.fireball_impactvec - this.origin, 1);
-	}
-}
 
 void W_Fireball_Think(entity this)
 {
@@ -144,11 +106,12 @@ void W_Fireball_Think(entity this)
 		return;
 	}
 
-	W_Fireball_LaserPlay(this,
+	W_LaserPlay(this,
 		WEP_CVAR_PRI(WEP_FIREBALL, laserradius),
 		WEP_CVAR_PRI(WEP_FIREBALL, laserdamage),
 		WEP_CVAR_PRI(WEP_FIREBALL, laseredgedamage),
-		WEP_CVAR_PRI(WEP_FIREBALL, laserburntime));
+		WEP_CVAR_PRI(WEP_FIREBALL, laserburntime),
+		W_Fireball_LaserPlay_cond);
 
 	this.nextthink = time + 0.1;
 }
@@ -175,6 +138,7 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity proj = new(plasma_prim);
+	WarpZone_RefSys_Copy(proj, actor);
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(WEP_FIREBALL, damage);
@@ -207,10 +171,12 @@ void W_Fireball_Attack1(entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-void W_Fireball_AttackEffect(entity actor, .entity weaponentity, float i, vector f_diff)
+void W_Fireball_AttackEffect(entity actor, .entity weaponentity, int bullet_count)
 {
+	vector old_movedir = actor.(weaponentity).movedir;
+	actor.(weaponentity).movedir += W_SetupShot_GetAlternatingOffset(bullet_count);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0, WEP_FIREBALL.m_id); // TODO: probably doesn't need deathtype, just a prefire effect
-	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
+	actor.(weaponentity).movedir = old_movedir;
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
 
@@ -222,25 +188,25 @@ void W_Fireball_Attack1_Frame4(Weapon thiswep, entity actor, .entity weaponentit
 
 void W_Fireball_Attack1_Frame3(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 0, '+1.25 +3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 3);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_FIREBALL, animtime), W_Fireball_Attack1_Frame4);
 }
 
 void W_Fireball_Attack1_Frame2(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 0, '-1.25 +3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 2);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_FIREBALL, animtime), W_Fireball_Attack1_Frame3);
 }
 
 void W_Fireball_Attack1_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 1, '+1.25 -3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 1);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_FIREBALL, animtime), W_Fireball_Attack1_Frame2);
 }
 
 void W_Fireball_Attack1_Frame0(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_Fireball_AttackEffect(actor, weaponentity, 0, '-1.25 -3.75 0');
+	W_Fireball_AttackEffect(actor, weaponentity, 0);
 	sound(actor, CH_WEAPON_SINGLE, SND_FIREBALL_PREFIRE2, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(WEP_FIREBALL, animtime), W_Fireball_Attack1_Frame1);
 }
@@ -253,24 +219,25 @@ void W_Fireball_Firemine_Think(entity this)
 		return;
 	}
 
-	// make it "hot" once it leaves its owner
+	// Make it "hot" once it leaves its owner: can touch the owner, but won't do laserplay
 	if (this.owner)
 	{
-		if (vdist(this.origin - this.owner.origin - this.owner.view_ofs, >, WEP_CVAR_SEC(WEP_FIREBALL, laserradius)))
+		vector owner_view_origin = WarpZone_RefSys_TransformOrigin(this.owner, this, this.owner.origin + this.owner.view_ofs);
+		if (vdist(this.origin - owner_view_origin, >, WEP_CVAR_SEC(WEP_FIREBALL, laserradius)))
 		{
-			++this.cnt;
-			if (this.cnt == 3)
+			if (++this.cnt == 3)
 				this.owner = NULL;
 		}
 		else
 			this.cnt = 0;
 	}
 
-	W_Fireball_LaserPlay(this,
+	W_LaserPlay(this,
 		WEP_CVAR_SEC(WEP_FIREBALL, laserradius),
 		WEP_CVAR_SEC(WEP_FIREBALL, laserdamage),
 		WEP_CVAR_SEC(WEP_FIREBALL, laseredgedamage),
-		WEP_CVAR_SEC(WEP_FIREBALL, laserburntime));
+		WEP_CVAR_SEC(WEP_FIREBALL, laserburntime),
+		W_Fireball_LaserPlay_cond);
 
 	this.nextthink = time + 0.1;
 }
@@ -289,32 +256,15 @@ void W_Fireball_Firemine_Touch(entity this, entity toucher)
 
 void W_Fireball_Attack2(entity actor, .entity weaponentity)
 {
-	vector f_diff;
-
-	float c = actor.(weaponentity).bulletcounter % 4;
-	switch (c)
-	{
-		case 0:
-			f_diff = '-1.25 -3.75 0';
-			break;
-		case 1:
-			f_diff = '+1.25 -3.75 0';
-			break;
-		case 2:
-			f_diff = '-1.25 +3.75 0';
-			break;
-		case 3:
-		default:
-			f_diff = '+1.25 +3.75 0';
-			break;
-	}
+	vector old_movedir = actor.(weaponentity).movedir;
+	actor.(weaponentity).movedir += W_SetupShot_GetAlternatingOffset(actor.(weaponentity).bulletcounter);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(WEP_FIREBALL, damage), WEP_FIREBALL.m_id | HITTYPE_SECONDARY);
-	traceline(w_shotorg, w_shotorg + f_diff.x * v_up + f_diff.y * v_right, MOVE_NORMAL, actor);
-	w_shotorg = trace_endpos;
+	actor.(weaponentity).movedir = old_movedir;
 
 	W_MuzzleFlash(WEP_FIREBALL, actor, weaponentity, w_shotorg, w_shotdir);
 
 	entity proj = new(grenade);
+	WarpZone_RefSys_Copy(proj, actor);
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(WEP_FIREBALL, damage);
@@ -331,7 +281,7 @@ void W_Fireball_Attack2(entity actor, .entity weaponentity)
 	W_SetupProjVelocity_UP_SEC(proj, WEP_FIREBALL);
 
 	proj.angles = vectoangles(proj.velocity);
-	proj.flags = FL_PROJECTILE;
+	proj.flags = FL_PROJECTILE | FL_STATICOWNER;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;

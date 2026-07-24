@@ -8,46 +8,6 @@ bool napalm_damage_cond(entity e)
 		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent))
 		&& !STAT(FROZEN, e));
 }
-void napalm_damage(entity this, float rad, float damage, float edgedamage, float burntime)
-{
-	if (damage < 0)
-		return;
-
-	// NOTE: W_Fireball_LaserPlay uses similar code, please keep them in sync
-	RandomSelection_Init();
-	entity last = NULL;
-	float last_dist = 0;
-	// optimize code by comparing squared distances and avoiding vlen and sqrt calls as much as possible
-	float rad2 = rad * rad;
-	WarpZone_SearchInRadius_otherent = this;
-	for (entity e = WarpZone_SearchInRadius(this.origin, rad, MOVE_NOMONSTERS, napalm_damage_cond); e; e = e.chain)
-	{
-		vector p = e.origin;
-		p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
-		p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
-		p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
-		float dist2 = vlen2(WarpZone_UnTransformOrigin(e, this.origin) - p);
-		if (dist2 < rad2)
-		{
-			e.fireball_impactvec = p;
-			last = e;
-			last_dist = sqrt(dist2); // won't be recalculated if this entity is the only or last one found
-			RandomSelection_AddEnt(e, 1 / (1 + last_dist), !StatusEffects_active(STATUSEFFECT_Burning, e));
-		}
-	}
-	if (RandomSelection_chosen_ent)
-	{
-		float dist;
-		if (RandomSelection_chosen_ent == last)
-			dist = last_dist; // already calculated
-		else
-			dist = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
-		dist = damage + (edgedamage - damage) * (dist / rad);
-		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, dist * burntime, burntime, this.projectiledeathtype);
-		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.fireball_impactvec - this.origin, 1);
-	}
-}
 
 void napalm_ball_think(entity this)
 {
@@ -69,8 +29,12 @@ void napalm_ball_think(entity this)
 
 	this.angles = vectoangles(this.velocity);
 
-	napalm_damage(this, autocvar_g_nades_napalm_ball_radius, autocvar_g_nades_napalm_ball_damage,
-	              autocvar_g_nades_napalm_ball_damage, autocvar_g_nades_napalm_burntime);
+	W_LaserPlay(this,
+		autocvar_g_nades_napalm_ball_radius,
+		autocvar_g_nades_napalm_ball_damage,
+		autocvar_g_nades_napalm_ball_damage, // TODO: missing cvar
+		autocvar_g_nades_napalm_burntime,
+		napalm_damage_cond);
 
 	this.nextthink = time + 0.1;
 }
@@ -134,8 +98,12 @@ void napalm_fountain_think(entity this)
 		UpdateCSQCProjectile(this);
 	}
 
-	napalm_damage(this, autocvar_g_nades_napalm_fountain_radius, autocvar_g_nades_napalm_fountain_damage,
-	              autocvar_g_nades_napalm_fountain_edgedamage, autocvar_g_nades_napalm_burntime);
+	W_LaserPlay(this,
+		autocvar_g_nades_napalm_fountain_radius,
+		autocvar_g_nades_napalm_fountain_damage,
+		autocvar_g_nades_napalm_fountain_edgedamage,
+		autocvar_g_nades_napalm_burntime,
+		napalm_damage_cond);
 
 	this.nextthink = time + 0.1;
 	if (time >= this.nade_special_time)

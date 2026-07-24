@@ -175,3 +175,139 @@ bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher
 		UpdateCSQCProjectile(this);
 	return false;
 }
+
+
+vector W_LaserPlay_last_hit_org;
+vector W_LaserPlay_end_org;
+void W_LaserPlay_trace_callback(vector start, vector hit, vector end)
+{
+	if (end == W_LaserPlay_end_org) // must be the final trace segment
+		return;
+	W_LaserPlay_last_hit_org = hit;
+	Send_Effect(EFFECT_FIREBALL_LASER, start, hit - start, 1);
+	//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), start, hit);
+}
+/// Randomly chooses a player within the radius to shoot a laser towards
+void W_LaserPlay(entity this, float rad, float damage, float edgedamage, float burntime, WarpZone_FindRadius_cond_callback_t cb)
+{
+	if (damage <= 0 && edgedamage <= 0)
+		return;
+
+	RandomSelection_Init();
+	entity last = NULL;
+	float rad2 = rad * rad;
+	WarpZone_SearchInRadius_otherent = this;
+	for (entity e = WarpZone_SearchInRadius(this.origin, rad, MOVE_NOMONSTERS, cb); e; e = e.chain)
+	{
+		// adjust the hit location to be a random position inside the entity's bbox
+		vector p = e.origin + e.mins;
+		p.x += random() * (e.maxs.x - e.mins.x);
+		p.y += random() * (e.maxs.y - e.mins.y);
+		p.z += random() * (e.maxs.z - e.mins.z);
+		float dist2 = vlen2(this.origin - WarpZone_UnTransformOrigin(e, p));
+		if (dist2 <= rad2) // there's a chance this is false, so we optimize by only calling sqrt if true
+		{
+			e.dest = p;
+			e.dmg_radius = sqrt(dist2);
+			last = e;
+			RandomSelection_AddEnt(e, 1 / (1 + e.dmg_radius), !StatusEffects_active(STATUSEFFECT_Burning, e));
+		}
+	}
+	if (RandomSelection_chosen_ent)
+	{
+		float dist = damage + (edgedamage - damage) * (RandomSelection_chosen_ent.dmg_radius / rad);
+		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, dist * burntime, burntime, this.projectiledeathtype | HITTYPE_BOUNCE);
+
+		// WarpZone_TraceLine_ThroughZone with callback to draw the line-effect through zones on the way to the end,
+		// but then for the final segment draw towards .dest instead of the trace's end (.WarpZone_findradius_nearest).
+		// This is probably the best we can do
+		W_LaserPlay_last_hit_org = this.origin;
+		if (RandomSelection_chosen_ent.warpzone_transform != '0 0 0' || RandomSelection_chosen_ent.warpzone_shift != '0 0 0')
+		{
+			W_LaserPlay_end_org = RandomSelection_chosen_ent.WarpZone_findradius_nearest;
+			WarpZone_TraceLine_ThroughZone(this.origin, WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, W_LaserPlay_end_org),
+				MOVE_NOTHING, NULL, NULL, W_LaserPlay_trace_callback);
+		}
+		Send_Effect(EFFECT_FIREBALL_LASER, W_LaserPlay_last_hit_org, RandomSelection_chosen_ent.dest - W_LaserPlay_last_hit_org, 1);
+		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.dest);
+	}
+}
+
+.float wait;
+/// Automatically guides a projectile towards its enemy.
+/// RefSys must be setup
+float W_SeekOutEnemy(entity this,
+	float speed_decel, float speed_accel, float speed_max, float turn_rate,
+	bool smart, float smart_mindist, float smart_trace_min, float smart_trace_max)
+{
+	if (this.enemy != NULL
+	&&  this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy))
+		this.enemy = NULL;
+	if (!this.enemy)
+		return 0;
+
+	float spd = vlen(this.velocity);
+	spd = bound(
+		spd - speed_decel * frametime,
+		speed_max,
+		spd + speed_accel * frametime);
+
+	vector eorg = WarpZone_RefSys_TransformOrigin(this.enemy, this, 0.5 * (this.enemy.absmin + this.enemy.absmax));
+	float dist = vlen(eorg - this.origin);
+	vector desireddir = (eorg - this.origin) * 1 / dist;
+	vector olddir = this.velocity * 1 / spd; // get my current direction
+
+	// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
+	if (smart && dist > smart_mindist)
+	{
+		// Is it a better idea (shorter distance) to trace to the target itself?
+		if (vdist(this.origin + olddir * this.wait, <, dist))
+			WarpZone_TraceLine(this.origin, this.origin + olddir * this.wait, false, this);
+		else
+			WarpZone_TraceLine(this.origin, eorg, false, this);
+
+		// Setup adaptive tracelength
+		this.wait = bound(
+			smart_trace_min,
+			vlen(this.origin - WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos)),
+			smart_trace_max);
+
+		// Calc how important it is that we turn and add this to the desired (enemy) dir
+		desireddir = normalize((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction));
+	}
+
+	vector newdir = normalize(olddir + desireddir * turn_rate); // take the average of the 2 directions; not the best method but simple & easy
+	this.velocity = newdir * spd; // make me fly in the new direction at my flight speed
+	return dist;
+}
+
+/// Applies damage over time, called within a think function
+void W_DamageOverTime_Think(entity this,
+	float duration, float duration_power,
+	float damage, float edgedamage, float rad, float force,
+	entity cantbe, float think_delay)
+{
+	float dt = time - this.teleport_time;
+	float dmg_remaining_next = bound(0, 1 - dt / duration, 1) ** duration_power;
+
+	float f = this.dmg_last - dmg_remaining_next;
+	this.dmg_last = dmg_remaining_next;
+
+	RadiusDamage(this, this.realowner,
+		f * damage,
+		f * edgedamage,
+		rad,
+		cantbe,
+		NULL,
+		f * force,
+		this.projectiledeathtype,
+		this.weaponentity_fld,
+		NULL
+	);
+	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
+
+	if (dt < duration)
+		this.nextthink = time + think_delay;
+	else
+		delete(this);
+}
