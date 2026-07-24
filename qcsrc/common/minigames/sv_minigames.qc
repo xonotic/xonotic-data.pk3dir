@@ -60,8 +60,6 @@ void minigame_rmplayer(entity minigame_session, entity player)
 #define MSLE(Name, Fields) \
 	else if (this.classname == #Name) \
 	{ \
-		if (sf & MINIG_SF_CREATE) \
-			WriteString(MSG_ENTITY, this.owner.netname); \
 		Fields \
 	}
 
@@ -75,17 +73,16 @@ bool minigame_SendEntity(entity this, entity to, int sf)
 	if ( sf & MINIG_SF_CREATE )
 	{
 		WriteShort(MSG_ENTITY,msle_id(this.classname));
+		WriteShort(MSG_ENTITY,this.minigame_id);
+		WriteRegistered(Minigames,MSG_ENTITY,this.descriptor);
 		WriteString(MSG_ENTITY,this.netname);
 	}
 
 	entity minigame_ent = this.owner;
-
 	if ( this.classname == "minigame" )
 	{
 		minigame_ent = this;
-
-		if ( sf & MINIG_SF_CREATE )
-			WriteString(MSG_ENTITY,this.descriptor.netname);
+		WriteByte(MSG_ENTITY, (CS(to).active_minigame == this));
 
 		if ( sf & MINIG_SF_UPDATE )
 			WriteLong(MSG_ENTITY,this.minigame_flags);
@@ -93,10 +90,7 @@ bool minigame_SendEntity(entity this, entity to, int sf)
 	else if ( this.classname == "minigame_player" )
 	{
 		if ( sf & MINIG_SF_CREATE )
-		{
-			WriteString(MSG_ENTITY,this.owner.netname);
-			WriteLong(MSG_ENTITY,etof(this.minigame_players));
-		}
+			WriteEntity(MSG_ENTITY,this.minigame_players);
 		if ( sf & MINIG_SF_UPDATE )
 			WriteByte(MSG_ENTITY,this.team);
 	}
@@ -115,7 +109,7 @@ void minigame_resend(entity minigame)
 {
 	minigame.SendFlags = MINIG_SF_ALL;
 	entity e = NULL;
-	while (( e = findentity(e,owner,minigame) ))
+	while (( e = findfloat(e,minigame_id,minigame.minigame_id) ))
 	{
 		e.SendFlags = MINIG_SF_ALL;
 	}
@@ -143,6 +137,8 @@ int minigame_addplayer(entity minigame_session, entity player)
 
 	if ( mgteam )
 	{
+		player_pointer.minigame_id = minigame_session.minigame_id;
+		player_pointer.descriptor = minigame_session.descriptor;
 		player_pointer.owner = minigame_session;
 		player_pointer.minigame_players = player;
 		player_pointer.team = mgteam;
@@ -176,7 +172,8 @@ entity start_minigame(entity player, string minigame )
 	if ( e )
 	{
 		entity minig = new(minigame);
-		minig.netname = strzone(strcat(e.netname,"_",ftos(etof(minig))));
+		minig.minigame_id = etof(minig);
+		minig.netname = strzone(strcat(e.netname,"_",ftos(minig.minigame_id)));
 		minig.descriptor = e;
 		minig.minigame_event = e.minigame_event;
 		minig.minigame_event(minig,"start");
@@ -239,10 +236,11 @@ void end_minigame(entity minigame_session)
 
 
 	entity e = NULL;
-	while( (e = findentity(e, owner, minigame_session)) )
+	while( (e = findfloat(e, minigame_id, minigame_session.minigame_id)) )
 		if ( e.minigame_autoclean )
 		{
 			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")");
+			strfree(e.netname);
 			delete(e);
 		}
 

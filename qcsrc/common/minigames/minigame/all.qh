@@ -60,7 +60,7 @@ Note: As of now, flags are sent as a single byte
 
 Even for non-networked entities, the system provides a system to remove
 automatically unneeded entities when the minigame is over, the requirement is
-that .owner is set to the minigame session entity and .minigame_autoclean is true.
+that .minigame_id is set to the minigame session identifier and .minigame_autoclean is true.
 */
 
 #include "nmm.qc"
@@ -94,7 +94,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
  * 			Vector	 Note: implemented as Write/Read Coord on _x _y _z
  * 			Vector2D Note: implemented as Write/Read Coord on _x _y
  * Note:
- * 	classname and netname are always sent
+ * 	classname, minigame_id, descriptor and netname are always sent
  * 	MSLE stands for Minigame Simple Linked Entity
  */
 #define MINIGAME_SIMPLELINKED_ENTITIES \
