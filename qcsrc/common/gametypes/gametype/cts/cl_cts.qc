@@ -36,9 +36,9 @@ MUTATOR_HOOKFUNCTION(cl_cts, DrawScoreboardAccuracy)
 
 MUTATOR_HOOKFUNCTION(cl_cts, ShowRankings)
 {
-	if(ISGAMETYPE(CTS))
+	if (ISGAMETYPE(CTS))
 	{
-		M_ARGV(0, string) = _("Rankings");
+		M_ARGV(1, string) = _("Rankings");
 		return true;
 	}
 }
