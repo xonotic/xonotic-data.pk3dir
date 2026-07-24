@@ -1,0 +1,21 @@
+#pragma once
+
+//#define MENU_INCLUDE_OVERKILL
+/* Properly enabling overkill requires executing the ruleset,
+ * which can be done in the menu but will override the user's settings.
+ * See https://gitlab.com/xonotic/xonotic-data.pk3dir/-/issues/1973
+ */
+
+#ifdef MENU_INCLUDE_OVERKILL
+const string MENU_OVERKILL_NAME = _("Overkill");
+const string MENU_OVERKILL_DESCRIPTION = _("Unique arena mutator that replaces all weapons with mostly hitscan ones with a short time to kill for rapid gameplay. The secondary fire of all weapons shoots a %s-like projectile. It also enables %s and %s.");
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorOverkillTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorOverkillTab, fill, void(entity));
+	ATTRIB(XonoticMutatorOverkillTab, title, string, MENU_OVERKILL_NAME);
+	ATTRIB(XonoticMutatorOverkillTab, message, string, "g_overkill");
+	METHOD(XonoticMutatorOverkillTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorOverkillTab)
+entity makeXonoticMutatorOverkillTab();
+#endif

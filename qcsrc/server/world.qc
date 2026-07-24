@@ -1991,69 +1991,67 @@ void readplayerstartcvars()
 		g_weaponarena = 0;
 		break;
 	case "all": case "1":
-		g_weaponarena_list = "All Weapons Arena";
+		g_weaponarena_list = "all";
 		g_weaponarena_weapons = weapons_all();
 		break;
 	case "devall":
-		g_weaponarena_list = "Dev All Weapons Arena";
+		g_weaponarena_list = "devall";
 		g_weaponarena_weapons = weapons_devall();
 		break;
 	case "standard": case "most":
-		g_weaponarena_list = "Standard Weapons Arena";
+		g_weaponarena_list = "standard";
 		g_weaponarena_weapons = weapons_standard();
 		break;
 	case "extended":
-		g_weaponarena_list = "Extended Weapons Arena";
+		g_weaponarena_list = "extended";
 		g_weaponarena_weapons = weapons_extended();
 		break;
 	case "extended_available":
-		g_weaponarena_list = "Extended Available Weapons Arena";
+		g_weaponarena_list = "extended_available";
 		g_weaponarena_weapons = weapons_extended();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "all_available":
-		g_weaponarena_list = "All Available Weapons Arena";
+		g_weaponarena_list = "all_available";
 		g_weaponarena_weapons = weapons_all();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "devall_available":
-		g_weaponarena_list = "Dev All Available Weapons Arena";
+		g_weaponarena_list = "devall_available";
 		g_weaponarena_weapons = weapons_devall();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "standard_available": case "most_available":
-		g_weaponarena_list = "Standard Available Weapons Arena";
+		g_weaponarena_list = "standard_available";
 		g_weaponarena_weapons = weapons_standard();
 
 		// this needs to run after weaponsInMapAll is initialized
 		InitializeEntity(NULL, weaponarena_available_update, INITPRIO_FINDTARGET);
 		break;
 	case "none":
-		g_weaponarena_list = "No Weapons Arena";
+		g_weaponarena_list = "none";
 		break;
 	default:
 	{
-		float t = tokenize_console(s);
+		int t = tokenize_console(s);
 		g_weaponarena_list = "";
 		for (int j = 0; j < t; ++j)
 		{
 			s = argv(j);
 			Weapon wep = Weapon_from_name(s);
-			if(wep != WEP_Null)
+			if (wep != WEP_Null)
 			{
 				g_weaponarena_weapons |= (wep.m_wepset);
-				g_weaponarena_list = strcat(g_weaponarena_list, wep.netname, " & ");
+				g_weaponarena_list = cons_mid(g_weaponarena_list, " & ", wep.netname);
 			}
 		}
-		if (g_weaponarena_list != "") // remove trailing " & "
-			g_weaponarena_list = substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3);
-		else // no valid weapon found
+		if (g_weaponarena_list == "") // no valid weapon found
 			g_weaponarena_list = "No Weapons Arena";
 	}}
 
@@ -2187,9 +2185,12 @@ void readlevelcvars()
 		}
 	}
 
-	g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
-	if(!g_weapon_stay)
-		g_weapon_stay = cvar("g_weapon_stay");
+	int i = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
+	if (!i)
+		i = cvar("g_weapon_stay");
+	MUTATOR_CALLHOOK(SetWeaponStay, i);
+	i = M_ARGV(0, int);
+	g_weapon_stay = i;
 
 	MUTATOR_CALLHOOK(ReadLevelCvars);
 

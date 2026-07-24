@@ -1329,14 +1329,30 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 
 string build_weaponarena_list(string s)
 {
-	if (s == "") return s;
-	if (s == "All Weapons Arena") return _("All Weapons Arena");
-	if (s == "All Available Weapons Arena") return _("All Available Weapons Arena");
-	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
-	if (s == "Most Available Weapons Arena") return _("Most Available Weapons Arena");
-	if (s == "Dev All Weapons Arena") return s; // development option, do not translate
-	if (s == "Dev All Available Weapons Arena") return s; // development option, do not translate
-	if (s == "No Weapons Arena") return _("No Weapons Arena");
+	switch (s)
+	{
+		case "":
+			return s;
+		case "all":
+			return _("All Weapons Arena");
+		case "all_available":
+			return _("All Available Weapons Arena");
+		case "standard":
+			return _("Standard Weapons Arena");
+		case "standard_available":
+			return _("Standard Available Weapons Arena");
+		case "extended":
+			return _("Extended Weapons Arena");
+		case "extended_available":
+			return _("Extended Available Weapons Arena");
+		case "none":
+			return _("No Weapons Arena");
+		case "devall":
+		case "devall_available":
+			return s; // development option, do not translate
+		default:
+			break;
+	}
 
 	int n = tokenizebyseparator(s, " & ");
 	string wpn_list = "";
