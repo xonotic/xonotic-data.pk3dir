@@ -1175,6 +1175,8 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			s = substring(s, 0, p);
 
 		t = car(s); s = cdr(s);
+		if(p && (t == "" || t == "\t")) // indented comment line
+			continue;
 		if(t == "title")
 			MapInfo_Map_title = s;
 		else if(t == "description")
@@ -1340,7 +1342,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, Gamet
 			}
 		}
 		else if(WARN_COND)
-			LOG_WARN("Map ", pFilename, " provides unknown info item ", t, ", ignored");
+			LOG_WARN("Map ", pFilename, " provides unknown info item \"", t, "\", ignored");
 	}
 	fclose(fh);
 
