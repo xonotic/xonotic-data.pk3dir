@@ -203,25 +203,28 @@ spawnfunc(func_button)
 		this.speed = 40;
 	if (!this.wait)
 		this.wait = 1;
-	if (!this.lip)
-		this.lip = 4;
+	G_SpawnFloat("lip", 4, this, lip); // explicit 0 is supported
 
 	if(this.wait < 0 && q3compat)
-		this.wait = 0.1; // compatibility for q3: -1 = return immediately
+		this.wait = 1/1024; // compatibility for q3: -1 = return immediately
 
-    if(this.noise != "")
-        precache_sound(this.noise);
+	if(this.noise != "")
+		precache_sound(this.noise);
 
 	this.draggable = drag_undraggable;
 
 	this.setactive = button_setactive;
 
 	this.pos1 = this.origin;
-	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
-    this.flags |= FL_NOTARGET;
+	vector absmovedir;
+	absmovedir.x = fabs(this.movedir.x);
+	absmovedir.y = fabs(this.movedir.y);
+	absmovedir.z = fabs(this.movedir.z);
+	this.pos2 = this.pos1 + this.movedir * (absmovedir * this.size - this.lip);
 
-    this.reset = button_reset;
+	this.flags |= FL_NOTARGET;
 
+	this.reset = button_reset;
 	button_reset(this);
 }
 #endif

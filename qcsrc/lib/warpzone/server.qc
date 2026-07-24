@@ -664,7 +664,7 @@ spawnfunc(trigger_warpzone)
 	if (!this.scale)
 		this.scale = 1;
 
-	WarpZoneLib_ExactTrigger_Init(this, false);
+	WarpZoneLib_ExactTrigger_Init(this, false, true);
 
 	setSendEntity(this, WarpZone_Send);
 	this.SendFlags = 0xFFFFFF;
