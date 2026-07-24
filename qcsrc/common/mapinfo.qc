@@ -868,6 +868,9 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 					MapInfo_Map_title = stored_Map_title;
 				if(stored_Map_author != "") // write the usual "<AUTHOR>" if we have nothing better
 					MapInfo_Map_author = stored_Map_author;
+				if(isdefi) // some maps omit the required "style" key and don't appear in defrag's menu
+				           // but can still be played in defrag's default gametype with eg `map kool_simple5`.
+					stored_supportedGametypes |= MAPINFO_TYPE_CTS.gametype_flags;
 				// might have .arena AND .defi for the same map so these bitfields are OR'd
 				if(isgenerator)
 					MapInfo_Map_supportedGametypes |= stored_supportedGametypes;
@@ -952,7 +955,7 @@ bool _MapInfo_ParseArena(string arena_filename, int fh, string pFilename, Gamety
 		else if(t == "style" && isdefi)
 		{
 			// we have a defrag map on our hands, add CTS!
-			// TODO: styles
+			// TODO: styles, see https://ws.q3df.org/level_design/defi/?dark=1
 			stored_supportedGametypes |= MAPINFO_TYPE_CTS.gametype_flags;
 		}
 		else if(t == "map")
