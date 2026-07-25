@@ -1350,7 +1350,7 @@ msgstr "Арена без використання зброї"
 #: qcsrc/client/main.qc:1351
 #, c-format
 msgid "%s Arena"
-msgstr "%s Арена"
+msgstr "Арена з: %s"
 
 #: qcsrc/client/main.qc:1362 qcsrc/client/main.qc:1367
 #, c-format
@@ -5641,7 +5641,7 @@ msgstr "^BG%s%s^K1 з'їв ракету ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:491
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's rocket%s%s"
-msgstr "^BG%s%s^K1 опинився надто близько до ракети ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 опинився занадто близько до ракети ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:492
 #, c-format
@@ -5662,7 +5662,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:495
 #, c-format
 msgid "^BG%s%s^K1 got too close to ^BG%s^K1's Electro orb%s%s"
-msgstr "^BG%s%s^K1 опинився надто близько до Електро-сфер ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 опинився занадто близько до Електро-сфер ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
@@ -6229,7 +6229,7 @@ msgstr "K1Ви підсмажилися!"
 
 #: qcsrc/common/notifications/all.inc:665
 msgid "^K1You got a little bit too crispy!"
-msgstr "^K1Ви занадто захрустіли!"
+msgstr "^K1Ви занадто сильно захрустіли!"
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1You fragged yourself!"
@@ -13927,15 +13927,15 @@ msgstr "<модель не знайдена>"
 
 #: qcsrc/menu/xonotic/serverlist.qc:263
 msgid "SERVER^Remove favorite"
-msgstr "Видалити з обраного"
+msgstr "Видалити з обраних"
 
 #: qcsrc/menu/xonotic/serverlist.qc:264
 msgid "Remove the currently highlighted server from bookmarks"
-msgstr "Видалити виділений сервер зі списку обраного"
+msgstr "Видалити виділений сервер зі списку обраних"
 
 #: qcsrc/menu/xonotic/serverlist.qc:268
 msgid "SERVER^Favorite"
-msgstr "Обрані"
+msgstr "В обрані"
 
 #: qcsrc/menu/xonotic/serverlist.qc:269
 msgid ""
@@ -14136,7 +14136,7 @@ msgstr "Проведено часу у грі:"
 
 #: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:215
 msgid "Favorite map:"
-msgstr "Улюблена арена:"
+msgstr "Улюблена мапа:"
 
 #: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
 #: qcsrc/menu/xonotic/statslist.qc:229

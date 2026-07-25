@@ -3,6 +3,8 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# EnmarkOKAY, 2026
+# Mark Zhou, 2026
 # Артем Быстров, 2015-2016
 # Артем Быстров, 2016
 # Артём, 2015
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артем Быстров, 2015-2016\n"
+"Last-Translator: Mark Zhou, 2026\n"
 "Language-Team: Kazakh (Cyrillic) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/kk@Cyrl/)\n"
 "Language: kk@Cyrl\n"
@@ -85,47 +87,47 @@ msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:104
 msgid "^1Observing"
-msgstr "^1Көрігі"
+msgstr "^1Көріп жатырсыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
 msgid "^1Spectating: ^7%s"
-msgstr "^1Қарау: ^7%s"
+msgstr "^1Бақылап жатырсыз: ^7%s"
 
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Қарау үшін ^3%s^1 батырмаға басыныз"
+msgstr "^1Бақылау үшін ^3%s^1 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/menu/xonotic/keybinder.qc:73
 msgid "primary fire"
-msgstr "Бастысы ат"
+msgstr "басты ату"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
-msgstr "^1Келесі әлде жоғары ойыншы үшін ^3%s^1 әлде ^3%s^1 батырмаға басыныз"
+msgstr "^1Келесі н/е алдыңғы ойыншы үшін ^3%s^1 н/е ^3%s^1 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #: qcsrc/client/hud/panel/infomessages.qc:123
 msgid "next weapon"
-msgstr ""
+msgstr "келесі қару"
 
 #: qcsrc/client/hud/panel/infomessages.qc:119
 #: qcsrc/client/hud/panel/infomessages.qc:123
 msgid "previous weapon"
-msgstr ""
+msgstr "алдыңғы қару"
 
 #: qcsrc/client/hud/panel/infomessages.qc:123
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
-msgstr "^1 Жылдамдықты өзгерту үшін ^3%s^1 әлде ^3%s^1 батырмаға басыныз"
+msgstr "^1Жылдамдықты өзгерту үшін ^3%s^1 н/е ^3%s^1 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:125
 #, c-format
 msgid "^1Press ^3%s^1 to observe, ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Көру үшін ^3%s^1 басыңыз, камера түрін ауыстыру үшін ^3%s^1 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:125
 #: qcsrc/client/hud/panel/infomessages.qc:127
@@ -134,32 +136,32 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
 #: qcsrc/common/vehicles/cl_vehicles.qc:165
 msgid "drop weapon"
-msgstr "Қару лақтыру"
+msgstr "қаруды лақтыру"
 
 #: qcsrc/client/hud/panel/infomessages.qc:125
 #: qcsrc/menu/xonotic/keybinder.qc:74
 msgid "secondary fire"
-msgstr "Қосымша ат"
+msgstr "қосымша ату"
 
 #: qcsrc/client/hud/panel/infomessages.qc:127
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Камера түрін ауыстыру үшін ^3%s^1 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1Ойын түрінің ақпаратын көру үшін ^3%s^1 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/menu/xonotic/keybinder.qc:153
 msgid "server info"
-msgstr "Сервер ақпараты"
+msgstr "сервер ақпараты"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr ""
+msgstr "^1Қосылу үшін ^3%s^1 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1385
@@ -169,7 +171,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/guide/pages.qc:83 qcsrc/menu/xonotic/guide/pages.qc:84
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:155
 msgid "jump"
-msgstr ""
+msgstr "секіру"
 
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
@@ -183,39 +185,39 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:156
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
-msgstr ""
+msgstr "^1Матч ^3%d^1 секундта басталады"
 
 #: qcsrc/client/hud/panel/infomessages.qc:164
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr ""
+msgstr "^2Қазір ^1дайындық^2 кезеңі!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:174
 msgid "^31^2 more player is needed for the match to start."
-msgstr ""
+msgstr "Матчты бастау үшін тағы ^31^2 ойыншы керек."
 
 #: qcsrc/client/hud/panel/infomessages.qc:176
 #, c-format
 msgid "^3%d^2 more players are needed for the match to start."
-msgstr ""
+msgstr "Матчты бастау үшін тағы ^3%d^2 ойыншы керек."
 
 #: qcsrc/client/hud/panel/infomessages.qc:186
 #: qcsrc/menu/xonotic/keybinder.qc:149
 msgid "ready"
-msgstr "Дайын"
+msgstr "дайын"
 
 #: qcsrc/client/hud/panel/infomessages.qc:190
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr ""
+msgstr "%sДайыңдық кезеңің аяқтау үшін ^3%s%s басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:192
 msgid "^2Waiting for others to ready up to end warmup..."
-msgstr ""
+msgstr "^2Басқалардың дайындықты аяқтауға дайын болуын күтіп отырмыз..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:195
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
-msgstr ""
+msgstr "^2Дайыңдық кезеңің аяқтау үшін ^3%s^2 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
@@ -256,7 +258,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:256
 msgid "^7Press ^3ESC ^7to show HUD options."
-msgstr "^7 ^3ESC ^7 батырмасы басыныз HUD параметрлері көрсету үшін."
+msgstr "^7HUD баптауларын көрсету үшін ^3ESC^7 басыңыз."
 
 #: qcsrc/client/hud/panel/infomessages.qc:257
 msgid "^3Double-click ^7a panel for panel-specific options."
@@ -274,7 +276,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/score.qc:64
 #, c-format
 msgid "Player %d"
-msgstr ""
+msgstr "Ойыншы %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:222
 msgid "Standard quick menu"
@@ -298,7 +300,7 @@ msgstr "Жалғау..."
 #: qcsrc/client/hud/panel/quickmenu.qc:840
 #: qcsrc/client/hud/panel/quickmenu.qc:847
 msgid "Chat"
-msgstr ""
+msgstr "Чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "QMCMD^Send public message to"
@@ -314,11 +316,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "QMCMD^good game"
-msgstr "QMCMD^жақсы ойыны"
+msgstr "QMCMD^мықты ойын"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^hi / good luck"
-msgstr "QMCMD^hi  / сәттілік тілеймін!"
+msgstr "QMCMD^сәлем / іске сәт!"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "QMCMD^hi / good luck and have fun"
@@ -326,12 +328,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "QMCMD^Send in English"
-msgstr ""
+msgstr "QMCMD^Ағылшын тілде жіберу"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "QMCMD^Team chat"
-msgstr "QMCMD^ Топтық чат"
+msgstr "QMCMD^Топтық чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "QMCMD^strength soon"
@@ -403,7 +405,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr "QMCMD^шабуылы (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
+msgstr "QMCMD^шабуыл жасап жатырмын (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "QMCMD^attacking, icon"
@@ -454,7 +456,7 @@ msgstr "QMCMD^Баптаулар"
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "QMCMD^View/HUD settings"
-msgstr "QMCMD^Түрі/HUD-тың баптаулар"
+msgstr "QMCMD^Түрі/HUD баптаулары"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 msgid "QMCMD^3rd person view"
@@ -462,11 +464,11 @@ msgstr "QMCMD^3-ші беткен түрі"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 msgid "QMCMD^Player models like mine"
-msgstr "QMCMD^Менде тартқан модельмен ойыншылар"
+msgstr "QMCMD^Менікі сияқты ойыншы модерльдері"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "QMCMD^Names above players"
-msgstr "QMCMD^Ойыншылар үстінде есімдер"
+msgstr "QMCMD^Ойыншы үстіндегі есімдер"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "QMCMD^Crosshair per weapon"
@@ -483,7 +485,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:882
 #: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "QMCMD^Sound settings"
-msgstr "QMCMD^Дыбыс баптаулар"
+msgstr "QMCMD^Дыбыс баптаулары"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 msgid "QMCMD^Hit sound"
@@ -495,20 +497,20 @@ msgstr "QMCMD^Чат дыбысы"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "QMCMD^Change spectator camera"
-msgstr ""
+msgstr "Қарау камерасын ауыстыру"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 #: qcsrc/client/hud/panel/quickmenu.qc:897
 msgid "QMCMD^Observer camera"
-msgstr "QMCMD^Байқаушының камерасы"
+msgstr "QMCMD^Көрушінің камерасы"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "QMCMD^Increase speed"
-msgstr " QMCMD^Жылдамдықтың артасы"
+msgstr "QMCMD^Жылдамдықты арттыру"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "QMCMD^Decrease speed"
-msgstr "QMCMD^Жылдамдықтың ақырындату"
+msgstr "QMCMD^Жылдамдықты ақырындату"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "QMCMD^Wall collision"
@@ -561,7 +563,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Ойыншыны бақылау"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -1489,7 +1491,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Clan Arena"
-msgstr ""
+msgstr "Клан аренасы"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Kill all enemy teammates to win the round"
@@ -2390,7 +2392,7 @@ msgstr ""
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:449
 msgid "Join"
-msgstr ""
+msgstr "Қосылу"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:527
 msgid "Minigames"
@@ -2617,7 +2619,7 @@ msgstr ""
 #: qcsrc/common/monsters/monster.qh:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:76
 msgid "Monster"
-msgstr ""
+msgstr "Монстр"
 
 #: qcsrc/common/monsters/monster/golem.qc:312
 msgid ""
@@ -3323,7 +3325,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
 #: qcsrc/common/mutators/mutator/nades/nades.qh:17
 msgid "Grenade"
-msgstr ""
+msgstr "Граната"
 
 #: qcsrc/common/mutators/mutator/nades/nade/spawn.qc:46
 #, c-format
@@ -3817,7 +3819,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:5
 msgid "Here"
-msgstr ""
+msgstr "Осы жерде"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:6
 msgid "DANGER"
@@ -3842,49 +3844,49 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
 msgid "Finish"
-msgstr ""
+msgstr "Финиш"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
 #: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
 msgid "Start"
-msgstr ""
+msgstr "Старт"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:20
 msgid "Defend"
-msgstr ""
+msgstr "Қорғаңыз"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:21
 msgid "Destroy"
-msgstr ""
+msgstr "Қиратыңыз"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:22
 msgid "Push"
-msgstr ""
+msgstr "Итеріңіз"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:24
 msgid "Flag carrier"
-msgstr ""
+msgstr "Жалаушашы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:25
 msgid "White base"
-msgstr ""
+msgstr "Ақ базасы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:26
 msgid "Red base"
-msgstr ""
+msgstr "Қызыл базасы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:27
 msgid "Blue base"
-msgstr ""
+msgstr "Көк базасы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:28
 msgid "Yellow base"
-msgstr ""
+msgstr "Сары базасы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:29
 msgid "Pink base"
-msgstr ""
+msgstr "Қызғылт базасы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:30
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:31
@@ -3892,7 +3894,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:33
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:34
 msgid "Dropped flag"
-msgstr ""
+msgstr "Түсірілген жалау"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:35
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:36
@@ -3900,11 +3902,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:38
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:39
 msgid "Enemy carrier"
-msgstr ""
+msgstr "Қарсылас жалаушашы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
 msgid "Return flag here"
-msgstr ""
+msgstr "Жалауды осы жерге қайтарыңыз"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
@@ -3915,11 +3917,11 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:69
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:70
 msgid "Control point"
-msgstr ""
+msgstr "Басқару нүктесі"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:48
 msgid "Dropped key"
-msgstr ""
+msgstr "Түсірілген кілт"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:49
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:51
@@ -3927,16 +3929,16 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:53
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:54
 msgid "Key carrier"
-msgstr ""
+msgstr "Кілт ұстаушы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:50
 msgid "Run here"
-msgstr ""
+msgstr "Осы жерге жүгіріңіз"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:56
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:65
 msgid "Ball"
-msgstr ""
+msgstr "Доп"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:57
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:58
@@ -3944,24 +3946,24 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:60
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:61
 msgid "Ball carrier"
-msgstr ""
+msgstr "Доп ұстаушы"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:63
 msgid "Leader"
-msgstr ""
+msgstr "Лидер"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:66
 msgid "Goal"
-msgstr ""
+msgstr "Гол"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:71
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:72
 msgid "Generator"
-msgstr ""
+msgstr "Генератор"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:74
 msgid "Weapon"
-msgstr ""
+msgstr "Қару"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:78
 #: qcsrc/common/vehicles/vehicle.qh:14
@@ -4135,7 +4137,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:274
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2Сіз келесі раундта бақылайсыз"
 
 #: qcsrc/common/notifications/all.inc:276
 msgid "^F2Match is restarting..."
@@ -4741,27 +4743,27 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:731
 #, c-format
 msgid "^F1%s^BG is ^F4not available^BG on this map"
-msgstr ""
+msgstr "^F1%s^BG осы картада ^F4қолжетімсіз^BG"
 
 #: qcsrc/common/notifications/all.inc:398
 #, c-format
 msgid "^BG%s^BG is connecting..."
-msgstr ""
+msgstr "^BG%s^BG қосылып жатыр..."
 
 #: qcsrc/common/notifications/all.inc:399
 #, c-format
 msgid "^BG%s^F3 connected"
-msgstr ""
+msgstr "^BG%s^F3 қосылды"
 
 #: qcsrc/common/notifications/all.inc:400
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr ""
+msgstr "^BG%s^F3 енді ойнап жатыр"
 
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 енді ^TC^TT командада ойнап жатыр"
 
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
@@ -4776,34 +4778,34 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:404
 #, c-format
 msgid "^BG%s^F3 wants to play"
-msgstr ""
+msgstr "^BG%s^F3 ойнағысы келеді"
 
 #: qcsrc/common/notifications/all.inc:406
 #: qcsrc/common/notifications/all.inc:746
 #, c-format
 msgid "^BG%s^BG has dropped the ball!"
-msgstr ""
+msgstr "^BG%s^BG допты түсірді!"
 
 #: qcsrc/common/notifications/all.inc:407
 #: qcsrc/common/notifications/all.inc:747
 #, c-format
 msgid "^BG%s^BG has picked up the ball!"
-msgstr ""
+msgstr "^BG%s^BG допты алды!"
 
 #: qcsrc/common/notifications/all.inc:409
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT командасында ойнағысы келеді"
 
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT кілтті түсірді"
 
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT кілтті жоғалтты"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
@@ -4818,7 +4820,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:414
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT кілтті алды"
 
 #: qcsrc/common/notifications/all.inc:416
 #, c-format
@@ -5500,63 +5502,66 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:594
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGСіз ^TC^TT^BG жалауды алдыңыз!"
 
 #: qcsrc/common/notifications/all.inc:595
 msgid "^BGYou got the flag!"
-msgstr ""
+msgstr "^BGСіз жалауды алдыңыз!"
 
 #: qcsrc/common/notifications/all.inc:596
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr ""
+msgstr "^BGСіз өз %sкомандаңыздың^BG жалауын алдыңыз, оны қайтарыңыз!"
 
 #: qcsrc/common/notifications/all.inc:597
 #, c-format
 msgid "^BGYou got the %senemy^BG's flag, return it!"
-msgstr ""
+msgstr "^BGСіз %sқарсыластың^BG жалауын алдыңыз, оны қайтарыңыз!"
 
 #: qcsrc/common/notifications/all.inc:598
 #, c-format
 msgid "^BGThe %senemy^BG got your flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sҚарсылас^BG сіздің жалауыңызды алып кетті! Оны қайтарып алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:599
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"
 msgstr ""
+"^BG%sҚарсылас (^BG%s%s)^BG сіздің жалауыңызды алып кетті! Оны қайтарып "
+"алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:600
 #: qcsrc/common/notifications/all.inc:606
 #, c-format
 msgid "^BGThe %senemy^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sҚарсылас^BG жалауды алып кетті! Оны қайтарып алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:601
 #: qcsrc/common/notifications/all.inc:607
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sҚарсылас (^BG%s%s)^BG жалауды алып кетті! Оны қайтарып алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:602
 #, c-format
 msgid "^BGThe %senemy^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sҚарсылас^BG өз жалауын алып кетті! Оны қайтарып алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:603
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sҚарсылас (^BG%s%s)^BG өз жалауын алып кетті! Оны қайтарып алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:604
 #, c-format
 msgid "^BGThe %senemy^BG got the ^TC^TT^BG flag! Retrieve it!"
-msgstr ""
+msgstr "^BG%sҚарсылас^BG ^TC^TT^BG жалауды алып кетті! Оны қайтарып алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:605
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the ^TC^TT^BG flag! Retrieve it!"
 msgstr ""
+"^BG%sҚарсылас (^BG%s%s)^BG ^TC^TT^BG жалауды алып кетті! Оны қайтарып алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:608
 #, c-format
@@ -5581,11 +5586,11 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:612
 #: qcsrc/common/notifications/all.inc:759
 msgid "^BGEnemies can now see you on radar!"
-msgstr ""
+msgstr "Қарсыластар енді сізді радарда көре алады!"
 
 #: qcsrc/common/notifications/all.inc:613
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGСіз ^TC^TT^BG жалауды қайтардыңыз!"
 
 #: qcsrc/common/notifications/all.inc:614
 msgid "^BGStalemate! Enemies can now see you on radar!"
@@ -6546,75 +6551,75 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
-msgstr ""
+msgstr "TEAM^Қызыл"
 
 #: qcsrc/common/teams.qh:32
 msgid "TEAM^Blue"
-msgstr ""
+msgstr "TEAM^Көк"
 
 #: qcsrc/common/teams.qh:33
 msgid "TEAM^Yellow"
-msgstr ""
+msgstr "TEAM^Сары"
 
 #: qcsrc/common/teams.qh:34
 msgid "TEAM^Pink"
-msgstr ""
+msgstr "TEAM^Қызғылт"
 
 #: qcsrc/common/teams.qh:35
 msgid "Team"
-msgstr ""
+msgstr "Команда"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
-msgstr ""
+msgstr "Нейтрал"
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Red"
-msgstr ""
+msgstr "KEY^Қызыл"
 
 #: qcsrc/common/teams.qh:40
 msgid "KEY^Blue"
-msgstr ""
+msgstr "KEY^Көк"
 
 #: qcsrc/common/teams.qh:41
 msgid "KEY^Yellow"
-msgstr ""
+msgstr "KEY^Сары"
 
 #: qcsrc/common/teams.qh:42
 msgid "KEY^Pink"
-msgstr ""
+msgstr "KEY^Қызғылт"
 
 #: qcsrc/common/teams.qh:43
 msgid "FLAG^Red"
-msgstr ""
+msgstr "FLAG^Қызыл"
 
 #: qcsrc/common/teams.qh:44
 msgid "FLAG^Blue"
-msgstr ""
+msgstr "FLAG^Көк"
 
 #: qcsrc/common/teams.qh:45
 msgid "FLAG^Yellow"
-msgstr ""
+msgstr "FLAG^Сары"
 
 #: qcsrc/common/teams.qh:46
 msgid "FLAG^Pink"
-msgstr ""
+msgstr "FLAG^Қызғылт"
 
 #: qcsrc/common/teams.qh:47
 msgid "GENERATOR^Red"
-msgstr ""
+msgstr "GENERATOR^Қызыл"
 
 #: qcsrc/common/teams.qh:48
 msgid "GENERATOR^Blue"
-msgstr ""
+msgstr "GENERATOR^Көк"
 
 #: qcsrc/common/teams.qh:49
 msgid "GENERATOR^Yellow"
-msgstr ""
+msgstr "GENERATOR^Сары"
 
 #: qcsrc/common/teams.qh:50
 msgid "GENERATOR^Pink"
-msgstr ""
+msgstr "GENERATOR^Қызғылт"
 
 #: qcsrc/common/turrets/cl_turrets.qc:118
 #, c-format
@@ -8709,7 +8714,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:227
 #: qcsrc/menu/xonotic/dialog_welcome.qc:131
 msgid "Join!"
-msgstr ""
+msgstr "Қосылу"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:28
@@ -8752,7 +8757,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:69
 #: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
-msgstr ""
+msgstr "Бақылау"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:8
 msgid "Game menu"
@@ -11974,12 +11979,12 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:50
 #, c-format
 msgid "%d KiB/s"
-msgstr ""
+msgstr "%d КиБ/с"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:51
 #, c-format
 msgid "%d MiB/s"
-msgstr ""
+msgstr "%d МиБ/с"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Menu tooltips:"
@@ -12440,7 +12445,7 @@ msgstr "қызғылт"
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:44
 #: qcsrc/menu/xonotic/keybinder.qc:165
 msgid "spectate"
-msgstr ""
+msgstr "бақылау"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:75
 msgid "Terms of Service have been updated. Please read them before continuing:"
