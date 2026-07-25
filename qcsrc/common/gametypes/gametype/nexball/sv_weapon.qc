@@ -64,14 +64,13 @@ METHOD(BallStealer, wr_checkammo2, bool(BallStealer this, entity actor, .entity 
 void W_Nexball_Think(entity this)
 {
 	//dprint("W_Nexball_Think\n");
-	//vector new_dir = steerlib_arrive(this.enemy.origin, 2500);
-	vector new_dir = normalize(this.enemy.origin + '0 0 50' - this.origin);
-	vector old_dir = normalize(this.velocity);
+	//vector new_dir = steerlib_arrive(WarpZone_RefSys_TransformOrigin(this.enemy, this, this.enemy.origin), 2500);
 	float _speed = vlen(this.velocity);
-	vector new_vel = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
-	//vector new_vel = (new_dir * autocvar_g_nexball_safepass_turnrate
+	vector old_dir = this.velocity * (1 / _speed);
+	vector new_dir = normalize(WarpZone_RefSys_TransformOrigin(this.enemy, this, this.enemy.origin + '0 0 50') - this.origin);
 
-	this.velocity = new_vel;
+	this.velocity = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
+	//this.velocity = new_dir * autocvar_g_nexball_safepass_turnrate;
 
 	this.nextthink = time;
 }
@@ -115,14 +114,7 @@ void W_Nexball_Attack(Weapon thiswep, entity actor, .entity weaponentity, float 
 	if (!ball)
 		return;
 
-	W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: use ballstealer weapon here? we don't want duplicates in the scoreboard
-	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, NULL);
-	if (trace_startsolid)
-	{
-		if (STAT(NB_METERSTART, actor))
-			STAT(NB_METERSTART, actor) = 0; // Shot failed, hide the power meter
-		return;
-	}
+	W_SetupShot_ProjectileSize(actor, weaponentity, BALL_MINS, BALL_MAXS, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id); // TODO: use ballstealer weapon here? we don't want duplicates in the scoreboard
 
 	// Calculate multiplier
 	float mul;
@@ -149,7 +141,7 @@ void W_Nexball_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	if (actor.ballcarried.enemy)
 	{
 		entity _ball = actor.ballcarried;
-		W_SetupShot(actor, weaponentity, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id | HITTYPE_SECONDARY); // TODO: use the ball stealer weapon here? probably don't want duplicates
+		W_SetupShot_ProjectileSize(actor, weaponentity, BALL_MINS, BALL_MAXS, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0, WEP_PORTO.m_id | HITTYPE_SECONDARY); // TODO: use the ball stealer weapon here? probably don't want duplicates
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32, _ball));
 		setthink(_ball, W_Nexball_Think);
 		_ball.nextthink = time;

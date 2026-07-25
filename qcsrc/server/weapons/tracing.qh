@@ -36,6 +36,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 #define W_SetupShot_Range(ent, wepent, antilag, recoil, snd, chan, maxdamage, range, deathtype) \
 	W_SetupShot_Dir_ProjectileSize_Range(ent, wepent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range, deathtype)
 
+vector W_SetupShot_GetAlternatingOffset(int bullet_count);
+
 vector W_CalculateProjectileVelocity(entity actor, vector pvelocity, vector mvelocity, float forceAbsolute);
 
 #if 0

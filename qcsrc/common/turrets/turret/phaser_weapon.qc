@@ -13,6 +13,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 	if (fire & 1)
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 1))
 	{
+		float prev_shot_speed = actor.shot_speed;
 		if (isPlayer)
 		{
 			turret_initparams(actor);
@@ -31,6 +32,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 		beam.cnt = time + actor.shot_speed;
 		beam.shot_spread = time + 2;
 		beam.nextthink = time;
+		beam.realowner = actor;
 		beam.owner = actor;
 		beam.shot_dmg = actor.shot_dmg / (actor.shot_speed / frametime);
 		beam.scale = actor.target_range / 256;
@@ -50,12 +52,14 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 		soundat(actor, trace_endpos, CH_SHOTS, SND(PhaserTurretAttack_IMPACT), VOL_BASE, ATTEN_NORM);
 		if (!isPlayer && actor.tur_head.frame == 0)
 			actor.tur_head.frame = 1;
+		if (isPlayer)
+			actor.shot_speed = prev_shot_speed;
 	}
 }
 
 void beam_think(entity this)
 {
-	entity actor = this.owner;
+	entity actor = this.realowner;
 	if (time > this.cnt || IS_DEAD(actor))
 	{
 		actor.attack_finished_single[0] = time + actor.shot_refire;
@@ -86,7 +90,7 @@ void beam_think(entity this)
 		0.75,
 		DEATH_TURRET_PHASER.m_id
 	);
-	this.scale = vlen(actor.tur_shotorg - trace_endpos) / 256;
+	this.scale = vlen(actor.tur_shotorg - WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos)) / 256;
 }
 
 #endif // SVQC

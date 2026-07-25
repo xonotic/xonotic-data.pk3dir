@@ -769,7 +769,6 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	makevectors(player.v_angle);
 	if(nexball_mode & NBM_BASKETBALL)
 	{
 		if(player.ballcarried)
@@ -778,11 +777,12 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 			player.ballcarried.velocity = player.velocity;
 			setcefc(player.ballcarried, ball_customize);
 
-			vector org = player.origin + player.view_ofs +
-					  v_forward * autocvar_g_nexball_viewmodel_offset.x +
-					  v_right * autocvar_g_nexball_viewmodel_offset.y +
-					  v_up * autocvar_g_nexball_viewmodel_offset.z;
-			setorigin(player.ballcarried, org);
+			makevectors(player.v_angle);
+			vector org = player.origin + player.view_ofs
+				+ autocvar_g_nexball_viewmodel_offset.x * v_forward
+				+ autocvar_g_nexball_viewmodel_offset.y * v_right
+				+ autocvar_g_nexball_viewmodel_offset.z * v_up;
+			setorigin(player.ballcarried, org); // FIXME: not actually guaranteed to be in the same warpzone refsys as the start of the crosshair trace below
 
 			// 'safe passing'
 			if(autocvar_g_nexball_safepass_maxdist)
@@ -791,24 +791,25 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				{
 					//centerprint(player, sprintf("Lost lock on %s", player.ballcarried.enemy.netname));
 					player.ballcarried.enemy = NULL;
+					WarpZone_RefSys_Clear(player.ballcarried);
 				}
 
-
-				//tracebox(player.origin + player.view_ofs, '-2 -2 -2', '2 2 2', player.origin + player.view_ofs + v_forward * autocvar_g_nexball_safepass_maxdist);
-				crosshair_trace(player);
-				if( trace_ent &&
-					IS_CLIENT(trace_ent) &&
-					!IS_DEAD(trace_ent) &&
-					trace_ent.team == player.team &&
-					vdist(trace_ent.origin - player.origin, <=, autocvar_g_nexball_safepass_maxdist) )
+				//WarpZone_TraceBox(player_view_org, '-2 -2 -2', '2 2 2', player_view_org + v_forward * autocvar_g_nexball_safepass_maxdist);
+				WarpZone_crosshair_trace(player);
+				if (trace_ent
+				&& IS_CLIENT(trace_ent)
+				&& !IS_DEAD(trace_ent)
+				&& trace_ent.team == player.team
+				&& vdist(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - player.origin, <=, autocvar_g_nexball_safepass_maxdist))
 				{
-
-					//if(player.ballcarried.enemy != trace_ent)
-					//	centerprint(player, sprintf("Locked to %s", trace_ent.netname));
-					player.ballcarried.enemy = trace_ent;
+					if (player.ballcarried.enemy != trace_ent)
+					{
+						//centerprint(player, sprintf("Locked to %s", trace_ent.netname));
+						player.ballcarried.enemy = trace_ent;
+						WarpZone_RefSys_Copy(player.ballcarried, player.ballcarried.enemy);
+						WarpZone_RefSys_AddInverse(player.ballcarried, WarpZone_trace_transform);
+					}
 					player.ballcarried.wait = time + autocvar_g_nexball_safepass_holdtime;
-
-
 				}
 			}
 		}

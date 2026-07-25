@@ -100,8 +100,8 @@ entity sandbox_ObjectEdit_Get(entity this, float permissions)
 	// If permissions if false, the object is returned regardless of editing rights.
 	// Attached objects are SOLID_NOT and do not get traced.
 
-	crosshair_trace_plusvisibletriggers(this);
-	if(vdist(this.origin - trace_ent.origin, >, autocvar_g_sandbox_editor_distance_edit))
+	WarpZone_crosshair_trace_plusvisibletriggers(this);
+	if(vdist(this.origin - WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_ent.origin), >, autocvar_g_sandbox_editor_distance_edit))
 		return NULL; // out of trace range
 	if(trace_ent.classname != "object")
 		return NULL; // entity is not an object
@@ -198,9 +198,10 @@ entity sandbox_ObjectSpawn(entity this, float database)
 
 		// set origin and direction based on player position and view angle
 		makevectors(this.v_angle);
-		WarpZone_TraceLine(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, this);
+		vector view_org = this.origin + this.view_ofs;
+		WarpZone_TraceLine(view_org, view_org + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, this);
 		setorigin(e, trace_endpos);
-		e.angles_y = this.v_angle.y;
+		e.angles.y = WarpZone_TransformVAngles(WarpZone_trace_transform, this.v_angle).y;
 	}
 
 	CSQCMODEL_AUTOINIT(e);

@@ -317,7 +317,8 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_MINE_LAYER, damage), thiswep.m_id);
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-	entity mine = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity mine = new(mine);
+	WarpZone_RefSys_Copy(mine, actor);
 	mine.weaponentity_fld = weaponentity;
 	IL_PUSH(g_mines, mine);
 	mine.owner = mine.realowner = actor;
@@ -325,7 +326,6 @@ void W_MineLayer_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		mine.spawnshieldtime = time + WEP_CVAR(WEP_MINE_LAYER, detonatedelay);
 	else
 		mine.spawnshieldtime = -1;
-	mine.classname = "mine";
 	mine.bot_dodge = true;
 	mine.bot_dodgerating = WEP_CVAR(WEP_MINE_LAYER, damage) * 2; // * 2 because it can detonate inflight which makes it even more dangerous
 

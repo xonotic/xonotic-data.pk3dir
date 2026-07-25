@@ -5,31 +5,15 @@
 const float HOOK_SECONDARY_DELAY = 0.0625; // (1/16) exact multiple of default frametime 0.015625 (1/64)
 void W_Hook_ExplodeThink(entity this)
 {
-	// NOTE: W_Electro_ExplodeComboThink uses similar code, please keep them in sync
-	float dt = time - this.teleport_time;
-
-	float dmg_remaining_next = bound(0, 1 - dt / WEP_CVAR_SEC(WEP_HOOK, duration), 1) ** WEP_CVAR_SEC(WEP_HOOK, power);
-
-	float f = this.dmg_last - dmg_remaining_next;
-	this.dmg_last = dmg_remaining_next;
-
-	RadiusDamage(this, this.realowner,
-		f * WEP_CVAR_SEC(WEP_HOOK, damage),
-		f * WEP_CVAR_SEC(WEP_HOOK, edgedamage),
+	W_DamageOverTime_Think(this,
+		WEP_CVAR_SEC(WEP_HOOK, duration),
+		WEP_CVAR_SEC(WEP_HOOK, power),
+		WEP_CVAR_SEC(WEP_HOOK, damage),
+		WEP_CVAR_SEC(WEP_HOOK, edgedamage),
 		WEP_CVAR_SEC(WEP_HOOK, radius),
+		WEP_CVAR_SEC(WEP_HOOK, force),
 		this.realowner,
-		NULL,
-		f * WEP_CVAR_SEC(WEP_HOOK, force),
-		this.projectiledeathtype,
-		this.weaponentity_fld,
-		NULL
-	);
-	this.projectiledeathtype |= HITTYPE_SPAM;
-
-	if (dt < WEP_CVAR_SEC(WEP_HOOK, duration))
-		this.nextthink = time + HOOK_SECONDARY_DELAY;
-	else
-		delete(this);
+		HOOK_SECONDARY_DELAY);
 }
 
 void W_Hook_Explode2(entity this)
@@ -277,7 +261,6 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += (0.25 / 8) * vlen(hit - start);
 }
 
-classfield(Hook) .float teleport_time;
 void Draw_GrapplingHook(entity this)
 {
 	vector a, b;

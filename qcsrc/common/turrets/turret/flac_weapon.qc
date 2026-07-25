@@ -41,28 +41,24 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
 void turret_flac_projectile_think_explode(entity this)
 {
 	if (this.enemy != NULL
-	&& vdist(this.origin - this.enemy.origin, <, this.owner.shot_radius * 3))
-		setorigin(this, this.enemy.origin + randomvec() * this.owner.shot_radius);
+	&& vdist(this.origin - this.enemy.origin, <, this.realowner.shot_radius * 3))
+		setorigin(this, this.enemy.origin + randomvec() * this.realowner.shot_radius);
 
 #ifdef TURRET_DEBUG
-	float d = RadiusDamage(this, this.owner,
-#else
-	RadiusDamage(this, this.realowner,
+	this.realowner.tur_debug_dmg_t_f += this.realowner.shot_dmg;
+	this.realowner.tur_debug_dmg_t_h += 
 #endif
-		this.owner.shot_dmg,
-		this.owner.shot_dmg,
-		this.owner.shot_radius,
+	RadiusDamage(this, this.realowner,
+		this.realowner.shot_dmg,
+		this.realowner.shot_dmg,
+		this.realowner.shot_radius,
 		this,
 		NULL,
-		this.owner.shot_force,
+		this.realowner.shot_force,
 		this.projectiledeathtype,
 		DMG_NOWEP,
 		NULL
 	);
-#ifdef TURRET_DEBUG
-	this.owner.tur_debug_dmg_t_h += d;
-	this.owner.tur_debug_dmg_t_f += this.owner.shot_dmg;
-#endif
 	delete(this);
 }
 

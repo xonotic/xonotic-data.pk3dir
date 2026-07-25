@@ -2,7 +2,7 @@
 
 #ifdef SVQC
 
-entity toast(entity actor, entity from, float range, float damage);
+entity turret_tesla_toast(entity actor, entity from, float range, float damage);
 SOUND(TeslaCoilTurretAttack_FIRE, W_Sound("electro_fire"));
 METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -27,7 +27,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
 
 		actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 
-		entity t = toast(actor, e, r, d);
+		entity t = turret_tesla_toast(actor, e, r, d);
 		delete(e);
 
 		if (t == NULL)
@@ -36,11 +36,11 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
 		actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_TEAMCHECK;
 
 		actor.attack_finished_single[0] = time + actor.shot_refire;
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 10; ++i) // chain the lightning between max 10 more targets
 		{
 			d *= 0.75;
 			r *= 0.85;
-			t = toast(actor, t, r, d);
+			t = turret_tesla_toast(actor, t, r, d);
 			if (t == NULL)
 				break;
 		}
@@ -50,44 +50,46 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
 	}
 }
 
-entity toast(entity actor, entity from, float range, float damage)
+entity turret_tesla_toast_cond_from;
+entity turret_tesla_toast_cond_actor;
+bool turret_tesla_toast_cond(entity e)
 {
-	float dd = range + 1;
-	entity etarget = NULL;
-	FOREACH_ENTITY_RADIUS(from.origin, range, it != from && !it.railgunhit,
+	return (e != turret_tesla_toast_cond_from && !e.railgunhit
+		&& turret_validate_target(turret_tesla_toast_cond_actor, e, turret_tesla_toast_cond_actor.target_validate_flags) > 0);
+}
+entity turret_tesla_toast(entity actor, entity from, float range, float damage)
+{
+	entity closest = NULL;
+	float head_dist2, closest_dist2 = 0;
+	turret_tesla_toast_cond_from = from;
+	turret_tesla_toast_cond_actor = actor;
+	for (entity head = WarpZone_SearchInRadius(from.origin, range, MOVE_NOMONSTERS, turret_tesla_toast_cond); head; head = head.chain)
 	{
-		float r = turret_validate_target(actor, it, actor.target_validate_flags);
-		if (r > 0)
+		head_dist2 = vlen2(head.WarpZone_findradius_dist);
+		if (!closest || head_dist2 < closest_dist2) // new closest
 		{
-			traceline(from.origin, 0.5 * (it.absmin + it.absmax), MOVE_WORLDONLY, from);
-			if (trace_fraction == 1.0)
-			{
-				float d = vlen(it.origin - from.origin);
-				if (d < dd)
-				{
-					dd = d;
-					etarget = it;
-				}
-			}
+			closest_dist2 = head_dist2;
+			closest = head;
 		}
-	});
+	}
 
-	if (etarget)
+	if (closest)
 	{
-		te_csqc_lightningarc(from.origin, etarget.origin);
-		if (etarget != actor.realowner)
-			Damage(etarget, actor, actor,
+		te_csqc_trace_callback_func = te_csqc_lightningarc;
+		WarpZone_TraceLine_ThroughZone(from.origin, WarpZone_UnTransformOrigin(closest, closest.WarpZone_findradius_nearest),
+			MOVE_NOTHING, NULL, NULL, te_csqc_trace_callback);
+		if (closest != actor.realowner)
+			Damage(closest, actor, actor,
 				damage,
 				DEATH_TURRET_TESLA.m_id,
 				DMG_NOWEP,
-				etarget.origin,
+				closest.WarpZone_findradius_nearest,
 				'0 0 0'
 			);
-		etarget.railgunhit = true;
-		IL_PUSH(g_railgunhit, etarget);
+		closest.railgunhit = true;
+		IL_PUSH(g_railgunhit, closest);
 	}
-
-	return etarget;
+	return closest;
 }
 
 #endif // SVQC
