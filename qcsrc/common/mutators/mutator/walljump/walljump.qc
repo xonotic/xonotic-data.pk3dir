@@ -16,14 +16,16 @@ REGISTER_MUTATOR(walljump, autocvar_g_walljump);
 vector PlayerTouchWall(entity this)
 {
 #define TRACE(newvec) \
-	tracebox (start, this.mins, this.maxs, (newvec), true, this); \
-	if (trace_fraction < 1 && vdist(this.origin - trace_endpos, <, dist) && trace_plane_normal_z < max_normal) \
-	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) \
-		return trace_plane_normal;
+	WarpZone_TraceBox(start, this.mins, this.maxs, (newvec), true, this); \
+	trans_plane_norm = WarpZone_UnTransformVelocity(WarpZone_trace_transform, trace_plane_normal); \
+	if (trace_fraction < 1 && trans_plane_norm.z < max_normal \
+	&& vdist(this.origin - WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), <, dist) \
+	&& !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)) \
+		return trans_plane_norm;
 
 	float dist = 10, max_normal = 0.2, scaler = 100;
 	vector start = this.origin;
-	vector forward, right, _up;
+	vector forward, right, _up, trans_plane_norm;
 	MAKE_VECTORS(this.angles, forward, right, _up);
 	TRACE(start + forward * scaler)
 	TRACE(start - forward * scaler)

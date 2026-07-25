@@ -77,6 +77,5 @@ REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 SPAWNFUNC_WEAPON(weapon_fireball, WEP_FIREBALL)
 
 #ifdef SVQC
-.vector fireball_impactvec;
 .float fireball_primarytime;
 #endif

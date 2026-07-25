@@ -167,8 +167,11 @@ METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 
 	it.velocity.z = vz;
 
-	if (it.velocity)
+	if (it.origin != it.oldorigin || it.velocity != it.oldvelocity)
 		it.SendFlags |= TNSF_MOVE;
+
+	it.oldorigin = it.origin;
+	it.oldvelocity = it.velocity;
 }
 
 METHOD(EWheel, tr_death, void(EWheel this, entity it))

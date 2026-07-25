@@ -18,13 +18,13 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	WarpZone_SearchInRadius_otherent = player;
 	entity head = WarpZone_SearchInRadius(player.origin, autocvar_g_buffs_swapper_range, MOVE_NOTHING, buff_Swapper_cond);
 	entity closest = NULL;
-	float head_dist2, best_dist2 = autocvar_g_buffs_swapper_range ** 2;
+	float head_dist2, closest_dist2 = 0;
 	for (; head; head = head.chain)
 	{
 		head_dist2 = vlen2(head.WarpZone_findradius_dist);
-		if (head_dist2 < best_dist2)
+		if (!closest || head_dist2 < closest_dist2) // new closest
 		{
-			best_dist2 = head_dist2;
+			closest_dist2 = head_dist2;
 			closest = head;
 		}
 	}

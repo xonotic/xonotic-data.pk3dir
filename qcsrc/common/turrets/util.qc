@@ -27,14 +27,12 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 {
 	vector dir = normalize(end - start);
 	vector force = dir * bforce;
+	end += dir; // go a little bit into the wall because we need to hit this wall later
 
-	// go a little bit into the wall because we need to hit this wall later
-	end += dir;
-
-	// trace multiple times until we hit a wall, each obstacle will be made unsolid.
-	// note down which entities were hit so we can damage them later
+	// Trace multiple times until we hit a wall, each obstacle will be made non-solid.
+	// Note down which entities were hit so we can damage them later
 	entity o = this;
-	while (1)
+	do
 	{
 		WarpZone_tracebox_antilag(this, start, smin, smax, end, false, o, (CS(this).antilag_debug ? CS(this).antilag_debug : ANTILAG_LATENCY(this)));
 		if (o && WarpZone_trace_firstzone)
@@ -43,58 +41,55 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 			continue;
 		}
 
-		// if it is NULL we can't hurt it so stop now
+		// If it is NULL we can't hurt it so stop now
 		if (trace_ent == NULL || trace_fraction == 1)
 			break;
 
-		// make the entity non-solid so we can hit the next one
+		// Make the entity non-solid so we can hit the next one
 		IL_PUSH(g_railgunhit, trace_ent);
 		trace_ent.railgunhit = true;
-		trace_ent.railgunhitloc = end;
+		trace_ent.railgunhitloc = trace_endpos;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
 		trace_ent.railgunforce = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
 
-		// stop if this is a wall
-		if (trace_ent.solid == SOLID_BSP)
+		if (trace_ent.solid == SOLID_BSP) // stop if this is a wall
 			break;
-
-		// make the entity non-solid
-		trace_ent.solid = SOLID_NOT;
+		trace_ent.solid = SOLID_NOT; // make the entity non-solid
 	}
+	while (true);
 
 	vector endpoint = trace_endpos;
 	entity endent = trace_ent;
 	float endq3surfaceflags = trace_dphitq3surfaceflags;
 
-	// find all the entities the railgun hit and restore their solid state
+	// Find all the entities the trace hit and restore their solid state
 	IL_EACH(g_railgunhit, it.railgunhit, it.solid = it.railgunhitsolidbackup);
 
 	// Unlike the railgun, this does NOT check for targets close by
 
-	// find all the entities the railgun hit and hurt them
+	// Find all the entities the trace hit and hurt them
 	IL_EACH(g_railgunhit, it.railgunhit,
 	{
-		// removal from the list is handled below
-		// no falloff applied
-
-		// apply the damage
 		if (it.takedamage)
 		{
+			// Apply the damage
+			// No falloff applied
 			Damage(it, this, this, f_dmg, deathtype, DMG_NOWEP, it.railgunhitloc, it.railgunforce);
-			// slow down the target
+			// Slow down the target
 			it.velocity *= f_velfactor;
 		}
 
+		// Reset fields before the list is cleared
+		it.railgunhit = false;
 		it.railgunhitloc = '0 0 0';
 		it.railgunhitsolidbackup = SOLID_NOT;
-		it.railgunhit = false;
 		it.railgundistance = 0;
 	});
 
 	IL_CLEAR(g_railgunhit);
 
-	// no accuracy, as a weapon entity is not attached
+	// No accuracy, as a weapon entity is not attached
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
