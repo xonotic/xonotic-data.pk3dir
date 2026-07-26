@@ -5,6 +5,7 @@
 # Translators:
 # EnmarkOKAY, 2026
 # Mark Zhou, 2026
+# Mark Zhou, 2026
 # Артем Быстров, 2015-2016
 # Артем Быстров, 2016
 # Артём, 2015
@@ -13,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-06 07:22+0200\n"
+"POT-Creation-Date: 2026-07-26 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Mark Zhou, 2026\n"
 "Language-Team: Kazakh (Cyrillic) (http://app.transifex.com/team-xonotic/"
@@ -131,7 +132,7 @@ msgstr "^1Көру үшін ^3%s^1 басыңыз, камера түрін ау�
 
 #: qcsrc/client/hud/panel/infomessages.qc:125
 #: qcsrc/client/hud/panel/infomessages.qc:127
-#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:86
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:92
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
 #: qcsrc/common/vehicles/cl_vehicles.qc:165
@@ -165,7 +166,7 @@ msgstr "^1Қосылу үшін ^3%s^1 басыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1385
-#: qcsrc/common/mutators/mutator/walljump/walljump.qc:82
+#: qcsrc/common/mutators/mutator/walljump/walljump.qc:84
 #: qcsrc/common/notifications/all.qh:451
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
 #: qcsrc/menu/xonotic/guide/pages.qc:83 qcsrc/menu/xonotic/guide/pages.qc:84
@@ -291,7 +292,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:660
 #, c-format
 msgid "Command%d"
-msgstr ""
+msgstr "Команда%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:684
 msgid "Continue..."
@@ -1111,12 +1112,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2577
 #, c-format
 msgid "^5%d^7/^5%d ^7players"
-msgstr ""
+msgstr "^5%d^7/^5%d ^7ойыншылар"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1414
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:42
 msgid "Map:"
-msgstr ""
+msgstr "Карта:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2739
 #, c-format
@@ -1156,11 +1157,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:102
 msgid "m"
-msgstr ""
+msgstr "м"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:103
 msgid "km"
-msgstr ""
+msgstr "км"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:104
 msgid "mi"
@@ -1172,7 +1173,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/timer.qc:155
 msgid "Warmup"
-msgstr ""
+msgstr "Дайындық"
 
 #: qcsrc/client/hud/panel/timer.qc:160
 msgid "Warmup: too few players!"
@@ -1233,7 +1234,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:16
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:15
 msgid "Yes"
-msgstr ""
+msgstr "Иә"
 
 #: qcsrc/client/hud/panel/vote.qc:154 qcsrc/menu/xonotic/dialog_firstrun.qc:89
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:33
@@ -1245,11 +1246,11 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_reset.qc:17
 #: qcsrc/menu/xonotic/dialog_uid2name.qc:17
 msgid "No"
-msgstr ""
+msgstr "Жоқ"
 
 #: qcsrc/client/hud/panel/weapons.qc:647
 msgid "Out of ammo"
-msgstr "оқ-дәрілер бітіп қалды"
+msgstr "Оқ-дәрілер бітіп қалды"
 
 #: qcsrc/client/hud/panel/weapons.qc:652
 msgid "Don't have"
@@ -1269,15 +1270,15 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1122 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
 msgid "m/s"
-msgstr ""
+msgstr "м/сек"
 
 #: qcsrc/client/main.qc:1123 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
 msgid "km/h"
-msgstr ""
+msgstr "км/сағ"
 
 #: qcsrc/client/main.qc:1124 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
 msgid "mph"
-msgstr ""
+msgstr "миль/сағ"
 
 #: qcsrc/client/main.qc:1125 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
 msgid "knots"
@@ -1285,33 +1286,33 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1333
 msgid "All Weapons Arena"
-msgstr ""
+msgstr "Барлық қарулар аренасы"
 
 #: qcsrc/client/main.qc:1334
 msgid "All Available Weapons Arena"
-msgstr ""
+msgstr "Барлық қолжетімді қарулар аренасы"
 
 #: qcsrc/client/main.qc:1335
 msgid "Most Weapons Arena"
-msgstr ""
+msgstr "Көптеген қарулар аренасы"
 
 #: qcsrc/client/main.qc:1336
 msgid "Most Available Weapons Arena"
-msgstr ""
+msgstr "Көптеген қолжетімді қарулар аренасы"
 
 #: qcsrc/client/main.qc:1339 qcsrc/client/main.qc:1353
 msgid "No Weapons Arena"
-msgstr ""
+msgstr "Қарусыз аренасы"
 
 #: qcsrc/client/main.qc:1351
 #, c-format
 msgid "%s Arena"
-msgstr ""
+msgstr "%s аренасы"
 
 #: qcsrc/client/main.qc:1362 qcsrc/client/main.qc:1367
 #, c-format
 msgid "This is %s"
-msgstr ""
+msgstr "Бұл %s"
 
 #: qcsrc/client/main.qc:1363
 msgid "Your client version is outdated."
@@ -1491,7 +1492,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Clan Arena"
-msgstr "Клан аренасы"
+msgstr "Кландар аренасы"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Kill all enemy teammates to win the round"
@@ -1848,7 +1849,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/lms/cl_lms.qc:18
 msgid "^1You have no more lives left"
-msgstr "^1Сенде енді өмірдер жоқ"
+msgstr "^1Сізде енді өмірлер жоқ"
 
 #: qcsrc/common/gametypes/gametype/lms/lms.qc:10
 #, c-format
@@ -2388,7 +2389,7 @@ msgstr ""
 #: qcsrc/common/minigames/cl_minigames_hud.qc:446
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:15
 msgid "Create"
-msgstr ""
+msgstr "Құру"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:449
 msgid "Join"
@@ -2621,20 +2622,20 @@ msgstr ""
 msgid "Monster"
 msgstr "Монстр"
 
-#: qcsrc/common/monsters/monster/golem.qc:312
+#: qcsrc/common/monsters/monster/golem.qc:319
 msgid ""
 "Golems are large powerful brutes capable of taking and dealing a beating. "
 "Keeping your distance is advised."
 msgstr ""
 
-#: qcsrc/common/monsters/monster/golem.qc:313
+#: qcsrc/common/monsters/monster/golem.qc:320
 msgid ""
 "The Golem's primary melee attack is a series of punches. On occasion the "
 "Golem may jump into the air, dealing massive damage in an area as it slams "
 "the ground."
 msgstr ""
 
-#: qcsrc/common/monsters/monster/golem.qc:315
+#: qcsrc/common/monsters/monster/golem.qc:322
 msgid ""
 "To deal with distant foes, the Golem may throw a chunk of its electrified "
 "rocky exterior, zapping nearby targets on impact."
@@ -2645,33 +2646,33 @@ msgstr ""
 msgid "Golem"
 msgstr ""
 
-#: qcsrc/common/monsters/monster/mage.qc:519
+#: qcsrc/common/monsters/monster/mage.qc:482
 msgid ""
 "Wielding nanotechnology as if it were sorcery, the Mage employs a range of "
 "unique abilities of its own creation in combat."
 msgstr ""
 
-#: qcsrc/common/monsters/monster/mage.qc:520
+#: qcsrc/common/monsters/monster/mage.qc:483
 msgid ""
 "As a primary attack, the Mage throws a homing electric sphere towards the "
 "player. This sphere will track its target at high speed, exploding on impact "
 "or if it does not reach its target in time."
 msgstr ""
 
-#: qcsrc/common/monsters/monster/mage.qc:522
+#: qcsrc/common/monsters/monster/mage.qc:485
 msgid ""
 "When threatened, the Mage may deploy an energy shield to protect itself from "
 "damage briefly. Enemies approaching too closely during this time may be "
 "pushed away with explosive force!"
 msgstr ""
 
-#: qcsrc/common/monsters/monster/mage.qc:524
+#: qcsrc/common/monsters/monster/mage.qc:487
 msgid ""
 "Defensively the Mage is capable of healing itself and nearby allies, with "
 "some variants also providing armor and ammunition."
 msgstr ""
 
-#: qcsrc/common/monsters/monster/mage.qc:525
+#: qcsrc/common/monsters/monster/mage.qc:488
 msgid ""
 "The Mage may sometimes appear to blink out of existence as it teleports "
 "behind its target for a sneak attack."
@@ -2686,13 +2687,13 @@ msgstr ""
 msgid "Mage spike"
 msgstr ""
 
-#: qcsrc/common/monsters/monster/spider.qc:256
+#: qcsrc/common/monsters/monster/spider.qc:262
 msgid ""
 "The Spider is a large mechanically-enhanced arachnoid adept at hunting "
 "speedy enemies."
 msgstr ""
 
-#: qcsrc/common/monsters/monster/spider.qc:257
+#: qcsrc/common/monsters/monster/spider.qc:263
 msgid ""
 "To slow down its target, the Spider launches a synthetic web-like substance "
 "from its cannons. Approaching its enwebbed prey, the Spider will inflict a "
@@ -2712,13 +2713,13 @@ msgstr ""
 msgid "Webbed"
 msgstr ""
 
-#: qcsrc/common/monsters/monster/wyvern.qc:196
+#: qcsrc/common/monsters/monster/wyvern.qc:201
 msgid ""
 "The Wyvern is a flying reptilian monster that glides around hunting for "
 "fresh prey."
 msgstr ""
 
-#: qcsrc/common/monsters/monster/wyvern.qc:197
+#: qcsrc/common/monsters/monster/wyvern.qc:202
 msgid ""
 "While fragile, the Wyvern is capable of launching deadly fireballs at the "
 "player from a distance, inflicting high damage and causing burning."
@@ -2784,14 +2785,14 @@ msgstr ""
 msgid "Blood loss"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:66
+#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:69
 #, c-format
 msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:67
+#: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:70
 #, c-format
 msgid ""
 "It also removes the need to reload any weapons that require reloading, like "
@@ -2844,7 +2845,7 @@ msgstr ""
 msgid "Flight"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/inferno.qc:23
+#: qcsrc/common/mutators/mutator/buffs/buff/inferno.qc:69
 #, c-format
 msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
@@ -2880,7 +2881,7 @@ msgstr ""
 msgid "Luck"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/magnet.qc:30
+#: qcsrc/common/mutators/mutator/buffs/buff/magnet.qc:37
 #, c-format
 msgid ""
 "The %s buff increases your item pickup range, collecting nearby items for "
@@ -2891,7 +2892,7 @@ msgstr ""
 msgid "Magnet"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:28
+#: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:36
 #, c-format
 msgid ""
 "The %s buff increases health regeneration speed, increases the maximum "
@@ -2899,7 +2900,7 @@ msgid ""
 "speed until the buff expires."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:29
+#: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:37
 msgid ""
 "It also gives you a chance to survive a fatal hit, with a small amount of "
 "health left over."
@@ -2909,12 +2910,12 @@ msgstr ""
 msgid "Medic"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:14
+#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:22
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:15
+#: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:23
 msgid "This also impacts the damage you deal to yourself."
 msgstr ""
 
@@ -2922,19 +2923,19 @@ msgstr ""
 msgid "Resistance"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:86
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:92
 #, c-format
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:87
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:93
 msgid ""
 "A common usage of this buff is to jump over the map's void, then swap with "
 "an enemy, to cause them to fall into the void."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:88
+#: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:94
 msgid ""
 "The range that the buff works over is limited, so sometimes it may do "
 "nothing if there are no enemies nearby."
@@ -2944,15 +2945,15 @@ msgstr ""
 msgid "Swapper"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:26
+#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:30
 #, c-format
 msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:27
-#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:25
+#: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:31
+#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:28
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
 msgstr ""
@@ -2963,7 +2964,7 @@ msgstr ""
 msgid "Vampire"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:24
+#: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:27
 #, c-format
 msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
@@ -3005,11 +3006,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:32
 msgid "Font size minimum:"
-msgstr ""
+msgstr "Минималды қаріп өлшемі:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:37
 msgid "Font size maximum:"
-msgstr ""
+msgstr "Максималды қаріп өлшемі:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:42
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
@@ -3018,7 +3019,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
 #: qcsrc/menu/xonotic/util.qc:746
 msgid "Color:"
-msgstr ""
+msgstr "Түсі:"
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:49
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:33
@@ -3118,7 +3119,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/hook/hook.qc:12
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:12
-#: qcsrc/common/weapons/weapon/hook.qc:419
+#: qcsrc/common/weapons/weapon/hook.qc:402
 msgid "hook"
 msgstr ""
 
@@ -3210,7 +3211,7 @@ msgstr ""
 msgid "^3nades^8 are enabled, press ^3%s^8 to use them"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:80
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:83
 #, c-format
 msgid ""
 "The %s detonates after a short delay, temporarily creating an orb around the "
@@ -3219,7 +3220,7 @@ msgid ""
 "ammo."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:82
+#: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:85
 #, c-format
 msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
@@ -3230,14 +3231,14 @@ msgstr ""
 msgid "Ammo grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:142
+#: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:148
 #, c-format
 msgid ""
 "The %s detonates after a short delay, creating a dark field which "
 "temporarily blinds enemies who enter it."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:143
+#: qcsrc/common/mutators/mutator/nades/nade/darkness.qc:149
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qc:55
 #, c-format
 msgid "This is sort of the opposite of the %s."
@@ -3259,7 +3260,7 @@ msgstr ""
 msgid "Entrap grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/heal.qc:64
+#: qcsrc/common/mutators/mutator/nades/nade/heal.qc:62
 #, c-format
 msgid ""
 "The %s detonates after a short delay, temporarily creating a healing orb "
@@ -3272,7 +3273,7 @@ msgstr ""
 msgid "Heal grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/ice.qc:118
+#: qcsrc/common/mutators/mutator/nades/nade/ice.qc:125
 #, c-format
 msgid ""
 "The %s detonates after a short delay, freezing any enemies who walk within "
@@ -3295,7 +3296,7 @@ msgstr ""
 msgid "Monster grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/napalm.qc:176
+#: qcsrc/common/mutators/mutator/nades/nade/napalm.qc:148
 #, c-format
 msgid ""
 "The %s detonates after a short delay, spreading fiery napalm globs around in "
@@ -3323,7 +3324,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qh:11
-#: qcsrc/common/mutators/mutator/nades/nades.qh:17
+#: qcsrc/common/mutators/mutator/nades/nades.qh:18
 msgid "Grenade"
 msgstr "Граната"
 
@@ -3339,19 +3340,19 @@ msgstr ""
 msgid "Spawn grenade"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:51
+#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:58
 #, c-format
 msgid ""
 "The %s detonates after a short delay, teleporting you to where it detonated."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:52
+#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:59
 msgid ""
 "A common use of this nade is saving yourself from the void in space maps, "
 "however mastering this is very tricky."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:53
+#: qcsrc/common/mutators/mutator/nades/nade/translocate.qc:60
 msgid ""
 "If this grenade is destroyed by an attacker, it will deal some damage to "
 "them."
@@ -3393,7 +3394,7 @@ msgstr ""
 msgid "This mutator is enabled by default in %s."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:83 qcsrc/common/util.qc:329
+#: qcsrc/common/mutators/mutator/nades/nades.qh:84 qcsrc/common/util.qc:329
 #: qcsrc/menu/xonotic/guide/guide.qh:16
 msgid "Nades"
 msgstr ""
@@ -3421,7 +3422,7 @@ msgstr ""
 #: qcsrc/common/util.qc:308
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
 msgid "New Toys"
-msgstr ""
+msgstr "Жаңа қарулар"
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -3434,7 +3435,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:309
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
 msgid "NIX"
-msgstr ""
+msgstr "NIX"
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -3475,7 +3476,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:174
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:169
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:358
-#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:255
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:256
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qc:130
 #, c-format
 msgid ""
@@ -3484,7 +3485,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:175
-#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:256
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:257
 msgid ""
 "It is a superweapon found on some maps, meaning that it breaks down after "
 "some time."
@@ -3549,7 +3550,7 @@ msgstr ""
 msgid "Overkill Nex"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:254
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:255
 #, c-format
 msgid ""
 "As the name suggests, the %s is a superweapon that fires a rocket propelled "
@@ -3557,14 +3558,14 @@ msgid ""
 "players close by."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:257
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:258
 #, c-format
 msgid ""
 "The primary fire consumes %s ammo, although you spawn with an infinite "
 "amount of it in %s."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:258
+#: qcsrc/common/mutators/mutator/overkill/okrpc.qc:259
 #, c-format
 msgid ""
 "Since it is the only %s weapon which deals splash damage, the %s is a good "
@@ -3619,10 +3620,10 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:21
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:54
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qc:58
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:40
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:56
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qc:60
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:44
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:62
 msgid "Since it is a powerup, it will drop if you die while holding it."
 msgstr ""
 
@@ -3634,7 +3635,7 @@ msgstr ""
 msgid "Fuel regen"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:52
+#: qcsrc/common/mutators/mutator/powerups/powerup/invisibility.qc:54
 #, c-format
 msgid ""
 "The %s powerup increases your translucency while the powerup is active, "
@@ -3670,7 +3671,7 @@ msgstr ""
 msgid "Jetpack"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qc:56
+#: qcsrc/common/mutators/mutator/powerups/powerup/shield.qc:58
 #, c-format
 msgid ""
 "The %s powerup greatly decreases the damage you take until the powerup "
@@ -3684,7 +3685,7 @@ msgstr ""
 msgid "Shield"
 msgstr "Қалқан"
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:38
+#: qcsrc/common/mutators/mutator/powerups/powerup/speed.qc:42
 #, c-format
 msgid ""
 "The %s powerup increases your movement speed, attack speed, and health "
@@ -3699,20 +3700,20 @@ msgstr ""
 msgid "Speed"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:56
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
 #, c-format
 msgid ""
 "The %s powerup greatly increases the damage you deal, until the powerup "
 "expires. It also increases the knockback that your attacks deal."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:58
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
 msgid ""
 "The damage and knockback you deal to yourself also increases but by a "
 "smaller amount."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:59
+#: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:61
 #, c-format
 msgid ""
 "The %s is one of the most sought after items on a map due to its ability to "
@@ -3750,7 +3751,7 @@ msgstr ""
 msgid "Spawn Shield"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:16
+#: qcsrc/common/mutators/mutator/status_effects/status_effect/stunned.qh:13
 msgid "Stunned"
 msgstr ""
 
@@ -3791,14 +3792,14 @@ msgid ""
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/walljump/walljump.qc:81
+#: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
 #, c-format
 msgid ""
 "%s is a mutator that enables jumping off walls for added mobility. To do a "
 "wall jump, tap %s when against a wall."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
+#: qcsrc/common/mutators/mutator/walljump/walljump.qc:85
 msgid ""
 "This mutator adds a bit of versatility, allowing for more dynamic and "
 "unpredictable movement."
@@ -4085,37 +4086,37 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:258
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
-msgstr ""
+msgstr "^TC^TT^BG жалауы базаға қайтарылды"
 
 #: qcsrc/common/notifications/all.inc:259
 msgid "^BGThe flag has returned to the base"
-msgstr ""
+msgstr "^BGЖалау базаға қайтарылды"
 
 #: qcsrc/common/notifications/all.inc:260
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT^BG жалауды жоғалтты"
 
 #: qcsrc/common/notifications/all.inc:261
 #, c-format
 msgid "^BG%s^BG lost the flag"
-msgstr ""
+msgstr "^BG%s^BG жалауды жоғалтты"
 
 #: qcsrc/common/notifications/all.inc:262
 #, c-format
 msgid "^BG%s^BG got the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT^BG жалауды алды"
 
 #: qcsrc/common/notifications/all.inc:263
 #, c-format
 msgid "^BG%s^BG got the flag"
-msgstr ""
+msgstr "^BG%s^BG жалауды алды"
 
 #: qcsrc/common/notifications/all.inc:264
 #: qcsrc/common/notifications/all.inc:265
 #, c-format
 msgid "^BG%s^BG returned the ^TC^TT^BG flag"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT^BG жалауды қайтарды"
 
 #: qcsrc/common/notifications/all.inc:267
 #: qcsrc/common/notifications/all.inc:578
@@ -4664,13 +4665,13 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:379
 #: qcsrc/common/notifications/all.inc:714
 msgid "^TC^TT^BG team wins the round"
-msgstr ""
+msgstr "^TC^TT^BG командасы раундта жеңіске жетті"
 
 #: qcsrc/common/notifications/all.inc:380
 #: qcsrc/common/notifications/all.inc:715
 #, c-format
 msgid "^BG%s^BG wins the round"
-msgstr ""
+msgstr "^BG%s^BG раундта жеңіске жетті"
 
 #: qcsrc/common/notifications/all.inc:381
 #: qcsrc/common/notifications/all.inc:573
@@ -4680,7 +4681,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:382
 #: qcsrc/common/notifications/all.inc:574
 msgid "^BGRound over, there's no winner"
-msgstr ""
+msgstr "^BGРаунд бітті, жеңіскер жоқ"
 
 #: qcsrc/common/notifications/all.inc:384
 #, c-format
@@ -4767,13 +4768,13 @@ msgstr "^BG%s^F3 енді ^TC^TT командада ойнап жатыр"
 
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
-msgid "^K1You may only spectate or observe at this time."
+msgid "^K1You may only spectate at this time."
 msgstr ""
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
 msgid "^BG%s^F3 wants to play on the ^TC^TT team"
-msgstr ""
+msgstr "^BG%s^F3 ^TC^TT^BG командасында ойнағысы келеді"
 
 #: qcsrc/common/notifications/all.inc:404
 #, c-format
@@ -4795,17 +4796,17 @@ msgstr "^BG%s^BG допты алды!"
 #: qcsrc/common/notifications/all.inc:409
 #, c-format
 msgid "^BG%s^BG captured the keys for the ^TC^TT team"
-msgstr "^BG%s^BG ^TC^TT командасында ойнағысы келеді"
+msgstr ""
 
 #: qcsrc/common/notifications/all.inc:410
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr "^BG%s^BG ^TC^TT кілтті түсірді"
+msgstr "^BG%s^BG ^TC^TT кілтті^BG түсірді"
 
 #: qcsrc/common/notifications/all.inc:411
 #, c-format
 msgid "^BG%s^BG lost the ^TC^TT Key"
-msgstr "^BG%s^BG ^TC^TT кілтті жоғалтты"
+msgstr "^BG%s^BG ^TC^TT кілтті^BG жоғалтты"
 
 #: qcsrc/common/notifications/all.inc:412
 #, c-format
@@ -4820,12 +4821,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:414
 #, c-format
 msgid "^BG%s^BG picked up the ^TC^TT Key"
-msgstr "^BG%s^BG ^TC^TT кілтті алды"
+msgstr "^BG%s^BG ^TC^TT^BG кілтті алды"
 
 #: qcsrc/common/notifications/all.inc:416
 #, c-format
 msgid "^BG%s^F3 has no more lives left"
-msgstr ""
+msgstr "^BG%s-да^F3 енді өмірлер жоқ"
 
 #: qcsrc/common/notifications/all.inc:418
 msgid "^BGMonsters are currently disabled"
@@ -5393,15 +5394,15 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:560
 msgid "^F4You are now alone!"
-msgstr ""
+msgstr "^F4Енді сіз жалғыз қалдыңыз!"
 
 #: qcsrc/common/notifications/all.inc:562
 msgid "^BGYou are attacking!"
-msgstr ""
+msgstr "^BGСіз шабуыл жасайсыз!"
 
 #: qcsrc/common/notifications/all.inc:563
 msgid "^BGYou are defending!"
-msgstr ""
+msgstr "^BGСіз қорғайсыз!"
 
 #: qcsrc/common/notifications/all.inc:564
 #, c-format
@@ -5566,22 +5567,22 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:608
 #, c-format
 msgid "^BGYour %steammate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BG%sКомандаласыңыз^BG ^TC^TT^BG жалауын алды! Оны қорғаңыз!"
 
 #: qcsrc/common/notifications/all.inc:609
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BG%sКомандаласыңыз (^BG%s%s)^BG ^TC^TT^BG жалауын алды! Оны қорғаңыз!"
 
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
 msgid "^BGYour %steammate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BG%sКомандаласыңыз^BG жалауды алып кетті! Оны қорғаңыз!"
 
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BG%sКомандаласыңыз (^BG%s%s)^BG жалауды алып кетті! Оны қорғаңыз!"
 
 #: qcsrc/common/notifications/all.inc:612
 #: qcsrc/common/notifications/all.inc:759
@@ -5594,11 +5595,11 @@ msgstr "^BGСіз ^TC^TT^BG жалауды қайтардыңыз!"
 
 #: qcsrc/common/notifications/all.inc:614
 msgid "^BGStalemate! Enemies can now see you on radar!"
-msgstr ""
+msgstr "^BGЛажсыз жағдай! Қарсыластар енді сізді радарда көре алады!"
 
 #: qcsrc/common/notifications/all.inc:615
 msgid "^BGStalemate! Flag carriers can now be seen by enemies on radar!"
-msgstr ""
+msgstr "^BGЛажсыз жағдай! Жалаушашыларды енді қарсыластар радарда көре алады!"
 
 #: qcsrc/common/notifications/all.inc:619
 #, c-format
@@ -6027,7 +6028,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:748
 msgid "^BGYou picked up the ball"
-msgstr ""
+msgstr "^BGСіз допты алдыңыз"
 
 #: qcsrc/common/notifications/all.inc:749
 msgid "^BGGet the ball to score points for frags!"
@@ -6630,14 +6631,14 @@ msgstr ""
 msgid "Turret"
 msgstr ""
 
-#: qcsrc/common/turrets/turret/ewheel.qc:252
+#: qcsrc/common/turrets/turret/ewheel.qc:255
 #, c-format
 msgid ""
 "The %s is a mobile turret that rolls around, attacking its targets when they "
 "enter its line of sight."
 msgstr ""
 
-#: qcsrc/common/turrets/turret/ewheel.qc:253
+#: qcsrc/common/turrets/turret/ewheel.qc:256
 #, c-format
 msgid ""
 "It attacks by shooting laser beams similar to those of the %s, from both of "
@@ -6847,12 +6848,12 @@ msgstr ""
 msgid "Tesla Coil"
 msgstr ""
 
-#: qcsrc/common/turrets/turret/walker.qc:649
+#: qcsrc/common/turrets/turret/walker.qc:653
 #, c-format
 msgid "The %s is an arachnid-like walking turret that hunts down its targets."
 msgstr ""
 
-#: qcsrc/common/turrets/turret/walker.qc:650
+#: qcsrc/common/turrets/turret/walker.qc:654
 #, c-format
 msgid ""
 "It has two weapons, both a machinegun like the %s for medium range combat, "
@@ -7481,27 +7482,27 @@ msgstr ""
 msgid "The combo adds an extra %s damage"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qc:1446
+#: qcsrc/common/weapons/weapon/arc.qc:1437
 #, c-format
 msgid ""
 "The %s fires a continuous beam of electricity, steadily dealing damage to "
 "any enemies that cross its path."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qc:1447
+#: qcsrc/common/weapons/weapon/arc.qc:1438
 msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qc:1448
+#: qcsrc/common/weapons/weapon/arc.qc:1439
 #, c-format
 msgid ""
 "It consumes %s ammo, steadily churning through your supply to maintain the "
 "stream."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/arc.qc:1449
+#: qcsrc/common/weapons/weapon/arc.qc:1440
 #, c-format
 msgid ""
 "The %s is quite a versatile weapon, however it is more effective at close to "
@@ -7553,7 +7554,7 @@ msgstr ""
 msgid "Blaster"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/crylink.qc:613
+#: qcsrc/common/weapons/weapon/crylink.qc:619
 #, c-format
 msgid ""
 "The %s fires bursts of laser-like projectiles, spreading out as they travel "
@@ -7563,33 +7564,33 @@ msgid ""
 "converge on them."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/crylink.qc:616
+#: qcsrc/common/weapons/weapon/crylink.qc:622
 msgid ""
 "Projectiles deal damage on collision but also when they bounce, so with good "
 "positioning they can sometimes deal double damage."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/crylink.qc:617
+#: qcsrc/common/weapons/weapon/crylink.qc:623
 msgid ""
 "The secondary fire shoots the projectiles together in a tight group, so it "
 "is often the better option in situations where the enemy is an easy target "
 "to hit."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/crylink.qc:618
+#: qcsrc/common/weapons/weapon/crylink.qc:624
 #, c-format
 msgid ""
 "It consumes %s ammo for each projectile, which is shared by several weapons."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/crylink.qc:619
+#: qcsrc/common/weapons/weapon/crylink.qc:625
 #, c-format
 msgid ""
 "Close to medium range is the ideal time to use the %s, although the "
 "secondary fire can be useful for long range combat sometimes."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/crylink.qc:620
+#: qcsrc/common/weapons/weapon/crylink.qc:626
 #, c-format
 msgid ""
 "The %s deals knockback in a unique way, pulling the player from their center "
@@ -7604,7 +7605,7 @@ msgstr ""
 msgid "Crylink"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/devastator.qc:587
+#: qcsrc/common/weapons/weapon/devastator.qc:593
 #, c-format
 msgid ""
 "The %s launches a remote controlled rocket, dealing significant damage when "
@@ -7612,21 +7613,21 @@ msgid ""
 "by the user's aim, allowing steering it towards enemies."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/devastator.qc:589
+#: qcsrc/common/weapons/weapon/devastator.qc:595
 msgid ""
 "The secondary fire can be used to immediately detonate rockets, allowing "
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/devastator.qc:590
+#: qcsrc/common/weapons/weapon/devastator.qc:596
 #, c-format
 msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/devastator.qc:591
+#: qcsrc/common/weapons/weapon/devastator.qc:597
 #, c-format
 msgid ""
 "Due to its high damage output, the %s is one of the most commonly used "
@@ -7635,7 +7636,7 @@ msgid ""
 "rockets damaging both you and your enemy."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/devastator.qc:594
+#: qcsrc/common/weapons/weapon/devastator.qc:600
 #, c-format
 msgid ""
 "Due to the ability to remotely detonate rockets, a common usage is \"rocket "
@@ -7647,14 +7648,14 @@ msgstr ""
 msgid "Devastator"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/electro.qc:761
+#: qcsrc/common/weapons/weapon/electro.qc:742
 #, c-format
 msgid ""
 "The %s shoots electric balls forwards, dealing some splash damage when they "
 "burst on impact."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/electro.qc:762
+#: qcsrc/common/weapons/weapon/electro.qc:743
 #, c-format
 msgid ""
 "The secondary fire launches orbs that are influenced by gravity, so they can "
@@ -7663,12 +7664,12 @@ msgid ""
 "forced to burst in a \"combo\" if a primary fire ball bursts near them."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/electro.qc:765
+#: qcsrc/common/weapons/weapon/electro.qc:746
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/electro.qc:766
+#: qcsrc/common/weapons/weapon/electro.qc:747
 #, c-format
 msgid ""
 "The %s is one of the best spam weapons to use in crowded areas, since combos "
@@ -7681,28 +7682,28 @@ msgstr ""
 msgid "Electro"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:449
+#: qcsrc/common/weapons/weapon/fireball.qc:401
 #, c-format
 msgid ""
 "The %s supercharges then fires a massive fireball in a straight line, "
 "dealing heaps of splash damage over a large radius on impact."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:450
+#: qcsrc/common/weapons/weapon/fireball.qc:402
 msgid ""
 "The secondary fire launches flaming balls that set nearby players alight."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:451
+#: qcsrc/common/weapons/weapon/fireball.qc:403
 msgid "It is a superweapon, so isn't often found in game."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:452
+#: qcsrc/common/weapons/weapon/fireball.qc:404
 #: qcsrc/common/weapons/weapon/porto.qc:423
 msgid "It doesn't require ammo, but it is destroyed after some time."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/fireball.qc:453
+#: qcsrc/common/weapons/weapon/fireball.qc:405
 #, c-format
 msgid ""
 "Since the %s takes a moment to charge and the fireball travels slowly, using "
@@ -7747,34 +7748,34 @@ msgstr ""
 msgid "Hagar"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hlac.qc:245
+#: qcsrc/common/weapons/weapon/hlac.qc:246
 #, c-format
 msgid ""
 "The %s (or HLAC for short) fires lasers in quick succession. The projectiles "
 "it fires are similar to those of the %s."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hlac.qc:247
+#: qcsrc/common/weapons/weapon/hlac.qc:248
 msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hlac.qc:248
+#: qcsrc/common/weapons/weapon/hlac.qc:249
 #, c-format
 msgid ""
 "Unlike the %s, it consumes %s ammo for each laser shot, meaning that it "
 "cannot be used infinitely."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hlac.qc:249
+#: qcsrc/common/weapons/weapon/hlac.qc:250
 #, c-format
 msgid ""
 "The %s works best in close ranges, but the primary fire is also useful in "
 "medium ranges."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hlac.qc:250
+#: qcsrc/common/weapons/weapon/hlac.qc:251
 #, c-format
 msgid ""
 "A unique aspect of the %s is that the longer the primary fire is held, the "
@@ -7787,27 +7788,27 @@ msgstr ""
 msgid "Heavy Laser Assault Cannon"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:414
+#: qcsrc/common/weapons/weapon/hook.qc:397
 #, c-format
 msgid ""
 "The %s is a unique weapon, firing a chain forwards which pulls you in once "
 "it latches onto something."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:415
+#: qcsrc/common/weapons/weapon/hook.qc:398
 msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:416
+#: qcsrc/common/weapons/weapon/hook.qc:399
 #, c-format
 msgid ""
 "It usually requires %s ammo to work, consuming it both when initially firing "
 "the hook, and after a couple seconds as it reels you in."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:417
+#: qcsrc/common/weapons/weapon/hook.qc:400
 #, c-format
 msgid ""
 "The %s allows reaching previously unreachable places on maps and zooming "
@@ -7815,7 +7816,7 @@ msgid ""
 "escapes possible."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/hook.qc:419
+#: qcsrc/common/weapons/weapon/hook.qc:402
 #, c-format
 msgid ""
 "It isn't available very often on maps, unless the %s mutator is active, in "
@@ -7854,7 +7855,7 @@ msgstr ""
 msgid "MachineGun"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/minelayer.qc:553
+#: qcsrc/common/weapons/weapon/minelayer.qc:561
 #, c-format
 msgid ""
 "The %s places mines on the ground when fired, which detonate and damage "
@@ -7862,18 +7863,18 @@ msgid ""
 "after some time they will self-detonate."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/minelayer.qc:555
+#: qcsrc/common/weapons/weapon/minelayer.qc:563
 msgid ""
 "Uniquely, the mines explode sooner the closer an enemy comes to them. The "
 "secondary fire can be used to detonate all mines placed by the primary fire."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/minelayer.qc:557
+#: qcsrc/common/weapons/weapon/minelayer.qc:565
 #, c-format
 msgid "It consumes %s ammo for each mine laid."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/minelayer.qc:558
+#: qcsrc/common/weapons/weapon/minelayer.qc:566
 #, c-format
 msgid ""
 "The mines are not launched very far before they hit the ground, so the %s "
@@ -7989,7 +7990,7 @@ msgstr ""
 msgid "Rifle"
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/seeker.qc:681
+#: qcsrc/common/weapons/weapon/seeker.qc:632
 #, c-format
 msgid ""
 "The %s is a unique weapon, firing a \"tag\" which then launches a few homing "
@@ -7997,18 +7998,18 @@ msgid ""
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/seeker.qc:683
+#: qcsrc/common/weapons/weapon/seeker.qc:634
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/seeker.qc:684
+#: qcsrc/common/weapons/weapon/seeker.qc:635
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/seeker.qc:685
+#: qcsrc/common/weapons/weapon/seeker.qc:636
 #, c-format
 msgid ""
 "The %s primary fire deals quite a lot of damage when a tag lands, although "
@@ -8134,202 +8135,202 @@ msgstr ""
 #: qcsrc/lib/counting.qh:9
 #, c-format
 msgid "CI_DEC^%s years"
-msgstr ""
+msgstr "%s жыл"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr ""
+msgstr "%d жыл"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr ""
+msgstr "%d жыл"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr ""
+msgstr "%d жыл"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "CI_THI^%d years"
-msgstr ""
+msgstr "%d жыл"
 
 #: qcsrc/lib/counting.qh:16
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr ""
+msgstr "%d жыл"
 
 #: qcsrc/lib/counting.qh:18
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr ""
+msgstr "%s апта"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr ""
+msgstr "%d апта"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr ""
+msgstr "%d апта"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr ""
+msgstr "%d апта"
 
 #: qcsrc/lib/counting.qh:24
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr ""
+msgstr "%d апта"
 
 #: qcsrc/lib/counting.qh:25
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr ""
+msgstr "%d апта"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr ""
+msgstr "%s күн"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr ""
+msgstr "%d күн"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr ""
+msgstr "%d күн"
 
 #: qcsrc/lib/counting.qh:32
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr ""
+msgstr "%d күн"
 
 #: qcsrc/lib/counting.qh:33
 #, c-format
 msgid "CI_THI^%d days"
-msgstr ""
+msgstr "%d күн"
 
 #: qcsrc/lib/counting.qh:34
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr ""
+msgstr "%d күн"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr ""
+msgstr "%s сағат"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr ""
+msgstr "%d сағат"
 
 #: qcsrc/lib/counting.qh:40
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr ""
+msgstr "%d сағат"
 
 #: qcsrc/lib/counting.qh:41
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr ""
+msgstr "%d сағат"
 
 #: qcsrc/lib/counting.qh:42
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr ""
+msgstr "%d сағат"
 
 #: qcsrc/lib/counting.qh:43
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr ""
+msgstr "%d сағат"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr ""
+msgstr "%s минут"
 
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr ""
+msgstr "%d минут"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr ""
+msgstr "%d минут"
 
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr ""
+msgstr "%d минут"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr ""
+msgstr "%d минут"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr ""
+msgstr "%d минут"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr ""
+msgstr "%s секунд"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr ""
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr ""
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr ""
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr ""
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "CI_MUL^%d seconds"
-msgstr ""
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:78
 #, c-format
 msgid "%dst"
-msgstr ""
+msgstr "%d-ші"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "%dnd"
-msgstr ""
+msgstr "%d-ші"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "%drd"
-msgstr ""
+msgstr "%d-ші"
 
 #: qcsrc/lib/counting.qh:83
 #, c-format
 msgid "%dth"
-msgstr ""
+msgstr "%d-ші"
 
 #: qcsrc/lib/oo.qh:350
 msgid "No description"
@@ -8470,11 +8471,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:144
 msgid "Compiler"
-msgstr ""
+msgstr "Компилятор"
 
 #: qcsrc/menu/xonotic/credits.qc:151
 msgid "Translators"
-msgstr ""
+msgstr "Аудармашылар"
 
 #: qcsrc/menu/xonotic/credits.qc:153
 msgid "Asturian"
@@ -8490,15 +8491,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:174
 msgid "Chinese (China)"
-msgstr ""
+msgstr "Қытайша (Қытай)"
 
 #: qcsrc/menu/xonotic/credits.qc:191
 msgid "Chinese (Hong Kong)"
-msgstr ""
+msgstr "Қытайша (Гонконг)"
 
 #: qcsrc/menu/xonotic/credits.qc:204
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "Қытайша (Тайвань)"
 
 #: qcsrc/menu/xonotic/credits.qc:223
 msgid "Czech"
@@ -8510,11 +8511,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:247
 msgid "English (Australia)"
-msgstr ""
+msgstr "Ағылшынша (Австралия)"
 
 #: qcsrc/menu/xonotic/credits.qc:255
 msgid "English (United Kingdom)"
-msgstr ""
+msgstr "Ағылшынша (Ұлыбритания)"
 
 #: qcsrc/menu/xonotic/credits.qc:259
 msgid "Finnish"
@@ -8554,11 +8555,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:351
 msgid "Japanese"
-msgstr ""
+msgstr "Жапонша"
 
 #: qcsrc/menu/xonotic/credits.qc:360
 msgid "Kazakh"
-msgstr ""
+msgstr "Қазақша"
 
 #: qcsrc/menu/xonotic/credits.qc:363
 msgid "Korean"
@@ -8586,7 +8587,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:432
 msgid "Russian"
-msgstr ""
+msgstr "Орысша"
 
 #: qcsrc/menu/xonotic/credits.qc:458
 msgid "Serbian"
@@ -8652,7 +8653,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:84
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: qcsrc/menu/xonotic/dialog_credits.qh:7
 msgid "Credits"
@@ -8719,26 +8720,26 @@ msgstr "Қосылу"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:20
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:28
 msgid "Restart level"
-msgstr ""
+msgstr "Деңгейді қайта ойнау"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:46
 msgid "Main menu"
-msgstr ""
+msgstr "Негізгі меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:13
 msgid "Servers"
-msgstr ""
+msgstr "Серверлер"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:53
 #: qcsrc/menu/xonotic/dialog_multiplayer.qc:17
 msgid "Profile"
-msgstr ""
+msgstr "Профиль"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:56
 #: qcsrc/menu/xonotic/dialog_settings.qh:6
 msgid "Settings"
-msgstr ""
+msgstr "Баптаулар"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:59
 #: qcsrc/menu/xonotic/dialog_settings.qc:22
@@ -8752,7 +8753,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:64
 msgid "Quick menu"
-msgstr ""
+msgstr "Жылдам меню"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:69
 #: qcsrc/menu/xonotic/dialog_welcome.qc:133
@@ -9612,19 +9613,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_media.qc:13
 msgid "Demos"
-msgstr ""
+msgstr "Демолар"
 
 #: qcsrc/menu/xonotic/dialog_media.qc:14
 msgid "Screenshots"
-msgstr ""
+msgstr "Скриншоттар"
 
 #: qcsrc/menu/xonotic/dialog_media.qc:15
 msgid "Music Player"
-msgstr ""
+msgstr "Музыка плеері"
 
 #: qcsrc/menu/xonotic/dialog_media.qh:6
 msgid "Media"
-msgstr ""
+msgstr "Медиа"
 
 #: qcsrc/menu/xonotic/dialog_media.qh:8
 msgid ""
@@ -9739,15 +9740,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:144
 msgid "Previous"
-msgstr ""
+msgstr "Алдыңғы"
 
 #: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:147
 msgid "Next"
-msgstr ""
+msgstr "Келесі"
 
 #: qcsrc/menu/xonotic/dialog_media_screenshot_viewer.qc:152
 msgid "Slide show"
-msgstr ""
+msgstr "Слайдшоу"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:13
 msgid "Monster:"
@@ -9828,15 +9829,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
 msgid "Gametype"
-msgstr ""
+msgstr "Ойын түрі"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
 msgid "Show all"
-msgstr ""
+msgstr "Барлығын көрсету"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
 msgid "Show all available gametypes"
-msgstr ""
+msgstr "Барлық қолжетімді ойын түрлерін көрсету"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
 msgid "Time limit:"
@@ -9856,45 +9857,46 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
 msgid "Teams:"
-msgstr ""
+msgstr "Командалар:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "2 teams"
-msgstr ""
+msgstr "2 команда"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "3 teams"
-msgstr ""
+msgstr "3 команда"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
 msgid "4 teams"
-msgstr ""
+msgstr "4 команда"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "Player slots:"
-msgstr ""
+msgstr "Ойыншы слоттары:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Серверге бірден қосыла алатын ойыншылардың немесе боттардың ең көп саны"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
-msgstr ""
+msgstr "Боттар саны:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
 msgid "Amount of bots on your server"
-msgstr ""
+msgstr "Сіздің серверіңізде боттар саны"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "Bot skill:"
-msgstr ""
+msgstr "Бот шеберлігі:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Specify how experienced the bots will be"
-msgstr ""
+msgstr "Боттардың қаншалықты тәжірибелі болатынын таңдау"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Botlike"
@@ -9951,39 +9953,39 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
 msgid "Maplist"
-msgstr ""
+msgstr "Карталар тізімі"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
 msgid "Add shown"
-msgstr ""
+msgstr "Көрсетілгенді қосу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:179
 msgid "Add the maps shown in the list to your selection"
-msgstr ""
+msgstr "Тізімде көрсетілген карталарды таңдауыңызға қосу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
 msgid "Remove shown"
-msgstr ""
+msgstr "Көрсетілгенді өшіру"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:183
 msgid "Remove the maps shown in the list from your selection"
-msgstr ""
+msgstr "Тізімде көрсетілген карталарды таңдауыңыздан өшіру"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Add all"
-msgstr ""
+msgstr "Барлығын қосу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
 msgid "Add every available map to your selection"
-msgstr ""
+msgstr "Тізімде көрсетілген барлық қолжетімді карталарды таңдауыңызға қосу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
 msgid "Remove all"
-msgstr ""
+msgstr "Барлығын өшіру"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:193
 msgid "Remove all the maps from your selection"
-msgstr ""
+msgstr "Тізімде көрсетілген барлық қолжетімді карталарды таңдауыңыздан өшіру"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Mutators..."
@@ -9995,32 +9997,32 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:212
 msgid "Start multiplayer!"
-msgstr ""
+msgstr "Мультиплеерді бастау!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:51
 msgid "Title:"
-msgstr ""
+msgstr "Аты:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:57
 msgid "Author:"
-msgstr ""
+msgstr "Авторы:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:63
 msgid "Gametypes:"
-msgstr ""
+msgstr "Ойын түрлері:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
 msgid "Close"
-msgstr ""
+msgstr "Жабу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:89
 msgid "MAP^Play"
-msgstr ""
+msgstr "Ойнау"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qh:7
 msgid "Map Information"
-msgstr ""
+msgstr "Карта ақпараты"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:74
 msgid "Gameplay mutators:"
@@ -10129,19 +10131,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
 msgid "Weapon arenas:"
-msgstr ""
+msgstr "Қарулар аренасы:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:176
 msgid "Custom weapons"
-msgstr ""
+msgstr "Өз қарулар"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:198
 msgid "Most weapons"
-msgstr ""
+msgstr "Көптеген қарулар"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
 msgid "All weapons"
-msgstr ""
+msgstr "Барлық қарулар"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:205
 msgid "Special arenas:"
@@ -10181,19 +10183,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:41
 msgid "SRVS^Empty"
-msgstr ""
+msgstr "Бос"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:42
 msgid "Show empty servers"
-msgstr ""
+msgstr "Бос серверлерді көрсету"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:46
 msgid "SRVS^Full"
-msgstr ""
+msgstr "Толық"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:47
 msgid "Show full servers that have no slots available"
-msgstr ""
+msgstr "Слоттар бос емес толық серверлерді көрсету"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:51
 msgid "SRVS^Laggy"
@@ -10205,25 +10207,27 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:58
 msgid "Reload the server list"
-msgstr ""
+msgstr "Сервер тізімін қайта жүктеу"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:61
 msgid "Pause"
-msgstr ""
+msgstr "Пауза"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:62
 msgid ""
 "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr ""
+"Серверлердің \"секіріп кетуіне\" жол бермеу үшін серверлер тізімін жаңартуды "
+"кідірту"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:74
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:29
 msgid "Address:"
-msgstr ""
+msgstr "Адрес:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:85
 msgid "Info..."
-msgstr ""
+msgstr "Ақпарат..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:86
 msgid "Show more information about the currently highlighted server"
@@ -10246,7 +10250,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
 msgid "Official"
-msgstr ""
+msgstr "Ресми"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:159
 msgid "N/A (auth library missing, can't connect)"
@@ -10309,7 +10313,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:213
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:214
 #: qcsrc/menu/xonotic/dialog_termsofservice.qh:11
@@ -10318,36 +10322,36 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qh:7
 msgid "Server Info"
-msgstr ""
+msgstr "Сервер ақпараты"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:23
 msgid "Hostname:"
-msgstr ""
+msgstr "Хост аты:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:47
 msgid "Mod:"
-msgstr ""
+msgstr "Мод:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:52
 msgid "Version:"
-msgstr ""
+msgstr "Версиясы:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:57
 msgid "Settings:"
-msgstr ""
+msgstr "Баптаулары:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:64
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:101
 msgid "Players:"
-msgstr ""
+msgstr "Ойыншылар:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:69
 msgid "Bots:"
-msgstr ""
+msgstr "Боттар:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:74
 msgid "Free slots:"
-msgstr ""
+msgstr "Бос слоттар:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:80
 msgid "Encryption:"
@@ -10372,7 +10376,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:23
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:20
 msgid "Apply immediately"
-msgstr ""
+msgstr "Дереу қолдану"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:78
 msgid "Model"
@@ -10540,19 +10544,19 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:17
 msgid "Video"
-msgstr ""
+msgstr "Видео"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:18
 msgid "Effects"
-msgstr ""
+msgstr "Эффекттер"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:19
 msgid "Audio"
-msgstr ""
+msgstr "Аудио"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:21
 msgid "Game"
-msgstr ""
+msgstr "Ойын"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:23
 msgid "User"
@@ -10624,39 +10628,39 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "8 kHz"
-msgstr ""
+msgstr "8 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:109
 msgid "11.025 kHz"
-msgstr ""
+msgstr "11.025 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "16 kHz"
-msgstr ""
+msgstr "16 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:111
 msgid "22.05 kHz"
-msgstr ""
+msgstr "22.05 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:112
 msgid "24 kHz"
-msgstr ""
+msgstr "24 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:113
 msgid "32 kHz"
-msgstr ""
+msgstr "32 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:114
 msgid "44.1 kHz"
-msgstr ""
+msgstr "44.1 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:115
 msgid "48 kHz"
-msgstr ""
+msgstr "48 кГц"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:119
 msgid "Channels:"
-msgstr ""
+msgstr "Каналдар:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:121
 msgid "Number of channels for the sound output"
@@ -10664,35 +10668,35 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:122
 msgid "Mono"
-msgstr ""
+msgstr "Моно"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:123
 msgid "Stereo"
-msgstr ""
+msgstr "Стерео"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:124
 msgid "2.1"
-msgstr ""
+msgstr "2.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:125
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:126
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:127
 msgid "5.1"
-msgstr ""
+msgstr "5.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:128
 msgid "6.1"
-msgstr ""
+msgstr "6.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:129
 msgid "7.1"
-msgstr ""
+msgstr "7.1"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:134
 msgid "Swap stereo output channels"
@@ -10742,11 +10746,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:158
 msgid "Chat message sound"
-msgstr ""
+msgstr "Чат хабарлама дауысы"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:160
 msgid "Menu sounds"
-msgstr ""
+msgstr "Меню дауыстары"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:161
 msgid "Play sounds when clicking menu items"
@@ -10754,7 +10758,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:162
 msgid "Focus sounds"
-msgstr ""
+msgstr "Фокус дауыстары"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:163
 msgid "Play sounds when hovering over menu items too"
@@ -10766,7 +10770,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:170
 msgid "WRN^Disabled"
-msgstr ""
+msgstr "WRN^Өшірулі"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:172
 msgid "WRN^Both"
@@ -11262,7 +11266,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:79
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:139
 msgid "Font size:"
-msgstr ""
+msgstr "Қаріп өлшемі:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:87
 msgid "Edge offset:"
@@ -11473,7 +11477,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qh:7
 msgid "Messages"
-msgstr ""
+msgstr "Хабарламалар"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 #: qcsrc/menu/xonotic/guide/guide.qh:13
@@ -11498,7 +11502,7 @@ msgstr "GHOITEMS^Қара"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:42
 msgid "GHOITEMS^Dark"
-msgstr "GHOITEMS^қараңғы"
+msgstr "GHOITEMS^Қараңғы"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:43
 msgid "GHOITEMS^Tinted"
@@ -11705,11 +11709,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:38
 msgid "Up"
-msgstr ""
+msgstr "Жоғары"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:42
 msgid "Down"
-msgstr ""
+msgstr "Төмен"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:49
 msgid "Use priority list for weapon cycling"
