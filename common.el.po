@@ -6,6 +6,7 @@
 # 77960155d0a4db79ed901e7c2ee242e7_4b8c532, 2016
 # aaa627661149cfc7c57d1c75ef650b07_039425b, 2018
 # Apostolos Mourelatos, 2026
+# Apostolos Mourelatos, 2026
 # Hector Champipis <hector-hab@hotmail.com>, 2019
 # 77960155d0a4db79ed901e7c2ee242e7_4b8c532, 2016
 # Vindex <kon14.inside@gmail.com>, 2014
@@ -151,7 +152,7 @@ msgstr "ρίξτε το όπλο"
 #: qcsrc/client/hud/panel/infomessages.qc:125
 #: qcsrc/menu/xonotic/keybinder.qc:74
 msgid "secondary fire"
-msgstr "Δευτερεύουσα λειτουργία όπλου "
+msgstr "Δεύτερη λειτουργία όπλου "
 
 #: qcsrc/client/hud/panel/infomessages.qc:127
 #, c-format
@@ -637,7 +638,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:132
 msgid "SCO^caps"
-msgstr ""
+msgstr "SCO^καταλήψεις"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^captime"
@@ -653,7 +654,7 @@ msgstr "Αριθμός θανάτων"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "SCO^deaths"
-msgstr ""
+msgstr "SCO^θάνατοι"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "Number of keys destroyed by pushing them into void"
@@ -661,7 +662,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:135
 msgid "SCO^destructions"
-msgstr ""
+msgstr "SCO^καταστροφές"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage dealt"
@@ -705,7 +706,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "Number of flag carrier kills"
-msgstr ""
+msgstr "Αριθμός φόνων σημαιοφόρου"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:141
 msgid "SCO^fckills"
@@ -713,11 +714,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^fps"
-msgstr ""
+msgstr "SCO^fps"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "Number of kills minus suicides"
@@ -725,7 +726,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:143
 msgid "SCO^frags"
-msgstr ""
+msgstr "SCO^Φράγκ"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:144
 msgid "Number of generators destroyed"
@@ -741,7 +742,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:145
 msgid "SCO^goals"
-msgstr "SCO^Γκολς"
+msgstr "SCO^Γκόλ"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:146
 msgid "Number of hunts (Survival)"
@@ -767,7 +768,7 @@ msgstr "SCO^k/d"
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 #: qcsrc/client/hud/panel/scoreboard.qc:150
 msgid "The kill-death ratio"
-msgstr "Η Αναλογία σκοτωμών-θάνατων"
+msgstr "Η Αναλογία φόνων-θάνατων"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^kdr"
@@ -779,7 +780,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "Number of kills"
-msgstr "Αριθμός σκοτωμών"
+msgstr "Αριθμός φόνων"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:151
 msgid "SCO^kills"
@@ -881,11 +882,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "Number of revivals"
-msgstr ""
+msgstr "Αριθμός αναστάσεων"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:164
 msgid "SCO^revivals"
-msgstr ""
+msgstr "SCO^αναστάσεις"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:165
 msgid "Number of rounds won"
@@ -1148,7 +1149,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2784
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Πέθανες, περίμενε ^3%s^7 πριν ξαναγεννηθείς"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2792
 #, c-format
@@ -1422,7 +1423,7 @@ msgstr ""
 
 #: qcsrc/client/view.qc:1020
 msgid "Revival progress"
-msgstr "Πρόοδος αναβίωσης"
+msgstr "Πρόοδος ανάστασης"
 
 #: qcsrc/common/command/generic.qc:156
 msgid "error creating curl handle"
@@ -1569,6 +1570,8 @@ msgid ""
 "Find and bring the enemy flag to your base to capture it, defend your base "
 "from the other team"
 msgstr ""
+"Βρές και φέρε την σημαία του εχθρού στην βάση σου για να την κατακτήσεις, "
+"προστάτεψε την βάση σου από την άλλη ομάδα "
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:29
 msgid "Capture limit:"
@@ -2205,11 +2208,11 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:95 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
-msgstr ""
+msgstr "Σφαίρα"
 
 #: qcsrc/common/items/item/ammo.qh:131 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
-msgstr ""
+msgstr "Πύραυλοι"
 
 #: qcsrc/common/items/item/ammo.qh:167 qcsrc/common/resources/all.inc:57
 msgid "Cells"
@@ -2273,7 +2276,7 @@ msgstr "Μεγάλη πανοπλία"
 
 #: qcsrc/common/items/item/armor.qh:200 qcsrc/common/items/item/armor.qh:211
 msgid "Mega armor"
-msgstr ""
+msgstr "Μεγάλη πανοπλία"
 
 #: qcsrc/common/items/item/health.qc:7
 #, c-format
@@ -2322,7 +2325,7 @@ msgstr "Μεγάλη ζωή"
 
 #: qcsrc/common/items/item/health.qh:199 qcsrc/common/items/item/health.qh:210
 msgid "Mega health"
-msgstr ""
+msgstr "Πολύ μεγάλη ζωή"
 
 #: qcsrc/common/mapinfo.qc:663
 #, no-c-format
@@ -4041,7 +4044,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
 msgid "^BG%s^BG captured the flag"
-msgstr "^BG%s^BG έπιασε την σημαία"
+msgstr "^BG%s^BG κατέλαβε την σημαία "
 
 #: qcsrc/common/notifications/all.inc:246
 #, c-format
@@ -4054,14 +4057,17 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break "
 "^BG%s^BG's previous record of ^F1%s^BG seconds"
 msgstr ""
+"Ο/Η ^BG%s^BG κατέλαβε την ^TC^TT^BG σημαία σε ^F2%s^BG δευτερόλεπτα, "
+"αποτυγχάνοντας να σπάσει το προηγούμενο ρεκόρ του/ης  ^BG%s^BG των ^F1%s^BG "
+"δευτερολέπτων "
 
 #: qcsrc/common/notifications/all.inc:248
 msgid "^BGThe ^TC^TT^BG flag was returned to base by its owner"
-msgstr ""
+msgstr "^BGΗ ^TC^TT^BG σημαία επέστρεψε στη βάση από τον ιδιοκτήτη της "
 
 #: qcsrc/common/notifications/all.inc:249
 msgid "^BGThe flag was returned by its owner"
-msgstr ""
+msgstr "^BGΗ σημαία επέστρεψε από τον ιδιοκτήτη της "
 
 #: qcsrc/common/notifications/all.inc:250
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
@@ -4777,12 +4783,12 @@ msgstr "^BG%s^F3 συνδέθηκε"
 #: qcsrc/common/notifications/all.inc:400
 #, c-format
 msgid "^BG%s^F3 is now playing"
-msgstr ""
+msgstr "Ο/Η ^BG%s^F3 Παίζει"
 
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr ""
+msgstr "Ο/Η ^BG%s^F3 παίζει στην ^TC^TT ομάδα"
 
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
@@ -5472,7 +5478,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:584
 msgid "^BGYou captured the flag!"
-msgstr "^BGYou Επίασες την σημαία!"
+msgstr "^BGΚατέλαβες την σημαία! "
 
 #: qcsrc/common/notifications/all.inc:585
 #, c-format
@@ -5619,7 +5625,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:619
 #, c-format
 msgid "^K3%sYou fragged ^BG%s"
-msgstr ""
+msgstr "^K3%sΦράγκαρες τον/ην ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:620
 #: qcsrc/common/notifications/all.inc:629
@@ -5631,7 +5637,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:621
 #, c-format
 msgid "^K1%sYou were fragged by ^BG%s"
-msgstr ""
+msgstr "^K1%sΣε φράγκαρε ο/η ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:622
 #: qcsrc/common/notifications/all.inc:631
@@ -5687,7 +5693,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:656
 msgid "^F2You got a ^K1BONUS GRENADE^F2!"
-msgstr ""
+msgstr "^F2Πήρες μια ^K1ΕΠΙΠΛΕΟΝ ΧΕΙΡΟΒΟΜΒΙΔΑ^F2!"
 
 #: qcsrc/common/notifications/all.inc:658
 #, c-format
@@ -5735,7 +5741,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1You fragged yourself!"
-msgstr ""
+msgstr "^K1Φράγκαρες τον ευατό σου!"
 
 #: qcsrc/common/notifications/all.inc:666
 msgid "^K1You need to be more careful!"
@@ -6587,7 +6593,7 @@ msgstr "Ομάδα"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
-msgstr ""
+msgstr "Ουδέτερη "
 
 #: qcsrc/common/teams.qh:39
 msgid "KEY^Red"
@@ -6607,7 +6613,7 @@ msgstr "KEY^Ρόζ"
 
 #: qcsrc/common/teams.qh:43
 msgid "FLAG^Red"
-msgstr "FLAG^Κόκκινο"
+msgstr "FLAG^Κόκκινη "
 
 #: qcsrc/common/teams.qh:44
 msgid "FLAG^Blue"
@@ -6615,7 +6621,7 @@ msgstr "FLAG^Μπλέ"
 
 #: qcsrc/common/teams.qh:45
 msgid "FLAG^Yellow"
-msgstr "FLAG^Κίτρινο"
+msgstr "FLAG^Κίτρινη "
 
 #: qcsrc/common/teams.qh:46
 msgid "FLAG^Pink"
@@ -10029,7 +10035,7 @@ msgstr "Δημιουργός:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:63
 msgid "Gametypes:"
-msgstr ""
+msgstr "Τύποι παιχνιδιού: "
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -13069,7 +13075,7 @@ msgstr "Ενταχθείτε αυτόματα σε ομάδα"
 
 #: qcsrc/menu/xonotic/keybinder.qc:169
 msgid "drop key/flag, exit vehicle"
-msgstr ""
+msgstr "απόθεση κλειδιού/σημαίας, έξοδος οχήματος "
 
 #: qcsrc/menu/xonotic/keybinder.qc:170
 msgid "suicide / respawn"

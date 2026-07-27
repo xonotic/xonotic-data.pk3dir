@@ -1165,12 +1165,12 @@ msgstr "Мапа:"
 #: qcsrc/client/hud/panel/scoreboard.qc:2739
 #, c-format
 msgid "Speed award: %d%s ^7(%s^7)"
-msgstr "Нагорода за швидкість: %d%s^7(%s^7)"
+msgstr "Нагорода за швидкість: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2743
 #, c-format
 msgid "All-time fastest: %d%s ^7(%s^7)"
-msgstr "Найшвидший за весь час: %d%s^7(%s^7)"
+msgstr "Рекорд швидкості за весь час: %d%s ^7(%s^7)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2775
 #, c-format

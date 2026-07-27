@@ -6,6 +6,7 @@
 # EnmarkOKAY, 2026
 # Mark Zhou, 2026
 # Mark Zhou, 2026
+# Mark Zhou, 2026
 # Артем Быстров, 2015-2016
 # Артем Быстров, 2016
 # Артём, 2015
@@ -281,7 +282,7 @@ msgstr "Ойыншы %d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:222
 msgid "Standard quick menu"
-msgstr ""
+msgstr "Стандарттық жылдам меню"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:653
 #: qcsrc/client/hud/panel/quickmenu.qc:655
@@ -519,12 +520,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 msgid "QMCMD^Fullscreen"
-msgstr ""
+msgstr "QMCMD^Толық экран"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 #: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "QMCMD^Call a vote"
-msgstr ""
+msgstr "QMCMD^Дауыс беру"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "QMCMD^Restart the map"
@@ -544,11 +545,11 @@ msgstr "QMCMD^Матчтың уақытты ұзарту"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "QMCMD^Shuffle teams"
-msgstr ""
+msgstr "QMCMD^Командаларды ауыстыру"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "Server quick menu"
-msgstr ""
+msgstr "Сервердің жылдам меню"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:919
 msgid "Waypoint editor menu"
@@ -560,7 +561,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:924
 msgid "Server quick menu as default"
-msgstr ""
+msgstr "Әдепкі бойынша сервердің жылдам менюсы"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "QMCMD^Spectate a player"
@@ -702,7 +703,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^fps"
@@ -801,7 +802,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 #: qcsrc/client/hud/panel/scoreboard.qc:156
 msgid "Player name"
-msgstr ""
+msgstr "Ойыншының аты"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:155
 msgid "SCO^name"
@@ -1137,19 +1138,19 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2784
 #, c-format
 msgid "You are dead, wait ^3%s^7 before respawning"
-msgstr ""
+msgstr "Сіз өлдіңіз, қайта пайда болмас бұрын ^3%s^7 күтіңіз"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2792
 #, c-format
 msgid "You are dead, press ^2%s^7 to respawn"
-msgstr ""
+msgstr "Сіз өлдіңіз, қайта пайда болу үшін ^2%s^7 басыңыз"
 
 #: qcsrc/client/hud/panel/strafehud/extra.qc:115
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:56
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:31
 #, c-format
 msgid "%s°"
-msgstr ""
+msgstr "%s°"
 
 #: qcsrc/client/hud/panel/strafehud/util.qc:101
 msgid "qu"
@@ -1177,36 +1178,36 @@ msgstr "Дайындық"
 
 #: qcsrc/client/hud/panel/timer.qc:160
 msgid "Warmup: too few players!"
-msgstr ""
+msgstr "Дайындық: ойыншылар тым аз!"
 
 #: qcsrc/client/hud/panel/timer.qc:162
 msgid "Warmup: teams unbalanced!"
-msgstr ""
+msgstr "Дайындық: командалар теңгерімсіз!"
 
 #: qcsrc/client/hud/panel/timer.qc:164
 msgid "Warmup: no time limit"
-msgstr ""
+msgstr "Дайындық: уақыт шектеусіз"
 
 #: qcsrc/client/hud/panel/timer.qc:168
 msgid "Timeout"
-msgstr ""
+msgstr "Тайм-аут"
 
 #: qcsrc/client/hud/panel/timer.qc:170
 msgid "Sudden Death"
-msgstr ""
+msgstr "Кенеттен өлім"
 
 #: qcsrc/client/hud/panel/timer.qc:172
 msgid "Overtime"
-msgstr ""
+msgstr "Қос. уақыт"
 
 #: qcsrc/client/hud/panel/timer.qc:174
 #, c-format
 msgid "Overtime #%d"
-msgstr ""
+msgstr "Қос. уақыт #%d"
 
 #: qcsrc/client/hud/panel/vote.qc:32
 msgid "^1You must answer before entering HUD configure mode"
-msgstr ""
+msgstr "^1HUD конфигурация режиміне кірмес бұрын жауап беруіңіз керек"
 
 #: qcsrc/client/hud/panel/vote.qc:35
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
@@ -1352,7 +1353,7 @@ msgstr ""
 #: qcsrc/client/main.qc:1412
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:37
 msgid "Gametype:"
-msgstr ""
+msgstr "Ойын түрі:"
 
 #: qcsrc/client/main.qc:1416
 msgid "by:"
@@ -1365,22 +1366,22 @@ msgstr ""
 #: qcsrc/client/main.qc:1422
 #, c-format
 msgid "%d players"
-msgstr ""
+msgstr "%d ойыншы"
 
 #: qcsrc/client/main.qc:1424
 #, c-format
 msgid "%d to %d players"
-msgstr ""
+msgstr "%d-тен %d-ге дейінгі ойыншылар"
 
 #: qcsrc/client/main.qc:1426
 #, c-format
 msgid "%d players maximum"
-msgstr ""
+msgstr "Максимум %d ойыншы"
 
 #: qcsrc/client/main.qc:1428
 #, c-format
 msgid "%d players minimum"
-msgstr ""
+msgstr "Минимум %d ойыншы"
 
 #: qcsrc/client/main.qc:1433
 msgid "Active modifications:"
@@ -9169,11 +9170,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qc:28
 msgid "Use the server's quickmenu"
-msgstr ""
+msgstr "Сервердің жылдам менюсын пайдалану"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_quickmenu.qh:6
 msgid "Quick Menu Panel"
-msgstr ""
+msgstr "Жылдам меню панелі"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.qh:6
 msgid "Race Timer Panel"
@@ -13053,7 +13054,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:171
 msgid "quick menu"
-msgstr ""
+msgstr "жылдам меню"
 
 #: qcsrc/menu/xonotic/keybinder.qc:173
 msgid "scoreboard user interface"
