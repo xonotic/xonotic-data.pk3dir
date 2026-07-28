@@ -1732,7 +1732,7 @@ msgstr "Бій Насмерть"
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
-msgstr "Захопіть якомога більше прапорів"
+msgstr "Наберіть якомога більше фрагів"
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:8
 #, c-format
@@ -5255,7 +5255,7 @@ msgstr "^BG%s^F3 зараз грає у ^TC^TT команді"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate at this time."
-msgstr ""
+msgstr "^K1Наразі ви можете лише спостерігати."
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -5606,12 +5606,12 @@ msgstr "^BG%s%s^K1 вбитий струмом від Дуги ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:484
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Arc bolts%s%s"
-msgstr "^BG%s%s^K1 був рознесений болтами від Дуги ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 був рознесений розрядами від Дуги ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:485
 #, c-format
 msgid "^BG%s^K1 played with Arc bolts%s%s"
-msgstr "^BG%s^K1 награвся з болтами Дуги%s%s"
+msgstr "^BG%s^K1 награвся з розрядами Дуги%s%s"
 
 #: qcsrc/common/notifications/all.inc:486
 #, c-format
@@ -5651,7 +5651,7 @@ msgstr "^BG%s^K1 підірвався від свого же Спустошув�
 #: qcsrc/common/notifications/all.inc:493
 #, c-format
 msgid "^BG%s%s^K1 was blasted by ^BG%s^K1's Electro bolt%s%s"
-msgstr "^BG%s%s^K1 був рознесений болтами від Електро ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 був рознесений згустками від Електро ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:494
 #, c-format
@@ -5667,7 +5667,7 @@ msgstr "^BG%s%s^K1 опинився занадто близько до Елек�
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid "^BG%s^K1 played with Electro bolts%s%s"
-msgstr "^BG%s^K1 награвся з болтами Електро%s%s"
+msgstr "^BG%s^K1 награвся зі згустками Електро%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
@@ -8108,12 +8108,16 @@ msgid ""
 "The %s fires a continuous beam of electricity, steadily dealing damage to "
 "any enemies that cross its path."
 msgstr ""
+"%s стріляє безперервним електричним променем, поступово завдаючи шкоди "
+"ворогам, які опинилися на його шляху. "
 
 #: qcsrc/common/weapons/weapon/arc.qc:1438
 msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
+"Вторинний вогонь стрімко випускає вперед електричні розряди, які вибухають "
+"при контакті та завдають шкоди по площі."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1439
 #, c-format
@@ -8121,6 +8125,7 @@ msgid ""
 "It consumes %s ammo, steadily churning through your supply to maintain the "
 "stream."
 msgstr ""
+"Він використовує набої (%s), поступово виснажуючи запас для підтримки потоку."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1440
 #, c-format
@@ -8128,6 +8133,8 @@ msgid ""
 "The %s is quite a versatile weapon, however it is more effective at close to "
 "medium ranges, since the stream is not instantaneous."
 msgstr ""
+"%s - це доволі універсальна зброя, однак вона ефективніша на близьких та "
+"середніх дистанціях, оскільки потік не миттєвий."
 
 #: qcsrc/common/weapons/weapon/arc.qh:38
 msgid "Arc"
@@ -8140,18 +8147,24 @@ msgid ""
 "high speed laser, dealing some splash damage but importantly a lot of "
 "knockback."
 msgstr ""
+"%s - це одна із двох основних видів зброї, яка стріляє відносно слабким, але "
+"високошвидкісним лазером, завдаючи незначної шкоди по площі, але, що "
+"найважливіше, із сильним відштовхуванням."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:168
 msgid ""
 "It has no secondary fire, instead switching to the previously selected "
 "weapon."
 msgstr ""
+"Вторинний вогонь відсутній, замість цього перемикає на попередню зброю."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:169
 msgid ""
 "It doesn't require ammo, meaning it is a great choice if you are running low "
 "on ammo and need to preserve some."
 msgstr ""
+"Він не потребує набої, що є чудовим вибором, якщо вони закінчуються і їх "
+"треба зберегти."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:170
 #, c-format
@@ -8160,6 +8173,9 @@ msgid ""
 "in, but it's difficult to master when used over a medium to long range. "
 "Unlike other weapons, the %s can hit other projectiles directly."
 msgstr ""
+"%s завжди доступний, тому він використовується багатьма гравцями після "
+"появи, але його важко опанувати на середніх та далеких дистанціях. На "
+"відміну від іншої зброї, %s може безпосередньо влучати в інші снаряди."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:172
 #, c-format
@@ -8169,6 +8185,11 @@ msgid ""
 "Because it does a lot of knockback, another common usage is alternating "
 "between a high damage weapon and the %s to throw the enemy's aim off."
 msgstr ""
+"Один із найпопулярніших способів використання зброї %s - це \"лазер-джамп\", "
+"де ви можете набрати висоти: націлившись вниз, стрибніть, і потім зробіть "
+"постріл, щоб підкинути себе вгору. Оскільки він дає сильне відштовхування, "
+"інший популярний прийом - чергування потужної зброї та зброєю %s, щоб збити "
+"приціл ворогу. "
 
 #: qcsrc/common/weapons/weapon/blaster.qh:32
 msgid "Blaster"

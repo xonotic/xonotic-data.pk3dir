@@ -162,7 +162,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr ""
+msgstr "^1Πατήστε ^3%s^1 για πληροφορίες τύπου παιχνιδιού"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -172,7 +172,7 @@ msgstr "πληροφορίες διακομιστή "
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #, c-format
 msgid "^1Press ^3%s^1 to join"
-msgstr "^1Πατήστε ^3%s^1 για σύνδεση"
+msgstr "^1Πατήστε ^3%s^1 για να μπείτε"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1385
@@ -187,7 +187,7 @@ msgstr "άλμα"
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Είσαι στην ουρά για να μπείς στην %s%s^2 ομάδα"
 
 #: qcsrc/client/hud/panel/infomessages.qc:150
 msgid "^2You're queued to join any available team"
@@ -238,12 +238,12 @@ msgstr "%sΧρειάζονται ενεργοί παίκτες για: %s "
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%sΠεριμένοντας για 1 παίκτη να μπεί..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "%sΠεριμένοντας για %d παίκτες να μπούν..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "Teams are unbalanced!"
@@ -576,7 +576,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "QMCMD^Spectate a player"
-msgstr ""
+msgstr "QMCMD^Παρακολούθησε έναν παίκτη"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -618,7 +618,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Number of ball carrier kills"
-msgstr ""
+msgstr "Αριθμός φόνων σφαιροφόρου"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "SCO^bckills"
@@ -642,11 +642,11 @@ msgstr "SCO^καταλήψεις"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "SCO^captime"
-msgstr ""
+msgstr "SCO^χρόνοςκατάληψης"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:133
 msgid "Time of fastest capture (CTF)"
-msgstr ""
+msgstr "Χρόνος ταχύτερης κατάληψης (CTF)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:134
 msgid "Number of deaths"
@@ -666,11 +666,11 @@ msgstr "SCO^καταστροφές"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "SCO^damage dealt"
-msgstr ""
+msgstr "SCO^προκληθείσα Ζημία"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:136
 msgid "The total damage dealt"
-msgstr ""
+msgstr "Η συνολική προκληθείσα Ζημία"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:137
 msgid "SCO^damage taken"
@@ -954,11 +954,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "Number of teamkills"
-msgstr ""
+msgstr "Αριθμός ομαδοκτονιών"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:173
 msgid "SCO^teamkills"
-msgstr ""
+msgstr "SCO^ομαδοκτονίες"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Number of ticks (Domination)"
@@ -4162,7 +4162,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:274
 msgid "^F2You will spectate in the next round"
-msgstr ""
+msgstr "^F2Θα παρακολουθήσεις τον επόμενο γύρο"
 
 #: qcsrc/common/notifications/all.inc:276
 msgid "^F2Match is restarting..."
@@ -4793,7 +4793,7 @@ msgstr "Ο/Η ^BG%s^F3 παίζει στην ^TC^TT ομάδα"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate at this time."
-msgstr ""
+msgstr "^K1Μπορείς μόνο να παρακολουθήσεις αυτή τη στιγμή."
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -4942,12 +4942,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:440
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr ""
+msgstr "Ο/Η ^BG%s^F3 διώχθηκε λόγω υπερβολικής ομαδοκτονίας"
 
 #: qcsrc/common/notifications/all.inc:441
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr ""
+msgstr "Ο/Η ^BG%s^F3 έγινε αναγκαστικά θεατής λόγω υπερβολικής ομαδοκτονίας"
 
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
@@ -6251,6 +6251,8 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
+"^K1Είσαι αναγκαστικά θεατής καθώς απαγορεύεται να παίξεις επειδή έχεις "
+"αποκλειστεί από αυτόν τον διακομιστή"
 
 #: qcsrc/common/notifications/all.inc:803
 msgid "^F2The race is over, finish your lap!"
@@ -8784,7 +8786,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:69
 #: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
-msgstr ""
+msgstr "Παρακολούθησε"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:8
 msgid "Game menu"
@@ -12615,6 +12617,10 @@ msgid ""
 "at which weapons they choose depending on the gameplay situation, for "
 "example in close combat, mid-range battles, or against groups of opponents."
 msgstr ""
+"Ένας ακόμα τρόπος να μάθεις είναι να παρακολουθείς έμπειρους παίκτες. "
+"Παρατήρησε τι όπλα συνδυάζουν και τις τεχνικές κίνησης που χρησιμοποιούν. "
+"Επίσης κοίτα τι όπλα επιλέγουν βάσει της περίπτωσης , για παράδειγμα σε "
+"κοντινή πάλη, μάχες μέτριας απόστασης, ή ενάντια σε ομάδες αντίπαλων."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:49
 msgid ""
@@ -13083,7 +13089,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/keybinder.qc:171
 msgid "quick menu"
-msgstr ""
+msgstr "γρήγορο μενού"
 
 #: qcsrc/menu/xonotic/keybinder.qc:173
 msgid "scoreboard user interface"
