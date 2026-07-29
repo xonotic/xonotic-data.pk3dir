@@ -157,7 +157,7 @@ msgstr "Δεύτερη λειτουργία όπλου "
 #: qcsrc/client/hud/panel/infomessages.qc:127
 #, c-format
 msgid "^1Press ^3%s^1 to change camera mode"
-msgstr ""
+msgstr "^1Πατήστε ^3%s^1 για αλλαγή λειτουργίας κάμερας"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
@@ -191,7 +191,7 @@ msgstr "^2Είσαι στην ουρά για να μπείς στην %s%s^2 ο
 
 #: qcsrc/client/hud/panel/infomessages.qc:150
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Είσαι στην ουρά για να μπείς σε οποιαδήποτε διαθέσιμη ομάδα"
 
 #: qcsrc/client/hud/panel/infomessages.qc:156
 #, c-format
@@ -1109,17 +1109,17 @@ msgstr "Επιλογή Ομαδάς"
 #: qcsrc/client/hud/panel/scoreboard.qc:2533
 #, c-format
 msgid "^7Press ^3%s^7 to join the selected team"
-msgstr "^7Πατήστε ^3%s^7 για να μπείτε στην επιλεγμένη ομάδα "
+msgstr "^7Πάτα ^3%s^7 για να μπείς στην επιλεγμένη ομάδα"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2535
 #, c-format
 msgid "^7Press ^3%s^7 to auto-select a team and join"
-msgstr "^7Πατήστε ^3%s^7 για να μπείτε αυτόματα σε μια ομάδα και στο παιχνίδι "
+msgstr "^7Πάτα ^3%s^7 για να μπείς αυτόματα σε μια ομάδα και στο παιχνίδι "
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2539
 #, c-format
 msgid "^7Press ^3%s ^7to select a specific team"
-msgstr ""
+msgstr "^7Πάτα ^3%s ^7για να επιλέξεις μια συγκεκριμένη ομάδα"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2577
 #, c-format
@@ -2208,7 +2208,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/ammo.qh:95 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
-msgstr "Σφαίρα"
+msgstr "Σφαίρες"
 
 #: qcsrc/common/items/item/ammo.qh:131 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
@@ -4030,7 +4030,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:243
 #, c-format
 msgid "^BG%s^BG captured the ^TC^TT^BG flag"
-msgstr "^BG%s^BG έπιασε την ^TC^TT^BG σημαία"
+msgstr "^BG%s^BG κατέλαβε την ^TC^TT^BG σημαία"
 
 #: qcsrc/common/notifications/all.inc:244
 #, c-format
@@ -4038,8 +4038,8 @@ msgid ""
 "^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking "
 "^BG%s^BG's previous record of ^F2%s^BG seconds"
 msgstr ""
-"^BG%s^BG έπιασε την ^TC^TT^BG σημαία σε ^F1%s^BG δευτερόλεπτα, ξεπερνώντας "
-"^BG%s^BG's προηγούμενο ρεκόρ των ^F2%s^BG δευτερολέπτων"
+"^BG%s^BG κατέλαβε την ^TC^TT^BG σημαία σε ^F1%s^BG δευτερόλεπτα, ξεπερνώντας "
+"το προηγούμενο ρεκόρ του/ης ^BG%s^BG των ^F2%s^BG δευτερολέπτων"
 
 #: qcsrc/common/notifications/all.inc:245
 #, c-format
@@ -5426,7 +5426,7 @@ msgstr "^BGΕίστε στην Επίθεση! "
 
 #: qcsrc/common/notifications/all.inc:563
 msgid "^BGYou are defending!"
-msgstr "^BGYou Αμύνονται!"
+msgstr "^BGΕίσαι στην άμυνα!"
 
 #: qcsrc/common/notifications/all.inc:564
 #, c-format
@@ -5527,11 +5527,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:594
 msgid "^BGYou got the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGΠήρες την ^TC^TT^BG σημαία!"
 
 #: qcsrc/common/notifications/all.inc:595
 msgid "^BGYou got the flag!"
-msgstr ""
+msgstr "^BGΠήρες την σημαία!"
 
 #: qcsrc/common/notifications/all.inc:596
 #, c-format
@@ -5546,12 +5546,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:598
 #, c-format
 msgid "^BGThe %senemy^BG got your flag! Retrieve it!"
-msgstr ""
+msgstr "^BGΟ %sεχθρός^BG Πήρε την σημαία σας! Ανακτήστε τη! "
 
 #: qcsrc/common/notifications/all.inc:599
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"
-msgstr ""
+msgstr "^BGΟ %sεχθρός (^BG%s%s)^BG Πήρε την σημαία σας! Ανακτήστε τη! "
 
 #: qcsrc/common/notifications/all.inc:600
 #: qcsrc/common/notifications/all.inc:606
@@ -5589,21 +5589,25 @@ msgstr ""
 #, c-format
 msgid "^BGYour %steammate^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
+"^BGΟ/Η %sσυμπαίκτης/ρια σου^BG πήρε την ^TC^TT^BG σημαία! Πρoστάτεψε τον/ην !"
 
 #: qcsrc/common/notifications/all.inc:609
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
+"^BGΟ/Η %sσυμπαίκτης/ρια σου (^BG%s%s)^BG πήρε την ^TC^TT^BG σημαία! "
+"Προστάτεψε τον/ην! "
 
 #: qcsrc/common/notifications/all.inc:610
 #, c-format
 msgid "^BGYour %steammate^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGΟ/Η %sσυμπαίκτης/ρια σου^BG πήρε την σημαία! Προστάτεψε τον/ην!"
 
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the flag! Protect them!"
 msgstr ""
+"^BGΟ/Η %sσυμπαίκτρια σου (^BG%s%s)^BG Πήρε την σημαία! Προστάτεψε τον/ην!"
 
 #: qcsrc/common/notifications/all.inc:612
 #: qcsrc/common/notifications/all.inc:759
@@ -5612,7 +5616,7 @@ msgstr "^BGΟι εχθροί μπορούν να σε δούν στο radar!"
 
 #: qcsrc/common/notifications/all.inc:613
 msgid "^BGYou returned the ^TC^TT^BG flag!"
-msgstr ""
+msgstr "^BGΓύρισες πίσω την ^TC^TT^BG σημαία!"
 
 #: qcsrc/common/notifications/all.inc:614
 msgid "^BGStalemate! Enemies can now see you on radar!"
@@ -8692,7 +8696,7 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
-"Καλωσορίσατε στο Xonotic, παρακαλούμε επιλέξτε της γλώσσα προτίμησης σας και "
+"Καλωσορίσατε στο Xonotic, παρακαλούμε επιλέξτε την γλώσσα προτίμησης σας και "
 "εισάγετε το όνομά σας. Μπορείτε να αλλάξετε αυτές τις επιλογές αργότερα μέσω "
 "του μενού."
 

@@ -21,7 +21,7 @@ fi    "Finnish" "Suomi" 89%
 sv    "Swedish" "Svenska" 78%
 tr    "Turkish" "Türkçe" 44%
 cs    "Czech" "Čeština" 25%
-el    "Greek" "Ελληνική" 38%
+el    "Greek" "Ελληνική" 39%
 be    "Belarusian" "Беларуская" 39%
 bg    "Bulgarian" "Български" 55%
 ru    "Russian" "Русский" 100%
