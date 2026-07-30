@@ -63,12 +63,12 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/centerprint.qc:213
 msgid "Generic message"
-msgstr ""
+msgstr "Жалпы хабарлама"
 
 #: qcsrc/client/hud/panel/centerprint.qc:293
 #: qcsrc/client/hud/panel/centerprint.qc:303
 msgid "vs"
-msgstr ""
+msgstr "vs"
 
 #: qcsrc/client/hud/panel/chat.qc:168
 msgid "^3Player^7: This is the chat area."
@@ -178,11 +178,11 @@ msgstr "секіру"
 #: qcsrc/client/hud/panel/infomessages.qc:147
 #, c-format
 msgid "^2You're queued to join the %s%s^2 team"
-msgstr ""
+msgstr "^2Сіз %s%s^2 командасына қосылу үшін кезекке қойылдыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:150
 msgid "^2You're queued to join any available team"
-msgstr ""
+msgstr "^2Сіз әрбір қолжетімді командасына қосылу үшін кезекке қойылдыңыз"
 
 #: qcsrc/client/hud/panel/infomessages.qc:156
 #, c-format
@@ -224,21 +224,21 @@ msgstr "^2Дайыңдық кезеңің аяқтау үшін ^3%s^2 басы�
 #: qcsrc/client/hud/panel/infomessages.qc:205
 #, c-format
 msgid "%sNeed active players for: %s"
-msgstr ""
+msgstr "%s%s үшін белсенді ойыншылар қажет"
 
 #: qcsrc/client/hud/panel/infomessages.qc:209
 #, c-format
 msgid "%sWaiting for 1 player to join..."
-msgstr ""
+msgstr "%s1 ойыншының қосылуы күтілуде..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:211
 #, c-format
 msgid "%sWaiting for %d players to join..."
-msgstr ""
+msgstr "%s%d ойыншының қосылуы күтілуде..."
 
 #: qcsrc/client/hud/panel/infomessages.qc:223
 msgid "Teams are unbalanced!"
-msgstr ""
+msgstr "Командалар теңгерімсіз!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #, c-format
@@ -288,7 +288,7 @@ msgstr "Стандарттық жылдам меню"
 #: qcsrc/client/hud/panel/quickmenu.qc:655
 #, c-format
 msgid "Submenu%d"
-msgstr ""
+msgstr "Ішкі меню%d"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:660
 #, c-format
@@ -4161,7 +4161,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:278
 #: qcsrc/common/notifications/all.inc:567
 msgid "Teams are too unbalanced."
-msgstr ""
+msgstr "Командалар тым теңгерімсіз."
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
@@ -4692,54 +4692,54 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:386
 #, c-format
 msgid "^BG%s^BG got the %s^BG buff!"
-msgstr ""
+msgstr "^BG%s^BG %s^BG баффты алды!"
 
 #: qcsrc/common/notifications/all.inc:387
 #, c-format
 msgid "^BG%s^BG lost the %s^BG buff!"
-msgstr ""
+msgstr "^BG%s^BG %s^BG баффты жоғалтты!"
 
 #: qcsrc/common/notifications/all.inc:388
 #: qcsrc/common/notifications/all.inc:722
 #, c-format
 msgid "^BGYou dropped the %s^BG buff!"
-msgstr ""
+msgstr "^BGСіз %s^BG баффты түсірдіңіз!"
 
 #: qcsrc/common/notifications/all.inc:389
 #: qcsrc/common/notifications/all.inc:723
 #, c-format
 msgid "^BGYou got the %s^BG buff!"
-msgstr ""
+msgstr "^BGCіз %s^BG баффты алдыңыз!"
 
 #: qcsrc/common/notifications/all.inc:391
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr ""
+msgstr "^BGСізде ^F1%s^BG жоқ"
 
 #: qcsrc/common/notifications/all.inc:392
 #: qcsrc/common/notifications/all.inc:727
 #, c-format
 msgid "^BGYou dropped the ^F1%s^BG%s"
-msgstr ""
+msgstr "^BGСіз ^F1%s^BG-ды түсірдіңіз%s"
 
 #: qcsrc/common/notifications/all.inc:393
 #: qcsrc/common/notifications/all.inc:728
 #, c-format
 msgid "^BGYou got the ^F1%s"
-msgstr ""
+msgstr "^BGСіз ^F1%s^BG-ды алдыңыз"
 
 #: qcsrc/common/notifications/all.inc:394
 #: qcsrc/common/notifications/all.inc:729
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr ""
+msgstr "^BGСізде ^F1%s^BG үшін оқ жеткіліксіз"
 
 #: qcsrc/common/notifications/all.inc:395
 #: qcsrc/common/notifications/all.inc:730
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr ""
+msgstr "^F1%s %s^BG ата алмайды, бірақ оның ^F1%s^BG ата алады"
 
 #: qcsrc/common/notifications/all.inc:396
 #: qcsrc/common/notifications/all.inc:731
@@ -4765,7 +4765,7 @@ msgstr "^BG%s^F3 енді ойнап жатыр"
 #: qcsrc/common/notifications/all.inc:401
 #, c-format
 msgid "^BG%s^F3 is now playing on the ^TC^TT team"
-msgstr "^BG%s^F3 енді ^TC^TT командада ойнап жатыр"
+msgstr "^BG%s^F3 енді ^TC^TT^BG командада ойнап жатыр"
 
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
@@ -4817,7 +4817,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:413
 #, c-format
 msgid "^BG%s^BG destroyed the ^TC^TT Key"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT кілтін^BG​ жойды"
 
 #: qcsrc/common/notifications/all.inc:414
 #, c-format
@@ -4835,17 +4835,17 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:420
 msgid "^BGThe ^TC^TT^BG team held the ball for too long"
-msgstr ""
+msgstr "^BG^TC^TT^BG командасы допты тым ұзақ ұстап тұрды"
 
 #: qcsrc/common/notifications/all.inc:422
 #, c-format
 msgid "^BG%s^BG captured %s^BG control point"
-msgstr ""
+msgstr "^BG%s^BG %s^BG басқару нүктесін түсірді"
 
 #: qcsrc/common/notifications/all.inc:423
 #, c-format
 msgid "^BG%s^BG captured a control point"
-msgstr ""
+msgstr "^BG%s^BG басқару нүктесін түсірді"
 
 #: qcsrc/common/notifications/all.inc:424
 #, c-format
@@ -4855,15 +4855,15 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:425
 #, c-format
 msgid "^TC^TT^BG team control point has been destroyed by %s"
-msgstr ""
+msgstr "%s ^TC^TT^BG командасының басқару нүктесін жойды"
 
 #: qcsrc/common/notifications/all.inc:426
 msgid "^TC^TT^BG generator has been destroyed"
-msgstr ""
+msgstr "^TC^TT^BG генератор жойылды"
 
 #: qcsrc/common/notifications/all.inc:427
 msgid "^TC^TT^BG generator spontaneously combusted due to overtime!"
-msgstr ""
+msgstr "^TC^TT^BG генераторы қос. уақытына байланысты өздігінен жанып кетті!"
 
 #: qcsrc/common/notifications/all.inc:429
 #, c-format
@@ -5898,6 +5898,8 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
+"^K1Командалар теңгерімсіз!\n"
+"^BG%s^BG көрермендерге ^COUNT ішінде ауысуда..."
 
 #: qcsrc/common/notifications/all.inc:700
 #, c-format
@@ -6109,50 +6111,54 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:770
 #, c-format
 msgid "^BGYou captured %s^BG control point"
-msgstr ""
+msgstr "^BGСіз %s^BG басқару нүктесін басып алдыңыз"
 
 #: qcsrc/common/notifications/all.inc:771
 msgid "^BGYou captured a control point"
-msgstr ""
+msgstr "^BGСіз басқару нүктесін басып алдыңыз"
 
 #: qcsrc/common/notifications/all.inc:772
 #, c-format
 msgid "^TC^TT^BG team captured %s^BG control point"
-msgstr ""
+msgstr "^TC^TT^BG командасы %s^BG басқару нүктесін басып алды"
 
 #: qcsrc/common/notifications/all.inc:773
 msgid "^TC^TT^BG team captured a control point"
-msgstr ""
+msgstr "^TC^TT^BG командасы басқару нүктесін басып алды"
 
 #: qcsrc/common/notifications/all.inc:774
 msgid "^BGThis control point currently cannot be captured"
-msgstr ""
+msgstr "^BGБүл басқару нүктесін қазіргіде басып алу мүмкін емес"
 
 #: qcsrc/common/notifications/all.inc:775
 msgid ""
 "^BGThe enemy generator cannot be destroyed yet\n"
 "^F2Capture some control points to unshield it"
 msgstr ""
+"^BGҚарсылас генераторын әлі жою мүмкін емес\n"
+"^F2Оны қорғаныштан босату үшін кейбір басқару нүктелерін басып алыңыз"
 
 #: qcsrc/common/notifications/all.inc:776
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
-msgstr ""
+msgstr "^TCҚарсылас^BG генераторы енді қорғалмаған!"
 
 #: qcsrc/common/notifications/all.inc:777
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture control points to shield it!"
 msgstr ""
+"^K1Сіздің генераторыңыз ҚОРҒАЛҒАН ЕМЕС!\n"
+"^BGОны қорғау үшін басқару нүктелерін қайта басып алыңыз!"
 
 #: qcsrc/common/notifications/all.inc:778
 #, c-format
 msgid "^BGPress ^F2%s^BG to teleport"
-msgstr ""
+msgstr "^BGТелепортациялау үшін ^F2%s^BG басыңыз"
 
 #: qcsrc/common/notifications/all.inc:779
 #, c-format
 msgid "^BGTeleporting disabled for %s"
-msgstr ""
+msgstr "^BGТелепортациялау %s үшін өшірілген"
 
 #: qcsrc/common/notifications/all.inc:781
 msgid ""

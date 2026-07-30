@@ -4202,7 +4202,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
 #: qcsrc/menu/xonotic/guide/pages.qc:72 qcsrc/menu/xonotic/guide/pages.qc:123
 msgid "Rocket Flying"
-msgstr "Політ на Ракетах"
+msgstr "Рокет-Флаїнг"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -5631,7 +5631,7 @@ msgstr "^BG%s%s^K1 відчув потужне притягання Крайлі
 #: qcsrc/common/notifications/all.inc:489
 #, c-format
 msgid "^BG%s^K1 felt the strong pull of their Crylink%s%s"
-msgstr "^BG%s^K1 почув потужне притягання свого Крайлінка%s%s"
+msgstr "^BG%s^K1 відчув потужне притягання свого Крайлінка%s%s"
 
 #: qcsrc/common/notifications/all.inc:490
 #, c-format
@@ -8204,12 +8204,19 @@ msgid ""
 "be utilized to deal more damage to an enemy by making the projectiles "
 "converge on them."
 msgstr ""
+"%s стріляє чергами лазероподібних снарядів, які розлітаються вбік та "
+"відбиваються від стін. Якщо утримувати й відпустити кнопку основного вогню, "
+"снаряди спочатку збігаються в одну точку, а потім знову розсіюються. Це може "
+"бути використано для завдання більшої шкоди ворогу, спрямувавши точку збігу "
+"прямо на нього."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:622
 msgid ""
 "Projectiles deal damage on collision but also when they bounce, so with good "
 "positioning they can sometimes deal double damage."
 msgstr ""
+"Снаряди завдають шкоди при зіткненні, а й під час рикошету, тому за вдалого "
+"позиціонування ними можна завдати подвійної шкоди."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:623
 msgid ""
@@ -8217,12 +8224,16 @@ msgid ""
 "is often the better option in situations where the enemy is an easy target "
 "to hit."
 msgstr ""
+"Вторинний вогонь стріляє снарядами щільною групою, тож це кращий вибір, коли "
+"у ворога легко влучити."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:624
 #, c-format
 msgid ""
 "It consumes %s ammo for each projectile, which is shared by several weapons."
 msgstr ""
+"Використовує набої (%s) для кожного снаряда, які спільні для кількох видів "
+"зброї."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:625
 #, c-format
@@ -8230,6 +8241,8 @@ msgid ""
 "Close to medium range is the ideal time to use the %s, although the "
 "secondary fire can be useful for long range combat sometimes."
 msgstr ""
+"%s ідеально підходить для близької до середньої дистанції, хоча вторинний "
+"вогонь іноді корисний і в далекому бою."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:626
 #, c-format
@@ -8241,6 +8254,12 @@ msgid ""
 "angle down and use the secondary fire to pull yourself forwards, in order to "
 "gain speed."
 msgstr ""
+"%s завдає відштовхування унікальним способом: притягує гравця від його "
+"центру до точки влучання. Це робить її однією з найкращих видів зброї для "
+"сповільнення ворога під час переслідування, особливо з вторинним вогнем. "
+"Інший популярний трюк зі зброєю %s - \"крайлінк-ран\", де ви частково "
+"нахиляєте приціл униз і використовуєте вторинний вогонь, щоб потягнути себе "
+"вперед і набрати швидкість."
 
 #: qcsrc/common/weapons/weapon/crylink.qh:36
 msgid "Crylink"
@@ -8253,6 +8272,9 @@ msgid ""
 "it explodes on impact. If the primary fire is held, the rocket can be guided "
 "by the user's aim, allowing steering it towards enemies."
 msgstr ""
+"%s стріляє ракетами з дистанційним керуванням, завдаючи значної шкоди при "
+"вибуху від зіткнення. Якщо утримувати кнопку основного вогню, ракетою можна "
+"керувати за допомогою прицілу, спрямовуючи її на ворогів."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:595
 msgid ""
@@ -8260,6 +8282,8 @@ msgid ""
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr ""
+"Вторинний вогонь використовується для миттєвої детонації ракети, що дозволяє "
+"завдавати шкоди ворогам, навіть якщо ракета пролетіла зовсім поруч із ними."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:596
 #, c-format
@@ -8267,6 +8291,8 @@ msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
+"Він витрачає чимало набоїв (%s) на кожну ракету, тож набої можуть швидко "
+"вичерпатися, тому гравці часто чергують його з іншою зброєю, наприклад, %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:597
 #, c-format
@@ -8276,6 +8302,10 @@ msgid ""
 "combat. In close range combat, the large splash radius often results in "
 "rockets damaging both you and your enemy."
 msgstr ""
+"Завдяки його великій шкоді, %s - один із найпопулярніших видів зброї. Його "
+"можна використовувати майже в будь-якій ситуації, а найкраще він показує "
+"себе в бою на середній дистанції. В близькому бою великий радіус вибуху "
+"часто призводить до того, що ракети завдають шкоди і вам, і вашому ворогу."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:600
 #, c-format
@@ -8284,6 +8314,10 @@ msgid ""
 "flying,\" where you fire a rocket and immediately detonate it to boost "
 "yourself while mid-air, much more effective with the %s mutator enabled."
 msgstr ""
+"Завдяки можливості дистанційно детонувати ракети, популярним трюком є "
+"\"рокет-флаїнг\", де ви стріляєте ракетою й одразу підриваєте її, щоб "
+"підштовхнути себе в повітрі. Цей трюк значно ефективніший з увімкненим "
+"мутатором %s."
 
 #: qcsrc/common/weapons/weapon/devastator.qh:36
 msgid "Devastator"
@@ -8295,6 +8329,8 @@ msgid ""
 "The %s shoots electric balls forwards, dealing some splash damage when they "
 "burst on impact."
 msgstr ""
+"%s стріляє електричними кулями вперед, завдаючи шкоди по площі, коли вони "
+"вибухають при зіткненні."
 
 #: qcsrc/common/weapons/weapon/electro.qc:743
 #, c-format
@@ -8304,11 +8340,16 @@ msgid ""
 "damage enemies that walk by. The orbs burst after some time, and can be "
 "forced to burst in a \"combo\" if a primary fire ball bursts near them."
 msgstr ""
+"Вторинний вогонь випускає сфери, на які впливає гравітація, тож їх можна "
+"залишати на мапі у місцях із високим рухом (наприклад, на прапорних базах у "
+"%s), щоб завдавати шкоди ворогам, які пробігають повз. Сфери вибухають через "
+"деякий час, але їх також можна підірвати за допомогою \"комбо\", якщо поруч "
+"із ними вибухне куля від основного вогню."
 
 #: qcsrc/common/weapons/weapon/electro.qc:746
 #, c-format
 msgid "It consumes some %s ammo for each ball / orb."
-msgstr ""
+msgstr "Споживає трохи набоїв типу %s за кожну кулю / сферу."
 
 #: qcsrc/common/weapons/weapon/electro.qc:747
 #, c-format
@@ -8318,6 +8359,10 @@ msgid ""
 "fire doesn't travel particularly fast, the %s is not useful in many other "
 "situations."
 msgstr ""
+"%s - один із найкращих видів зброї для спаму в скупченнях ворогів, адже "
+"комбо завдає величезної шкоди, якщо противник достатньо близько. Оскільки "
+"кулі основного вогню летять не надто швидко, %s не надто корисний в інших "
+"ситуаціях."
 
 #: qcsrc/common/weapons/weapon/electro.qh:37
 msgid "Electro"
@@ -9896,7 +9941,7 @@ msgstr "%s qu"
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:45
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:80
 msgid "Zoom mode:"
-msgstr "Спосіб зуму:"
+msgstr "Спосіб наближення:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:49
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:84
@@ -10696,6 +10741,8 @@ msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr ""
+"Увімкнути ухилення (швидке прискорення в заданому напрямку). Двічі натисніть "
+"на клавішу руху, щоб ухилитися"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:82
 msgid "An explosion occurs when two players collide"
@@ -10710,10 +10757,12 @@ msgid ""
 "Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
 "that support it"
 msgstr ""
+"Увімкнути появу бафів (випадкові бонуси, як-от Медик, Невидимість, тощо) на "
+"мапах, які їх підтримують"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
 msgid "Only possible to inflict damage on your enemy while they're airborne"
-msgstr ""
+msgstr "Шкоду можна завдати тільки тоді, коли вороги в повітрі"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
 msgid "Damage done to your enemy gets added to your own health"
@@ -10729,7 +10778,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
-msgstr ""
+msgstr "Сповільнює падіння об'єктів (відсоток від нормальної гравітації)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:122
 msgid "Weapon & item mutators:"
@@ -10754,6 +10803,8 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode Electro orbs "
 "with the Electro primary fire"
 msgstr ""
+"Снаряди неможливо знищити. Проте ви все одно можете підривати сфери Електро "
+"основним вогнем."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
 msgid "Allow maps to spawn additional weapons (new toys)"
@@ -12340,19 +12391,19 @@ msgstr "Дозволити рух крізь стіни для глядачів"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:79
 msgid "Zooming"
-msgstr "Прицілювання"
+msgstr "Наближення"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:81
 msgid "ZOOM^Zoom factor:"
-msgstr "Масштаб прицілювання:"
+msgstr "Масштаб наближення:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:83
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr "Кратність наближення при натисканні клавіші прицілювання"
+msgstr "Кратність наближення при натисканні клавіші наближення"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:90
 msgid "ZOOM^Zoom speed:"
-msgstr "Швидкість прицілювання:"
+msgstr "Швидкість наближення:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:93
 msgid "How fast the view will be zoomed, disable to zoom instantly"
@@ -12365,19 +12416,19 @@ msgstr "Миттєвий"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:100
 msgid "ZOOM^Zoom sensitivity:"
-msgstr "Чутливість прицілювання:"
+msgstr "Чутливість наближення:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:103
 msgid ""
 "How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no "
 "sensitivity change)"
 msgstr ""
-"Як буде змінюватися чутливість при прицілюванні: від 0% (найнижча) до 100% "
+"Як буде змінюватися чутливість при наближенні: від 0% (найнижча) до 100% "
 "(без змін)"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:107
 msgid "Zoom scrolling"
-msgstr "Регулювання прицілювання мишею"
+msgstr "Регулювання наближення мишею"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:131
 msgid "Velocity zoom"
@@ -12393,15 +12444,15 @@ msgstr "Тільки під час руху вперед"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:149
 msgid "Display reticle 2D overlay while zooming"
-msgstr "Показувати 2D-сітку під час прицілювання"
+msgstr "Показувати 2D-сітку під час наближення"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:152
 msgid "Release zoom when you die or respawn"
-msgstr "Відпустити прицілювання при смерті чи відродженні"
+msgstr "Відпустити наближення при смерті чи відродженні"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:156
 msgid "Release zoom when you switch weapons"
-msgstr "Скидати прицілювання при зміні зброї"
+msgstr "Скидати наближення при зміні зброї"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qh:7
 #: qcsrc/menu/xonotic/keybinder.qc:133
@@ -13393,7 +13444,7 @@ msgstr "Стрибання з Бластеру"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:73 qcsrc/menu/xonotic/guide/pages.qc:133
 msgid "Crylink Running"
-msgstr "Біг Крайлінком"
+msgstr "Крайлінк-Ран"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
@@ -13586,10 +13637,10 @@ msgid ""
 "stand into high speed. Finding the best angle to aim at takes some practice, "
 "and changes depending on your speed."
 msgstr ""
-"Для \"розгону з крайлінком\", зробіть постріл з альтернативного вогню %sа в "
-"підлогу (або паралельну стіну) прямо перед собою та почніть бані-хоп, щоб "
-"миттєво набрати високу швидкість. Знайти найкращий кут пострілу потребує "
-"практики, але цей кут змінюється залежно від швидкості."
+"Для \"крайлінк-рану\", зробіть постріл з альтернативного вогню %sа в підлогу "
+"(або паралельну стіну) прямо перед собою та почніть бані-хоп, щоб миттєво "
+"набрати високу швидкість. Знайти найкращий кут пострілу потребує практики, "
+"але цей кут змінюється залежно від швидкості."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:141
 msgid "Crylink Wall Climbing"
@@ -13803,11 +13854,11 @@ msgstr "група зброї %d"
 
 #: qcsrc/menu/xonotic/keybinder.qc:134
 msgid "hold zoom"
-msgstr "утримувати прицілювання"
+msgstr "утримувати наближення"
 
 #: qcsrc/menu/xonotic/keybinder.qc:135
 msgid "toggle zoom"
-msgstr "перемикати прицілювання"
+msgstr "перемикати наближення"
 
 #: qcsrc/menu/xonotic/keybinder.qc:136
 msgid "show scores"
