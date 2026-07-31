@@ -2595,7 +2595,7 @@ msgstr "Без різниці"
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:340
 #, c-format
 msgid "Suggested by: %s"
-msgstr "Спропоновано: %s"
+msgstr "Запропонував(-ла): %s"
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:421
 msgid "Decide the gametype"
@@ -7299,18 +7299,18 @@ msgstr ""
 
 #: qcsrc/common/turrets/turret/hk.qh:17
 msgid "Hunter-Killer Turret"
-msgstr "Турель Ловча-Винищувача"
+msgstr "Турель Мисливця-Вбивці"
 
 #: qcsrc/common/turrets/turret/hk_weapon.qh:7
 msgid "Hunter-Killer"
-msgstr "Ловець-Винищувач"
+msgstr "Мисливець-Вбивця"
 
 #: qcsrc/common/turrets/turret/machinegun.qc:28
 #, c-format
 msgid ""
 "As the name suggests, the %s fires bullets in a burst at its targets, "
 "similar to the %s."
-msgstr "Як і підказує назва, %s стріляє чергами по своїх цілях, подібно до %s."
+msgstr "Як і підказує назва, %s стріляє чергами по своїх цілях, як %s."
 
 #: qcsrc/common/turrets/turret/machinegun.qh:15
 msgid "Machinegun Turret"
