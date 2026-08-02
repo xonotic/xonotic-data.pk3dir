@@ -119,19 +119,21 @@ SHUTDOWN(scoreboard)
 
 // mode 0: returns translated label
 // mode 1: prints name and description of all the labels
-string Label_getInfo(string label, int mode)
+string Label_getInfo(string label, bool log_all)
 {
-	if (mode == 1)
-		label = "bckills"; // first case in the switch
-
-#define SCO_LABEL(strlabel, label, padding, help) \
-	case label: \
-		if (!mode) \
-			return CTX(strlabel); \
-		LOG_HELP("^3", label, padding, "^7", help);
-
 	switch (label)
 	{
+	#define SCO_LABEL(strlabel, label, padding, help) \
+		case label: \
+			if (!log_all) \
+				return CTX(strlabel); \
+			LOG_HELP("^3", label, padding, "^7", help); \
+			/* fallthrough when logging all labels */
+
+		default:
+			if (!log_all)
+				break;
+			// else fallthrough
 		SCO_LABEL(_("SCO^bckills"),       "bckills", "            ", _("Number of ball carrier kills"));
 		SCO_LABEL(_("SCO^bctime"),        "bctime", "             ", _("Total amount of time holding the ball in Keepaway"));
 		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (Key Hunt) was captured"));
@@ -178,9 +180,9 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^teamkills"),     "teamkills", "          ", _("Number of teamkills"));
 		SCO_LABEL(_("SCO^ticks"),         "ticks", "              ", _("Number of ticks (Domination)"));
 		SCO_LABEL(_("SCO^time"),          "time", "               ", _("Total time raced (Race/CTS)"));
+	#undef SCO_LABEL
 	}
 	return label;
-#undef SCO_LABEL
 }
 
 bool scoreboard_ui_disabling;
@@ -417,7 +419,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if (!key_pressed)
 			return true;
 		if (scoreboard_selected_panel == SB_PANEL_RANKINGS)
-			rankings_start_column = min(rankings_start_column + 1, (ceil(RANKINGS_RECEIVED_CNT / rankings_rows) - rankings_columns));
+			rankings_start_column = min(rankings_start_column + 1, ceil(RANKINGS_RECEIVED_CNT / rankings_rows) - rankings_columns);
 	}
 	else if (nPrimary == K_LEFTARROW)
 	{
@@ -455,19 +457,21 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 			switch (scoreboard_selected_columns_layout)
 			{
 				case 0:
-					if (autocvar_scoreboard_columns != "" && autocvar_scoreboard_columns != "all" && autocvar_scoreboard_columns != "default")
+					if (autocvar_scoreboard_columns != ""
+					&&  autocvar_scoreboard_columns != "all"
+					&&  autocvar_scoreboard_columns != "default")
 					{
-						localcmd(sprintf("scoreboard_columns_set\n")); // sets the layout saved in scoreboard_columns
+						localcmd("scoreboard_columns_set\n"); // sets the layout saved in scoreboard_columns
 						scoreboard_selected_columns_layout = 1;
 						break;
 					}
 					// fallthrough
 				case 1:
-					localcmd(sprintf("scoreboard_columns_set default\n"));
+					localcmd("scoreboard_columns_set default\n");
 					scoreboard_selected_columns_layout = 2;
 					break;
 				case 2:
-					localcmd(sprintf("scoreboard_columns_set all\n"));
+					localcmd("scoreboard_columns_set all\n");
 					scoreboard_selected_columns_layout = 0;
 					break;
 			}
@@ -509,11 +513,11 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 
 void PrintScoresLabels()
 {
-	Label_getInfo(string_null, 1);
+	Label_getInfo(string_null, true);
 }
 string TranslateScoresLabel(string label)
 {
-	return Label_getInfo(label, 0);
+	return Label_getInfo(label, false);
 }
 
 void Scoreboard_InitScores()
