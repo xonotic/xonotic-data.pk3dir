@@ -201,10 +201,11 @@ string MapInfo_FixName(string s);
 float MapInfo_CheckMap(string s); // returns 0 if the map can't be played with the current settings
 void MapInfo_LoadMap(string s, float reinit);
 
-// list all maps for the current gametype
-string MapInfo_ListAllowedMaps(Gametype type, float pFlagsRequired, float pFlagsForbidden);
-// list all allowed maps (for any gametype)
-string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
+// list all maps for the current gametype, one map per string buffer entry starting at index 0
+// (returns how many). A buffer, not a string: the full list of a well stocked server is far longer
+// than the 16383 bytes a QC string can hold.
+int _MapInfo_FilteredToBuffer(int buf);          // whatever MapInfo_FilterGametype() last selected
+int MapInfo_AllowedMapsToBuffer(int buf, Gametype type, float pFlagsRequired, float pFlagsForbidden);
 
 // gets a gametype from a string
 string _MapInfo_GetDefaultEx(Gametype t);

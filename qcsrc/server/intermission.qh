@@ -34,6 +34,10 @@ bool Map_IsRecent(string m);
 
 bool Map_Check(string m, float pass);
 
+// the configured map list (g_maplist, else the list file, else every installed map), cached for the level
+int maplist_configured_count;
+int Maplist_Configured();
+
 int Maplist_Init(void);
 void Maplist_Close();
 string GetNextMap(void);

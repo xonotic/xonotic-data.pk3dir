@@ -1,6 +1,7 @@
 #include "intermission.qh"
 
 #include <common/mapinfo.qh>
+#include <common/maplist.qh>
 #include <common/mapvoting/_mod.qh>
 #include <common/util.qh>
 #include <server/bot/api.qh>
@@ -235,74 +236,123 @@ int MaplistMethod_Random(void) // random map selection
 	return -1;
 }
 
+// The configured map list (g_maplist, else the map list file, else every installed map), unfiltered.
+// Held for the level because resolving it can mean a directory scan and a .mapinfo read per map, and
+// Maplist_Init() runs more than once per intermission. Cleared with the rest of the SVQC globals on
+// level change; MapList_Forget() handles the map set changing under a running server.
+int maplist_configured_buffer = -1;
+
+// returns a buffer holding the configured map list, one map per entry, and sets
+// maplist_configured_count to how many. Owned by the cache, don't buf_del() it.
+int Maplist_Configured()
+{
+	if(maplist_configured_buffer >= 0)
+		return maplist_configured_buffer;
+
+	maplist_configured_buffer = buf_create();
+	maplist_configured_count = MapList_ToBuffer(maplist_configured_buffer);
+	return maplist_configured_buffer;
+}
+
+// appends a map to maplist_buffer at position pos, or at a random position if g_maplist_shuffle is set
+// NOTE: inlined maplist_shuffle function to avoid a second buffer, keep both in sync
+void Maplist_Append(string map, int pos)
+{
+	if(autocvar_g_maplist_shuffle)
+	{
+		int j = floor(random() * (pos + 1));
+		if(j != pos)
+			bufstr_set(maplist_buffer, pos, bufstr_get(maplist_buffer, j));
+		bufstr_set(maplist_buffer, j, map);
+	}
+	else
+		bufstr_set(maplist_buffer, pos, map);
+}
+
+// Fills maplist_buffer with the playable maps of the configured list and returns how many. Sets
+// maplist_missing to how many entries named a map whose .bsp is gone, so the caller can trim them.
+int maplist_missing;
+int Maplist_Fill()
+{
+	int cfg = Maplist_Configured();
+	int cnt = 0;
+	maplist_missing = 0;
+
+	for(int i = 0; i < maplist_configured_count; ++i)
+	{
+		string map = bufstr_get(cfg, i);
+		if(!fexists(Map_Filename(map)))
+		{
+			++maplist_missing;
+			continue;
+		}
+		if(!Map_Check(map, 2))
+			continue; // playable file, but not in this gametype: keep it in the list, just not in the rotation
+		Maplist_Append(map, cnt);
+		++cnt;
+	}
+	return cnt;
+}
+
+// Rewrites the configured list without the maps whose .bsp is gone, wherever it's stored.
+void Maplist_TrimMissing()
+{
+	int cfg = Maplist_Configured();
+	int keep = buf_create();
+	int n = 0;
+	for(int i = 0; i < maplist_configured_count; ++i)
+	{
+		string map = bufstr_get(cfg, i);
+		if(fexists(Map_Filename(map)))
+			bufstr_set(keep, n++, map);
+	}
+	if(n > 0)
+		MapList_FromBuffer(keep, n);
+	buf_del(keep);
+	LOG_DEBUGF("Maplist_Init: trimmed %d missing maps from the list", maplist_missing);
+
+	// the store changed underneath the cache
+	buf_del(maplist_configured_buffer);
+	maplist_configured_buffer = -1;
+}
+
 // NOTE: call Maplist_Close when you're done!
 int Maplist_Init(void)
 {
-	bool have_maps = false;
-	if(autocvar_g_maplist != "")
-	{
-		// make sure there is at least one playable map in the list
-		bool needtrim = false;
-		FOREACH_WORD(autocvar_g_maplist, true,
-		{
-			if(!fexists(Map_Filename(it)))
-			{
-				needtrim = true;
-				if(have_maps)
-					break;
-				continue;
-			}
-			if(have_maps || !Map_Check(it, 2))
-				continue;
-			have_maps = true;
-			if(needtrim)
-				break;
-		});
+	maplist_buffer = buf_create();
+	int _cnt = Maplist_Fill();
 
-		// additionally trim any non-existent maps
-		if(needtrim)
+	// Only trim a list that is actually stored somewhere. An unconfigured list comes from the live
+	// map glob so nothing in it can be missing, and writing it back would freeze it.
+	if(maplist_missing && MapList_Source != MAPLIST_SOURCE_ALL)
+	{
+		Maplist_TrimMissing();
+		if(_cnt == 0)
 		{
-			int trimmedmaps = 0;
-			string newmaplist = "";
-			FOREACH_WORD(autocvar_g_maplist, true,
-			{
-				if(!fexists(Map_Filename(it)))
-				{
-					++trimmedmaps;
-					continue;
-				}
-				newmaplist = cons(newmaplist, it);
-			});
-			cvar_set("g_maplist", newmaplist);
-			LOG_DEBUGF("Maplist_Init: trimmed %d missing maps from the list", trimmedmaps);
+			// everything the list named is gone; the trimmed store may still resolve to something
+			buf_del(maplist_buffer);
+			maplist_buffer = buf_create();
+			_cnt = Maplist_Fill();
 		}
 	}
 
-	if (!have_maps)
+	if(_cnt == 0 && MapList_Source != MAPLIST_SOURCE_ALL)
 	{
-		bprint( "Maplist contains no usable maps!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_CurrentGametype(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		// A curated list with nothing playable in it. Drop it and take every installed map, which is
+		// what an empty g_maplist and no list file mean.
+		bprint("Maplist contains no usable maps!  Falling back to the full map list.\n");
+		cvar_set("g_maplist", "");
+		MapList_Forget();
+		buf_del(maplist_configured_buffer);
+		maplist_configured_buffer = -1;
+
+		buf_del(maplist_buffer);
+		maplist_buffer = buf_create();
+		_cnt = Maplist_Fill();
+
 		if(!autocvar_sv_dedicated)
 			localcmd("\nmenu_cmd sync\n");
 	}
-
-	maplist_buffer = buf_create();
-
-	int _cnt = 0;
-	FOREACH_WORD(autocvar_g_maplist, Map_Check(it, 2),
-	{
-		// NOTE: inlined maplist_shuffle function to avoid a second buffer, keep both in sync
-		if(autocvar_g_maplist_shuffle)
-		{
-			int _j = floor(random() * (_cnt + 1));
-			if(_j != _cnt)
-				bufstr_set(maplist_buffer, _cnt, bufstr_get(maplist_buffer, _j));
-			bufstr_set(maplist_buffer, _j, it);
-			++_cnt;
-		}
-		else
-			bufstr_set(maplist_buffer, i, it);
-	});
 
 	Map_Count = buf_getsize(maplist_buffer);
 

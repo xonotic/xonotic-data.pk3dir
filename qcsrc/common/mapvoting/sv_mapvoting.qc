@@ -640,7 +640,10 @@ bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_h
 			cvar_set("g_maplist", cvar_string(gvmaplist));
 	}
 	if (do_reset)
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(type, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		// an empty g_maplist means "every map that supports the current gametype", which is exactly what
+		// resetting the list wants; writing out all the map names would exceed the maximum length of a QC
+		// string on a well stocked server and silently drop maps (see issue #3002)
+		cvar_set("g_maplist", "");
 
 	return true;
 }

@@ -160,7 +160,10 @@ float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
 
 #ifdef SVQC
-string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_reply; // cached replies
+// a long map list doesn't fit in one QC string (16383 bytes), so it's split over several pages
+const int MAPLIST_REPLY_PAGES = 10;
+string rankings_reply, ladder_reply, lsmaps_reply, monsterlist_reply; // cached replies
+string maplist_reply[MAPLIST_REPLY_PAGES];
 string records_reply[10];
 #endif
 

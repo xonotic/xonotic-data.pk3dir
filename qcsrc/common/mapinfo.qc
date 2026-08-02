@@ -1530,35 +1530,21 @@ void MapInfo_LoadMap(string s, float reinit)
 		localcmd(strcat("\nchangelevel ", s, "\n"));
 }
 
-string MapInfo_ListAllowedMaps(Gametype type, float pRequiredFlags, float pForbiddenFlags)
+// writes the currently filtered maps into buf, one map per entry starting at index 0
+int _MapInfo_FilteredToBuffer(int buf)
 {
-	string out;
+	for(int i = 0; i < MapInfo_count; ++i)
+		bufstr_set(buf, i, _MapInfo_GlobItem(MapInfo_FilterList_Lookup(i)));
+	return MapInfo_count;
+}
 
+int MapInfo_AllowedMapsToBuffer(int buf, Gametype type, float pRequiredFlags, float pForbiddenFlags)
+{
 	// to make absolutely sure:
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(type, MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);
 
-	out = "";
-	for(float i = 0; i < MapInfo_count; ++i)
-		out = strcat(out, " ", _MapInfo_GlobItem(MapInfo_FilterList_Lookup(i)));
-	return substring(out, 1, strlen(out) - 1);
-}
-
-string MapInfo_ListAllAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
-{
-	string out;
-
-	// to make absolutely sure:
-	MapInfo_Enumerate();
-	_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, pRequiredFlags, pForbiddenFlags, 0);
-
-	out = "";
-	for(float i = 0; i < MapInfo_count; ++i)
-		out = strcat(out, " ", _MapInfo_GlobItem(MapInfo_FilterList_Lookup(i)));
-
-	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);
-
-	return substring(out, 1, strlen(out) - 1);
+	return _MapInfo_FilteredToBuffer(buf);
 }
 
 void MapInfo_LoadMapSettings_SaveGameType(Gametype t)

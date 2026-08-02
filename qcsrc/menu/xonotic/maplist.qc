@@ -1,6 +1,7 @@
 #include "maplist.qh"
 
 #include <common/mapinfo.qh>
+#include <common/maplist.qh>
 #include "dialog_multiplayer_create_mapinfo.qh"
 #include "mainwindow.qh"
 #include "inputbox.qh"
@@ -59,20 +60,29 @@ void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 	c = substring(s, i+1, strlen(s) - (i+1));
 	strunzone(s);
 	me.g_maplistCache = strzone(strcat(a, b, c));
-	// TODO also update the actual cvar
 	if (!((bspname = MapInfo_BSPName_ByID(i))))
 		return;
+
+	// Edit the stored list rather than the cvar string: it may live in a file (too long for a cvar),
+	// and it must stay an edit of the WHOLE list -- the checkbox grid only covers the maps the current
+	// gametype/search filter shows, so rebuilding from it would drop everything currently hidden.
+	int list = buf_create();
+	n = MapList_ToBuffer(list);
+	int out = buf_create();
+	int w = 0;
+
 	if(b == "1")
-		cvar_set("g_maplist", strcat(bspname, " ", cvar_string("g_maplist")));
-	else
+		bufstr_set(out, w++, bspname); // newly included maps go to the front, as they always have
+	for(i = 0; i < n; ++i)
 	{
-		s = "";
-		n = tokenize_console(cvar_string("g_maplist"));
-		for(i = 0; i < n; ++i)
-			if(argv(i) != bspname)
-				s = strcat(s, " ", argv(i));
-		cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
+		string map = bufstr_get(list, i);
+		if(map != bspname)
+			bufstr_set(out, w++, map);
 	}
+
+	MapList_FromBuffer(out, w);
+	buf_del(list);
+	buf_del(out);
 }
 
 void XonoticMapList_draw(entity me)
@@ -194,14 +204,24 @@ void XonoticMapList_refilter(entity me)
 	s = "0";
 	for(i = 1; i < MapInfo_count; i *= 2)
 		s = strcat(s, s);
-	n = tokenize_console(cvar_string("g_maplist"));
+
+	// Read the list through the store rather than the cvar directly: on a server with more maps than
+	// a cvar can hold it lives in a file, and tokenizing it would truncate anyway (issue #3002).
+	int list = buf_create();
+	n = MapList_ToBuffer(list);
+	// MapList_ToBuffer() resolves the gametype filter for its own use; put ours back before indexing by ID
+	MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	if (me.stringFilter)
+		MapInfo_FilterString(me.stringFilter);
+
 	for(i = 0; i < n; ++i)
 	{
-		j = MapInfo_FindName(argv(i));
+		string map = bufstr_get(list, i);
+		j = MapInfo_FindName(map);
 		if(j >= 0)
 		{
 			// double check that the two mapnames are "identical", not just share the same prefix
-			if (strlen(MapInfo_BSPName_ByID(j)) == strlen(argv(i)))
+			if (strlen(MapInfo_BSPName_ByID(j)) == strlen(map))
 				s = strcat(
 					substring(s, 0, j),
 					"1",
@@ -209,6 +229,7 @@ void XonoticMapList_refilter(entity me)
 				);
 		}
 	}
+	buf_del(list);
 	strcpy(me.g_maplistCache, s);
 	if(gt != me.lastGametype || f != me.lastFeatures)
 	{
@@ -258,16 +279,22 @@ void MapList_Remove_Shown(entity btn, entity me)
 void MapList_Add_All(entity btn, entity me)
 {
 	_MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
-	string s = "";
-	for(int i = 0; i < MapInfo_count; ++i)
-		s = cons(s, MapInfo_BSPName_ByID(i));
-	cvar_set("g_maplist", s);
+	int buf = buf_create();
+	int n = _MapInfo_FilteredToBuffer(buf);
+	// Saved through the store, so an install with more maps than a cvar can hold gets all of them
+	// (the strcat loop this replaced silently cut the list off mid-name -- issue #3002).
+	MapList_FromBuffer(buf, n);
+	buf_del(buf);
 	me.refilter(me);
 }
 
 void MapList_Remove_All(entity btn, entity me)
 {
+	// Clear both stores. Note this resolves back to "every installed map", because that is what an
+	// unset map list has always meant to the server -- Maplist_Init() regenerates rather than
+	// refusing to rotate, and an empty rotation is a fatal error there.
 	cvar_set("g_maplist", "");
+	MapList_Forget();
 	me.refilter(me);
 }
 

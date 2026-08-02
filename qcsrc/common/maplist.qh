@@ -1,0 +1,35 @@
+#pragma once
+
+// The map list, resolved in precedence order:
+//
+//   1. the g_maplist cvar, if set  - a curated list, exactly as before. A cvar written or read from
+//                                    QC can't exceed 16383 bytes, so this holds roughly 1300 maps.
+//   2. MAPLIST_FILE, if it exists  - one map name per line, no length limit. Written by the menu when
+//                                    a selection is too big for the cvar, or by an admin by hand.
+//   3. every installed map         - resolved fresh each time, and NOT saved: a list that is not
+//                                    configured tracks what is installed, so a map added later shows
+//                                    up without anyone having to clear a stale file.
+//
+// Names are stored unfiltered in all three cases, exactly like g_maplist has always been: the
+// gametype/feature filter is applied when the list is read (Map_Check in Maplist_Init), not when it
+// is written, so one list serves every gametype.
+
+const string MAPLIST_FILE = "maplist.txt";
+
+// Fills buf with the map list, one name per entry starting at index 0, and returns how many.
+int MapList_ToBuffer(int buf);
+
+// Where MapList_ToBuffer() last read from, for messages and for the menu's "these are all selected"
+// state. Valid after a MapList_ToBuffer() call.
+const int MAPLIST_SOURCE_CVAR = 0;
+const int MAPLIST_SOURCE_FILE = 1;
+const int MAPLIST_SOURCE_ALL  = 2;
+int MapList_Source;
+
+// Saves count entries of buf as the map list: into g_maplist when it fits (so small lists keep
+// living in the cvar, where admins and configs expect them), otherwise into MAPLIST_FILE with
+// g_maplist cleared. Returns which of the two it used.
+int MapList_FromBuffer(int buf, int count);
+
+// Drops MAPLIST_FILE so the next MapList_ToBuffer() regenerates it (map set changed on disk).
+void MapList_Forget();

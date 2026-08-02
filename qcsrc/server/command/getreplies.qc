@@ -3,6 +3,7 @@
 #include <common/command/_mod.qh>
 #include <common/constants.qh>
 #include <common/gametypes/_mod.qh>
+#include <common/maplist.qh>
 #include <common/mapvoting/_mod.qh>
 #include <common/monsters/_mod.qh>
 #include <common/net_linked.qh>
@@ -230,22 +231,77 @@ string getladder()
 	else return strcat("Top ", ftos(LADDER_SIZE), " ladder rankings:\n", s);
 }
 
-string getmaplist()
+// A page can't exceed the 16383 byte QC string limit; stop well short of it so the header and the
+// "not listed" suffix still fit. MAPLIST_REPLY_PAGES pages hold upwards of ten thousand maps.
+const int MAPLIST_REPLY_MAXLEN = 15000;
+string _maplist_page;
+int _maplist_pagecount, _maplist_count, _maplist_listed;
+
+void _maplist_page_flush()
 {
-	if(autocvar_g_maplist == "")
-		return "^7Map list is empty";
+	if(_maplist_page == "" || _maplist_pagecount >= MAPLIST_REPLY_PAGES)
+		return;
+	maplist_reply[_maplist_pagecount] = strzone(_maplist_page);
+	++_maplist_pagecount;
+	_maplist_page = "";
+}
 
-	string maplist = "";
-	int mapcount = 0;
-	FOREACH_WORD(autocvar_g_maplist, MapInfo_CheckMap(it),
+void _maplist_add(string map, string col)
+{
+	++_maplist_count;
+	if(strlen(_maplist_page) + strlen(map) + 4 > MAPLIST_REPLY_MAXLEN)
+		_maplist_page_flush();
+	if(_maplist_pagecount >= MAPLIST_REPLY_PAGES)
+		return; // out of pages: keep counting so the total stays honest
+	_maplist_page = cons(_maplist_page, strcat(col, map));
+	++_maplist_listed;
+}
+
+// Fills maplist_reply[] and returns how many maps the list holds. Unlike a single reply string this
+// can show every map: the listing is split across pages rather than cut off at the string limit.
+int getmaplist()
+{
+	for(int i = 0; i < MAPLIST_REPLY_PAGES; ++i)
+		strfree(maplist_reply[i]);
+	_maplist_page = "";
+	_maplist_pagecount = _maplist_count = _maplist_listed = 0;
+
+	// read the same configured list Maplist_Init() rotates through (g_maplist, else the list file,
+	// else every installed map), so this can't disagree with what the server will actually play
+	int cfg = Maplist_Configured();
+	for(int i = 0; i < maplist_configured_count; ++i)
 	{
-		string col = (i % 2) ? "^2" : "^3";
-		maplist = cons(maplist, strcat(col, it));
-		++mapcount;
-	});
+		string map = bufstr_get(cfg, i);
+		if(MapInfo_CheckMap(map))
+			_maplist_add(map, (i % 2) ? "^2" : "^3");
+	}
 
+	_maplist_page_flush();
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps in list (%d): %s\n", mapcount, maplist);
+
+	if(_maplist_count == 0)
+	{
+		// Nothing in the configured list is playable here. Maplist_Init() drops such a list and takes
+		// every installed map instead, so say that rather than reporting a rotation that won't happen.
+		maplist_reply[0] = strzone(MapList_Source == MAPLIST_SOURCE_ALL
+			? "^7Map list is empty"
+			: "^7No usable maps in the list; every map for the current gametype will be used");
+		return 0;
+	}
+
+	// The count goes on the first page; anything that didn't fit at all is noted on the last one.
+	// NOTE: strcpy() unzones its destination before evaluating the source, so a page that is being
+	// rewritten in terms of itself has to be built into a local first.
+	string s = sprintf("^7Maps in list (%d): %s\n", _maplist_count, maplist_reply[0]);
+	strcpy(maplist_reply[0], s);
+	if(_maplist_count > _maplist_listed)
+	{
+		int last = _maplist_pagecount - 1;
+		s = sprintf("%s ^7(%d not listed)\n", maplist_reply[last], _maplist_count - _maplist_listed);
+		strcpy(maplist_reply[last], s);
+	}
+
+	return _maplist_count;
 }
 
 const int LSMAPS_MAX = 250;

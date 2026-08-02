@@ -6,6 +6,7 @@
 #include <common/checkextension.qh>
 #include <common/ent_cs.qh>
 #include <common/mapinfo.qh>
+#include <common/maplist.qh>
 #include <common/net_notice.qh>
 #include <common/playerstats.qh>
 #include <common/replicate.qh>

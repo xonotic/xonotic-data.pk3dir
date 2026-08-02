@@ -6,6 +6,7 @@
 #include <common/checkextension.qc>
 #include <common/ent_cs.qc>
 #include <common/mapinfo.qc>
+#include <common/maplist.qc>
 #include <common/net_notice.qc>
 #include <common/playerstats.qc>
 #include <common/replicate.qc>

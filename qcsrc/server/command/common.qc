@@ -527,7 +527,8 @@ void CommonCommand_printmaplist(int request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(caller, maplist_reply);
+			for (int i = 0; i < MAPLIST_REPLY_PAGES; ++i)
+				if (maplist_reply[i] != "") print_to(caller, maplist_reply[i]);
 			return;  // never fall through to usage
 		}
 

@@ -1019,7 +1019,7 @@ spawnfunc(worldspawn)
 	Nagger_Init();
 
 	// set up information replies for clients and server to use
-	maplist_reply = strzone(getmaplist());
+	getmaplist(); // fills maplist_reply[], which it strzones itself
 	lsmaps_reply = strzone(getlsmaps());
 	monsterlist_reply = strzone(getmonsterlist());
 	bool records_available = false;
