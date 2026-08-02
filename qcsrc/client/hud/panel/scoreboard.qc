@@ -2570,7 +2570,7 @@ void Scoreboard_Draw(bool should_draw)
 		panel_pos.y = max((autocvar_con_notify * autocvar_con_notifysize), panel_pos.y);
 
 	float excess = max(0, max_namesize - autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x);
-	float fixed_scoreboard_width = bound(vid_conwidth * autocvar_hud_panel_scoreboard_minwidth, vid_conwidth - excess, vid_conwidth * 0.93);
+	float fixed_scoreboard_width = bound(vid_conwidth * autocvar_hud_panel_scoreboard_minwidth, vid_conwidth - excess, vid_conwidth * 0.9);
 	scoreboard_left = 0.5 * (vid_conwidth - fixed_scoreboard_width);
 	scoreboard_right = scoreboard_left + fixed_scoreboard_width;
 	panel_pos.x = scoreboard_left;
