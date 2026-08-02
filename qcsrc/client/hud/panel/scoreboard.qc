@@ -1953,12 +1953,10 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size, int ite
 	}
 
 	pos = panel_pos;
-	vector tmp = panel_size;
-
-	float item_width = tmp.x / (item_columns * item_rows);
+	float item_width = panel_size.x / item_columns;
 
 	if (sbt_bg_alpha)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, panel_size, rgb, sbt_bg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 
 	if (sbt_highlight)
 	{
@@ -1966,16 +1964,12 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size, int ite
 		// column highlighting
 		for (i = 0; i < item_columns; ++i)
 			if (i % 2 == 0)
-				drawfill(pos + eX * item_width * item_rows * i, vec2(item_width * item_rows, item_height * item_rows), '0 0 0', sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos + eX * item_width * i, vec2(item_width, item_height * item_rows), '0 0 0', sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 		// row highlighting
 		for (i = 0; i < item_rows; ++i)
 			drawfill(pos + eY * (item_height_just_item + item_height * i), vec2(panel_size.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 	}
 
-	if (item_rows == 2)
-		pos.x += item_width * 0.5;
-
-	vector tmpos = pos;
 	float padding, oldposx = pos.x;
 
 	string s;
@@ -1986,17 +1980,15 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size, int ite
 		//n = 1 + floor(i * 3 + 4.8) % 7; // debug: display a value for each item
 		if (n <= 0)
 			continue;
-		drawpic_aspect_skin(tmpos, it.m_icon, vec2(item_width, item_height_just_item), '1 1 1', sbt_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, it.m_icon, vec2(item_width, item_height_just_item), '1 1 1', sbt_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 		s = itos(n);
 		padding = (item_width - stringwidth(s, false, hud_fontsize)) * 0.5;
-		drawstring(tmpos + vec2(padding, item_height_just_item), s, hud_fontsize, '1 1 1', sbt_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
+		drawstring(pos + vec2(padding, item_height_just_item), s, hud_fontsize, '1 1 1', sbt_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 
-		tmpos.x += item_width * item_rows;
-		pos.x += item_width * item_rows;
+		pos.x += item_width;
 		if (item_rows == 2 && column == item_columns - 1)
 		{
-			tmpos.x = oldposx;
-			tmpos.y += item_height;
+			pos.x = oldposx;
 			pos.y += item_height;
 		}
 		++column;
@@ -2072,12 +2064,10 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size, Wep
 	}
 
 	pos = panel_pos;
-	vector tmp = panel_size;
-
-	float wep_width = tmp.x / (wep_columns * wep_rows);
+	float wep_width = panel_size.x / wep_columns;
 
 	if (sbt_bg_alpha)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, panel_size, rgb, sbt_bg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 
 	if (sbt_highlight)
 	{
@@ -2085,27 +2075,23 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size, Wep
 		// column highlighting
 		for (i = 0; i < wep_columns; ++i)
 			if (i % 2 == 0)
-				drawfill(pos + eX * wep_width * wep_rows * i, vec2(wep_width * wep_rows, wep_height * wep_rows), '0 0 0', sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+				drawfill(pos + eX * wep_width * i, vec2(wep_width, wep_height * wep_rows), '0 0 0', sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 		// row highlighting
 		for (i = 0; i < wep_rows; ++i)
-			drawfill(pos + eY * (wep_height_just_weapon + wep_height * i), vec2(tmp.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+			drawfill(pos + eY * (wep_height_just_weapon + wep_height * i), vec2(panel_size.x, hud_fontsize.y), rgb, sbt_highlight_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 	}
-
-	average_accuracy = 0;
-	if (wep_rows == 2)
-		pos.x += wep_width * 0.5;
 
 	vector wep_rgb = '1 1 1';
 	if (!autocvar_hud_panel_scoreboard_accuracy_nocolors)
 		Accuracy_LoadColors();
 
-	vector tmpos = pos;
 	float wep_alpha, padding, oldposx = pos.x;
 
 	string s;
 	WepSet set;
 	int acc, weps_with_stats = 0;
 	int column = 0;
+	average_accuracy = 0;
 	FOREACH(Weapons, it != WEP_Null,
 	{
 		acc = weapon_accuracy[i - WEP_FIRST];
@@ -2120,7 +2106,7 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size, Wep
 			: 0.2 * sbt_fg_alpha;
 
 		// weapon icon
-		drawpic_aspect_skin(tmpos, it.model2, vec2(wep_width, wep_height_just_weapon), '1 1 1', wep_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, it.model2, vec2(wep_width, wep_height_just_weapon), '1 1 1', wep_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if (acc >= 0)
 		{
@@ -2132,15 +2118,13 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size, Wep
 			if (!autocvar_hud_panel_scoreboard_accuracy_nocolors)
 				wep_rgb = Accuracy_GetColor(acc);
 
-			drawstring(tmpos + vec2(padding, wep_height_just_weapon), s, hud_fontsize, wep_rgb, sbt_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
+			drawstring(pos + vec2(padding, wep_height_just_weapon), s, hud_fontsize, wep_rgb, sbt_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 		}
 
-		tmpos.x += wep_width * wep_rows;
-		pos.x += wep_width * wep_rows;
+		pos.x += wep_width;
 		if (wep_rows == 2 && column == wep_columns - 1)
 		{
-			tmpos.x = oldposx;
-			tmpos.y += wep_height;
+			pos.x = oldposx;
 			pos.y += wep_height;
 		}
 		++column;
@@ -2290,10 +2274,9 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size)
 	}
 
 	pos = panel_pos;
-	vector tmp = panel_size;
 
 	if (sbt_bg_alpha)
-		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, panel_size, rgb, sbt_bg_alpha, DRAWFLAG_NORMAL);
 
 	// draw monsters
 	if (stat_monsters_total)
