@@ -30,6 +30,7 @@
 #include <common/net_notice.qh>
 #include <common/scores.qh>
 #include <common/vehicles/all.qh>
+#include <common/weapons/weapon.qh>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>
 #include <lib/warpzone/client.qh>
@@ -1334,30 +1335,28 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-string build_weaponarena_list(string s)
+string build_weaponarena_list(int arena_type, WepSet set)
 {
-	if (s == "") return s;
-	if (s == "All Weapons Arena") return _("All Weapons Arena");
-	if (s == "All Available Weapons Arena") return _("All Available Weapons Arena");
-	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
-	if (s == "Most Available Weapons Arena") return _("Most Available Weapons Arena");
-	if (s == "Dev All Weapons Arena") return s; // development option, do not translate
-	if (s == "Dev All Available Weapons Arena") return s; // development option, do not translate
-	if (s == "No Weapons Arena") return _("No Weapons Arena");
-
-	int n = tokenizebyseparator(s, " & ");
-	string wpn_list = "";
-	for (int i = 0; i < n; ++i)
+	switch (arena_type)
 	{
-		Weapon wep = Weapon_from_name(argv(i));
-		if (wep == WEP_Null)
-			LOG_INFO("^3Warning: ^7server sent an invalid weapon name\n");
-		wpn_list = cons_mid(wpn_list, " & ", wep.m_name);
+		default:
+		case WEPARENA_OFF:                 return "";
+		case WEPARENA_NONE:                return _("No Weapons Arena");
+		case WEPARENA_ALL:                 return _("All Weapons Arena");
+		case WEPARENA_ALL_AVAILABLE:       return _("All Available Weapons Arena");
+		case WEPARENA_STANDARD:            return _("Standard Weapons Arena");
+		case WEPARENA_STANDARD_AVAILABLE:  return _("Standard Available Weapons Arena");
+		case WEPARENA_EXTENDED:            return _("Extended Weapons Arena");
+		case WEPARENA_EXTENDED_AVAILABLE:  return _("Extended Available Weapons Arena");
+		case WEPARENA_DEVALL:              return "Dev All Weapons Arena";           // development option, won't bother translating
+		case WEPARENA_DEVALL_AVAILABLE:    return "Dev All Available Weapons Arena"; // development option, won't bother translating
+		case WEPARENA_CUSTOM:
+		{
+			string wpn_list = "";
+			FOREACH(Weapons, it != WEP_Null && (set & it.m_wepset), wpn_list = cons_mid(wpn_list, " & ", it.m_name));
+			return sprintf(_("%s Arena"), wpn_list); // it shouldn't be empty
+		}
 	}
-	if (wpn_list != "")
-		return sprintf(_("%s Arena"), wpn_list);
-	else
-		return _("No Weapons Arena");
 }
 
 string GetVersionMessage(string hostversion, bool version_mismatch, bool version_check)
@@ -1410,7 +1409,8 @@ bool net_handle_ServerWelcome()
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
 	string modifications = build_mutator_list(ReadString()); // executes cl_hook_mutator_* hooks too
-	string weaponarena_list = build_weaponarena_list(ReadString());
+	int weaponarena_type = ReadByte();
+	string weaponarena_list = build_weaponarena_list(weaponarena_type, (weaponarena_type == WEPARENA_CUSTOM) ? ReadWepSet() : '0 0 0');
 	string cache_mutatormsg = ReadString();
 	string motd = ReadString();
 

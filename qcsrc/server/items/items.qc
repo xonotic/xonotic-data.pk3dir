@@ -120,7 +120,7 @@ bool have_pickup_item(entity this)
 			return true;
 		if(autocvar_g_pickup_items == 0)
 			return false;
-		if(g_weaponarena)
+		if(g_weaponarena_type != WEPARENA_OFF)
 			if(STAT(WEAPONS, this) || this.itemdef.instanceOfAmmo) // no item or ammo pickups in weaponarena
 				return false;
 	}
@@ -1619,7 +1619,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	if(!StatusEffects_active(STATUSEFFECT_Superweapon, e))
 	{
 		// also give default superweapon time if player had no superweapons and just got one
-		if(!g_weaponarena && !(save_weapons & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
+		if(g_weaponarena_type == WEPARENA_OFF && !(save_weapons & WEPSET_SUPERWEAPONS) && (STAT(WEAPONS, e) & WEPSET_SUPERWEAPONS))
 			StatusEffects_apply(STATUSEFFECT_Superweapon, e, time + autocvar_g_balance_superweapons_time, 0);
 	}
 

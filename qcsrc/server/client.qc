@@ -1108,7 +1108,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
 
-	if (!g_weaponarena && cvar("g_balance_blaster_weaponstartoverride") == 0)
+	if (g_weaponarena_type == WEPARENA_OFF && cvar("g_balance_blaster_weaponstartoverride") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -1120,7 +1120,9 @@ void SendWelcomeMessage(entity this, int msg_type)
 
 	WriteString(msg_type, modifications);
 
-	WriteString(msg_type, g_weaponarena_list);
+	WriteByte(msg_type, g_weaponarena_type);
+	if (g_weaponarena_type == WEPARENA_CUSTOM)
+		WriteWepSet(msg_type, g_weaponarena_weapons);
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{

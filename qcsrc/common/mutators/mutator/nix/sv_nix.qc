@@ -76,7 +76,7 @@ bool NIX_CanChooseWeapon(int wpn)
 {
 	entity e = REGISTRY_GET(Weapons, wpn);
 	if (e == WEP_Null) return false; // skip dummies
-	if(g_weaponarena)
+	if(g_weaponarena_type != WEPARENA_OFF)
 	{
 		if(!(g_weaponarena_weapons & e.m_wepset))
 			return false;

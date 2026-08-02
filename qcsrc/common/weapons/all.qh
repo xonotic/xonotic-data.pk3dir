@@ -141,6 +141,7 @@ ENDCLASS(NullWeapon)
 REGISTER_WEAPON(Null, NEW(NullWeapon));
 REGISTRY_DEFINE_GET(Weapons, WEP_Null)
 
+#ifdef SVQC
 Weapon Weapon_from_name(string s)
 {
 	FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
@@ -152,6 +153,7 @@ Weapon Weapon_from_impulse(int imp)
 	FOREACH(Weapons, it != WEP_Null && it.m_unique_impulse == imp, return it);
 	return WEP_Null;
 }
+#endif
 
 
 #ifdef GAMEQC
