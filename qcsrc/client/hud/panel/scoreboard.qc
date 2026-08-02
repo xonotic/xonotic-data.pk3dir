@@ -36,8 +36,9 @@ void Scoreboard_Draw_Export(int fh)
 	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_self");
 	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_eliminated");
 	HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
-	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_doublerows");
+	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_min_aspect");
 	HUD_Write_Cvar("hud_panel_scoreboard_accuracy_nocolors");
+	HUD_Write_Cvar("hud_panel_scoreboard_itemstats_min_aspect");
 	HUD_Write_Cvar("hud_panel_scoreboard_spectators_position");
 }
 
@@ -82,13 +83,13 @@ float autocvar_hud_panel_scoreboard_team_size_position = 0;
 float autocvar_hud_panel_scoreboard_spectators_position = 1;
 
 bool autocvar_hud_panel_scoreboard_accuracy = true;
-bool autocvar_hud_panel_scoreboard_accuracy_doublerows = false;
+float autocvar_hud_panel_scoreboard_accuracy_min_aspect = 1.15;
 bool autocvar_hud_panel_scoreboard_accuracy_nocolors = false;
 float autocvar_hud_panel_scoreboard_accuracy_showdelay = 2;
 float autocvar_hud_panel_scoreboard_accuracy_showdelay_minpos = 0.75;
 
 bool autocvar_hud_panel_scoreboard_itemstats = true;
-bool autocvar_hud_panel_scoreboard_itemstats_doublerows = false;
+float autocvar_hud_panel_scoreboard_itemstats_min_aspect = 1.25;
 int autocvar_hud_panel_scoreboard_itemstats_filter = 1;
 int autocvar_hud_panel_scoreboard_itemstats_filter_mask = 12;
 float autocvar_hud_panel_scoreboard_itemstats_showdelay = 2.2; // slightly more delayed than accuracy
@@ -1985,13 +1986,17 @@ vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size, int ite
 		padding = (item_width - stringwidth(s, false, hud_fontsize)) * 0.5;
 		drawstring(pos + vec2(padding, item_height_just_item), s, hud_fontsize, '1 1 1', sbt_fg_alpha * scoreboard_itemstats_fade_alpha, DRAWFLAG_NORMAL);
 
-		pos.x += item_width;
-		if (item_rows == 2 && column == item_columns - 1)
+		if (column == item_columns - 1)
 		{
 			pos.x = oldposx;
 			pos.y += item_height;
+			column = 0;
 		}
-		++column;
+		else
+		{
+			pos.x += item_width;
+			++column;
+		}
 	});
 
 	panel_size.x += panel_bg_padding * 2; // restore initial width
@@ -2121,13 +2126,17 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size, Wep
 			drawstring(pos + vec2(padding, wep_height_just_weapon), s, hud_fontsize, wep_rgb, sbt_fg_alpha * scoreboard_acc_fade_alpha, DRAWFLAG_NORMAL);
 		}
 
-		pos.x += wep_width;
-		if (wep_rows == 2 && column == wep_columns - 1)
+		if (column == wep_columns - 1)
 		{
 			pos.x = oldposx;
 			pos.y += wep_height;
+			column = 0;
 		}
-		++column;
+		else
+		{
+			pos.x += wep_width;
+			++column;
+		}
 	});
 
 	if (weps_with_stats)
@@ -2172,23 +2181,20 @@ vector Scoreboard_AccuracyAndItemStats_Draw(vector pos, vector rgb, vector bg_si
 			++uninteresting_cnt;
 		else if (!g_inventory.inv_items[it.m_id]) // debug: display all items by changing this to `else if (true)`
 			++disowned_cnt;
-	});
-	int items_cnt = REGISTRY_COUNT(Items) - disowned_cnt - uninteresting_cnt;
+	});	int items_cnt = REGISTRY_COUNT(Items) - disowned_cnt - uninteresting_cnt;
 
 	// size pre-calculations
-	int item_rows = (autocvar_hud_panel_scoreboard_itemstats_doublerows && items_cnt >= floor(REGISTRY_COUNT(Items) * 0.5))
-		? 2
-		: 1;
-	int item_columns = max(6, ceil(items_cnt / item_rows));
+	float table_width = panel_size.x - panel_bg_padding * 2;
+
 	float item_height_just_item = hud_fontsize.y * 2.3;
 	float item_height = item_height_just_item + hud_fontsize.y;
+	int item_columns = min(floor(table_width / (autocvar_hud_panel_scoreboard_itemstats_min_aspect * item_height)), items_cnt);
+	int item_rows = item_columns ? ceil(items_cnt / item_columns) : 0;
 
-	int wep_rows = (autocvar_hud_panel_scoreboard_accuracy_doublerows && wep_cnt >= floor((REGISTRY_COUNT(Weapons) - wep_hidden - 1) * 0.5))
-		? 2
-		: 1;
-	int wep_columns = ceil(wep_cnt / wep_rows);
 	float wep_height_just_weapon = hud_fontsize.y * 2.3 / max(0.001, autocvar_hud_panel_weapons_aspect);
 	float wep_height = wep_height_just_weapon + hud_fontsize.y;
+	int wep_columns = min(floor(table_width / (autocvar_hud_panel_scoreboard_accuracy_min_aspect * wep_height)), wep_cnt);
+	int wep_rows = wep_columns ? ceil(wep_cnt / wep_columns) : 0;
 
 
 	float items_posy = pos.y;
