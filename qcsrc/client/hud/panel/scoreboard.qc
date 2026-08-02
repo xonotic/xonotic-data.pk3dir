@@ -117,21 +117,23 @@ SHUTDOWN(scoreboard)
 		cvar_set("hud_panel_scoreboard_scores_per_round", "0");
 }
 
-// mode 0: returns translated label
-// mode 1: prints name and description of all the labels
-string Label_getInfo(string label, int mode)
+// log_all false: returns translated label
+// log_all true:  prints name and description of all the labels
+string Label_getInfo(string label, bool log_all)
 {
-	if (mode == 1)
-		label = "bckills"; // first case in the switch
-
-#define SCO_LABEL(strlabel, label, padding, help) \
-	case label: \
-		if (!mode) \
-			return CTX(strlabel); \
-		LOG_HELP("^3", label, padding, "^7", help);
-
 	switch (label)
 	{
+	#define SCO_LABEL(strlabel, label, padding, help) \
+		case label: \
+			if (!log_all) \
+				return CTX(strlabel); \
+			LOG_HELP("^3", label, padding, "^7", help); \
+			/* fallthrough when logging all labels */
+
+		default:
+			if (!log_all)
+				break;
+			// else fallthrough
 		SCO_LABEL(_("SCO^bckills"),       "bckills", "            ", _("Number of ball carrier kills"));
 		SCO_LABEL(_("SCO^bctime"),        "bctime", "             ", _("Total amount of time holding the ball in Keepaway"));
 		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (Key Hunt) was captured"));
@@ -178,9 +180,9 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^teamkills"),     "teamkills", "          ", _("Number of teamkills"));
 		SCO_LABEL(_("SCO^ticks"),         "ticks", "              ", _("Number of ticks (Domination)"));
 		SCO_LABEL(_("SCO^time"),          "time", "               ", _("Total time raced (Race/CTS)"));
+	#undef SCO_LABEL
 	}
 	return label;
-#undef SCO_LABEL
 }
 
 bool scoreboard_ui_disabling;
@@ -417,7 +419,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if (!key_pressed)
 			return true;
 		if (scoreboard_selected_panel == SB_PANEL_RANKINGS)
-			rankings_start_column = min(rankings_start_column + 1, (ceil(RANKINGS_RECEIVED_CNT / rankings_rows) - rankings_columns));
+			rankings_start_column = min(rankings_start_column + 1, ceil(RANKINGS_RECEIVED_CNT / rankings_rows) - rankings_columns);
 	}
 	else if (nPrimary == K_LEFTARROW)
 	{
@@ -439,7 +441,7 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 					team_name = "auto";
 				else
 					team_name = Static_Team_ColorName(scoreboard_selected_team.team);
-				localcmd(sprintf("cmd join %s\n", team_name));
+				localcmd(strcat("cmd join ", team_name, "\n"));
 				HUD_Scoreboard_UI_Disable();
 			}
 			else if (scoreboard_selected_player)
@@ -455,19 +457,21 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 			switch (scoreboard_selected_columns_layout)
 			{
 				case 0:
-					if (autocvar_scoreboard_columns != "" && autocvar_scoreboard_columns != "all" && autocvar_scoreboard_columns != "default")
+					if (autocvar_scoreboard_columns != ""
+					&&  autocvar_scoreboard_columns != "all"
+					&&  autocvar_scoreboard_columns != "default")
 					{
-						localcmd(sprintf("scoreboard_columns_set\n")); // sets the layout saved in scoreboard_columns
+						localcmd("scoreboard_columns_set\n"); // sets the layout saved in scoreboard_columns
 						scoreboard_selected_columns_layout = 1;
 						break;
 					}
 					// fallthrough
 				case 1:
-					localcmd(sprintf("scoreboard_columns_set default\n"));
+					localcmd("scoreboard_columns_set default\n");
 					scoreboard_selected_columns_layout = 2;
 					break;
 				case 2:
-					localcmd(sprintf("scoreboard_columns_set all\n"));
+					localcmd("scoreboard_columns_set all\n");
 					scoreboard_selected_columns_layout = 0;
 					break;
 			}
@@ -485,9 +489,9 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if (!key_pressed)
 			return true;
 		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD
-			&& scoreboard_selected_player)
+		&&  scoreboard_selected_player)
 		{
-			localcmd(sprintf("commandmode tell \"%s^7\"\n", entcs_GetName(scoreboard_selected_player.sv_entnum)));
+			localcmd(strcat("commandmode tell \"", entcs_GetName(scoreboard_selected_player.sv_entnum), "^7\"\n"));
 			HUD_Scoreboard_UI_Disable();
 		}
 	}
@@ -496,10 +500,8 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 		if (!key_pressed)
 			return true;
 		if (scoreboard_selected_panel == SB_PANEL_SCOREBOARD
-			&& scoreboard_selected_player)
-		{
-			localcmd(sprintf("vcall kick \"%s^7\"\n", entcs_GetName(scoreboard_selected_player.sv_entnum)));
-		}
+		&&  scoreboard_selected_player)
+			localcmd(strcat("vcall kick \"", entcs_GetName(scoreboard_selected_player.sv_entnum), "^7\"\n"));
 	}
 	else if (hit_con_bind || nPrimary == K_PAUSE)
 		return false;
@@ -509,11 +511,11 @@ float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSeconda
 
 void PrintScoresLabels()
 {
-	Label_getInfo(string_null, 1);
+	Label_getInfo(string_null, true);
 }
 string TranslateScoresLabel(string label)
 {
-	return Label_getInfo(label, 0);
+	return Label_getInfo(label, false);
 }
 
 void Scoreboard_InitScores()
@@ -574,7 +576,7 @@ void Scoreboard_UpdatePlayerTeams()
 	}
 	/*
 	if (num != lastpnum)
-		print(strcat("PNUM: ", ftos(num), "\n"));
+		print(strcat("PNUM: ", itos(num), "\n"));
 	lastpnum = num;
 	*/
 
@@ -724,21 +726,21 @@ void Cmd_Scoreboard_Help()
 	LOG_HELP(_("^2scoreboard_columns_set ^3expand_default ^7loads default layout and expands it into the cvar scoreboard_columns so you can edit it"));
 	LOG_HELP(_("You can use a ^3|^7 to start the right-aligned fields."));
 	LOG_HELP(_("The following field names are recognized (case insensitive):"));
-	LOG_HELP("");
 
+	LOG_HELP("");
 	PrintScoresLabels();
-	LOG_HELP("");
 
+	LOG_HELP("");
 	LOG_HELP(_("Before a field you can put a + or - sign, then a comma separated list\n"
 	           "of gametypes, then a slash, to make the field show up only in these\n"
 	           "or in all but these gametypes. You can also specify 'all' as a\n"
 	           "field to show all fields available for the current gametype."));
-	LOG_HELP("");
 
+	LOG_HELP("");
 	LOG_HELP(_("The special gametype names 'teams' and 'noteams' can be used to\n"
 	           "include/exclude ALL teams/noteams gametypes."));
-	LOG_HELP("");
 
+	LOG_HELP("");
 	LOG_HELP(_("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"));
 	LOG_HELP(_("will display name, ping and pl aligned to the left, and the fields\n"
 	           "right of the vertical bar aligned to the right."));
@@ -783,7 +785,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 		for (i = 0; i < MAX_SBT_FIELDS; ++i)
 			sbt_field_title[i] = strzone("(null)");
 
-	// TODO: re enable with gametype dependant cvars?
+	// TODO: re-enable with gametype-dependent cvars?
 	if (argc < 3) // no arguments provided
 		argc = tokenizebyseparator(strcat("0 1 ", autocvar_scoreboard_columns), " ");
 
@@ -808,11 +810,8 @@ void Cmd_Scoreboard_SetFields(int argc)
 				s = strcat(s, " ", "kdratio");
 				s = strcat(s, " ", "frags");
 			}
-			FOREACH(Scores, true,
-			{
-				if (it != ps_primary && it != ps_secondary && scores_label(it) != "")
-					s = strcat(s, " ", scores_label(it));
-			});
+			FOREACH(Scores, it != ps_primary && it != ps_secondary && scores_label(it) != "",
+				s = strcat(s, " ", scores_label(it)));
 			if (ps_secondary != ps_primary)
 				s = strcat(s, " ", scores_label(ps_secondary));
 			s = strcat(s, " ", scores_label(ps_primary));
@@ -965,6 +964,7 @@ void Cmd_Scoreboard_SetFields(int argc)
 	sbt_field[sbt_num_fields] = SP_END;
 	sb_field_sizes_init = 1;
 }
+#undef SCOREBOARD_DEFAULT_COLUMNS
 
 string Scoreboard_AddPlayerId(string pl_name, entity pl)
 {
@@ -1035,12 +1035,6 @@ int autocvar_hud_panel_scoreboard_ping_high = 200;
 vector autocvar_hud_panel_scoreboard_ping_low_color = '0 1 0';
 vector autocvar_hud_panel_scoreboard_ping_medium_color = '1 1 0';
 vector autocvar_hud_panel_scoreboard_ping_high_color = '1 0 0';
-#define PING_LOW autocvar_hud_panel_scoreboard_ping_low
-#define PING_MED autocvar_hud_panel_scoreboard_ping_medium
-#define PING_HIGH autocvar_hud_panel_scoreboard_ping_high
-#define COLOR_LOW autocvar_hud_panel_scoreboard_ping_low_color
-#define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
-#define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
 string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 {
 	float tmp, num, denom;
@@ -1056,6 +1050,12 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 	switch (field)
 	{
 		case SP_PING:
+		#define PING_LOW autocvar_hud_panel_scoreboard_ping_low
+		#define PING_MED autocvar_hud_panel_scoreboard_ping_medium
+		#define PING_HIGH autocvar_hud_panel_scoreboard_ping_high
+		#define COLOR_LOW autocvar_hud_panel_scoreboard_ping_low_color
+		#define COLOR_MED autocvar_hud_panel_scoreboard_ping_medium_color
+		#define COLOR_HIGH autocvar_hud_panel_scoreboard_ping_high_color
 			if (!pl.gotscores)
 				return "\xE2\x96\xB6\xE2\x96\xB6\xE2\x96\xB6"; // >>> sign using U+25B6 (Black Right-Pointing Triangle)
 			//str = getplayerkeyvalue(pl.sv_entnum, "ping");
@@ -1072,6 +1072,12 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 			else
 				sbt_field_rgb = COLOR_HIGH;
 			return ftos(f);
+		#undef PING_LOW
+		#undef PING_MED
+		#undef PING_HIGH
+		#undef COLOR_LOW
+		#undef COLOR_MED
+		#undef COLOR_HIGH
 
 		case SP_PL:
 			if (!pl.gotscores)
@@ -2265,7 +2271,7 @@ vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size)
 
 	if (panel_bg_padding)
 	{
-		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_pos  += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
@@ -2365,7 +2371,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 
 	if (panel_bg_padding)
 	{
-		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_pos  += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
@@ -2390,7 +2396,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 		else if (!((j + rankings_start_column + column) & 1) && sbt_highlight)
 			drawfill(pos, columnsize, hl_rgb, sbt_highlight_alpha, DRAWFLAG_NORMAL);
 
-		str = count_ordinal(i+1);
+		str = count_ordinal(i + 1);
 		vector rank_color;
 		switch (i)
 		{
@@ -2851,22 +2857,14 @@ void Scoreboard_Draw(bool should_draw)
 			if (respawn_time < time) // it happens for a few frames when server is respawning the player
 				str = ""; // draw an empty string to not change suddenly scoreboard_bottom
 			else
-				str = sprintf(_("^1Respawning in ^3%s^1..."),
-					(autocvar_hud_panel_scoreboard_respawntime_decimals ?
-						count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
-						:
-						count_seconds(ceil(respawn_time - time))
-					)
-				);
+				str = sprintf(_("^1Respawning in ^3%s^1..."), (autocvar_hud_panel_scoreboard_respawntime_decimals
+					? count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
+					: count_seconds(ceil(respawn_time - time))));
 		}
 		else if (time < respawn_time)
-			str = sprintf(_("You are dead, wait ^3%s^7 before respawning"),
-				(autocvar_hud_panel_scoreboard_respawntime_decimals ?
-					count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
-					:
-					count_seconds(ceil(respawn_time - time))
-				)
-			);
+			str = sprintf(_("You are dead, wait ^3%s^7 before respawning"), (autocvar_hud_panel_scoreboard_respawntime_decimals
+				? count_seconds_decs(respawn_time - time, autocvar_hud_panel_scoreboard_respawntime_decimals)
+				: count_seconds(ceil(respawn_time - time))));
 		else if (time >= respawn_time)
 			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey(_("jump"), "+jump"));
 
