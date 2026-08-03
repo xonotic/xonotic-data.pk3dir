@@ -26,7 +26,7 @@
 "ctf","implosion","7","8","5",,"g_jetpack 1","[Special] Capture the Flag: Implosion","Jetpack: Press jump (default key 'space') while already in the air to use the Jetpack and enjoy flying around!"
 "as","techassault","7","8",,,"g_campaign_forceteam 1","Assault: Techassault","You are in the attacking team and you have to destroy all objects. There will be new rooms/ways if you destroy an object."
 "tmayhem","trident","7","8",,"5",,"Team Mayhem: Trident","In this gametype, you spawn with all weapons and a full health and armour stack. Self-damage is off, the team who deals the most damage and gets the most frags wins the game!"
-//"cts","courtfun","0","0","6000",,,"Race CTS: Courtfun","Race CTS (Complete the Stage) is similar to the Race gametype, just that you only need to reach the finish once in CTS. You have to beat it within 1 minute though."
+//"cts","courtfun","0","0","6000",,,"Complete the Stage: Courtfun","Complete the Stage (CTS) is similar to the Race gametype, just that you only need to reach the finish once in CTS. You have to beat it within 1 minute though."
 "ft","xoylent","5","8","5",,,"Freeze Tag: Xoylent","Another match of Freeze Tag. You can revive teammates by standing close to them for a few seconds."
 "ons","runningmanctf","7","8","1","10",,"Onslaught: Running Man","Onslaught: Touch a connected but uncaptured checkpoint to start building it. Destroy connected opposing team checkpoints to uncapture them and touch to capture. Destroy the opposing team's core to win!"
 "ctf","catharsis","9","9","5",,,"Capture the Flag: Catharsis","CTF versus a team consisting of the hardest bots so far! 5 captures to win."
