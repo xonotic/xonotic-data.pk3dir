@@ -3895,8 +3895,8 @@ msgid ""
 "Like with all %s weapons, the secondary fire shoots a laser which doesn't "
 "damage or push enemies, but can be used to push yourself around."
 msgstr ""
-"Як і у всієї %s зброї, вторинний вогонь випускає лазер, який не шкодить і не "
-"відштовхує ворогів, але здатний відштовхнути вас самих."
+"Як і у всієї %s зброї, вторинний вогонь випускає лазерний імпульс, який не "
+"шкодить і не відштовхує ворогів, але здатний відштовхнути вас самих."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:175
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:257
@@ -8148,8 +8148,8 @@ msgid ""
 "knockback."
 msgstr ""
 "%s - це одна із двох основних видів зброї, яка стріляє відносно слабким, але "
-"високошвидкісним лазером, завдаючи незначної шкоди по площі, але, що "
-"найважливіше, із сильним відштовхуванням."
+"високошвидкісним лазерним імпульсом, завдаючи незначної шкоди по площі, але, "
+"що найважливіше, із сильним відштовхуванням."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:168
 msgid ""
@@ -8374,11 +8374,15 @@ msgid ""
 "The %s supercharges then fires a massive fireball in a straight line, "
 "dealing heaps of splash damage over a large radius on impact."
 msgstr ""
+"%s заряджається і випускає величезну вогняну кулю по прямій, завдаючи "
+"колосальної шкоди по великій площі при зіткненні."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:402
 msgid ""
 "The secondary fire launches flaming balls that set nearby players alight."
 msgstr ""
+"Вторинний режим вогню випускає полум'яні кулі, які підпалюють гравців "
+"поблизу."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:403
 msgid "It is a superweapon, so isn't often found in game."
@@ -8387,7 +8391,7 @@ msgstr "Так як це суперзброя, вона рідко з'являє
 #: qcsrc/common/weapons/weapon/fireball.qc:404
 #: qcsrc/common/weapons/weapon/porto.qc:423
 msgid "It doesn't require ammo, but it is destroyed after some time."
-msgstr ""
+msgstr "Вона не використовує набої, але руйнується через деякий час."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:405
 #, c-format
@@ -8396,6 +8400,9 @@ msgid ""
 "it effectively may be difficult, but if done properly it can deal a ton of "
 "damage."
 msgstr ""
+"Оскільки %s потребує часу на заряд, а вогняна куля летить повільно, "
+"ефективне використати його може бути складно, але, при влучному "
+"застосування, він завдасть колосальної шкоди."
 
 #: qcsrc/common/weapons/weapon/fireball.qh:38
 msgid "Fireball"
@@ -8407,6 +8414,8 @@ msgid ""
 "The %s rapidly fires small propelled rockets forwards, dealing some splash "
 "damage on impact."
 msgstr ""
+"%s стрімко стріляє малими реактивними ракетами вперед, завдаючи невеликої "
+"шкоди по площі від вибуху."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:511
 msgid ""
@@ -8415,11 +8424,15 @@ msgid ""
 "it will fire itself after some time (after a warning beep) if the secondary "
 "fire isn't released."
 msgstr ""
+"Якщо утримувати вторинний вогонь, зброя заряджає кілька ракет і випускає їх "
+"одночасно при відпусканні. Ракети не можна утримувати нескінченно, тому вони "
+"вилетять автоматично (після попереджувального сигналу), якщо не відпускати "
+"вторинний вогонь."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:513
 #, c-format
 msgid "It consumes %s ammo for each rocket."
-msgstr ""
+msgstr "Споживає набої %s за кожну ракету."
 
 #: qcsrc/common/weapons/weapon/hagar.qc:514
 #, c-format
@@ -8429,6 +8442,9 @@ msgid ""
 "before turning a corner, so you can surprise any enemies around the corner "
 "with a bunch of rockets to the face."
 msgstr ""
+"%s найкраще працює на близькій та середній дистанції, оскільки на великій "
+"відстані важко влучити. Поширений прийом: повністю зарядити вторинний вогонь "
+"перед поворотом, щоб застати ворогів зненацька залпом ракет прямо в них."
 
 #: qcsrc/common/weapons/weapon/hagar.qh:41
 msgid "Hagar"
@@ -8440,12 +8456,16 @@ msgid ""
 "The %s (or HLAC for short) fires lasers in quick succession. The projectiles "
 "it fires are similar to those of the %s."
 msgstr ""
+"%s (коротко ВИЛА) стріляє лазерними імпульсами в швидкому темпі. Снаряди, "
+"якими він стріляє, дуже схожі на тих, з яких стріляє %s."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:248
 msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
+"Вторинний вогонь стріляє чергою з кількох випадково розсіяних лазерних "
+"імпульсів за раз."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:249
 #, c-format
@@ -8453,6 +8473,8 @@ msgid ""
 "Unlike the %s, it consumes %s ammo for each laser shot, meaning that it "
 "cannot be used infinitely."
 msgstr ""
+"На відміну від %sа, він споживає набої %s за кожний лазерний постріл, тож "
+"стріляти з нього нескінченно не вийде."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:250
 #, c-format
@@ -8460,6 +8482,8 @@ msgid ""
 "The %s works best in close ranges, but the primary fire is also useful in "
 "medium ranges."
 msgstr ""
+"%s найкраще працює на близькій відстані, проте основний вогонь теж корисний "
+"на середній дистанції."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:251
 #, c-format
@@ -8469,10 +8493,14 @@ msgid ""
 "fire every now and then is important to restore accuracy. Also, the %s has "
 "less spread when used while crouching."
 msgstr ""
+"%s має унікальний аспект: що довше стріляти з основного вогню, то сильніше "
+"розсіюються лазерні імпульси. Це означає, що важливо відпускати основний "
+"вогонь час від часу для відновлення точності. Крім того, %s менше "
+"розсіюється у присіданні."
 
 #: qcsrc/common/weapons/weapon/hlac.qh:35
 msgid "Heavy Laser Assault Cannon"
-msgstr "Важка Імпульсна Лазерна Арматура"
+msgstr "Важкий Імпульсний Лазерний Автомат"
 
 #: qcsrc/common/weapons/weapon/hook.qc:397
 #, c-format
