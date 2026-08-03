@@ -7,9 +7,9 @@
 
 #define TOPICS(X) \
 	X(NEW(IntroductionSource), _("Introduction"), "gametype_tdm") \
-	X(NEW(MovementSource),     _("Movement"),     "gametype_inv") \
-	X(NEW(GametypeSource),     _("Gametypes"),    "gametype_dm") \
 	X(NEW(WeaponSource),       _("Weapons"),      "gametype_duel") \
+	X(NEW(GametypeSource),     _("Gametypes"),    "gametype_dm") \
+	X(NEW(MovementSource),     _("Movement"),     "gametype_inv") \
 	X(NEW(ItemSource),         _("Items"),        "gametype_kh") \
 	X(NEW(PowerupSource),      _("Powerups"),     "gametype_dom") \
 	X(NEW(BuffSource),         _("Buffs"),        "gametype_ka") \
