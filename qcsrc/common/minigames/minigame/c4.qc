@@ -27,14 +27,14 @@ const int C4_SPECTATOR_TEAM = 255; // must be above max teams and equal to or be
 entity c4_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
 	return NULL;
 }
 
 // Checks if the given piece completes a row
-bool c4_winning_piece(entity piece)
+bool c4_winning_piece(entity minigame, entity piece)
 {
 	int number = minigame_tile_number(piece.netname);
 	int letter = minigame_tile_letter(piece.netname);
@@ -46,7 +46,7 @@ bool c4_winning_piece(entity piece)
 	entity botleft = piece;
 	for(i = number; i < C4_NUM_CNT; ++i)
 	{
-		entity p = c4_find_piece(piece.owner,minigame_tile_buildname(letter, i));
+		entity p = c4_find_piece(minigame,minigame_tile_buildname(letter, i));
 		if(p.team == piece.team)
 			top = p;
 		else break;
@@ -54,7 +54,7 @@ bool c4_winning_piece(entity piece)
 
 	for(i = letter; i >= 0; --i)
 	{
-		entity p = c4_find_piece(piece.owner,minigame_tile_buildname(i, number));
+		entity p = c4_find_piece(minigame,minigame_tile_buildname(i, number));
 		if(p.team == piece.team)
 			left = p;
 		else break;
@@ -63,14 +63,14 @@ bool c4_winning_piece(entity piece)
 	int j;
 	for(i = letter, j = number; i >= 0, j >= 0; --i, --j)
 	{
-		entity p = c4_find_piece(piece.owner,minigame_tile_buildname(i, j));
+		entity p = c4_find_piece(minigame,minigame_tile_buildname(i, j));
 		if(p.team == piece.team)
 			botleft = p;
 		else break;
 	}
 	for(i = letter, j = number; i >= 0, j < C4_NUM_CNT; --i, ++j)
 	{
-		entity p = c4_find_piece(piece.owner,minigame_tile_buildname(i, j));
+		entity p = c4_find_piece(minigame,minigame_tile_buildname(i, j));
 		if(p.team == piece.team)
 			topleft = p;
 		else break;
@@ -80,7 +80,7 @@ bool c4_winning_piece(entity piece)
 	int found = 0;
 	for(i = minigame_tile_number(top.netname); i >= 0; --i)
 	{
-		if(c4_find_piece(piece.owner,minigame_tile_buildname(letter, i)).team == piece.team)
+		if(c4_find_piece(minigame,minigame_tile_buildname(letter, i)).team == piece.team)
 			++found;
 		else break;
 	}
@@ -92,7 +92,7 @@ bool c4_winning_piece(entity piece)
 	found = 0;
 	for(i = minigame_tile_letter(left.netname); i < C4_LET_CNT; ++i)
 	{
-		if(c4_find_piece(piece.owner,minigame_tile_buildname(i, number)).team == piece.team)
+		if(c4_find_piece(minigame,minigame_tile_buildname(i, number)).team == piece.team)
 			++found;
 		else break;
 	}
@@ -104,7 +104,7 @@ bool c4_winning_piece(entity piece)
 	found = 0;
 	for(i = minigame_tile_letter(topleft.netname), j = minigame_tile_number(topleft.netname); i < C4_LET_CNT, j >= 0; ++i, --j)
 	{
-		if(c4_find_piece(piece.owner,minigame_tile_buildname(i, j)).team == piece.team)
+		if(c4_find_piece(minigame,minigame_tile_buildname(i, j)).team == piece.team)
 			++found;
 		else break;
 	}
@@ -116,7 +116,7 @@ bool c4_winning_piece(entity piece)
 	found = 0;
 	for(i = minigame_tile_letter(botleft.netname), j = minigame_tile_number(botleft.netname); i < C4_LET_CNT, j < C4_NUM_CNT; ++i, ++j)
 	{
-		if(c4_find_piece(piece.owner,minigame_tile_buildname(i, j)).team == piece.team)
+		if(c4_find_piece(minigame,minigame_tile_buildname(i, j)).team == piece.team)
 			++found;
 		else break;
 	}
@@ -170,7 +170,7 @@ void c4_move(entity minigame, entity player, string pos )
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 			++minigame.c4_npieces;
 			minigame.c4_nexteam = minigame_next_team(player.team,C4_TEAMS);
-			if ( c4_winning_piece(piece) )
+			if ( c4_winning_piece(minigame, piece) )
 			{
 				minigame.minigame_flags = C4_TURN_WIN | player.team;
 			}
@@ -198,7 +198,7 @@ int c4_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
@@ -282,7 +282,7 @@ void c4_hud_board(vector pos, vector mySize)
 
 			if ( active_minigame.minigame_flags & C4_TURN_WIN )
 			if ( !e.c4_checkwin )
-				e.c4_checkwin = c4_winning_piece(e) ? 1 : -1;
+				e.c4_checkwin = c4_winning_piece(active_minigame, e) ? 1 : -1;
 
 			float icon_color = 1;
 			if ( e.c4_checkwin == -1 )

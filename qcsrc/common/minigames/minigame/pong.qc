@@ -119,9 +119,9 @@ void pong_paddle_bounce(entity ball, int pteam)
 }
 
 // checks if the ball hit the paddle for the given team
-bool pong_paddle_hit(entity ball, int pteam)
+bool pong_paddle_hit(entity minigame, entity ball, int pteam)
 {
-	entity paddle = ball.owner.pong_paddles[pteam-1];
+	entity paddle = minigame.pong_paddles[pteam-1];
 	if (!paddle)
 		return false;
 
@@ -135,15 +135,15 @@ bool pong_paddle_hit(entity ball, int pteam)
 }
 
 // Checks for a goal, when that happes adds scores and resets the ball
-bool pong_goal(entity ball, int pteam)
+bool pong_goal(entity minigame, entity ball, int pteam)
 {
-	entity paddle = ball.owner.pong_paddles[pteam-1];
+	entity paddle = minigame.pong_paddles[pteam-1];
 	if (!paddle)
 		return false;
 
-	if ( !pong_paddle_hit(ball, pteam) )
+	if ( !pong_paddle_hit(minigame, ball, pteam) )
 	{
-		pong_add_score(ball.owner ,ball.team, pteam, 1);
+		pong_add_score(minigame,ball.team, pteam, 1);
 		pong_ball_reset(ball);
 		return true;
 	}
@@ -154,6 +154,7 @@ bool pong_goal(entity ball, int pteam)
 // Moves the ball around
 void pong_ball_think(entity this)
 {
+	entity minigame = this.owner;
 	float think_speed = autocvar_sys_ticrate;
 	this.nextthink = time + think_speed;
 
@@ -163,7 +164,7 @@ void pong_ball_think(entity this)
 
 	int i;
 	for ( i = 1; i <= PONG_MAX_PLAYERS; ++i )
-		if ( pong_paddle_hit(this, i) )
+		if ( pong_paddle_hit(minigame, this, i) )
 		{
 			pong_paddle_bounce(this,i);
 			this.team = i;
@@ -173,7 +174,7 @@ void pong_ball_think(entity this)
 
 	if ( this.origin_y <= this.pong_length )
 	{
-		if ( !pong_goal(this,3) )
+		if ( !pong_goal(minigame,this,3) )
 		{
 			this.origin_y = this.pong_length;
 			this.velocity_y *= -1;
@@ -181,7 +182,7 @@ void pong_ball_think(entity this)
 	}
 	else if ( this.origin_y >= 1-this.pong_length )
 	{
-		if ( !pong_goal(this,4) )
+		if ( !pong_goal(minigame,this,4) )
 		{
 			this.origin_y = 1-this.pong_length;
 			this.velocity_y *= -1;
@@ -190,7 +191,7 @@ void pong_ball_think(entity this)
 
 	if ( this.origin_x <= this.pong_length )
 	{
-		if ( !pong_goal(this,2) )
+		if ( !pong_goal(minigame,this,2) )
 		{
 			 this.origin_x = this.pong_length;
 			 this.velocity_x *= -1;
@@ -198,7 +199,7 @@ void pong_ball_think(entity this)
 	}
 	else if ( this.origin_x >= 1-this.pong_length )
 	{
-		if ( !pong_goal(this,1) )
+		if ( !pong_goal(minigame,this,1) )
 		{
 			 this.origin_x = 1-this.pong_length;
 			 this.velocity_x *= -1;
@@ -218,7 +219,7 @@ void pong_ai_think(entity this)
 	float min_distance = 1;
 	entity ball = NULL;
 	entity mayball = NULL;
-	while ( ( mayball = findentity(mayball,owner,this.owner) ) )
+	while ( ( mayball = findfloat(mayball,minigame_id,this.minigame_id) ) )
 		if ( mayball.classname == "pong_ball" )
 		{
 			distance = vlen(mayball.origin-this.pong_ai_paddle.origin);
@@ -258,9 +259,9 @@ void pong_ai_think(entity this)
 		this.pong_keys = 0;
 }
 
-entity pong_ai_spawn(entity paddle)
+entity pong_ai_spawn(entity minigame, entity paddle)
 {
-	entity ai = msle_spawn(paddle.owner,new(pong_ai));
+	entity ai = msle_spawn(minigame,new(pong_ai));
 	ai.minigame_players = ai;
 	ai.team = paddle.team;
 	setthink(ai, pong_ai_think);
@@ -329,7 +330,7 @@ entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 	paddle.m_maxs = pong_team_to_box_halfsize(pl_team,paddle.pong_length,1/16);
 
 	if ( real_player == NULL )
-		pong_ai_spawn(paddle);
+		pong_ai_spawn(minigame, paddle);
 	else
 		paddle.realowner = real_player;
 
@@ -379,7 +380,7 @@ int pong_server_event(entity minigame, string event, ...)
 				paddle = minigame.pong_paddles[i];
 				if ( paddle != NULL && paddle.realowner == player )
 				{
-					ai = pong_ai_spawn(paddle);
+					ai = pong_ai_spawn(minigame, paddle);
 					ai.pong_score = player.minigame_players.pong_score;
 					break;
 				}

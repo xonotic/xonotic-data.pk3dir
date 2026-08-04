@@ -1268,7 +1268,7 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 						notif.nent_icon, notif.nent_iconargs,
 						s1, s2, s3, s4, f1, f2, f3, f4);
 					// remove the trailing newline
-					notif.nent_icon = strzone(substring(s, 0, -1));
+					notif.nent_icon = strzone(substring(s, 0, -2));
 				}
 				Local_Notification_HUD_Notify_Push(
 					notif.nent_icon,

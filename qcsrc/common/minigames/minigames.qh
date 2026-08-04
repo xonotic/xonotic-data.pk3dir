@@ -44,6 +44,10 @@ int minigame_count_players(entity minigame);
 /// For minigame sessions: minigame descriptor object
 .entity descriptor;
 
+/// Unique ID for the minigame session, associated with all objects
+/// currently the result of etof(minigame) on the server
+.int minigame_id;
+
 /// For minigame sessions/descriptors: execute the given event
 /// Client events:
 /// 	mouse_moved(vector mouse_pos)
@@ -120,3 +124,5 @@ entity msle_spawn(entity minigame_session, entity e);
 
 int msle_id(string class_name);
 string msle_classname(int id);
+
+entity minigame_get_owner(int id);
