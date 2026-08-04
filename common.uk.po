@@ -3929,7 +3929,7 @@ msgid ""
 "long ranges since the bullets pierce the sky instantaneously."
 msgstr ""
 "%s можна використовувати в різних ситуаціях, і чудово працює на великих "
-"відстанях, оскільки кулі миттєво пронизують небо."
+"відстанях, оскільки його кулі долітають миттєво."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:179
 #, c-format
@@ -8508,12 +8508,16 @@ msgid ""
 "The %s is a unique weapon, firing a chain forwards which pulls you in once "
 "it latches onto something."
 msgstr ""
+"%s - унікальна зброя, що випускає ланцюг вперед, який притягує вас, щойно за "
+"щось зачепиться."
 
 #: qcsrc/common/weapons/weapon/hook.qc:398
 msgid ""
 "The secondary fire usually drops a gravity bomb that affects enemies, also "
 "releasing light and smoke sort of like a flashbang."
 msgstr ""
+"Вторинний вогонь зазвичай скидає гравітаційну бомбу, яка діє на ворогів, а "
+"також спалахує світлом і димом, наче світлошумова граната. "
 
 #: qcsrc/common/weapons/weapon/hook.qc:399
 #, c-format
@@ -8521,6 +8525,8 @@ msgid ""
 "It usually requires %s ammo to work, consuming it both when initially firing "
 "the hook, and after a couple seconds as it reels you in."
 msgstr ""
+"Для роботи зазвичай використовує набої %s: вони витрачаються як під час "
+"випуску гака, так і через кілька секунд, коли він притягує вас."
 
 #: qcsrc/common/weapons/weapon/hook.qc:400
 #, c-format
@@ -8529,6 +8535,9 @@ msgid ""
 "around the map at high speeds, making both surprise ambushes and miraculous "
 "escapes possible."
 msgstr ""
+"%s дозволяє діставатися раніше недоступних місць і носитися мапою на "
+"величезній швидкості, що уможливлює як раптові засідки, так і дивовижні "
+"втечі."
 
 #: qcsrc/common/weapons/weapon/hook.qc:402
 #, c-format
@@ -8536,6 +8545,8 @@ msgid ""
 "It isn't available very often on maps, unless the %s mutator is active, in "
 "which all players have it on their offhand, used with %s."
 msgstr ""
+"Він рідко трапляється на мапах, хіба що увімкненого мутатора %s, де кожен "
+"гравець має його як допоміжну зброю на клавіші %s."
 
 #: qcsrc/common/weapons/weapon/hook.qh:36
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
@@ -8548,6 +8559,8 @@ msgid ""
 "fire and with no spread, but there's a short delay until it can be used "
 "again."
 msgstr ""
+"Вторинний вогонь випускає швидку чергу куль, швидшу за основний вогонь і без "
+"розкиду, але перед наступним використанням є невелика затримка."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:447
 #, c-format
@@ -8555,6 +8568,8 @@ msgid ""
 "It consumes %s ammo for each bullet shot, until the whole magazine is "
 "emptied."
 msgstr ""
+"Використовує набої %s для кожного пострілу, поки повністю не спорожніє "
+"магазин."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:448
 #, c-format
@@ -8564,6 +8579,10 @@ msgid ""
 "secondary fire has no spread, it's the better option when firing over a long "
 "range."
 msgstr ""
+"%s можна використовувати в різних ситуаціях, і чудово працює на великих "
+"відстанях, оскільки його кулі долітають миттєво. Завдяки відсутності "
+"розкиду, вторинний вогонь краще використовувати для стрільби на велику "
+"відстань."
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:34
 msgid "MachineGun"
@@ -8576,17 +8595,23 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after some time they will self-detonate."
 msgstr ""
+"%s встановлює на землю міни, які детонують і завдають шкоди ворогам, що на "
+"них наступають. Одночасно можна встановити лише кілька мін, і через деякий "
+"час вони самопідриваються."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:563
 msgid ""
 "Uniquely, the mines explode sooner the closer an enemy comes to them. The "
 "secondary fire can be used to detonate all mines placed by the primary fire."
 msgstr ""
+"Унікальна особливість у тому, що міни вибухають тим швидше, чим ближче до "
+"них підходить ворог. За допомогою вторинного вогню, можна підірвати всі "
+"міни, встановлені основним вогнем."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:565
 #, c-format
 msgid "It consumes %s ammo for each mine laid."
-msgstr ""
+msgstr "Споживає набої %s за кожну міну."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:566
 #, c-format
@@ -8596,6 +8621,9 @@ msgid ""
 "important areas of the map such as the flag in %s, control points in %s, or "
 "checkpoints in %s."
 msgstr ""
+"Міни запускаються не дуже далеко перш ніж упасти, тому %s не ефективний на "
+"середній та далекій відстані. його часто використовують для захисту важливих "
+"місць, наприклад, прапора (%s), контрольних точок (%s), або цілей (%s)."
 
 #: qcsrc/common/weapons/weapon/minelayer.qh:38
 msgid "Mine Layer"
@@ -8607,17 +8635,21 @@ msgid ""
 "The %s launches a grenade that explodes immediately on impact, dealing a "
 "medium amount of splash damage."
 msgstr ""
+"%s вистрілює гранату, яка одразу вибухає при зіткненні, завдаючи середньої "
+"шкоди по площі."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:399
 msgid ""
 "The secondary fire shoots a similar grenade that explodes shortly after "
 "bouncing."
 msgstr ""
+"Вторинний вогонь вистрілює схожою гранатою, яка вибухає невдовзі після "
+"відскоку."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:400
 #, c-format
 msgid "It consumes %s ammo for every grenade launched."
-msgstr ""
+msgstr "Споживає набої %s на кожну випущену гранату."
 
 #: qcsrc/common/weapons/weapon/mortar.qc:401
 #, c-format
@@ -8627,6 +8659,10 @@ msgid ""
 "exploding, it can be bounced against walls to damage enemies lurking around "
 "a corner."
 msgstr ""
+"%s найкраще працює на ближній та середній дистанції, але досить складно "
+"влучити у ворога в повітрі. Оскільки граната від вторинного режиму вибухає "
+"після відскоку, її можна рикошетити від стін, щоб уразити ворогів, які "
+"ховаються за поворотом."
 
 #: qcsrc/common/weapons/weapon/mortar.qh:35
 msgid "Mortar"
@@ -8721,7 +8757,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/seeker.qc:635
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
-msgstr "Споживає тип набоїв %s, навіть коли мітка не попала."
+msgstr "Споживає тип набоїв %s, навіть коли мітка не влучила."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:636
 #, c-format
