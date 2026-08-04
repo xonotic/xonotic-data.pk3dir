@@ -920,10 +920,9 @@ void ClientInit_misc(entity this)
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[2]));
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[3]));
 
-	if(autocvar_sv_foginterval && world.fog != "")
-		WriteString(channel, world.fog);
-	else
-		WriteString(channel, "");
+	WriteString(channel, world.fog);
+	WriteByte(channel, autocvar_sv_foginterval && world.fog != ""); // only forced if necessary
+
 	WriteByte(channel, this.count * 255.0); // g_balance_armor_blockpercent
 	WriteByte(channel, this.cnt * 255.0); // g_balance_damagepush_speedfactor
 	WriteByte(channel, serverflags);
@@ -1217,9 +1216,6 @@ void ClientConnect(entity this)
 		else if (autocvar_sv_quickmenu_file != "" && strstrofs(autocvar_sv_quickmenu_file, "/", 0) && fexists(autocvar_sv_quickmenu_file))
 			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", autocvar_sv_quickmenu_file));
 	}
-
-	if (!autocvar_sv_foginterval && world.fog != "")
-		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 	CSQCMODEL_AUTOINIT(this);
 
