@@ -33,7 +33,7 @@ float autocvar_g_respawn_ghosts_speed;
 int autocvar_g_respawn_waves;
 bool autocvar_g_nodepthtestplayers;
 string autocvar_g_mutatormsg;
-float autocvar_sv_foginterval;
+bool autocvar_sv_foginterval;
 float autocvar_sv_maxidle;
 int autocvar_sv_maxidle_minplayers = 2;
 float autocvar_sv_maxidle_playertospectator = 60;

@@ -1754,7 +1754,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 #endif
 
 	TargetMusic_Advance();
-	Fog_Force();
+	Fog_Set(string_null, false);
 	fpscounter_update();
 
 	if(drawtime == 0)

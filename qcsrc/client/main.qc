@@ -1026,22 +1026,29 @@ bool CSQC_Parse_TempEntity()
 
 bool autocvar_r_drawfog;
 bool autocvar_r_fog_exp2;
-string forcefog;
-void Fog_Force()
+void Fog_Set(string fog, bool force)
 {
+	static string saved = string_null;
+	if (force) // else just set the fog once
+		strcpy(saved, fog);
+	else if (saved)
+		fog = saved;
+
 	if (autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
 	{
 		if (autocvar_r_drawfog)
 			cvar_set("r_drawfog", "0");
 	}
-	else if (forcefog != "")
+	else if (fog)
 	{
-		// using cvar_set as it's faster and safer than a command
-		if (!autocvar_r_drawfog)
-			cvar_set("r_drawfog", "1");
+		// "fog none" in the mapinfo just disables r_drawfog, client's worldspawn fog values aren't changed
+		bool drawfog = boolean(fog != "");
+		if (autocvar_r_drawfog != drawfog)
+			cvar_set("r_drawfog", ftos(drawfog));
 		if (autocvar_r_fog_exp2)
 			cvar_set("r_fog_exp2", "0");
-		localcmd(sprintf("\nfog %s\n", forcefog));
+		if (fog != "")
+			localcmd(strcat("\nfog ", fog, " \n"));
 	}
 }
 
@@ -1083,7 +1090,7 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	arc_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	arc_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
-	strcpy(forcefog, ReadString());
+	Fog_Set(ReadString(), ReadByte());
 
 	armorblockpercent = ReadByte() / 255.0;
 	damagepush_speedfactor = ReadByte() / 255.0;
