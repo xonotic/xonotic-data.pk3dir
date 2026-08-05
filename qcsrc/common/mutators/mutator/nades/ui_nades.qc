@@ -76,6 +76,7 @@ void XonoticMutatorNadesTab_fill(entity me)
 				e.align = 1;
 				e.marginRight = 0.5;
 			name = strzone(it.netname);
+			// XONRELEASE TODO v0.9.0 post-release: remove ID-selection from cl_nade_type in favor of netname-selection, and update the description
 			me.TD(me, 1, 0.2, e = makeXonoticRadioButton(1, "g_nades_nade_type", name, ""));
 				setDependent(e, "g_nades_client_select", 0, 0);
 			me.TD(me, 1, 0.2, e = makeXonoticRadioButton(2, "g_nades_bonus_type", name, ""));
