@@ -3961,8 +3961,8 @@ msgid ""
 "The %s fires harmful beams of energy that traverse the map instantaneously "
 "and deal a significant chunk of damage on impact."
 msgstr ""
-"%s стріляє небезпечними променями енергії, які миттєво перетинають через всю "
-"мапу та при влучанні завдають значну частину шкоди."
+"%s стріляє небезпечними променями енергії, які миттєво долітають в інший "
+"кінець мапи та завдають значної шкоди при влучанні."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:361
 #, c-format
@@ -8674,18 +8674,22 @@ msgid ""
 "The %s is a unique gun that creates one-way portals between flat surfaces on "
 "the map, that immediately teleport players and projectiles."
 msgstr ""
+"%s - це унікальна зброя, яка створює односторонні портали між плоскими "
+"поверхнями мапи, які одразу телепортують гравців та снаряди."
 
 #: qcsrc/common/weapons/weapon/porto.qc:422
 msgid ""
 "The secondary fire is used to shoot the out-portal, while the primary fire "
 "shoots the in-portal."
-msgstr ""
+msgstr "Вторинний вогонь випускає вихідний портал, а основний - вхідний."
 
 #: qcsrc/common/weapons/weapon/porto.qc:424
 msgid ""
 "The portals will close either after the player who shot them dies or after "
 "some time period."
 msgstr ""
+"Портали закриваються після смерті гравця, який їх створив, або через певний "
+"проміжок часу."
 
 #: qcsrc/common/weapons/weapon/porto.qc:425
 #, c-format
@@ -8693,6 +8697,8 @@ msgid ""
 "The %s isn't often placed on maps, but if used well it can make for some "
 "interesting gameplay."
 msgstr ""
+"%s рідко з'являється на мапах, але в умілих руках робить геймплей набагато "
+"цікавішим."
 
 #: qcsrc/common/weapons/weapon/porto.qh:36
 msgid "Port-O-Launch"
@@ -8704,17 +8710,21 @@ msgid ""
 "The %s fires bullets that traverse the map instantaneously and deal a "
 "significant chunk of damage on impact."
 msgstr ""
+"%s стріляє кулями, які миттєво долітають в інший кінець мапи та завдають "
+"значної шкоди при влучанні."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:250
 msgid ""
 "The secondary fire shoots a few less powerful bullets at once with a bit of "
 "scatter."
 msgstr ""
+"Вторинний вогонь випускає кілька менш потужних куль одночасно з невеликим "
+"розкидом."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:251
 #, c-format
 msgid "It consumes %s ammo for each bullet shot."
-msgstr ""
+msgstr "Споживає набої %s за постріл."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:252
 #, c-format
@@ -8723,6 +8733,9 @@ msgid ""
 "manually with the %s. Also, it needs to be reloaded after its magazine is "
 "emptied."
 msgstr ""
+"На відміну від %sа, вторинний вогонь не наближає, тому %s потрібно вмикати "
+"вручну при зброї %s. Крім того, її треба перезаряджати коли магазин "
+"спорожніє."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:253
 msgid "zoom"
@@ -8735,6 +8748,8 @@ msgid ""
 "Similar to the %s, the %s can be used at any range, but it stands out at "
 "long ranges."
 msgstr ""
+"Як %s, %s можна використовувати на будь-якій відстані, але найкраще вона "
+"показує себе на далеких."
 
 #: qcsrc/common/weapons/weapon/rifle.qh:34
 msgid "Rifle"
@@ -8747,12 +8762,17 @@ msgid ""
 "missiles if it collides with a player. The homing isn't perfect, so "
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
+"%s - унікальна зброя, що стріляє \"міткою\", яка запускає декілька "
+"самонавідних ракет при влучанні в гравця. Самонаведення не ідеальне, тому "
+"іноді ракети можуть влучити в перешкоду чи в поворот."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:634
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
+"Вторинний вогонь стріляє швидким потоком розкиданих вибухових снарядів, які "
+"летять лише на коротку відстань."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:635
 #, c-format
@@ -8766,6 +8786,9 @@ msgid ""
 "it requires skill to aim effectively. The secondary fire is only useful in "
 "close range combat, and sometimes the explosives can damage yourself too."
 msgstr ""
+"%s при основному вогні завдає великої шкоди, коли мітка влучає, але вимагає "
+"вправності у ефективному прицілюванні. Вторинний режим корисний лише в "
+"ближньому бою, до того ж вибухівка може поранити й вас."
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
 msgid "T.A.G. Seeker"
