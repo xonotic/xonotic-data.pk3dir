@@ -2424,7 +2424,7 @@ msgstr "%s використовується для підсилювача %s."
 
 #: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
 msgid "Shells"
-msgstr "Гільза"
+msgstr "Патрони"
 
 #: qcsrc/common/items/item/ammo.qh:95 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
@@ -3993,7 +3993,7 @@ msgid ""
 "The primary fire consumes %s ammo, although you spawn with an infinite "
 "amount of it in %s."
 msgstr ""
-"Основний вогонь використовує набої типу %s, хоча в режимі %s ви з'являється "
+"Основний вогонь використовує набої типу %s, хоча в режимі %s ви з'являєтеся "
 "з їхньою нескінченною кількістю."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:259
@@ -8733,8 +8733,8 @@ msgid ""
 "manually with the %s. Also, it needs to be reloaded after its magazine is "
 "emptied."
 msgstr ""
-"На відміну від %sа, вторинний вогонь не наближає, тому %s потрібно вмикати "
-"вручну при зброї %s. Крім того, її треба перезаряджати коли магазин "
+"Порівняно зі зброєю %s, вторинний вогонь не наближає, тому %s потрібно "
+"вмикати вручну при зброї %s. Крім того, її треба перезаряджати коли магазин "
 "спорожніє."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:253
@@ -8800,6 +8800,8 @@ msgid ""
 "The %s is one of the two main default weapons, firing a single shotgun round "
 "which spreads into multiple pellets upon exiting the barrel."
 msgstr ""
+"%s - це одна із двох основних початкових видів зброї, яка стріляє одним "
+"дробовим набоєм, який розлітається на безліч дробин після вильоту зі ствола."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:421
 #, c-format
@@ -8808,6 +8810,9 @@ msgid ""
 "head of the weapon. Since the slap takes a moment to land, timing this well "
 "is difficult."
 msgstr ""
+"%s дозволяє розмахуватися нею через вторинний вогонь, б'ючи дулом зброї "
+"гравців, що знаходяться поруч. Оскільки ляпас відбувається із затримкою, "
+"піймати правильний момент досить складно."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:423
 #, c-format
@@ -8815,6 +8820,8 @@ msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
 "will already have some."
 msgstr ""
+"Основна атака витрачає набої %s, хоча якщо ваша початкова зброя - %s, у вас "
+"вже буде її певний запас."
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:34
 msgid "Shotgun"
@@ -8826,14 +8833,16 @@ msgid ""
 "The %s is a unique weapon that makes the ears of nearby enemies bleed by "
 "playing awful sounds, also slightly knocking them back."
 msgstr ""
+"%s - унікальна зброя, від жахливих звуків якої у ворогів неподалік іде кров "
+"з вух, а самих їх злегка відштовхує."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:605
 msgid "The secondary fire works the same way, playing a higher pitch."
-msgstr ""
+msgstr "Вторинний вогонь працює так само, але видає вищий тон."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 msgid "The only ammo it needs to operate is the breath from your lungs."
-msgstr ""
+msgstr "Єдині набої, необхідні для її роботи - це повітря з ваших легень."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:607
 #, c-format
@@ -8841,11 +8850,13 @@ msgid ""
 "Since your enemies need to be close by to hear your rubbish music, the %s is "
 "only effective at very close ranges."
 msgstr ""
+"Оскільки вороги мають бути поруч, щоб чути вашу нікудишню музику, %s "
+"ефективна лише на дуже близькій відстані."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:608
 #, c-format
 msgid "The pitch the %s plays depends on the movement keys pressed."
-msgstr ""
+msgstr "Тональність, яку видає %s, залежить від натиснутих клавіш руху."
 
 #: qcsrc/common/weapons/weapon/tuba.qh:39
 #, no-c-format
@@ -8859,6 +8870,9 @@ msgid ""
 "amount of damage. In %s, the beam has the ability to instantly kill enemies "
 "with a single shot, unless they have an %s."
 msgstr ""
+"%s - це унікальна зброя, яка випускає смертельний промінь енергії, завдаючи "
+"колосальної шкоди. %s дозволяє цьому променю миттєво вбивати ворогів за один "
+"постріл, якщо вони не мають %s."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:442
 #, c-format
@@ -8866,6 +8880,8 @@ msgid ""
 "The secondary fire shoots a laser identical to that fired by the %s, with "
 "strong knockback."
 msgstr ""
+"Вторинний вогонь стріляє лазерним імпульсом, ідентичний тому, що має %s, із "
+"сильним відштовхуванням."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:443
 #, c-format
@@ -8903,6 +8919,9 @@ msgid ""
 "slightly before it finishes completely reloading, albeit with the tradeoff "
 "of dealing slightly less damage."
 msgstr ""
+"Порівняно зі зброєю %s, %s не потребує ручного перезаряджання, хоча потрібно "
+"чекати кілька секунд між пострілами. Її унікальна фішка - можливість зробити "
+"постріл трохи раніше повного перезаряджання, але ціною дещо меншої шкоди."
 
 #: qcsrc/common/weapons/weapon/vortex.qh:36
 msgid "Vortex"
