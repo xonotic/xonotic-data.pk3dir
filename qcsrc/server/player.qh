@@ -1,5 +1,6 @@
 #pragma once
 
+bool autocvar_g_corpses_shootable;
 float autocvar_g_spawnshieldtime;
 float autocvar_g_spawnshield_blockdamage;
 bool autocvar_sv_precacheplayermodels;

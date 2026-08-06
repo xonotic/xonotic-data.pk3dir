@@ -556,8 +556,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 			// toss the corpse
 			set_movetype(this, MOVETYPE_TOSS);
 		}
-		// shootable corpse
-		this.solid = SOLID_CORPSE;
+		// shootable corpse; when disabled the corpse is made non-solid instead, so that weapon
+		// attacks pass through it. SOLID_TRIGGER can't be used here as that marks independent
+		// players, see IS_INDEPENDENT_PLAYER(). As Xonotic sets sv_areagrid_link_SOLID_NOT 0
+		// this also unlinks the corpse from the area grid, so it can no longer be gibbed by
+		// splash damage or touch triggers such as teleporters; it still falls and fades normally.
+		this.solid = (autocvar_g_corpses_shootable) ? SOLID_CORPSE : SOLID_NOT;
+		setorigin(this, this.origin); // relink so the new solidity applies to the area grid right away
 		PS(this).ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
 		UNSET_ONGROUND(this);
