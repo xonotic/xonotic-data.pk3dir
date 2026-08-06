@@ -257,7 +257,7 @@ void c4_hud_board(vector pos, vector mySize)
 
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("c4/board_under"));
 
-	drawpic(pos, minigame_texture("c4/board_over"), mySize, '1 1 1', 1, 0);
+	drawpic(pos, minigame_texture("c4/board_over"), mySize, '1 1 1', panel_fg_alpha, 0);
 
 	vector tile_size = minigame_hud_denormalize_size('1 1 0' / C4_TILE_SIZE,pos,mySize);
 	vector tile_pos;

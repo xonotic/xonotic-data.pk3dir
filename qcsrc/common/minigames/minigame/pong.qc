@@ -613,7 +613,7 @@ void pong_hud_status(vector pos, vector mySize)
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if ( e == minigame_self )
-				drawborderlines(1, mypos, ts, pong_team_to_color(e.team), 1, DRAWFLAG_NORMAL);
+				drawborderlines(1, mypos, ts, pong_team_to_color(e.team), panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 }
