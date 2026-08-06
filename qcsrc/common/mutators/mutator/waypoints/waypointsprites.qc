@@ -403,7 +403,7 @@ vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, 
     if (is_text)
         drawstring(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
     else
-        drawpic(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
+        drawpic_aspect(o, str, sz, rgb, a, DRAWFLAG_NORMAL);
 
     o.x += 0.5 * sw;
     o.y += 0.5 * h;
