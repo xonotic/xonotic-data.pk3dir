@@ -30,9 +30,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     if (sendflags & 0x80)
     {
         if (this.max_health)
-        {
             WriteByte(MSG_ENTITY, (GetResource(this, RES_HEALTH) / this.max_health) * 191.0);
-        }
         else
         {
             float dt = this.pain_finished - time;
@@ -43,9 +41,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
     }
 
     if (sendflags & 64)
-    {
         WriteVector(MSG_ENTITY, this.origin);
-    }
 
     if (sendflags & 1)
     {
@@ -92,7 +88,8 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
 #ifdef CSQC
 void Ent_WaypointSprite(entity this, bool isnew);
-NET_HANDLE(waypointsprites, bool isnew) {
+NET_HANDLE(waypointsprites, bool isnew)
+{
     Ent_WaypointSprite(this, isnew);
     return true;
 }
@@ -160,19 +157,13 @@ void Ent_WaypointSprite(entity this, bool isnew)
     }
 
     if (sendflags & 2)
-    {
         strcpy(this.netname, ReadString());
-    }
 
     if (sendflags & 4)
-    {
         strcpy(this.netname2, ReadString());
-    }
 
     if (sendflags & 8)
-    {
         strcpy(this.netname3, ReadString());
-    }
 
     if (sendflags & 16)
     {
@@ -371,24 +362,15 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str)
 {
     float algnx, algny;
-    float sw, w, h;
-    float aspect, sa, ca;
 
-    if (is_text)
-        sw = stringwidth(str, false, sz);
-    else
-        sw = sz.x;
-
-    if (sw > minwidth)
-        w = sw;
-    else
-        w = minwidth;
-    h = sz.y;
+    float sw = is_text ? stringwidth(str, false, sz) : sz.x;
+    float w = sw > minwidth ? sw : minwidth;
+    float h = sz.y;
 
     // how do corners work?
-    aspect = vid_conwidth / vid_conheight;
-    sa = sin(ang);
-    ca = cos(ang) * aspect;
+    float aspect = vid_conwidth / vid_conheight;
+    float sa = sin(ang);
+    float ca = cos(ang) * aspect;
     if (fabs(sa) > fabs(ca))
     {
         algnx = (sa < 0);
@@ -740,9 +722,7 @@ void Draw_WaypointSprite(entity this)
                  );
     }
     else
-    {
         drawsprite_TextOrIcon(is_text, o, ang, 0, col, a, sz, txt);
-    }
 
     draw_endBoldFont();
 }
@@ -966,9 +946,7 @@ void WaypointSprite_Think(entity this)
     bool doremove = false;
 
     if (this.fade_time && time >= this.teleport_time)
-    {
         doremove = true;
-    }
 
     if (this.exteriormodeltoclient)
         WaypointSprite_UpdateOrigin(this, this.exteriormodeltoclient.origin + this.view_ofs);
@@ -1110,16 +1088,8 @@ entity WaypointSprite_DeployFixed(
     entity icon // initial icon
 )
 {
-    float t;
-    if (teamplay)
-        t = player.team;
-    else
-        t = 0;
-    float maxdistance;
-    if (limited_range)
-        maxdistance = waypointsprite_limitedrange;
-    else
-        maxdistance = 0;
+    float t = teamplay ? player.team : 0;
+    float maxdistance = limited_range ? waypointsprite_limitedrange : 0;
     return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, NULL, ofs, NULL, t, player, waypointsprite_deployed_fixed, false, icon);
 }
 
@@ -1140,18 +1110,10 @@ entity WaypointSprite_Attach(
     entity icon // initial icon
 )
 {
-    float t;
     if (player.waypointsprite_attachedforcarrier)
         return NULL; // can't attach to FC
-    if (teamplay)
-        t = player.team;
-    else
-        t = 0;
-    float maxdistance;
-    if (limited_range)
-        maxdistance = waypointsprite_limitedrange;
-    else
-        maxdistance = 0;
+    float t = teamplay ? player.team : 0;
+    float maxdistance = limited_range ? waypointsprite_limitedrange : 0;
     return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, player, '0 0 64', NULL, t, player, waypointsprite_attached, false, icon);
 }
 
