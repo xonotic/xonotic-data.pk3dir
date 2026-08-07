@@ -1177,19 +1177,19 @@ void HUD_Contents()
 	{
 		case CONTENT_WATER:
 			liquidalpha = autocvar_hud_contents_water_alpha;
-			liquidcolor = stov(autocvar_hud_contents_water_color);
+			liquidcolor = autocvar_hud_contents_water_color;
 			incontent = 1;
 			break;
 
 		case CONTENT_LAVA:
 			liquidalpha = autocvar_hud_contents_lava_alpha;
-			liquidcolor = stov(autocvar_hud_contents_lava_color);
+			liquidcolor = autocvar_hud_contents_lava_color;
 			incontent = 1;
 			break;
 
 		case CONTENT_SLIME:
 			liquidalpha = autocvar_hud_contents_slime_alpha;
-			liquidcolor = stov(autocvar_hud_contents_slime_color);
+			liquidcolor = autocvar_hud_contents_slime_color;
 			incontent = 1;
 			break;
 
@@ -1298,13 +1298,13 @@ void HUD_Damage()
 				myhealth_gentlergb = randomvec();
 		}
 		else
-			myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
+			myhealth_gentlergb = autocvar_hud_damage_gentle_color;
 
 		if(myhealth_flash_temp > 0)
 			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 	else if(myhealth_flash_temp > 0)
-		drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+		drawpic(splash_pos, "gfx/blood", splash_size, autocvar_hud_damage_color, bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 
 	if(autocvar_hud_postprocessing) // we still need to set this anyway even when chase_active is set, this way it doesn't get stuck on.
 	{

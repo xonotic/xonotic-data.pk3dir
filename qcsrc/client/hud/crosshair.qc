@@ -196,7 +196,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 			break;
 LABEL(normalcolor)
 		default:
-			wcross_color = stov(autocvar_crosshair_color);
+			wcross_color = autocvar_crosshair_color;
 			break;
 	}
 
@@ -382,7 +382,7 @@ void HUD_Crosshair(entity this)
 		// todo: make crosshair hit indication dependent on damage dealt
 		if (autocvar_crosshair_hitindication)
 		{
-			vector col = (autocvar_crosshair_color_special == 1 ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
+			vector col = (autocvar_crosshair_color_special == 1 ? autocvar_crosshair_hitindication_per_weapon_color : autocvar_crosshair_hitindication_color);
 
 			if (unaccounted_damage)
 				hitindication_crosshair_size = 1;
