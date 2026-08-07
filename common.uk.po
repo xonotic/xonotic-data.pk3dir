@@ -70,8 +70,8 @@ msgid ""
 "^1Multiline message at time %s that\n"
 "^BOLDlasts longer than normal"
 msgstr ""
-"^1Багато повідомлень за часом %s, які\n"
-"^BOLDтривають довше ніж зазвичай"
+"^1Багаторядкове повідомлення за часом %s, яке\n"
+"^BOLDтриває довше ніж зазвичай"
 
 #: qcsrc/client/hud/panel/centerprint.qc:208
 #, c-format
@@ -106,7 +106,7 @@ msgstr "FPS: %.*f"
 
 #: qcsrc/client/hud/panel/infomessages.qc:104
 msgid "^1Observing"
-msgstr "^1Вільний огляд"
+msgstr "^1Спостереження"
 
 #: qcsrc/client/hud/panel/infomessages.qc:106
 #, c-format
@@ -591,12 +591,12 @@ msgstr "Спостерігати за гравцем"
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
 msgid " (-%dL)"
-msgstr "(-%dL)"
+msgstr "(-%dК)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:70
 #, c-format
 msgid " (+%dL)"
-msgstr "(+%dL)"
+msgstr "(+%dК)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:90
 msgid "Start line"
@@ -13455,6 +13455,11 @@ msgid ""
 "respectfully, this will be recognized, while acting toxic on the other hand "
 "will not make your life easier on the servers."
 msgstr ""
+"Xonotic виділяється дружньою, зрілою, та привітною спільнотою гравців, та "
+"чимало досвідчених гравців вважають, що це, мабуть, одна з найбільших "
+"переваг Xonotic. Якщо ви ставитеся до інших дружньо та шанобливо, це "
+"обов'язково оцінять, на відміну від токсичної поведінки, яка не полегшить "
+"вам життя на серверах."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:36
 #, c-format
@@ -13478,6 +13483,11 @@ msgid ""
 "the game mechanics. If you see experienced players doing tricks you don't "
 "understand, don't hesitate to ask anyone on the server!"
 msgstr ""
+"Розрив у майстерності між новачками та досвідченими гравцями часто "
+"колосальний. Натомість, це здебільшого тому, що досвідчені гравці навчилися "
+"ефективно використовувати ігрові механіки. Якщо ви бачите, як досвідчені "
+"гравці роблять незрозумілі вам трюки, не соромтеся запитати про них на "
+"сервері!"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:46
 msgid ""
@@ -13486,6 +13496,10 @@ msgid ""
 "at which weapons they choose depending on the gameplay situation, for "
 "example in close combat, mid-range battles, or against groups of opponents."
 msgstr ""
+"Ще один спосіб навчатися - спостерігати за досвідченими гравцями. Звертайте "
+"увагу на те, яку зброю вони чередують, та які техніки руху використовують. "
+"Також дивіться, яку зброю вони обирають залежно від ігрової ситуації, "
+"наприклад: в ближньому бою, на середній дистанції, або проти групи опонентів."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:49
 msgid ""
@@ -13493,6 +13507,8 @@ msgid ""
 "works will enable you to speed around the map and apply effective weapon "
 "combos in no time."
 msgstr ""
+"Поріг входження дуже високий. Утім, зрозумівши принципи гри, ви зможете "
+"вмить носитися мапою та застосовувати ефективні комбінації зброї."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:52
 msgid "XonStat"
@@ -13572,6 +13588,10 @@ msgid ""
 "down. This allows you to get around the map much faster than if you would "
 "just walk."
 msgstr ""
+"Завдяки контролю в повітрі, ви можете значно перевищувати максимальну "
+"швидкість ходьби. Щоб уникнути тертя об землю, гравці постійно стрибають, "
+"утримуючи %s - так торкання землі їх не сповільнює. Це дозволяє пересуватися "
+"мапою набагато швидше, ніж звичайною ходьбою."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -13579,6 +13599,8 @@ msgid ""
 "Therefore, keeping %s held while moving quickly is one of the most essential "
 "movement strategies, used by all experienced players."
 msgstr ""
+"Таким чином, утримуючи %s під час швидкого руху - це одна з найважливіших "
+"стратегій пересування, якою користуються всі досвідчені гравці."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:85
 msgid ""
@@ -13586,6 +13608,9 @@ msgid ""
 "900 qu/s (\"units per second\"). CTS/DeFRaG servers usually run with "
 "different CPMA-like physics that remove this cap."
 msgstr ""
+"За стандартних налаштувань, швидкість під час бані-хопінгу обмежена до 900 "
+"qu/с (\"юнітів на секунду\"). Сервери CTS/DeFRaG зазвичай працюють з іншою, "
+"CPMA-подібною фізикою, яка знімає це обмеження."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:92
 msgid ""
@@ -13594,6 +13619,9 @@ msgid ""
 "method used to quickly change the direction you're traveling while mid-air, "
 "without losing speed."
 msgstr ""
+"Бані-хопінг на поворотах потребує \"стрейф-тьорнінг\", інакше ви втратите "
+"багато швидкості (або просто не впишетеся в поворот). Стрейф-тьорнінг - це "
+"техніка швидкої зміни напрямку руху в повітрі без втрати швидкості."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:94
 #, c-format
@@ -13602,6 +13630,9 @@ msgid ""
 "turn direction (%s or %s), then start turning smoothly into the turn "
 "direction. As always, during the entire strafe turn keep %s held."
 msgstr ""
+"Під час баніхопінгу спочатку відпустіть %s, потім натисніть клавішу стрейфу "
+"в бік повороту (%s або %s) і плавно повертайте мишу в той самий бік. Як і "
+"завжди, протягом усього стрейф-тьорнінгу тримайте %s затиснутою."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
 msgid "move forward"
