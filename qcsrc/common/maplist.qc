@@ -95,6 +95,9 @@ int MapList_FromBuffer(int buf, int count)
 		string s = buf_implode(buf, " ");
 		// buf_implode() writes the separator in front of every entry, including the first one
 		cvar_set("g_maplist", substring(s, 1, -1));
+		// Drop any file the list used to live in. It's shadowed by the cvar either way, but leaving
+		// it behind means clearing g_maplist later resurrects a list the admin already edited away.
+		MapList_Forget();
 		return MAPLIST_SOURCE_CVAR;
 	}
 

@@ -2,7 +2,6 @@
 
 #include "mapvoting.qh"
 
-#define autocvar_g_maplist cvar_string("g_maplist")
 bool autocvar_g_maplist_check_waypoints;
 int autocvar_g_maplist_index;
 string autocvar_g_maplist_mostrecent;

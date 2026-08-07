@@ -7,6 +7,7 @@
 	#include <common/command/reg.qh>
 	#include <common/command/rpn.qh>
 	#include <common/mapinfo.qh>
+	#include <common/maplist.qh>
 	#include <common/notifications/all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -15,6 +16,7 @@
 	#include <common/command/reg.qh>
 	#include <common/command/rpn.qh>
 	#include <common/mapinfo.qh>
+	#include <common/maplist.qh>
 	#include <common/notifications/all.qh>
 	#include <common/turrets/config.qh>
 	#include <common/weapons/config.qh>
@@ -229,23 +231,15 @@ GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to <program>_cmd
 	}
 }
 
-string maplist_shuffle(string input)
+// Fills buf with the stored map list and returns how many, or 0 when no list is configured.
+// These subcommands edit an explicit selection, so an unset list is left unset: resolving it here
+// would freeze the live "every installed map" glob into a stored list, which is what leaving it
+// unset is for. Matches what these did when g_maplist was empty, back when the cvar was the only
+// store: "add" starts a new list, the others have nothing to work on.
+int _MapList_Stored(int buf)
 {
-	int buf = buf_create();
-
-	int _cnt = 0;
-	FOREACH_WORD(input, true,
-	{
-		int _j = floor(random() * (_cnt + 1));
-		if(_j != _cnt)
-			bufstr_set(buf, _cnt, bufstr_get(buf, _j));
-		bufstr_set(buf, _j, it);
-		++_cnt;
-	});
-
-	string output = buf_implode(buf, " ");
-	buf_del(buf);
-	return substring(output, 1, -1);
+	int n = MapList_ToBuffer(buf);
+	return (MapList_Source == MAPLIST_SOURCE_ALL) ? 0 : n;
 }
 
 void GenericCommand_maplist(int request, int argc)
@@ -254,9 +248,10 @@ void GenericCommand_maplist(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string tmp_string;
-			float i;
-
+			// NOTE: go through MapList_ToBuffer()/MapList_FromBuffer() rather than g_maplist. A list
+			// too long for a cvar lives in a file with g_maplist left empty, so editing the cvar here
+			// would shadow it: "add" would cut the rotation down to the one map it just added, and the
+			// others would silently do nothing at all.
 			switch(argv(1))
 			{
 				case "add": // appends new maps to the maplist
@@ -269,11 +264,15 @@ void GenericCommand_maplist(int request, int argc)
 							break;
 						}
 
-						if(cvar_string("g_maplist") == "")
-							cvar_set("g_maplist", argv(2));
-						else
-							cvar_set("g_maplist", strcat(argv(2), " ", cvar_string("g_maplist")));
-
+						int buf = buf_create();
+						int n = _MapList_Stored(buf);
+						int out = buf_create();
+						bufstr_set(out, 0, argv(2)); // new maps go to the front, as they always have
+						for(int i = 0; i < n; ++i)
+							bufstr_set(out, i + 1, bufstr_get(buf, i));
+						MapList_FromBuffer(out, n + 1);
+						buf_del(buf);
+						buf_del(out);
 						return;
 					}
 					break; // go to usage
@@ -283,9 +282,21 @@ void GenericCommand_maplist(int request, int argc)
 				{
 					MapInfo_Enumerate();
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					string filtered = "";
-					FOREACH_WORD(cvar_string("g_maplist"), MapInfo_CheckMap(it), filtered = cons(filtered, it));
-					cvar_set("g_maplist", filtered);
+
+					int buf = buf_create();
+					int n = _MapList_Stored(buf);
+					int out = buf_create();
+					int w = 0;
+					for(int i = 0; i < n; ++i)
+					{
+						string map = bufstr_get(buf, i);
+						if(MapInfo_CheckMap(map))
+							bufstr_set(out, w++, map);
+					}
+					if(n)
+						MapList_FromBuffer(out, w);
+					buf_del(buf);
+					buf_del(out);
 					return;
 				}
 
@@ -293,18 +304,23 @@ void GenericCommand_maplist(int request, int argc)
 				{
 					if(argc == 3)
 					{
-						// save argv(2) from being overridden by tokenize engine call
+						// save argv(2) from being overridden by any tokenizing done further down
 						string del_map_name = argv(2);
-						argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 
-						tmp_string = "";
-						for(i = 0; i < argc; ++i)
-							if(argv(i) != del_map_name)
-								tmp_string = strcat(tmp_string, " ", argv(i));
-
-						tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
-						cvar_set("g_maplist", tmp_string);
-
+						int buf = buf_create();
+						int n = _MapList_Stored(buf);
+						int out = buf_create();
+						int w = 0;
+						for(int i = 0; i < n; ++i)
+						{
+							string map = bufstr_get(buf, i);
+							if(map != del_map_name)
+								bufstr_set(out, w++, map);
+						}
+						if(n)
+							MapList_FromBuffer(out, w);
+						buf_del(buf);
+						buf_del(out);
 						return;
 					}
 					break; // go to usage
@@ -312,7 +328,23 @@ void GenericCommand_maplist(int request, int argc)
 
 				case "shuffle": // randomly shuffle the maplist
 				{
-					cvar_set("g_maplist", maplist_shuffle(cvar_string("g_maplist")));
+					int buf = buf_create();
+					int n = _MapList_Stored(buf);
+					// Fisher-Yates over the buffer, rather than through a string that a long list
+					// wouldn't fit in
+					for(int i = n - 1; i > 0; --i)
+					{
+						int j = floor(random() * (i + 1));
+						if(j != i)
+						{
+							string t = bufstr_get(buf, i);
+							bufstr_set(buf, i, bufstr_get(buf, j));
+							bufstr_set(buf, j, t);
+						}
+					}
+					if(n)
+						MapList_FromBuffer(buf, n);
+					buf_del(buf);
 					return;
 				}
 
