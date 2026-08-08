@@ -3,3 +3,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/nix/sv_nix.qh>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/nix/ui_nix.qh>
+#endif

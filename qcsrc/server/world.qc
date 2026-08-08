@@ -2183,8 +2183,10 @@ void readlevelcvars()
 	}
 
 	g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
-	if(!g_weapon_stay)
+	if (!g_weapon_stay)
 		g_weapon_stay = cvar("g_weapon_stay");
+	MUTATOR_CALLHOOK(SetWeaponStay, g_weapon_stay);
+	g_weapon_stay = M_ARGV(0, int);
 
 	MUTATOR_CALLHOOK(ReadLevelCvars);
 
