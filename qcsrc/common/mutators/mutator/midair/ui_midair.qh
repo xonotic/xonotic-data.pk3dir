@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorMidAirTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorMidAirTab, fill, void(entity));
+	ATTRIB(XonoticMutatorMidAirTab, title, string, _("Midair"));
+	ATTRIB(XonoticMutatorMidAirTab, message, string, "g_midair");
+	METHOD(XonoticMutatorMidAirTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorMidAirTab)
+entity makeXonoticMutatorMidAirTab();

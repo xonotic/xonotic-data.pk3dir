@@ -3,3 +3,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/new_toys/sv_new_toys.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/new_toys/ui_new_toys.qc>
+#endif

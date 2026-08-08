@@ -2,3 +2,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/midair/sv_midair.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/midair/ui_midair.qc>
+#endif
