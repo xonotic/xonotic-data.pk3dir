@@ -116,7 +116,7 @@ msgstr "^1Спостерігаєте за: ^7%s"
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "^1Натисніть^3%s^1 для спостередження"
+msgstr "^1Натисніть ^3%s^1 для спостереження"
 
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/menu/xonotic/keybinder.qc:73
@@ -162,7 +162,7 @@ msgstr "викинути зброю"
 #: qcsrc/client/hud/panel/infomessages.qc:125
 #: qcsrc/menu/xonotic/keybinder.qc:74
 msgid "secondary fire"
-msgstr "альтернативний вогонь"
+msgstr "вторинний вогонь"
 
 #: qcsrc/client/hud/panel/infomessages.qc:127
 #, c-format
@@ -210,7 +210,7 @@ msgstr "^1Гра почнеться через ^3%d^1 секунд"
 
 #: qcsrc/client/hud/panel/infomessages.qc:164
 msgid "^2Currently in ^1warmup^2 stage!"
-msgstr "^2Зараз  ^1розминка^2!"
+msgstr "^2Зараз ^1розминка^2!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:174
 msgid "^31^2 more player is needed for the match to start."
@@ -224,7 +224,7 @@ msgstr "^3%d^2 гравців потрібно, щоб розпочати мат
 #: qcsrc/client/hud/panel/infomessages.qc:186
 #: qcsrc/menu/xonotic/keybinder.qc:149
 msgid "ready"
-msgstr "готовий"
+msgstr "готовність"
 
 #: qcsrc/client/hud/panel/infomessages.qc:190
 #, c-format
@@ -620,11 +620,11 @@ msgstr "загублено контрольну точку"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select spawn location"
-msgstr "Натисніть щоб вибрати точку появи"
+msgstr "Натисніть, щоб вибрати точку появи"
 
 #: qcsrc/client/hud/panel/radar.qc:340
 msgid "Click to select teleport destination"
-msgstr "Натисніть щоб вибрати пункт призначення телепорту"
+msgstr "Натисніть, щоб вибрати пункт призначення телепорту"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:130
 msgid "Number of ball carrier kills"
@@ -2177,8 +2177,8 @@ msgid ""
 "systematically progress across the map to reach the enemy generator."
 msgstr ""
 "Оскільки Ваша команда може захопити контрольну точку лише тоді, коли вона "
-"з'єднана з іншою точкою під Вашим контролем, потрібно послідовно прасуватися "
-"мапою, щоб дістатися до ворожого генератора."
+"з'єднана з іншою точкою під Вашим контролем, потрібно послідовно "
+"пересуватися мапою, щоб дістатися до ворожого генератора."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:80
 msgid ""
@@ -2817,14 +2817,14 @@ msgstr "Тягни-Штовхай"
 #: qcsrc/common/minigames/minigame/pp.qc:456
 #: qcsrc/common/minigames/minigame/ttt.qc:340
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
-msgstr "Натисність в меню \"^1Наступний матч^7\" для реваншу!"
+msgstr "Натисніть в меню \"^1Наступний матч^7\" для реваншу!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:457
 #: qcsrc/common/minigames/minigame/pp.qc:463
 #: qcsrc/common/minigames/minigame/ttt.qc:341
 #: qcsrc/common/minigames/minigame/ttt.qc:347
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
-msgstr "Натисність в меню \"^1Наступний матч^7\" для нового матчу!"
+msgstr "Натисніть в меню \"^1Наступний матч^7\" для нового матчу!"
 
 #: qcsrc/common/minigames/minigame/pp.qc:464
 #: qcsrc/common/minigames/minigame/ttt.qc:348
@@ -4268,7 +4268,7 @@ msgid ""
 "wall jump, tap %s when against a wall."
 msgstr ""
 "%s - це мутатор, який дозволяє відштовхуватися від стін для більшої "
-"рухливості. Щоб зробити такий стрибок, натисність %s, перебуваючи впритул до "
+"рухливості. Щоб зробити такий стрибок, натисніть %s, перебуваючи впритул до "
 "стіни."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:85
@@ -6893,7 +6893,7 @@ msgstr "основний режим вогню"
 #: qcsrc/common/notifications/all.qh:438 qcsrc/common/notifications/all.qh:439
 #: qcsrc/common/weapons/all.qc:867
 msgid "secondary"
-msgstr "додатковий режим вогню"
+msgstr "вторинний"
 
 #: qcsrc/common/notifications/all.qh:441
 #, c-format
@@ -6920,7 +6920,7 @@ msgstr "%s^K1 здійснив ПОТРІЙНИЙ ФРАГ!"
 #: qcsrc/common/notifications/all.qh:487
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
-msgstr "%s^K1 здійснив ПОТРІЙНИЙ БАЛ!"
+msgstr "%s^K1 здійснив ПОТРІЙНЕ ОЧКО!"
 
 #: qcsrc/common/notifications/all.qh:487
 msgid "TRIPLE FRAG!"
@@ -6929,7 +6929,7 @@ msgstr "ПОТРІЙНЕ ВБИВСТВО!"
 #: qcsrc/common/notifications/all.qh:488
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
-msgstr "%s^K1 здійснив П'ЯТЬ БАЛІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив П'ЯТЬ ОЧКІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:488
 #, c-format
@@ -6943,7 +6943,7 @@ msgstr "ЛЮТЬ!"
 #: qcsrc/common/notifications/all.qh:489
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
-msgstr "%s^K1 здійснив ДЕСЯТЬ БАЛІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив ДЕСЯТЬ ОЧКІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:489
 #, c-format
@@ -6962,7 +6962,7 @@ msgstr "%s^K1 почав ПОГРОМ!"
 #: qcsrc/common/notifications/all.qh:490
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
-msgstr "%s^K1 здійснив П'ЯТНАДЦЯТЬ БАЛІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив П'ЯТНАДЦЯТЬ ОЧКІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:490
 msgid "MAYHEM!"
@@ -6976,7 +6976,7 @@ msgstr "%s^K1 став БЕРСЕРКОМ!"
 #: qcsrc/common/notifications/all.qh:491
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
-msgstr "%s^K1 здійснив ДВАДЦЯТЬ БАЛІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив ДВАДЦЯТЬ ОЧКІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:491
 msgid "BERSERKER!"
@@ -6990,7 +6990,7 @@ msgstr "%s^K1 влаштовує ПОБОЇЩЕ!"
 #: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
-msgstr "%s^K1 здійснив ДВАДЦЯТЬ П'ЯТЬ БАЛІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив ДВАДЦЯТЬ П'ЯТЬ ОЧКІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:492
 msgid "CARNAGE!"
@@ -6999,7 +6999,7 @@ msgstr "ПОБОЇЩЕ!"
 #: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
-msgstr "%s^K1 здійснив ТРИДЦЯТЬ БАЛІВ ПОСПІЛЬ!"
+msgstr "%s^K1 здійснив ТРИДЦЯТЬ ОЧКІВ ПОСПІЛЬ!"
 
 #: qcsrc/common/notifications/all.qh:493
 #, c-format
@@ -7204,7 +7204,8 @@ msgstr ""
 msgid ""
 "It attacks by shooting laser beams similar to those of the %s, from both of "
 "its two cannons."
-msgstr "Вона стріляє лазерні промені, з яких %s стріляє, з обох її гармат."
+msgstr ""
+"Вона стріляє лазерними імпульсами, з яких стріляє %s, з обох її гармат."
 
 #: qcsrc/common/turrets/turret/ewheel.qh:17
 msgid "eWheel Turret"
@@ -7250,7 +7251,7 @@ msgid ""
 "instead works by generating power for nearby turrets, so that they can "
 "attack their shared targets more often."
 msgstr ""
-"%s трохи специфічна турель, замість того, щоб атакувати мішені, вона "
+"%s - трохи специфічна турель: замість того, щоб атакувати мішені, вона "
 "допомагає союзним установкам. Вона не має своєї зброї, але живить енергією "
 "інші установки поблизу, що дає дозволяє атакувати мішені частіше."
 
@@ -7884,7 +7885,7 @@ msgstr "MIDI-НОТА%d"
 #: qcsrc/common/vehicles/cl_vehicles.qc:165
 #, c-format
 msgid "Press %s"
-msgstr "Натисність %s"
+msgstr "Натисніть %s"
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:980
 msgid "No right gunner!"
@@ -8241,7 +8242,7 @@ msgid ""
 "Close to medium range is the ideal time to use the %s, although the "
 "secondary fire can be useful for long range combat sometimes."
 msgstr ""
-"%s ідеально підходить для близької до середньої дистанції, хоча вторинний "
+"%s ідеально підходить для близької та середньої дистанції, хоча вторинний "
 "вогонь іноді корисний і в далекому бою."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:626
@@ -8930,182 +8931,182 @@ msgstr "Вихор"
 #: qcsrc/lib/counting.qh:9
 #, c-format
 msgid "CI_DEC^%s years"
-msgstr "CI_DEC^%s років"
+msgstr "%s років"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "CI_ZER^%d years"
-msgstr "CI_ZER^%d років"
+msgstr "%d років"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "CI_FIR^%d year"
-msgstr "CI_FIR^%d рік"
+msgstr "%d рік"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "CI_SEC^%d years"
-msgstr "CI_SEC^%d роки"
+msgstr "%d роки"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "CI_THI^%d years"
-msgstr "CI_THI^%d роки"
+msgstr "%d роки"
 
 #: qcsrc/lib/counting.qh:16
 #, c-format
 msgid "CI_MUL^%d years"
-msgstr "CI_MUL^%d років"
+msgstr "%d років"
 
 #: qcsrc/lib/counting.qh:18
 #, c-format
 msgid "CI_DEC^%s weeks"
-msgstr "CI_DEC^%s тижнів"
+msgstr "%s тижнів"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "CI_ZER^%d weeks"
-msgstr "CI_ZER^%d тижнів"
+msgstr "%d тижнів"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "CI_FIR^%d week"
-msgstr "CI_FIR^%d тиждень"
+msgstr "%d тиждень"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "CI_SEC^%d weeks"
-msgstr "CI_SEC^%d тижня"
+msgstr "%d тижня"
 
 #: qcsrc/lib/counting.qh:24
 #, c-format
 msgid "CI_THI^%d weeks"
-msgstr "CI_THI^%d тижня"
+msgstr "%d тижня"
 
 #: qcsrc/lib/counting.qh:25
 #, c-format
 msgid "CI_MUL^%d weeks"
-msgstr "CI_MUL^%d тижнів"
+msgstr "%d тижнів"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "CI_DEC^%s days"
-msgstr "CI_DEC^%s днів"
+msgstr "%s днів"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "CI_ZER^%d days"
-msgstr "CI_ZER^%d днів"
+msgstr "%d днів"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "CI_FIR^%d day"
-msgstr "CI_FIR^%d день"
+msgstr "%d день"
 
 #: qcsrc/lib/counting.qh:32
 #, c-format
 msgid "CI_SEC^%d days"
-msgstr "CI_SEC^%d дня"
+msgstr "%d дня"
 
 #: qcsrc/lib/counting.qh:33
 #, c-format
 msgid "CI_THI^%d days"
-msgstr "CI_THI^%d дня"
+msgstr "%d дня"
 
 #: qcsrc/lib/counting.qh:34
 #, c-format
 msgid "CI_MUL^%d days"
-msgstr "CI_MUL^%d днів"
+msgstr "%d днів"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "CI_DEC^%s hours"
-msgstr "CI_DEC^%s годин"
+msgstr "%s годин"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "CI_ZER^%d hours"
-msgstr "CI_ZER^%d годин"
+msgstr "%d годин"
 
 #: qcsrc/lib/counting.qh:40
 #, c-format
 msgid "CI_FIR^%d hour"
-msgstr "CI_FIR^%d година"
+msgstr "%d година"
 
 #: qcsrc/lib/counting.qh:41
 #, c-format
 msgid "CI_SEC^%d hours"
-msgstr "CI_SEC^%d години"
+msgstr "%d години"
 
 #: qcsrc/lib/counting.qh:42
 #, c-format
 msgid "CI_THI^%d hours"
-msgstr "CI_THI^%d години"
+msgstr "%d години"
 
 #: qcsrc/lib/counting.qh:43
 #, c-format
 msgid "CI_MUL^%d hours"
-msgstr "CI_MUL^%d годин"
+msgstr "%d годин"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "CI_DEC^%s minutes"
-msgstr "CI_DEC^%s хвилин"
+msgstr "%s хвилин"
 
 #: qcsrc/lib/counting.qh:49
 #, c-format
 msgid "CI_ZER^%d minutes"
-msgstr "CI_ZER^%d хвилин"
+msgstr "%d хвилин"
 
 #: qcsrc/lib/counting.qh:50
 #, c-format
 msgid "CI_FIR^%d minute"
-msgstr "CI_FIR^%d хвилина"
+msgstr "%d хвилина"
 
 #: qcsrc/lib/counting.qh:51
 #, c-format
 msgid "CI_SEC^%d minutes"
-msgstr "CI_SEC^%d хвилини"
+msgstr "%d хвилини"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "CI_THI^%d minutes"
-msgstr "CI_THI^%d хвилини"
+msgstr "%d хвилини"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "CI_MUL^%d minutes"
-msgstr "CI_MUL^%d хвилин"
+msgstr "%d хвилин"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "CI_DEC^%s seconds"
-msgstr "CI_DEC^%s секунд"
+msgstr "%s секунд"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "CI_ZER^%d seconds"
-msgstr "CI_ZER^%d секунд"
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:59
 #, c-format
 msgid "CI_FIR^%d second"
-msgstr "CI_FIR^%d секунда"
+msgstr "%d секунда"
 
 #: qcsrc/lib/counting.qh:60
 #, c-format
 msgid "CI_SEC^%d seconds"
-msgstr "CI_SEC^%d секунди"
+msgstr "%d секунди"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "CI_THI^%d seconds"
-msgstr "CI_THI^%d секунди"
+msgstr "%d секунди"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "CI_MUL^%d seconds"
-msgstr "CI_MUL^%d секунд"
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:78
 #, c-format
@@ -10309,7 +10310,7 @@ msgstr "Оновити"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:60
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:27
 msgid "Set skin"
-msgstr "Встановити скин"
+msgstr "Встановити скін"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:64
 msgid "Save current skin"
@@ -13484,7 +13485,7 @@ msgid ""
 "understand, don't hesitate to ask anyone on the server!"
 msgstr ""
 "Розрив у майстерності між новачками та досвідченими гравцями часто "
-"колосальний. Натомість, це здебільшого тому, що досвідчені гравці навчилися "
+"колосальний. Однак, це здебільшого тому, що досвідчені гравці навчилися "
 "ефективно використовувати ігрові механіки. Якщо ви бачите, як досвідчені "
 "гравці роблять незрозумілі вам трюки, не соромтеся запитати про них на "
 "сервері!"
@@ -13558,7 +13559,7 @@ msgstr "Бані-хопінг"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:70 qcsrc/menu/xonotic/guide/pages.qc:89
 msgid "Strafe Turning"
-msgstr "Поворот Стрейфом"
+msgstr "Стрейф-Тьорнінг"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:71 qcsrc/menu/xonotic/guide/pages.qc:101
 msgid "Blaster Jumping"
@@ -13862,8 +13863,8 @@ msgid ""
 "crucial on CTS/DeFRaG servers that use slightly different physics."
 msgstr ""
 "Такі просунуті техніки як \"стрейф-джампінг\" (\"стрейфінг\") або \"сьоркл-"
-"джамп\" (\"CJ\") дають незначну перевагу в звичайній грі, проти вони є "
-"вирішальними на серверах CTS/ДеФРаГу, у яких злегка змінені налаштування "
+"джамп\" (\"CJ\") дають незначну перевагу в звичайній грі, проте вони є "
+"вирішальними на серверах CTS/DeFRaG, у яких злегка змінені налаштування "
 "фізики."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167
@@ -14374,17 +14375,17 @@ msgstr "Улюблена мапа:"
 #: qcsrc/menu/xonotic/statslist.qc:229
 #, c-format
 msgid "Matches:"
-msgstr "Зіграно матчей:"
+msgstr "Матчей:"
 
 #: qcsrc/menu/xonotic/statslist.qc:154
 #, c-format
 msgid "Wins/Losses:"
-msgstr "Перемоги/Поразок:"
+msgstr "Перемоги/Поразки:"
 
 #: qcsrc/menu/xonotic/statslist.qc:155
 #, c-format
 msgid "Win percentage:"
-msgstr "Загальний відсоток перемог:"
+msgstr "Відсоток перемог:"
 
 #: qcsrc/menu/xonotic/statslist.qc:166
 #, c-format
