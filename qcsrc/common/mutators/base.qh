@@ -138,25 +138,25 @@ CLASS(CallbackChain, Object)
 	}
 ENDCLASS(CallbackChain)
 
-#define _MUTATOR_HANDLE_NOP(type, id)
-#define _MUTATOR_HANDLE_PARAMS(type, id) , type in_##id
-#define _MUTATOR_HANDLE_PREPARE(type, id) id = in_##id;
-#define _MUTATOR_HANDLE_PUSHTMP(type, id) TC(type, id); type tmp_##id = id;
-#define _MUTATOR_HANDLE_PUSHOUT(type, id) type out_##id = id;
-#define _MUTATOR_HANDLE_POPTMP(type, id) id = tmp_##id;
-#define _MUTATOR_HANDLE_POPOUT(type, id) id = out_##id;
+#define _MUTATOR_HANDLE_NOP(type, idx)
+#define _MUTATOR_HANDLE_PARAMS(type, idx) , type in_MUTATOR_ARGV_##idx##_##type
+#define _MUTATOR_HANDLE_PREPARE(type, idx) MUTATOR_ARGV_##idx##_##type = in_MUTATOR_ARGV_##idx##_##type;
+#define _MUTATOR_HANDLE_PUSHTMP(type, idx) type tmp_MUTATOR_ARGV_##idx##_##type = MUTATOR_ARGV_##idx##_##type;
+#define _MUTATOR_HANDLE_PUSHOUT(type, idx) type out_MUTATOR_ARGV_##idx##_##type = MUTATOR_ARGV_##idx##_##type;
+#define _MUTATOR_HANDLE_POPTMP(type, idx) MUTATOR_ARGV_##idx##_##type = tmp_MUTATOR_ARGV_##idx##_##type;
+#define _MUTATOR_HANDLE_POPOUT(type, idx) MUTATOR_ARGV_##idx##_##type = out_MUTATOR_ARGV_##idx##_##type;
 
 void RegisterHooks() {}
 void RegisterCallbacks() {}
 
-#define MUTATOR_HOOKABLE(id, params) _MUTATOR_HOOKABLE(id, params)
-#define _MUTATOR_HOOKABLE(id, params) \
-	CallbackChain HOOK_##id; \
-	bool __Mutator_Send_##id(int params(_MUTATOR_HANDLE_PARAMS, _MUTATOR_HANDLE_NOP)) \
+#define MUTATOR_HOOKABLE(name, params) _MUTATOR_HOOKABLE(name, params)
+#define _MUTATOR_HOOKABLE(name, params) \
+	CallbackChain HOOK_##name; \
+	bool __Mutator_Send_##name(int params(_MUTATOR_HANDLE_PARAMS, _MUTATOR_HANDLE_NOP)) \
 	{ \
 		params(_MUTATOR_HANDLE_PUSHTMP, _MUTATOR_HANDLE_NOP) \
 		params(_MUTATOR_HANDLE_PREPARE, _MUTATOR_HANDLE_NOP) \
-		bool ret = CallbackChain_Call(HOOK_##id); \
+		bool ret = CallbackChain_Call(HOOK_##name); \
 		params(_MUTATOR_HANDLE_NOP,     _MUTATOR_HANDLE_PUSHOUT) \
 		params(_MUTATOR_HANDLE_POPTMP,  _MUTATOR_HANDLE_NOP) \
 		params(_MUTATOR_HANDLE_NOP,     _MUTATOR_HANDLE_POPOUT) \
@@ -164,14 +164,14 @@ void RegisterCallbacks() {}
 	} \
 	ACCUMULATE void RegisterHooks() \
 	{ \
-		HOOK_##id = NEW(CallbackChain, #id); \
+		HOOK_##name = NEW(CallbackChain, #name); \
 	}
 
-#define MUTATOR_CALLHOOK(id, ...) _MUTATOR_CALLHOOK(id, __VA_ARGS__)
+#define MUTATOR_CALLHOOK(name, ...) _MUTATOR_CALLHOOK(name, __VA_ARGS__)
 #ifdef __STDC__
-	#define _MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0 P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+	#define _MUTATOR_CALLHOOK(name, ...) APPLY(__Mutator_Send_##name, 0 P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 #else
-	#define _MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
+	#define _MUTATOR_CALLHOOK(name, ...) APPLY(__Mutator_Send_##name, 0, ##__VA_ARGS__)
 #endif
 
 enum
