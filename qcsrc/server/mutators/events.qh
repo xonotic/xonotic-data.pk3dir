@@ -302,6 +302,13 @@ MUTATOR_HOOKABLE(TurretFire, EV_TurretFire);
 	/**/
 MUTATOR_HOOKABLE(Turret_CheckFire, EV_Turret_CheckFire);
 
+/// Called in Plasma & Dual Plasma turret's tr_attack. Return true to override the default attack
+#define EV_Turret_Plasma_Fire(i, o) \
+	/** turret */ i(entity, 0) \
+	/** dual   */ i(bool, 1) \
+	/**/
+MUTATOR_HOOKABLE(Turret_Plasma_Fire, EV_Turret_Plasma_Fire);
+
 /// Return error to prevent entity spawn, or modify the entity
 #define EV_OnEntityPreSpawn(i, o) \
 	/** entity  */ i(entity, 0) \
@@ -494,6 +501,12 @@ MUTATOR_HOOKABLE(W_Reload, EV_W_Reload);
 	/**/
 MUTATOR_HOOKABLE(PlayerPowerups, EV_PlayerPowerups);
 
+/// Return true to keep the player's superweapons unchanged in player_powerups()
+#define EV_SuperweaponsImmutable(i, o) \
+	/** player */    i(entity, 0) \
+	/**/
+MUTATOR_HOOKABLE(SuperweaponsImmutable, EV_SuperweaponsImmutable);
+
 /** Called every player think frame.
  *  Return 1 to disable regen.
  */
@@ -530,6 +543,12 @@ MUTATOR_HOOKABLE(PlayerRegen, EV_PlayerRegen);
 	/** player */ i(entity, 0) \
 	/**/
 MUTATOR_HOOKABLE(PlayerUseKey, EV_PlayerUseKey);
+
+/// Return true if the player should be considered invisible
+#define EV_PlayerIsInvisible(i, o) \
+	/** player */    i(entity, 0) \
+	/**/
+MUTATOR_HOOKABLE(PlayerIsInvisible, EV_PlayerIsInvisible);
 
 /**
  * Called when a client command is parsed
