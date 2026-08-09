@@ -138,13 +138,29 @@ CLASS(CallbackChain, Object)
 	}
 ENDCLASS(CallbackChain)
 
+
+// Limits can be increased as needed
+#define MUTATOR_TYPE_ARRAY(type, limit) noref type MUTATOR_ARGV_##type[limit]
+MUTATOR_TYPE_ARRAY(bool,    6);
+MUTATOR_TYPE_ARRAY(int,     6);
+MUTATOR_TYPE_ARRAY(entity,  9);
+MUTATOR_TYPE_ARRAY(float,   11);
+MUTATOR_TYPE_ARRAY(vector,  7);
+MUTATOR_TYPE_ARRAY(string,  5);
+#undef MUTATOR_TYPE_ARRAY
+
+// TODO: search for and remove any leftovers from when globals were used
+#define M_ARGV(idx, type) MUTATOR_ARGV_##type[idx]
+
 #define _MUTATOR_HANDLE_NOP(type, idx)
-#define _MUTATOR_HANDLE_PARAMS(type, idx) , type in_MUTATOR_ARGV_##idx##_##type
-#define _MUTATOR_HANDLE_PREPARE(type, idx) MUTATOR_ARGV_##idx##_##type = in_MUTATOR_ARGV_##idx##_##type;
-#define _MUTATOR_HANDLE_PUSHTMP(type, idx) type tmp_MUTATOR_ARGV_##idx##_##type = MUTATOR_ARGV_##idx##_##type;
-#define _MUTATOR_HANDLE_PUSHOUT(type, idx) type out_MUTATOR_ARGV_##idx##_##type = MUTATOR_ARGV_##idx##_##type;
-#define _MUTATOR_HANDLE_POPTMP(type, idx) MUTATOR_ARGV_##idx##_##type = tmp_MUTATOR_ARGV_##idx##_##type;
-#define _MUTATOR_HANDLE_POPOUT(type, idx) MUTATOR_ARGV_##idx##_##type = out_MUTATOR_ARGV_##idx##_##type;
+#define _MUTATOR_HANDLE_PARAMS(type, idx) , type in_MUTATOR_ARGV_##type##_##idx
+#define _MUTATOR_HANDLE_PREPARE(type, idx) MUTATOR_ARGV_##type[idx] = in_MUTATOR_ARGV_##type##_##idx;
+#define _MUTATOR_HANDLE_PUSHTMP(type, idx) type tmp_MUTATOR_ARGV_##type##_##idx = MUTATOR_ARGV_##type[idx];
+#define _MUTATOR_HANDLE_PUSHOUT(type, idx) type out_MUTATOR_ARGV_##type##_##idx = MUTATOR_ARGV_##type[idx];
+#define _MUTATOR_HANDLE_POPTMP(type, idx) MUTATOR_ARGV_##type[idx] = tmp_MUTATOR_ARGV_##type##_##idx;
+#define _MUTATOR_HANDLE_POPOUT(type, idx) MUTATOR_ARGV_##type[idx] = out_MUTATOR_ARGV_##type##_##idx;
+
+#define EV_NO_ARGS(i, o)
 
 void RegisterHooks() {}
 void RegisterCallbacks() {}
