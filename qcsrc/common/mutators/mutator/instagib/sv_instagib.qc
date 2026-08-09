@@ -164,6 +164,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(mutator_instagib, SuperweaponsImmutable)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
@@ -409,13 +414,63 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 
 	if(item.itemdef == ITEM_ExtraLife)
 	{
-		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives);
+		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives); // no limit
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_instagib_extralives);
 		Inventory_pickupitem(item.itemdef, toucher);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
 	return MUT_ITEMTOUCH_CONTINUE;
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, GiveResourceWithLimit)
+{
+	switch (M_ARGV(8, entity)) // resource type
+	{
+		case RES_ARMOR:
+			// Prevent Heal nade, Mage, Bumblebee, etc. from giving lots of Extra lives
+			M_ARGV(10, float) = autocvar_g_instagib_extralives;
+			break;
+		case RES_HEALTH:
+			M_ARGV(10, float) = 100; // don't heal above maximum health
+			break;
+		case RES_CELLS:
+			break;
+		case RES_FUEL:
+			if (!autocvar_g_instagib_allow_jetpacks)
+				M_ARGV(10, float) = 0;
+			break;
+		default:
+			M_ARGV(10, float) = 0;
+			break;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(mutator_instagib, Turret_Plasma_Fire)
+{
+	entity it = M_ARGV(0, entity);
+	//bool dual = M_ARGV(1, bool);
+
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	FireRailgunBullet(it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance,
+		10000000000,
+		false,
+		800,
+		0,
+		0,
+		0,
+		0,
+		DEATH_TURRET_PLASMA.m_id
+	);
+
+	Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, it.tur_shotorg, it.tur_shotdir_updated * 1000, 1);
+
+	// teamcolor / hit beam effect
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	vector rgb = Team_ColorRGB(it.team);
+	Send_Effect_Core(EFFECT_VAPORIZER_BEAM, it.tur_shotorg, v, 1, rgb, rgb, -1, -1, -1, NULL);
+
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)
