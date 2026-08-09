@@ -1,39 +1,5 @@
 #pragma once
 
-#define EV_NO_ARGS(i, o)
-
-#pragma noref 1
-
-#define MUTATOR_TYPES(_, X) \
-	_(X, bool) \
-	_(X, int) \
-	_(X, entity) \
-	_(X, float) \
-	_(X, vector) \
-	_(X, string) \
-	/**/
-
-// TODO: migrate to arrays some day when no other globals are used
-#define M_ARGV(X, type) MUTATOR_ARGV_##X##_##type
-#define MUTATOR_NEWGLOBAL(X, type) type MUTATOR_ARGV_##X##_##type;
-
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 0)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 1)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 2)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 3)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 4)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 5)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 6)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 7)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 8)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 9)
-MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 10)
-
-#undef MUTATOR_TYPES
-#undef MUTATOR_NEWGLOBAL
-
-#pragma noref 0
-
 /// Appends ":mutatorname" to argument for logging
 #define EV_BuildMutatorsString(i, o) \
 	/** mutator string */ i(string, 0) \
