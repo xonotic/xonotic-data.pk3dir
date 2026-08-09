@@ -2,9 +2,9 @@
 
 #include <common/mutators/base.qh>
 
-// register all possible hooks here
+// Register all possible hooks here
 
-// to use a hook, first register your mutator using REGISTER_MUTATOR
+// To use a hook, first register your mutator using REGISTER_MUTATOR,
 // then create your function using MUTATOR_HOOKFUNCTION
 
 // globals
@@ -19,13 +19,17 @@ string cmd_string;
  * NOTE: return true if you handled the command, return false to continue handling
  * NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
  * // example:
- * MUTATOR_HOOKFUNCTION(foo, Menu_ConsoleCommand) {
- *     if (MUTATOR_RETURNVALUE) return false; // command was already handled
- *     if (cmd_name == "echocvar" && cmd_argc >= 2) {
+ * MUTATOR_HOOKFUNCTION(foo, Menu_ConsoleCommand)
+ * {
+ *     if (MUTATOR_RETURNVALUE)
+ *         return false; // command was already handled
+ *     if (cmd_name == "echocvar" && cmd_argc >= 2)
+ *     {
  *         print(cvar_string(argv(1)), "\n");
  *         return true;
  *     }
- *     if (cmd_name == "echostring" && cmd_argc >= 2) {
+ *     if (cmd_name == "echostring" && cmd_argc >= 2)
+ *     {
  *         print(substring(cmd_string, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), "\n");
  *         return true;
  *     }
