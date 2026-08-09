@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 07:22+0200\n"
+"POT-Creation-Date: 2026-08-09 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Seokho Son, 2022\n"
 "Language-Team: Korean (http://app.transifex.com/team-xonotic/xonotic/"
@@ -138,6 +138,7 @@ msgstr "^1 ^3%s^1를 눌러 관전하고, ^3%s^1를 눌러 카메라 모드를 �
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:92
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
 #: qcsrc/common/vehicles/cl_vehicles.qc:165
 msgid "drop weapon"
 msgstr "무기 떨구기"
@@ -168,12 +169,13 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1참가하려면 ^3%s^1를 누르세요"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
-#: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1385
+#: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1391
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:84
 #: qcsrc/common/notifications/all.qh:451
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
 #: qcsrc/menu/xonotic/guide/pages.qc:83 qcsrc/menu/xonotic/guide/pages.qc:84
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:155
+#: qcsrc/menu/xonotic/mutatortab.qc:374
 msgid "jump"
 msgstr "뛰기"
 
@@ -595,7 +597,7 @@ msgstr "결승 선"
 msgid "PENALTY: %.1f (%s)"
 msgstr "페널티: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1227
+#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1235
 msgid "missing a checkpoint"
 msgstr "체크포인트를 놓침"
 
@@ -1047,7 +1049,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1058
 #: qcsrc/client/hud/panel/scoreboard.qc:1072
 #: qcsrc/client/hud/panel/scoreboard.qc:1143
-#: qcsrc/client/hud/panel/scoreboard.qc:1152 qcsrc/common/util.qc:443
+#: qcsrc/client/hud/panel/scoreboard.qc:1152 qcsrc/common/util.qc:433
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1125,7 +1127,7 @@ msgstr ""
 msgid "^5%d^7/^5%d ^7players"
 msgstr ""
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1414
+#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1421
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:42
 msgid "Map:"
 msgstr "맵:"
@@ -1271,141 +1273,149 @@ msgstr "부족해요 -->"
 msgid "Unavailable"
 msgstr "이용 불가"
 
-#: qcsrc/client/main.qc:319
+#: qcsrc/client/main.qc:320
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "팀 목록에 없는 팀을 지우려고 하는 중이에요!"
 
-#: qcsrc/client/main.qc:1121 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:185
+#: qcsrc/client/main.qc:1129 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:185
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1122 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
+#: qcsrc/client/main.qc:1130 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1123 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
+#: qcsrc/client/main.qc:1131 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1124 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
+#: qcsrc/client/main.qc:1132 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1125 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
+#: qcsrc/client/main.qc:1133 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
 msgid "knots"
 msgstr "노트"
 
-#: qcsrc/client/main.qc:1333
-msgid "All Weapons Arena"
-msgstr ""
-
-#: qcsrc/client/main.qc:1334
-msgid "All Available Weapons Arena"
-msgstr ""
-
-#: qcsrc/client/main.qc:1335
-msgid "Most Weapons Arena"
-msgstr ""
-
-#: qcsrc/client/main.qc:1336
-msgid "Most Available Weapons Arena"
-msgstr ""
-
-#: qcsrc/client/main.qc:1339 qcsrc/client/main.qc:1353
+#: qcsrc/client/main.qc:1344
 msgid "No Weapons Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1351
+#: qcsrc/client/main.qc:1345
+msgid "All Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1346
+msgid "All Available Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1347
+msgid "Standard Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1348
+msgid "Standard Available Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1349
+msgid "Extended Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1350
+msgid "Extended Available Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1357
 #, c-format
 msgid "%s Arena"
 msgstr ""
 
-#: qcsrc/client/main.qc:1362 qcsrc/client/main.qc:1367
+#: qcsrc/client/main.qc:1368 qcsrc/client/main.qc:1373
 #, c-format
 msgid "This is %s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1363
+#: qcsrc/client/main.qc:1369
 msgid "Your client version is outdated."
 msgstr ""
 
-#: qcsrc/client/main.qc:1364
+#: qcsrc/client/main.qc:1370
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr ""
 
-#: qcsrc/client/main.qc:1365
+#: qcsrc/client/main.qc:1371
 msgid "Please update!"
 msgstr "업데이트가 필요합니다!"
 
-#: qcsrc/client/main.qc:1368
+#: qcsrc/client/main.qc:1374
 msgid "This server is using an outdated Xonotic version."
 msgstr ""
 
-#: qcsrc/client/main.qc:1369
+#: qcsrc/client/main.qc:1375
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr ""
 
-#: qcsrc/client/main.qc:1371
+#: qcsrc/client/main.qc:1377
 #, c-format
 msgid "Welcome to %s"
 msgstr ""
 
-#: qcsrc/client/main.qc:1387 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1393 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1395
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr ""
 
-#: qcsrc/client/main.qc:1412
+#: qcsrc/client/main.qc:1419
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:37
 msgid "Gametype:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1416
+#: qcsrc/client/main.qc:1423
 msgid "by:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1420
+#: qcsrc/client/main.qc:1427
 msgid "This match supports"
 msgstr ""
 
-#: qcsrc/client/main.qc:1422
+#: qcsrc/client/main.qc:1429
 #, c-format
 msgid "%d players"
 msgstr ""
 
-#: qcsrc/client/main.qc:1424
+#: qcsrc/client/main.qc:1431
 #, c-format
 msgid "%d to %d players"
 msgstr ""
 
-#: qcsrc/client/main.qc:1426
+#: qcsrc/client/main.qc:1433
 #, c-format
 msgid "%d players maximum"
 msgstr ""
 
-#: qcsrc/client/main.qc:1428
+#: qcsrc/client/main.qc:1435
 #, c-format
 msgid "%d players minimum"
 msgstr ""
 
-#: qcsrc/client/main.qc:1433
+#: qcsrc/client/main.qc:1440
 msgid "Active modifications:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1436
+#: qcsrc/client/main.qc:1443
 msgid "Special gameplay tips:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1443
+#: qcsrc/client/main.qc:1450
 msgid "Server's message"
 msgstr ""
 
-#: qcsrc/client/main.qc:1530
+#: qcsrc/client/main.qc:1537
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (미정)"
@@ -1608,8 +1618,8 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
-msgid "Race CTS"
-msgstr "경주 CTS"
+msgid "Complete the Stage"
+msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
@@ -2268,10 +2278,12 @@ msgid "Medium armor"
 msgstr ""
 
 #: qcsrc/common/items/item/armor.qh:148 qcsrc/common/items/item/armor.qh:159
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:45
 msgid "Big armor"
 msgstr ""
 
 #: qcsrc/common/items/item/armor.qh:200 qcsrc/common/items/item/armor.qh:211
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:43
 msgid "Mega armor"
 msgstr "메가 보호구"
 
@@ -2321,6 +2333,7 @@ msgid "Big health"
 msgstr ""
 
 #: qcsrc/common/items/item/health.qh:199 qcsrc/common/items/item/health.qh:210
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:44
 msgid "Mega health"
 msgstr "메가 체력"
 
@@ -2376,11 +2389,11 @@ msgstr "^1오류:^7 pak 인덱스를 찾지 못함"
 msgid "Requesting preview..."
 msgstr "프리뷰 요청..."
 
-#: qcsrc/common/minigames/cl_minigames.qc:300
+#: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
 msgstr ""
 
-#: qcsrc/common/minigames/cl_minigames.qc:436
+#: qcsrc/common/minigames/cl_minigames.qc:423
 msgid "It's your turn"
 msgstr "당신 차례입니다"
 
@@ -2422,59 +2435,59 @@ msgstr ""
 msgid "Bulldozer"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/bd.qc:1107
+#: qcsrc/common/minigames/minigame/bd.qc:1109
 #: qcsrc/common/minigames/minigame/ps.qc:423
 #: qcsrc/common/minigames/minigame/ps.qc:429
 msgid "Game over!"
 msgstr "게임 끝!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1110
+#: qcsrc/common/minigames/minigame/bd.qc:1112
 msgid "Well done! Click \"Next Level\" to continue"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/bd.qc:1181
+#: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:380
-#: qcsrc/common/minigames/minigame/nmm.qc:605
-#: qcsrc/common/minigames/minigame/pong.qc:625
-#: qcsrc/common/minigames/minigame/pp.qc:447
+#: qcsrc/common/minigames/minigame/nmm.qc:607
+#: qcsrc/common/minigames/minigame/pong.qc:626
+#: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ps.qc:497
-#: qcsrc/common/minigames/minigame/ttt.qc:330
+#: qcsrc/common/minigames/minigame/ttt.qc:336
 msgid "You are spectating"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/bd.qc:1184
+#: qcsrc/common/minigames/minigame/bd.qc:1186
 msgid "Better luck next time!"
 msgstr "다음 번에는 잘 되겠죠!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1189
+#: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Tubular! Press \"Next Level\" to continue!"
 msgstr "Tubular! 진행하려면 'Next Level'를 누르세요!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1191
+#: qcsrc/common/minigames/minigame/bd.qc:1193
 msgid "Wicked! Press \"Next Level\" to continue!"
 msgstr "Wicked! 진행하려면 'Next Level'를 누르세요!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1195
+#: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the spacebar to change your currently selected tile"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/bd.qc:1198
+#: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/bd.qc:1434
+#: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Next Level"
 msgstr "다음 단계"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1435
+#: qcsrc/common/minigames/minigame/bd.qc:1437
 msgid "Restart"
 msgstr "재시작하기"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1436
+#: qcsrc/common/minigames/minigame/bd.qc:1438
 msgid "Editor"
 msgstr "편집기"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1437
+#: qcsrc/common/minigames/minigame/bd.qc:1439
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
 msgstr "저장하기"
@@ -2485,45 +2498,45 @@ msgstr ""
 
 #: qcsrc/common/minigames/minigame/c4.qc:314
 #: qcsrc/common/minigames/minigame/c4.qc:320
-#: qcsrc/common/minigames/minigame/nmm.qc:488
-#: qcsrc/common/minigames/minigame/nmm.qc:494
-#: qcsrc/common/minigames/minigame/pp.qc:367
-#: qcsrc/common/minigames/minigame/pp.qc:373
+#: qcsrc/common/minigames/minigame/nmm.qc:490
+#: qcsrc/common/minigames/minigame/nmm.qc:496
+#: qcsrc/common/minigames/minigame/pp.qc:370
+#: qcsrc/common/minigames/minigame/pp.qc:376
 #, c-format
 msgid "%s^7 won the game!"
 msgstr ""
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
-#: qcsrc/common/minigames/minigame/pp.qc:450
-#: qcsrc/common/minigames/minigame/ttt.qc:333
+#: qcsrc/common/minigames/minigame/pp.qc:453
+#: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Draw"
 msgstr "무승부"
 
 #: qcsrc/common/minigames/minigame/c4.qc:388
-#: qcsrc/common/minigames/minigame/nmm.qc:610
-#: qcsrc/common/minigames/minigame/pp.qc:456
-#: qcsrc/common/minigames/minigame/ttt.qc:340
+#: qcsrc/common/minigames/minigame/nmm.qc:612
+#: qcsrc/common/minigames/minigame/pp.qc:459
+#: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "You lost the game!"
 msgstr "졌어요!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:389
-#: qcsrc/common/minigames/minigame/nmm.qc:611
-#: qcsrc/common/minigames/minigame/pp.qc:457
-#: qcsrc/common/minigames/minigame/ttt.qc:341
+#: qcsrc/common/minigames/minigame/nmm.qc:613
+#: qcsrc/common/minigames/minigame/pp.qc:460
+#: qcsrc/common/minigames/minigame/ttt.qc:347
 msgid "You win!"
 msgstr "이겼어요!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:393
-#: qcsrc/common/minigames/minigame/nmm.qc:615
-#: qcsrc/common/minigames/minigame/pp.qc:468
-#: qcsrc/common/minigames/minigame/ttt.qc:352
+#: qcsrc/common/minigames/minigame/nmm.qc:617
+#: qcsrc/common/minigames/minigame/pp.qc:471
+#: qcsrc/common/minigames/minigame/ttt.qc:358
 msgid "Wait for your opponent to make their move"
 msgstr "적이 움직이기를 기다리세요"
 
 #: qcsrc/common/minigames/minigame/c4.qc:396
-#: qcsrc/common/minigames/minigame/nmm.qc:617
-#: qcsrc/common/minigames/minigame/pp.qc:471
-#: qcsrc/common/minigames/minigame/ttt.qc:355
+#: qcsrc/common/minigames/minigame/nmm.qc:619
+#: qcsrc/common/minigames/minigame/pp.qc:474
+#: qcsrc/common/minigames/minigame/ttt.qc:361
 msgid "Click on the game board to place your piece"
 msgstr "게임판 위을 클릭해 당신의 말을 놓으세요"
 
@@ -2531,16 +2544,16 @@ msgstr "게임판 위을 클릭해 당신의 말을 놓으세요"
 msgid "Nine Men's Morris"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/nmm.qc:619
+#: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid ""
 "You can select one of your pieces to move it to one of the surrounding places"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/nmm.qc:621
+#: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/nmm.qc:623
+#: qcsrc/common/minigames/minigame/nmm.qc:625
 msgid "You can take one of the opponent's pieces"
 msgstr "적의 말 하나를 가져갈 수 있어요"
 
@@ -2548,24 +2561,24 @@ msgstr "적의 말 하나를 가져갈 수 있어요"
 msgid "Pong"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/pong.qc:608
-#: qcsrc/common/minigames/minigame/ttt.qc:310
+#: qcsrc/common/minigames/minigame/pong.qc:609
+#: qcsrc/common/minigames/minigame/ttt.qc:316
 msgid "AI"
 msgstr "인공지능"
 
-#: qcsrc/common/minigames/minigame/pong.qc:627
+#: qcsrc/common/minigames/minigame/pong.qc:628
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr "^1대전 시작하기^7를 눌러 지금 있는 플레이어로 대전을 시작하세요"
 
-#: qcsrc/common/minigames/minigame/pong.qc:699
+#: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Start Match"
 msgstr "대전 시작하기"
 
-#: qcsrc/common/minigames/minigame/pong.qc:700
+#: qcsrc/common/minigames/minigame/pong.qc:701
 msgid "Add AI player"
 msgstr "인공지능 플레이어 추가하기"
 
-#: qcsrc/common/minigames/minigame/pong.qc:701
+#: qcsrc/common/minigames/minigame/pong.qc:702
 msgid "Remove AI player"
 msgstr "인공지능 플레이어 빼기"
 
@@ -2573,25 +2586,25 @@ msgstr "인공지능 플레이어 빼기"
 msgid "Push-Pull"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/pp.qc:456
-#: qcsrc/common/minigames/minigame/ttt.qc:340
+#: qcsrc/common/minigames/minigame/pp.qc:459
+#: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/pp.qc:457
-#: qcsrc/common/minigames/minigame/pp.qc:463
-#: qcsrc/common/minigames/minigame/ttt.qc:341
+#: qcsrc/common/minigames/minigame/pp.qc:460
+#: qcsrc/common/minigames/minigame/pp.qc:466
 #: qcsrc/common/minigames/minigame/ttt.qc:347
+#: qcsrc/common/minigames/minigame/ttt.qc:353
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/pp.qc:464
-#: qcsrc/common/minigames/minigame/ttt.qc:348
+#: qcsrc/common/minigames/minigame/pp.qc:467
+#: qcsrc/common/minigames/minigame/ttt.qc:354
 msgid "Wait for your opponent to confirm the rematch"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/pp.qc:613
-#: qcsrc/common/minigames/minigame/ttt.qc:699
+#: qcsrc/common/minigames/minigame/pp.qc:616
+#: qcsrc/common/minigames/minigame/ttt.qc:707
 msgid "Next Match"
 msgstr "다음 대전"
 
@@ -2628,7 +2641,7 @@ msgstr "조각을 점령하기 위해서는 또 다른 조각 위로 뛰세요"
 msgid "Tic Tac Toe"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/ttt.qc:700
+#: qcsrc/common/minigames/minigame/ttt.qc:708
 msgid "Single Player"
 msgstr "개인 플레이어"
 
@@ -2795,9 +2808,28 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
-#: qcsrc/common/util.qc:320
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
+#: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qh:6
 msgid "Blood loss"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:21
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
+#: qcsrc/menu/xonotic/mutatortab.qc:30 qcsrc/menu/xonotic/mutatortab.qc:302
+#: qcsrc/menu/xonotic/util.qc:728
+msgid "Enable"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:24
+msgid "Bleed below health:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:30
+msgid ""
+"Amount of health below which players start bleeding out (health rots and "
+"they can't jump)."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:69
@@ -2974,8 +3006,8 @@ msgid "In some sense, this is the opposite of the %s buff."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
-#: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:317
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qh:6
+#: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:305
 msgid "Vampire"
 msgstr "흡혈귀"
 
@@ -2995,6 +3027,62 @@ msgstr "복수"
 msgid "Buff"
 msgstr "버프"
 
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:20
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:78
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:90
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:103
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:195
+#: qcsrc/menu/xonotic/mutatortab.qc:202 qcsrc/menu/xonotic/mutatortab.qc:298
+#: qcsrc/menu/xonotic/util.qc:741 qcsrc/menu/xonotic/util.qc:758
+#: qcsrc/menu/xonotic/util.qc:776
+msgid "Disable"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:22
+msgid "Enable only if placed by mapper"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:28
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:34
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:40
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:40
+msgid "Allow maps to spawn:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:43
+msgid "Replace unavailable buffs with others"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:47
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:76
+msgid "Allow dropping"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:50
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:85
+msgid "Replace powerups with buffs"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:59
+#, c-format
+msgid ""
+"Enable buff pickups (random bonuses like %s and %s) on the maps that support "
+"them."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qh:6 qcsrc/common/util.qc:311
+#: qcsrc/menu/xonotic/guide/guide.qh:15
+msgid "Buffs"
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qc:10
 #, c-format
 msgid ""
@@ -3002,32 +3090,37 @@ msgid ""
 "powerup. This adds an extra layer of stealth and strategy to gameplay."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:313
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
+#: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5
+#: qcsrc/common/mutators/mutator/cloaked/ui_cloaked.qh:6
+#: qcsrc/common/util.qc:301
 msgid "Cloaked"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:23
+#: qcsrc/common/mutators/mutator/cloaked/ui_cloaked.qc:17
+msgid "All players are almost invisible."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:22
 msgid "Damage Text"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Draw damage numbers"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:27
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:26
 msgid "Draw damage numbers for friendly fire"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:32
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:31
 msgid "Font size minimum:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:37
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:36
 msgid "Font size maximum:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:42
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:41
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:67
@@ -3036,17 +3129,17 @@ msgstr ""
 msgid "Color:"
 msgstr "색:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:49
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:70
 msgid "Per weapon"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:54
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:53
 msgid "Initial opacity:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:60
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:59
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:25
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
@@ -3054,18 +3147,18 @@ msgstr ""
 msgid "Fade time:"
 msgstr "사라지는 시간:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:66
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:65
 msgid "Accumulate:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:70
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:69
 msgid "If younger than:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:75
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:74
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:46
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:25
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:146
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:178
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:160
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
@@ -3074,9 +3167,9 @@ msgstr ""
 msgid "Never"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:77
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:76
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:50
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:181
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:162
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
@@ -3085,11 +3178,11 @@ msgstr ""
 msgid "Always"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:82
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:81
 msgid "Or opacity greater than:"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:11
 msgid "Damage text"
 msgstr "데미지 텍스트"
 
@@ -3108,8 +3201,8 @@ msgstr ""
 msgid "Some other mutators like %s enable this by default."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:306
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
+#: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:294
+#: qcsrc/menu/xonotic/mutatortab.qc:399
 msgid "Dodging"
 msgstr ""
 
@@ -3133,8 +3226,9 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:12
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:12
-#: qcsrc/common/weapons/weapon/hook.qc:402
+#: qcsrc/common/weapons/weapon/hook.qc:402 qcsrc/menu/xonotic/mutatortab.qc:348
 msgid "hook"
 msgstr ""
 
@@ -3151,7 +3245,7 @@ msgstr ""
 msgid "Note that it is overridden by the %s mutator."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:314
+#: qcsrc/common/mutators/mutator/hook/hook.qh:5
 msgid "Hook"
 msgstr ""
 
@@ -3188,8 +3282,8 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qh:5
-#: qcsrc/common/util.qc:307
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:3
+#: qcsrc/common/util.qc:295
 msgid "InstaGib"
 msgstr ""
 
@@ -3215,6 +3309,85 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/instagib/items.qh:60
 msgid "Extra life"
 msgstr "추가 목숨"
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:36
+msgid "Starting ammo:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:39
+msgid "Ammo from weapons and cells:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:44
+msgid "Extra lives per pickup:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:47
+msgid ""
+"How many extra lives to reward a player when they pick up the Extra life"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:52
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:34
+msgid "Keep Blaster damage"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:55
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:36
+msgid "Keep Blaster force"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:60
+msgid "Allow Jetpacks and Fuel regenerators"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:65
+msgid "Enable Rocketminsta"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:66
+msgid ""
+"The primary fire also explodes on impact, and the secondary fire shoots "
+"laser prongs"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:4
+#, c-format
+msgid ""
+"Players will be given only one weapon, the %s, which can instantly kill the "
+"opponent with a single shot. If the player runs out of ammo, they will have "
+"10 seconds to find some or face death if they fail to do so. The secondary "
+"fire does not inflict any damage but is good for doing trickjumps."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qc:19
+#, c-format
+msgid ""
+"Projectiles can't be destroyed. However, you can still explode %s orbs with "
+"the %s primary fire."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qh:6
+msgid "Invincible projectiles"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/midair/ui_midair.qc:20
+msgid "Invincibility time:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/midair/ui_midair.qc:22
+msgid "Invincibility time after leaving contact with ground"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/midair/ui_midair.qc:29
+msgid ""
+"Makes it only possible to inflict damage on your enemy while they're "
+"airborne."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/midair/ui_midair.qh:6 qcsrc/common/util.qc:303
+msgid "Midair"
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/cl_nades.qc:76
 #: qcsrc/menu/xonotic/keybinder.qc:83
@@ -3409,9 +3582,60 @@ msgstr ""
 msgid "This mutator is enabled by default in %s."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:84 qcsrc/common/util.qc:329
+#: qcsrc/common/mutators/mutator/nades/nades.qh:84
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qh:6 qcsrc/common/util.qc:318
 #: qcsrc/menu/xonotic/guide/guide.qh:16
 msgid "Nades"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:24
+msgid "Enable bonus nades"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:25
+msgid ""
+"Gives players a bonus grenade when they reach a certain score or have "
+"Strength"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:26
+msgid "Max bonus nades:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:32
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:116
+msgid "Allow client selection"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:33
+msgid "For bonus nades"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:36
+msgid "Refire time:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:42
+msgid "Nade types:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:96
+msgid "Random"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:107
+msgid "Normal nade type, if client selection is disabled"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:111
+msgid "Bonus nade type, if client selection is disabled"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
+#, c-format
+msgid ""
+"Enable throwable grenades which explode with a variety of effects. Press %s "
+"or %s to use them."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
@@ -3434,9 +3658,27 @@ msgid "The current %s weapons are:"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
-#: qcsrc/common/util.qc:308
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qh:6
+#: qcsrc/common/util.qc:296
 msgid "New Toys"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:19
+msgid "Replacement:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:21
+msgid ""
+"Automatically replace some normal weapons of the map with their "
+"corresponding additional weapons"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:25
+msgid "Randomly"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:30
+msgid "Allow maps to spawn additional weapons (new toys)."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
@@ -3447,9 +3689,34 @@ msgid ""
 "and ammo pickups are also removed from the map."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:309
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
+#: qcsrc/common/mutators/mutator/nix/nix.qh:5
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qh:3 qcsrc/common/util.qc:297
 msgid "NIX"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:31
+msgid "With Blaster"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:32
+msgid "Always carry the Blaster as an additional weapon in NIX"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:37
+msgid "Health and armor"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:38
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qh:6
+#: qcsrc/common/util.qc:313 qcsrc/menu/xonotic/guide/guide.qh:14
+msgid "Powerups"
+msgstr "파워업"
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qh:4
+msgid ""
+"No items Xonotic - instead of pickup items, everyone plays with the same "
+"weapon. After some time a countdown will start, after which everyone will "
+"switch to another weapon."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
@@ -3477,7 +3744,6 @@ msgid "Note that it overrides the %s mutator, since they use the same bind."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
-#: qcsrc/common/util.qc:330
 msgid "Offhand blaster"
 msgstr ""
 
@@ -3611,8 +3877,21 @@ msgid "Overkill Shotgun"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/overkill.qh:5
-#: qcsrc/common/util.qc:323 qcsrc/menu/xonotic/guide/pages.qc:171
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qh:10
+#: qcsrc/common/util.qc:310 qcsrc/menu/xonotic/guide/pages.qc:171
 msgid "Overkill"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:49
+msgid "Replace Strength and Shield with weapons"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qh:11
+#, c-format
+msgid ""
+"Unique arena mutator that replaces all weapons with mostly hitscan ones with "
+"a short time to kill for rapid gameplay. The secondary fire of all weapons "
+"shoots a %s-like projectile. It also enables %s and %s."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qc:8
@@ -3622,9 +3901,13 @@ msgid ""
 "Without this mutator, players normally drop only their equipped weapon."
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:318
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
+#: qcsrc/common/mutators/mutator/pinata/pinata.qh:5
+#: qcsrc/common/mutators/mutator/pinata/ui_pinata.qh:6 qcsrc/common/util.qc:306
 msgid "Piñata"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/pinata/ui_pinata.qc:17
+msgid "Players will drop all weapons they possessed when they are fragged."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:19
@@ -3681,8 +3964,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
-#: qcsrc/common/util.qc:321
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
+#: qcsrc/common/util.qc:309 qcsrc/menu/xonotic/mutatortab.qh:63
 msgid "Jetpack"
 msgstr ""
 
@@ -3742,6 +4024,43 @@ msgstr ""
 msgid "Strength"
 msgstr "힘"
 
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:34
+msgid "Dependent on gametype"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:18
+msgid "Always enable"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:69
+msgid "Drop on death"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:72
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
+msgid "Disabled"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:73
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:80
+msgid "Timer continues"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:74
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:81
+msgid "Timer pauses"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:95
+#, c-format
+msgid ""
+"Enable powerup pickups (powerful bonuses like %s and %s) on the maps that "
+"support them."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qc:10
 #, c-format
 msgid ""
@@ -3752,10 +4071,25 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
-#: qcsrc/common/util.qc:310
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
-#: qcsrc/menu/xonotic/guide/pages.qc:72 qcsrc/menu/xonotic/guide/pages.qc:123
+#: qcsrc/common/util.qc:298 qcsrc/menu/xonotic/guide/pages.qc:72
+#: qcsrc/menu/xonotic/guide/pages.qc:123
 msgid "Rocket Flying"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:19
+msgid "Disable projectile detonation delay"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:26
+#, c-format
+msgid ""
+"%s rockets can be detonated instantly (otherwise, there's a short delay). "
+"This allows players to fire and detonate a rocket while mid-air for a strong "
+"boost even while moving fast."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qh:6
+msgid "Rocket flying"
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
@@ -3787,9 +4121,56 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
-#: qcsrc/common/util.qc:326
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qh:6
 msgid "Touch explode"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:19
+msgid "Damage:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:22
+msgid "Force:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:24
+#, c-format
+msgid "%s qu/s"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:29
+msgid "An explosion occurs when two players collide."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:21
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
+msgid "Factor:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:23
+msgid "Fraction of the damage dealt to be stolen as health"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:84
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:138
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:82
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:89
+#, c-format
+msgid "%sx"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:26
+msgid "Consider both health and armor"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:31
+msgid "All damage dealt to your enemies is added to your own health."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
@@ -3821,7 +4202,7 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
-#: qcsrc/common/util.qc:327
+#: qcsrc/menu/xonotic/mutatortab.qc:417
 msgid "Wall jumping"
 msgstr ""
 
@@ -3858,13 +4239,13 @@ msgid "Checkpoint"
 msgstr "체크포인트"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:227
 msgid "Finish"
 msgstr "완료"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:227
 msgid "Start"
 msgstr "시작"
 
@@ -3994,7 +4375,7 @@ msgstr "불청객"
 msgid "Tagged"
 msgstr ""
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:690
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:672
 #, c-format
 msgid "%s needing help!"
 msgstr ""
@@ -6894,418 +7275,423 @@ msgstr "걷기 터렛"
 msgid "Walker"
 msgstr "걷기"
 
-#: qcsrc/common/util.qc:311
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
+#: qcsrc/common/util.qc:299
 msgid "Invincible Projectiles"
 msgstr ""
 
+#: qcsrc/common/util.qc:300
+msgid "Low Gravity"
+msgstr ""
+
+#: qcsrc/common/util.qc:302 qcsrc/menu/xonotic/mutatortab.qc:339
+msgid "Offhand Hook"
+msgstr ""
+
+#: qcsrc/common/util.qc:304
+msgid "Melee Only Arena"
+msgstr ""
+
+#: qcsrc/common/util.qc:307
+msgid "Weapons Stay"
+msgstr ""
+
+#: qcsrc/common/util.qc:308
+msgid "Blood Loss"
+msgstr ""
+
 #: qcsrc/common/util.qc:312
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:116
-msgid "Low gravity"
+msgid "No Powerups"
+msgstr ""
+
+#: qcsrc/common/util.qc:314
+msgid "Buffs Replace Powerups"
 msgstr ""
 
 #: qcsrc/common/util.qc:315
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:94
-msgid "Midair"
+msgid "Touch Explode"
 msgstr ""
 
 #: qcsrc/common/util.qc:316
-msgid "Melee only Arena"
+msgid "Wall Jumping"
 msgstr ""
 
-#: qcsrc/common/util.qc:319
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:164
-msgid "Weapons stay"
+#: qcsrc/common/util.qc:317
+msgid "No Start Weapons"
 msgstr ""
 
-#: qcsrc/common/util.qc:322
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
-#: qcsrc/menu/xonotic/guide/guide.qh:15
-msgid "Buffs"
+#: qcsrc/common/util.qc:319 qcsrc/menu/xonotic/mutatortab.qc:335
+msgid "Offhand Blaster"
 msgstr ""
 
-#: qcsrc/common/util.qc:324
-msgid "No powerups"
-msgstr "파워업 없음"
-
-#: qcsrc/common/util.qc:325 qcsrc/menu/xonotic/guide/guide.qh:14
-msgid "Powerups"
-msgstr "파워업"
-
-#: qcsrc/common/util.qc:328
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:223
-msgid "No start weapons"
-msgstr ""
-
-#: qcsrc/common/util.qc:1579
+#: qcsrc/common/util.qc:1569
 msgid "Male"
 msgstr "남성"
 
-#: qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1570
 msgid "Female"
 msgstr "음성"
 
-#: qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1571
 msgid "Undisclosed"
 msgstr ""
 
-#: qcsrc/common/util.qc:1628
+#: qcsrc/common/util.qc:1618
 msgid "<KEY NOT FOUND>"
 msgstr ""
 
-#: qcsrc/common/util.qc:1629
+#: qcsrc/common/util.qc:1619
 msgid "<UNKNOWN KEYNUM>"
 msgstr ""
 
-#: qcsrc/common/util.qc:1634
+#: qcsrc/common/util.qc:1624
 msgid "TAB"
 msgstr ""
 
-#: qcsrc/common/util.qc:1635 qcsrc/common/util.qc:1706
+#: qcsrc/common/util.qc:1625 qcsrc/common/util.qc:1696
 #, c-format
 msgid "ENTER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1636
+#: qcsrc/common/util.qc:1626
 msgid "ESCAPE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1637
+#: qcsrc/common/util.qc:1627
 msgid "SPACE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1639
+#: qcsrc/common/util.qc:1629
 msgid "BACKSPACE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1640 qcsrc/common/util.qc:1697
+#: qcsrc/common/util.qc:1630 qcsrc/common/util.qc:1687
 #, c-format
 msgid "UPARROW"
 msgstr ""
 
-#: qcsrc/common/util.qc:1641 qcsrc/common/util.qc:1692
+#: qcsrc/common/util.qc:1631 qcsrc/common/util.qc:1682
 #, c-format
 msgid "DOWNARROW"
 msgstr ""
 
-#: qcsrc/common/util.qc:1642 qcsrc/common/util.qc:1694
+#: qcsrc/common/util.qc:1632 qcsrc/common/util.qc:1684
 #, c-format
 msgid "LEFTARROW"
 msgstr ""
 
-#: qcsrc/common/util.qc:1643 qcsrc/common/util.qc:1695
+#: qcsrc/common/util.qc:1633 qcsrc/common/util.qc:1685
 #, c-format
 msgid "RIGHTARROW"
 msgstr ""
 
-#: qcsrc/common/util.qc:1645
+#: qcsrc/common/util.qc:1635
 msgid "ALT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1646
+#: qcsrc/common/util.qc:1636
 msgid "CTRL"
 msgstr ""
 
-#: qcsrc/common/util.qc:1647
+#: qcsrc/common/util.qc:1637
 msgid "SHIFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1649 qcsrc/common/util.qc:1690
+#: qcsrc/common/util.qc:1639 qcsrc/common/util.qc:1680
 #, c-format
 msgid "INS"
 msgstr ""
 
-#: qcsrc/common/util.qc:1650 qcsrc/common/util.qc:1700
+#: qcsrc/common/util.qc:1640 qcsrc/common/util.qc:1690
 #, c-format
 msgid "DEL"
 msgstr ""
 
-#: qcsrc/common/util.qc:1651 qcsrc/common/util.qc:1693
+#: qcsrc/common/util.qc:1641 qcsrc/common/util.qc:1683
 #, c-format
 msgid "PGDN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1652 qcsrc/common/util.qc:1698
+#: qcsrc/common/util.qc:1642 qcsrc/common/util.qc:1688
 #, c-format
 msgid "PGUP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1653 qcsrc/common/util.qc:1696
+#: qcsrc/common/util.qc:1643 qcsrc/common/util.qc:1686
 #, c-format
 msgid "HOME"
 msgstr ""
 
-#: qcsrc/common/util.qc:1654 qcsrc/common/util.qc:1691
+#: qcsrc/common/util.qc:1644 qcsrc/common/util.qc:1681
 #, c-format
 msgid "END"
 msgstr ""
 
-#: qcsrc/common/util.qc:1656
+#: qcsrc/common/util.qc:1646
 msgid "PAUSE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1658
+#: qcsrc/common/util.qc:1648
 msgid "NUMLOCK"
 msgstr ""
 
-#: qcsrc/common/util.qc:1659
+#: qcsrc/common/util.qc:1649
 msgid "CAPSLOCK"
 msgstr ""
 
-#: qcsrc/common/util.qc:1660
+#: qcsrc/common/util.qc:1650
 msgid "SCROLLOCK"
 msgstr ""
 
-#: qcsrc/common/util.qc:1662
+#: qcsrc/common/util.qc:1652
 msgid "SEMICOLON"
 msgstr ""
 
-#: qcsrc/common/util.qc:1663
+#: qcsrc/common/util.qc:1653
 msgid "TILDE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1664
+#: qcsrc/common/util.qc:1654
 msgid "BACKQUOTE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1665
+#: qcsrc/common/util.qc:1655
 msgid "QUOTE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1666
+#: qcsrc/common/util.qc:1656
 msgid "APOSTROPHE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1667
+#: qcsrc/common/util.qc:1657
 msgid "BACKSLASH"
 msgstr ""
 
-#: qcsrc/common/util.qc:1675
+#: qcsrc/common/util.qc:1665
 #, c-format
 msgid "F%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1685
+#: qcsrc/common/util.qc:1675
 #, c-format
 msgid "KP_%d"
 msgstr ""
 
+#: qcsrc/common/util.qc:1680 qcsrc/common/util.qc:1681
+#: qcsrc/common/util.qc:1682 qcsrc/common/util.qc:1683
+#: qcsrc/common/util.qc:1684 qcsrc/common/util.qc:1685
+#: qcsrc/common/util.qc:1686 qcsrc/common/util.qc:1687
+#: qcsrc/common/util.qc:1688 qcsrc/common/util.qc:1689
 #: qcsrc/common/util.qc:1690 qcsrc/common/util.qc:1691
 #: qcsrc/common/util.qc:1692 qcsrc/common/util.qc:1693
 #: qcsrc/common/util.qc:1694 qcsrc/common/util.qc:1695
 #: qcsrc/common/util.qc:1696 qcsrc/common/util.qc:1697
-#: qcsrc/common/util.qc:1698 qcsrc/common/util.qc:1699
-#: qcsrc/common/util.qc:1700 qcsrc/common/util.qc:1701
-#: qcsrc/common/util.qc:1702 qcsrc/common/util.qc:1703
-#: qcsrc/common/util.qc:1704 qcsrc/common/util.qc:1705
-#: qcsrc/common/util.qc:1706 qcsrc/common/util.qc:1707
 #, c-format
 msgid "KP_%s"
 msgstr ""
 
-#: qcsrc/common/util.qc:1699
+#: qcsrc/common/util.qc:1689
 #, c-format
 msgid "PERIOD"
 msgstr ""
 
-#: qcsrc/common/util.qc:1701
+#: qcsrc/common/util.qc:1691
 #, c-format
 msgid "DIVIDE"
 msgstr ""
 
-#: qcsrc/common/util.qc:1702
+#: qcsrc/common/util.qc:1692
 #, c-format
 msgid "SLASH"
 msgstr ""
 
-#: qcsrc/common/util.qc:1703
+#: qcsrc/common/util.qc:1693
 #, c-format
 msgid "MULTIPLY"
 msgstr ""
 
-#: qcsrc/common/util.qc:1704
+#: qcsrc/common/util.qc:1694
 #, c-format
 msgid "MINUS"
 msgstr ""
 
-#: qcsrc/common/util.qc:1705
+#: qcsrc/common/util.qc:1695
 #, c-format
 msgid "PLUS"
 msgstr ""
 
-#: qcsrc/common/util.qc:1707
+#: qcsrc/common/util.qc:1697
 #, c-format
 msgid "EQUALS"
 msgstr ""
 
-#: qcsrc/common/util.qc:1712
+#: qcsrc/common/util.qc:1702
 msgid "PRINTSCREEN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1715
+#: qcsrc/common/util.qc:1705
 #, c-format
 msgid "MOUSE%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1717
+#: qcsrc/common/util.qc:1707
 msgid "MWHEELUP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1718
+#: qcsrc/common/util.qc:1708
 msgid "MWHEELDOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1721
+#: qcsrc/common/util.qc:1711
 #, c-format
 msgid "JOY%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1724
+#: qcsrc/common/util.qc:1714
 #, c-format
 msgid "AUX%d"
 msgstr ""
 
-#: qcsrc/common/util.qc:1731
+#: qcsrc/common/util.qc:1721
 #, c-format
 msgid "DPAD_UP"
 msgstr ""
 
+#: qcsrc/common/util.qc:1721 qcsrc/common/util.qc:1722
+#: qcsrc/common/util.qc:1723 qcsrc/common/util.qc:1724
+#: qcsrc/common/util.qc:1725 qcsrc/common/util.qc:1726
+#: qcsrc/common/util.qc:1727 qcsrc/common/util.qc:1728
+#: qcsrc/common/util.qc:1729 qcsrc/common/util.qc:1730
 #: qcsrc/common/util.qc:1731 qcsrc/common/util.qc:1732
 #: qcsrc/common/util.qc:1733 qcsrc/common/util.qc:1734
 #: qcsrc/common/util.qc:1735 qcsrc/common/util.qc:1736
 #: qcsrc/common/util.qc:1737 qcsrc/common/util.qc:1738
 #: qcsrc/common/util.qc:1739 qcsrc/common/util.qc:1740
-#: qcsrc/common/util.qc:1741 qcsrc/common/util.qc:1742
-#: qcsrc/common/util.qc:1743 qcsrc/common/util.qc:1744
-#: qcsrc/common/util.qc:1745 qcsrc/common/util.qc:1746
-#: qcsrc/common/util.qc:1747 qcsrc/common/util.qc:1748
-#: qcsrc/common/util.qc:1749 qcsrc/common/util.qc:1750
 #, c-format
 msgid "X360_%s"
 msgstr ""
 
-#: qcsrc/common/util.qc:1732
+#: qcsrc/common/util.qc:1722
 #, c-format
 msgid "DPAD_DOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1733
+#: qcsrc/common/util.qc:1723
 #, c-format
 msgid "DPAD_LEFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1734
+#: qcsrc/common/util.qc:1724
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1735
+#: qcsrc/common/util.qc:1725
 #, c-format
 msgid "START"
 msgstr ""
 
-#: qcsrc/common/util.qc:1736
+#: qcsrc/common/util.qc:1726
 #, c-format
 msgid "BACK"
 msgstr ""
 
-#: qcsrc/common/util.qc:1737
+#: qcsrc/common/util.qc:1727
 #, c-format
 msgid "LEFT_THUMB"
 msgstr ""
 
-#: qcsrc/common/util.qc:1738
+#: qcsrc/common/util.qc:1728
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr ""
 
-#: qcsrc/common/util.qc:1739
+#: qcsrc/common/util.qc:1729
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1740
+#: qcsrc/common/util.qc:1730
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1741
+#: qcsrc/common/util.qc:1731
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1742
+#: qcsrc/common/util.qc:1732
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr ""
 
-#: qcsrc/common/util.qc:1743
+#: qcsrc/common/util.qc:1733
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1744
+#: qcsrc/common/util.qc:1734
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1745
+#: qcsrc/common/util.qc:1735
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1746
+#: qcsrc/common/util.qc:1736
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1747
+#: qcsrc/common/util.qc:1737
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1748
+#: qcsrc/common/util.qc:1738
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1749
+#: qcsrc/common/util.qc:1739
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1750
+#: qcsrc/common/util.qc:1740
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1760 qcsrc/common/util.qc:1761
-#: qcsrc/common/util.qc:1762 qcsrc/common/util.qc:1763
+#: qcsrc/common/util.qc:1750 qcsrc/common/util.qc:1751
+#: qcsrc/common/util.qc:1752 qcsrc/common/util.qc:1753
 #, c-format
 msgid "JOY_%s"
 msgstr ""
 
-#: qcsrc/common/util.qc:1760
+#: qcsrc/common/util.qc:1750
 #, c-format
 msgid "UP"
 msgstr ""
 
-#: qcsrc/common/util.qc:1761
+#: qcsrc/common/util.qc:1751
 #, c-format
 msgid "DOWN"
 msgstr ""
 
-#: qcsrc/common/util.qc:1762
+#: qcsrc/common/util.qc:1752
 #, c-format
 msgid "LEFT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1763
+#: qcsrc/common/util.qc:1753
 #, c-format
 msgid "RIGHT"
 msgstr ""
 
-#: qcsrc/common/util.qc:1769
+#: qcsrc/common/util.qc:1759
 #, c-format
 msgid "MIDINOTE%d"
 msgstr ""
@@ -7849,7 +8235,6 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/weapons/weapon/hook.qh:36
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
 msgid "Grappling Hook"
 msgstr ""
 
@@ -8673,7 +9058,7 @@ msgstr "읽기 전용"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:37
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:254
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:84
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
@@ -8989,22 +9374,6 @@ msgstr "체력/보호구 제어반"
 msgid "Info Messages Panel"
 msgstr "정보 메시지 제어반"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:78
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:90
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:103
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:195
-#: qcsrc/menu/xonotic/util.qc:741 qcsrc/menu/xonotic/util.qc:758
-#: qcsrc/menu/xonotic/util.qc:776
-msgid "Disable"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 msgid "Enable spectating"
@@ -9070,13 +9439,6 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
 msgstr "공지 제어반"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
-#: qcsrc/menu/xonotic/util.qc:728
-msgid "Enable"
-msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
@@ -9146,19 +9508,6 @@ msgstr "물리 제어반"
 msgid "Icon size scale:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:84
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:138
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:69
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:82
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:89
-#, c-format
-msgid "%sx"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:42
 msgid "Show timer:"
 msgstr ""
@@ -9174,11 +9523,6 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
 msgstr "파워업 제어반"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:18
-msgid "Always enable"
-msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
@@ -10052,157 +10396,15 @@ msgstr ""
 msgid "Map Information"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:74
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:16
 msgid "Gameplay mutators:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:78
-msgid ""
-"Enable dodging (quick acceleration in a given direction). Double-tap a "
-"directional key to dodge"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:82
-msgid "An explosion occurs when two players collide"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:86
-msgid "All players are almost invisible"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:90
-msgid ""
-"Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
-"that support it"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
-msgid "Only possible to inflict damage on your enemy while they're airborne"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
-msgid "Damage done to your enemy gets added to your own health"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:104
-msgid ""
-"Amount of health below which players start bleeding out (health rots and "
-"they can't jump)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
-msgid "Make things fall to the ground slower (percentage of normal gravity)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:122
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:16
 msgid "Weapon & item mutators:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:126
-msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
-msgid ""
-"Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
-"to use it"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
-msgid ""
-"Projectiles can't be destroyed. However, you can still explode Electro orbs "
-"with the Electro primary fire"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
-msgid "Allow maps to spawn additional weapons (new toys)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
-msgid "Replacement:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
-msgid ""
-"Automatically replace some normal weapons of the map with their "
-"corresponding additional weapons"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
-msgid "Randomly"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
-msgid ""
-"Devastator rockets can be detonated instantly (otherwise, there's a short "
-"delay). This allows players to fire and detonate a Devastator rocket while "
-"in the air for a strong mid-air boost even while moving fast"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
-msgid "Players will drop all weapons they possessed when they are killed"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:165
-msgid "Weapons stay after they are picked up"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
-msgid "Regular (no arena)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:171
-msgid ""
-"Players will be given a set of weapons at spawn as well as unlimited ammo, "
-"without weapon pickups"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
-msgid "Weapon arenas:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:176
-msgid "Custom weapons"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:198
-msgid "Most weapons"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
-msgid "All weapons"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:205
-msgid "Special arenas:"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:209
-msgid ""
-"Players will be given only one weapon, which can instantly kill the opponent "
-"with a single shot. If the player runs out of ammo, they will have 10 "
-"seconds to find some or if they fail to do so, face death. The secondary "
-"fire mode does not inflict any damage but is good for doing trickjumps."
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
-msgid ""
-"No items Xonotic - instead of pickup items, everyone plays with the same "
-"weapon. After some time, a countdown will start, after which everyone will "
-"switch to another weapon."
-msgstr ""
-"아이템 없는 조노틱 - 보급 아이템 대신, 모두가 동일한 무기를 사용해요. 시간이 "
-"좀 지난 후에, 카운트다운이 시작되는데, 그 뒤에는 다른 무기로 모두 바뀌어요."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:218
-msgid "with blaster"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:219
-msgid "Always carry the blaster as an additional weapon in Nix"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:8
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:96
 #: qcsrc/menu/xonotic/guide/guide.qh:20
 msgid "Mutators"
 msgstr ""
@@ -11316,10 +11518,6 @@ msgstr ""
 msgid "Overlay:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
-msgid "Factor:"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 msgid "Fade rate:"
 msgstr ""
@@ -11825,7 +12023,7 @@ msgid "In team games"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
-#: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
+#: qcsrc/menu/xonotic/guide/guide.qh:10 qcsrc/menu/xonotic/keybinder.qc:77
 msgid "Weapons"
 msgstr ""
 
@@ -12046,10 +12244,6 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:79
 msgid "How fast animations in the menu occur"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
-msgid "Disabled"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:86
@@ -12520,12 +12714,12 @@ msgstr ""
 msgid "Introduction"
 msgstr ""
 
-#: qcsrc/menu/xonotic/guide/guide.qh:10
-msgid "Movement"
-msgstr ""
-
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
+msgstr ""
+
+#: qcsrc/menu/xonotic/guide/guide.qh:12
+msgid "Movement"
 msgstr ""
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
@@ -12975,7 +13169,7 @@ msgstr ""
 msgid "crouch / sink"
 msgstr ""
 
-#: qcsrc/menu/xonotic/keybinder.qc:69
+#: qcsrc/menu/xonotic/keybinder.qc:69 qcsrc/menu/xonotic/mutatortab.qc:374
 msgid "jetpack"
 msgstr ""
 
@@ -13162,6 +13356,149 @@ msgstr "%s의 조노틱 서버"
 msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:206
+msgid "All weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:210
+msgid "Standard weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:214
+msgid "Extended weapons (includes New Toys)"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:218
+msgid "Custom weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:239
+msgid "Special arenas:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:245
+msgid "No start weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:258
+msgid "Melee only arena"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:259
+#, c-format
+msgid ""
+"Players spawn with no ammo and no weapons except the %s, so can only slap "
+"other players."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:271
+msgid ""
+"Players will be given a set of weapons on spawn along with unlimited ammo, "
+"without weapon pickups on the map."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:300
+msgid "Enabled but pickups give no ammo"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:308
+msgid "Weapons stay on the map after they are picked up."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:343
+msgid "Consume ammo"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:348
+#, c-format
+msgid ""
+"Players spawn with an Offhand Blaster or Grappling Hook. Press %s to use it."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:374
+#, c-format
+msgid "Players spawn with the %s. Double-tap %s or press %s to use it."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:400
+msgid ""
+"Enable dodging (quick acceleration in a given direction). Double-tap a "
+"directional key to dodge"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:404
+msgid "Midair jumps:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:406
+msgid "How many times players can jump while midair"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:407
+msgid "Infinite"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:412
+msgid "Additive velocity"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:413
+msgid ""
+"Add on, rather than set, their vertical velocity each time the player jumps"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:418
+msgid "Jump away from walls when running alongside them"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:421
+msgid "Delay between walljumps:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:428
+msgid "Double jumps"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:429
+msgid "Gain extra height when jumping again shortly after the first jump"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:435
+msgid "Make things fall to the ground slower (percentage of normal gravity)"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:439
+msgid "Low gravity"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:445
+msgid "Global forces"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:446
+msgid "Knockback experienced by any player affects all players"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:451
+msgid "Various fun changes to physics and movement."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qh:33
+msgid "Weapon arena"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qh:43
+msgid "Weapons stay"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qh:53
+msgid "Offhand weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qh:73
+msgid "Custom physics"
 msgstr ""
 
 #: qcsrc/menu/xonotic/playerlist.qc:114

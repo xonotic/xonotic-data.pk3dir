@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 07:22+0200\n"
+"POT-Creation-Date: 2026-08-09 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Oftox, 2023\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -150,6 +150,7 @@ msgstr "^1Paina ^3%s^1 tarkkaillaksesi, ^3%s^1 vaihtaaksesi kameratilaa"
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:92
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
 #: qcsrc/common/vehicles/cl_vehicles.qc:165
 msgid "drop weapon"
 msgstr "pudota ase"
@@ -180,12 +181,13 @@ msgid "^1Press ^3%s^1 to join"
 msgstr "^1Liity painamalla ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:141
-#: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1385
+#: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1391
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:84
 #: qcsrc/common/notifications/all.qh:451
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
 #: qcsrc/menu/xonotic/guide/pages.qc:83 qcsrc/menu/xonotic/guide/pages.qc:84
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:155
+#: qcsrc/menu/xonotic/mutatortab.qc:374
 msgid "jump"
 msgstr "hyppää"
 
@@ -607,7 +609,7 @@ msgstr "Maaliviiva"
 msgid "PENALTY: %.1f (%s)"
 msgstr "RANGAISTUS: %.1f (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1227
+#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1235
 msgid "missing a checkpoint"
 msgstr "tarkistuspiste sivuutettu"
 
@@ -1069,7 +1071,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:1058
 #: qcsrc/client/hud/panel/scoreboard.qc:1072
 #: qcsrc/client/hud/panel/scoreboard.qc:1143
-#: qcsrc/client/hud/panel/scoreboard.qc:1152 qcsrc/common/util.qc:443
+#: qcsrc/client/hud/panel/scoreboard.qc:1152 qcsrc/common/util.qc:433
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:50
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:51
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:151
@@ -1147,7 +1149,7 @@ msgstr "^7Valitse määrätty joukkue painamalla ^3%s ^7"
 msgid "^5%d^7/^5%d ^7players"
 msgstr "^5%d^7/^5%d ^7pelaajaa"
 
-#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1414
+#: qcsrc/client/hud/panel/scoreboard.qc:2578 qcsrc/client/main.qc:1421
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:42
 msgid "Map:"
 msgstr "Kartta:"
@@ -1293,141 +1295,149 @@ msgstr "Ei ole"
 msgid "Unavailable"
 msgstr "Ei saatavissa"
 
-#: qcsrc/client/main.qc:319
+#: qcsrc/client/main.qc:320
 msgid "Trying to remove a team which is not in the teamlist!"
 msgstr "Yritetään poistaa joukkuetta, joka ei ole joukkueluettelossa!"
 
-#: qcsrc/client/main.qc:1121 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:185
+#: qcsrc/client/main.qc:1129 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:185
 msgid "qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/main.qc:1122 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
+#: qcsrc/client/main.qc:1130 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:186
 msgid "m/s"
 msgstr "m/s"
 
-#: qcsrc/client/main.qc:1123 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
+#: qcsrc/client/main.qc:1131 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:187
 msgid "km/h"
 msgstr "km/h"
 
-#: qcsrc/client/main.qc:1124 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
+#: qcsrc/client/main.qc:1132 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:188
 msgid "mph"
 msgstr "mph"
 
-#: qcsrc/client/main.qc:1125 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
+#: qcsrc/client/main.qc:1133 qcsrc/menu/xonotic/dialog_settings_game_hud.qc:189
 msgid "knots"
 msgstr "knots"
 
-#: qcsrc/client/main.qc:1333
-msgid "All Weapons Arena"
-msgstr "Kaikkien aseiden taistelukenttä"
-
-#: qcsrc/client/main.qc:1334
-msgid "All Available Weapons Arena"
-msgstr "Kaikkien aseiden taistelukenttä"
-
-#: qcsrc/client/main.qc:1335
-msgid "Most Weapons Arena"
-msgstr "Suurimman osan aseiden taistelukenttä"
-
-#: qcsrc/client/main.qc:1336
-msgid "Most Available Weapons Arena"
-msgstr "Enimpien aseiden taistelukenttä"
-
-#: qcsrc/client/main.qc:1339 qcsrc/client/main.qc:1353
+#: qcsrc/client/main.qc:1344
 msgid "No Weapons Arena"
 msgstr "Aseeton taistelukenttä"
 
-#: qcsrc/client/main.qc:1351
+#: qcsrc/client/main.qc:1345
+msgid "All Weapons Arena"
+msgstr "Kaikkien aseiden taistelukenttä"
+
+#: qcsrc/client/main.qc:1346
+msgid "All Available Weapons Arena"
+msgstr "Kaikkien aseiden taistelukenttä"
+
+#: qcsrc/client/main.qc:1347
+msgid "Standard Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1348
+msgid "Standard Available Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1349
+msgid "Extended Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1350
+msgid "Extended Available Weapons Arena"
+msgstr ""
+
+#: qcsrc/client/main.qc:1357
 #, c-format
 msgid "%s Arena"
 msgstr "%s taistelukenttä"
 
-#: qcsrc/client/main.qc:1362 qcsrc/client/main.qc:1367
+#: qcsrc/client/main.qc:1368 qcsrc/client/main.qc:1373
 #, c-format
 msgid "This is %s"
 msgstr "Tämä on %s"
 
-#: qcsrc/client/main.qc:1363
+#: qcsrc/client/main.qc:1369
 msgid "Your client version is outdated."
 msgstr "Asiakasohjelman versiosi on vanhentunut."
 
-#: qcsrc/client/main.qc:1364
+#: qcsrc/client/main.qc:1370
 msgid "### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###"
 msgstr "### ET VOI PELATA TÄLLÄ PALVELIMELLA ###"
 
-#: qcsrc/client/main.qc:1365
+#: qcsrc/client/main.qc:1371
 msgid "Please update!"
 msgstr "Ole hyvä ja päivitä!"
 
-#: qcsrc/client/main.qc:1368
+#: qcsrc/client/main.qc:1374
 msgid "This server is using an outdated Xonotic version."
 msgstr "Tämä palvelin käyttää vanhentunutta Xonotic-julkaisua."
 
-#: qcsrc/client/main.qc:1369
+#: qcsrc/client/main.qc:1375
 msgid "### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###"
 msgstr "### TÄMÄ PALVELIN ON YHTEENSOPIMATON ETKÄ TÄTEN VOI LIITTYÄ ###"
 
-#: qcsrc/client/main.qc:1371
+#: qcsrc/client/main.qc:1377
 #, c-format
 msgid "Welcome to %s"
 msgstr "Tervetuloa: %s"
 
-#: qcsrc/client/main.qc:1387 qcsrc/menu/xonotic/campaign.qc:244
+#: qcsrc/client/main.qc:1393 qcsrc/menu/xonotic/campaign.qc:244
 #, c-format
 msgid "Level %d:"
 msgstr "Taso %d:"
 
-#: qcsrc/client/main.qc:1389
+#: qcsrc/client/main.qc:1395
 #, c-format
 msgid "^BGPress ^F2%s^BG to enter the game"
 msgstr "^BGLiity peliin painamalla ^F2%s^BG"
 
-#: qcsrc/client/main.qc:1412
+#: qcsrc/client/main.qc:1419
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:37
 msgid "Gametype:"
 msgstr "Pelityyppi"
 
-#: qcsrc/client/main.qc:1416
+#: qcsrc/client/main.qc:1423
 msgid "by:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1420
+#: qcsrc/client/main.qc:1427
 msgid "This match supports"
 msgstr "Tämä ottelu tukee"
 
-#: qcsrc/client/main.qc:1422
+#: qcsrc/client/main.qc:1429
 #, c-format
 msgid "%d players"
 msgstr "%d pelaajaa"
 
-#: qcsrc/client/main.qc:1424
+#: qcsrc/client/main.qc:1431
 #, c-format
 msgid "%d to %d players"
 msgstr "%d :stä %d pelaajaa"
 
-#: qcsrc/client/main.qc:1426
+#: qcsrc/client/main.qc:1433
 #, c-format
 msgid "%d players maximum"
 msgstr "%d pelaajaa enimmillään"
 
-#: qcsrc/client/main.qc:1428
+#: qcsrc/client/main.qc:1435
 #, c-format
 msgid "%d players minimum"
 msgstr "%d pelaajaa vähimmillään"
 
-#: qcsrc/client/main.qc:1433
+#: qcsrc/client/main.qc:1440
 msgid "Active modifications:"
 msgstr "Aktiiviset muunnokset:"
 
-#: qcsrc/client/main.qc:1436
+#: qcsrc/client/main.qc:1443
 msgid "Special gameplay tips:"
 msgstr "Erityiset pelivinkit:"
 
-#: qcsrc/client/main.qc:1443
+#: qcsrc/client/main.qc:1450
 msgid "Server's message"
 msgstr "Palvelimen viesti"
 
-#: qcsrc/client/main.qc:1530
+#: qcsrc/client/main.qc:1537
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (ei sidottu)"
@@ -1635,8 +1645,8 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
-msgid "Race CTS"
-msgstr "Kilpailu CTS (RACE CTS)"
+msgid "Complete the Stage"
+msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
@@ -2314,10 +2324,12 @@ msgid "Medium armor"
 msgstr "Keskisuuri panssari"
 
 #: qcsrc/common/items/item/armor.qh:148 qcsrc/common/items/item/armor.qh:159
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:45
 msgid "Big armor"
 msgstr "Iso panssari"
 
 #: qcsrc/common/items/item/armor.qh:200 qcsrc/common/items/item/armor.qh:211
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:43
 msgid "Mega armor"
 msgstr "Mahtipanssari"
 
@@ -2375,6 +2387,7 @@ msgid "Big health"
 msgstr "Suuri terveyspalautus"
 
 #: qcsrc/common/items/item/health.qh:199 qcsrc/common/items/item/health.qh:210
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:44
 msgid "Mega health"
 msgstr "Mahtava terveyspalautus"
 
@@ -2431,11 +2444,11 @@ msgstr "^1Virhe:^7 Ei löytynyt: pak index."
 msgid "Requesting preview..."
 msgstr "Pyydetään esikatselua..."
 
-#: qcsrc/common/minigames/cl_minigames.qc:300
+#: qcsrc/common/minigames/cl_minigames.qc:287
 msgid "Spectators:"
 msgstr "Katselijat:"
 
-#: qcsrc/common/minigames/cl_minigames.qc:436
+#: qcsrc/common/minigames/cl_minigames.qc:423
 msgid "It's your turn"
 msgstr "Sinun vuorosi"
 
@@ -2477,59 +2490,59 @@ msgstr "Pienpeliviesti"
 msgid "Bulldozer"
 msgstr "Jyrä"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1107
+#: qcsrc/common/minigames/minigame/bd.qc:1109
 #: qcsrc/common/minigames/minigame/ps.qc:423
 #: qcsrc/common/minigames/minigame/ps.qc:429
 msgid "Game over!"
 msgstr "Peli on ohi!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1110
+#: qcsrc/common/minigames/minigame/bd.qc:1112
 msgid "Well done! Click \"Next Level\" to continue"
 msgstr "Hyvin meni! Jatka napsauttamalla \"Seuraava Taso\""
 
-#: qcsrc/common/minigames/minigame/bd.qc:1181
+#: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:380
-#: qcsrc/common/minigames/minigame/nmm.qc:605
-#: qcsrc/common/minigames/minigame/pong.qc:625
-#: qcsrc/common/minigames/minigame/pp.qc:447
+#: qcsrc/common/minigames/minigame/nmm.qc:607
+#: qcsrc/common/minigames/minigame/pong.qc:626
+#: qcsrc/common/minigames/minigame/pp.qc:450
 #: qcsrc/common/minigames/minigame/ps.qc:497
-#: qcsrc/common/minigames/minigame/ttt.qc:330
+#: qcsrc/common/minigames/minigame/ttt.qc:336
 msgid "You are spectating"
 msgstr "Olet katsojana"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1184
+#: qcsrc/common/minigames/minigame/bd.qc:1186
 msgid "Better luck next time!"
 msgstr "Parempi onni ensi kerralla!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1189
+#: qcsrc/common/minigames/minigame/bd.qc:1191
 msgid "Tubular! Press \"Next Level\" to continue!"
 msgstr "Se meni putkeen! Jatka painamalla \"Seuraava Taso\"!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1191
+#: qcsrc/common/minigames/minigame/bd.qc:1193
 msgid "Wicked! Press \"Next Level\" to continue!"
 msgstr "Päheetä! Jatka painamalla \"Seuraava taso\"!"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1195
+#: qcsrc/common/minigames/minigame/bd.qc:1197
 msgid "Press the spacebar to change your currently selected tile"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/bd.qc:1198
+#: qcsrc/common/minigames/minigame/bd.qc:1200
 msgid "Push the boulders onto the targets"
 msgstr "Työnnä lohkareet kohteita päin"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1434
+#: qcsrc/common/minigames/minigame/bd.qc:1436
 msgid "Next Level"
 msgstr "Seuraava taso"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1435
+#: qcsrc/common/minigames/minigame/bd.qc:1437
 msgid "Restart"
 msgstr "Aloita uudelleen"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1436
+#: qcsrc/common/minigames/minigame/bd.qc:1438
 msgid "Editor"
 msgstr "Muokkain"
 
-#: qcsrc/common/minigames/minigame/bd.qc:1437
+#: qcsrc/common/minigames/minigame/bd.qc:1439
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:37
 msgid "Save"
 msgstr "Tallenna"
@@ -2540,45 +2553,45 @@ msgstr "Neljän suora"
 
 #: qcsrc/common/minigames/minigame/c4.qc:314
 #: qcsrc/common/minigames/minigame/c4.qc:320
-#: qcsrc/common/minigames/minigame/nmm.qc:488
-#: qcsrc/common/minigames/minigame/nmm.qc:494
-#: qcsrc/common/minigames/minigame/pp.qc:367
-#: qcsrc/common/minigames/minigame/pp.qc:373
+#: qcsrc/common/minigames/minigame/nmm.qc:490
+#: qcsrc/common/minigames/minigame/nmm.qc:496
+#: qcsrc/common/minigames/minigame/pp.qc:370
+#: qcsrc/common/minigames/minigame/pp.qc:376
 #, c-format
 msgid "%s^7 won the game!"
 msgstr "%s^7 voitti pelin!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:383
-#: qcsrc/common/minigames/minigame/pp.qc:450
-#: qcsrc/common/minigames/minigame/ttt.qc:333
+#: qcsrc/common/minigames/minigame/pp.qc:453
+#: qcsrc/common/minigames/minigame/ttt.qc:339
 msgid "Draw"
 msgstr "Tasapeli"
 
 #: qcsrc/common/minigames/minigame/c4.qc:388
-#: qcsrc/common/minigames/minigame/nmm.qc:610
-#: qcsrc/common/minigames/minigame/pp.qc:456
-#: qcsrc/common/minigames/minigame/ttt.qc:340
+#: qcsrc/common/minigames/minigame/nmm.qc:612
+#: qcsrc/common/minigames/minigame/pp.qc:459
+#: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "You lost the game!"
 msgstr "Hävisit pelin!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:389
-#: qcsrc/common/minigames/minigame/nmm.qc:611
-#: qcsrc/common/minigames/minigame/pp.qc:457
-#: qcsrc/common/minigames/minigame/ttt.qc:341
+#: qcsrc/common/minigames/minigame/nmm.qc:613
+#: qcsrc/common/minigames/minigame/pp.qc:460
+#: qcsrc/common/minigames/minigame/ttt.qc:347
 msgid "You win!"
 msgstr "Voitto on sinun!"
 
 #: qcsrc/common/minigames/minigame/c4.qc:393
-#: qcsrc/common/minigames/minigame/nmm.qc:615
-#: qcsrc/common/minigames/minigame/pp.qc:468
-#: qcsrc/common/minigames/minigame/ttt.qc:352
+#: qcsrc/common/minigames/minigame/nmm.qc:617
+#: qcsrc/common/minigames/minigame/pp.qc:471
+#: qcsrc/common/minigames/minigame/ttt.qc:358
 msgid "Wait for your opponent to make their move"
 msgstr "Odota, että vastustajasi tekee siirtonsa"
 
 #: qcsrc/common/minigames/minigame/c4.qc:396
-#: qcsrc/common/minigames/minigame/nmm.qc:617
-#: qcsrc/common/minigames/minigame/pp.qc:471
-#: qcsrc/common/minigames/minigame/ttt.qc:355
+#: qcsrc/common/minigames/minigame/nmm.qc:619
+#: qcsrc/common/minigames/minigame/pp.qc:474
+#: qcsrc/common/minigames/minigame/ttt.qc:361
 msgid "Click on the game board to place your piece"
 msgstr "Aseta pelinappulasi napsauttamalla pelilautaa"
 
@@ -2586,17 +2599,17 @@ msgstr "Aseta pelinappulasi napsauttamalla pelilautaa"
 msgid "Nine Men's Morris"
 msgstr "Mylly"
 
-#: qcsrc/common/minigames/minigame/nmm.qc:619
+#: qcsrc/common/minigames/minigame/nmm.qc:621
 msgid ""
 "You can select one of your pieces to move it to one of the surrounding places"
 msgstr ""
 
-#: qcsrc/common/minigames/minigame/nmm.qc:621
+#: qcsrc/common/minigames/minigame/nmm.qc:623
 msgid "You can select one of your pieces to move it anywhere on the board"
 msgstr ""
 "Voit valita yhden nappuloistasi siirtääksesi sen laudalla mihin tahansa "
 
-#: qcsrc/common/minigames/minigame/nmm.qc:623
+#: qcsrc/common/minigames/minigame/nmm.qc:625
 msgid "You can take one of the opponent's pieces"
 msgstr "Voit syödä yhden vastustajasi nappuloista"
 
@@ -2604,25 +2617,25 @@ msgstr "Voit syödä yhden vastustajasi nappuloista"
 msgid "Pong"
 msgstr "Pong-mailapeli"
 
-#: qcsrc/common/minigames/minigame/pong.qc:608
-#: qcsrc/common/minigames/minigame/ttt.qc:310
+#: qcsrc/common/minigames/minigame/pong.qc:609
+#: qcsrc/common/minigames/minigame/ttt.qc:316
 msgid "AI"
 msgstr "AI-tekoäly"
 
-#: qcsrc/common/minigames/minigame/pong.qc:627
+#: qcsrc/common/minigames/minigame/pong.qc:628
 msgid "Press ^1Start Match^7 to start the match with the current players"
 msgstr ""
 "Paina ^1Aloita Ottelu^7 aloittaaksesi ottelun tämänhetkisillä pelaajilla"
 
-#: qcsrc/common/minigames/minigame/pong.qc:699
+#: qcsrc/common/minigames/minigame/pong.qc:700
 msgid "Start Match"
 msgstr "Aloita Ottelu"
 
-#: qcsrc/common/minigames/minigame/pong.qc:700
+#: qcsrc/common/minigames/minigame/pong.qc:701
 msgid "Add AI player"
 msgstr "Lisää AI-tekoälypelaajia"
 
-#: qcsrc/common/minigames/minigame/pong.qc:701
+#: qcsrc/common/minigames/minigame/pong.qc:702
 msgid "Remove AI player"
 msgstr "Poista AI-tekoälypelaaja"
 
@@ -2630,25 +2643,25 @@ msgstr "Poista AI-tekoälypelaaja"
 msgid "Push-Pull"
 msgstr "Työnnä-Vedä"
 
-#: qcsrc/common/minigames/minigame/pp.qc:456
-#: qcsrc/common/minigames/minigame/ttt.qc:340
+#: qcsrc/common/minigames/minigame/pp.qc:459
+#: qcsrc/common/minigames/minigame/ttt.qc:346
 msgid "Select \"^1Next Match^7\" on the menu for a rematch!"
 msgstr "Valitse valikossa \"^1Seuraava Ottelu^7\" uusintaottelua varten!"
 
-#: qcsrc/common/minigames/minigame/pp.qc:457
-#: qcsrc/common/minigames/minigame/pp.qc:463
-#: qcsrc/common/minigames/minigame/ttt.qc:341
+#: qcsrc/common/minigames/minigame/pp.qc:460
+#: qcsrc/common/minigames/minigame/pp.qc:466
 #: qcsrc/common/minigames/minigame/ttt.qc:347
+#: qcsrc/common/minigames/minigame/ttt.qc:353
 msgid "Select \"^1Next Match^7\" on the menu to start a new match!"
 msgstr "Valitse valikossa \"^1Seuraava Ottelu^7\" aloittaaksesi uuden ottelun!"
 
-#: qcsrc/common/minigames/minigame/pp.qc:464
-#: qcsrc/common/minigames/minigame/ttt.qc:348
+#: qcsrc/common/minigames/minigame/pp.qc:467
+#: qcsrc/common/minigames/minigame/ttt.qc:354
 msgid "Wait for your opponent to confirm the rematch"
 msgstr "Odota vastustajasi vahvistusta uusintaottelulle"
 
-#: qcsrc/common/minigames/minigame/pp.qc:613
-#: qcsrc/common/minigames/minigame/ttt.qc:699
+#: qcsrc/common/minigames/minigame/pp.qc:616
+#: qcsrc/common/minigames/minigame/ttt.qc:707
 msgid "Next Match"
 msgstr "Seuraava Ottelu"
 
@@ -2685,7 +2698,7 @@ msgstr "Pompsauta nappula toisen päälle kaapataksesi sen"
 msgid "Tic Tac Toe"
 msgstr "Ristinolla"
 
-#: qcsrc/common/minigames/minigame/ttt.qc:700
+#: qcsrc/common/minigames/minigame/ttt.qc:708
 msgid "Single Player"
 msgstr "Yksinpeli"
 
@@ -2895,10 +2908,29 @@ msgstr ""
 "terveyttä ylitääkseen terveyden ala-arvon."
 
 #: qcsrc/common/mutators/mutator/bloodloss/bloodloss.qh:5
-#: qcsrc/common/util.qc:320
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:105
+#: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qh:6
 msgid "Blood loss"
 msgstr "Verenhukka"
+
+#: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:21
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
+#: qcsrc/menu/xonotic/mutatortab.qc:30 qcsrc/menu/xonotic/mutatortab.qc:302
+#: qcsrc/menu/xonotic/util.qc:728
+msgid "Enable"
+msgstr "Ota käyttöön"
+
+#: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:24
+msgid "Bleed below health:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:30
+msgid ""
+"Amount of health below which players start bleeding out (health rots and "
+"they can't jump)."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:69
 #, c-format
@@ -3102,8 +3134,8 @@ msgid "In some sense, this is the opposite of the %s buff."
 msgstr "Jollain tapaa tämä on vastakohtana %s-tehostukselle."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
-#: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:317
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:98
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qh:6
+#: qcsrc/common/mutators/mutator/vampire/vampire.qh:5 qcsrc/common/util.qc:305
 msgid "Vampire"
 msgstr "Vampyyri"
 
@@ -3125,6 +3157,62 @@ msgstr "Kosto"
 msgid "Buff"
 msgstr "Tehostus"
 
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:20
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
+#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
+#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:78
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:90
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:103
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:195
+#: qcsrc/menu/xonotic/mutatortab.qc:202 qcsrc/menu/xonotic/mutatortab.qc:298
+#: qcsrc/menu/xonotic/util.qc:741 qcsrc/menu/xonotic/util.qc:758
+#: qcsrc/menu/xonotic/util.qc:776
+msgid "Disable"
+msgstr "Pois päältä"
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:22
+msgid "Enable only if placed by mapper"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:28
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:34
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:40
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:40
+msgid "Allow maps to spawn:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:43
+msgid "Replace unavailable buffs with others"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:47
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:76
+msgid "Allow dropping"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:50
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:85
+msgid "Replace powerups with buffs"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:59
+#, c-format
+msgid ""
+"Enable buff pickups (random bonuses like %s and %s) on the maps that support "
+"them."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/buffs/ui_buffs.qh:6 qcsrc/common/util.qc:311
+#: qcsrc/menu/xonotic/guide/guide.qh:15
+msgid "Buffs"
+msgstr "Tehostukset"
+
 #: qcsrc/common/mutators/mutator/cloaked/cloaked.qc:10
 #, c-format
 msgid ""
@@ -3134,32 +3222,37 @@ msgstr ""
 "%s-muovaaja tekee kaikki pelaajan näkymättömiksi, kuten %s-tehostus. Se tuo "
 "peliin lisää häivettä ja strategiaa."
 
-#: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5 qcsrc/common/util.qc:313
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:85
+#: qcsrc/common/mutators/mutator/cloaked/cloaked.qh:5
+#: qcsrc/common/mutators/mutator/cloaked/ui_cloaked.qh:6
+#: qcsrc/common/util.qc:301
 msgid "Cloaked"
 msgstr "Häivetilassa"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:23
+#: qcsrc/common/mutators/mutator/cloaked/ui_cloaked.qc:17
+msgid "All players are almost invisible."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:22
 msgid "Damage Text"
 msgstr "Vahinkoteksti"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:25
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:24
 msgid "Draw damage numbers"
 msgstr "Piirrä vahinkonumerot"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:27
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:26
 msgid "Draw damage numbers for friendly fire"
 msgstr "Piirrä vahinkonumerot koskien vahinkolaukauksia"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:32
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:31
 msgid "Font size minimum:"
 msgstr "Pienin kirjasinkoko:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:37
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:36
 msgid "Font size maximum:"
 msgstr "Suurin kirjasinkoko:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:42
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:41
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:83
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:67
@@ -3168,17 +3261,17 @@ msgstr "Suurin kirjasinkoko:"
 msgid "Color:"
 msgstr "Väri:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:49
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:48
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:33
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:70
 msgid "Per weapon"
 msgstr "Asekohtainen"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:54
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:53
 msgid "Initial opacity:"
 msgstr "Läpikuultavuuden alkuarvo:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:60
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:59
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:25
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:25
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:25
@@ -3186,18 +3279,18 @@ msgstr "Läpikuultavuuden alkuarvo:"
 msgid "Fade time:"
 msgstr "Häivennyksen kesto:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:66
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:65
 msgid "Accumulate:"
 msgstr "Kertymä:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:70
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:69
 msgid "If younger than:"
 msgstr "Jos on nuorempi kuin:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:75
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:74
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:23
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:46
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:25
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:146
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:178
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:160
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:59
@@ -3206,9 +3299,9 @@ msgstr "Jos on nuorempi kuin:"
 msgid "Never"
 msgstr "Ei ikinä"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:77
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:76
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:50
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:148
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:181
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:162
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:64
@@ -3217,11 +3310,11 @@ msgstr "Ei ikinä"
 msgid "Always"
 msgstr "Aina"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:82
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:81
 msgid "Or opacity greater than:"
 msgstr "Tai läpikuultavuuden ollessa suurempi kuin:"
 
-#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:7
+#: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qh:11
 msgid "Damage text"
 msgstr "Vahinkoteksti"
 
@@ -3240,8 +3333,8 @@ msgstr ""
 msgid "Some other mutators like %s enable this by default."
 msgstr "Jotkut muut muovaajat, kuten %s, ottavat tämän käyttöön oletuksena."
 
-#: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:306
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:77
+#: qcsrc/common/mutators/mutator/dodging/dodging.qh:5 qcsrc/common/util.qc:294
+#: qcsrc/menu/xonotic/mutatortab.qc:399
 msgid "Dodging"
 msgstr "Väistely"
 
@@ -3266,8 +3359,9 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:12
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:12
-#: qcsrc/common/weapons/weapon/hook.qc:402
+#: qcsrc/common/weapons/weapon/hook.qc:402 qcsrc/menu/xonotic/mutatortab.qc:348
 msgid "hook"
 msgstr "koukku"
 
@@ -3284,7 +3378,7 @@ msgstr ""
 msgid "Note that it is overridden by the %s mutator."
 msgstr "Huomaa, että muovaaja %s korvaa sen"
 
-#: qcsrc/common/mutators/mutator/hook/hook.qh:5 qcsrc/common/util.qc:314
+#: qcsrc/common/mutators/mutator/hook/hook.qh:5
 msgid "Hook"
 msgstr "Koukku"
 
@@ -3324,8 +3418,8 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qh:5
-#: qcsrc/common/util.qc:307
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:208
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:3
+#: qcsrc/common/util.qc:295
 msgid "InstaGib"
 msgstr "InstaGib-hetitappo"
 
@@ -3351,6 +3445,85 @@ msgstr "Höyrystimen ammukset"
 #: qcsrc/common/mutators/mutator/instagib/items.qh:60
 msgid "Extra life"
 msgstr "Lisäelämä"
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:36
+msgid "Starting ammo:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:39
+msgid "Ammo from weapons and cells:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:44
+msgid "Extra lives per pickup:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:47
+msgid ""
+"How many extra lives to reward a player when they pick up the Extra life"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:52
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:34
+msgid "Keep Blaster damage"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:55
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:36
+msgid "Keep Blaster force"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:60
+msgid "Allow Jetpacks and Fuel regenerators"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:65
+msgid "Enable Rocketminsta"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:66
+msgid ""
+"The primary fire also explodes on impact, and the secondary fire shoots "
+"laser prongs"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:4
+#, c-format
+msgid ""
+"Players will be given only one weapon, the %s, which can instantly kill the "
+"opponent with a single shot. If the player runs out of ammo, they will have "
+"10 seconds to find some or face death if they fail to do so. The secondary "
+"fire does not inflict any damage but is good for doing trickjumps."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qc:19
+#, c-format
+msgid ""
+"Projectiles can't be destroyed. However, you can still explode %s orbs with "
+"the %s primary fire."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qh:6
+msgid "Invincible projectiles"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/midair/ui_midair.qc:20
+msgid "Invincibility time:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/midair/ui_midair.qc:22
+msgid "Invincibility time after leaving contact with ground"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/midair/ui_midair.qc:29
+msgid ""
+"Makes it only possible to inflict damage on your enemy while they're "
+"airborne."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/midair/ui_midair.qh:6 qcsrc/common/util.qc:303
+msgid "Midair"
+msgstr "Keskinoste"
 
 #: qcsrc/common/mutators/mutator/nades/cl_nades.qc:76
 #: qcsrc/menu/xonotic/keybinder.qc:83
@@ -3550,10 +3723,61 @@ msgstr ""
 msgid "This mutator is enabled by default in %s."
 msgstr "Tämä muovaaja on oletuksena käytössä: %s."
 
-#: qcsrc/common/mutators/mutator/nades/nades.qh:84 qcsrc/common/util.qc:329
+#: qcsrc/common/mutators/mutator/nades/nades.qh:84
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qh:6 qcsrc/common/util.qc:318
 #: qcsrc/menu/xonotic/guide/guide.qh:16
 msgid "Nades"
 msgstr "Naatit"
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:24
+msgid "Enable bonus nades"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:25
+msgid ""
+"Gives players a bonus grenade when they reach a certain score or have "
+"Strength"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:26
+msgid "Max bonus nades:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:32
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:116
+msgid "Allow client selection"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:33
+msgid "For bonus nades"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:36
+msgid "Refire time:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:42
+msgid "Nade types:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:96
+msgid "Random"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:107
+msgid "Normal nade type, if client selection is disabled"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:111
+msgid "Bonus nade type, if client selection is disabled"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
+#, c-format
+msgid ""
+"Enable throwable grenades which explode with a variety of effects. Press %s "
+"or %s to use them."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
 #, c-format
@@ -3575,10 +3799,28 @@ msgid "The current %s weapons are:"
 msgstr "Nykyiset %s aseet ovat:"
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
-#: qcsrc/common/util.qc:308
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:138
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qh:6
+#: qcsrc/common/util.qc:296
 msgid "New Toys"
 msgstr "Uudet lelut"
+
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:19
+msgid "Replacement:"
+msgstr "Korvike:"
+
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:21
+msgid ""
+"Automatically replace some normal weapons of the map with their "
+"corresponding additional weapons"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:25
+msgid "Randomly"
+msgstr "Satunnaisesti"
+
+#: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:30
+msgid "Allow maps to spawn additional weapons (new toys)."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -3591,10 +3833,35 @@ msgstr ""
 "aseen. Kotvan kuluttua ase valitaan uudelleen, ja tämä toistuu loputtomiin. "
 "Keräiltävät aseet ja ammukset poistetaan myös kartalta."
 
-#: qcsrc/common/mutators/mutator/nix/nix.qh:5 qcsrc/common/util.qc:309
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:213
+#: qcsrc/common/mutators/mutator/nix/nix.qh:5
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qh:3 qcsrc/common/util.qc:297
 msgid "NIX"
 msgstr "NIX"
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:31
+msgid "With Blaster"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:32
+msgid "Always carry the Blaster as an additional weapon in NIX"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:37
+msgid "Health and armor"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qc:38
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qh:6
+#: qcsrc/common/util.qc:313 qcsrc/menu/xonotic/guide/guide.qh:14
+msgid "Powerups"
+msgstr "Tehonlisäykset"
+
+#: qcsrc/common/mutators/mutator/nix/ui_nix.qh:4
+msgid ""
+"No items Xonotic - instead of pickup items, everyone plays with the same "
+"weapon. After some time a countdown will start, after which everyone will "
+"switch to another weapon."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -3623,7 +3890,6 @@ msgid "Note that it overrides the %s mutator, since they use the same bind."
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
-#: qcsrc/common/util.qc:330
 msgid "Offhand blaster"
 msgstr "Toiskäden läjäytin"
 
@@ -3765,9 +4031,22 @@ msgid "Overkill Shotgun"
 msgstr "Yliampuva haulikko"
 
 #: qcsrc/common/mutators/mutator/overkill/overkill.qh:5
-#: qcsrc/common/util.qc:323 qcsrc/menu/xonotic/guide/pages.qc:171
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qh:10
+#: qcsrc/common/util.qc:310 qcsrc/menu/xonotic/guide/pages.qc:171
 msgid "Overkill"
 msgstr "Yliampuva"
+
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:49
+msgid "Replace Strength and Shield with weapons"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/overkill/ui_overkill.qh:11
+#, c-format
+msgid ""
+"Unique arena mutator that replaces all weapons with mostly hitscan ones with "
+"a short time to kill for rapid gameplay. The secondary fire of all weapons "
+"shoots a %s-like projectile. It also enables %s and %s."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qc:8
 #, c-format
@@ -3778,10 +4057,14 @@ msgstr ""
 "%s on muovaaja, joka saa pelaajan pudottamaan kaikki aseensa kuollessaan. "
 "Ilman tätä muovaajaa, pelaaja pudottaa vain varustetun aseen."
 
-#: qcsrc/common/mutators/mutator/pinata/pinata.qh:5 qcsrc/common/util.qc:318
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:159
+#: qcsrc/common/mutators/mutator/pinata/pinata.qh:5
+#: qcsrc/common/mutators/mutator/pinata/ui_pinata.qh:6 qcsrc/common/util.qc:306
 msgid "Piñata"
 msgstr "Piñata"
+
+#: qcsrc/common/mutators/mutator/pinata/ui_pinata.qc:17
+msgid "Players will drop all weapons they possessed when they are fragged."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:19
 #, c-format
@@ -3837,8 +4120,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
-#: qcsrc/common/util.qc:321
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:129
+#: qcsrc/common/util.qc:309 qcsrc/menu/xonotic/mutatortab.qh:63
 msgid "Jetpack"
 msgstr "Rakettireppu"
 
@@ -3901,6 +4183,43 @@ msgstr ""
 msgid "Strength"
 msgstr "Voima"
 
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:34
+msgid "Dependent on gametype"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:36
+#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
+#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:18
+msgid "Always enable"
+msgstr "Aina päällä"
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:69
+msgid "Drop on death"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:72
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:79
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
+msgid "Disabled"
+msgstr "Kytketty pois"
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:73
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:80
+msgid "Timer continues"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:74
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:81
+msgid "Timer pauses"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:95
+#, c-format
+msgid ""
+"Enable powerup pickups (powerful bonuses like %s and %s) on the maps that "
+"support them."
+msgstr ""
+
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qc:10
 #, c-format
 msgid ""
@@ -3911,11 +4230,26 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qh:5
-#: qcsrc/common/util.qc:310
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:154
-#: qcsrc/menu/xonotic/guide/pages.qc:72 qcsrc/menu/xonotic/guide/pages.qc:123
+#: qcsrc/common/util.qc:298 qcsrc/menu/xonotic/guide/pages.qc:72
+#: qcsrc/menu/xonotic/guide/pages.qc:123
 msgid "Rocket Flying"
 msgstr "Rakettilentely"
+
+#: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:19
+msgid "Disable projectile detonation delay"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:26
+#, c-format
+msgid ""
+"%s rockets can be detonated instantly (otherwise, there's a short delay). "
+"This allows players to fire and detonate a rocket while mid-air for a strong "
+"boost even while moving fast."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qh:6
+msgid "Rocket flying"
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -3947,10 +4281,57 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
-#: qcsrc/common/util.qc:326
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:81
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qh:6
 msgid "Touch explode"
 msgstr "Kosketusräjähdys"
+
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:19
+msgid "Damage:"
+msgstr "Veriroiskeet:"
+
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:22
+msgid "Force:"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:24
+#, c-format
+msgid "%s qu/s"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:29
+msgid "An explosion occurs when two players collide."
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:21
+#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
+msgid "Factor:"
+msgstr "Kerroin:"
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:23
+msgid "Fraction of the damage dealt to be stolen as health"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:24
+#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:84
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
+#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:138
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:82
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:89
+#, c-format
+msgid "%sx"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:26
+msgid "Consider both health and armor"
+msgstr ""
+
+#: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:31
+msgid "All damage dealt to your enemies is added to your own health."
+msgstr ""
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
 #, c-format
@@ -3987,7 +4368,7 @@ msgstr ""
 "odottamatonta liikkumista."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qh:5
-#: qcsrc/common/util.qc:327
+#: qcsrc/menu/xonotic/mutatortab.qc:417
 msgid "Wall jumping"
 msgstr "Seinähyppely"
 
@@ -4024,13 +4405,13 @@ msgid "Checkpoint"
 msgstr "Tarkistuspiste"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:16
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:227
 msgid "Finish"
 msgstr "Loppu"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:17
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:18
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:236
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:227
 msgid "Start"
 msgstr "Alku"
 
@@ -4160,7 +4541,7 @@ msgstr "Tunkeutuja!"
 msgid "Tagged"
 msgstr "Korvamerkitty"
 
-#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:690
+#: qcsrc/common/mutators/mutator/waypoints/waypointsprites.qc:672
 #, c-format
 msgid "%s needing help!"
 msgstr "%s avuntarpeessa!"
@@ -7171,418 +7552,423 @@ msgstr "Walker-tykkitorni"
 msgid "Walker"
 msgstr "Kävelijä"
 
-#: qcsrc/common/util.qc:311
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:133
+#: qcsrc/common/util.qc:299
 msgid "Invincible Projectiles"
 msgstr "Voittamattomat ammukset"
 
+#: qcsrc/common/util.qc:300
+msgid "Low Gravity"
+msgstr ""
+
+#: qcsrc/common/util.qc:302 qcsrc/menu/xonotic/mutatortab.qc:339
+msgid "Offhand Hook"
+msgstr ""
+
+#: qcsrc/common/util.qc:304
+msgid "Melee Only Arena"
+msgstr ""
+
+#: qcsrc/common/util.qc:307
+msgid "Weapons Stay"
+msgstr ""
+
+#: qcsrc/common/util.qc:308
+msgid "Blood Loss"
+msgstr ""
+
 #: qcsrc/common/util.qc:312
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:116
-msgid "Low gravity"
-msgstr "Vajaa painovoima"
+msgid "No Powerups"
+msgstr ""
+
+#: qcsrc/common/util.qc:314
+msgid "Buffs Replace Powerups"
+msgstr ""
 
 #: qcsrc/common/util.qc:315
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:94
-msgid "Midair"
-msgstr "Keskinoste"
+msgid "Touch Explode"
+msgstr ""
 
 #: qcsrc/common/util.qc:316
-msgid "Melee only Arena"
-msgstr "Taistelukenttä vain lähiaseilla"
+msgid "Wall Jumping"
+msgstr ""
 
-#: qcsrc/common/util.qc:319
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:164
-msgid "Weapons stay"
-msgstr "Aseet jäävät"
+#: qcsrc/common/util.qc:317
+msgid "No Start Weapons"
+msgstr ""
 
-#: qcsrc/common/util.qc:322
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:89
-#: qcsrc/menu/xonotic/guide/guide.qh:15
-msgid "Buffs"
-msgstr "Tehostukset"
+#: qcsrc/common/util.qc:319 qcsrc/menu/xonotic/mutatortab.qc:335
+msgid "Offhand Blaster"
+msgstr ""
 
-#: qcsrc/common/util.qc:324
-msgid "No powerups"
-msgstr "Ei tehonlisäyksiä"
-
-#: qcsrc/common/util.qc:325 qcsrc/menu/xonotic/guide/guide.qh:14
-msgid "Powerups"
-msgstr "Tehonlisäykset"
-
-#: qcsrc/common/util.qc:328
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:223
-msgid "No start weapons"
-msgstr "Ei aloitusasetta"
-
-#: qcsrc/common/util.qc:1579
+#: qcsrc/common/util.qc:1569
 msgid "Male"
 msgstr "Miespuolinen"
 
-#: qcsrc/common/util.qc:1580
+#: qcsrc/common/util.qc:1570
 msgid "Female"
 msgstr "Naispuolinen"
 
-#: qcsrc/common/util.qc:1581
+#: qcsrc/common/util.qc:1571
 msgid "Undisclosed"
 msgstr "Epäselvä"
 
-#: qcsrc/common/util.qc:1628
+#: qcsrc/common/util.qc:1618
 msgid "<KEY NOT FOUND>"
 msgstr "<KEY NOT FOUND>"
 
-#: qcsrc/common/util.qc:1629
+#: qcsrc/common/util.qc:1619
 msgid "<UNKNOWN KEYNUM>"
 msgstr "<UNKNOWN KEYNUM>"
 
-#: qcsrc/common/util.qc:1634
+#: qcsrc/common/util.qc:1624
 msgid "TAB"
 msgstr "TAB"
 
-#: qcsrc/common/util.qc:1635 qcsrc/common/util.qc:1706
+#: qcsrc/common/util.qc:1625 qcsrc/common/util.qc:1696
 #, c-format
 msgid "ENTER"
 msgstr "ENTER-rivinvaihto"
 
-#: qcsrc/common/util.qc:1636
+#: qcsrc/common/util.qc:1626
 msgid "ESCAPE"
 msgstr "ESCAPE"
 
-#: qcsrc/common/util.qc:1637
+#: qcsrc/common/util.qc:1627
 msgid "SPACE"
 msgstr "VÄLILYÖNTI"
 
-#: qcsrc/common/util.qc:1639
+#: qcsrc/common/util.qc:1629
 msgid "BACKSPACE"
 msgstr "BACKSPACE-askelpalautin"
 
-#: qcsrc/common/util.qc:1640 qcsrc/common/util.qc:1697
+#: qcsrc/common/util.qc:1630 qcsrc/common/util.qc:1687
 #, c-format
 msgid "UPARROW"
 msgstr "NUOLI YLÖSPÄIN"
 
-#: qcsrc/common/util.qc:1641 qcsrc/common/util.qc:1692
+#: qcsrc/common/util.qc:1631 qcsrc/common/util.qc:1682
 #, c-format
 msgid "DOWNARROW"
 msgstr "NUOLI ALASPÄIN"
 
-#: qcsrc/common/util.qc:1642 qcsrc/common/util.qc:1694
+#: qcsrc/common/util.qc:1632 qcsrc/common/util.qc:1684
 #, c-format
 msgid "LEFTARROW"
 msgstr "NUOLI VASEMMALLE"
 
-#: qcsrc/common/util.qc:1643 qcsrc/common/util.qc:1695
+#: qcsrc/common/util.qc:1633 qcsrc/common/util.qc:1685
 #, c-format
 msgid "RIGHTARROW"
 msgstr "NUOLI OIKEALLE"
 
-#: qcsrc/common/util.qc:1645
+#: qcsrc/common/util.qc:1635
 msgid "ALT"
 msgstr "ALT"
 
-#: qcsrc/common/util.qc:1646
+#: qcsrc/common/util.qc:1636
 msgid "CTRL"
 msgstr "CTRL"
 
-#: qcsrc/common/util.qc:1647
+#: qcsrc/common/util.qc:1637
 msgid "SHIFT"
 msgstr "SHIFT-vaihtonäppäin"
 
-#: qcsrc/common/util.qc:1649 qcsrc/common/util.qc:1690
+#: qcsrc/common/util.qc:1639 qcsrc/common/util.qc:1680
 #, c-format
 msgid "INS"
 msgstr "INS"
 
-#: qcsrc/common/util.qc:1650 qcsrc/common/util.qc:1700
+#: qcsrc/common/util.qc:1640 qcsrc/common/util.qc:1690
 #, c-format
 msgid "DEL"
 msgstr "DEL"
 
-#: qcsrc/common/util.qc:1651 qcsrc/common/util.qc:1693
+#: qcsrc/common/util.qc:1641 qcsrc/common/util.qc:1683
 #, c-format
 msgid "PGDN"
 msgstr "PGDN"
 
-#: qcsrc/common/util.qc:1652 qcsrc/common/util.qc:1698
+#: qcsrc/common/util.qc:1642 qcsrc/common/util.qc:1688
 #, c-format
 msgid "PGUP"
 msgstr "PGUP"
 
-#: qcsrc/common/util.qc:1653 qcsrc/common/util.qc:1696
+#: qcsrc/common/util.qc:1643 qcsrc/common/util.qc:1686
 #, c-format
 msgid "HOME"
 msgstr "HOME"
 
-#: qcsrc/common/util.qc:1654 qcsrc/common/util.qc:1691
+#: qcsrc/common/util.qc:1644 qcsrc/common/util.qc:1681
 #, c-format
 msgid "END"
 msgstr "END"
 
-#: qcsrc/common/util.qc:1656
+#: qcsrc/common/util.qc:1646
 msgid "PAUSE"
 msgstr "PAUSE"
 
-#: qcsrc/common/util.qc:1658
+#: qcsrc/common/util.qc:1648
 msgid "NUMLOCK"
 msgstr "NUMLOCK"
 
-#: qcsrc/common/util.qc:1659
+#: qcsrc/common/util.qc:1649
 msgid "CAPSLOCK"
 msgstr "CAPSLOCK"
 
-#: qcsrc/common/util.qc:1660
+#: qcsrc/common/util.qc:1650
 msgid "SCROLLOCK"
 msgstr "SCROLLOCK"
 
-#: qcsrc/common/util.qc:1662
+#: qcsrc/common/util.qc:1652
 msgid "SEMICOLON"
 msgstr "PUOLIPISTE"
 
-#: qcsrc/common/util.qc:1663
+#: qcsrc/common/util.qc:1653
 msgid "TILDE"
 msgstr "TILDE-aaltoviiva"
 
-#: qcsrc/common/util.qc:1664
+#: qcsrc/common/util.qc:1654
 msgid "BACKQUOTE"
 msgstr "BACKQUOTE-taaksepäinlainaus"
 
-#: qcsrc/common/util.qc:1665
+#: qcsrc/common/util.qc:1655
 msgid "QUOTE"
 msgstr "QUOTE-lainausmerkki"
 
-#: qcsrc/common/util.qc:1666
+#: qcsrc/common/util.qc:1656
 msgid "APOSTROPHE"
 msgstr "HEITTOMERKKI"
 
-#: qcsrc/common/util.qc:1667
+#: qcsrc/common/util.qc:1657
 msgid "BACKSLASH"
 msgstr "KENOVIIVA VASEMMALLE"
 
-#: qcsrc/common/util.qc:1675
+#: qcsrc/common/util.qc:1665
 #, c-format
 msgid "F%d"
 msgstr "F%d"
 
-#: qcsrc/common/util.qc:1685
+#: qcsrc/common/util.qc:1675
 #, c-format
 msgid "KP_%d"
 msgstr "KP_%d"
 
+#: qcsrc/common/util.qc:1680 qcsrc/common/util.qc:1681
+#: qcsrc/common/util.qc:1682 qcsrc/common/util.qc:1683
+#: qcsrc/common/util.qc:1684 qcsrc/common/util.qc:1685
+#: qcsrc/common/util.qc:1686 qcsrc/common/util.qc:1687
+#: qcsrc/common/util.qc:1688 qcsrc/common/util.qc:1689
 #: qcsrc/common/util.qc:1690 qcsrc/common/util.qc:1691
 #: qcsrc/common/util.qc:1692 qcsrc/common/util.qc:1693
 #: qcsrc/common/util.qc:1694 qcsrc/common/util.qc:1695
 #: qcsrc/common/util.qc:1696 qcsrc/common/util.qc:1697
-#: qcsrc/common/util.qc:1698 qcsrc/common/util.qc:1699
-#: qcsrc/common/util.qc:1700 qcsrc/common/util.qc:1701
-#: qcsrc/common/util.qc:1702 qcsrc/common/util.qc:1703
-#: qcsrc/common/util.qc:1704 qcsrc/common/util.qc:1705
-#: qcsrc/common/util.qc:1706 qcsrc/common/util.qc:1707
 #, c-format
 msgid "KP_%s"
 msgstr "KP_%s"
 
-#: qcsrc/common/util.qc:1699
+#: qcsrc/common/util.qc:1689
 #, c-format
 msgid "PERIOD"
 msgstr "PISTE"
 
-#: qcsrc/common/util.qc:1701
+#: qcsrc/common/util.qc:1691
 #, c-format
 msgid "DIVIDE"
 msgstr "JAKOMERKKI"
 
-#: qcsrc/common/util.qc:1702
+#: qcsrc/common/util.qc:1692
 #, c-format
 msgid "SLASH"
 msgstr "KENOVIIVA OIKEALLE"
 
-#: qcsrc/common/util.qc:1703
+#: qcsrc/common/util.qc:1693
 #, c-format
 msgid "MULTIPLY"
 msgstr "KERTOMERKKI"
 
-#: qcsrc/common/util.qc:1704
+#: qcsrc/common/util.qc:1694
 #, c-format
 msgid "MINUS"
 msgstr "MIINUS"
 
-#: qcsrc/common/util.qc:1705
+#: qcsrc/common/util.qc:1695
 #, c-format
 msgid "PLUS"
 msgstr "PLUS"
 
-#: qcsrc/common/util.qc:1707
+#: qcsrc/common/util.qc:1697
 #, c-format
 msgid "EQUALS"
 msgstr "YHTÄKUIN"
 
-#: qcsrc/common/util.qc:1712
+#: qcsrc/common/util.qc:1702
 msgid "PRINTSCREEN"
 msgstr "PRINTSCREEN-näppäin"
 
-#: qcsrc/common/util.qc:1715
+#: qcsrc/common/util.qc:1705
 #, c-format
 msgid "MOUSE%d"
 msgstr "HIIRI%d"
 
-#: qcsrc/common/util.qc:1717
+#: qcsrc/common/util.qc:1707
 msgid "MWHEELUP"
 msgstr "HIIRIRULLA YLÖS"
 
-#: qcsrc/common/util.qc:1718
+#: qcsrc/common/util.qc:1708
 msgid "MWHEELDOWN"
 msgstr "HIIRIRULLA ALAS"
 
-#: qcsrc/common/util.qc:1721
+#: qcsrc/common/util.qc:1711
 #, c-format
 msgid "JOY%d"
 msgstr "SAUVA%d"
 
-#: qcsrc/common/util.qc:1724
+#: qcsrc/common/util.qc:1714
 #, c-format
 msgid "AUX%d"
 msgstr "AUX%d"
 
-#: qcsrc/common/util.qc:1731
+#: qcsrc/common/util.qc:1721
 #, c-format
 msgid "DPAD_UP"
 msgstr "D-PADI_YLÖS"
 
+#: qcsrc/common/util.qc:1721 qcsrc/common/util.qc:1722
+#: qcsrc/common/util.qc:1723 qcsrc/common/util.qc:1724
+#: qcsrc/common/util.qc:1725 qcsrc/common/util.qc:1726
+#: qcsrc/common/util.qc:1727 qcsrc/common/util.qc:1728
+#: qcsrc/common/util.qc:1729 qcsrc/common/util.qc:1730
 #: qcsrc/common/util.qc:1731 qcsrc/common/util.qc:1732
 #: qcsrc/common/util.qc:1733 qcsrc/common/util.qc:1734
 #: qcsrc/common/util.qc:1735 qcsrc/common/util.qc:1736
 #: qcsrc/common/util.qc:1737 qcsrc/common/util.qc:1738
 #: qcsrc/common/util.qc:1739 qcsrc/common/util.qc:1740
-#: qcsrc/common/util.qc:1741 qcsrc/common/util.qc:1742
-#: qcsrc/common/util.qc:1743 qcsrc/common/util.qc:1744
-#: qcsrc/common/util.qc:1745 qcsrc/common/util.qc:1746
-#: qcsrc/common/util.qc:1747 qcsrc/common/util.qc:1748
-#: qcsrc/common/util.qc:1749 qcsrc/common/util.qc:1750
 #, c-format
 msgid "X360_%s"
 msgstr "X360_%s"
 
-#: qcsrc/common/util.qc:1732
+#: qcsrc/common/util.qc:1722
 #, c-format
 msgid "DPAD_DOWN"
 msgstr "D-PADI_ALAS"
 
-#: qcsrc/common/util.qc:1733
+#: qcsrc/common/util.qc:1723
 #, c-format
 msgid "DPAD_LEFT"
 msgstr "D-PADI_VASEN"
 
-#: qcsrc/common/util.qc:1734
+#: qcsrc/common/util.qc:1724
 #, c-format
 msgid "DPAD_RIGHT"
 msgstr "D-PADI_OIKEA"
 
-#: qcsrc/common/util.qc:1735
+#: qcsrc/common/util.qc:1725
 #, c-format
 msgid "START"
 msgstr "START-nappi"
 
-#: qcsrc/common/util.qc:1736
+#: qcsrc/common/util.qc:1726
 #, c-format
 msgid "BACK"
 msgstr "BACK-takaisinnappi"
 
-#: qcsrc/common/util.qc:1737
+#: qcsrc/common/util.qc:1727
 #, c-format
 msgid "LEFT_THUMB"
 msgstr "VASEN_PEUKALO"
 
-#: qcsrc/common/util.qc:1738
+#: qcsrc/common/util.qc:1728
 #, c-format
 msgid "RIGHT_THUMB"
 msgstr "OIKEA_PEUKALO"
 
-#: qcsrc/common/util.qc:1739
+#: qcsrc/common/util.qc:1729
 #, c-format
 msgid "LEFT_SHOULDER"
 msgstr "VASEN_OLKAPÄÄ"
 
-#: qcsrc/common/util.qc:1740
+#: qcsrc/common/util.qc:1730
 #, c-format
 msgid "RIGHT_SHOULDER"
 msgstr "OIKEA_OLKAPÄÄ"
 
-#: qcsrc/common/util.qc:1741
+#: qcsrc/common/util.qc:1731
 #, c-format
 msgid "LEFT_TRIGGER"
 msgstr "VASEN_LIIPAISIN"
 
-#: qcsrc/common/util.qc:1742
+#: qcsrc/common/util.qc:1732
 #, c-format
 msgid "RIGHT_TRIGGER"
 msgstr "OIKEA_LIIPAISIN"
 
-#: qcsrc/common/util.qc:1743
+#: qcsrc/common/util.qc:1733
 #, c-format
 msgid "LEFT_THUMB_UP"
 msgstr "VASEN_PEUKALO_YLÖS"
 
-#: qcsrc/common/util.qc:1744
+#: qcsrc/common/util.qc:1734
 #, c-format
 msgid "LEFT_THUMB_DOWN"
 msgstr "VASEN_PEUKALO_ALAS"
 
-#: qcsrc/common/util.qc:1745
+#: qcsrc/common/util.qc:1735
 #, c-format
 msgid "LEFT_THUMB_LEFT"
 msgstr "VASEN_PEUKALO_VASEN"
 
-#: qcsrc/common/util.qc:1746
+#: qcsrc/common/util.qc:1736
 #, c-format
 msgid "LEFT_THUMB_RIGHT"
 msgstr "VASEN_PEUKALO_OIKEA"
 
-#: qcsrc/common/util.qc:1747
+#: qcsrc/common/util.qc:1737
 #, c-format
 msgid "RIGHT_THUMB_UP"
 msgstr "OIKEA_PEUKALO_YLÖS"
 
-#: qcsrc/common/util.qc:1748
+#: qcsrc/common/util.qc:1738
 #, c-format
 msgid "RIGHT_THUMB_DOWN"
 msgstr "OIKEA_PEUKALO_ALAS"
 
-#: qcsrc/common/util.qc:1749
+#: qcsrc/common/util.qc:1739
 #, c-format
 msgid "RIGHT_THUMB_LEFT"
 msgstr "OIKEA_PEUKALO_VASEN"
 
-#: qcsrc/common/util.qc:1750
+#: qcsrc/common/util.qc:1740
 #, c-format
 msgid "RIGHT_THUMB_RIGHT"
 msgstr "OIKEA_PEUKALO_OIKEA"
 
-#: qcsrc/common/util.qc:1760 qcsrc/common/util.qc:1761
-#: qcsrc/common/util.qc:1762 qcsrc/common/util.qc:1763
+#: qcsrc/common/util.qc:1750 qcsrc/common/util.qc:1751
+#: qcsrc/common/util.qc:1752 qcsrc/common/util.qc:1753
 #, c-format
 msgid "JOY_%s"
 msgstr "Sauvaohjain_%s"
 
-#: qcsrc/common/util.qc:1760
+#: qcsrc/common/util.qc:1750
 #, c-format
 msgid "UP"
 msgstr "YLÖS"
 
-#: qcsrc/common/util.qc:1761
+#: qcsrc/common/util.qc:1751
 #, c-format
 msgid "DOWN"
 msgstr "ALAS"
 
-#: qcsrc/common/util.qc:1762
+#: qcsrc/common/util.qc:1752
 #, c-format
 msgid "LEFT"
 msgstr "VASEN"
 
-#: qcsrc/common/util.qc:1763
+#: qcsrc/common/util.qc:1753
 #, c-format
 msgid "RIGHT"
 msgstr "OIKEA"
 
-#: qcsrc/common/util.qc:1769
+#: qcsrc/common/util.qc:1759
 #, c-format
 msgid "MIDINOTE%d"
 msgstr "MIDIHUOMAUTUS%d"
@@ -8169,7 +8555,6 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/weapons/weapon/hook.qh:36
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:125
 msgid "Grappling Hook"
 msgstr "Tarttumakoukku"
 
@@ -9004,7 +9389,7 @@ msgstr "vain luku"
 
 #: qcsrc/menu/xonotic/dialog_credits.qc:13
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:37
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:228
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:254
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:91
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:84
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.qc:14
@@ -9320,22 +9705,6 @@ msgstr "Terveys/Panssaripaneeli"
 msgid "Info Messages Panel"
 msgstr "Tiedotuspaneeli"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:15
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:16
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:32
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:23
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:78
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:90
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:103
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:195
-#: qcsrc/menu/xonotic/util.qc:741 qcsrc/menu/xonotic/util.qc:758
-#: qcsrc/menu/xonotic/util.qc:776
-msgid "Disable"
-msgstr "Pois päältä"
-
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:18
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:16
 msgid "Enable spectating"
@@ -9401,13 +9770,6 @@ msgstr "Käännä ilmoitusjärjestys"
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.qh:6
 msgid "Notification Panel"
 msgstr "Ilmoituspaneeli"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:18
-#: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
-#: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
-#: qcsrc/menu/xonotic/util.qc:728
-msgid "Enable"
-msgstr "Ota käyttöön"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:19
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:34
@@ -9477,19 +9839,6 @@ msgstr "Fysiikkapaneeli"
 msgid "Icon size scale:"
 msgstr "Kuvakekoon mittakaava:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:71
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:240
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:84
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:115
-#: qcsrc/menu/xonotic/dialog_settings_game_view.qc:138
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:69
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:82
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:89
-#, c-format
-msgid "%sx"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:42
 msgid "Show timer:"
 msgstr "Näytä ajastin:"
@@ -9505,11 +9854,6 @@ msgstr "Keräilypaneeli"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
 msgstr "Tehonlisäyspaneeli"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
-#: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:18
-msgid "Always enable"
-msgstr "Aina päällä"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:23
 msgid "Forced aspect:"
@@ -10389,183 +10733,15 @@ msgstr "Pelaa"
 msgid "Map Information"
 msgstr "Kartan tiedot"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:74
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:16
 msgid "Gameplay mutators:"
 msgstr "Pelityylin muovaajat:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:78
-msgid ""
-"Enable dodging (quick acceleration in a given direction). Double-tap a "
-"directional key to dodge"
-msgstr ""
-"Kytke päälle väistöt (pikakiihdytys annettuun suuntaan). \n"
-"Kaksoistäppää nuolinäppäintä väistääksesi"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:82
-msgid "An explosion occurs when two players collide"
-msgstr "Tapahtuu räjähdys kahden pelaajan törmätessä"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:86
-msgid "All players are almost invisible"
-msgstr "Kaikki pelaajat ovat lähes näkymättömiä"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:90
-msgid ""
-"Enable buff pickups (random bonuses like Medic, Invisible, etc.) on the maps "
-"that support it"
-msgstr ""
-"Kytke kerättävät tehostukset päälle (satunnaisia lisäetuja, kuten ensiapu, "
-"näkymättömyys, jne.) niitä tukevissa kartoissa"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:95
-msgid "Only possible to inflict damage on your enemy while they're airborne"
-msgstr ""
-"Ainoa mahdollisuus aiheuttaa vahinkoa vihollisillesi on silloin kun he ovat "
-"ilmassa"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:99
-msgid "Damage done to your enemy gets added to your own health"
-msgstr "Vihollisellesi tehty vahinko lisätään omaan terveyteesi"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:104
-msgid ""
-"Amount of health below which players start bleeding out (health rots and "
-"they can't jump)"
-msgstr ""
-"Terveysmäärä, jonka alittuessa pelaajat alkavat vuotamaan kuiviin (vointi "
-"romahtaa eivätkä kykene hyppäämään)"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:113
-msgid "Make things fall to the ground slower (percentage of normal gravity)"
-msgstr ""
-"Aseta esineet putoamaan maahan hitaammin (prosenttimäärä perinteiseen "
-"painovoimaan nähden)"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:122
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:16
 msgid "Weapon & item mutators:"
 msgstr "Ase- ja esinemuovaajat:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:126
-msgid "Players spawn with the grappling hook. Press the 'hook' key to use it"
-msgstr ""
-"Pelaajat syntyvät heittokoukun kera. Paina 'koukku' näppäintä sitä "
-"käyttääksesi "
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:130
-msgid ""
-"Players spawn with the jetpack. Double-tap 'jump' or press the 'jetpack' key "
-"to use it"
-msgstr ""
-"Pelaajat syntyvät rakettirepun kera. Käytä sitä kaksoisnapauttamalla hyppy-"
-"näppäintä tai painamalla rakettireppu-näppäintä"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:134
-msgid ""
-"Projectiles can't be destroyed. However, you can still explode Electro orbs "
-"with the Electro primary fire"
-msgstr ""
-"Ammuksia ei voi tuhota. Voit, kuitenkin, räjäyttää sähköpalloja "
-"ensisijaisella sähkötulituksella  "
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:139
-msgid "Allow maps to spawn additional weapons (new toys)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:141
-msgid "Replacement:"
-msgstr "Korvike:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:143
-msgid ""
-"Automatically replace some normal weapons of the map with their "
-"corresponding additional weapons"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:150
-msgid "Randomly"
-msgstr "Satunnaisesti"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:155
-msgid ""
-"Devastator rockets can be detonated instantly (otherwise, there's a short "
-"delay). This allows players to fire and detonate a Devastator rocket while "
-"in the air for a strong mid-air boost even while moving fast"
-msgstr ""
-"Hävittäjäraketit voidaan räjäyttää välittömästi (muutoin on pieni viive). "
-"Tämä antaa pelaajien ampua ja räjäyttää hävittäjäraketin ilmassa saaden "
-"vahvaa ilmanostetta jopa liikkuessaan nopeasti"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:160
-msgid "Players will drop all weapons they possessed when they are killed"
-msgstr "Pelaajat pudottavat kaikki aseensa tultuaan tapetuiksi"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:165
-msgid "Weapons stay after they are picked up"
-msgstr "Aseet säilyvät poiminnan jälkeen"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:170
-msgid "Regular (no arena)"
-msgstr "Tavanomainen (ei areena)"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:171
-msgid ""
-"Players will be given a set of weapons at spawn as well as unlimited ammo, "
-"without weapon pickups"
-msgstr ""
-"Pelaajille annetaan syntyessä asevalikoima sekä rajattomia ammuksia, ilman "
-"asepoimintoja"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:173
-msgid "Weapon arenas:"
-msgstr "Tietyn aseen taistelukentät:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:176
-msgid "Custom weapons"
-msgstr "Mukautetut aseet"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:198
-msgid "Most weapons"
-msgstr "Suurin osa aseista"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:202
-msgid "All weapons"
-msgstr "Kaikki aseet"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:205
-msgid "Special arenas:"
-msgstr "Erityiskentät:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:209
-msgid ""
-"Players will be given only one weapon, which can instantly kill the opponent "
-"with a single shot. If the player runs out of ammo, they will have 10 "
-"seconds to find some or if they fail to do so, face death. The secondary "
-"fire mode does not inflict any damage but is good for doing trickjumps."
-msgstr ""
-"Pelaajille annetaan vain yksi ase, joka tappaa vastustajan kertalaakista. "
-"Jos pelaajalta loppuvat ammukset, hänellä on 10 sekuntia aikaa löytää niitä, "
-"tai muutoin kohtaavat kuoleman. Toissijainen tulitus ei aiheuta yhtään "
-"vahinkoa, mutta se on hyödyllinen temppuhyppyjä varten."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:214
-msgid ""
-"No items Xonotic - instead of pickup items, everyone plays with the same "
-"weapon. After some time, a countdown will start, after which everyone will "
-"switch to another weapon."
-msgstr ""
-"Xonotic ilman esineitä - keräilyesineiden sijasta kaikki pelaavat samalla "
-"aseella. Kotvan kuluttua lähtölaskenta alkaa, minkä loputtua kaikki "
-"vaihtavat toiseen aseeseen."
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:218
-msgid "with blaster"
-msgstr "läjäyttimellä"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:219
-msgid "Always carry the blaster as an additional weapon in Nix"
-msgstr "Kanna aina läjäytintä lisäaseena Nixissä"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:8
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:96
 #: qcsrc/menu/xonotic/guide/guide.qh:20
 msgid "Mutators"
 msgstr "Muovaajat"
@@ -11705,10 +11881,6 @@ msgstr "Vahinko"
 msgid "Overlay:"
 msgstr "Päällinen:"
 
-#: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
-msgid "Factor:"
-msgstr "Kerroin:"
-
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:118
 msgid "Fade rate:"
 msgstr "Häivennyksen nopeus:"
@@ -12220,7 +12392,7 @@ msgid "In team games"
 msgstr "Joukkuepeleissä"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
-#: qcsrc/menu/xonotic/guide/guide.qh:12 qcsrc/menu/xonotic/keybinder.qc:77
+#: qcsrc/menu/xonotic/guide/guide.qh:10 qcsrc/menu/xonotic/keybinder.qc:77
 msgid "Weapons"
 msgstr "Aseet"
 
@@ -12445,10 +12617,6 @@ msgstr "Valikon animaatiot:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:79
 msgid "How fast animations in the menu occur"
 msgstr "Miten nopeasti animaatiot tapahtuvat valikossa"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:82
-msgid "Disabled"
-msgstr "Kytketty pois"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:86
 msgid "Text shadow"
@@ -12937,13 +13105,13 @@ msgstr "kaikille vapaa"
 msgid "Introduction"
 msgstr "Johdanto"
 
-#: qcsrc/menu/xonotic/guide/guide.qh:10
-msgid "Movement"
-msgstr "Liikkuminen"
-
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
 msgstr "Pelitilat"
+
+#: qcsrc/menu/xonotic/guide/guide.qh:12
+msgid "Movement"
+msgstr "Liikkuminen"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:17
 msgid "Monsters"
@@ -13405,7 +13573,7 @@ msgstr "hyppää / ui"
 msgid "crouch / sink"
 msgstr "kyyristy / uppoa"
 
-#: qcsrc/menu/xonotic/keybinder.qc:69
+#: qcsrc/menu/xonotic/keybinder.qc:69 qcsrc/menu/xonotic/mutatortab.qc:374
 msgid "jetpack"
 msgstr "rakettireppu"
 
@@ -13597,6 +13765,153 @@ msgid ""
 msgstr ""
 "Täh? Tätä ei voi pelata (viallinen pelityyppi). Uudelleensuodatetaan jotta "
 "näin ei tapahtuisi enää."
+
+#: qcsrc/menu/xonotic/mutatortab.qc:206
+msgid "All weapons"
+msgstr "Kaikki aseet"
+
+#: qcsrc/menu/xonotic/mutatortab.qc:210
+msgid "Standard weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:214
+msgid "Extended weapons (includes New Toys)"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:218
+msgid "Custom weapons"
+msgstr "Mukautetut aseet"
+
+#: qcsrc/menu/xonotic/mutatortab.qc:239
+msgid "Special arenas:"
+msgstr "Erityiskentät:"
+
+#: qcsrc/menu/xonotic/mutatortab.qc:245
+msgid "No start weapons"
+msgstr "Ei aloitusasetta"
+
+#: qcsrc/menu/xonotic/mutatortab.qc:258
+msgid "Melee only arena"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:259
+#, c-format
+msgid ""
+"Players spawn with no ammo and no weapons except the %s, so can only slap "
+"other players."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:271
+msgid ""
+"Players will be given a set of weapons on spawn along with unlimited ammo, "
+"without weapon pickups on the map."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:300
+msgid "Enabled but pickups give no ammo"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:308
+msgid "Weapons stay on the map after they are picked up."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:343
+msgid "Consume ammo"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:348
+#, c-format
+msgid ""
+"Players spawn with an Offhand Blaster or Grappling Hook. Press %s to use it."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:374
+#, c-format
+msgid "Players spawn with the %s. Double-tap %s or press %s to use it."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:400
+msgid ""
+"Enable dodging (quick acceleration in a given direction). Double-tap a "
+"directional key to dodge"
+msgstr ""
+"Kytke päälle väistöt (pikakiihdytys annettuun suuntaan). \n"
+"Kaksoistäppää nuolinäppäintä väistääksesi"
+
+#: qcsrc/menu/xonotic/mutatortab.qc:404
+msgid "Midair jumps:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:406
+msgid "How many times players can jump while midair"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:407
+msgid "Infinite"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:412
+msgid "Additive velocity"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:413
+msgid ""
+"Add on, rather than set, their vertical velocity each time the player jumps"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:418
+msgid "Jump away from walls when running alongside them"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:421
+msgid "Delay between walljumps:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:428
+msgid "Double jumps"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:429
+msgid "Gain extra height when jumping again shortly after the first jump"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:435
+msgid "Make things fall to the ground slower (percentage of normal gravity)"
+msgstr ""
+"Aseta esineet putoamaan maahan hitaammin (prosenttimäärä perinteiseen "
+"painovoimaan nähden)"
+
+#: qcsrc/menu/xonotic/mutatortab.qc:439
+msgid "Low gravity"
+msgstr "Vajaa painovoima"
+
+#: qcsrc/menu/xonotic/mutatortab.qc:445
+msgid "Global forces"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:446
+msgid "Knockback experienced by any player affects all players"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qc:451
+msgid "Various fun changes to physics and movement."
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qh:33
+msgid "Weapon arena"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qh:43
+msgid "Weapons stay"
+msgstr "Aseet jäävät"
+
+#: qcsrc/menu/xonotic/mutatortab.qh:53
+msgid "Offhand weapons"
+msgstr ""
+
+#: qcsrc/menu/xonotic/mutatortab.qh:73
+msgid "Custom physics"
+msgstr ""
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
