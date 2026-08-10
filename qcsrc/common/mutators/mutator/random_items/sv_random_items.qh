@@ -35,8 +35,8 @@ string RandomItems_GetRandomVanillaItemClassName(string prefix, int types);
 
 /// Called when random item classname is requested
 #define EV_RandomItems_GetRandomItemClassName(i, o) \
-	/** prefix */    i(string, 0) \
-	/** classname */ o(string, 1) \
+	i(string, 0) /** prefix */ \
+	o(string, 1) /** classname */ \
     /**/
 MUTATOR_HOOKABLE(RandomItems_GetRandomItemClassName, EV_RandomItems_GetRandomItemClassName);
 
