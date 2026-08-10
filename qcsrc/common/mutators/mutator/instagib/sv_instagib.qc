@@ -39,7 +39,7 @@ string RandomItems_GetRandomInstagibItemClassName(string prefix)
 }
 
 .float instagib_nextthink;
-.float instagib_needammo;
+.bool instagib_needammo;
 void instagib_stop_countdown(entity e)
 {
 	if (!e.instagib_needammo)
@@ -69,18 +69,16 @@ void instagib_countdown(entity this)
 
 void instagib_ammocheck(entity this)
 {
-	if(time < this.instagib_nextthink)
+	if (time < this.instagib_nextthink || !IS_PLAYER(this))
 		return;
-	if(!IS_PLAYER(this))
-		return; // not a player
 
-	if(IS_DEAD(this) || game_stopped)
+	if (IS_DEAD(this) || game_stopped)
 		instagib_stop_countdown(this);
 	else if (GetResource(this, RES_CELLS) > 0 || (this.items & IT_UNLIMITED_AMMO) || (this.flags & FL_GODMODE))
 		instagib_stop_countdown(this);
-	else if(autocvar_g_rm && autocvar_g_rm_laser)
+	else if (autocvar_g_rm && autocvar_g_rm_laser)
 	{
-		if(!this.instagib_needammo)
+		if (!this.instagib_needammo)
 		{
 			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_INSTAGIB_DOWNGRADE);
 			this.instagib_needammo = true;
@@ -96,13 +94,12 @@ void instagib_ammocheck(entity this)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
-	FOREACH_CLIENT(IS_PLAYER(it), { instagib_stop_countdown(it); });
+	FOREACH_CLIENT(IS_PLAYER(it), instagib_stop_countdown(it));
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, RandomItems_GetRandomItemClassName)
 {
-	M_ARGV(1, string) = RandomItems_GetRandomInstagibItemClassName(
-		M_ARGV(0, string));
+	M_ARGV(1, string) = RandomItems_GetRandomInstagibItemClassName(M_ARGV(0, string));
 	return true;
 }
 
@@ -114,16 +111,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 {
 	entity mon = M_ARGV(0, entity);
-
-	// always refill ammo
-	if(mon.monsterdef == MON_MAGE)
-		mon.skin = 1;
+	if (mon.monsterdef == MON_MAGE)
+		mon.skin = 1; // always refill ammo
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
-
 	instagib_stop_countdown(player);
 }
 
@@ -135,21 +129,18 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidRandomStartWeapons)
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
-
 	player.effects |= EF_FULLBRIGHT;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
-
 	instagib_ammocheck(player);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerRegen)
 {
-	// no regeneration in instagib
-	return true;
+	return true; // no regeneration in InstaGib
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
@@ -160,8 +151,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
 {
-	// weapon dropping on death handled by FilterItem
-	return true;
+	return true; // weapon dropping on death handled by FilterItem
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SuperweaponsImmutable)
@@ -178,32 +168,31 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 	float frag_mirrordamage = M_ARGV(5, float);
 	vector frag_force = M_ARGV(6, vector);
 
-	if(autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
+	if (autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 		frag_damage = 0;
 
-	if(IS_PLAYER(frag_target))
+	if (IS_PLAYER(frag_target))
 	{
-		if(frag_deathtype == DEATH_FALL.m_id)
+		if (frag_deathtype == DEATH_FALL.m_id)
 			frag_damage = 0; // never count fall damage
 
-		if(!autocvar_g_instagib_damagedbycontents)
-		switch(DEATH_ENT(frag_deathtype))
-		{
-			case DEATH_DROWN:
-			case DEATH_SLIME:
-			case DEATH_LAVA:
-				frag_damage = 0;
-				break;
-		}
+		if (!autocvar_g_instagib_damagedbycontents)
+			switch (DEATH_ENT(frag_deathtype))
+			{
+				case DEATH_DROWN:
+				case DEATH_SLIME:
+				case DEATH_LAVA:
+					frag_damage = 0;
+					break;
+			}
 
-		if(IS_PLAYER(frag_attacker))
-		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
+		if (IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		{
-			if(!autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker))
+			if (!autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker))
 				frag_force = '0 0 0';
 
 			float armor = GetResource(frag_target, RES_ARMOR);
-			if(armor)
+			if (armor)
 			{
 				--armor;
 				SetResource(frag_target, RES_ARMOR, armor);
@@ -214,30 +203,30 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 			}
 		}
 
-		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
+		if (IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 		{
-			if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
+			if (!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
 			{
 				frag_damage = 0;
-				if(!autocvar_g_instagib_mirrordamage)
+				if (!autocvar_g_instagib_mirrordamage)
 					frag_mirrordamage = 0; // never do mirror damage on enemies
 			}
 
-			if(frag_target != frag_attacker)
+			if (frag_target != frag_attacker)
 			{
-				if(!autocvar_g_instagib_blaster_keepforce)
+				if (!autocvar_g_instagib_blaster_keepforce)
 					frag_force = '0 0 0';
 			}
 		}
 	}
 
-	if(!autocvar_g_instagib_mirrordamage) // only apply the taking lives hack if we don't want to support real damage mirroring
-	if(IS_PLAYER(frag_attacker))
-	if(frag_mirrordamage > 0)
+	if (!autocvar_g_instagib_mirrordamage // only apply the taking lives hack if we don't want to support real damage mirroring
+	&& IS_PLAYER(frag_attacker)
+	&& frag_mirrordamage > 0)
 	{
 		// just lose extra LIVES, don't kill the player for mirror damage
 		float armor = GetResource(frag_attacker, RES_ARMOR);
-		if(armor > 0)
+		if (armor > 0)
 		{
 			--armor;
 			SetResource(frag_attacker, RES_ARMOR, armor);
@@ -247,8 +236,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 		frag_mirrordamage = 0;
 	}
 
-	if(frag_target.alpha && frag_target.alpha < 1)
-	if(IS_PLAYER(frag_target))
+	if (frag_target.alpha && frag_target.alpha < 1 && IS_PLAYER(frag_target))
 		yoda = 1;
 
 	M_ARGV(4, float) = frag_damage;
@@ -263,7 +251,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems, CBC_ORDER_LAST)
 
 	start_ammo_shells  = warmup_start_ammo_shells  = 0;
 	start_ammo_nails   = warmup_start_ammo_nails   = 0;
-	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
+	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_instagib_ammo_start;
 	start_ammo_rockets = warmup_start_ammo_rockets = 0;
 	//start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
@@ -273,14 +261,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems, CBC_ORDER_LAST)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponArena)
 {
-	// turn weapon arena off
-	M_ARGV(0, string) = "off";
+	M_ARGV(0, string) = "off"; // turn weapon arena off
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetWeaponStay)
 {
-	// turn weapon stay off
-	M_ARGV(0, int) = 0;
+	M_ARGV(0, int) = 0; // turn weapon stay off
 }
 
 void instagib_replace_item_with(entity this, GameItem def)
@@ -302,7 +288,7 @@ void instagib_replace_item_with(entity this, GameItem def)
 const int INSTAGIB_POWERUP_COUNT = 3;
 GameItem instagib_remaining_powerups[INSTAGIB_POWERUP_COUNT];
 
-// replaces item with a random powerup selected among the less spawned ones
+/// Replaces item with a random powerup selected among the less spawned ones
 void instagib_replace_item_with_random_powerup(entity item)
 {
 	static int remaining_powerups_count = INSTAGIB_POWERUP_COUNT;
@@ -315,9 +301,9 @@ void instagib_replace_item_with_random_powerup(entity item)
 		instagib_remaining_powerups[2] = ITEM_Speed;
 	}
 
-	float r = floor(random() * remaining_powerups_count);
+	int r = floor(random() * remaining_powerups_count);
 	instagib_replace_item_with(item, instagib_remaining_powerups[r]);
-	for(int i = r; i < INSTAGIB_POWERUP_COUNT - 1; ++i)
+	for (int i = r; i < INSTAGIB_POWERUP_COUNT - 1; ++i)
 		instagib_remaining_powerups[i] = instagib_remaining_powerups[i + 1];
 	--remaining_powerups_count;
 }
@@ -328,26 +314,27 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 
 	switch (item.itemdef)
 	{
-		case ITEM_Strength: case ITEM_Shield: case ITEM_HealthMega: case ITEM_ArmorMega:
-			if(autocvar_g_powerups)
+		case ITEM_Strength: case ITEM_Shield:
+		case ITEM_HealthMega: case ITEM_ArmorMega:
+			if (autocvar_g_powerups)
 				instagib_replace_item_with_random_powerup(item);
 			return true;
 		case ITEM_Invisibility: case ITEM_ExtraLife: case ITEM_Speed:
 			return false;
 		case ITEM_Cells:
-			if(autocvar_g_instagib_ammo_convert_cells)
+			if (autocvar_g_instagib_ammo_convert_cells)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
 		case ITEM_Rockets:
-			if(autocvar_g_instagib_ammo_convert_rockets)
+			if (autocvar_g_instagib_ammo_convert_rockets)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
 		case ITEM_Shells:
-			if(autocvar_g_instagib_ammo_convert_shells)
+			if (autocvar_g_instagib_ammo_convert_shells)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
 		case ITEM_Bullets:
-			if(autocvar_g_instagib_ammo_convert_bullets)
+			if (autocvar_g_instagib_ammo_convert_bullets)
 				instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
 		case ITEM_Jetpack:
@@ -364,16 +351,17 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 				return false;
 			}
 			break;
-		case WEP_DEVASTATOR.m_id: case WEP_VORTEX.m_id:
+		case WEP_DEVASTATOR.m_id:
+		case WEP_VORTEX.m_id:
 			instagib_replace_item_with(item, ITEM_VaporizerCells);
 			return true;
 	}
 
 	float cells = GetResource(item, RES_CELLS);
-	if(cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
+	if (cells > autocvar_g_instagib_ammo_drop && item.classname != "item_vaporizer_cells")
 		SetResource(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 
-	if(cells && !item.weapon)
+	if (cells && !item.weapon)
 		return false;
 
 	return true;
@@ -382,37 +370,37 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 {
 	float frag_deathtype = M_ARGV(3, float);
-
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
+	if (DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		M_ARGV(4, float) = 1000; // always gib if it was a vaporizer death
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 {
-	if(MUTATOR_RETURNVALUE) return false;
+	if (MUTATOR_RETURNVALUE)
+		return false;
 
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
-	if(GetResource(item, RES_CELLS))
+	if (GetResource(item, RES_CELLS))
 	{
-		// play some cool sounds ;)
 		float hp = GetResource(toucher, RES_HEALTH);
 		if (IS_CLIENT(toucher))
 		{
-			if(hp <= 5)
+			// play some cool sounds ;)
+			if (hp <= 5)
 				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_LASTSECOND);
-			else if(hp < 50)
+			else if (hp < 50)
 				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_NARROWLY);
 		}
 
-		if(hp < 100)
+		if (hp < 100)
 			SetResource(toucher, RES_HEALTH, 100);
 
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
 
-	if(item.itemdef == ITEM_ExtraLife)
+	if (item.itemdef == ITEM_ExtraLife)
 	{
 		GiveResource(toucher, RES_ARMOR, autocvar_g_instagib_extralives); // no limit
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES, autocvar_g_instagib_extralives);
