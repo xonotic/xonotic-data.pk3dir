@@ -102,7 +102,7 @@ MUTATOR_HOOKABLE(WantEventchase, EV_WantEventchase);
 	i(entity, 0) /* entity id */ \
 	o(vector, 0) /* current_view_origin_override */ \
 	o(vector, 1) /* view_offset_override */ \
-	o(float,  0) /* chase_distance_override */ \
+	o(float,  2) /* chase_distance_override */ \
 	/**/
 MUTATOR_HOOKABLE(CustomizeEventchase, EV_CustomizeEventchase);
 
