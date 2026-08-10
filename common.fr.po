@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-09 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -1341,19 +1341,19 @@ msgstr "Arène avec toutes les armes disponibles"
 
 #: qcsrc/client/main.qc:1347
 msgid "Standard Weapons Arena"
-msgstr ""
+msgstr "Arène d'armes standard"
 
 #: qcsrc/client/main.qc:1348
 msgid "Standard Available Weapons Arena"
-msgstr ""
+msgstr "Arène d'armes disponibles standard"
 
 #: qcsrc/client/main.qc:1349
 msgid "Extended Weapons Arena"
-msgstr ""
+msgstr "Arène d'armes étendue"
 
 #: qcsrc/client/main.qc:1350
 msgid "Extended Available Weapons Arena"
-msgstr ""
+msgstr "Arène d'armes disponibles étendue"
 
 #: qcsrc/client/main.qc:1357
 #, c-format
@@ -1708,7 +1708,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Complete the Stage"
-msgstr ""
+msgstr "Complete the Stage"
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
@@ -4176,6 +4176,8 @@ msgstr "Aléatoirement"
 #: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:30
 msgid "Allow maps to spawn additional weapons (new toys)."
 msgstr ""
+"Permet aux cartes de faire apparaître des armes supplémentaires (« nouveaux "
+"jouets »)."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -4196,15 +4198,16 @@ msgstr "NIX"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:31
 msgid "With Blaster"
-msgstr ""
+msgstr "Avec le Blaster"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:32
 msgid "Always carry the Blaster as an additional weapon in NIX"
 msgstr ""
+"Toujours porter le Blaster en tant qu'arme additionnelle avec le mutateur NIX"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:37
 msgid "Health and armor"
-msgstr ""
+msgstr "Santé et armure"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:38
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qh:6
@@ -4711,16 +4714,16 @@ msgstr "Blessures (vision brouillée quand vous êtes blessé) :"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:22
 msgid "Force:"
-msgstr ""
+msgstr "Force :"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:24
 #, c-format
 msgid "%s qu/s"
-msgstr ""
+msgstr "%s qu/s"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:29
 msgid "An explosion occurs when two players collide."
-msgstr ""
+msgstr "Une explosion survient quand deux joueurs entrent en collision."
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
@@ -4729,7 +4732,7 @@ msgstr "Facteur :"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:23
 msgid "Fraction of the damage dealt to be stolen as health"
-msgstr ""
+msgstr "Pourcentage des dégâts infligés convertis en points de vie"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
@@ -4747,11 +4750,12 @@ msgstr "%sx"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:26
 msgid "Consider both health and armor"
-msgstr ""
+msgstr "Tenir compte à la fois de la santé et de l'armure"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:31
 msgid "All damage dealt to your enemies is added to your own health."
 msgstr ""
+"Tous les dégâts infligés à vos ennemis sont ajoutés à votre propre santé."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
 #, c-format
@@ -8067,15 +8071,15 @@ msgstr "Projectiles invincibles"
 
 #: qcsrc/common/util.qc:300
 msgid "Low Gravity"
-msgstr ""
+msgstr "Faible gravité"
 
 #: qcsrc/common/util.qc:302 qcsrc/menu/xonotic/mutatortab.qc:339
 msgid "Offhand Hook"
-msgstr ""
+msgstr "Grappin mains libres"
 
 #: qcsrc/common/util.qc:304
 msgid "Melee Only Arena"
-msgstr ""
+msgstr "Arène de mêlée uniquement"
 
 #: qcsrc/common/util.qc:307
 msgid "Weapons Stay"
@@ -8087,7 +8091,7 @@ msgstr ""
 
 #: qcsrc/common/util.qc:312
 msgid "No Powerups"
-msgstr ""
+msgstr "Pas de bonus de puissance"
 
 #: qcsrc/common/util.qc:314
 msgid "Buffs Replace Powerups"

@@ -4114,7 +4114,7 @@ msgstr "Выбух ад дотыку"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:19
 msgid "Damage:"
-msgstr ""
+msgstr "Страты:"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:22
 msgid "Force:"

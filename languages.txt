@@ -6,7 +6,7 @@ en    "English" "English" 100%
 en_AU "English (Australia)" "English (Australia)" 96%
 en_GB "English (United Kingdom)" "English (United Kingdom)" 96%
 es    "Spanish" "Español" 75%
-fr    "French" "Français" 96%
+fr    "French" "Français" 97%
 gl    "Galician" "Galego" 96%
 ga    "Irish" "Irish" 24%
 it    "Italian" "Italiano" 96%
@@ -24,9 +24,9 @@ cs    "Czech" "Čeština" 24%
 el    "Greek" "Ελληνική" 38%
 be    "Belarusian" "Беларуская" 38%
 bg    "Bulgarian" "Български" 54%
-ru    "Russian" "Русский" 96%
+ru    "Russian" "Русский" 100%
 sr    "Serbian" "Српски" 96%
-uk    "Ukrainian" "Українська" 96%
+uk    "Ukrainian" "Українська" 100%
 zh_TW "Chinese (Taiwan)" "中文（正體字）" 96%
 zh_CN "Chinese (China)" "中文（简体字）" 96%
 zh_HK "Chinese (Hong Kong)" "中文（香港字）" 96%

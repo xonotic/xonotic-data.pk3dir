@@ -706,7 +706,7 @@ msgstr "найшвидший"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:139
 msgid "Time of fastest lap (Race/CTS)"
-msgstr "Найшвидше коло (Перегонки/CTS)"
+msgstr "Найшвидше коло (Перегонки/ПЕ)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:140
 msgid "Number of faults committed"
@@ -800,7 +800,7 @@ msgstr "вбито"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "Number of laps finished (Race/CTS)"
-msgstr "Кількість завершених кіл (Перегонки/CTS)"
+msgstr "Кількість завершених кіл (Перегонки/ПЕ)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:152
 msgid "SCO^laps"
@@ -988,7 +988,7 @@ msgstr "час"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:175
 msgid "Total time raced (Race/CTS)"
-msgstr "Загальний час забігів (Перегонки/Перегонки з етапами)"
+msgstr "Загальний час забігів (Перегонки/ПЕ)"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:713
 msgid ""
@@ -1343,19 +1343,19 @@ msgstr "Арена зі всією доступною зброєю"
 
 #: qcsrc/client/main.qc:1347
 msgid "Standard Weapons Arena"
-msgstr ""
+msgstr "Арена Стандартного Озброєння"
 
 #: qcsrc/client/main.qc:1348
 msgid "Standard Available Weapons Arena"
-msgstr ""
+msgstr "Арена Стандартного Доступного Озброєння"
 
 #: qcsrc/client/main.qc:1349
 msgid "Extended Weapons Arena"
-msgstr ""
+msgstr "Арена Розширенного Озброєння"
 
 #: qcsrc/client/main.qc:1350
 msgid "Extended Available Weapons Arena"
-msgstr ""
+msgstr "Арена Розширеного Доступного Озброєння"
 
 #: qcsrc/client/main.qc:1357
 #, c-format
@@ -1698,7 +1698,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Complete the Stage"
-msgstr ""
+msgstr "Пройти Етапи"
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
@@ -3105,13 +3105,15 @@ msgstr "Вмикати"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:24
 msgid "Bleed below health:"
-msgstr ""
+msgstr "Кровотеча при здоров'ї нижче:"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:30
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)."
 msgstr ""
+"Кількість здоров'я, нижче якого гравці починають кровотечати (здоров'я "
+"зменшується, стрибати не можна)."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:69
 #, c-format
@@ -3360,28 +3362,28 @@ msgstr "Вимикати"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:22
 msgid "Enable only if placed by mapper"
-msgstr ""
+msgstr "Увімкнути, лише якщо розміщено мапером"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:28
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:34
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:40
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:40
 msgid "Allow maps to spawn:"
-msgstr ""
+msgstr "Дозволити появу на мапах:"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:43
 msgid "Replace unavailable buffs with others"
-msgstr ""
+msgstr "Замінювати недоступні бафи іншими"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:47
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:76
 msgid "Allow dropping"
-msgstr ""
+msgstr "Дозволити скидання"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:50
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:85
 msgid "Replace powerups with buffs"
-msgstr ""
+msgstr "Замінювати підсилювачі бафами"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:59
 #, c-format
@@ -3389,6 +3391,8 @@ msgid ""
 "Enable buff pickups (random bonuses like %s and %s) on the maps that support "
 "them."
 msgstr ""
+"Увімкнути появу бафів (випадкові бонуси, як-от %s, %s, тощо) на мапах, які "
+"їх підтримують."
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qh:6 qcsrc/common/util.qc:311
 #: qcsrc/menu/xonotic/guide/guide.qh:15
@@ -3412,7 +3416,7 @@ msgstr "Маскування"
 
 #: qcsrc/common/mutators/mutator/cloaked/ui_cloaked.qc:17
 msgid "All players are almost invisible."
-msgstr ""
+msgstr "Всі гравці становляться майже невидимими."
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:22
 msgid "Damage Text"
@@ -3652,44 +3656,47 @@ msgstr "Додаткове життя"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:36
 msgid "Starting ammo:"
-msgstr ""
+msgstr "Початкові набої:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:39
 msgid "Ammo from weapons and cells:"
-msgstr ""
+msgstr "Набої від зброї та батарейок:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:44
 msgid "Extra lives per pickup:"
-msgstr ""
+msgstr "Додаткових життів за підбір:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:47
 msgid ""
 "How many extra lives to reward a player when they pick up the Extra life"
 msgstr ""
+"Скільки додаткових життів надавати гравцеві за підбір Додаткового життя"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:52
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:34
 msgid "Keep Blaster damage"
-msgstr ""
+msgstr "Зберігати шкоду від Бластера"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:55
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:36
 msgid "Keep Blaster force"
-msgstr ""
+msgstr "Зберігати відштовхування від Бластера"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:60
 msgid "Allow Jetpacks and Fuel regenerators"
-msgstr ""
+msgstr "Дозволити Джетпаки та Регенератори палива"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:65
 msgid "Enable Rocketminsta"
-msgstr ""
+msgstr "Увімкнути Рокетмінсту"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:66
 msgid ""
 "The primary fire also explodes on impact, and the secondary fire shoots "
 "laser prongs"
 msgstr ""
+"Основний вогонь вибухає при влучанні, а вторинний - вистрілює лазерними "
+"зубцями"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:4
 #, c-format
@@ -3699,6 +3706,10 @@ msgid ""
 "10 seconds to find some or face death if they fail to do so. The secondary "
 "fire does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Гравцям буде видано лише одну зброю, %s, яка миттєво вбиває ворога за один "
+"постріл. Якщо у гравця закінчилися набої, він матиме 10 секунд, що знайти "
+"нові набої, інакше настане смерть. Вторинний вогонь не завдає жодної шкоди, "
+"але зручний для виконання трикджампів."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qc:19
 #, c-format
@@ -3706,24 +3717,26 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode %s orbs with "
 "the %s primary fire."
 msgstr ""
+"Снаряди неможливо знищити. Проте ви все одно можете підривати %s-сфери "
+"основним вогнем %s."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qh:6
 msgid "Invincible projectiles"
-msgstr ""
+msgstr "Невразливі снаряди"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:20
 msgid "Invincibility time:"
-msgstr ""
+msgstr "Час невразливості:"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:22
 msgid "Invincibility time after leaving contact with ground"
-msgstr ""
+msgstr "Тривалість невразливості після втрати контакту із землею"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:29
 msgid ""
 "Makes it only possible to inflict damage on your enemy while they're "
 "airborne."
-msgstr ""
+msgstr "Шкоду можна завдати тільки тоді, коли вороги в повітрі."
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qh:6 qcsrc/common/util.qc:303
 msgid "Midair"
@@ -3971,46 +3984,48 @@ msgstr "Гранати"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:24
 msgid "Enable bonus nades"
-msgstr ""
+msgstr "Вмикати бонусні гранати"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:25
 msgid ""
 "Gives players a bonus grenade when they reach a certain score or have "
 "Strength"
 msgstr ""
+"Дає гравцям бонусну гранату за досягнення певного рахунку або при наявності "
+"Сили"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:26
 msgid "Max bonus nades:"
-msgstr ""
+msgstr "Максимум бонусних гранат:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:32
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:116
 msgid "Allow client selection"
-msgstr ""
+msgstr "Дозволити вибір гравцю"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:33
 msgid "For bonus nades"
-msgstr ""
+msgstr "Для бонусних гранат"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:36
 msgid "Refire time:"
-msgstr ""
+msgstr "Інтервал між пострілами:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:42
 msgid "Nade types:"
-msgstr ""
+msgstr "Типи гранат:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:96
 msgid "Random"
-msgstr ""
+msgstr "Випадковий"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:107
 msgid "Normal nade type, if client selection is disabled"
-msgstr ""
+msgstr "Тип звичайної гранати, якщо вибір гравця вимкнено"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:111
 msgid "Bonus nade type, if client selection is disabled"
-msgstr ""
+msgstr "Тип бонусної гранати, якщо вибір гравця вимкнено"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
 #, c-format
@@ -4018,6 +4033,8 @@ msgid ""
 "Enable throwable grenades which explode with a variety of effects. Press %s "
 "or %s to use them."
 msgstr ""
+"Увімкнути кидкові гранати з різними ефектами вибуху. Натисніть %s або %s для "
+"використання."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
 #, c-format
@@ -4064,7 +4081,7 @@ msgstr "Випадково"
 
 #: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:30
 msgid "Allow maps to spawn additional weapons (new toys)."
-msgstr ""
+msgstr "Дозволяти мапі появу додаткової зброї (нові забавки)."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -4084,15 +4101,15 @@ msgstr "NIX"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:31
 msgid "With Blaster"
-msgstr ""
+msgstr "З Бластером"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:32
 msgid "Always carry the Blaster as an additional weapon in NIX"
-msgstr ""
+msgstr "Завжди носити Бластер як додаткову зброю в NIX"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:37
 msgid "Health and armor"
-msgstr ""
+msgstr "Здоров'я та броня"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:38
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qh:6
@@ -4106,6 +4123,9 @@ msgid ""
 "weapon. After some time a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
+"No items Xonotic - замість того щоб підбирати предмети, всі гравці грають з "
+"однією зброєю. Через деякий час почнеться відлік, і зброя у всіх зміниться "
+"на іншу."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -4306,7 +4326,7 @@ msgstr "Оверкіл"
 
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:49
 msgid "Replace Strength and Shield with weapons"
-msgstr ""
+msgstr "Замінювати Силу та Щит зброєю"
 
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qh:11
 #, c-format
@@ -4315,6 +4335,9 @@ msgid ""
 "a short time to kill for rapid gameplay. The secondary fire of all weapons "
 "shoots a %s-like projectile. It also enables %s and %s."
 msgstr ""
+"Унікальний мутатор арени, який замінює всю зброю на переважно миттєву "
+"(hitscan) із коротким часом на вбивство для динамічного геймплею. Вторинний "
+"вогонь всієї зброї стріляє %sопобідним снарядом. Також вмикає %s та %s."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qc:8
 #, c-format
@@ -4332,7 +4355,7 @@ msgstr "Піньята"
 
 #: qcsrc/common/mutators/mutator/pinata/ui_pinata.qc:17
 msgid "Players will drop all weapons they possessed when they are fragged."
-msgstr ""
+msgstr "Після смерті гравця випадає вся його зброя."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:19
 #, c-format
@@ -4468,7 +4491,7 @@ msgstr "Сила"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:34
 msgid "Dependent on gametype"
-msgstr ""
+msgstr "Залежно від режиму гри"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:36
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
@@ -4478,7 +4501,7 @@ msgstr "Завжди вмикати"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:69
 msgid "Drop on death"
-msgstr ""
+msgstr "Скидати після смерті"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:72
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:79
@@ -4489,12 +4512,12 @@ msgstr "Вимкнуто"
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:73
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:80
 msgid "Timer continues"
-msgstr ""
+msgstr "Таймер продовжується"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:74
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:81
 msgid "Timer pauses"
-msgstr ""
+msgstr "Таймер зупиняється"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:95
 #, c-format
@@ -4502,6 +4525,8 @@ msgid ""
 "Enable powerup pickups (powerful bonuses like %s and %s) on the maps that "
 "support them."
 msgstr ""
+"Увімкнути появу підсилювачів (потужні бонуси, як-от %s чи %s) на мапах, які "
+"їх підтримують."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qc:10
 #, c-format
@@ -4524,7 +4549,7 @@ msgstr "Рокет-Флаїнг"
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:19
 msgid "Disable projectile detonation delay"
-msgstr ""
+msgstr "Вимкнути затримку детонації снарядів"
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:26
 #, c-format
@@ -4533,10 +4558,13 @@ msgid ""
 "This allows players to fire and detonate a rocket while mid-air for a strong "
 "boost even while moving fast."
 msgstr ""
+"Ракети %sа можна підірвати миттєво (інакше буде невеличка затримка). Це "
+"дозволяє гравцям стріляти та підірвати ракету в польоті, щоб отримати "
+"потужний буст навіть під час швидкого переміщення."
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qh:6
 msgid "Rocket flying"
-msgstr ""
+msgstr "Рокет-флаїнг"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -4575,20 +4603,20 @@ msgstr "Вибух при Зіткненні"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:19
 msgid "Damage:"
-msgstr "Затьмарення від болю:"
+msgstr "Шкода:"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:22
 msgid "Force:"
-msgstr ""
+msgstr "Сила віддачі:"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:24
 #, c-format
 msgid "%s qu/s"
-msgstr ""
+msgstr "%s qu/с"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:29
 msgid "An explosion occurs when two players collide."
-msgstr ""
+msgstr "Коли два гравці зіткнулися, відбувається вибух."
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
@@ -4597,7 +4625,7 @@ msgstr "Фактор:"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:23
 msgid "Fraction of the damage dealt to be stolen as health"
-msgstr ""
+msgstr "Частка завданої шкоди, що перетворюється на здоров'я"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
@@ -4615,11 +4643,11 @@ msgstr "%sx"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:26
 msgid "Consider both health and armor"
-msgstr ""
+msgstr "Враховувати здоров'я та броню"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:31
 msgid "All damage dealt to your enemies is added to your own health."
-msgstr ""
+msgstr "Шкода, яку ви завдаєте ворогам, додається до вашого здоров'я."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
 #, c-format
@@ -7851,47 +7879,47 @@ msgstr "Невразливі снаряди"
 
 #: qcsrc/common/util.qc:300
 msgid "Low Gravity"
-msgstr ""
+msgstr "Низька Гравітація"
 
 #: qcsrc/common/util.qc:302 qcsrc/menu/xonotic/mutatortab.qc:339
 msgid "Offhand Hook"
-msgstr ""
+msgstr "Допоміжний Гак"
 
 #: qcsrc/common/util.qc:304
 msgid "Melee Only Arena"
-msgstr ""
+msgstr "Арена Лише з Ближньою Зброєю"
 
 #: qcsrc/common/util.qc:307
 msgid "Weapons Stay"
-msgstr ""
+msgstr "Зброя залишається"
 
 #: qcsrc/common/util.qc:308
 msgid "Blood Loss"
-msgstr ""
+msgstr "Кровотеча"
 
 #: qcsrc/common/util.qc:312
 msgid "No Powerups"
-msgstr ""
+msgstr "Без Підсилювачів"
 
 #: qcsrc/common/util.qc:314
 msgid "Buffs Replace Powerups"
-msgstr ""
+msgstr "Бафи Замінюють Підсилювачі"
 
 #: qcsrc/common/util.qc:315
 msgid "Touch Explode"
-msgstr ""
+msgstr "Вибух при Зіткненні"
 
 #: qcsrc/common/util.qc:316
 msgid "Wall Jumping"
-msgstr ""
+msgstr "Стрибки по Стінам"
 
 #: qcsrc/common/util.qc:317
 msgid "No Start Weapons"
-msgstr ""
+msgstr "Без Стартової Зброї"
 
 #: qcsrc/common/util.qc:319 qcsrc/menu/xonotic/mutatortab.qc:335
 msgid "Offhand Blaster"
-msgstr ""
+msgstr "Допоміжний Бластер"
 
 #: qcsrc/common/util.qc:1569
 msgid "Male"
@@ -14326,15 +14354,15 @@ msgstr "Вся зброя"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:210
 msgid "Standard weapons"
-msgstr ""
+msgstr "Стандартне озброєння"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:214
 msgid "Extended weapons (includes New Toys)"
-msgstr ""
+msgstr "Розширене озброєння (включає Нові Забавки)"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:218
 msgid "Custom weapons"
-msgstr "Свій набір зброї"
+msgstr "Власний набір зброї"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:239
 msgid "Special arenas:"
@@ -14346,7 +14374,7 @@ msgstr "Без стартової зброї"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:258
 msgid "Melee only arena"
-msgstr ""
+msgstr "Арена лише з ближньою зброєю"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:259
 #, c-format
@@ -14354,35 +14382,43 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so can only slap "
 "other players."
 msgstr ""
+"Гравці з'являються без набоїв і зброї, крім такої як %s, тож можуть лише "
+"давати ляпасів іншим гравцям."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
 "Players will be given a set of weapons on spawn along with unlimited ammo, "
 "without weapon pickups on the map."
 msgstr ""
+"Під час появи гравці отримують набір зброї разом із нескінченними набоями, а "
+"сама зброя на карті не з'являється."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:300
 msgid "Enabled but pickups give no ammo"
-msgstr ""
+msgstr "Вмикати, але підбори не дають набої"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:308
 msgid "Weapons stay on the map after they are picked up."
-msgstr ""
+msgstr "Зброя залишається на мапі після того, як була підібраною."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:343
 msgid "Consume ammo"
-msgstr ""
+msgstr "Споживати набої"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:348
 #, c-format
 msgid ""
 "Players spawn with an Offhand Blaster or Grappling Hook. Press %s to use it."
 msgstr ""
+"Гравці з'являються з Допоміжним Бластером або з Абордажним гаком. Для "
+"використання натисніть клавішу %s."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:374
 #, c-format
 msgid "Players spawn with the %s. Double-tap %s or press %s to use it."
 msgstr ""
+"Гравці з'являються з %sом. Для використання двічі натисніть %s, або "
+"натисніть клавішу %s."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:400
 msgid ""
@@ -14394,40 +14430,42 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:404
 msgid "Midair jumps:"
-msgstr ""
+msgstr "Стрибків в Повітрі:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:406
 msgid "How many times players can jump while midair"
-msgstr ""
+msgstr "Скільки разів гравці можуть стрибнути в повітрі"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:407
 msgid "Infinite"
-msgstr ""
+msgstr "Нескінченно"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:412
 msgid "Additive velocity"
-msgstr ""
+msgstr "Додаткова швидкість"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:413
 msgid ""
 "Add on, rather than set, their vertical velocity each time the player jumps"
 msgstr ""
+"Додавати вертикальну швидкість після кожного стрибка замість її перезапису"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:418
 msgid "Jump away from walls when running alongside them"
-msgstr ""
+msgstr "Відштовхуватися від стін під час бігу вздовж них"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:421
 msgid "Delay between walljumps:"
-msgstr ""
+msgstr "Затримка між стрибками по стінам:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:428
 msgid "Double jumps"
-msgstr ""
+msgstr "Подвійні стрибки"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:429
 msgid "Gain extra height when jumping again shortly after the first jump"
 msgstr ""
+"Отримувати додаткову висоту при повторному стрибку одразу після першого"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:435
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
@@ -14439,19 +14477,20 @@ msgstr "Низька гравітація"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:445
 msgid "Global forces"
-msgstr ""
+msgstr "Глобальні сили"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:446
 msgid "Knockback experienced by any player affects all players"
 msgstr ""
+"Відштовхування, якого зазнає будь-який гравець, впливає на всіх гравців"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:451
 msgid "Various fun changes to physics and movement."
-msgstr ""
+msgstr "Різноманітні цікаві зміни фізики та руху."
 
 #: qcsrc/menu/xonotic/mutatortab.qh:33
 msgid "Weapon arena"
-msgstr ""
+msgstr "Арена з певною зброєю"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:43
 msgid "Weapons stay"
@@ -14459,11 +14498,11 @@ msgstr "Залишати зброю"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:53
 msgid "Offhand weapons"
-msgstr ""
+msgstr "Допоміжна зброя"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:73
 msgid "Custom physics"
-msgstr ""
+msgstr "Власна фізика"
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
