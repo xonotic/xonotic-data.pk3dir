@@ -1331,15 +1331,15 @@ msgstr "вузли"
 
 #: qcsrc/client/main.qc:1344
 msgid "No Weapons Arena"
-msgstr "Арена без використання зброї"
+msgstr "Арена без Озброєння"
 
 #: qcsrc/client/main.qc:1345
 msgid "All Weapons Arena"
-msgstr "Арена зі всією зброєю"
+msgstr "Арена Усього Озброєння"
 
 #: qcsrc/client/main.qc:1346
 msgid "All Available Weapons Arena"
-msgstr "Арена зі всією доступною зброєю"
+msgstr "Арена Усього Доступного Озброєння"
 
 #: qcsrc/client/main.qc:1347
 msgid "Standard Weapons Arena"
@@ -14362,7 +14362,7 @@ msgstr "Розширене озброєння (включає Нові Заба�
 
 #: qcsrc/menu/xonotic/mutatortab.qc:218
 msgid "Custom weapons"
-msgstr "Власний набір зброї"
+msgstr "Власне озброєння"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:239
 msgid "Special arenas:"
@@ -14430,7 +14430,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:404
 msgid "Midair jumps:"
-msgstr "Стрибків в Повітрі:"
+msgstr "Кількість Стрибків в Повітрі:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:406
 msgid "How many times players can jump while midair"

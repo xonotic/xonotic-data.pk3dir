@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-09 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2026\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -1324,19 +1324,19 @@ msgstr "All Available Weapons Arena"
 
 #: qcsrc/client/main.qc:1347
 msgid "Standard Weapons Arena"
-msgstr ""
+msgstr "Standard Weapons Arena"
 
 #: qcsrc/client/main.qc:1348
 msgid "Standard Available Weapons Arena"
-msgstr ""
+msgstr "Standard Available Weapons Arena"
 
 #: qcsrc/client/main.qc:1349
 msgid "Extended Weapons Arena"
-msgstr ""
+msgstr "Extended Weapons Arena"
 
 #: qcsrc/client/main.qc:1350
 msgid "Extended Available Weapons Arena"
-msgstr ""
+msgstr "Extended Available Weapons Arena"
 
 #: qcsrc/client/main.qc:1357
 #, c-format
@@ -1682,7 +1682,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Complete the Stage"
-msgstr ""
+msgstr "Complete the Stage"
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
@@ -3096,13 +3096,15 @@ msgstr "Enable"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:24
 msgid "Bleed below health:"
-msgstr ""
+msgstr "Bleed below health:"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:30
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)."
 msgstr ""
+"Amount of health below which players start bleeding out (health rots and "
+"they can't jump)."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:69
 #, c-format
@@ -3352,28 +3354,28 @@ msgstr "Disable"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:22
 msgid "Enable only if placed by mapper"
-msgstr ""
+msgstr "Enable only if placed by mapper"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:28
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:34
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:40
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:40
 msgid "Allow maps to spawn:"
-msgstr ""
+msgstr "Allow maps to spawn:"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:43
 msgid "Replace unavailable buffs with others"
-msgstr ""
+msgstr "Replace unavailable buffs with others"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:47
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:76
 msgid "Allow dropping"
-msgstr ""
+msgstr "Allow dropping"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:50
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:85
 msgid "Replace powerups with buffs"
-msgstr ""
+msgstr "Replace powerups with buffs"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:59
 #, c-format
@@ -3381,6 +3383,8 @@ msgid ""
 "Enable buff pickups (random bonuses like %s and %s) on the maps that support "
 "them."
 msgstr ""
+"Enable buff pickups (random bonuses like %s and %s) on the maps that support "
+"them."
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qh:6 qcsrc/common/util.qc:311
 #: qcsrc/menu/xonotic/guide/guide.qh:15
@@ -3404,7 +3408,7 @@ msgstr "Cloaked"
 
 #: qcsrc/common/mutators/mutator/cloaked/ui_cloaked.qc:17
 msgid "All players are almost invisible."
-msgstr ""
+msgstr "All players are almost invisible."
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:22
 msgid "Damage Text"
@@ -3644,44 +3648,47 @@ msgstr "Extra life"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:36
 msgid "Starting ammo:"
-msgstr ""
+msgstr "Starting ammo:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:39
 msgid "Ammo from weapons and cells:"
-msgstr ""
+msgstr "Ammo from weapons and cells:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:44
 msgid "Extra lives per pickup:"
-msgstr ""
+msgstr "Extra lives per pickup:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:47
 msgid ""
 "How many extra lives to reward a player when they pick up the Extra life"
 msgstr ""
+"How many extra lives to reward a player when they pick up the Extra life"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:52
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:34
 msgid "Keep Blaster damage"
-msgstr ""
+msgstr "Keep Blaster damage"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:55
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:36
 msgid "Keep Blaster force"
-msgstr ""
+msgstr "Keep Blaster force"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:60
 msgid "Allow Jetpacks and Fuel regenerators"
-msgstr ""
+msgstr "Allow Jetpacks and Fuel regenerators"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:65
 msgid "Enable Rocketminsta"
-msgstr ""
+msgstr "Enable Rocketminsta"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:66
 msgid ""
 "The primary fire also explodes on impact, and the secondary fire shoots "
 "laser prongs"
 msgstr ""
+"The primary fire also explodes on impact, and the secondary fire shoots "
+"laser prongs"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:4
 #, c-format
@@ -3691,6 +3698,10 @@ msgid ""
 "10 seconds to find some or face death if they fail to do so. The secondary "
 "fire does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Players will be given only one weapon, the %s, which can instantly kill the "
+"opponent with a single shot. If the player runs out of ammo, they will have "
+"10 seconds to find some or face death if they fail to do so. The secondary "
+"fire does not inflict any damage but is good for doing trickjumps."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qc:19
 #, c-format
@@ -3698,24 +3709,28 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode %s orbs with "
 "the %s primary fire."
 msgstr ""
+"Projectiles can't be destroyed. However, you can still explode %s orbs with "
+"the %s primary fire."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qh:6
 msgid "Invincible projectiles"
-msgstr ""
+msgstr "Invincible projectiles"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:20
 msgid "Invincibility time:"
-msgstr ""
+msgstr "Invincibility time:"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:22
 msgid "Invincibility time after leaving contact with ground"
-msgstr ""
+msgstr "Invincibility time after leaving contact with ground"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:29
 msgid ""
 "Makes it only possible to inflict damage on your enemy while they're "
 "airborne."
 msgstr ""
+"Makes it only possible to inflict damage on your enemy while they're "
+"airborne."
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qh:6 qcsrc/common/util.qc:303
 msgid "Midair"
@@ -3967,46 +3982,48 @@ msgstr "Nades"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:24
 msgid "Enable bonus nades"
-msgstr ""
+msgstr "Enable bonus nades"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:25
 msgid ""
 "Gives players a bonus grenade when they reach a certain score or have "
 "Strength"
 msgstr ""
+"Gives players a bonus grenade when they reach a certain score or have "
+"Strength"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:26
 msgid "Max bonus nades:"
-msgstr ""
+msgstr "Max bonus nades:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:32
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:116
 msgid "Allow client selection"
-msgstr ""
+msgstr "Allow client selection"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:33
 msgid "For bonus nades"
-msgstr ""
+msgstr "For bonus nades"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:36
 msgid "Refire time:"
-msgstr ""
+msgstr "Refire time:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:42
 msgid "Nade types:"
-msgstr ""
+msgstr "Nade types:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:96
 msgid "Random"
-msgstr ""
+msgstr "Random"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:107
 msgid "Normal nade type, if client selection is disabled"
-msgstr ""
+msgstr "Normal nade type, if client selection is disabled"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:111
 msgid "Bonus nade type, if client selection is disabled"
-msgstr ""
+msgstr "Bonus nade type, if client selection is disabled"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
 #, c-format
@@ -4014,6 +4031,8 @@ msgid ""
 "Enable throwable grenades which explode with a variety of effects. Press %s "
 "or %s to use them."
 msgstr ""
+"Enable throwable grenades which explode with a variety of effects. Press %s "
+"or %s to use them."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
 #, c-format
@@ -4062,7 +4081,7 @@ msgstr "Randomly"
 
 #: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:30
 msgid "Allow maps to spawn additional weapons (new toys)."
-msgstr ""
+msgstr "Allow maps to spawn additional weapons (new toys)."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -4082,15 +4101,15 @@ msgstr "NIX"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:31
 msgid "With Blaster"
-msgstr ""
+msgstr "With Blaster"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:32
 msgid "Always carry the Blaster as an additional weapon in NIX"
-msgstr ""
+msgstr "Always carry the Blaster as an additional weapon in NIX"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:37
 msgid "Health and armor"
-msgstr ""
+msgstr "Health and armour"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:38
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qh:6
@@ -4104,6 +4123,9 @@ msgid ""
 "weapon. After some time a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
+"No items Xonotic - instead of pickup items, everyone plays with the same "
+"weapon. After some time a countdown will start, after which everyone will "
+"switch to another weapon."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -4302,7 +4324,7 @@ msgstr "Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:49
 msgid "Replace Strength and Shield with weapons"
-msgstr ""
+msgstr "Replace Strength and Shield with weapons"
 
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qh:11
 #, c-format
@@ -4311,6 +4333,9 @@ msgid ""
 "a short time to kill for rapid gameplay. The secondary fire of all weapons "
 "shoots a %s-like projectile. It also enables %s and %s."
 msgstr ""
+"Unique arena mutator that replaces all weapons with mostly hitscan ones with "
+"a short time to kill for rapid gameplay. The secondary fire of all weapons "
+"shoots a %s-like projectile. It also enables %s and %s."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qc:8
 #, c-format
@@ -4328,7 +4353,7 @@ msgstr "Piñata"
 
 #: qcsrc/common/mutators/mutator/pinata/ui_pinata.qc:17
 msgid "Players will drop all weapons they possessed when they are fragged."
-msgstr ""
+msgstr "Players will drop all weapons they possessed when they are fragged."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:19
 #, c-format
@@ -4469,7 +4494,7 @@ msgstr "Strength"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:34
 msgid "Dependent on gametype"
-msgstr ""
+msgstr "Dependent on gametype"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:36
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
@@ -4479,7 +4504,7 @@ msgstr "Always enable"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:69
 msgid "Drop on death"
-msgstr ""
+msgstr "Drop on death"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:72
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:79
@@ -4490,12 +4515,12 @@ msgstr "Disabled"
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:73
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:80
 msgid "Timer continues"
-msgstr ""
+msgstr "Timer continues"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:74
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:81
 msgid "Timer pauses"
-msgstr ""
+msgstr "Timer pauses"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:95
 #, c-format
@@ -4503,6 +4528,8 @@ msgid ""
 "Enable powerup pickups (powerful bonuses like %s and %s) on the maps that "
 "support them."
 msgstr ""
+"Enable powerup pickups (powerful bonuses like %s and %s) on the maps that "
+"support them."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qc:10
 #, c-format
@@ -4525,7 +4552,7 @@ msgstr "Rocket Flying"
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:19
 msgid "Disable projectile detonation delay"
-msgstr ""
+msgstr "Disable projectile detonation delay"
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:26
 #, c-format
@@ -4534,10 +4561,13 @@ msgid ""
 "This allows players to fire and detonate a rocket while mid-air for a strong "
 "boost even while moving fast."
 msgstr ""
+"%s rockets can be detonated instantly (otherwise, there's a short delay). "
+"This allows players to fire and detonate a rocket while mid-air for a strong "
+"boost even while moving fast."
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qh:6
 msgid "Rocket flying"
-msgstr ""
+msgstr "Rocket flying"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -4577,20 +4607,20 @@ msgstr "Touch explode"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:19
 msgid "Damage:"
-msgstr ""
+msgstr "Damage:"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:22
 msgid "Force:"
-msgstr ""
+msgstr "Force:"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:24
 #, c-format
 msgid "%s qu/s"
-msgstr ""
+msgstr "%s qu/s"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:29
 msgid "An explosion occurs when two players collide."
-msgstr ""
+msgstr "An explosion occurs when two players collide."
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
@@ -4599,7 +4629,7 @@ msgstr "Factor:"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:23
 msgid "Fraction of the damage dealt to be stolen as health"
-msgstr ""
+msgstr "Fraction of the damage dealt to be stolen as health"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
@@ -4617,11 +4647,11 @@ msgstr "%sx"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:26
 msgid "Consider both health and armor"
-msgstr ""
+msgstr "Consider both health and armour"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:31
 msgid "All damage dealt to your enemies is added to your own health."
-msgstr ""
+msgstr "All damage dealt to your enemies is added to your own health."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
 #, c-format
@@ -7860,47 +7890,47 @@ msgstr "Invincible Projectiles"
 
 #: qcsrc/common/util.qc:300
 msgid "Low Gravity"
-msgstr ""
+msgstr "Low Gravity"
 
 #: qcsrc/common/util.qc:302 qcsrc/menu/xonotic/mutatortab.qc:339
 msgid "Offhand Hook"
-msgstr ""
+msgstr "Offhand Hook"
 
 #: qcsrc/common/util.qc:304
 msgid "Melee Only Arena"
-msgstr ""
+msgstr "Melee Only Arena"
 
 #: qcsrc/common/util.qc:307
 msgid "Weapons Stay"
-msgstr ""
+msgstr "Weapons Stay"
 
 #: qcsrc/common/util.qc:308
 msgid "Blood Loss"
-msgstr ""
+msgstr "Blood Loss"
 
 #: qcsrc/common/util.qc:312
 msgid "No Powerups"
-msgstr ""
+msgstr "No Powerups"
 
 #: qcsrc/common/util.qc:314
 msgid "Buffs Replace Powerups"
-msgstr ""
+msgstr "Buffs Replace Powerups"
 
 #: qcsrc/common/util.qc:315
 msgid "Touch Explode"
-msgstr ""
+msgstr "Touch Explode"
 
 #: qcsrc/common/util.qc:316
 msgid "Wall Jumping"
-msgstr ""
+msgstr "Wall Jumping"
 
 #: qcsrc/common/util.qc:317
 msgid "No Start Weapons"
-msgstr ""
+msgstr "No Start Weapons"
 
 #: qcsrc/common/util.qc:319 qcsrc/menu/xonotic/mutatortab.qc:335
 msgid "Offhand Blaster"
-msgstr ""
+msgstr "Offhand Blaster"
 
 #: qcsrc/common/util.qc:1569
 msgid "Male"
@@ -14344,11 +14374,11 @@ msgstr "All weapons"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:210
 msgid "Standard weapons"
-msgstr ""
+msgstr "Standard weapons"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:214
 msgid "Extended weapons (includes New Toys)"
-msgstr ""
+msgstr "Extended weapons (includes New Toys)"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:218
 msgid "Custom weapons"
@@ -14364,7 +14394,7 @@ msgstr "No start weapons"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:258
 msgid "Melee only arena"
-msgstr ""
+msgstr "Melee only arena"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:259
 #, c-format
@@ -14372,35 +14402,40 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so can only slap "
 "other players."
 msgstr ""
+"Players spawn with no ammo and no weapons except the %s, so can only slap "
+"other players."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
 "Players will be given a set of weapons on spawn along with unlimited ammo, "
 "without weapon pickups on the map."
 msgstr ""
+"Players will be given a set of weapons on spawn along with unlimited ammo, "
+"without weapon pickups on the map."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:300
 msgid "Enabled but pickups give no ammo"
-msgstr ""
+msgstr "Enabled but pickups give no ammo"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:308
 msgid "Weapons stay on the map after they are picked up."
-msgstr ""
+msgstr "Weapons stay on the map after they are picked up."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:343
 msgid "Consume ammo"
-msgstr ""
+msgstr "Consume ammo"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:348
 #, c-format
 msgid ""
 "Players spawn with an Offhand Blaster or Grappling Hook. Press %s to use it."
 msgstr ""
+"Players spawn with an Offhand Blaster or Grappling Hook. Press %s to use it."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:374
 #, c-format
 msgid "Players spawn with the %s. Double-tap %s or press %s to use it."
-msgstr ""
+msgstr "Players spawn with the %s. Double-tap %s or press %s to use it."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:400
 msgid ""
@@ -14412,40 +14447,41 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:404
 msgid "Midair jumps:"
-msgstr ""
+msgstr "Midair jumps:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:406
 msgid "How many times players can jump while midair"
-msgstr ""
+msgstr "How many times players can jump while midair"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:407
 msgid "Infinite"
-msgstr ""
+msgstr "Infinite"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:412
 msgid "Additive velocity"
-msgstr ""
+msgstr "Additive velocity"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:413
 msgid ""
 "Add on, rather than set, their vertical velocity each time the player jumps"
 msgstr ""
+"Add on, rather than set, their vertical velocity each time the player jumps"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:418
 msgid "Jump away from walls when running alongside them"
-msgstr ""
+msgstr "Jump away from walls when running alongside them"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:421
 msgid "Delay between walljumps:"
-msgstr ""
+msgstr "Delay between walljumps:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:428
 msgid "Double jumps"
-msgstr ""
+msgstr "Double jumps"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:429
 msgid "Gain extra height when jumping again shortly after the first jump"
-msgstr ""
+msgstr "Gain extra height when jumping again shortly after the first jump"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:435
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
@@ -14457,19 +14493,19 @@ msgstr "Low gravity"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:445
 msgid "Global forces"
-msgstr ""
+msgstr "Global forces"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:446
 msgid "Knockback experienced by any player affects all players"
-msgstr ""
+msgstr "Knockback experienced by any player affects all players"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:451
 msgid "Various fun changes to physics and movement."
-msgstr ""
+msgstr "Various fun changes to physics and movement."
 
 #: qcsrc/menu/xonotic/mutatortab.qh:33
 msgid "Weapon arena"
-msgstr ""
+msgstr "Weapon arena"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:43
 msgid "Weapons stay"
@@ -14477,11 +14513,11 @@ msgstr "Weapons stay"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:53
 msgid "Offhand weapons"
-msgstr ""
+msgstr "Offhand weapons"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:73
 msgid "Custom physics"
-msgstr ""
+msgstr "Custom physics"
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
