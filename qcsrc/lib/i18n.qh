@@ -16,7 +16,7 @@ string language_filename(string s)
 	string fn = prvm_language;
 	if (fn == "" || fn == "en" || fn == "dump")
 		return s;
-	fn = strcat(s, ".", fn);
+	fn = strcat(s, ".tr.", fn);
 	int fh = fopen(fn, FILE_READ);
 	if (fh >= 0)
 	{

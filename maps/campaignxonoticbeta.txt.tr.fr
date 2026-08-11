@@ -1,0 +1,97 @@
+//campaign:Xonotic Campaign
+//tr:  "Campagne Xonotic"
+
+//translators: Yannick Le Guen
+
+       "Deathmatch: Boil",                             "Welcome to Xonotic!\nWe'll start off easy with Deathmatch against 5 bots on Boil.\nXonotic is mainly a multiplayer game, but before jumping into online games it might be a good idea to practice a bit versus bots."
+//tr:  "Match à Mort : Boil",                          "Bienvenue sur Xonotic !\nNous allons commencer par un match à mort contre 5 bots sur Boil.\nXonotic est avant tout un jeu multijoueur, mais avant de se lancer dans les parties en ligne, il peut être judicieux de s'entraîner un peu contre des bots."
+
+       "Team Deathmatch: Stormkeep",                   "Next we'll try some 3v3 Team Deathmatch on Stormkeep.\nYou'll have to do your best for five minutes, because the team with the highest score is going to be the winning team!"
+//tr:  "Match à Mort en Équipe : Stormkeep",           "Ensuite, nous allons essayer un match à mort en 3 contre 3 sur Stormkeep.\nVous allez devoir faire de votre mieux pendant cinq minutes, car l'équipe avec le meilleur score sera gagnante !"
+
+       "Mayhem: Warfare",                              "Free For All Mayhem for five minutes!\nIn this gametype, you spawn with all weapons and a full health and armor stack. Self-damage is off, the player who deals the most damage and gets the most frags wins the game!"
+//tr:  "Grabuge : Warfare",                            "Du grabuge façon chacun pour soi pendant cinq minutes !\nDans ce mode de jeu, vous débutez avec toutes les armes et une pile de santé et d'armure complète. Les dommages auto-infligés sont désactivés. Le joueur qui inflige le plus de dommages et obtient le plus de frags remporte la partie !"
+
+       "Capture the Flag: Dance",                      "In CTF you have to take the other team's flag and bring it back to your base, over your own flag. 3 captures to win."
+//tr:  "Capture de Drapeau : Dance",                   "En CTF (capture de drapeau), vous devez prendre le drapeau de l'équipe adverse et le ramener à votre base, par-dessus votre propre drapeau. 3 captures pour gagner la partie."
+
+       "Deathmatch: Final Rage",                       "Again a DM match, but the bots are slightly better now."
+//tr:  "Match à Mort : Final Rage",                    "Encore un match à mort, mais les bots sont légèrement meilleurs maintenant."
+
+       "Domination: Atelier",                          "Defend the control points and kill intruders to win."
+//tr:  "Domination : Atelier",                         "Défendez les points de contrôle et tuez les intrus pour gagner."
+
+       "Key Hunt: Running Man",                        "Every team holds a key. You have to collect them (kill their carriers and pick them up) and meet with the other key carriers in your team."
+//tr:  "Chasse aux Clés : Running Man",                "Chaque équipe détient une clé. Vous devez les collecter en tuant leurs porteurs et en les ramassant, puis vous rassembler avec les autres porteurs de clés de votre équipe."
+
+       "Capture the Flag: Geoplanetary",               "Another crowded CTF experience before you jump into multiplayer games."
+//tr:  "Capture de Drapeau : Geoplanetary",            "Une autre expérience CTF bien remplie avant de se lancer dans le multijoueur."
+
+       "[Special] Deathmatch: Darkzone",               "InstaGib! Everyone has one weapon - the Vaporizer.\nYour opponents will die instantly if you shoot them with it (unless they picked up an 'Extra Life' powerup)."
+//tr:  "[Spécial] Match à Mort : Darkzone",            "InstaGib ! Tout le monde ne possède qu'une seule arme, le Vaporizer.\nVos adversaires meurent instantanément si vous leur tirez dessus (à moins qu'ils n'aient récupéré un bonus tel que « Vie supplémentaire »)."
+
+       "[Special] Capture the Flag: Vorix",            "Grappling Hook: Press 'e' (default key) or MOUSE5 to use it. Shoot at walls and it will pull you in quickly."
+//tr:  "[Spécial] Capture de Drapeau : Vorix",         "Grappin : Appuyez sur 'e' (touche par défaut) ou sur SOURIS5 pour l'utiliser. Tirez sur les murs et il vous propulsera à toute vitesse."
+
+       "[Special] Deathmatch: Solarium",               "NIX: In this mutator everyone will spawn with the same weapon, but the weapon will change randomly after some time."
+//tr:  "[Spécial] Match à Mort : Solarium",            "NIX : Dans ce mutateur, tout le monde débute avec la même arme, mais celle-ci change de façon aléatoire après un certain temps."
+
+       "Freeze Tag: Erbium",                           "If you get fragged you will be frozen. You revive teammates by standing close to them for a few seconds. A round is over if an entire team is frozen."
+//tr:  "Loup Glacé : Erbium",                          "Si vous vous faites fragger, vous êtes gelé. Vous pouvez dégeler vos coéquipiers en restant près d'eux pendant quelques secondes. Une manche se termine lorsqu'une équipe entière est gelée."
+
+       "Last Man Standing: Opium",                     "You will have 5 lives in this gametype and the goal is to not run out of lives before the others do!"
+//tr:  "Dernier Homme en Vie : Opium",                 "Vous avez 5 vies dans ce mode de jeu et le but est de ne pas se retrouver à court de vies avant les autres !"
+
+       "[Special] Team Deathmatch: Afterslime",        "Another TDM match.\nThough, we lowered the gravity a little bit."
+//tr:  "[Spécial] Match à Mort en Équipe : Afterslime","Une autre partie de TDM (match à mort en équipe).\nCependant, nous avons un peu réduit la gravité."
+
+       "Capture the Flag: Go",                         "Another CTF map in space, with a little more skilled bots this time. Watch your step and don't fall into the void!"
+//tr:  "Capture de Drapeau : Go",                      "Une autre carte de CTF dans l'espace, avec des bots un peu plus habiles cette fois. Attention à ne pas tomber dans le vide !"
+
+       "Team Keepaway: Running Man",                   "Pick up the ball with your team and frag the opposing team while holding it!\nHint: You can shoot through warpzones!"
+//tr:  "Gardez-la-Balle en équipe : Running Man",      "Ramassez la balle avec votre équipe et fraggez l'équipe adverse tout en la conservant ! Astuce : vous pouvez tirer à travers les warpzones !"
+
+       "Key Hunt: Silent Siege",                       "Key Hunt one more time! Get 600 points to win."
+//tr:  "Chasse aux Clés : Silent Siege",               "Chasse aux clés une fois de plus ! Obtenez 600 points pour gagner."
+
+       "Clan Arena: Bromine",                          "This is a round-based gametype. Self-damage is off but if you die, you have to wait for the next round. The last team with players still alive wins the round!"
+//tr:  "Clan Arena : Bromine",                         "Il s'agit d'un mode de jeu basé sur des manches. Les dommages auto-infligés sont désactivés, mais si vous mourez, vous devez attendre le prochain tour. La dernière équipe dont les joueurs sont encore en vie remporte la manche !"
+
+       "[Special] Capture the Flag: Implosion",        "Jetpack: Press jump (default key 'space') while already in the air to use the Jetpack and enjoy flying around!"
+//tr:  "[Spécial] Capture de Drapeau : Implosion",     "Jetpack : Appuyez sur Sauter (touche par défaut 'ESPACE') lorsque vous êtes déjà en l'air pour utiliser le Jetpack et vous amuser à voler !"
+
+       "Assault: Techassault",                         "You are in the attacking team and you have to destroy all objects. There will be new rooms/ways if you destroy an object."
+//tr:  "Assaut : Techassault",                         "Vous êtes dans l'équipe attaquante et devez détruire tous les objectifs. Lorsque vous détruisez un objectif, de nouvelles pièces/chemins s'ouvrent à vous."
+
+       "Team Mayhem: Trident",                         "In this gametype, you spawn with all weapons and a full health and armor stack. Self-damage is off, the team who deals the most damage and gets the most frags wins the game!"
+//tr:  "Grabuge en Équipe : Trident",                   "Dans ce mode de jeu, vous débutez avec toutes les armes et une pile de santé et d'armure complète. Les dommages auto-infligés sont désactivés. L'équipe qui inflige le plus de dommages et obtient le plus de frags remporte la partie !"
+
+       "Freeze Tag: Xoylent",                          "Another match of Freeze Tag. You can revive teammates by standing close to them for a few seconds."
+//tr:  "Loup Glacé : Xoylent",                         "Si vous vous faites fragger, vous êtes gelé. Vous pouvez dégeler vos coéquipiers en restant près d'eux pendant quelques secondes. Une manche se termine lorsqu'une équipe entière est gelée."
+
+       "Onslaught: Running Man",                       "Onslaught: Touch a connected but uncaptured checkpoint to start building it. Destroy connected opposing team checkpoints to uncapture them and touch to capture. Destroy the opposing team's core to win!"
+//tr:  "Attaque : Running Man",                        "Attaque : Touchez un point de contrôle connecté mais non capturé pour commencer à le construire. Détruisez les points de contrôle connectés de l'équipe adverse pour les libérer et touchez-les pour les capturer. Détruisez le noyau de l'équipe adverse pour gagner !"
+
+       "Capture the Flag: Catharsis",                  "CTF versus a team consisting of the hardest bots so far! 5 captures to win."
+//tr:  "Capture de Drapeau : Catharsis",               "CTF contre une équipe composée des bots les plus durs à ce jour ! 5 captures pour gagner."
+
+       "[Special] Deathmatch: Stormkeep",              "New Toys: In this mutator some fancy weapons like the Mine Layer, the Heavy Laser Assault Cannon (HLAC), or the T.A.G. Seeker will spawn.\nYou will also experience another mutator: Cloaked (almost invisible players)."
+//tr:  "[Spécial] Match à Mort : Stormkeep",           "Nouveaux Jouets : Dans ce mutateur, des armes fantaisistes comme le Poseur de Mines, le Heavy Laser Assault Cannon (HLAC) ou le T.A.G. Seeker sont disponibles.\nVous allez aussi faire l'expérience d'un autre mutateur : les joueurs presque invisibles."
+
+       "[Special] Capture the Flag: Space-Elevator",   "InstaGib in CTF this time. Also you will experience here how to play with the off-hand Grappling Hook (press 'e' or MOUSE5 to use it)!"
+//tr:  "[Spécial] Capture de Drapeau : Space-Elevator","InstaGib en CTF cette fois. Vous jouez également avec le grappin (appuyez sur 'e' ou sur SOURIS5 pour l'utiliser) !"
+
+       "[Special] Duel: Fuse",                         "This time you will face only 1 bot - a so-called 'Duel'. Duel is very popular in multiplayer."
+//tr:  "[Spécial] Duel : Fuse",                        "Cette fois-ci, vous n'affrontez qu'un seul bot, dans ce que l'on appelle un « Duel ». Le duel est très populaire en multijoueur."
+
+       "[Special] Clan Arena: Warfare",                "Vampire mutator enabled, you heal by dealing damage!\nThe last team with players still alive wins the round!"
+//tr:  "[Spécial] Clan Arena : Warfare",               "Mutateur vampirique activé, vous guérissez lorsque vous infligez des dommages !\nLa dernière équipe dont les joueurs sont encore en vie remporte la manche !"
+
+       "[FINAL] Deathmatch: Glow Plant",               "In this final match you have to beat 5 of the most skilled bots. You need to get 20 frags to win and complete the campaign! After this you should be ready for fights versus real people."
+//tr:  "[FINALE] Match à Mort : Glow Plant",           "Dans ce match final, vous devez battre 5 des bots les plus habiles. Vous devez obtenir 20 frags pour gagner et terminer la campagne ! Après cela, vous devriez être prêt à jouer contre des vraies personnes."
+
+       "[Bonus] Mayhem: Stormkeep",                    "SURPRISE!\nWelcome to the ROCKET HELL!\nOnly the Devastator will be available here. Self-damage has been enabled - don't blow yourself up! Have fun!"
+//tr:  "[Bonus] Grabuge : Stormkeep",                  "SURPRISE !\nBienvenue dans l'ENFER DES ROQUETTES !\nSeul le Devastator est disponible ici. Les dommages auto-infligés sont activés, ne vous faites pas exploser vous-même ! Amusez-vous bien !"
+
+       "[END GAME] Mayhem: Trident",                   "SURPRISE!\nWelcome to unhinged Free For All Mayhem!\nBonus stage with truly evil superbots you're not expected to beat without years of experience and full combat mastery."
+//tr:  "[PARTIE FINALE] Grabuge : Trident",            "SURPRISE !\nBienvenue sur une partie de Grabuge déséquilibrée !\nUn niveau bonus avec des superbots vraiment maléfiques que vous ne pouvez pas battre sans des années d'expérience et une maîtrise totale du combat."
