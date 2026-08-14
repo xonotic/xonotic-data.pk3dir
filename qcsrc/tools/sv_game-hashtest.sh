@@ -190,6 +190,12 @@ done < <(${ENGINE} +developer 1 +map _init +sv_cmd dumpnotifs +sv_cmd runtest +w
 test "$PASS" = "1" || { printf "\033[1;31m%s\033[0m\n" "sv_cmd runtest failed!"; exit 1; }
 diff notifications.cfg data/data/notifications_dump.cfg ||
 	{ printf "Please update notifications.cfg using \`dumpnotifs\`!"; exit 1; }
+cd maps
+cp campaignxonoticbeta.txt.tr._template campaignxonoticbeta.txt.tr._template.copied
+sh campaign_create_translation_template.sh
+diff campaignxonoticbeta.txt.tr._template campaignxonoticbeta.txt.tr._template.copied ||
+	{ printf "Please update campaignxonoticbeta.txt.tr.template using \`cd maps && sh campaign_create_translation_template.sh\`!"; exit 1; }
+cd ..
 
 createdtoday "data/finalrage.pk3" \
 	|| wget -nv -O data/finalrage.pk3 https://beta.xonotic.org/pipeline-bin/finalrage.pk3
