@@ -23,7 +23,7 @@ string XonoticStatsList_convertDate(string input)
 
 	string monthname = "";
 
-	switch(stof(substring(input, 5, 2)))
+	switch(stoi(substring(input, 5, 2)))
 	{
 		case 1:  monthname = _("January");    break;
 		case 2:  monthname = _("February");   break;
@@ -85,7 +85,7 @@ void XonoticStatsList_getStats(entity me)
 		order = 0;
 		outstr = "";
 		orderstr = "";
-		data = db_get(PS_D_IN_DB, sprintf("#%s", e));
+		data = db_get(PS_D_IN_DB, strcat("#", e));
 
 		// non-gametype specific stuff
 		switch(e)
@@ -108,7 +108,7 @@ void XonoticStatsList_getStats(entity me)
 			{
 				order = 1;
 				outstr = _("Time played:");
-				data = process_time(3, stof(data));
+				data = process_time(3, stoi(data));
 				break;
 			}
 			case "overall/favorite-map":
@@ -121,25 +121,25 @@ void XonoticStatsList_getStats(entity me)
 			case "overall/matches":
 			{
 				order = -1;
-				out_total_matches = stof(data);
+				out_total_matches = stoi(data);
 				break;
 			}
 			case "overall/wins":
 			{
 				order = -1;
-				out_total_wins = stof(data);
+				out_total_wins = stoi(data);
 				break;
 			}
 			case "overall/total-kills":
 			{
 				order = -1;
-				out_total_kills = stof(data);
+				out_total_kills = stoi(data);
 				break;
 			}
 			case "overall/total-deaths":
 			{
 				order = -1;
-				out_total_deaths = stof(data);
+				out_total_deaths = stoi(data);
 				break;
 			}
 		}
@@ -191,28 +191,28 @@ void XonoticStatsList_getStats(entity me)
 			string event = substring(e, (dividerpos + 1), strlen(e) - (dividerpos + 1));
 
 			// if we are ranked, read these sets of possible options
-			if(stof(db_get(PS_D_IN_DB, sprintf("#%s/rank", gametype))))
+			if(stof(db_get(PS_D_IN_DB, strcat("#", gametype, "/rank"))))
 			{
 				switch(event)
 				{
 					case "matches":
 					{
 						order = 1;
-						outstr = _("Matches:");
+						outstr = CTX(_("GAMETYPE^%s Matches:"));
 						break;
 					}
 					#if 0
 					case "skill":
 					{
 						order = 2;
-						outstr = _("Skill:");
-						data = sprintf("%d", stof(data));
+						outstr = CTX(_("GAMETYPE^%s Skill:"));
+						data = sprintf("%d", stoi(data));
 						break;
 					}
 					case "favorite-map":
 					{
 						order = 3;
-						outstr = _("Favorite map:");
+						outstr = CTX(_("GAMETYPE^%s Favorite map:"));
 						break;
 					}
 					#endif
@@ -220,15 +220,14 @@ void XonoticStatsList_getStats(entity me)
 					default: continue; // nothing to see here
 				}
 
-				outstr = strcat(strtoupper(gametype), " ", outstr);
+				outstr = sprintf(outstr, strtoupper(gametype));
 				// now set up order for sorting later
 				orderstr = sprintf("%2.2s%d", gametype, order);
 			}
 			else if(event == "matches")
 			{
-				outstr = _("Matches:");
-				outstr = strcat(strtoupper(gametype), " ", outstr);
-				data = sprintf(_("%d (unranked)"), stof(data));
+				outstr = sprintf(CTX(_("GAMETYPE^%s Matches:")), strtoupper(gametype));
+				data = sprintf(_("%d (unranked)"), stoi(data));
 
 				// unranked gametypes ALWAYS get put last
 				orderstr = "zzz";
@@ -236,7 +235,7 @@ void XonoticStatsList_getStats(entity me)
 			else { continue; }
 		}
 
-		bufstr_add(me.listStats, sprintf("%s%s\n%s", orderstr, outstr, data), true);
+		bufstr_add(me.listStats, strcat(orderstr, outstr, "\n", data), true);
 	}
 
 	me.nItems = buf_getsize(me.listStats);
