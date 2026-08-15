@@ -1,4 +1,5 @@
 #include "statslist.qh"
+
 #include <common/playerstats.qh>
 
 entity makeXonoticStatsList()
@@ -12,6 +13,12 @@ void XonoticStatsList_configureXonoticStatsList(entity me)
 {
 	me.configureXonoticListBox(me);
 	me.getStats(me);
+
+	for (int i = 0; i < GameType_GetTotalCount(); ++i)
+		if (SKINBOOL_STATSLIST_ICON_BLUR)
+			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
+		else
+			draw_PreloadPicture(GameType_GetIcon(i));
 }
 
 string XonoticStatsList_convertDate(string input)
@@ -67,9 +74,10 @@ void XonoticStatsList_getStats(entity me)
 	}
 
 	int order;
-	string data;
+	string data, extra;
 	string outstr; // NOTE: out string MUST use underscores for spaces here, we'll replace them later
-	string orderstr;
+	string orderstr; // 3 chars
+	// Strings added with bufstr_add are in the format: {orderstr}{outstr}\n{data}\n{extra}
 
 	int out_total_matches = -1;
 	int out_total_wins = -1;
@@ -83,6 +91,7 @@ void XonoticStatsList_getStats(entity me)
 		outstr = "";
 		orderstr = "";
 		data = db_get(PS_D_IN_DB, strcat("#", e));
+		extra = "";
 
 		// non-gametype specific stuff
 		switch (e)
@@ -127,13 +136,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if (order == -1 && out_total_matches >= 0 && out_total_wins >= 0)
 		{
-			bufstr_add(me.listStats, sprintf("003%s\n%d", _("Matches:"), out_total_matches), true);
+			bufstr_add(me.listStats, sprintf("003%s\n%d\n", _("Matches:"), out_total_matches), true);
 
 			if (out_total_matches > 0) // don't show extra info if there are no matches played
 			{
 				out_total_losses = max(0, out_total_matches - out_total_wins);
-				bufstr_add(me.listStats, sprintf("003%s\n%d/%d", _("Wins/Losses:"), out_total_wins, out_total_losses), true);
-				bufstr_add(me.listStats, sprintf("004%s\n%s", _("Win percentage:"), ftos_decimals_percentage(out_total_wins / out_total_matches, 0)), true);
+				bufstr_add(me.listStats, sprintf("003%s\n%d/%d\n", _("Wins/Losses:"), out_total_wins, out_total_losses), true);
+				bufstr_add(me.listStats, sprintf("004%s\n%s\n", _("Win percentage:"), ftos_decimals_percentage(out_total_wins / out_total_matches, 0)), true);
 			}
 
 			out_total_matches = -1;
@@ -144,13 +153,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if (order == -1 && out_total_kills >= 0 && out_total_deaths >= 0)
 		{
-			bufstr_add(me.listStats, sprintf("005%s\n%d/%d", _("Kills/Deaths:"), out_total_kills, out_total_deaths), true);
+			bufstr_add(me.listStats, sprintf("005%s\n%d/%d\n", _("Kills/Deaths:"), out_total_kills, out_total_deaths), true);
 
 			// if there are no deaths, just show kill count
 			if (out_total_deaths == 0)
 				out_total_deaths = 1;
 
-			bufstr_add(me.listStats, sprintf("006%s\n%.2f", _("Kill ratio:"), out_total_kills / out_total_deaths), true);
+			bufstr_add(me.listStats, sprintf("006%s\n%.2f\n", _("Kill-death ratio:"), out_total_kills / out_total_deaths), true);
 
 			out_total_kills = -1;
 			out_total_deaths = -1;
@@ -177,6 +186,7 @@ void XonoticStatsList_getStats(entity me)
 					case "matches":
 						order = 1;
 						outstr = CTX(_("GAMETYPE^%s Matches:"));
+						extra = GameType_GetIcon_FromString(gametype);
 						break;
 				#if 0
 					case "skill":
@@ -201,6 +211,7 @@ void XonoticStatsList_getStats(entity me)
 			{
 				outstr = sprintf(CTX(_("GAMETYPE^%s Matches:")), strtoupper(gametype));
 				data = sprintf(_("%d (unranked)"), stoi(data));
+				extra = GameType_GetIcon_FromString(gametype);
 
 				// unranked gametypes ALWAYS get put last
 				orderstr = "zzz";
@@ -209,7 +220,7 @@ void XonoticStatsList_getStats(entity me)
 				continue;
 		}
 
-		bufstr_add(me.listStats, strcat(orderstr, outstr, "\n", data), true);
+		bufstr_add(me.listStats, strcat(orderstr, outstr, "\n", data, "\n", extra), true);
 	}
 
 	me.nItems = buf_getsize(me.listStats);
@@ -234,15 +245,10 @@ void XonoticStatsList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 
-#if 0
-	me.columnNameOrigin = me.realFontSize.x;
-	me.columnNameSize = 0.5 - me.realFontSize.x; // end halfway at maximum length
-	me.columnDataOrigin = me.columnNameOrigin + me.columnNameSize;
-	me.columnDataSize = 1 - me.columnNameSize - me.realFontSize.x; // fill the rest of the control
-#else
-	me.columnNameOrigin = me.realFontSize.x;
-	me.columnNameSize = 1 - 2 * me.realFontSize.x;
-#endif
+	me.columnIconOrigin = 0.25 * me.realFontSize.x;
+	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;
+	me.columnNameOrigin = me.columnIconOrigin * 2 + me.columnIconSize; // .columnIconOrigin padding on both sides
+	me.columnNameSize = 1 - me.columnIconOrigin - me.columnIconSize - me.realFontSize.x;
 }
 
 void XonoticStatsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
@@ -254,13 +260,19 @@ void XonoticStatsList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	}
 
 	string data = bufstr_get(me.listStats, i);
-	int ofs = strstrofs(data, "\n", 0);
+	int ofs_data  = strstrofs(data, "\n", 0);
+	int ofs_extra = strstrofs(data, "\n", ofs_data + 1);
 
-	string s = substring(data, 3, ofs - 3);
+	string s    = substring(data, 3, ofs_data - 3); // column name -- first 3 chars are orderstr, discard
+	string d    = substring(data, ofs_data + 1, ofs_extra - (ofs_data + 1)); // data
+	string icon = substring(data, ofs_extra + 1, strlen(data) - (ofs_extra + 1)); // extra will be the gamtype icon path, or ""
+
+	if (icon != "")
+		draw_Picture(me.columnIconOrigin * eX, icon, me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+
 	s = draw_TextShortenToWidth(s, 0.5 * me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
 
-	string d = substring(data, ofs + 1, strlen(data) - (ofs + 1));
 	d = draw_TextShortenToWidth(d, me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize), 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 1 * (me.columnNameSize - draw_TextWidth(d, 0, me.realFontSize))) * eX, d, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
 }

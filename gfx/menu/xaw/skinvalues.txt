@@ -121,6 +121,9 @@ COLOR_CVARLIST_CONTROLS         '1 0 0'
 // gametypelist
 BOOL_GAMETYPELIST_ICON_BLUR     1
 
+// statslist
+BOOL_STATSLIST_ICON_BLUR        1
+
 // item: dialog
 //   uses "border" images
 //   uses "closebutton" images
