@@ -1237,7 +1237,10 @@ void SV_ParseClientCommand(entity this, string command)
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		// on connection, client sends all of these
-		case "name": case "rate": case "rate_burstsize": case "playermodel": case "playerskin": case "clientversion":
+		case "name":
+			if(IS_CLIENT(this) && CS(this).muted)
+				return; // muted players' name changes are not forwarded, so they can't be broadcast to others
+		case "rate": case "rate_burstsize": case "playermodel": case "playerskin": case "clientversion":
 			if(!IS_CLIENT(this)) break;
 			// else fall through to default: flood control
 		default:
