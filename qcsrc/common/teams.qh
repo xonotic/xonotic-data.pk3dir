@@ -32,7 +32,7 @@ const string COL_TEAM_4 = "^6";
 #define NAME_TEAM_2 CTX(_("TEAM^Blue"))
 #define NAME_TEAM_3 CTX(_("TEAM^Yellow"))
 #define NAME_TEAM_4 CTX(_("TEAM^Pink"))
-#define NAME_TEAM _("Team")
+//#define NAME_TEAM _("Team")
 #define NAME_NEUTRAL _("Neutral")
 
 // items colors, so they are handled properly in languages which decline things with grammatical gender
@@ -226,9 +226,9 @@ int Team_IndexToBit(int index)
 #define Static_Team_ColorName_Lower(teamid) strtolower(Static_Team_ColorName(teamid))
 #define Static_Team_ColorName_Upper(teamid) strtoupper(Static_Team_ColorName(teamid))
 
-#define Team_FullName_WithSuffixColor(teamid, suf_col) strcat(Team_ColorName(teamid), " ", NAME_TEAM, suf_col)
+#define Team_FullName_WithSuffixColor(teamid, suf_col) strcat(sprintf(_("%s team"), Team_ColorName(teamid)), suf_col)
 #define Team_FullName(teamid) Team_FullName_WithSuffixColor(teamid, "^7")
-#define Team_ColoredFullName_WithSuffixColor(teamid, suf_col) strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", NAME_TEAM, suf_col)
+#define Team_ColoredFullName_WithSuffixColor(teamid, suf_col) strcat(Team_ColorCode(teamid), sprintf(_("%s team"), Team_ColorName(teamid)), suf_col)
 #define Team_ColoredFullName(teamid) Team_ColoredFullName_WithSuffixColor(teamid, "^7")
 
 #define Team_IndexToFullName(index) Team_FullName(Team_IndexToTeam(index))
