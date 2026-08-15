@@ -18,7 +18,7 @@ pt    "Portuguese" "Português" 78%
 pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
 ro    "Romanian" "Romana" 54%
 fi    "Finnish" "Suomi" 86%
-sv    "Swedish" "Svenska" 75%
+sv    "Swedish" "Svenska" 100%
 tr    "Turkish" "Türkçe" 43%
 cs    "Czech" "Čeština" 24%
 el    "Greek" "Ελληνική" 38%
