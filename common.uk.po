@@ -289,9 +289,7 @@ msgstr "^3Двічі клацніть ^7по панелі для додатко�
 
 #: qcsrc/client/hud/panel/infomessages.qc:258
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
-msgstr ""
-"^3CTRL ^7для відключення тесту колізій,\n"
-"^3SHIFT ^7і"
+msgstr "^3CTRL ^7для відключення тесту колізій, ^3SHIFT ^7і"
 
 #: qcsrc/client/hud/panel/infomessages.qc:259
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
@@ -10210,7 +10208,7 @@ msgstr "Панель Таймеру Предметів"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr "РЕЖИМ ГРИ^%s:"
+msgstr "%s:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24

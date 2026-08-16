@@ -860,11 +860,11 @@ msgstr "кражи"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "Ping time"
-msgstr "Время отклика"
+msgstr "Время пинга"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:159
 msgid "SCO^ping"
-msgstr "отклик"
+msgstr "пинг"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:160
 msgid "Packet loss"
@@ -1071,7 +1071,7 @@ msgid ""
 "will display name, ping and pl aligned to the left, and the fields\n"
 "right of the vertical bar aligned to the right."
 msgstr ""
-"отобразит имя, отклик и потери пакетов выровненными слева, \n"
+"отобразит имя, пинг и потери пакетов выровненными слева, \n"
 "и поля вертикальной панели справа."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:740
@@ -7018,8 +7018,8 @@ msgid ""
 "^K2Your ping (connection latency) is currently too high to play here.\n"
 "Please consider joining a server closer to you."
 msgstr ""
-"^K2Сейчас ваш пинг (задержка соединения) слишком высок, чтобы играть здесь.\n"
-"Пожалуйста, подумайте о том, чтобы перейти на сервер поближе к вам."
+"^K2Ваш пинг (задержка соединения) слишком высок, чтобы играть здесь.\n"
+"Подключитесь к серверу, расположенному ближе к вам."
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^BGYou're queued to join any available team."
@@ -7509,7 +7509,7 @@ msgstr "%s(^F1Бот^BG)"
 #: qcsrc/common/notifications/all.qh:502
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
-msgstr "%s(Отклик ^F1%d^BG)"
+msgstr "%s(Пинг ^F1%d^BG)"
 
 #: qcsrc/common/notifications/all.qh:509
 #, c-format
@@ -14662,7 +14662,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/serverlist.qc:753
 msgid "Ping"
-msgstr "Отклик"
+msgstr "Пинг"
 
 #: qcsrc/menu/xonotic/serverlist.qc:754
 msgid "Hostname"
