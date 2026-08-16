@@ -270,6 +270,7 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 	// non-solid so we can hit the next, while doing this we spawn effects and
 	// note down which entities were hit so we can damage them later
 	entity o = this;
+	vector trans_force;
 	FireRailgunBullet_cb_this = this;
 	do
 	{
@@ -281,6 +282,10 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 			o = NULL;
 			continue;
 		}
+
+		trans_force = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
+		if (trace_ent.solid == SOLID_BSP)
+			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, trans_force, deathtype, trace_ent.species, this);
 
 		// If it is NULL we can't hurt it so stop now
 		if (trace_ent == NULL || trace_fraction == 1)
@@ -295,9 +300,7 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 		trace_ent.railgunhitloc = trace_endpos;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
-		trace_ent.railgunforce = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
-		if (trace_ent.solid == SOLID_BSP)
-			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, trace_ent.railgunforce, deathtype, trace_ent.species, this);
+		trace_ent.railgunforce = trans_force;
 
 		if (trace_ent.solid == SOLID_BSP) // stop if this is a wall
 			break;
