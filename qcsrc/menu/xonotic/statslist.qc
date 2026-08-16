@@ -1,6 +1,8 @@
 #include "statslist.qh"
 
 #include <common/playerstats.qh>
+#include <common/gametypes/_mod.qh>
+#include <common/mapinfo.qh>
 
 entity makeXonoticStatsList()
 {
@@ -48,10 +50,11 @@ string XonoticStatsList_convertDate(string input)
 
 	// without no-c-format this string looks messed up in Transifex since only %d is a valid c placeholder
 	/* xgettext:no-c-format */
-	string date = CTX(_("DATE^%m %d, %Y"));
-	date = strreplace("%Y", substring(input, 0, 4), date);
+	string date = CTX(_("DATE^%MMMM %d, %y")); // %MMMM: Month name, %d: day of month, %y: year
+	// see https://cldr.unicode.org/translation/date-time/date-time-symbols
+	date = strreplace("%y", substring(input, 0, 4), date);
 	date = strreplace("%d", ftos(stof(substring(input, 8, 2))), date); // ftos-stof removes leading 0
-	date = strreplace("%m", monthname, date);
+	date = strreplace("%MMMM", monthname, date);
 	return strzone(date);
 }
 
@@ -65,6 +68,10 @@ void XonoticStatsList_getStats(entity me)
 	// create the new buffer if we have a stats buffer
 	if (PS_D_IN_DB >= 0)
 		me.listStats = buf_create();
+
+	bool have_unranked_stats = false;
+	if (me.controlledTextLabel)
+		me.controlledTextLabel.setText(me.controlledTextLabel, "");
 
 	// now confirmation, if we didn't create a buffer then just return now
 	if (me.listStats < 0)
@@ -141,8 +148,8 @@ void XonoticStatsList_getStats(entity me)
 			if (out_total_matches > 0) // don't show extra info if there are no matches played
 			{
 				out_total_losses = max(0, out_total_matches - out_total_wins);
-				bufstr_add(me.listStats, sprintf("003%s\n%d/%d\n", _("Wins/Losses:"), out_total_wins, out_total_losses), true);
-				bufstr_add(me.listStats, sprintf("004%s\n%s\n", _("Win percentage:"), ftos_decimals_percentage(out_total_wins / out_total_matches, 0)), true);
+				bufstr_add(me.listStats, sprintf("004%s\n%d/%d\n", _("Wins/Losses:"), out_total_wins, out_total_losses), true);
+				bufstr_add(me.listStats, sprintf("005%s\n%s\n", _("Win percentage:"), ftos_decimals_percentage(out_total_wins / out_total_matches, 0)), true);
 			}
 
 			out_total_matches = -1;
@@ -153,13 +160,13 @@ void XonoticStatsList_getStats(entity me)
 
 		if (order == -1 && out_total_kills >= 0 && out_total_deaths >= 0)
 		{
-			bufstr_add(me.listStats, sprintf("005%s\n%d/%d\n", _("Kills/Deaths:"), out_total_kills, out_total_deaths), true);
+			bufstr_add(me.listStats, sprintf("006%s\n%d/%d\n", _("Kills/Deaths:"), out_total_kills, out_total_deaths), true);
 
 			// if there are no deaths, just show kill count
 			if (out_total_deaths == 0)
 				out_total_deaths = 1;
 
-			bufstr_add(me.listStats, sprintf("006%s\n%.2f\n", _("Kill-death ratio:"), out_total_kills / out_total_deaths), true);
+			bufstr_add(me.listStats, sprintf("007%s\n%.2f\n", _("Kill-death ratio:"), out_total_kills / out_total_deaths), true);
 
 			out_total_kills = -1;
 			out_total_deaths = -1;
@@ -185,18 +192,21 @@ void XonoticStatsList_getStats(entity me)
 				{
 					case "matches":
 						order = 1;
-						outstr = CTX(_("GAMETYPE^%s Matches:"));
+						Gametype gt = MapInfo_Type_FromString(gametype, false, false);
+						outstr = (gt) ? MapInfo_Type_ToText(gt) : gametype;
+						int num = stoi(data);
+						data = num == 1 ? _("1 match") : sprintf(_("%d matches"), num);
 						extra = GameType_GetIcon_FromString(gametype);
 						break;
 				#if 0
 					case "skill":
 						order = 2;
-						outstr = CTX(_("GAMETYPE^%s Skill:"));
+						outstr = _("Skill:");
 						data = sprintf("%d", stoi(data));
 						break;
 					case "favorite-map":
 						order = 3;
-						outstr = CTX(_("GAMETYPE^%s Favorite map:"));
+						outstr = _("Favorite map:");
 						break;
 				#endif
 					default:
@@ -209,9 +219,18 @@ void XonoticStatsList_getStats(entity me)
 			}
 			else if (event == "matches")
 			{
-				outstr = sprintf(CTX(_("GAMETYPE^%s Matches:")), strtoupper(gametype));
-				data = sprintf(_("%d (unranked)"), stoi(data));
+				Gametype gt = MapInfo_Type_FromString(gametype, false, false);
+				outstr = (gt) ? MapInfo_Type_ToText(gt) : gametype;
+				int num = stoi(data);
+				data = num == 1 ? _("1 match") : sprintf(_("%d matches"), num);
+				data = strcat(data, "*");
 				extra = GameType_GetIcon_FromString(gametype);
+
+				if (!have_unranked_stats && me.controlledTextLabel)
+				{
+					me.controlledTextLabel.setText(me.controlledTextLabel, _("* = unranked"));
+					have_unranked_stats = true;
+				}
 
 				// unranked gametypes ALWAYS get put last
 				orderstr = "zzz";
@@ -270,11 +289,34 @@ void XonoticStatsList_drawListBoxItem(entity me, int i, vector absSize, bool isS
 	if (icon != "")
 		draw_Picture(me.columnIconOrigin * eX, icon, me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 
-	s = draw_TextShortenToWidth(s, 0.5 * me.columnNameSize, 0, me.realFontSize);
-	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
+	vector save_fontscale = draw_fontscale;
+	float f = draw_CondensedFontFactor(s, false, me.realFontSize, 0.5 * me.columnNameSize);
+	draw_fontscale.x *= f;
+	vector fs = me.realFontSize;
+	fs.x *= f;
 
-	d = draw_TextShortenToWidth(d, me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize), 0, me.realFontSize);
-	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 1 * (me.columnNameSize - draw_TextWidth(d, 0, me.realFontSize))) * eX, d, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 1);
+	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, fs, '1 1 1', SKINALPHA_TEXT, 0);
+
+	draw_fontscale = save_fontscale;
+
+	f = draw_CondensedFontFactor(d, false, me.realFontSize, 0.5 * me.columnNameSize);
+	draw_fontscale.x *= f;
+	fs = me.realFontSize;
+	fs.x *= f;
+
+	bool drawStar = (substring(d, -1, 1) == "*");
+	float starwidth = 0;
+	if (drawStar)
+	{
+		starwidth = draw_TextWidth("*", 0, fs);
+		d = substring(d, 0, -2); // remove asterisk
+	}
+	float textwidth = draw_TextWidth(d, 0, fs);
+	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + me.columnNameSize - starwidth - textwidth) * eX, d, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
+	if (drawStar)
+		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + me.columnNameSize - starwidth) * eX, "*", fs, SKINCOLOR_HEADER, SKINALPHA_HEADER, 0);
+
+	draw_fontscale = save_fontscale;
 }
 
 void XonoticStatsList_showNotify(entity me)

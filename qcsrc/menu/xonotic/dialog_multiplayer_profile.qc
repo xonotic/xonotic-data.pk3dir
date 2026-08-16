@@ -135,12 +135,17 @@ void XonoticProfileTab_fill(entity me)
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_allow_uidranking", _("Allow player statistics to rank you in leaderboards")));
 			e.sendCvars = true;
 			setDependent(e, "cl_allow_uidtracking", 1, 1);
+	entity unranked_textlabel = makeXonoticHeaderLabel(""); // text will be set by statslist
 	me.gotoRC(me, 4.5, 3.1); // TOP RIGHT
-	//me.gotoRC(me, 12.5, 3.1); // BOTTOM RIGHT
-	//me.gotoRC(me, 12.5, 0); // BOTTOM LEFT
 		me.TDempty(me, 0.25);
 		me.TD(me, 11, 2.5, statslist = makeXonoticStatsList());
-		//setDependent(statslist, "cl_allow_uidtracking", 1, 1);
+			statslist.controlledTextLabel = unranked_textlabel;
+			//setDependent(statslist, "cl_allow_uidtracking", 1, 1);
+	me.gotoRC(me, 15.5, 3.1);
+		me.TDempty(me, 0.25);
+		me.TD(me, 1, 2.5, unranked_textlabel);
+			unranked_textlabel.align = 1;
+			//setDependent(unranked_textlabel, "cl_allow_uidtracking", 1, 1);
 
 	// =================
 	//  COUNTRY SECTION
