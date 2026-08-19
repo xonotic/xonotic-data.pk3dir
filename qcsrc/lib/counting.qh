@@ -6,109 +6,108 @@
 //  Time processing and counting functions/macros
 // ===============================================
 
-#define count_years_decs(time, decs) sprintf(CTX(_("CI_DEC^%s years")), ftos_decimals(time, decs))
+#define count_years_decs(time, decs) sprintf(CTX(_("DEC^%s years")), ftos_decimals(time, decs))
 #define count_years(time) \
 	count_fill(time, \
-	_("CI_ZER^%d years"), /* zeroth */ \
-	_("CI_FIR^%d year"),  /* first */ \
-	_("CI_SEC^%d years"), /* year */ \
-	_("CI_THI^%d years"), /* third */ \
-	_("CI_MUL^%d years")) /* multi */
+	_("ZER^%d years"), \
+	_("ONE^%d year"),  \
+	_("TWO^%d years"), \
+	_("THR^%d years"), \
+	_("MUL^%d years"))
 
-#define count_weeks_decs(time, decs) sprintf(CTX(_("CI_DEC^%s weeks")), ftos_decimals(time, decs))
+#define count_weeks_decs(time, decs) sprintf(CTX(_("DEC^%s weeks")), ftos_decimals(time, decs))
 #define count_weeks(time) \
 	count_fill(time, \
-	_("CI_ZER^%d weeks"), /* zeroth */ \
-	_("CI_FIR^%d week"),  /* first */ \
-	_("CI_SEC^%d weeks"), /* week */ \
-	_("CI_THI^%d weeks"), /* third */ \
-	_("CI_MUL^%d weeks")) /* multi */
+	_("ZER^%d weeks"), \
+	_("ONE^%d week"),  \
+	_("TWO^%d weeks"), \
+	_("THR^%d weeks"), \
+	_("MUL^%d weeks"))
 
-#define count_days_decs(time, decs) sprintf(CTX(_("CI_DEC^%s days")), ftos_decimals(time, decs))
+#define count_days_decs(time, decs) sprintf(CTX(_("DEC^%s days")), ftos_decimals(time, decs))
 #define count_days(time) \
 	count_fill(time, \
-	_("CI_ZER^%d days"), /* zeroth */ \
-	_("CI_FIR^%d day"),  /* first */ \
-	_("CI_SEC^%d days"), /* day */ \
-	_("CI_THI^%d days"), /* third */ \
-	_("CI_MUL^%d days")) /* multi */
+	_("ZER^%d days"), \
+	_("ONE^%d day"),  \
+	_("TWO^%d days"), \
+	_("THR^%d days"), \
+	_("MUL^%d days"))
 
-#define count_hours_decs(time, decs) sprintf(CTX(_("CI_DEC^%s hours")), ftos_decimals(time, decs))
+#define count_hours_decs(time, decs) sprintf(CTX(_("DEC^%s hours")), ftos_decimals(time, decs))
 #define count_hours(time) \
 	count_fill(time, \
-	_("CI_ZER^%d hours"), /* zeroth */ \
-	_("CI_FIR^%d hour"),  /* first */ \
-	_("CI_SEC^%d hours"), /* hour */ \
-	_("CI_THI^%d hours"), /* third */ \
-	_("CI_MUL^%d hours")) /* multi */
+	_("ZER^%d hours"), \
+	_("ONE^%d hour"),  \
+	_("TWO^%d hours"), \
+	_("THR^%d hours"), \
+	_("MUL^%d hours"))
 
-
-#define count_minutes_decs(time, decs) sprintf(CTX(_("CI_DEC^%s minutes")), ftos_decimals(time, decs))
+#define count_minutes_decs(time, decs) sprintf(CTX(_("DEC^%s minutes")), ftos_decimals(time, decs))
 #define count_minutes(time) \
 	count_fill(time, \
-	_("CI_ZER^%d minutes"), /* zeroth */ \
-	_("CI_FIR^%d minute"),  /* first */ \
-	_("CI_SEC^%d minutes"), /* minute */ \
-	_("CI_THI^%d minutes"), /* third */ \
-	_("CI_MUL^%d minutes")) /* multi */
+	_("ZER^%d minutes"), \
+	_("ONE^%d minute"),  \
+	_("TWO^%d minutes"), \
+	_("THR^%d minutes"), \
+	_("MUL^%d minutes"))
 
-#define count_seconds_decs(time, decs) sprintf(CTX(_("CI_DEC^%s seconds")), ftos_decimals(time, decs))
+#define count_seconds_decs(time, decs) sprintf(CTX(_("DEC^%s seconds")), ftos_decimals(time, decs))
 #define count_seconds(time) \
 	count_fill(time, \
-	_("CI_ZER^%d seconds"), /* zeroth */ \
-	_("CI_FIR^%d second"),  /* first */ \
-	_("CI_SEC^%d seconds"), /* second */ \
-	_("CI_THI^%d seconds"), /* third */ \
-	_("CI_MUL^%d seconds")) /* multi */
+	_("ZER^%d seconds"), \
+	_("ONE^%d second"),  \
+	_("TWO^%d seconds"), \
+	_("THR^%d seconds"), \
+	_("MUL^%d seconds"))
 
 // returns 1st, 2nd, 3rd, nth ordinal number from a cardinal number (integer)
 ERASEABLE
-string count_ordinal(int interval)
+string count_ordinal(int num)
 {
 	// This function is designed primarily for the English language, it's impossible
 	// to accomodate all languages unless we do a specific function for each one...
 	// and since that's not technically feasible/practical, this is all we've got folks.
 
-	int last2digits = interval % 100;
+	int last2digits = num % 100;
 
 	// numbers ending with 11, 12 and 13 don't follow the standard pattern
 	if (last2digits < 4 || last2digits > 20)
 		switch (last2digits % 10)
 		{
-			case 1: return sprintf(_("%dst"), interval);
-			case 2: return sprintf(_("%dnd"), interval);
-			case 3: return sprintf(_("%drd"), interval);
+			case 1: return sprintf(_("%dst"), num);
+			case 2: return sprintf(_("%dnd"), num);
+			case 3: return sprintf(_("%drd"), num);
 		}
 
-	return sprintf(_("%dth"), interval);
+	return sprintf(_("%dth"), num);
 }
 
 ERASEABLE
-string count_fill(float interval, string zeroth, string first, string second, string third, string multi)
+string count_fill(float num, string zero, string one, string two, string three, string multi)
 {
 	// This function is designed primarily for the English language, it's impossible
 	// to accomodate all languages unless we do a specific function for each one...
 	// and since that's not technically feasible/practical, this is all we've got folks.
 
-	// Here you can insert specific strings based on the interval number, so you could do
-	// i.e. count_seconds which outputs like this:
+	// Here you can insert specific strings based on the input number, so you could do
+	// e.g. count_seconds which outputs like this:
 	//   0 seconds
 	//   1 second
 	//   2 seconds
 	//   3 seconds
 	//   etc... minutes, hours, days, etc.
 
-	switch (floor(interval))
+	switch (floor(num))
 	{
-		case 0: return sprintf(CTX(zeroth), interval);
+		case 0: return sprintf(CTX(zero), num);
 		case 1:
-			if (interval == 1) // EXACTLY value of 1
-				return sprintf(CTX(first), interval);
+			if (num == 1) // EXACTLY value of 1
+				return sprintf(CTX(one), num);
 			else
-				return sprintf(CTX(multi), interval);
-		case 2: return sprintf(CTX(second), interval);
-		case 3: return sprintf(CTX(third), interval);
-		default: return sprintf(CTX(multi), interval);
+				return sprintf(CTX(multi), num);
+		case 2: return sprintf(CTX(two), num);
+		case 3: return sprintf(CTX(three), num);
+		default: return sprintf(CTX(multi), num);
 	}
 	return "";
 }
