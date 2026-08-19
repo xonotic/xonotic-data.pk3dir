@@ -1331,19 +1331,19 @@ msgstr "Arena con tutte le armi disponibili"
 
 #: qcsrc/client/main.qc:1347
 msgid "Standard Weapons Arena"
-msgstr ""
+msgstr "Arena con le armi standard"
 
 #: qcsrc/client/main.qc:1348
 msgid "Standard Available Weapons Arena"
-msgstr ""
+msgstr "Arena con le armi standard disponibili"
 
 #: qcsrc/client/main.qc:1349
 msgid "Extended Weapons Arena"
-msgstr ""
+msgstr "Arena con armi estese"
 
 #: qcsrc/client/main.qc:1350
 msgid "Extended Available Weapons Arena"
-msgstr ""
+msgstr "Arena con armi estese disponibili"
 
 #: qcsrc/client/main.qc:1357
 #, c-format
