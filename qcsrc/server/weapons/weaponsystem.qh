@@ -42,7 +42,7 @@ entity weapon_dropevent_item;
 
 void CL_SpawnWeaponentity(entity e, .entity weaponentity);
 
-void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
+void w_enddrop(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 
 void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 

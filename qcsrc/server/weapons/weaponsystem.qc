@@ -216,13 +216,13 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 }
 
 // Weapon subs
-void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire)
+void w_enddrop(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	entity w_ent = actor.(weaponentity);
 	if (w_ent)
 	{
 		w_ent.m_weapon = WEP_Null;
-		w_ent.m_switchingweapon = WEP_Null;
+		//w_ent.m_switchingweapon = WEP_Null; // let this field be set the next weapon frame
 		w_ent.state = WS_CLEAR;
 		w_ent.effects = 0;
 	}
@@ -576,7 +576,8 @@ void W_WeaponFrame(Player actor, .entity weaponentity)
 				{
 					sound(actor, CH_WEAPON_SINGLE, SND_WEAPON_SWITCH, VOL_BASE, ATTN_NORM);
 					this.state = WS_DROP;
-					weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
+					weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_enddrop);
+					this.weapon_nextthink -= this.weapon_frametime; // because it will use one extra frame before the raise begins
 				}
 				break;
 			}
