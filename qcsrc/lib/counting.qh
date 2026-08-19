@@ -6,6 +6,40 @@
 //  Time processing and counting functions/macros
 // ===============================================
 
+#define count_votes(num) \
+	count_fill(num, \
+	_("ZER^%d votes"), \
+	_("ONE^%d vote"),  \
+	_("TWO^%d votes"), \
+	_("THR^%d votes"), \
+	_("MUL^%d votes"))
+
+#define count_matches(num) \
+	count_fill(num, \
+	_("ZER^%d matches"), \
+	_("ONE^%d match"),   \
+	_("TWO^%d matches"), \
+	_("THR^%d matches"), \
+	_("MUL^%d matches"))
+
+#define count_points_decs(time, decs) sprintf(CTX(_("DEC^%s points")), ftos_decimals(time, decs))
+#define count_points(num) \
+	count_fill(num, \
+	_("ZER^%d points"), \
+	_("ONE^%d point"),  \
+	_("TWO^%d points"), \
+	_("THR^%d points"), \
+	_("MUL^%d points"))
+
+#define count_results(num) \
+	count_fill(num, \
+	_("ZER^%d results"), \
+	_("ONE^%d result"),  \
+	_("TWO^%d results"), \
+	_("THR^%d results"), \
+	_("MUL^%d results"))
+
+
 #define count_years_decs(time, decs) sprintf(CTX(_("DEC^%s years")), ftos_decimals(time, decs))
 #define count_years(time) \
 	count_fill(time, \

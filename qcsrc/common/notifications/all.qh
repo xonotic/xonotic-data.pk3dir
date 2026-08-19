@@ -438,7 +438,7 @@ const int ARG_DC        = 6; ///< unique result to durcnt/centerprint
 	ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \
-	ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("1 point") : sprintf(_("%d points"), f1))) \
+	ARG_CASE(ARG_CS,        "f1points",      count_points(f1)) \
 	ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
 	ARG_CASE(ARG_CS_SV,     "f1time",        process_time(2, f1)) \
 	ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   TIME_ENCODED_TOSTRING(f1, true)) \

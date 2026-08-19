@@ -195,7 +195,7 @@ void XonoticStatsList_getStats(entity me)
 						Gametype gt = MapInfo_Type_FromString(gametype, false, false);
 						outstr = (gt) ? MapInfo_Type_ToText(gt) : gametype;
 						int num = stoi(data);
-						data = num == 1 ? _("1 match") : sprintf(_("%d matches"), num);
+						data = count_matches(num);
 						extra = GameType_GetIcon_FromString(gametype);
 						break;
 				#if 0
@@ -222,7 +222,7 @@ void XonoticStatsList_getStats(entity me)
 				Gametype gt = MapInfo_Type_FromString(gametype, false, false);
 				outstr = (gt) ? MapInfo_Type_ToText(gt) : gametype;
 				int num = stoi(data);
-				data = num == 1 ? _("1 match") : sprintf(_("%d matches"), num);
+				data = count_matches(num);
 				data = strcat(data, "*");
 				extra = GameType_GetIcon_FromString(gametype);
 

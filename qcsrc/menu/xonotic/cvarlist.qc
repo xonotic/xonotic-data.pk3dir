@@ -21,7 +21,7 @@ void CvarList_UpdateResults(entity me)
 {
 	int c = me.nItems;
 	static string cvarlistResultCount = string_null;
-	strcpy(cvarlistResultCount, c == 1 ? _("1 result") : sprintf(_("%d results"), c));
+	strcpy(cvarlistResultCount, count_results(c));
 	me.cvarlistResultCountBox.setText(me.cvarlistResultCountBox, cvarlistResultCount);
 }
 void CvarList_Load(entity me, string filter)

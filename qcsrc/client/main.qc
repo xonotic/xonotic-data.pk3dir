@@ -1424,15 +1424,14 @@ bool net_handle_ServerWelcome()
 
 	if (srv_minplayers || srv_maxplayers)
 	{
-		msg = strcat(msg, "\n", _("This match supports"), " ^5");
+		string interval;
 		if (srv_minplayers == srv_maxplayers)
-			msg = strcat(msg, sprintf(_("%d players"), srv_maxplayers), "\n");
-		else if (srv_minplayers && srv_maxplayers)
-			msg = strcat(msg, sprintf(_("%d to %d players"), srv_minplayers, srv_maxplayers), "\n");
-		else if (srv_maxplayers)
-			msg = strcat(msg, sprintf(_("%d players maximum"), srv_maxplayers), "\n");
+			interval = itos(srv_maxplayers);
+		else if (!srv_minplayers)
+			interval = sprintf(_("%d maximum"), srv_maxplayers);
 		else
-			msg = strcat(msg, sprintf(_("%d players minimum"), srv_minplayers), "\n");
+			interval = sprintf(CTX(_("INTERVAL^%d-%d")), srv_minplayers, srv_maxplayers);
+		msg = strcat(msg, "\n", _("Number of players supported by this match:"), " ^5", interval, "\n");
 	}
 
 	modifications = cons_mid(modifications, ", ", weaponarena_list);
