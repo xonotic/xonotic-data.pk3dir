@@ -1547,7 +1547,7 @@ void View_CheckButtonStatus()
 			entity e = wepent.activeweapon;
 			if(e.netname != "")
 				localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
-			else if(slot == 0)
+			else if(slot == 0 && wepent.switchweapon == WEP_Null) // make sure we switched to no weapon
 				localcmd("\ncl_hook_activeweapon none\n");
 		}
 	}
