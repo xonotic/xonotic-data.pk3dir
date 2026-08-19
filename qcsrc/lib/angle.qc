@@ -72,3 +72,13 @@ vector angleofs3(vector from, vector ang, vector to)
 }
 
 #define angleofs(from, to) angleofs3(from.origin, from.angles, to.origin)
+
+ERASEABLE
+vector angles_remove360(vector ang)
+{
+	// safe to use regardless of POSITIVE_PITCH_IS_DOWN
+	if (ang.x == 360 || ang.x == -360) ang.x = 0;
+	if (ang.y == 360 || ang.y == -360) ang.y = 0;
+	if (ang.z == 360 || ang.z == -360) ang.z = 0;
+	return ang;
+}
