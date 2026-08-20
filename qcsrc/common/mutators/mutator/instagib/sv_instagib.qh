@@ -5,20 +5,20 @@
 #include <common/mutators/mutator/powerups/_mod.qh>
 
 // TODO: make this its own mutator (somehow)!
-float autocvar_g_rm;
+bool autocvar_g_rm;
 float autocvar_g_rm_damage;
 float autocvar_g_rm_edgedamage;
 float autocvar_g_rm_force;
 float autocvar_g_rm_radius;
-float autocvar_g_rm_laser;
-float autocvar_g_rm_laser_count;
+bool autocvar_g_rm_laser;
+int autocvar_g_rm_laser_count;
 float autocvar_g_rm_laser_speed;
 float autocvar_g_rm_laser_spread;
-float autocvar_g_rm_laser_spread_random;
+bool autocvar_g_rm_laser_spread_random;
 float autocvar_g_rm_laser_lifetime;
 float autocvar_g_rm_laser_damage;
 float autocvar_g_rm_laser_refire;
-float autocvar_g_rm_laser_rapid;
+bool autocvar_g_rm_laser_rapid;
 float autocvar_g_rm_laser_rapid_refire;
 float autocvar_g_rm_laser_rapid_delay;
 float autocvar_g_rm_laser_radius;
@@ -26,6 +26,7 @@ float autocvar_g_rm_laser_force;
 
 bool autocvar_g_instagib;
 int autocvar_g_instagib_extralives;
+int autocvar_g_instagib_ammo_start;
 
 float autocvar_g_instagib_invisibility_time;
 float autocvar_g_instagib_speed_time;

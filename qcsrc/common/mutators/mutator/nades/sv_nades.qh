@@ -65,15 +65,13 @@ void nades_RemovePlayer(entity player);
 /// Give a bonus grenade to a player
 void nades_GiveBonus(entity player, float score);
 
-/**
- * called to adjust nade damage and force on hit
- */
+/// Called to adjust nade damage and force on hit
 #define EV_Nade_Damage(i, o) \
-	/** nade */   i(entity, MUTATOR_ARGV_0_entity) \
-	/** weapon */ i(entity, MUTATOR_ARGV_1_entity) \
-	/** force */  i(vector, MUTATOR_ARGV_2_vector) \
-	/**/          o(vector, MUTATOR_ARGV_2_vector) \
-	/** damage */ i(float,  MUTATOR_ARGV_3_float) \
-	/**/          o(float,  MUTATOR_ARGV_3_float) \
+	i(entity, 0) /** nade */ \
+	i(entity, 1) /** weapon */ \
+	i(vector, 2) /** force */ \
+	o(vector, 2) \
+	i(float,  3) /** damage */ \
+	o(float,  3) \
 	/**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);

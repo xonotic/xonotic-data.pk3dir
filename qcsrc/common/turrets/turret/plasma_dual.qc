@@ -10,28 +10,7 @@ spawnfunc(turret_plasma_dual)
 
 METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur, entity it))
 {
-	if (MUTATOR_IS_ENABLED(mutator_instagib))
-	{
-		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		FireRailgunBullet(it, weaponentity, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * max_shot_distance,
-			10000000000,
-			false,
-			800,
-			0,
-			0,
-			0,
-			0,
-			DEATH_TURRET_PLASMA.m_id
-		);
-
-		Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, it.tur_shotorg, it.tur_shotdir_updated * 1000, 1);
-
-		// teamcolor / hit beam effect
-		vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-		vector rgb = Team_ColorRGB(it.team);
-        Send_Effect_Core(EFFECT_VAPORIZER_BEAM, it.tur_shotorg, v, 1, rgb, rgb, -1, -1, -1, NULL);
-	}
-	else
+	if (!MUTATOR_CALLHOOK(Turret_Plasma_Fire, it, true))
 		SUPER(PlasmaTurret).tr_attack(thistur, it);
 	++it.tur_head.frame;
 }
