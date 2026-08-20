@@ -11665,7 +11665,7 @@ msgstr "Частота:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:107
 msgid "Sound output frequency"
-msgstr "Частотність звуку"
+msgstr "Частотність виведення звуку"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "8 kHz"
@@ -11705,7 +11705,7 @@ msgstr "Канали:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:121
 msgid "Number of channels for the sound output"
-msgstr "Кількість каналів"
+msgstr "Кількість каналів виведення звуку"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:122
 msgid "Mono"
@@ -11764,7 +11764,7 @@ msgstr "Звук влучання"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:144
 msgid "Play a hit indicator sound when your shot hits an enemy"
-msgstr "Грати спеціальний звук коли ви влучаєте у ворога"
+msgstr "Відтворювати звуковий індикатор коли ви влучаєте у ворога"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:148
 msgid "SND^Fixed"
@@ -11772,19 +11772,19 @@ msgstr "Фіксований тон"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:151
 msgid "Decrease pitch with more damage"
-msgstr "Зменшувати висоту звуку при більшій шкоді"
+msgstr "Знижувати висоту звуку при більшій шкоді"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:151
 msgid "Decreasing"
-msgstr "Зменшувати висоту"
+msgstr "Спадний тон"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:154
 msgid "Increase pitch with more damage"
-msgstr "Збільшувати висоту звуку при більшій шкоді"
+msgstr "Підвищувати висоту звуку при більшій шкоді"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:154
 msgid "Increasing"
-msgstr "Збільшувати висоту"
+msgstr "Висхідний тон"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:158
 msgid "Chat message sound"
@@ -12243,7 +12243,7 @@ msgstr "Розмір:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:73
 msgid "By health"
-msgstr "Залежно від здоров'я"
+msgstr "Від здоров'я"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:89
 msgid "Use rings to indicate weapon status"
@@ -12545,15 +12545,15 @@ msgstr "Предмети"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:32
 msgid "Use simple 2D images instead of item models"
-msgstr "Використовувати прості 2D-зображення замість моделей предметів"
+msgstr "Використовувати 2D-зображення замість моделей"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:34
 msgid "Unavailable opacity:"
-msgstr "Прозорість при відсутності:"
+msgstr "Прозорість відсутності:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:38
 msgid "Unavailable color:"
-msgstr "Колір при відсутності:"
+msgstr "Колір відсутності:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:41
 msgid "GHOITEMS^Black"
@@ -12582,11 +12582,11 @@ msgstr "Гравці"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:53
 msgid "Force player models to mine"
-msgstr "Використовувати власну модель для всіх гравців"
+msgstr "Застосувати мою модель до всіх"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:55
 msgid "Force player colors to mine:"
-msgstr "Використовувати власні кольори для всіх гравців:"
+msgstr "Застосувати мій колір до всіх:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""
@@ -12598,7 +12598,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Except in team games"
-msgstr "Завжди крім командних режимах"
+msgstr "Крім командних режимів"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 msgid "Only in Duel"
@@ -12610,7 +12610,7 @@ msgstr "Тільки в командних режимах"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "In team games and Duel"
-msgstr "І в командних режимах, і в дуелях"
+msgstr "І в командних, і в дуелях"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "Body fading:"
@@ -12674,7 +12674,7 @@ msgstr "Вирівнювати поле зору після присідання
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:49
 msgid "View bobbing while walking around"
-msgstr "Гойдання поля зору підчас ходьби"
+msgstr "Гойдання поля зору під час ходьби"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:54
 msgid "View waving while idle"
@@ -14781,4 +14781,4 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:798
 msgid "Hide on death"
-msgstr "Сховати при смерті"
+msgstr "Сховати після смерті"
