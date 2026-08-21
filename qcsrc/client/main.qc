@@ -1533,12 +1533,12 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 	if (keys == "NO_KEY")
 	{
 		if (autocvar_hud_showbinds > 1)
-			return sprintf(_("%s (not bound)"), cmd_name);
+			return strcat(cmd_name, sprintf(_(" (%s)"), _("not bound")));
 		else
 			return cmd_name;
 	}
 	else if (autocvar_hud_showbinds > 1 || forcename)
-		return sprintf("%s (%s)", cmd_name, keys);
+		return strcat(cmd_name, sprintf(_(" (%s)"), keys));
 	return keys;
 }
 
