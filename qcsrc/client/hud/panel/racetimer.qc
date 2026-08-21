@@ -62,12 +62,12 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 
 		if (lapdelta > 0)
 		{
-			lapstr = sprintf(_(" (-%dL)"), lapdelta);
+			lapstr = sprintf(" (-%s)", sprintf(_("LAPS^%dL"), lapdelta));
 			col = "^2";
 		}
 		else if (lapdelta < 0)
 		{
-			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
+			lapstr = sprintf(" (+%s)", sprintf(_("LAPS^%dL"), -lapdelta));
 			col = "^1";
 		}
 	}

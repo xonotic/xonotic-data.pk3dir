@@ -38,7 +38,7 @@ string MapVote_FormatItem(int id, string text, int _count, float maxwidth, vecto
 	TC(int, id);
 	string post = "";
 	if (mv_detail && (_count == 1 || (_count >= 0 && (mv_flags[id] & GTV_AVAILABLE))))
-		post = sprintf(_(" (%s)"), sprintf(count_votes(_count)));
+		post = sprintf(" (%s)", sprintf(count_votes(_count)));
 
 	string pre = strcat(itos(id + 1), ". ");
 	maxwidth -= stringwidth_nocolors(pre, fontsize) + stringwidth_nocolors(post, fontsize);
