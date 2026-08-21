@@ -6,6 +6,39 @@
 //  Time processing and counting functions/macros
 // ===============================================
 
+#define count_shells(num) \
+	count_fill(num, \
+	_("ZER^%d shells"), \
+	_("ONE^%d shell"),  \
+	_("TWO^%d shells"), \
+	_("THR^%d shells"), \
+	_("MUL^%d shells"))
+
+#define count_bullets(num) \
+	count_fill(num, \
+	_("ZER^%d bullets"), \
+	_("ONE^%d bullet"),  \
+	_("TWO^%d bullets"), \
+	_("THR^%d bullets"), \
+	_("MUL^%d bullets"))
+
+#define count_rockets(num) \
+	count_fill(num, \
+	_("ZER^%d rockets"), \
+	_("ONE^%d rocket"),  \
+	_("TWO^%d rockets"), \
+	_("THR^%d rockets"), \
+	_("MUL^%d rockets"))
+
+#define count_cells(num) \
+	count_fill(num, \
+	_("ZER^%d cells"), \
+	_("ONE^%d cell"),  \
+	_("TWO^%d cells"), \
+	_("THR^%d cells"), \
+	_("MUL^%d cells"))
+
+
 #define count_votes(num) \
 	count_fill(num, \
 	_("ZER^%d votes"), \

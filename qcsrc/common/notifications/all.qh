@@ -3,6 +3,7 @@
 #include <common/command/_mod.qh>
 
 #include <common/constants.qh>
+#include <common/items/item/ammo.qh>
 #include <common/mutators/mutator/buffs/buffs.qh>
 #include <common/sounds/sound.qh>
 #include <common/teams.qh>
@@ -634,8 +635,8 @@ string notif_arg_item_wepammo(float f1, float f2)
 	Weapon wep = REGISTRY_GET(Weapons, f1);
 	if (wep.ammo_type == RES_NONE)
 		return ""; // doesn't use ammo
-	// example for translators: You dropped the Vortex with 5 cells
-	return sprintf(_(" with %d %s"), f2, strtolower(wep.ammo_type.m_name));
+
+	return sprintf(_(" (%s)"), count_ammo(f2, wep.ammo_type));
 }
 
 
