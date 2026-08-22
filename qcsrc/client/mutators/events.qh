@@ -233,7 +233,8 @@ MUTATOR_HOOKABLE(DrawReticle, EV_NO_ARGS);
 
 /** Return true to show leaderboard rankings, needs title argument set */
 #define EV_ShowRankings(i, o) \
-	/** rankings title */ 	o(string, MUTATOR_ARGV_0_string) \
+	/** deathscoreboard */ 	i(bool, MUTATOR_ARGV_0_bool) \
+	/** rankings title */ 	o(string, MUTATOR_ARGV_1_string) \
 	/**/
 MUTATOR_HOOKABLE(ShowRankings, EV_ShowRankings);
 
