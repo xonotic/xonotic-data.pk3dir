@@ -205,6 +205,9 @@ COLOR_DIALOG_HUDCONFIRM         '1 0 0'
 // gametypelist
 BOOL_GAMETYPELIST_ICON_BLUR     1
 
+// statslist
+BOOL_STATSLIST_ICON_BLUR        1
+
 // item: input box
 //   uses "inputbox" images
 COLOR_INPUTBOX_N                '1 1 1'

@@ -15,11 +15,11 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 	me.configureXonoticListBox(me);
 	me.nItems = GameType_GetCount();
 
-	if(SKINBOOL_GAMETYPELIST_ICON_BLUR)
-	{
-		for(int i = 0; i < GameType_GetTotalCount(); ++i)
+	for (int i = 0; i < GameType_GetTotalCount(); ++i)
+		if (SKINBOOL_GAMETYPELIST_ICON_BLUR)
 			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
-	}
+		else
+			draw_PreloadPicture(GameType_GetIcon(i));
 
 	me.loadCvars(me);
 }
@@ -107,10 +107,11 @@ void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSiz
 	me.realFontSize.y = me.fontSize / me.itemAbsSize.y;
 	me.realFontSize.x = me.fontSize / me.itemAbsSize.x;
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
+
 	me.columnIconOrigin = 0;
 	me.columnIconSize = me.itemAbsSize.y / me.itemAbsSize.x;
-	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + (0.5 * me.realFontSize.x);
-	me.columnNameSize = 1 - me.columnIconSize - (1.5 * me.realFontSize.x);
+	me.columnNameOrigin = me.columnIconOrigin + me.columnIconSize + 0.5 * me.realFontSize.x;
+	me.columnNameSize = 1 - me.columnIconOrigin - me.columnIconSize - 1.5 * me.realFontSize.x;
 }
 float XonoticGametypeList_keyDown(entity me, float scan, float ascii, float shift)
 {

@@ -132,6 +132,9 @@ HEIGHT_ZOOMEDTITLE            -1
 // gametypelist
 BOOL_GAMETYPELIST_ICON_BLUR   0
 
+// statslist
+BOOL_STATSLIST_ICON_BLUR      0
+
 // inputbox
 COLOR_INPUTBOX_F              '1 1 1'
 COLOR_INPUTBOX_N              '1 1 1'
