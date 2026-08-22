@@ -5606,7 +5606,7 @@ msgstr "^BGВи отримали баф %s^BG!"
 #: qcsrc/common/notifications/all.inc:726
 #, c-format
 msgid "^BGYou do not have the ^F1%s"
-msgstr "^BGВи не маєте ^F1%s"
+msgstr "^F1%s ^BGвідсутній(-я)"
 
 #: qcsrc/common/notifications/all.inc:392
 #: qcsrc/common/notifications/all.inc:727
