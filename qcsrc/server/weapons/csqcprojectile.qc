@@ -116,6 +116,13 @@ void UpdateCSQCProjectile(entity e)
 // END HACK
 }
 
+void UpdateCSQCProjectileType(entity e, int new_type)
+{
+	e.csqcprojectile_type = new_type;
+	if(getSendEntity(e) == CSQCProjectile_SendEntity)
+		e.SendFlags |= 2;
+}
+
 void UpdateCSQCProjectileAfterTeleport(entity e)
 {
 	if(getSendEntity(e) == CSQCProjectile_SendEntity)
