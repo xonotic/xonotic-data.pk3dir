@@ -33,14 +33,16 @@
  *     return false;
  * }
  */
-#define EV_Menu_ConsoleCommand(i, o) \
+#define params(i, o) \
 	i(string, 0) /* command name */ \
 	i(int,    1) /* argc (also, argv() can be used) */ \
 	i(string, 2) /* whole command, use only if you really have to */ \
 	/**/
-MUTATOR_HOOKABLE(Menu_ConsoleCommand, EV_Menu_ConsoleCommand);
+MUTATOR_HOOKABLE(Menu_ConsoleCommand, params);
+#undef params
 
-#define EV_ConfigureDialogs(i, o) \
+#define params(i, o) \
 	i(entity, 0) /* main window entity */ \
 	/**/
-MUTATOR_HOOKABLE(ConfigureDialogs, EV_ConfigureDialogs);
+MUTATOR_HOOKABLE(ConfigureDialogs, params);
+#undef params

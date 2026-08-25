@@ -34,11 +34,12 @@ string RandomItems_GetRandomItemClassName(string prefix);
 string RandomItems_GetRandomVanillaItemClassName(string prefix, int types);
 
 /// Called when random item classname is requested
-#define EV_RandomItems_GetRandomItemClassName(i, o) \
+#define params(i, o) \
 	i(string, 0) /** prefix */ \
 	o(string, 1) /** classname */ \
     /**/
-MUTATOR_HOOKABLE(RandomItems_GetRandomItemClassName, EV_RandomItems_GetRandomItemClassName);
+MUTATOR_HOOKABLE(RandomItems_GetRandomItemClassName, params);
+#undef params
 
 REGISTER_MUTATOR(random_items, (autocvar_g_random_items ||
 	autocvar_g_random_loot));

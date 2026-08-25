@@ -1,88 +1,99 @@
 #pragma once
 
 /// Appends ":mutatorname" to argument for logging
-#define EV_BuildMutatorsString(i, o) \
+#define params(i, o) \
 	i(string, 0) /* mutator string */ \
 	o(string, 0) \
 	/**/
-MUTATOR_HOOKABLE(BuildMutatorsString, EV_BuildMutatorsString);
+MUTATOR_HOOKABLE(BuildMutatorsString, params);
+#undef params
 
 /// Appends ", Mutator name" to ret_string for display
-#define EV_BuildMutatorsPrettyString(i, o) \
+#define params(i, o) \
 	i(string, 0) /* mutator string */ \
 	o(string, 0) \
 	/**/
-MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
+MUTATOR_HOOKABLE(BuildMutatorsPrettyString, params);
+#undef params
 
 /// Appends mutator string for displaying extra gameplay tips
-#define EV_BuildGameplayTipsString(i, o) \
+#define params(i, o) \
 	i(string, 0) /* tips string */ \
 	o(string, 0) \
 	/**/
-MUTATOR_HOOKABLE(BuildGameplayTipsString, EV_BuildGameplayTipsString);
+MUTATOR_HOOKABLE(BuildGameplayTipsString, params);
+#undef params
 
-#define EV_IsFlying(i, o) \
+#define params(i, o) \
 	i(entity, 0) \
 	/**/
-MUTATOR_HOOKABLE(IsFlying, EV_IsFlying);
+MUTATOR_HOOKABLE(IsFlying, params);
+#undef params
 
-#define EV_WP_Format(i, o) \
+#define params(i, o) \
 	i(entity, 0) \
 	i(string, 1) \
 	o(vector, 2) \
 	o(string, 3) \
 	o(string, 4) \
 	/**/
-MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
+MUTATOR_HOOKABLE(WP_Format, params);
+#undef params
 
 /**
  * Called before any player physics, may adjust variables for movement,
  * is run AFTER bot code and idle checking on the server
  */
-#define EV_PlayerPhysics(i, o) \
+#define params(i, o) \
 	i(entity, 0) /* player */ \
 	i(float,  1) /* ticrate */ \
 	/**/
-MUTATOR_HOOKABLE(PlayerPhysics, EV_PlayerPhysics);
+MUTATOR_HOOKABLE(PlayerPhysics, params);
+#undef params
 
 /// Called when a player presses the jump key
-#define EV_PlayerJump(i, o) \
+#define params(i, o) \
 	i(entity, 0) /* player */ \
 	i(float,  1) /* jump height */ \
 	o(float,  1) \
 	i(bool,   2) /* multijump */ \
 	o(bool,   2) \
 	/**/
-MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
+MUTATOR_HOOKABLE(PlayerJump, params);
+#undef params
 
 /// Called during player physics, allows adjusting the movement type used
-#define EV_PM_Physics(i, o) \
+#define params(i, o) \
 	i(entity, 0) /* player */ \
 	i(float,  1) /* maxspeed_mod */ \
 	i(float,  2) /* tick rate */ \
 	/**/
-MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
+MUTATOR_HOOKABLE(PM_Physics, params);
+#undef params
 
 /// Called when a weapon sound is about to be played, allows custom paths etc.
-#define EV_WeaponSound(i, o) \
+#define params(i, o) \
 	i(string, 0) /* sound */ \
 	i(string, 1) /* output */ \
 	o(string, 1) \
 	/**/
-MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
+MUTATOR_HOOKABLE(WeaponSound, params);
+#undef params
 
 /// Called when a weapon model is about to be set, allows custom paths etc.
-#define EV_WeaponModel(i, o) \
+#define params(i, o) \
 	i(string, 0) /* model */ \
 	i(string, 1) /* output */ \
 	o(string, 1) \
 	/**/
-MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);
+MUTATOR_HOOKABLE(WeaponModel, params);
+#undef params
 
 /// Decides whether a player can crouch or not
-#define EV_PlayerCanCrouch(i, o) \
+#define params(i, o) \
 	i(entity, 0) /* player */ \
 	i(bool,   1) /* do_crouch */ \
 	o(bool,   1) \
 	/**/
-MUTATOR_HOOKABLE(PlayerCanCrouch, EV_PlayerCanCrouch);
+MUTATOR_HOOKABLE(PlayerCanCrouch, params);
+#undef params
