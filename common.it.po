@@ -8650,7 +8650,7 @@ msgstr "Infligge %s di danno"
 #: qcsrc/common/weapons/all.qc:869
 #, c-format
 msgid "It shoots %s shots doing %s damage each"
-msgstr "Spara %s spari infliggendo %s di danno ognuno"
+msgstr "Spara %s colpi infliggendo %s di danno ognuno"
 
 #: qcsrc/common/weapons/all.qc:870
 #, c-format
@@ -8665,12 +8665,12 @@ msgstr "Il %s infligge %s di danno al secondo"
 #: qcsrc/common/weapons/all.qc:872
 #, c-format
 msgid "The %s shoots %s shots doing %s damage each"
-msgstr "Il %s spara %s spari infliggendo %s di danno ognuno"
+msgstr "Il %s spara %s colpi infliggendo %s di danno ognuno"
 
 #: qcsrc/common/weapons/all.qc:873
 #, c-format
 msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr "Il %s spara fino a %s spari infliggendo %s di danno ognuno"
+msgstr "Il %s spara fino a %s colpi infliggendo %s di danno ognuno"
 
 #: qcsrc/common/weapons/all.qc:896 qcsrc/common/weapons/all.qc:906
 #: qcsrc/common/weapons/all.qc:927 qcsrc/common/weapons/all.qc:941
@@ -9065,8 +9065,8 @@ msgid ""
 "The secondary fire shoots a burst of multiple randomly-scattered lasers at "
 "once."
 msgstr ""
-"Il fuoco secondario spara una raffica di più laser sparsi casualmente in una "
-"volta sola."
+"Il fuoco secondario spara una raffica di più laser sparsi casualmente alla "
+"volta."
 
 #: qcsrc/common/weapons/weapon/hlac.qc:249
 #, c-format
@@ -9324,8 +9324,8 @@ msgid ""
 "The secondary fire shoots a few less powerful bullets at once with a bit of "
 "scatter."
 msgstr ""
-"Il fuoco secondario spara in una volta sola alcuni proiettili meno potenti "
-"con un po' di dispersione."
+"Il fuoco secondario spara alcuni proiettili meno potenti alla volta, con un "
+"po' di dispersione."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:251
 #, c-format
