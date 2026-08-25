@@ -2,16 +2,10 @@
 
 #include <common/mutators/base.qh>
 
-// register all possible hooks here
+// Register all possible hooks here
 
-// to use a hook, first register your mutator using REGISTER_MUTATOR
+// To use a hook, first register your mutator using REGISTER_MUTATOR,
 // then create your function using MUTATOR_HOOKFUNCTION
-
-// globals
-
-string cmd_name;
-int cmd_argc;
-string cmd_string;
 
 /**
  * Called when a menu command is parsed
@@ -19,27 +13,36 @@ string cmd_string;
  * NOTE: return true if you handled the command, return false to continue handling
  * NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
  * // example:
- * MUTATOR_HOOKFUNCTION(foo, Menu_ConsoleCommand) {
- *     if (MUTATOR_RETURNVALUE) return false; // command was already handled
- *     if (cmd_name == "echocvar" && cmd_argc >= 2) {
+ * MUTATOR_HOOKFUNCTION(foo, Menu_ConsoleCommand)
+ * {
+ *     if (MUTATOR_RETURNVALUE)
+ *         return false; // command was already handled
+ *     string cmd_name = M_ARGV(0, string);
+ *     int cmd_argc = M_ARGV(1, int);
+ *     string cmd_string = M_ARGV(2, string);
+ *     if (cmd_name == "echocvar" && cmd_argc >= 2)
+ *     {
  *         print(cvar_string(argv(1)), "\n");
  *         return true;
  *     }
- *     if (cmd_name == "echostring" && cmd_argc >= 2) {
+ *     if (cmd_name == "echostring" && cmd_argc >= 2)
+ *     {
  *         print(substring(cmd_string, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), "\n");
  *         return true;
  *     }
  *     return false;
  * }
  */
-#define EV_Menu_ConsoleCommand(i, o) \
-	/** command name */ i(string, cmd_name) \
-	/** also, argv() can be used */ i(int, cmd_argc) \
-	/** whole command, use only if you really have to */ i(string, cmd_string) \
+#define params(i, o) \
+	i(string, 0) /* command name */ \
+	i(int,    1) /* argc (also, argv() can be used) */ \
+	i(string, 2) /* whole command, use only if you really have to */ \
 	/**/
-MUTATOR_HOOKABLE(Menu_ConsoleCommand, EV_Menu_ConsoleCommand);
+MUTATOR_HOOKABLE(Menu_ConsoleCommand, params);
+#undef params
 
-#define EV_ConfigureDialogs(i, o) \
-	/** main window entity */ i(entity, MUTATOR_ARGV_0_entity) \
+#define params(i, o) \
+	i(entity, 0) /* main window entity */ \
 	/**/
-MUTATOR_HOOKABLE(ConfigureDialogs, EV_ConfigureDialogs);
+MUTATOR_HOOKABLE(ConfigureDialogs, params);
+#undef params
