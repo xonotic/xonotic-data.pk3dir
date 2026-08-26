@@ -1,7 +1,7 @@
 #pragma once
 
-const string MENU_NIX_NAME = _("NIX");
-const string MENU_NIX_DESCRIPTION = _("No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time a countdown will start, after which everyone will switch to another weapon.");
+#define MENU_NIX_NAME _("NIX")
+#define MENU_NIX_DESCRIPTION _("No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time a countdown will start, after which everyone will switch to another weapon.")
 
 #include <menu/xonotic/mutatortab.qh>
 CLASS(XonoticMutatorNIXTab, XonoticMutatorTab)

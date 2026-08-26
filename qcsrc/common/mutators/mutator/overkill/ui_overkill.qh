@@ -7,8 +7,8 @@
  */
 
 #ifdef MENU_INCLUDE_OVERKILL
-const string MENU_OVERKILL_NAME = _("Overkill");
-const string MENU_OVERKILL_DESCRIPTION = _("Unique arena mutator that replaces all weapons with mostly hitscan ones with a short time to kill for rapid gameplay. The secondary fire of all weapons shoots a %s-like projectile. It also enables %s and %s.");
+#define MENU_OVERKILL_NAME _("Overkill")
+#define MENU_OVERKILL_DESCRIPTION _("Unique arena mutator that replaces all weapons with mostly hitscan ones with a short time to kill for rapid gameplay. The secondary fire of all weapons shoots a %s-like projectile. It also enables %s and %s.")
 
 #include <menu/xonotic/mutatortab.qh>
 CLASS(XonoticMutatorOverkillTab, XonoticMutatorTab)
