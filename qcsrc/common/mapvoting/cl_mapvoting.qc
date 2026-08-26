@@ -36,19 +36,11 @@ bool PreviewExists(string name)
 string MapVote_FormatItem(int id, string text, int _count, float maxwidth, vector fontsize)
 {
 	TC(int, id);
-	string post, pre = strcat(itos(id + 1), ". ");
-	if (mv_detail)
-	{
-		if (_count == 1)
-			post = _(" (1 vote)");
-		else if (_count >= 0 && (mv_flags[id] & GTV_AVAILABLE))
-			post = sprintf(_(" (%d votes)"), _count);
-		else
-			post = "";
-	}
-	else
-		post = "";
+	string post = "";
+	if (mv_detail && (_count == 1 || (_count >= 0 && (mv_flags[id] & GTV_AVAILABLE))))
+		post = sprintf(_(" (%s)"), sprintf(count_votes(_count)));
 
+	string pre = strcat(itos(id + 1), ". ");
 	maxwidth -= stringwidth_nocolors(pre, fontsize) + stringwidth_nocolors(post, fontsize);
 	text = textShortenToWidth(text, maxwidth, fontsize, stringwidth_nocolors);
 	return strcat(pre, text, post);

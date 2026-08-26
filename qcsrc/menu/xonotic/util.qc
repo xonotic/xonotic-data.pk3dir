@@ -706,6 +706,14 @@ string GameType_GetIcon(int cnt)
 	return i ? strcat("gametype_", MapInfo_Type_ToString(i)) : "";
 }
 
+string GameType_GetIcon_FromString(string gtype)
+{
+	if (gtype == "")
+		return "";
+	Gametype i = MapInfo_Type_FromString(gtype, false, false);
+	return i ? strcat("gametype_", MapInfo_Type_ToString(i)) : "";
+}
+
 .void(entity) TR;
 .void(entity, float, float, entity) TD;
 .void(entity, float) TDempty;
