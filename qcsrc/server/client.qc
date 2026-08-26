@@ -1571,7 +1571,7 @@ void player_powerups(entity this)
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = this.items;
 
-	if (!MUTATOR_IS_ENABLED(mutator_instagib))
+	if (!MUTATOR_CALLHOOK(SuperweaponsImmutable, this))
 	{
 		// NOTE: superweapons are a special case and as such are handled here instead of the status effects system
 		if (this.items & IT_SUPERWEAPON)

@@ -59,7 +59,7 @@ MUTATOR_HOOKFUNCTION(cl_ons, CustomizeEventchase)
 	{
 		M_ARGV(0, vector) = generator_camera.origin;
 		M_ARGV(1, vector) = autocvar_cl_eventchase_generator_viewoffset;
-		M_ARGV(0, float) = autocvar_cl_eventchase_generator_distance;
+		M_ARGV(2, float) = autocvar_cl_eventchase_generator_distance;
 		return true;
 	}
 	return false;
