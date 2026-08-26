@@ -60,15 +60,12 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 			othercol = "^2";
 		}
 
-		if (lapdelta > 0)
+		if (lapdelta)
 		{
-			lapstr = sprintf(_(" (-%dL)"), lapdelta);
-			col = "^2";
-		}
-		else if (lapdelta < 0)
-		{
-			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
-			col = "^1";
+			// to translators: LAP_DIFF string shows e.g.: "+2L" where L stands for lap(s)
+			// ^%+d forces a plus sign to show on positive numbers
+			lapstr = sprintf(_(" (%s)"), sprintf(CTX(_("LAP_DIFF^%+dL")), -lapdelta));
+			col = lapdelta > 0 ? "^2" : "^1";
 		}
 	}
 	else if (theirtime > 0) // anticipation
@@ -104,11 +101,16 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 	if (theirtime < 0)
 		return strcat(col, cpname);
 	else if (theirname == "")
-		return strcat(col, sprintf("%s (%s)", cpname, timestr));
-	else if (othertime)
-		return strcat(col, sprintf("%s %s(%s)%s (%s %s)", cpname, othercol, othertimestr, col, timestr, strcat(theirname, col, lapstr)));
+		return strcat(col, cpname, sprintf(_(" (%s)"), timestr));
 	else
-		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
+	{
+		// to translators: TIMEDIFF_PLAYER string shows e.g.: "+0.54 Bob"
+		string time_and_their_name = sprintf(_(" (%s)"), sprintf(CTX(_("TIMEDIFF_PLAYER^%s %s")), timestr, strcat(theirname, col, lapstr)));
+		if (othertime)
+			return strcat(col, cpname, othercol, sprintf(_(" (%s)"), othertimestr), col, time_and_their_name);
+		else
+			return strcat(col, cpname, time_and_their_name);
+	}
 }
 
 void ClearCheckpointSplits(bool quiet)
@@ -211,13 +213,29 @@ void HUD_RaceTimer(bool should_draw)
 		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '1 1 0' * 0.6 * mySize.y));
 		drawstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
+
 		float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
-		s = strcat("^1", sprintf(_("Checkpoint %d"), 1), " (+15.42)", autocvar_cl_race_cptimes_showspeed ? sprintf(" ^7%d%s %s(%+d%s)", 345 * speed_conversion_factor, units_text, rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color), 123 * speed_conversion_factor, units_text) : "");
+		string col = "^1";
+		string cpname = sprintf(_("Checkpoint %d"), 1);
+		string timestr = "+15.42";
+		// strcat ported from MakeRaceString, please keep in sync
+		s = strcat(col, cpname, sprintf(_(" (%s)"), timestr));
+		if (autocvar_cl_race_cptimes_showspeed)
+		{
+			string speed_str = sprintf(CTX(_("SPEED^ %d%s")), 345 * speed_conversion_factor, units_text);
+			string speed_color = rgb_to_hexcolor(autocvar_hud_progressbar_acceleration_color);
+			float speed_diff = 123;
+			// strcat ported from another place of this function, please keep in sync
+			s = strcat(s, "^7", speed_str, speed_color, sprintf(_(" (%s)"), sprintf(CTX(_("SPEED_DIFF^%+d%s")), speed_diff * speed_conversion_factor, units_text)));
+		}
+
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
-		s = sprintf(_("PENALTY: %.1f (%s)"), 2, _("missing a checkpoint"));
-		s = strcat("^1", s);
+		float race_penaltytime = 20;
+		string race_penaltyreason = _("missing a checkpoint");
+		// strcat ported from another place of this function, please keep in sync
+		s = strcat("^1", sprintf(_("PENALTY: %.1f"), race_penaltytime * 0.1), sprintf(_(" (%s)"), race_penaltyreason));
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
@@ -261,10 +279,11 @@ void HUD_RaceTimer(bool should_draw)
 						else if (speed_diff == 0)
 							speed_color = "^3";
 
+						string speed_str = sprintf(CTX(_("SPEED^ %d%s")), speed * speed_conversion_factor, units_text);
 						if (race_time && race_previousbesttime && race_checkpoint_splits_speed[race_checkpoint])
-							s = sprintf("%s ^7%d%s %s(%+d%s)", s, speed * speed_conversion_factor, units_text, speed_color, speed_diff * speed_conversion_factor, units_text);
+							s = strcat(s, "^7", speed_str, speed_color, sprintf(_(" (%s)"), sprintf(CTX(_("SPEED_DIFF^%+d%s")), speed_diff * speed_conversion_factor, units_text)));
 						else
-							s = sprintf("%s ^7%d%s", s, speed * speed_conversion_factor, units_text);
+							s = strcat(s, "^7", speed_str);
 
 						// if fastest cp time, store speed for later comparison
 						if (TIME_DECODE(race_time) - TIME_DECODE(race_previousbesttime) < 0 || !race_checkpoint_splits_speed[race_checkpoint])
@@ -308,8 +327,7 @@ void HUD_RaceTimer(bool should_draw)
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if (a > 0)
 			{
-				s = sprintf(_("PENALTY: %.1f (%s)"), race_penaltytime * 0.1, race_penaltyreason);
-				s = strcat("^1", s);
+				s = strcat("^1", sprintf(_("PENALTY: %.1f"), race_penaltytime * 0.1), sprintf(_(" (%s)"), race_penaltyreason));
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
@@ -372,7 +390,7 @@ void HUD_RaceTimer(bool should_draw)
 					t = 0;
 					col = "^2";
 				}
-				s = strcat(col, sprintf(_("PENALTY: %.1f (%s)"), t, race_penaltyreason));
+				s = strcat(col, sprintf(_("PENALTY: %.1f"), t), sprintf(_(" (%s)"), race_penaltyreason));
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
