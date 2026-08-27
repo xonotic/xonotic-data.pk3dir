@@ -3459,7 +3459,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:43
 msgid "Replace unavailable buffs with others"
-msgstr ""
+msgstr "Remplacer les bonus indisponibles par d'autres"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:47
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:76
@@ -3768,26 +3768,28 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:52
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:34
 msgid "Keep Blaster damage"
-msgstr ""
+msgstr "Conserver les dégâts du Blaster"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:55
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:36
 msgid "Keep Blaster force"
-msgstr ""
+msgstr "Conserver la force du Blaster"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:60
 msgid "Allow Jetpacks and Fuel regenerators"
-msgstr ""
+msgstr "Autoriser les Jetpacks et les régénérateurs de carburant"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:65
 msgid "Enable Rocketminsta"
-msgstr ""
+msgstr "Autoriser Rocketminsta"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:66
 msgid ""
 "The primary fire also explodes on impact, and the secondary fire shoots "
 "laser prongs"
 msgstr ""
+"Le tir primaire explose aussi à l'impact, tandis que le tir secondaire "
+"projette des rayons laser en forme de fourches"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:4
 #, c-format
@@ -3797,6 +3799,11 @@ msgid ""
 "10 seconds to find some or face death if they fail to do so. The secondary "
 "fire does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Les joueurs ne disposent que d'une seule arme, le %s, capable de tuer "
+"instantanément l'adversaire d'un seul tir. Si le joueur vient à manquer de "
+"munitions, il disposera de 10 secondes pour en trouver ; s'il n'y parvient "
+"pas, il mourra. Le tir secondaire n'inflige aucun dégât, mais permet "
+"d'effectuer des sauts acrobatiques."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qc:19
 #, c-format
@@ -4109,11 +4116,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:42
 msgid "Nade types:"
-msgstr ""
+msgstr "Types de grenades :"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:96
 msgid "Random"
-msgstr ""
+msgstr "Aléatoire"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:107
 msgid "Normal nade type, if client selection is disabled"
@@ -4430,7 +4437,7 @@ msgstr "Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:49
 msgid "Replace Strength and Shield with weapons"
-msgstr ""
+msgstr "Remplacer la Force et le Bouclier par des armes"
 
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qh:11
 #, c-format

@@ -27,16 +27,16 @@
 # Simple88, 2016
 # Simple88, 2016
 # Артём Котлубай, 2022
-# Темак, 2022-2023
+# 11fae04751cc88bf0b4daf15dbd7e33d_68cdff3, 2022-2023
 # Темак, 2024
-# Темак, 2024
+# 11fae04751cc88bf0b4daf15dbd7e33d_68cdff3, 2024
 msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-09 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Andrei Stepanov, 2014-2026\n"
+"Last-Translator: Темак, 2024\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
