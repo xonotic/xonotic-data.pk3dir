@@ -155,7 +155,7 @@ void W_Shotgun_Melee_Think(entity this)
 				WarpZone_TransformVelocity(WarpZone_trace_transform, v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, force))
 			);
 			Damage_DamageInfo(trace_endpos, swing_damage, 0, 0, WEP_CVAR_SEC(WEP_SHOTGUN, force), v_forward,
-				WEP_SHOTGUN.m_id | HITTYPE_SECONDARY, trace_ent.species, this.realowner);
+				WEP_SHOTGUN.m_id | HITTYPE_SECONDARY, trace_ent.species, this.realowner, trace_ent);
 
 			if (accuracy_isgooddamage(this.realowner, target_victim))
 				accuracy_add(this.realowner, WEP_SHOTGUN, 0, swing_damage, 0); // add to hit

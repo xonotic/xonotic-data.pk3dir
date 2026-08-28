@@ -26,5 +26,5 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .void(entity this, float thisdmg, int hittype, vector org, vector thisforce) event_damage;
 void Damage_DamageInfo_Apply(
 	entity this, int attacker, vector org, float damage, float edgedamage, float rad, bool rad_negative,
-	float vlen_force, vector force_dir, int deathtype, bool issilent, float species, int colors);
+	float vlen_force, vector force_dir, int deathtype, bool issilent, float species, int colors, entity dmg_receiver_ent);
 #endif

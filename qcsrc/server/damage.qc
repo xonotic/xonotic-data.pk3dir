@@ -738,9 +738,9 @@ float RadiusDamageForSource(
 	{
 		vector force = inflictorvelocity != '0 0 0' ? normalize(inflictorvelocity) : '0 0 0';
 		if (forceintensity >= 0)
-			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity, force, deathtype, 0, attacker);
+			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity, force, deathtype, 0, attacker, NULL);
 		else
-			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, -forceintensity, force, deathtype, 0, attacker);
+			Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, -forceintensity, force, deathtype, 0, attacker, NULL);
 	}
 
 	RadiusDamageForSource_cond_inflictor = inflictor;

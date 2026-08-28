@@ -1084,7 +1084,7 @@ void Draw_ArcBeam(entity this)
 		int colors = (teamplay) ? playerslots[ent_num].team + 1 : entcs_GetClientColors(ent_num);
 		Damage_DamageInfo_Apply(DamageInfo_ent, ent_num, last_origin, WEP_CVAR(WEP_ARC, beam_damage) * falloff, 0, 0,
 			false, WEP_CVAR_SEC(WEP_SHOTGUN, force), WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir),
-			WEP_ARC.m_id, false, trace_ent.species, colors);
+			WEP_ARC.m_id, false, trace_ent.species, colors, trace_ent);
 	}
 
 	if (this.beam_hitlight[0])

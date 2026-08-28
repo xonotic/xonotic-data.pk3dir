@@ -6,15 +6,36 @@ REGISTER_NET_LINKED(ENT_CLIENT_DAMAGEINFO)
 
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
-	vector org = vec3(floor(this.origin.x), floor(this.origin.y), floor(this.origin.z));
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 
 	WriteByte(MSG_ENTITY, etof(this.realowner)); // attacker
 
+	WriteByte(MSG_ENTITY, this.species);
+	WriteByte(MSG_ENTITY, this.colormap);
+
 	WriteShort(MSG_ENTITY, this.projectiledeathtype);
-	WriteVector(MSG_ENTITY, org);
+
+	bool hitscan_hit = this.species & BIT(6);
+	vector org = vec3(floor(this.origin.x), floor(this.origin.y), floor(this.origin.z));
+	if (hitscan_hit)
+	{
+		// org is actually an offset from player origin so we can send it with less data
+		WriteChar(MSG_ENTITY, bound(-BIT(8), org.x, BITS(7)));
+		WriteChar(MSG_ENTITY, bound(-BIT(8), org.y, BITS(7)));
+		WriteChar(MSG_ENTITY, bound(-BIT(8), org.z, BITS(7)));
+	}
+	else
+		WriteVector(MSG_ENTITY, org);
+
 	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
-	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
+
+	// hitscan weapon hits need sending damage receiver entnum and its origin offset to make sure
+	// hit position is actually on the player model in the client, normally it doesn't happen because
+	// the player is pushed away by the hit force
+	if (hitscan_hit)
+		WriteByte(MSG_ENTITY, etof(this.enemy)); // send only dmg_receiver entnum (radius is 0)
+	else
+		WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
 
 	// we can't send the force vector compressed with compressShortVector to 1 byte since
@@ -29,13 +50,11 @@ bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 
 	// max 255 * 4 = 1020 force length, min 0 (discards negative values)
 	WriteByte(MSG_ENTITY, bound(0, this.dmg_force / 4, BITS(8)));
-
-	WriteByte(MSG_ENTITY, this.species);
-	WriteByte(MSG_ENTITY, this.colormap);
 	return true;
 }
 
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, float force, vector dir, int deathtype, float bloodtype, entity dmg_owner)
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, float force, vector dir,
+	int deathtype, float bloodtype, entity dmg_owner, entity dmg_receiver)
 {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
@@ -44,9 +63,16 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 		deathtype |= 0x8000;
 
 	entity e = new_pure(damageinfo);
+
 	// origin is just data to be sent
 	//setorigin(e, org);
-	e.origin = org;
+	bool hitscan_hit = (rad == 0 && dmg_receiver);
+	// e.origin is actually an offset from player origin
+	if (hitscan_hit)
+		e.origin = org - dmg_receiver.origin;
+	else
+		e.origin = org;
+
 	e.projectiledeathtype = deathtype;
 	e.dmg = coredamage;
 	e.dmg_edge = edgedamage;
@@ -64,6 +90,11 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.species = bloodtype & BITS(4); // it only uses bits from 0 to 3, see SPECIES_* constants
 	if(rad_negative)
 		e.species |= BIT(7);
+	if (hitscan_hit)
+	{
+		e.species |= BIT(6); // hitscan_hit
+		e.enemy = dmg_receiver;
+	}
 
 	e.colormap = (teamplay) ? dmg_owner.team : dmg_owner.clientcolors; // NOTE: doesn't work on non-clients
 
@@ -207,9 +238,81 @@ void DamageEffect(entity this, vector org, float damage, int type, int specnum)
 	++this.total_damages;
 }
 
+bool Damage_DamageInfo_Apply_To_Ent(entity it, entity attacker_entcs, float damage, float edgedamage,
+	float rad, bool rad_negative, float vlen_force, vector force, int species, bool hitscan_hit)
+{
+	int forcemul = (rad_negative ? -1 : 1);
+	float thisdmg;
+	vector thisforce;
+	if (hitscan_hit)
+	{
+		thisdmg = damage;
+		thisforce = forcemul * force;
+	}
+	else if (rad)
+	{
+		vector nearest = NearestPointOnBox(it, w_org);
+		thisdmg = ((vlen(nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
+		if (thisdmg >= 1)
+			return false;
+		if (thisdmg < 0)
+			thisdmg = 0;
+		if (damage)
+		{
+			thisdmg = damage + (edgedamage - damage) * thisdmg;
+			thisforce = forcemul * vlen_force * (thisdmg / damage) * normalize(it.origin - w_org);
+		}
+		else
+		{
+			thisdmg = 0;
+			thisforce = forcemul * vlen_force * normalize(it.origin - w_org);
+		}
+	}
+	else
+	{
+		vector nearest = NearestPointOnBox(it, w_org);
+		if (vdist((nearest - w_org), >, bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)))
+			return false;
+
+		thisdmg = damage;
+		thisforce = forcemul * force;
+	}
+
+	if (it.damageforcescale && vdist(thisforce, !=, 0))
+	{
+		it.velocity += damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, damagepush_speedfactor);
+		UNSET_ONGROUND(it);
+	}
+
+	if (w_issilent)
+		it.silent = 1;
+
+	if (it.event_damage)
+		it.event_damage(it, thisdmg, w_deathtype, w_org, thisforce);
+
+	DamageEffect(it, w_org, thisdmg, w_deathtype, species);
+
+	if (it.entnum && it.entnum < 255 // only players
+	&& it.entnum - 1 == current_player
+	&& !autocvar_chase_active && autocvar_cl_hit_indicator)
+	{
+		if (rad)
+			thisforce = normalize(it.origin - w_org);
+		else if (attacker_entcs)
+			thisforce = normalize(it.origin - attacker_entcs.origin);
+		else
+			thisforce = force;
+		HitIndicatorUpdate(attacker_entcs, damage, thisforce, rad_negative);
+	}
+
+	if (it != csqcplayer && it.entnum && it.entnum < 255)
+		return true; // this impact damaged another player
+	return false;
+}
+
 void Damage_DamageInfo_Apply(entity this, int attacker, vector org, float damage, float edgedamage, float rad,
                              bool rad_negative, float vlen_force, vector force_dir, int deathtype, bool issilent,
-                             float species, int colors)
+                             float species, int colors, entity dmg_receiver_ent)
 {
 	bool hitplayer = false;
 	entity attacker_entcs = entcs_receiver(attacker);
@@ -224,8 +327,6 @@ void Damage_DamageInfo_Apply(entity this, int attacker, vector org, float damage
 	vector force = force_dir * vlen_force;
 	if (vlen_force < 1)
 		vlen_force = 1;
-
-	int forcemul = (rad_negative ? -1 : 1);
 
 	// team color logic copied from projectiles
 	int tcolor = colors;
@@ -242,68 +343,21 @@ void Damage_DamageInfo_Apply(entity this, int attacker, vector org, float damage
 	particles_colormin = colormapPaletteColor(floor(tcolor / 16), false);
 	particles_colormax = colormapPaletteColor(tcolor % 16, true);
 
+	if (dmg_receiver_ent)
+	{
+		hitplayer = Damage_DamageInfo_Apply_To_Ent(dmg_receiver_ent, attacker_entcs, damage, edgedamage,
+			rad, rad_negative, vlen_force, force, species, true);
+		goto damage_applied;
+	}
+
 	FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity && !is_pure(it), {
-		float thisdmg;
-		vector thisforce;
-		vector nearest = NearestPointOnBox(it, w_org);
-		if (rad)
-		{
-			thisdmg = ((vlen(nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
-			if(thisdmg >= 1)
-				continue;
-			if(thisdmg < 0)
-				thisdmg = 0;
-			if(damage)
-			{
-				thisdmg = damage + (edgedamage - damage) * thisdmg;
-				thisforce = forcemul * vlen_force * (thisdmg / damage) * normalize(it.origin - w_org);
-			}
-			else
-			{
-				thisdmg = 0;
-				thisforce = forcemul * vlen_force * normalize(it.origin - w_org);
-			}
-		}
-		else
-		{
-			if(vdist((nearest - w_org), >, bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)))
-				continue;
-
-			thisdmg = damage;
-			thisforce = forcemul * force;
-		}
-
-		if(it.damageforcescale)
-			if(vdist(thisforce, !=, 0))
-			{
-				it.velocity += damage_explosion_calcpush(it.damageforcescale * thisforce, it.velocity, damagepush_speedfactor);
-				UNSET_ONGROUND(it);
-			}
-
-		if(w_issilent)
-			it.silent = 1;
-
-		if(it.event_damage)
-			it.event_damage(it, thisdmg, w_deathtype, w_org, thisforce);
-
-		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
-
-		if (it.entnum && it.entnum < 255 // only players
-		&& it.entnum - 1 == current_player && attacker != current_player
-		&& !autocvar_chase_active && autocvar_cl_hit_indicator)
-		{
-			if (rad)
-				thisforce = normalize(it.origin - w_org);
-			else if (attacker_entcs)
-				thisforce = normalize(it.origin - attacker_entcs.origin);
-			else
-				thisforce = force;
-			HitIndicatorUpdate(attacker_entcs, damage, thisforce, rad_negative);
-		}
-
-		if(it != csqcplayer && it.entnum && it.entnum < 255)
-			hitplayer = true; // this impact damaged another player
+		bool _hitplayer = Damage_DamageInfo_Apply_To_Ent(it, attacker_entcs, damage, edgedamage,
+			rad, rad_negative, vlen_force, force, species, false);
+		if (!hitplayer)
+			hitplayer = _hitplayer;
 	});
+
+	LABEL(damage_applied);
 
 	if(DEATH_ISVEHICLE(w_deathtype) && !(w_deathtype & HITTYPE_SPAM))
 	{
@@ -465,14 +519,41 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 {
 	int attacker = ReadByte() - 1;
 
+	int species = ReadByte();
+	bool rad_negative = boolean(species & BIT(7));
+	bool hitscan_hit = boolean(species & BIT(6));
+	species = (species & BITS(4));
+
+	int colors = ReadByte();
+
 	int deathtype = ReadShort();
 	bool issilent = (deathtype & 0x8000);
 	deathtype = (deathtype & 0x7FFF);
 
-	vector org = ReadVector();
+	vector org;
+	if (hitscan_hit)
+	{
+		// org is actually an offset from player model origin
+		org.x = ReadChar();
+		org.y = ReadChar();
+		org.z = ReadChar();
+	}
+	else
+		org = ReadVector();
 
 	int damage = ReadByte();
-	int rad = ReadByte();
+
+	entity dmg_receiver_ent = NULL;
+	int rad = 0;
+	if (hitscan_hit)
+	{
+		int dmg_receiver = ReadByte() - 1;
+		dmg_receiver_ent = CSQCModel_server2csqc(entcs_receiver(dmg_receiver).sv_entnum);
+		org += dmg_receiver_ent.origin; // convert org from offset to absolute position
+	}
+	else
+		rad = ReadByte();
+
 	int edgedamage = ReadByte();
 
 	// map [-127, 127] back to [-1, 1]
@@ -483,12 +564,6 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	int vlen_force = ReadByte() * 4 + 2; // + 2 rounds the value and makes it > 0 so that decals can always work
 
-	int species = ReadByte();
-	bool rad_negative = boolean(species & BIT(7));
-	species = (species & BITS(4));
-
-	int colors = ReadByte();
-
 	return = true;
 
 	if (!isNew)
@@ -496,7 +571,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	Damage_DamageInfo_Apply(
 		this, attacker, org, damage, edgedamage, rad, rad_negative,
-		vlen_force, force_dir, deathtype, issilent, species, colors);
+		vlen_force, force_dir, deathtype, issilent, species, colors, dmg_receiver_ent);
 }
 
 #endif
