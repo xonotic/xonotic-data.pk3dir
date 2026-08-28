@@ -14,10 +14,6 @@ void nade_normal_boom(entity this)
 		DMG_NOWEP,
 		this.enemy
 	);
-	vector norm_vel = (this.velocity == '0 0 0' ? '0 0 0' : normalize(this.velocity));
-	Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-		autocvar_g_nades_nade_radius, autocvar_g_nades_nade_force, norm_vel,
-		this.projectiledeathtype, 0, this);
 }
 #endif // SVQC
 #ifdef MENUQC
