@@ -174,6 +174,19 @@ void HUD_HealthArmor(bool should_draw)
 		fuel_alpha = bound(0, start_alpha + (1 - start_alpha) * f, 1);
 	}
 
+	vector health_color, health_combined_color = '0 1 1', health_health_color = '0 1 1';
+	if (STAT(FROZEN))
+	{
+		health_color = '0 1 1'; // aqua
+
+		float hp_percent = 1;
+		float f = (1 - hp_percent / 25) * sin(2*M_PI * time); // code copied from HUD_Get_Num_Color
+		health_combined_color *= 1 - f;                       // please keep in sync
+		health_health_color   *= 1 - f;                       // ...
+	}
+	else
+		health_color = autocvar_hud_progressbar_health_color;
+
 	int baralign = autocvar_hud_panel_healtharmor_baralign;
 	int iconalign = autocvar_hud_panel_healtharmor_iconalign;
 
@@ -190,7 +203,7 @@ void HUD_HealthArmor(bool should_draw)
 		{
 			biggercount = "health";
 			if (autocvar_hud_panel_healtharmor_progressbar)
-				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_health, hp / maxtotal, 0, (baralign == 1 || baralign == 2), autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos, mySize, autocvar_hud_panel_healtharmor_progressbar_health, hp / maxtotal, 0, (baralign == 1 || baralign == 2), health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			if (armor && autocvar_hud_panel_healtharmor_text)
 				drawpic_aspect_skin(pos + eX * mySize.x - eX * 0.5 * mySize.y, "armor", '0.5 0.5 0' * mySize.y, '1 1 1', panel_fg_alpha * armor / health, DRAWFLAG_NORMAL);
 		}
@@ -203,7 +216,7 @@ void HUD_HealthArmor(bool should_draw)
 				drawpic_aspect_skin(pos + eX * mySize.x - eX * 0.5 * mySize.y, "health", '0.5 0.5 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		if (autocvar_hud_panel_healtharmor_text)
-			DrawNumIcon(pos, mySize, hp, biggercount, false, false, iconalign, HUD_Get_Num_Color(hp, maxtotal, true), 1);
+			DrawNumIcon(pos, mySize, hp, biggercount, false, false, iconalign, (STAT(FROZEN) ? health_combined_color : HUD_Get_Num_Color(hp, maxtotal, true)), 1);
 
 		if (fuel)
 			HUD_Panel_DrawProgressBar(pos, vec2(mySize.x, 0.2 * mySize.y), "progressbar", fuel / 100, 0, (baralign == 1 || baralign == 3), autocvar_hud_progressbar_fuel_color, fuel_alpha * panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
@@ -262,15 +275,15 @@ void HUD_HealthArmor(bool should_draw)
 					&& time - health_damagetime < 1)
 					{
 						float health_damagealpha = 1 - (time - health_damagetime) * (time - health_damagetime);
-						HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, health_beforedamage / maxhealth, is_vertical, health_baralign, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * health_damagealpha, DRAWFLAG_NORMAL);
+						HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, health_beforedamage / maxhealth, is_vertical, health_baralign, health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * health_damagealpha, DRAWFLAG_NORMAL);
 					}
 					if (health <= autocvar_hud_panel_healtharmor_progressbar_gfx_lowhealth)
 						pain_health_alpha = blink(0.85, 0.15, 9);
 				}
-				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health / maxhealth, is_vertical, health_baralign, autocvar_hud_progressbar_health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
+				HUD_Panel_DrawProgressBar(pos + health_offset, mySize, autocvar_hud_panel_healtharmor_progressbar_health, p_health / maxhealth, is_vertical, health_baralign, health_color, autocvar_hud_progressbar_alpha * panel_fg_alpha * pain_health_alpha, DRAWFLAG_NORMAL);
 			}
 			if (autocvar_hud_panel_healtharmor_text)
-				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, false, health_iconalign, HUD_Get_Num_Color(health, maxhealth, true), 1);
+				DrawNumIcon(pos + health_offset, mySize, health, "health", is_vertical, false, health_iconalign, (STAT(FROZEN) ? health_health_color : HUD_Get_Num_Color(health, maxhealth, true)), 1);
 		}
 
 		//if (armor)
