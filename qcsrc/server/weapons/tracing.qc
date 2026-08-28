@@ -63,7 +63,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, .entity weaponentity, vect
 		w_shotend = view_org + s_forward * autocvar_g_trueaim_minrange;
 
 	// track max damage
-	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
+	if (maxdamage && IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
 		accuracy_add(ent, wep, maxdamage, 0, 0); // add to fired
 
 	if (IS_PLAYER(ent))
@@ -261,8 +261,7 @@ void FireRailgunBullet_cb(vector start, vector hit, vector end)
 void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector end, float bdamage, bool headshot_notify, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector dir = normalize(end - start);
-	vector force = dir * bforce;
-	end += dir; // go a little bit into the wall because we need to hit this wall later
+	end += dir * bforce; // go a little bit into the wall because we need to hit this wall later
 
 	bool headshot = false; // indicates that one of the targets hit was a headshot
 
@@ -270,7 +269,7 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 	// non-solid so we can hit the next, while doing this we spawn effects and
 	// note down which entities were hit so we can damage them later
 	entity o = this;
-	vector trans_force;
+	vector trans_dir;
 	FireRailgunBullet_cb_this = this;
 	do
 	{
@@ -283,9 +282,9 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 			continue;
 		}
 
-		trans_force = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
+		trans_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		if (trace_ent.solid == SOLID_BSP)
-			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, trans_force, deathtype, trace_ent.species, this);
+			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, bforce, trans_dir, deathtype, trace_ent.species, this);
 
 		// If it is NULL we can't hurt it so stop now
 		if (trace_ent == NULL || trace_fraction == 1)
@@ -300,7 +299,8 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 		trace_ent.railgunhitloc = trace_endpos;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
-		trace_ent.railgunforce = trans_force;
+		trace_ent.railgunforcedir = trans_dir;
+		trace_ent.railgunforce = trans_dir * bforce;
 
 		if (trace_ent.solid == SOLID_BSP) // stop if this is a wall
 			break;
@@ -347,7 +347,7 @@ void FireRailgunBullet(entity this, .entity weaponentity, vector start, vector e
 			Damage(it, this, this, bdamage * foff, deathtype, weaponentity, it.railgunhitloc, it.railgunforce * ffs);
 			if (it.solid == SOLID_SLIDEBOX)
 				Damage_DamageInfo(it.railgunhitloc, bdamage * foff, 0, 0,
-					bforce * ffs * normalize(it.railgunforce), deathtype, it.species, this);
+					bforce * ffs, it.railgunforcedir, deathtype, it.species, this);
 		}
 
 		// Reset fields before the list is cleared
@@ -447,7 +447,7 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
 			is_weapclip = true;
 
 		if (!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
-			Damage_DamageInfo(start, damage * damage_fraction, 0, 0, max(1, force) * dir * damage_fraction, dtype, hit.species, this);
+			Damage_DamageInfo(start, damage * damage_fraction, 0, 0, force * damage_fraction, dir, dtype, hit.species, this);
 
 		// Avoid self-damage (except after going through a warp)
 		// avoid hitting the same entity twice (engine bug)
@@ -541,7 +541,7 @@ void fireBullet_falloff(entity this, .entity weaponentity, vector start, vector 
 		start = trace_endpos;
 
 		if (hit.solid == SOLID_BSP)
-			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -damage_fraction, dtype, 0, this);
+			Damage_DamageInfo(start, 0, 0, 0, force * damage_fraction, -dir, dtype, 0, this);
 	}
 
 	if (headshot)
