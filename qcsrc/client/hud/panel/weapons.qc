@@ -477,9 +477,8 @@ void Weapons_Draw(
 	if (weapon_pos_current.x == -1)
 		weapon_pos_current = panel_pos;
 
-	float switch_speed = (autocvar_hud_panel_weapons_selection_speed <= 0 || autocvar__hud_configure)
-		? 999
-		: frametime * autocvar_hud_panel_weapons_selection_speed;
+	bool switch_instant = (autocvar_hud_panel_weapons_selection_speed <= 0 || autocvar__hud_configure);
+	float switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
 	// draw background behind currently selected weapon
@@ -526,14 +525,19 @@ void Weapons_Draw(
 		// update position of the currently selected weapon
 		if (it == panel_switchweapon)
 		{
-			if (weapon_pos_current.y > weapon_pos.y)
-				weapon_pos_current.y = max(weapon_pos.y, weapon_pos_current.y - switch_speed * (weapon_pos_current.y - weapon_pos.y));
-			else if (weapon_pos_current.y < weapon_pos.y)
-				weapon_pos_current.y = min(weapon_pos.y, weapon_pos_current.y + switch_speed * (weapon_pos.y - weapon_pos_current.y));
-			if (weapon_pos_current.x > weapon_pos.x)
-				weapon_pos_current.x = max(weapon_pos.x, weapon_pos_current.x - switch_speed * (weapon_pos_current.x - weapon_pos.x));
-			else if (weapon_pos_current.x < weapon_pos.x)
-				weapon_pos_current.x = min(weapon_pos.x, weapon_pos_current.x + switch_speed * (weapon_pos.x - weapon_pos_current.x));
+			if (switch_instant)
+				weapon_pos_current = weapon_pos;
+			else
+			{
+				if (weapon_pos_current.y > weapon_pos.y)
+					weapon_pos_current.y = max(weapon_pos.y, weapon_pos_current.y - switch_speed * (weapon_pos_current.y - weapon_pos.y));
+				else if (weapon_pos_current.y < weapon_pos.y)
+					weapon_pos_current.y = min(weapon_pos.y, weapon_pos_current.y + switch_speed * (weapon_pos.y - weapon_pos_current.y));
+				if (weapon_pos_current.x > weapon_pos.x)
+					weapon_pos_current.x = max(weapon_pos.x, weapon_pos_current.x - switch_speed * (weapon_pos_current.x - weapon_pos.x));
+				else if (weapon_pos_current.x < weapon_pos.x)
+					weapon_pos_current.x = min(weapon_pos.x, weapon_pos_current.x + switch_speed * (weapon_pos.x - weapon_pos_current.x));
+			}
 		}
 
 		// draw the weapon accuracy
@@ -549,20 +553,18 @@ void Weapons_Draw(
 			}
 		}
 
-		vector weapon_size_real = noncurrent_size;
-		float weapon_alpha_real = noncurrent_alpha;
 		float radius_factor_x = 1 - bound(0, fabs(weapon_pos.x - weapon_pos_current.x) / radius_size.x, 1);
 		float radius_factor_y = 1 - bound(0, fabs(weapon_pos.y - weapon_pos_current.y) / radius_size.y, 1);
+		float weapon_alpha_real = noncurrent_alpha;
+		vector weapon_size_real = noncurrent_size;
 		if (radius_factor_x || radius_factor_y)
 		{
+			weapon_alpha_real += (panel_fg_alpha - noncurrent_alpha) * min(radius_factor_x, radius_factor_y);
 			weapon_size_real.x += (weapon_size.x - noncurrent_size.x) * radius_factor_x;
 			weapon_size_real.y += (weapon_size.y - noncurrent_size.y) * radius_factor_y;
-			weapon_alpha_real += (panel_fg_alpha - noncurrent_alpha) * min(radius_factor_x, radius_factor_y);
 		}
 
-		vector weapon_pos_real = weapon_pos;
-		weapon_pos_real.x = weapon_pos.x + (weapon_size.x - weapon_size_real.x) * 0.5;
-		weapon_pos_real.y = weapon_pos.y + (weapon_size.y - weapon_size_real.y) * 0.5;
+		vector weapon_pos_real = weapon_pos + (weapon_size - weapon_size_real) * 0.5;
 
 		// drawing all the weapon items
 		if (weapons_stat & WepSet_FromWeapon(it))
