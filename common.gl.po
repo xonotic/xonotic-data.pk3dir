@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-09 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020\n"
+"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2026\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -97,7 +97,7 @@ msgstr "^1Ollando: ^7%s"
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
-msgstr "Preme ^3%s^1 para ver"
+msgstr "Preme ^3%s^1 para observar"
 
 #: qcsrc/client/hud/panel/infomessages.qc:117
 #: qcsrc/menu/xonotic/keybinder.qc:73
@@ -565,7 +565,7 @@ msgstr "Menú rapido do servidor por defecto"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "QMCMD^Spectate a player"
-msgstr "QMCMD^Ollar a un xogador"
+msgstr "QMCMD^Observar a un xogador"
 
 #: qcsrc/client/hud/panel/racetimer.qc:65
 #, c-format
@@ -1311,36 +1311,36 @@ msgstr "nós"
 
 #: qcsrc/client/main.qc:1344
 msgid "No Weapons Arena"
-msgstr "Sen Armas na Area"
+msgstr "Sen Armas na Arena"
 
 #: qcsrc/client/main.qc:1345
 msgid "All Weapons Arena"
-msgstr "Todalas Armas na Area"
+msgstr "Todalas Armas na Arena"
 
 #: qcsrc/client/main.qc:1346
 msgid "All Available Weapons Arena"
-msgstr "Dipoñibles Todalas Armas na Area"
+msgstr "Dipoñibles Todalas Armas na Arena"
 
 #: qcsrc/client/main.qc:1347
 msgid "Standard Weapons Arena"
-msgstr ""
+msgstr "Arena de armas estándar"
 
 #: qcsrc/client/main.qc:1348
 msgid "Standard Available Weapons Arena"
-msgstr ""
+msgstr "Arena de armas estándar dispoñibles"
 
 #: qcsrc/client/main.qc:1349
 msgid "Extended Weapons Arena"
-msgstr ""
+msgstr "Arena de armas ampliada"
 
 #: qcsrc/client/main.qc:1350
 msgid "Extended Available Weapons Arena"
-msgstr ""
+msgstr "Arena de armas ampliada dispoñibles"
 
 #: qcsrc/client/main.qc:1357
 #, c-format
 msgid "%s Arena"
-msgstr "%s Area"
+msgstr "%s Arena"
 
 #: qcsrc/client/main.qc:1368 qcsrc/client/main.qc:1373
 #, c-format
@@ -1551,7 +1551,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Clan Arena"
-msgstr "Clan Area"
+msgstr "Clan Arena"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Kill all enemy teammates to win the round"
@@ -1685,7 +1685,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Complete the Stage"
-msgstr ""
+msgstr "Completar o escenario"
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Race to the finish line for the fastest time"
@@ -3134,13 +3134,15 @@ msgstr "Activar"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:24
 msgid "Bleed below health:"
-msgstr ""
+msgstr "Sangrado por debaixo da saúde:"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:30
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)."
 msgstr ""
+"Cantidade de saúde por debaixo da cal os xogadores comezan a sangrar (a "
+"saúde vaise reducindo e non poden saltar)."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:69
 #, c-format
@@ -3148,8 +3150,8 @@ msgid ""
 "The %s buff gives you infinite ammo until the buff expires, so you don't "
 "need to worry about running out of ammo."
 msgstr ""
-"O  potenciador %s dáche munición infinita ata que remata o seu efecto, así "
-"que non tes que preocuparte por quedar sen balas."
+"A mellora %s dáche munición infinita ata que remata o seu efecto, así que "
+"non tes que preocuparte por quedar sen balas."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:70
 #, c-format
@@ -3170,8 +3172,8 @@ msgid ""
 "The %s buff increases the knockback force you deal, and makes you immune to "
 "knockback while the buff is active."
 msgstr ""
-"O potenciador %s aumenta a forza de retroceso que provocas e faiche inmune "
-"ao retroceso mentres o potenciador estea activo."
+"A mellora %s aumenta a forza de retroceso que provocas e faiche inmune ao "
+"retroceso mentres a mellora estea activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/bash.qc:28
 msgid "It also slightly increases the knockback you deal to yourself."
@@ -3187,8 +3189,8 @@ msgid ""
 "The %s buff causes your enemies and monsters to slow down for a few seconds "
 "when you attack them, while the buff is active."
 msgstr ""
-"O potenciador %s fai que os teus inimigos e monstros se volvan máis lentos "
-"durante uns segundos cando os atacas, mentres o potenciador estea activo."
+"A mellora%s fai que os teus inimigos e monstros se volvan máis lentos "
+"durante uns segundos cando os atacas, mentres a mellora estea activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
@@ -3206,7 +3208,7 @@ msgid ""
 "While you have the %s buff, you can crouch while mid-air to switch your "
 "gravity, allowing flight."
 msgstr ""
-"Mentres tes o potenciador %s, podes agacharte no aire para cambiar a túa "
+"Mentres tes a mellora %s, podes agacharte no aire para cambiar a túa "
 "gravidade, o que che permite voar."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/flight.qh:11
@@ -3219,9 +3221,8 @@ msgid ""
 "The %s buff sets any enemies or monsters you attack alight, dealing burn "
 "damage to them for several seconds until the buff expires."
 msgstr ""
-"O potenciador %s prende lume a calquera inimigo ou monstro que ataques, "
-"causando dano por queimadura durante varios segundos ata que o potenciador "
-"remata."
+"A mellora%s prende lume a calquera inimigo ou monstro que ataques, causando "
+"dano por queimadura durante varios segundos ata ca mellora  remata."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/inferno.qh:17
 msgid "Inferno"
@@ -3231,8 +3232,7 @@ msgstr "Inferno"
 #, c-format
 msgid ""
 "The %s buff greatly increases your jump height, while the buff is active."
-msgstr ""
-"O potenciador %s aumenta moito a túa altura de salto mentres está activo."
+msgstr "A mellora %s aumenta moito a túa altura de salto mentres está activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/jump.qc:26
 msgid "It also makes you immune to fall damage."
@@ -3248,7 +3248,7 @@ msgid ""
 "While you have the %s buff, each attack has a chance of being a critical hit "
 "with greatly increased damage."
 msgstr ""
-"Mentres tes o potenciador %s, cada ataque ten a posibilidade de ser un golpe "
+"Mentres tes a mellora %s, cada ataque ten a posibilidade de ser un golpe "
 "crítico con un dano moito maior."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/luck.qh:13
@@ -3261,6 +3261,8 @@ msgid ""
 "The %s buff increases your item pickup range, collecting nearby items for "
 "you while the buff is active."
 msgstr ""
+"A mellora %s aumenta o teu alcance para obxectos recollibles, recollendo por "
+"ti os obxectos próximos mentres está activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/magnet.qh:10
 msgid "Magnet"
@@ -3273,9 +3275,9 @@ msgid ""
 "health you can have before health starts to rot, and reduces health rot "
 "speed until the buff expires."
 msgstr ""
-"O potenciador %s aumenta a velocidade de rexeneración da vida, incrementa a "
+"A mellora %s aumenta a velocidade de rexeneración da vida, incrementa a "
 "saúde máxima que podes ter antes de que comece a decaer e reduce a "
-"velocidade de perda de saúde ata que o potenciador remata."
+"velocidade de perda de saúde ata ca mellora remata."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/medic.qc:37
 msgid ""
@@ -3292,7 +3294,7 @@ msgstr "Menciña"
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:22
 #, c-format
 msgid "The %s buff greatly reduces your damage taken while the buff is active."
-msgstr "O potenciador %s reduce moito o dano que recibes mentres está activo."
+msgstr "A mellora %s reduce moito o dano que recibes mentres está activa."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/resistance.qc:23
 msgid "This also impacts the damage you deal to yourself."
@@ -3307,7 +3309,7 @@ msgstr "Resistencia"
 msgid ""
 "The %s buff allows you to press %s to switch places with a nearby enemy once."
 msgstr ""
-"O potenciador %s permítelle premer %s para intercambiar lugares cun inimigo "
+"A mellora %s permítelle premer %s para intercambiar lugares cun inimigo "
 "próximo unha vez."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/swapper.qc:93
@@ -3336,14 +3338,14 @@ msgid ""
 "The %s buff converts some of the damage you deal to enemies and monsters "
 "into health for yourself, until the buff expires."
 msgstr ""
-"O potenciador %s converte parte do dano que causas a inimigos e monstros en "
-"vida para ti, ata que o potenciador remata."
+"A mellora %s converte parte do dano que causas a inimigos e monstros en vida "
+"para ti, ata ca mellora remata."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qc:31
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qc:28
 #, c-format
 msgid "In some sense, this is the opposite of the %s buff."
-msgstr "En certo sentido, isto é o contrario do potenciador %s."
+msgstr "En certo sentido, isto é o contrario da mellora %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vampire.qh:10
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qh:6
@@ -3357,8 +3359,8 @@ msgid ""
 "The %s buff reciprocates a portion of the damage enemies deal to you onto "
 "them, until the buff expires."
 msgstr ""
-"O potenciador %s devolve unha parte do dano que os inimigos che causan sobre "
-"eles, ata que o potenciador remata."
+"A mellora %s devolve unha parte do dano que os inimigos che causan sobre "
+"eles, ata ca mellora remata."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/vengeance.qh:13
 msgid "Vengeance"
@@ -3390,28 +3392,28 @@ msgstr "Desactivar"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:22
 msgid "Enable only if placed by mapper"
-msgstr ""
+msgstr "Activar só se foi colocado polo deseñador do mapa"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:28
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:34
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:40
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:40
 msgid "Allow maps to spawn:"
-msgstr ""
+msgstr "Permitir cos mapas xeren:"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:43
 msgid "Replace unavailable buffs with others"
-msgstr ""
+msgstr "Substituír as melloras non dispoñibles por outras"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:47
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:76
 msgid "Allow dropping"
-msgstr ""
+msgstr "Permitir soltar"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:50
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:85
 msgid "Replace powerups with buffs"
-msgstr ""
+msgstr "Substituír os potenciadores por melloras"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:59
 #, c-format
@@ -3419,6 +3421,8 @@ msgid ""
 "Enable buff pickups (random bonuses like %s and %s) on the maps that support "
 "them."
 msgstr ""
+"Activar recollibles de melloras (bonificacións aleatorias como %s e %s) nos "
+"mapas cos admitan."
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qh:6 qcsrc/common/util.qc:311
 #: qcsrc/menu/xonotic/guide/guide.qh:15
@@ -3442,7 +3446,7 @@ msgstr "Encuberto"
 
 #: qcsrc/common/mutators/mutator/cloaked/ui_cloaked.qc:17
 msgid "All players are almost invisible."
-msgstr ""
+msgstr "Tódolos xogadores son case invisibles."
 
 #: qcsrc/common/mutators/mutator/damagetext/ui_damagetext.qc:22
 msgid "Damage Text"
@@ -3612,7 +3616,7 @@ msgid ""
 "instead giving players the %s, which immediately frags players in a single "
 "shot, hence the name \"InstaGib.\""
 msgstr ""
-"%s é un mutador que elimina todas as armas e recollidas de armas do mapa, e "
+"%s é un mutador que elimina todas as armas e recollibles de armas do mapa, e "
 "en vez diso dá aos xogadores o %s, que elimina aos xogadores nun só disparo, "
 "de aí o nome \"InstaGib\"."
 
@@ -3686,44 +3690,47 @@ msgstr "Vida extra"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:36
 msgid "Starting ammo:"
-msgstr ""
+msgstr "Munición inicial:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:39
 msgid "Ammo from weapons and cells:"
-msgstr ""
+msgstr "Munición das armas e das células:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:44
 msgid "Extra lives per pickup:"
-msgstr ""
+msgstr "Vidas extra por recollible:"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:47
 msgid ""
 "How many extra lives to reward a player when they pick up the Extra life"
 msgstr ""
+"Cantas vidas extra se lle conceden a un xogador cando recolle a vida extra"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:52
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:34
 msgid "Keep Blaster damage"
-msgstr ""
+msgstr "Manter o dano do Bláster"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:55
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:36
 msgid "Keep Blaster force"
-msgstr ""
+msgstr "Manter a forza do Bláster"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:60
 msgid "Allow Jetpacks and Fuel regenerators"
-msgstr ""
+msgstr "Permitir Mochila propulsora e rexeneradores de combustible"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:65
 msgid "Enable Rocketminsta"
-msgstr ""
+msgstr "Activar Foguete minsta"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:66
 msgid ""
 "The primary fire also explodes on impact, and the secondary fire shoots "
 "laser prongs"
 msgstr ""
+"O disparo principal tamén explota ao impactar, e o disparo secundario lanza "
+"puntas láser"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:4
 #, c-format
@@ -3733,6 +3740,10 @@ msgid ""
 "10 seconds to find some or face death if they fail to do so. The secondary "
 "fire does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Os xogadores recibirán unha única arma, a %s, que pode matar "
+"instantaneamente o opoñente cun só disparo. Se o xogador queda sen munición, "
+"terá 10 segundos para atopar máis ou morrerá se non o consegue. O disparo "
+"secundario non causa dano, pero é útil para facer Saltos de técnica."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qc:19
 #, c-format
@@ -3740,24 +3751,27 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode %s orbs with "
 "the %s primary fire."
 msgstr ""
+"Os proxectís non se poden destruír. Porén, aínda podes facer explotar orbes "
+"%s co disparo principal de %s."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qh:6
 msgid "Invincible projectiles"
-msgstr ""
+msgstr "Proxectís invencibles"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:20
 msgid "Invincibility time:"
-msgstr ""
+msgstr "Tempo de invencibilidade:"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:22
 msgid "Invincibility time after leaving contact with ground"
 msgstr ""
+"Tempo de invencibilidade despois de deixar de estar en contacto co chan"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:29
 msgid ""
 "Makes it only possible to inflict damage on your enemy while they're "
 "airborne."
-msgstr ""
+msgstr "Fai que só sexa posible causar dano ao inimigo mentres estea no aire."
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qh:6 qcsrc/common/util.qc:303
 msgid "Midair"
@@ -3781,9 +3795,9 @@ msgid ""
 "orb they will recover ammo, and if enemies enter the sphere they will lose "
 "ammo."
 msgstr ""
-"O %s detóna despois dun pequeno retraso, creando temporalmente unha esfera "
+"O %s estoupa despois dun pequeno retraso, creando temporalmente unha orbe "
 "arredor do punto onde explotou durante varios segundos. Se os membros do teu "
-"equipo entran na esfera, recuperarán munición, e se os inimigos entran, "
+"equipo entran na orbe, recuperarán munición, e se os inimigos entran, "
 "perderán munición."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:85
@@ -3792,8 +3806,8 @@ msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
 "inside the orb, so you don't need to reload."
 msgstr ""
-"Semellante ao potenciador %s, os cargadores da túa arma permanecen cheos "
-"mentres estás dentro da esfera, así que non precisas recargar."
+"Semellante a mellora %s, os cargadores da túa arma permanecen cheos mentres "
+"estás dentro da orbe, así que non precisas recargar."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:24
 msgid "Ammo grenade"
@@ -3825,9 +3839,9 @@ msgid ""
 "point where it detonated for several seconds. Players and projectiles that "
 "enter the sphere will be slowed down, including yourself."
 msgstr ""
-"O %s detóna despois dun pequeno retraso, creando temporalmente unha esfera "
+"O %s estoupa despois dun pequeno atraso, creando temporalmente unha orbe "
 "arredor do punto onde explotou durante varios segundos. Os xogadores e "
-"proxectís que entren na esfera veranse ralentizados, incluído ti mesmo."
+"proxectís que entren na orbe veranse minorados, incluído ti mesmo."
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:24
 msgid "Entrap grenade"
@@ -3841,9 +3855,9 @@ msgid ""
 "members enter the orb they will recover health, and if enemies enter the "
 "sphere they will be harmed."
 msgstr ""
-"O %s detóna despois dun pequeno retraso, creando temporalmente unha esfera "
+"O %s estoupa despois dun pequeno atraso, creando temporalmente unha orbe "
 "sandadora arredor do punto onde explotou durante varios segundos. Se os "
-"membros do teu equipo entran na esfera, recuperarán saúde, e se os inimigos "
+"membros do teu equipo entran na orbe, recuperarán saúde, e se os inimigos "
 "entran, sufrirán dano."
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qh:24
@@ -3968,9 +3982,9 @@ msgid ""
 "point where it detonated for several seconds. Players inside the orb will be "
 "invisible to those outside it."
 msgstr ""
-"O %s detóna despois dun pequeno atraso, creando temporalmente unha esfera "
+"O %s estoupa despois dun pequeno atraso, creando temporalmente unha orbe "
 "arredor do punto onde explotou durante varios segundos. Os xogadores dentro "
-"da esfera serán invisibles para os que están fóra dela."
+"da orbe serán invisibles para os que están fóra dela."
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:24
 msgid "Veil grenade"
@@ -4010,46 +4024,48 @@ msgstr "Granadas"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:24
 msgid "Enable bonus nades"
-msgstr ""
+msgstr "Activar granadas extra"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:25
 msgid ""
 "Gives players a bonus grenade when they reach a certain score or have "
 "Strength"
 msgstr ""
+"Dálles aos xogadores unha granada extra cando alcanzan unha determinada "
+"puntuación ou teñen Forza"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:26
 msgid "Max bonus nades:"
-msgstr ""
+msgstr "Máximo de granadas extra:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:32
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:116
 msgid "Allow client selection"
-msgstr ""
+msgstr "Permitir a selección por parte do cliente"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:33
 msgid "For bonus nades"
-msgstr ""
+msgstr "Para as granadas extra"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:36
 msgid "Refire time:"
-msgstr ""
+msgstr "Tempo entre disparos:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:42
 msgid "Nade types:"
-msgstr ""
+msgstr "Tipos de granada:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:96
 msgid "Random"
-msgstr ""
+msgstr "Ao chou"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:107
 msgid "Normal nade type, if client selection is disabled"
-msgstr ""
+msgstr "Tipo de granada normal, se a selección do cliente está desactivada"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:111
 msgid "Bonus nade type, if client selection is disabled"
-msgstr ""
+msgstr "Tipo de granada extra, se a selección do cliente está desactivada"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
 #, c-format
@@ -4057,6 +4073,8 @@ msgid ""
 "Enable throwable grenades which explode with a variety of effects. Press %s "
 "or %s to use them."
 msgstr ""
+"Activar granadas guindables que explotan producindo diversos efectos. Preme "
+"%s ou %s para usalas."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
 #, c-format
@@ -4105,7 +4123,7 @@ msgstr "Ao chou"
 
 #: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:30
 msgid "Allow maps to spawn additional weapons (new toys)."
-msgstr ""
+msgstr "Permitir cos mapas xeren armas adicionais (novos xoguetes)."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -4116,7 +4134,8 @@ msgid ""
 msgstr ""
 "%s é un mutador que dá a todos os xogadores a mesma arma seleccionada ao "
 "chou. Tras un tempo, a arma selecciónase de novo, e isto repítese "
-"indefinidamente."
+"indefinidamente. As armas e recollibles de munición tamén se eliminan do "
+"mapa."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qh:5
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qh:3 qcsrc/common/util.qc:297
@@ -4125,15 +4144,15 @@ msgstr "NIX"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:31
 msgid "With Blaster"
-msgstr ""
+msgstr "Co Bláster"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:32
 msgid "Always carry the Blaster as an additional weapon in NIX"
-msgstr ""
+msgstr "Levar sempre o Bláster como arma adicional en NIX"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:37
 msgid "Health and armor"
-msgstr ""
+msgstr "Saúde e armadura"
 
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:38
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qh:6
@@ -4147,6 +4166,9 @@ msgid ""
 "weapon. After some time a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
+"Sen obxectos Xonotic: en lugar de obxectos recollibles, todos xogan coa "
+"mesma arma. Despois dun tempo comezará unha conta atrás, tras a cal todos "
+"trocarán a outra arma."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -4348,7 +4370,7 @@ msgstr "Overkill"
 
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:49
 msgid "Replace Strength and Shield with weapons"
-msgstr ""
+msgstr "Substituír Forza e Escudo por armas"
 
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qh:11
 #, c-format
@@ -4357,6 +4379,10 @@ msgid ""
 "a short time to kill for rapid gameplay. The secondary fire of all weapons "
 "shoots a %s-like projectile. It also enables %s and %s."
 msgstr ""
+"Modificador de arena único que substitúe tódalas armas por armas "
+"principalmente de impacto instantáneo, cun tempo de eliminación curto para "
+"ofrecer unha acción rápida. O disparo secundario de tódalas armas lanza un "
+"proxectil parecido a %s. Tamén activa %s e %s."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qc:8
 #, c-format
@@ -4376,6 +4402,7 @@ msgstr "Piñata"
 #: qcsrc/common/mutators/mutator/pinata/ui_pinata.qc:17
 msgid "Players will drop all weapons they possessed when they are fragged."
 msgstr ""
+"Os xogadores soltarán tódalas armas que posuían cando sexan eliminados."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:19
 #, c-format
@@ -4516,7 +4543,7 @@ msgstr "Forza"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:34
 msgid "Dependent on gametype"
-msgstr ""
+msgstr "Dependente do tipo de partida"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:36
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
@@ -4526,7 +4553,7 @@ msgstr "Sempre activado"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:69
 msgid "Drop on death"
-msgstr ""
+msgstr "Soltar ao morrer"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:72
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:79
@@ -4537,12 +4564,12 @@ msgstr "Desactivado"
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:73
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:80
 msgid "Timer continues"
-msgstr ""
+msgstr "O temporizador continúa"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:74
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:81
 msgid "Timer pauses"
-msgstr ""
+msgstr "O temporizador pausa"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:95
 #, c-format
@@ -4550,6 +4577,8 @@ msgid ""
 "Enable powerup pickups (powerful bonuses like %s and %s) on the maps that "
 "support them."
 msgstr ""
+"Activar recollibles potenciadores (bonificacións poderosas como %s e %s) nos "
+"mapas cos admitan."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qc:10
 #, c-format
@@ -4572,7 +4601,7 @@ msgstr "Voando con Foguetes"
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:19
 msgid "Disable projectile detonation delay"
-msgstr ""
+msgstr "Desactivar o atraso na detonación dos proxectís"
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:26
 #, c-format
@@ -4581,10 +4610,14 @@ msgid ""
 "This allows players to fire and detonate a rocket while mid-air for a strong "
 "boost even while moving fast."
 msgstr ""
+"os foguetes %s poden detonarse instantaneamente (se non, hai un pequeno "
+"atraso). Isto permite aos xogadores disparar e detonar un foguete mentres "
+"están no aire para obter un forte impulso, mesmo mentres se moven "
+"rapidamente."
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qh:6
 msgid "Rocket flying"
-msgstr ""
+msgstr "Voando con foguetes"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -4625,20 +4658,20 @@ msgstr "Explosivo por contacto"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:19
 msgid "Damage:"
-msgstr ""
+msgstr "Dano:"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:22
 msgid "Force:"
-msgstr ""
+msgstr "Forza:"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:24
 #, c-format
 msgid "%s qu/s"
-msgstr ""
+msgstr "%s qu/s"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:29
 msgid "An explosion occurs when two players collide."
-msgstr ""
+msgstr "Unha explosión ocorre cando dous xogadores chocan."
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:21
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
@@ -4647,7 +4680,7 @@ msgstr "Factor:"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:23
 msgid "Fraction of the damage dealt to be stolen as health"
-msgstr ""
+msgstr "Fracción do dano causado que se rouba como saúde"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qc:38
@@ -4665,11 +4698,11 @@ msgstr "%sx"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:26
 msgid "Consider both health and armor"
-msgstr ""
+msgstr "Ter en conta tanto a saúde como a armadura"
 
 #: qcsrc/common/mutators/mutator/vampire/ui_vampire.qc:31
 msgid "All damage dealt to your enemies is added to your own health."
-msgstr ""
+msgstr "Todo o dano causado aos teus inimigos engádese á túa propia saúde."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:10
 #, c-format
@@ -4678,8 +4711,8 @@ msgid ""
 "However, unlike the normal %s buff, when this mutator is enabled players' "
 "health can go way above the usual limit of 200."
 msgstr ""
-"O mutador %s dá a todos os xogadores unha versión permanente do potenciador "
-"%s. Con todo, ao contrario do potenciador normal %s, cando este mutador está "
+"O mutador %s dá a todos os xogadores unha versión permanente da mellora %s. "
+"Con todo, ao contrario da mellora normal %s, cando este mutador está "
 "activado, a saúde dos xogadores pode superar moito o límite habitual de 200."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
@@ -4689,7 +4722,7 @@ msgid ""
 "deal, which isn't normally the case with the %s buff."
 msgstr ""
 "Ademais, a cantidade de vida que reciben os xogadores é igual ao dano que "
-"causan, algo que normalmente non ocorre co potenciador %s."
+"causan, algo que normalmente non ocorre ca mellora %s."
 
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:83
 #, c-format
@@ -4740,7 +4773,7 @@ msgstr "Revivindo"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:13
 msgid "Item"
-msgstr "Obxeto"
+msgstr "Obxecto"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:15
 msgid "Checkpoint"
@@ -5056,7 +5089,7 @@ msgstr "^F1A rolda xa comezou, unirase ao xogo na seguinte rolda"
 
 #: qcsrc/common/notifications/all.inc:274
 msgid "^F2You will spectate in the next round"
-msgstr "^F2Serás espectador na seguinte rolda"
+msgstr "^F2Serás observador na seguinte rolda"
 
 #: qcsrc/common/notifications/all.inc:276
 msgid "^F2Match is restarting..."
@@ -5083,17 +5116,18 @@ msgstr "Os equipos están demasiado descompensados."
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 burned at the mercy of ^BG%s^K1's Inferno buff %s%s"
-msgstr "^BG%s%s^K1 queimado á mercé do buff Inferno%s%s de ^BG%s^K1"
+msgstr "^BG%s%s^K1 queimado á mercé da mellora Inferno%s%s de ^BG%s^K1"
 
 #: qcsrc/common/notifications/all.inc:280
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot thanks to ^BG%s^K1's Inferno buff %s%s"
-msgstr "^BG%s%s^K1 sentiu algo de calor grazas ao buff Inferno%s%s de ^BG%s^K1"
+msgstr ""
+"^BG%s%s^K1 sentiu algo de calor grazas a mellora Inferno%s%s de ^BG%s^K1"
 
 #: qcsrc/common/notifications/all.inc:281
 #, c-format
 msgid "^BG%s%s^K1 felt the karma of ^BG%s^K1's Vengeance buff %s%s"
-msgstr "^BG%s%s^K1 sentiu o karma do buff Vengeance de ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 sentiu o karma da mellora Vinganza de ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:282
 #, c-format
@@ -5696,7 +5730,7 @@ msgstr "^BG%s^F3 está xogando no equipo ^TC^TT"
 #: qcsrc/common/notifications/all.inc:402
 #: qcsrc/common/notifications/all.inc:737
 msgid "^K1You may only spectate at this time."
-msgstr ""
+msgstr "^K1Neste momento só podes observar."
 
 #: qcsrc/common/notifications/all.inc:403
 #, c-format
@@ -5855,7 +5889,7 @@ msgstr "^BG%s^F3 foi expulsado por matar excesivamente o seu equipo"
 #: qcsrc/common/notifications/all.inc:441
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
-msgstr "^BG%s^F3 viuse obrigado a espectador por matar o seu propio equipo"
+msgstr "^BG%s^F3 viuse obrigado a ser observador por matar o seu propio equipo"
 
 #: qcsrc/common/notifications/all.inc:442
 #, c-format
@@ -5970,12 +6004,12 @@ msgstr "^F1Supervivintes^BG gañan a rolda"
 #: qcsrc/common/notifications/all.inc:468
 #: qcsrc/common/notifications/all.inc:823
 msgid "^K2You're already on ^TC^TT^K2 team which seems fine."
-msgstr ""
+msgstr "^K2Xa estás no equipo ^TC^TT^K2, que parece estar ben."
 
 #: qcsrc/common/notifications/all.inc:469
 #: qcsrc/common/notifications/all.inc:824
 msgid "^K2You may only join ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Só podes unirte ao equipo ^TC^TT^K2!"
 
 #: qcsrc/common/notifications/all.inc:470
 #: qcsrc/common/notifications/all.inc:825
@@ -7211,7 +7245,7 @@ msgstr "^F2A forza desapareceu"
 
 #: qcsrc/common/notifications/all.inc:792
 msgid "^F2Shield surrounds you"
-msgstr "^F2O escudo te rodea"
+msgstr "^F2O escudo rodeache"
 
 #: qcsrc/common/notifications/all.inc:793
 msgid "^F2Shield has worn off"
@@ -7238,7 +7272,7 @@ msgid ""
 "^K1You are forced to spectate and you aren't allowed to play because you are "
 "banned in this server"
 msgstr ""
-"^K1Estás obrigado a mirar e non tes permiso para xogar porque estás "
+"^K1Estás obrigado a observar e non tes permiso para xogar porque estás "
 "prohibido neste servidor"
 
 #: qcsrc/common/notifications/all.inc:803
@@ -7941,47 +7975,47 @@ msgstr "Proxectís invencibles"
 
 #: qcsrc/common/util.qc:300
 msgid "Low Gravity"
-msgstr ""
+msgstr "Gravidade Baixa"
 
 #: qcsrc/common/util.qc:302 qcsrc/menu/xonotic/mutatortab.qc:339
 msgid "Offhand Hook"
-msgstr ""
+msgstr "Gancho secundario"
 
 #: qcsrc/common/util.qc:304
 msgid "Melee Only Arena"
-msgstr ""
+msgstr "Só corpo a corpo na Arena"
 
 #: qcsrc/common/util.qc:307
 msgid "Weapons Stay"
-msgstr ""
+msgstr "As armas permanecen"
 
 #: qcsrc/common/util.qc:308
 msgid "Blood Loss"
-msgstr ""
+msgstr "Perda de sangue"
 
 #: qcsrc/common/util.qc:312
 msgid "No Powerups"
-msgstr ""
+msgstr "Sen potenciadores"
 
 #: qcsrc/common/util.qc:314
 msgid "Buffs Replace Powerups"
-msgstr ""
+msgstr "As melloras substitúen os potenciadores"
 
 #: qcsrc/common/util.qc:315
 msgid "Touch Explode"
-msgstr ""
+msgstr "Explosivo por contacto"
 
 #: qcsrc/common/util.qc:316
 msgid "Wall Jumping"
-msgstr ""
+msgstr "Saltando paredes"
 
 #: qcsrc/common/util.qc:317
 msgid "No Start Weapons"
-msgstr ""
+msgstr "Comezar sen armas"
 
 #: qcsrc/common/util.qc:319 qcsrc/menu/xonotic/mutatortab.qc:335
 msgid "Offhand Blaster"
-msgstr ""
+msgstr "Bláster de man secundaria"
 
 #: qcsrc/common/util.qc:1569
 msgid "Male"
@@ -9645,7 +9679,7 @@ msgstr "%.*f%%"
 #: qcsrc/menu/item/listbox.qc:414
 #, c-format
 msgid "Item %d"
-msgstr "Obxeto %d"
+msgstr "Obxecto %d"
 
 #: qcsrc/menu/item/mixedslider.qc:6 qcsrc/menu/item/textslider.qc:11
 #: qcsrc/menu/item/textslider.qc:12
@@ -10056,7 +10090,7 @@ msgstr "Menú rápido"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:69
 #: qcsrc/menu/xonotic/dialog_welcome.qc:133
 msgid "Spectate"
-msgstr "Espectador"
+msgstr "Observar"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qh:8
 msgid "Game menu"
@@ -10277,7 +10311,7 @@ msgstr "Reducido"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:38
 msgid "Hide spawned items"
-msgstr "Ocultar os obxetos xerados"
+msgstr "Ocultar os obxectos xerados"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:40
 msgid "Hide big armor and health"
@@ -10289,7 +10323,7 @@ msgstr "Tamaño dinámico"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qh:6
 msgid "Items Time Panel"
-msgstr "Panel de tempo dos obxetos"
+msgstr "Panel de tempo dos obxectos"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:23
@@ -10402,7 +10436,7 @@ msgstr "Modo espectador"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pickup.qh:6
 msgid "Pickup Panel"
-msgstr "Panel de recollida"
+msgstr "Panel de recollibles"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qh:6
 msgid "Powerups Panel"
@@ -11304,7 +11338,7 @@ msgstr "Mutadores de xogo:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:16
 msgid "Weapon & item mutators:"
-msgstr "Mutadores de armas e obxetos:"
+msgstr "Mutadores de armas e obxectos:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qh:96
 #: qcsrc/menu/xonotic/guide/guide.qh:20
@@ -11724,7 +11758,7 @@ msgstr "Info:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:58
 msgid "Items:"
-msgstr "Obxetos:"
+msgstr "Obxectos:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:65
 msgid "Pain:"
@@ -12281,7 +12315,7 @@ msgid ""
 "using a powerup"
 msgstr ""
 "Permite efectos especiais de posprocesamento para cando estea danado ou "
-"baixo a auga ou cando se utiliza un encendido"
+"baixo a auga ou cando se utiliza un potenciador"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:221
 msgid "Motion blur strength - 0.4 recommended"
@@ -12386,7 +12420,7 @@ msgstr "Animar o punto de mira ao golpear un inimigo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:180
 msgid "Animate crosshair when picking up an item"
-msgstr "Animar o punto de mira ao recoller un elemento"
+msgstr "Animar o punto de mira ao recoller un obxecto"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:43
 msgid "Scoreboard"
@@ -12615,7 +12649,7 @@ msgstr "Amosa o estado dos xogadores na caixa de conversa"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:89
 msgid "Powerup notifications"
-msgstr "Notificacións de aceso"
+msgstr "Notificacións dos potenciadores"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:92
 msgid "Weapon centerprint notifications"
@@ -12648,7 +12682,7 @@ msgstr "Mensaxes"
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:30
 #: qcsrc/menu/xonotic/guide/guide.qh:13
 msgid "Items"
-msgstr "Obxetos"
+msgstr "Obxectos"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:32
 msgid "Use simple 2D images instead of item models"
@@ -12749,7 +12783,7 @@ msgstr "Modelos"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qh:8
 msgid "Customize how players and items are displayed in game"
-msgstr "Personaliza como se mostran os xogadores e elementos no xogo"
+msgstr "Personaliza como se mostran os xogadores e obxectos no xogo"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:25
 msgid "Perspective"
@@ -12908,7 +12942,7 @@ msgstr "Solta os botóns de ataque cando cambies de arma"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:61
 msgid "Auto switch weapons on pickup"
-msgstr "Cambio automático de armas na recollida"
+msgstr "Cambio automático de armas nos recollibles"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:62
 msgid ""
@@ -13177,7 +13211,7 @@ msgid ""
 "command bound to the menu item)"
 msgstr ""
 "Suxestións sobre ferramentas do menú: desactivado, estándar ou avanzado "
-"(tamén mostra o comando cvar ou da consola unido ao elemento do menú)"
+"(tamén mostra o comando cvar ou da consola asociado ao elemento do menú)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:72
 msgid "TLTIP^Disabled"
@@ -13648,7 +13682,7 @@ msgstr "rosa"
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:44
 #: qcsrc/menu/xonotic/keybinder.qc:165
 msgid "spectate"
-msgstr "Observar"
+msgstr "observar"
 
 #: qcsrc/menu/xonotic/dialog_termsofservice.qc:75
 msgid "Terms of Service have been updated. Please read them before continuing:"
@@ -14486,11 +14520,11 @@ msgstr "Todas as armas"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:210
 msgid "Standard weapons"
-msgstr ""
+msgstr "Armas estándar"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:214
 msgid "Extended weapons (includes New Toys)"
-msgstr ""
+msgstr "Armas ampliadas (inclúe Xoguetes novos)"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:218
 msgid "Custom weapons"
@@ -14506,7 +14540,7 @@ msgstr "Comezar sen armas"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:258
 msgid "Melee only arena"
-msgstr ""
+msgstr "Só corpo a corpo na Arena"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:259
 #, c-format
@@ -14514,35 +14548,42 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so can only slap "
 "other players."
 msgstr ""
+"Os xogadores aparecen sen munición e sen armas, excepto o %s, polo que só "
+"poden golpear outros xogadores."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
 "Players will be given a set of weapons on spawn along with unlimited ammo, "
 "without weapon pickups on the map."
 msgstr ""
+"Os xogadores aparecen cun conxunto de armas e munición ilimitada, sen "
+"recollibles de armas no mapa."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:300
 msgid "Enabled but pickups give no ammo"
-msgstr ""
+msgstr "Activado, pero os recollibles non dan munición"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:308
 msgid "Weapons stay on the map after they are picked up."
-msgstr ""
+msgstr "As armas permanecen no mapa despois de ser recollidas."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:343
 msgid "Consume ammo"
-msgstr ""
+msgstr "Consumir munición"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:348
 #, c-format
 msgid ""
 "Players spawn with an Offhand Blaster or Grappling Hook. Press %s to use it."
 msgstr ""
+"Os xogadores aparecen cun Bláster na man secundaria ou cun Gancho. Preme %s "
+"para usalo."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:374
 #, c-format
 msgid "Players spawn with the %s. Double-tap %s or press %s to use it."
 msgstr ""
+"Os xogadores aparecen co %s. Preme dúas veces %s ou preme %s para usalo."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:400
 msgid ""
@@ -14554,40 +14595,42 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:404
 msgid "Midair jumps:"
-msgstr ""
+msgstr "Saltos no aire:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:406
 msgid "How many times players can jump while midair"
-msgstr ""
+msgstr "Cantas veces poden saltar os xogadores mentres están no aire"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:407
 msgid "Infinite"
-msgstr ""
+msgstr "Infinito"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:412
 msgid "Additive velocity"
-msgstr ""
+msgstr "Velocidade acumulativa"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:413
 msgid ""
 "Add on, rather than set, their vertical velocity each time the player jumps"
 msgstr ""
+"Engadir, en lugar de establecer, a súa velocidade vertical cada vez co "
+"xogador salta"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:418
 msgid "Jump away from walls when running alongside them"
-msgstr ""
+msgstr "Saltar afastándose das paredes ao correr xunto a elas"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:421
 msgid "Delay between walljumps:"
-msgstr ""
+msgstr "Retardo entre saltos nas paredes:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:428
 msgid "Double jumps"
-msgstr ""
+msgstr "Dobre salto"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:429
 msgid "Gain extra height when jumping again shortly after the first jump"
-msgstr ""
+msgstr "Obter máis altura ao volver saltar pouco despois do primeiro salto"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:435
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
@@ -14601,19 +14644,19 @@ msgstr "Gravidade baixa"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:445
 msgid "Global forces"
-msgstr ""
+msgstr "Forzas globais"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:446
 msgid "Knockback experienced by any player affects all players"
-msgstr ""
+msgstr "O retroceso sufrido por calquera xogador afecta a tódolos xogadores"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:451
 msgid "Various fun changes to physics and movement."
-msgstr ""
+msgstr "Varios trocos divertidos na física e no movemento."
 
 #: qcsrc/menu/xonotic/mutatortab.qh:33
 msgid "Weapon arena"
-msgstr ""
+msgstr "Armas na Arena"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:43
 msgid "Weapons stay"
@@ -14621,11 +14664,11 @@ msgstr "As armas permanecen"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:53
 msgid "Offhand weapons"
-msgstr ""
+msgstr "Armas na man secundaria"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:73
 msgid "Custom physics"
-msgstr ""
+msgstr "Física personalizada"
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
