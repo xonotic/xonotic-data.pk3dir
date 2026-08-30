@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 07:22+0200\n"
+"POT-Creation-Date: 2026-08-30 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:126
+#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:128
 msgid "Checkpoint times:"
 msgstr "检查点时间："
 
@@ -90,8 +90,8 @@ msgstr "^3玩家昵称^7: 这里是聊天区。"
 
 #: qcsrc/client/hud/panel/checkpoints.qc:146
 #: qcsrc/client/hud/panel/checkpoints.qc:149
-#: qcsrc/client/hud/panel/racetimer.qc:94
-#: qcsrc/client/hud/panel/racetimer.qc:216
+#: qcsrc/client/hud/panel/racetimer.qc:91
+#: qcsrc/client/hud/panel/racetimer.qc:220
 #, c-format
 msgid "Checkpoint %d"
 msgstr "检查点 %d"
@@ -183,7 +183,7 @@ msgstr "^1按 ^3%s^1 加入"
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1391
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:84
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:452
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
 #: qcsrc/menu/xonotic/guide/pages.qc:83 qcsrc/menu/xonotic/guide/pages.qc:84
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:155
@@ -258,8 +258,8 @@ msgstr "队伍不平衡！"
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #, c-format
-msgid " Press ^3%s%s to adjust"
-msgstr " 按下 ^3%s%s来调整"
+msgid "UNBALTEAMS^%s Press ^3%s%s to adjust"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #: qcsrc/menu/xonotic/keybinder.qc:164
@@ -583,35 +583,63 @@ msgstr "默认使用服务器快捷菜单"
 msgid "QMCMD^Spectate a player"
 msgstr "观察玩家"
 
-#: qcsrc/client/hud/panel/racetimer.qc:65
+#: qcsrc/client/hud/panel/racetimer.qc:67
+#: qcsrc/client/hud/panel/racetimer.qc:104
+#: qcsrc/client/hud/panel/racetimer.qc:108
+#: qcsrc/client/hud/panel/racetimer.qc:110
+#: qcsrc/client/hud/panel/racetimer.qc:223
+#: qcsrc/client/hud/panel/racetimer.qc:230
+#: qcsrc/client/hud/panel/racetimer.qc:238
+#: qcsrc/client/hud/panel/racetimer.qc:284
+#: qcsrc/client/hud/panel/racetimer.qc:330
+#: qcsrc/client/hud/panel/racetimer.qc:393 qcsrc/client/main.qc:1536
+#: qcsrc/client/main.qc:1541 qcsrc/common/mapvoting/cl_mapvoting.qc:41
+#: qcsrc/common/notifications/all.qh:639 qcsrc/menu/xonotic/serverlist.qc:1058
 #, c-format
-msgid " (-%dL)"
-msgstr " (领先 %d 圈)"
+msgid " (%s)"
+msgstr " (%s)"
 
-#: qcsrc/client/hud/panel/racetimer.qc:70
+#: qcsrc/client/hud/panel/racetimer.qc:67
 #, c-format
-msgid " (+%dL)"
-msgstr " (落后 %d 圈)"
+msgid "LAP_DIFF^%+dL"
+msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:90
+#: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Start line"
 msgstr "起点线"
 
-#: qcsrc/client/hud/panel/racetimer.qc:92
-#: qcsrc/client/hud/panel/racetimer.qc:96
+#: qcsrc/client/hud/panel/racetimer.qc:89
+#: qcsrc/client/hud/panel/racetimer.qc:93
 msgid "Finish line"
 msgstr "终点线"
 
-#: qcsrc/client/hud/panel/racetimer.qc:219
-#: qcsrc/client/hud/panel/racetimer.qc:311
-#: qcsrc/client/hud/panel/racetimer.qc:375
+#: qcsrc/client/hud/panel/racetimer.qc:108
 #, c-format
-msgid "PENALTY: %.1f (%s)"
-msgstr "惩罚：%.1f（%s）"
+msgid "TIMEDIFF_PLAYER^%s %s"
+msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1235
+#: qcsrc/client/hud/panel/racetimer.qc:226
+#: qcsrc/client/hud/panel/racetimer.qc:282
+#, c-format
+msgid "SPEED^ %d%s"
+msgstr ""
+
+#: qcsrc/client/hud/panel/racetimer.qc:230
+#: qcsrc/client/hud/panel/racetimer.qc:284
+#, c-format
+msgid "SPEED_DIFF^%+d%s"
+msgstr ""
+
+#: qcsrc/client/hud/panel/racetimer.qc:236 qcsrc/client/main.qc:1235
 msgid "missing a checkpoint"
 msgstr "缺失一个检查点"
+
+#: qcsrc/client/hud/panel/racetimer.qc:238
+#: qcsrc/client/hud/panel/racetimer.qc:330
+#: qcsrc/client/hud/panel/racetimer.qc:393
+#, c-format
+msgid "PENALTY: %.1f"
+msgstr ""
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select spawn location"
@@ -1393,46 +1421,36 @@ msgstr "游戏模式："
 msgid "by:"
 msgstr "作者："
 
-#: qcsrc/client/main.qc:1427
-msgid "This match supports"
-msgstr "此竞赛支持"
-
-#: qcsrc/client/main.qc:1429
-#, c-format
-msgid "%d players"
-msgstr "%d 位玩家"
-
 #: qcsrc/client/main.qc:1431
 #, c-format
-msgid "%d to %d players"
-msgstr "%d 到 %d 位玩家"
+msgid "%d maximum"
+msgstr ""
 
 #: qcsrc/client/main.qc:1433
 #, c-format
-msgid "%d players maximum"
-msgstr "至多 %d 位玩家"
+msgid "INTERVAL^%d-%d"
+msgstr ""
 
-#: qcsrc/client/main.qc:1435
-#, c-format
-msgid "%d players minimum"
-msgstr "至少 %d 位玩家"
+#: qcsrc/client/main.qc:1434
+msgid "Number of players supported by this match:"
+msgstr ""
 
-#: qcsrc/client/main.qc:1440
+#: qcsrc/client/main.qc:1439
 msgid "Active modifications:"
 msgstr "起效的修改："
 
-#: qcsrc/client/main.qc:1443
+#: qcsrc/client/main.qc:1442
 msgid "Special gameplay tips:"
 msgstr "特殊游戏提示："
 
-#: qcsrc/client/main.qc:1450
+#: qcsrc/client/main.qc:1449
 msgid "Server's message"
 msgstr "服务器消息"
 
-#: qcsrc/client/main.qc:1537
+#: qcsrc/client/main.qc:1536
 #, c-format
-msgid "%s (not bound)"
-msgstr "%s (未绑定)"
+msgid "not bound"
+msgstr ""
 
 #: qcsrc/client/view.qc:1010
 msgid "Nade timer"
@@ -2289,38 +2307,43 @@ msgstr "与队友合作，在混乱的战场中争取造成最多伤害和击杀
 msgid "Team Mayhem"
 msgstr "组队大乱斗"
 
-#: qcsrc/common/items/item/ammo.qc:11
+#: qcsrc/common/items/item/ammo.qc:13
+#, c-format
+msgid "%d fuel"
+msgstr ""
+
+#: qcsrc/common/items/item/ammo.qc:27
 #, c-format
 msgid "The %s ammo type is used by the:"
 msgstr "%s用作以下武器的弹药："
 
-#: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
+#: qcsrc/common/items/item/ammo.qc:32 qcsrc/common/items/item/ammo.qc:42
 #, c-format
-msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
-msgstr "一般情况下，捡起可获得 %s 发弹药，最多持有 %s 发。"
+msgid "By default, the pickup gives you %s, to a maximum of %s."
+msgstr ""
 
-#: qcsrc/common/items/item/ammo.qc:25
+#: qcsrc/common/items/item/ammo.qc:41
 #, c-format
 msgid "The %s ammo type is used by the %s."
 msgstr "%s是用于%s的弹药。"
 
-#: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
+#: qcsrc/common/items/item/ammo.qh:61 qcsrc/common/resources/all.inc:30
 msgid "Shells"
 msgstr "霰弹"
 
-#: qcsrc/common/items/item/ammo.qh:95 qcsrc/common/resources/all.inc:39
+#: qcsrc/common/items/item/ammo.qh:97 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
 msgstr "子弹"
 
-#: qcsrc/common/items/item/ammo.qh:131 qcsrc/common/resources/all.inc:48
+#: qcsrc/common/items/item/ammo.qh:133 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
 msgstr "火箭弹"
 
-#: qcsrc/common/items/item/ammo.qh:167 qcsrc/common/resources/all.inc:57
+#: qcsrc/common/items/item/ammo.qh:169 qcsrc/common/resources/all.inc:57
 msgid "Cells"
 msgstr "电池"
 
-#: qcsrc/common/items/item/ammo.qh:203 qcsrc/common/resources/all.inc:66
+#: qcsrc/common/items/item/ammo.qh:205 qcsrc/common/resources/all.inc:66
 msgid "Fuel"
 msgstr "燃料"
 
@@ -2446,41 +2469,32 @@ msgstr "目标击杀数："
 msgid "The amount of frags needed before the match will end"
 msgstr "杀敌数达到目标后，一轮竞赛结束"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:43
-msgid " (1 vote)"
-msgstr " (1 票)"
-
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:45
-#, c-format
-msgid " (%d votes)"
-msgstr " (%d 票)"
-
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:301
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:293
 msgid "Don't care"
 msgstr "不在意"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:340
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:332
 #, c-format
 msgid "Suggested by: %s"
 msgstr "由 %s 提议"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:421
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:413
 msgid "Decide the gametype"
 msgstr "选择游戏模式"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:421
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:413
 msgid "Vote for a map"
 msgstr "投票选择地图"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:605
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:597
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr "mv_mapdownload: ^3你不应自行使用此命令！"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:617
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:609
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr "^1错误：^7无法找到数据包索引。"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:628
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:620
 msgid "Requesting preview..."
 msgstr "正在请求预览..."
 
@@ -2930,7 +2944,7 @@ msgstr "失血"
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
 #: qcsrc/menu/xonotic/mutatortab.qc:30 qcsrc/menu/xonotic/mutatortab.qc:302
-#: qcsrc/menu/xonotic/util.qc:728
+#: qcsrc/menu/xonotic/util.qc:736
 msgid "Enable"
 msgstr "启用"
 
@@ -3155,8 +3169,8 @@ msgstr "增益"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:195
 #: qcsrc/menu/xonotic/mutatortab.qc:202 qcsrc/menu/xonotic/mutatortab.qc:298
-#: qcsrc/menu/xonotic/util.qc:741 qcsrc/menu/xonotic/util.qc:758
-#: qcsrc/menu/xonotic/util.qc:776
+#: qcsrc/menu/xonotic/util.qc:749 qcsrc/menu/xonotic/util.qc:766
+#: qcsrc/menu/xonotic/util.qc:784
 msgid "Disable"
 msgstr "禁用"
 
@@ -3241,7 +3255,7 @@ msgstr "最大字号："
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:67
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
-#: qcsrc/menu/xonotic/util.qc:746
+#: qcsrc/menu/xonotic/util.qc:754
 msgid "Color:"
 msgstr "颜色："
 
@@ -6941,148 +6955,139 @@ msgstr "^K1由于你被此服务器封禁，你不可以发起投票"
 msgid "^K1You aren't allowed to vote because you are banned in this server"
 msgstr "^K1由于你被此服务器封禁，你不可以参与投票"
 
-#: qcsrc/common/notifications/all.qh:429 qcsrc/common/notifications/all.qh:430
-#: qcsrc/common/notifications/all.qh:431
+#: qcsrc/common/notifications/all.qh:430 qcsrc/common/notifications/all.qh:431
+#: qcsrc/common/notifications/all.qh:432
 #, c-format
 msgid " (near %s)"
 msgstr "（在%s旁）"
 
-#: qcsrc/common/notifications/all.qh:438 qcsrc/common/notifications/all.qh:439
+#: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
 #: qcsrc/common/weapons/all.qc:866
 msgid "primary"
 msgstr "主火力"
 
-#: qcsrc/common/notifications/all.qh:438 qcsrc/common/notifications/all.qh:439
+#: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
 #: qcsrc/common/weapons/all.qc:867
 msgid "secondary"
 msgstr "副火力"
 
-#: qcsrc/common/notifications/all.qh:441
-#, c-format
-msgid "%d points"
-msgstr "%d 点"
-
-#: qcsrc/common/notifications/all.qh:441
-msgid "1 point"
-msgstr "1 点"
-
-#: qcsrc/common/notifications/all.qh:449
+#: qcsrc/common/notifications/all.qh:450
 msgid "drop flag"
 msgstr "丢出旗帜"
 
-#: qcsrc/common/notifications/all.qh:450
+#: qcsrc/common/notifications/all.qh:451
 msgid "throw nade"
 msgstr "扔手雷"
 
-#: qcsrc/common/notifications/all.qh:487
+#: qcsrc/common/notifications/all.qh:488
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG!"
 msgstr "%s^K1 获得【三连杀】！"
 
-#: qcsrc/common/notifications/all.qh:487
+#: qcsrc/common/notifications/all.qh:488
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
 msgstr "%s^K1 连续【三次得分】！"
 
-#: qcsrc/common/notifications/all.qh:487
+#: qcsrc/common/notifications/all.qh:488
 msgid "TRIPLE FRAG!"
 msgstr "三连杀！"
 
-#: qcsrc/common/notifications/all.qh:488
+#: qcsrc/common/notifications/all.qh:489
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
 msgstr "%s^K1 连续【五次得分】！"
 
-#: qcsrc/common/notifications/all.qh:488
+#: qcsrc/common/notifications/all.qh:489
 #, c-format
 msgid "%s^K1 unlocked RAGE!"
 msgstr "%s^K1 解锁【狂怒】！"
 
-#: qcsrc/common/notifications/all.qh:488
+#: qcsrc/common/notifications/all.qh:489
 msgid "RAGE!"
 msgstr "狂怒！"
 
-#: qcsrc/common/notifications/all.qh:489
+#: qcsrc/common/notifications/all.qh:490
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
 msgstr "%s^K1 连续【十次得分】！"
 
-#: qcsrc/common/notifications/all.qh:489
+#: qcsrc/common/notifications/all.qh:490
 #, c-format
 msgid "%s^K1 started a MASSACRE!"
 msgstr "%s^K1 开始【杀戮】！"
 
-#: qcsrc/common/notifications/all.qh:489
+#: qcsrc/common/notifications/all.qh:490
 msgid "MASSACRE!"
 msgstr "杀戮！"
 
-#: qcsrc/common/notifications/all.qh:490
+#: qcsrc/common/notifications/all.qh:491
 #, c-format
 msgid "%s^K1 executed MAYHEM!"
 msgstr "%s^K1 释发【混乱】！"
 
-#: qcsrc/common/notifications/all.qh:490
+#: qcsrc/common/notifications/all.qh:491
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
 msgstr "%s^K1 连续【十五次得分】！"
 
-#: qcsrc/common/notifications/all.qh:490
+#: qcsrc/common/notifications/all.qh:491
 msgid "MAYHEM!"
 msgstr "混乱！"
 
-#: qcsrc/common/notifications/all.qh:491
+#: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 is a BERSERKER!"
 msgstr "%s^K1 现在【无懈可击】！"
 
-#: qcsrc/common/notifications/all.qh:491
+#: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
 msgstr "%s^K1 连续【二十次得分】！"
 
-#: qcsrc/common/notifications/all.qh:491
+#: qcsrc/common/notifications/all.qh:492
 msgid "BERSERKER!"
 msgstr "无懈可击！"
 
-#: qcsrc/common/notifications/all.qh:492
+#: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid "%s^K1 inflicts CARNAGE!"
 msgstr "%s^K1 成为【修罗者】！"
 
-#: qcsrc/common/notifications/all.qh:492
+#: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
 msgstr "%s^K1 连续【二十五次得分】！"
 
-#: qcsrc/common/notifications/all.qh:492
+#: qcsrc/common/notifications/all.qh:493
 msgid "CARNAGE!"
 msgstr "修罗者！"
 
-#: qcsrc/common/notifications/all.qh:493
+#: qcsrc/common/notifications/all.qh:494
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
 msgstr "%s^K1 连续【三十次得分】！"
 
-#: qcsrc/common/notifications/all.qh:493
+#: qcsrc/common/notifications/all.qh:494
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON!"
 msgstr "%s^K1 解封【末日决战】！"
 
-#: qcsrc/common/notifications/all.qh:493
+#: qcsrc/common/notifications/all.qh:494
 msgid "ARMAGEDDON!"
 msgstr "末日决战！"
 
-#: qcsrc/common/notifications/all.qh:500
+#: qcsrc/common/notifications/all.qh:501
 #, c-format
 msgid "%s(^F1Bot^BG)"
 msgstr "%s(^F1电脑玩家^BG)"
 
-#: qcsrc/common/notifications/all.qh:502
+#: qcsrc/common/notifications/all.qh:503
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
 msgstr "%s(延迟 ^F1%d^BG)"
 
-#: qcsrc/common/notifications/all.qh:509
+#: qcsrc/common/notifications/all.qh:510
 #, c-format
 msgid ""
 "\n"
@@ -7091,7 +7096,7 @@ msgstr ""
 "\n"
 "(生命 ^1%d^BG / 护甲 ^2%d^BG)%s"
 
-#: qcsrc/common/notifications/all.qh:511
+#: qcsrc/common/notifications/all.qh:512
 #, c-format
 msgid ""
 "\n"
@@ -7100,76 +7105,71 @@ msgstr ""
 "\n"
 "(^F4死亡^BG)%s"
 
-#: qcsrc/common/notifications/all.qh:523 qcsrc/common/notifications/all.qh:533
+#: qcsrc/common/notifications/all.qh:524 qcsrc/common/notifications/all.qh:534
 #, c-format
 msgid "%d score spree!"
 msgstr "%d 连续得分！"
 
-#: qcsrc/common/notifications/all.qh:532
+#: qcsrc/common/notifications/all.qh:533
 #, c-format
 msgid "%d frag spree!"
 msgstr "%d 连杀！"
 
-#: qcsrc/common/notifications/all.qh:542
+#: qcsrc/common/notifications/all.qh:543
 msgid "First blood!"
 msgstr "第一滴血！"
 
-#: qcsrc/common/notifications/all.qh:542
+#: qcsrc/common/notifications/all.qh:543
 msgid "First score!"
 msgstr "率先得分！"
 
-#: qcsrc/common/notifications/all.qh:544
+#: qcsrc/common/notifications/all.qh:545
 msgid "First casualty!"
 msgstr "第一个倒下！"
 
-#: qcsrc/common/notifications/all.qh:544
+#: qcsrc/common/notifications/all.qh:545
 msgid "First victim!"
 msgstr "第一个牺牲！"
 
-#: qcsrc/common/notifications/all.qh:584
+#: qcsrc/common/notifications/all.qh:585
 #, c-format
 msgid "%s^K1 has %d frags in a row!"
 msgstr "%s^K1 获得 %d 连杀！"
 
-#: qcsrc/common/notifications/all.qh:585
+#: qcsrc/common/notifications/all.qh:586
 #, c-format
 msgid "%s^K1 made %d scores in a row!"
 msgstr "%s^K1 连续得了 %d 分！"
 
-#: qcsrc/common/notifications/all.qh:599
+#: qcsrc/common/notifications/all.qh:600
 #, c-format
 msgid "%s^K1 drew first blood!"
 msgstr "%s^K1 拿到第一滴血！"
 
-#: qcsrc/common/notifications/all.qh:600
+#: qcsrc/common/notifications/all.qh:601
 #, c-format
 msgid "%s^K1 got the first score!"
 msgstr "%s^K1 率先得分！"
 
-#: qcsrc/common/notifications/all.qh:612
+#: qcsrc/common/notifications/all.qh:613
 #, c-format
 msgid ", ending their %d frag spree"
 msgstr "，终结了其 %d 连杀"
 
-#: qcsrc/common/notifications/all.qh:613
+#: qcsrc/common/notifications/all.qh:614
 #, c-format
 msgid ", ending their %d score spree"
 msgstr "，结束了他的 %d 次得分狂潮"
 
-#: qcsrc/common/notifications/all.qh:622
+#: qcsrc/common/notifications/all.qh:623
 #, c-format
 msgid ", losing their %d frag spree"
 msgstr "，失去了其 %d 连杀"
 
-#: qcsrc/common/notifications/all.qh:623
+#: qcsrc/common/notifications/all.qh:624
 #, c-format
 msgid ", losing their %d score spree"
 msgstr "，失去了他的 %d 次得分狂潮"
-
-#: qcsrc/common/notifications/all.qh:638
-#, c-format
-msgid " with %d %s"
-msgstr "，其中带有 %d 个%s"
 
 #: qcsrc/common/teams.qh:31
 msgid "TEAM^Red"
@@ -7186,10 +7186,6 @@ msgstr "黄"
 #: qcsrc/common/teams.qh:34
 msgid "TEAM^Pink"
 msgstr "粉"
-
-#: qcsrc/common/teams.qh:35
-msgid "Team"
-msgstr "队"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
@@ -7242,6 +7238,11 @@ msgstr "黄"
 #: qcsrc/common/teams.qh:50
 msgid "GENERATOR^Pink"
 msgstr "粉"
+
+#: qcsrc/common/teams.qh:229 qcsrc/common/teams.qh:231
+#, c-format
+msgid "%s team"
+msgstr ""
 
 #: qcsrc/common/turrets/cl_turrets.qc:118
 #, c-format
@@ -7418,14 +7419,14 @@ msgstr "相位炮塔"
 msgid "Phaser"
 msgstr "相位仪"
 
-#: qcsrc/common/turrets/turret/plasma.qc:66
+#: qcsrc/common/turrets/turret/plasma.qc:44
 #, c-format
 msgid ""
 "The %s is a turret that fires electric balls forwards, similar to those of "
 "the %s."
 msgstr "%s会向前方发射电射球，与%s相似。"
 
-#: qcsrc/common/turrets/turret/plasma.qc:67
+#: qcsrc/common/turrets/turret/plasma.qc:45
 #, c-format
 msgid "It is a weaker version of the %s, which has two electric ball cannons."
 msgstr "这是%1$s的弱化版。%1$s有两门电射炮。"
@@ -7434,14 +7435,14 @@ msgstr "这是%1$s的弱化版。%1$s有两门电射炮。"
 msgid "Plasma Cannon"
 msgstr "等离子炮"
 
-#: qcsrc/common/turrets/turret/plasma_dual.qc:55
+#: qcsrc/common/turrets/turret/plasma_dual.qc:34
 #, c-format
 msgid ""
 "The %s is a turret that fires electric balls forwards from its two cannons, "
 "shooting balls similar to those of the %s."
 msgstr "%s会用两门炮向前发射电射球，与%s相似。"
 
-#: qcsrc/common/turrets/turret/plasma_dual.qc:56
+#: qcsrc/common/turrets/turret/plasma_dual.qc:35
 #, c-format
 msgid ""
 "It is a stronger version of the %s, which only has one electric ball cannon."
@@ -7927,35 +7928,35 @@ msgstr "Midi 音符 %d"
 msgid "Press %s"
 msgstr "按%s"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:980
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:979
 msgid "No right gunner!"
 msgstr "右舷炮架没有炮手！"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:986
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:985
 msgid "No left gunner!"
 msgstr "左舷炮架没有炮手！"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1009
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1008
 #, c-format
 msgid ""
 "The %s vehicle seats up to three passengers, who are given different roles "
 "based on the order they enter."
 msgstr "%s载具可承载三名乘客，依据进入顺序赋予玩家不同的战斗分工。"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1010
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1009
 msgid ""
 "The first player to enter will be the pilot, flying the vehicle up into the "
 "skies. The first player can also shoot a green healing wave to heal other "
 "teammates on the ground."
 msgstr "首先进入的玩家是机长，可控制载具飞行，也可发射治愈激光治疗地上的队友。"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1012
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1011
 msgid ""
 "The second player to enter is the right gunner and the third player to enter "
 "is the left gunner."
 msgstr "接下来进入的玩家分别作为右、左舵手，控制载具两边的机枪。"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1013
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1012
 msgid ""
 "When the pilot exits the vehicle, the players switch roles by moving up in "
 "position."
@@ -8828,202 +8829,407 @@ msgstr ""
 msgid "Vortex"
 msgstr "星璇枪"
 
-#: qcsrc/lib/counting.qh:9
+#: qcsrc/lib/counting.qh:11
 #, c-format
-msgid "CI_DEC^%s years"
-msgstr "%s 年"
+msgid "ZER^%d shells"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
-msgid "CI_ZER^%d years"
-msgstr "%d 年"
+msgid "ONE^%d shell"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
-msgid "CI_FIR^%d year"
-msgstr "%d 年"
+msgid "TWO^%d shells"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
-msgid "CI_SEC^%d years"
-msgstr "%d 年"
+msgid "THR^%d shells"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
-msgid "CI_THI^%d years"
-msgstr "%d 年"
+msgid "MUL^%d shells"
+msgstr ""
 
-#: qcsrc/lib/counting.qh:16
+#: qcsrc/lib/counting.qh:19
 #, c-format
-msgid "CI_MUL^%d years"
-msgstr "%d 年"
+msgid "ZER^%d bullets"
+msgstr ""
 
-#: qcsrc/lib/counting.qh:18
+#: qcsrc/lib/counting.qh:20
 #, c-format
-msgid "CI_DEC^%s weeks"
-msgstr "%s 星期"
+msgid "ONE^%d bullet"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
-msgid "CI_ZER^%d weeks"
-msgstr "%d 星期"
+msgid "TWO^%d bullets"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
-msgid "CI_FIR^%d week"
-msgstr "%d 星期"
+msgid "THR^%d bullets"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
-msgid "CI_SEC^%d weeks"
-msgstr "%d 星期"
-
-#: qcsrc/lib/counting.qh:24
-#, c-format
-msgid "CI_THI^%d weeks"
-msgstr "%d 星期"
-
-#: qcsrc/lib/counting.qh:25
-#, c-format
-msgid "CI_MUL^%d weeks"
-msgstr "%d 星期"
+msgid "MUL^%d bullets"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
-msgid "CI_DEC^%s days"
-msgstr "%s 天"
+msgid "ZER^%d rockets"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:28
+#, c-format
+msgid "ONE^%d rocket"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:29
+#, c-format
+msgid "TWO^%d rockets"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
-msgid "CI_ZER^%d days"
-msgstr "%d 天"
+msgid "THR^%d rockets"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
-msgid "CI_FIR^%d day"
-msgstr "%d 天"
+msgid "MUL^%d rockets"
+msgstr ""
 
-#: qcsrc/lib/counting.qh:32
+#: qcsrc/lib/counting.qh:35
 #, c-format
-msgid "CI_SEC^%d days"
-msgstr "%d 天"
-
-#: qcsrc/lib/counting.qh:33
-#, c-format
-msgid "CI_THI^%d days"
-msgstr "%d 天"
-
-#: qcsrc/lib/counting.qh:34
-#, c-format
-msgid "CI_MUL^%d days"
-msgstr "%d 天"
+msgid "ZER^%d cells"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
-msgid "CI_DEC^%s hours"
-msgstr "%s 小时"
+msgid "ONE^%d cell"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:37
+#, c-format
+msgid "TWO^%d cells"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:38
+#, c-format
+msgid "THR^%d cells"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
-msgid "CI_ZER^%d hours"
-msgstr "%d 小时"
+msgid "MUL^%d cells"
+msgstr ""
 
-#: qcsrc/lib/counting.qh:40
+#: qcsrc/lib/counting.qh:44
 #, c-format
-msgid "CI_FIR^%d hour"
-msgstr "%d 小时"
+msgid "ZER^%d votes"
+msgstr ""
 
-#: qcsrc/lib/counting.qh:41
+#: qcsrc/lib/counting.qh:45
 #, c-format
-msgid "CI_SEC^%d hours"
-msgstr "%d 小时"
-
-#: qcsrc/lib/counting.qh:42
-#, c-format
-msgid "CI_THI^%d hours"
-msgstr "%d 小时"
-
-#: qcsrc/lib/counting.qh:43
-#, c-format
-msgid "CI_MUL^%d hours"
-msgstr "%d 小时"
+msgid "ONE^%d vote"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
-msgid "CI_DEC^%s minutes"
-msgstr "%s 分钟"
+msgid "TWO^%d votes"
+msgstr ""
 
-#: qcsrc/lib/counting.qh:49
+#: qcsrc/lib/counting.qh:47
 #, c-format
-msgid "CI_ZER^%d minutes"
-msgstr "%d 分钟"
+msgid "THR^%d votes"
+msgstr ""
 
-#: qcsrc/lib/counting.qh:50
+#: qcsrc/lib/counting.qh:48
 #, c-format
-msgid "CI_FIR^%d minute"
-msgstr "%d 分钟"
-
-#: qcsrc/lib/counting.qh:51
-#, c-format
-msgid "CI_SEC^%d minutes"
-msgstr "%d 分钟"
+msgid "MUL^%d votes"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
-msgid "CI_THI^%d minutes"
-msgstr "%d 分钟"
+msgid "ZER^%d matches"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
-msgid "CI_MUL^%d minutes"
-msgstr "%d 分钟"
+msgid "ONE^%d match"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:54
+#, c-format
+msgid "TWO^%d matches"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
-msgid "CI_DEC^%s seconds"
-msgstr "%s 秒"
+msgid "THR^%d matches"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:56
+#, c-format
+msgid "MUL^%d matches"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
-msgid "CI_ZER^%d seconds"
-msgstr "%d 秒"
-
-#: qcsrc/lib/counting.qh:59
-#, c-format
-msgid "CI_FIR^%d second"
-msgstr "%d 秒"
-
-#: qcsrc/lib/counting.qh:60
-#, c-format
-msgid "CI_SEC^%d seconds"
-msgstr "%d 秒"
+msgid "DEC^%s points"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
-msgid "CI_THI^%d seconds"
-msgstr "%d 秒"
+msgid "ZER^%d points"
+msgstr ""
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
-msgid "CI_MUL^%d seconds"
-msgstr "%d 秒"
+msgid "ONE^%d point"
+msgstr ""
 
-#: qcsrc/lib/counting.qh:78
+#: qcsrc/lib/counting.qh:63
+#, c-format
+msgid "TWO^%d points"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:64
+#, c-format
+msgid "THR^%d points"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:65
+#, c-format
+msgid "MUL^%d points"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:69
+#, c-format
+msgid "ZER^%d results"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:70
+#, c-format
+msgid "ONE^%d result"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:71
+#, c-format
+msgid "TWO^%d results"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:72
+#, c-format
+msgid "THR^%d results"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:73
+#, c-format
+msgid "MUL^%d results"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:76
+#, c-format
+msgid "DEC^%s years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:79
+#, c-format
+msgid "ZER^%d years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:80
+#, c-format
+msgid "ONE^%d year"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:81
+#, c-format
+msgid "TWO^%d years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:82
+#, c-format
+msgid "THR^%d years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:83
+#, c-format
+msgid "MUL^%d years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:85
+#, c-format
+msgid "DEC^%s weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:88
+#, c-format
+msgid "ZER^%d weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:89
+#, c-format
+msgid "ONE^%d week"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:90
+#, c-format
+msgid "TWO^%d weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:91
+#, c-format
+msgid "THR^%d weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:92
+#, c-format
+msgid "MUL^%d weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:94
+#, c-format
+msgid "DEC^%s days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:97
+#, c-format
+msgid "ZER^%d days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:98
+#, c-format
+msgid "ONE^%d day"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:99
+#, c-format
+msgid "TWO^%d days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:100
+#, c-format
+msgid "THR^%d days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:101
+#, c-format
+msgid "MUL^%d days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:103
+#, c-format
+msgid "DEC^%s hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:106
+#, c-format
+msgid "ZER^%d hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:107
+#, c-format
+msgid "ONE^%d hour"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:108
+#, c-format
+msgid "TWO^%d hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:109
+#, c-format
+msgid "THR^%d hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:110
+#, c-format
+msgid "MUL^%d hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:112
+#, c-format
+msgid "DEC^%s minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:115
+#, c-format
+msgid "ZER^%d minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:116
+#, c-format
+msgid "ONE^%d minute"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:117
+#, c-format
+msgid "TWO^%d minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:118
+#, c-format
+msgid "THR^%d minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:119
+#, c-format
+msgid "MUL^%d minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:121
+#, c-format
+msgid "DEC^%s seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:124
+#, c-format
+msgid "ZER^%d seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:125
+#, c-format
+msgid "ONE^%d second"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:126
+#, c-format
+msgid "TWO^%d seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:127
+#, c-format
+msgid "THR^%d seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:128
+#, c-format
+msgid "MUL^%d seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:144
 #, c-format
 msgid "%dst"
 msgstr "第 %d 名"
 
-#: qcsrc/lib/counting.qh:79
+#: qcsrc/lib/counting.qh:145
 #, c-format
 msgid "%dnd"
 msgstr "第 %d 名"
 
-#: qcsrc/lib/counting.qh:80
+#: qcsrc/lib/counting.qh:146
 #, c-format
 msgid "%drd"
 msgstr "第 %d 名"
 
-#: qcsrc/lib/counting.qh:83
+#: qcsrc/lib/counting.qh:149
 #, c-format
 msgid "%dth"
 msgstr "第 %d 名"
@@ -9308,15 +9514,6 @@ msgstr "乌克兰语"
 #: qcsrc/menu/xonotic/credits.qc:523
 msgid "Past Contributors"
 msgstr "过去的贡献者"
-
-#: qcsrc/menu/xonotic/cvarlist.qc:24
-#, c-format
-msgid "%d results"
-msgstr "%d 个结果"
-
-#: qcsrc/menu/xonotic/cvarlist.qc:24
-msgid "1 result"
-msgstr "1 个结果"
 
 #: qcsrc/menu/xonotic/cvarlist.qc:118
 msgid "forced to be saved to config.cfg"
@@ -9691,16 +9888,12 @@ msgstr "动态大小"
 msgid "Items Time Panel"
 msgstr "物品时间面板"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:19
 #, c-format
 msgid "GAMETYPE^%s:"
 msgstr "%s:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
 msgid "Show icons"
 msgstr "显示图标"
 
@@ -9849,7 +10042,7 @@ msgstr "在团队游戏中启用"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:72
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
-#: qcsrc/menu/xonotic/util.qc:764
+#: qcsrc/menu/xonotic/util.qc:772
 msgid "Opacity:"
 msgstr "透明度："
 
@@ -10181,27 +10374,27 @@ msgstr "注：HUD 皮肤保存于 data/data/ 目录，可手动重命名或删�
 msgid "Panel background defaults:"
 msgstr "面板背景默认值："
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:737
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:745
 msgid "Background:"
 msgstr "背景："
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:88 qcsrc/menu/xonotic/util.qc:755
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:88 qcsrc/menu/xonotic/util.qc:763
 msgid "Border size:"
 msgstr "边框大小："
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:100
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:134
-#: qcsrc/menu/xonotic/util.qc:772
+#: qcsrc/menu/xonotic/util.qc:780
 msgid "Team color:"
 msgstr "队伍颜色："
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:108
-#: qcsrc/menu/xonotic/util.qc:783
+#: qcsrc/menu/xonotic/util.qc:791
 msgid "Test team color in configure mode"
 msgstr "在配置模式下测试团队的颜色"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:111
-#: qcsrc/menu/xonotic/util.qc:786
+#: qcsrc/menu/xonotic/util.qc:794
 msgid "Padding:"
 msgstr "垫边："
 
@@ -10472,10 +10665,10 @@ msgstr "在线游玩、与局域网好友对战、更改玩家设置"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
-#: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:740
-#: qcsrc/menu/xonotic/util.qc:752 qcsrc/menu/xonotic/util.qc:757
-#: qcsrc/menu/xonotic/util.qc:766 qcsrc/menu/xonotic/util.qc:775
-#: qcsrc/menu/xonotic/util.qc:788
+#: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:748
+#: qcsrc/menu/xonotic/util.qc:760 qcsrc/menu/xonotic/util.qc:765
+#: qcsrc/menu/xonotic/util.qc:774 qcsrc/menu/xonotic/util.qc:783
+#: qcsrc/menu/xonotic/util.qc:796
 msgid "Default"
 msgstr "默认"
 
@@ -10920,7 +11113,7 @@ msgstr "允许玩家统计使用你的昵称"
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr "允许玩家统计在榜单上为你排名"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:155
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:160
 msgid "Select language..."
 msgstr "选择语言..."
 
@@ -13998,109 +14191,107 @@ msgstr "正常"
 msgid "FADESPEED^Fast"
 msgstr "快"
 
-#: qcsrc/menu/xonotic/statslist.qc:28
+#: qcsrc/menu/xonotic/statslist.qc:36
 msgid "January"
 msgstr "一月"
 
-#: qcsrc/menu/xonotic/statslist.qc:29
+#: qcsrc/menu/xonotic/statslist.qc:37
 msgid "February"
 msgstr "二月"
 
-#: qcsrc/menu/xonotic/statslist.qc:30
+#: qcsrc/menu/xonotic/statslist.qc:38
 msgid "March"
 msgstr "三月"
 
-#: qcsrc/menu/xonotic/statslist.qc:31
+#: qcsrc/menu/xonotic/statslist.qc:39
 msgid "April"
 msgstr "四月"
 
-#: qcsrc/menu/xonotic/statslist.qc:32
+#: qcsrc/menu/xonotic/statslist.qc:40
 msgid "May"
 msgstr "五月"
 
-#: qcsrc/menu/xonotic/statslist.qc:33
+#: qcsrc/menu/xonotic/statslist.qc:41
 msgid "June"
 msgstr "六月"
 
-#: qcsrc/menu/xonotic/statslist.qc:34
+#: qcsrc/menu/xonotic/statslist.qc:42
 msgid "July"
 msgstr "七月"
 
-#: qcsrc/menu/xonotic/statslist.qc:35
+#: qcsrc/menu/xonotic/statslist.qc:43
 msgid "August"
 msgstr "八月"
 
-#: qcsrc/menu/xonotic/statslist.qc:36
+#: qcsrc/menu/xonotic/statslist.qc:44
 msgid "September"
 msgstr "九月"
 
-#: qcsrc/menu/xonotic/statslist.qc:37
+#: qcsrc/menu/xonotic/statslist.qc:45
 msgid "October"
 msgstr "十月"
 
-#: qcsrc/menu/xonotic/statslist.qc:38
+#: qcsrc/menu/xonotic/statslist.qc:46
 msgid "November"
 msgstr "十一月"
 
-#: qcsrc/menu/xonotic/statslist.qc:39
+#: qcsrc/menu/xonotic/statslist.qc:47
 msgid "December"
 msgstr "十二月"
 
-#: qcsrc/menu/xonotic/statslist.qc:45
+#: qcsrc/menu/xonotic/statslist.qc:53
 #, no-c-format
-msgid "DATE^%m %d, %Y"
-msgstr "%Y 年 %m %d 日"
+msgid "DATE^%MMMM %d, %y"
+msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:96
+#: qcsrc/menu/xonotic/statslist.qc:108
 msgid "Joined:"
 msgstr "加入："
 
-#: qcsrc/menu/xonotic/statslist.qc:103
+#: qcsrc/menu/xonotic/statslist.qc:113
 msgid "Last match:"
 msgstr "最后的竞赛："
 
-#: qcsrc/menu/xonotic/statslist.qc:110
+#: qcsrc/menu/xonotic/statslist.qc:118
 msgid "Time played:"
 msgstr "游戏时间："
 
-#: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:215
+#: qcsrc/menu/xonotic/statslist.qc:123 qcsrc/menu/xonotic/statslist.qc:209
 msgid "Favorite map:"
 msgstr "最喜欢的地图："
 
-#: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
-#: qcsrc/menu/xonotic/statslist.qc:229
+#: qcsrc/menu/xonotic/statslist.qc:146
 #, c-format
 msgid "Matches:"
 msgstr "竞赛局数："
 
-#: qcsrc/menu/xonotic/statslist.qc:154
+#: qcsrc/menu/xonotic/statslist.qc:151
 #, c-format
 msgid "Wins/Losses:"
 msgstr "胜利/失败："
 
-#: qcsrc/menu/xonotic/statslist.qc:155
+#: qcsrc/menu/xonotic/statslist.qc:152
 #, c-format
 msgid "Win percentage:"
 msgstr "胜利百分比："
 
-#: qcsrc/menu/xonotic/statslist.qc:166
+#: qcsrc/menu/xonotic/statslist.qc:163
 #, c-format
 msgid "Kills/Deaths:"
 msgstr "击杀/死亡："
 
-#: qcsrc/menu/xonotic/statslist.qc:172
+#: qcsrc/menu/xonotic/statslist.qc:169
 #, c-format
-msgid "Kill ratio:"
-msgstr "击杀比："
+msgid "Kill-death ratio:"
+msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:208
+#: qcsrc/menu/xonotic/statslist.qc:204
 msgid "Skill:"
 msgstr "水平："
 
 #: qcsrc/menu/xonotic/statslist.qc:231
-#, c-format
-msgid "%d (unranked)"
-msgstr "%d（无排名）"
+msgid "* = unranked"
+msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
@@ -14123,6 +14314,6 @@ msgstr ""
 "^1错误：请求了材质压缩，但不支持。\n"
 "^1将会有视觉问题。"
 
-#: qcsrc/menu/xonotic/util.qc:798
+#: qcsrc/menu/xonotic/util.qc:806
 msgid "Hide on death"
 msgstr "死亡后隐藏"

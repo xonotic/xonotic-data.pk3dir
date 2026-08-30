@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 07:22+0200\n"
+"POT-Creation-Date: 2026-08-30 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Tomáš Volavka <czheron@gmail.com>, 2015,2018\n"
 "Language-Team: Czech (http://app.transifex.com/team-xonotic/xonotic/language/"
@@ -34,7 +34,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:126
+#: qcsrc/client/command/cl_cmd.qc:436 qcsrc/client/hud/panel/racetimer.qc:128
 msgid "Checkpoint times:"
 msgstr ""
 
@@ -84,8 +84,8 @@ msgstr "^3Hráč^7: Toto je komunikační oblast."
 
 #: qcsrc/client/hud/panel/checkpoints.qc:146
 #: qcsrc/client/hud/panel/checkpoints.qc:149
-#: qcsrc/client/hud/panel/racetimer.qc:94
-#: qcsrc/client/hud/panel/racetimer.qc:216
+#: qcsrc/client/hud/panel/racetimer.qc:91
+#: qcsrc/client/hud/panel/racetimer.qc:220
 #, c-format
 msgid "Checkpoint %d"
 msgstr ""
@@ -177,7 +177,7 @@ msgstr "^1Stiskni ^3%s^1 pro připojení"
 #: qcsrc/client/hud/panel/infomessages.qc:141
 #: qcsrc/client/hud/panel/scoreboard.qc:2792 qcsrc/client/main.qc:1391
 #: qcsrc/common/mutators/mutator/walljump/walljump.qc:84
-#: qcsrc/common/notifications/all.qh:451
+#: qcsrc/common/notifications/all.qh:452
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
 #: qcsrc/menu/xonotic/guide/pages.qc:83 qcsrc/menu/xonotic/guide/pages.qc:84
 #: qcsrc/menu/xonotic/guide/pages.qc:95 qcsrc/menu/xonotic/guide/pages.qc:155
@@ -252,8 +252,8 @@ msgstr "Týmy jsou nevyrovnané!"
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #, c-format
-msgid " Press ^3%s%s to adjust"
-msgstr " Zmáčkni ^3%s%s pro upravení"
+msgid "UNBALTEAMS^%s Press ^3%s%s to adjust"
+msgstr ""
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #: qcsrc/menu/xonotic/keybinder.qc:164
@@ -577,34 +577,62 @@ msgstr ""
 msgid "QMCMD^Spectate a player"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:65
+#: qcsrc/client/hud/panel/racetimer.qc:67
+#: qcsrc/client/hud/panel/racetimer.qc:104
+#: qcsrc/client/hud/panel/racetimer.qc:108
+#: qcsrc/client/hud/panel/racetimer.qc:110
+#: qcsrc/client/hud/panel/racetimer.qc:223
+#: qcsrc/client/hud/panel/racetimer.qc:230
+#: qcsrc/client/hud/panel/racetimer.qc:238
+#: qcsrc/client/hud/panel/racetimer.qc:284
+#: qcsrc/client/hud/panel/racetimer.qc:330
+#: qcsrc/client/hud/panel/racetimer.qc:393 qcsrc/client/main.qc:1536
+#: qcsrc/client/main.qc:1541 qcsrc/common/mapvoting/cl_mapvoting.qc:41
+#: qcsrc/common/notifications/all.qh:639 qcsrc/menu/xonotic/serverlist.qc:1058
 #, c-format
-msgid " (-%dL)"
+msgid " (%s)"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:70
+#: qcsrc/client/hud/panel/racetimer.qc:67
 #, c-format
-msgid " (+%dL)"
+msgid "LAP_DIFF^%+dL"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:90
+#: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Start line"
 msgstr "Startovní čára"
 
-#: qcsrc/client/hud/panel/racetimer.qc:92
-#: qcsrc/client/hud/panel/racetimer.qc:96
+#: qcsrc/client/hud/panel/racetimer.qc:89
+#: qcsrc/client/hud/panel/racetimer.qc:93
 msgid "Finish line"
 msgstr "Cílová čára"
 
-#: qcsrc/client/hud/panel/racetimer.qc:219
-#: qcsrc/client/hud/panel/racetimer.qc:311
-#: qcsrc/client/hud/panel/racetimer.qc:375
+#: qcsrc/client/hud/panel/racetimer.qc:108
 #, c-format
-msgid "PENALTY: %.1f (%s)"
+msgid "TIMEDIFF_PLAYER^%s %s"
 msgstr ""
 
-#: qcsrc/client/hud/panel/racetimer.qc:219 qcsrc/client/main.qc:1235
+#: qcsrc/client/hud/panel/racetimer.qc:226
+#: qcsrc/client/hud/panel/racetimer.qc:282
+#, c-format
+msgid "SPEED^ %d%s"
+msgstr ""
+
+#: qcsrc/client/hud/panel/racetimer.qc:230
+#: qcsrc/client/hud/panel/racetimer.qc:284
+#, c-format
+msgid "SPEED_DIFF^%+d%s"
+msgstr ""
+
+#: qcsrc/client/hud/panel/racetimer.qc:236 qcsrc/client/main.qc:1235
 msgid "missing a checkpoint"
+msgstr ""
+
+#: qcsrc/client/hud/panel/racetimer.qc:238
+#: qcsrc/client/hud/panel/racetimer.qc:330
+#: qcsrc/client/hud/panel/racetimer.qc:393
+#, c-format
+msgid "PENALTY: %.1f"
 msgstr ""
 
 #: qcsrc/client/hud/panel/radar.qc:339
@@ -1377,45 +1405,35 @@ msgstr "Herní mód:"
 msgid "by:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1427
-msgid "This match supports"
-msgstr ""
-
-#: qcsrc/client/main.qc:1429
-#, c-format
-msgid "%d players"
-msgstr ""
-
 #: qcsrc/client/main.qc:1431
 #, c-format
-msgid "%d to %d players"
+msgid "%d maximum"
 msgstr ""
 
 #: qcsrc/client/main.qc:1433
 #, c-format
-msgid "%d players maximum"
+msgid "INTERVAL^%d-%d"
 msgstr ""
 
-#: qcsrc/client/main.qc:1435
-#, c-format
-msgid "%d players minimum"
+#: qcsrc/client/main.qc:1434
+msgid "Number of players supported by this match:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1440
+#: qcsrc/client/main.qc:1439
 msgid "Active modifications:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1443
+#: qcsrc/client/main.qc:1442
 msgid "Special gameplay tips:"
 msgstr ""
 
-#: qcsrc/client/main.qc:1450
+#: qcsrc/client/main.qc:1449
 msgid "Server's message"
 msgstr ""
 
-#: qcsrc/client/main.qc:1537
+#: qcsrc/client/main.qc:1536
 #, c-format
-msgid "%s (not bound)"
+msgid "not bound"
 msgstr ""
 
 #: qcsrc/client/view.qc:1010
@@ -2188,38 +2206,43 @@ msgstr ""
 msgid "Team Mayhem"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qc:11
+#: qcsrc/common/items/item/ammo.qc:13
+#, c-format
+msgid "%d fuel"
+msgstr ""
+
+#: qcsrc/common/items/item/ammo.qc:27
 #, c-format
 msgid "The %s ammo type is used by the:"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qc:16 qcsrc/common/items/item/ammo.qc:26
+#: qcsrc/common/items/item/ammo.qc:32 qcsrc/common/items/item/ammo.qc:42
 #, c-format
-msgid "By default, the pickup gives you %s ammo, to a maximum of %s."
+msgid "By default, the pickup gives you %s, to a maximum of %s."
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qc:25
+#: qcsrc/common/items/item/ammo.qc:41
 #, c-format
 msgid "The %s ammo type is used by the %s."
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:59 qcsrc/common/resources/all.inc:30
+#: qcsrc/common/items/item/ammo.qh:61 qcsrc/common/resources/all.inc:30
 msgid "Shells"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:95 qcsrc/common/resources/all.inc:39
+#: qcsrc/common/items/item/ammo.qh:97 qcsrc/common/resources/all.inc:39
 msgid "Bullets"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:131 qcsrc/common/resources/all.inc:48
+#: qcsrc/common/items/item/ammo.qh:133 qcsrc/common/resources/all.inc:48
 msgid "Rockets"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:167 qcsrc/common/resources/all.inc:57
+#: qcsrc/common/items/item/ammo.qh:169 qcsrc/common/resources/all.inc:57
 msgid "Cells"
 msgstr ""
 
-#: qcsrc/common/items/item/ammo.qh:203 qcsrc/common/resources/all.inc:66
+#: qcsrc/common/items/item/ammo.qh:205 qcsrc/common/resources/all.inc:66
 msgid "Fuel"
 msgstr ""
 
@@ -2345,41 +2368,32 @@ msgstr "Limit zabití:"
 msgid "The amount of frags needed before the match will end"
 msgstr "Počet fragů, který je nutný pro dohrání zápasu"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:43
-msgid " (1 vote)"
-msgstr "(1 hlas)"
-
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:45
-#, c-format
-msgid " (%d votes)"
-msgstr " (%d hlasů)"
-
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:301
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:293
 msgid "Don't care"
 msgstr "Nezájem"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:340
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:332
 #, c-format
 msgid "Suggested by: %s"
 msgstr ""
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:421
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:413
 msgid "Decide the gametype"
 msgstr ""
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:421
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:413
 msgid "Vote for a map"
 msgstr "Hlasovat pro mapu"
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:605
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:597
 msgid "mv_mapdownload: ^3You're not supposed to use this command on your own!"
 msgstr ""
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:617
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:609
 msgid "^1Error:^7 Couldn't find pak index."
 msgstr ""
 
-#: qcsrc/common/mapvoting/cl_mapvoting.qc:628
+#: qcsrc/common/mapvoting/cl_mapvoting.qc:620
 msgid "Requesting preview..."
 msgstr ""
 
@@ -2812,7 +2826,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.qc:24
 #: qcsrc/menu/xonotic/mutatortab.qc:30 qcsrc/menu/xonotic/mutatortab.qc:302
-#: qcsrc/menu/xonotic/util.qc:728
+#: qcsrc/menu/xonotic/util.qc:736
 msgid "Enable"
 msgstr "Povolit"
 
@@ -3035,8 +3049,8 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:137
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:195
 #: qcsrc/menu/xonotic/mutatortab.qc:202 qcsrc/menu/xonotic/mutatortab.qc:298
-#: qcsrc/menu/xonotic/util.qc:741 qcsrc/menu/xonotic/util.qc:758
-#: qcsrc/menu/xonotic/util.qc:776
+#: qcsrc/menu/xonotic/util.qc:749 qcsrc/menu/xonotic/util.qc:766
+#: qcsrc/menu/xonotic/util.qc:784
 msgid "Disable"
 msgstr "Zákázat"
 
@@ -3119,7 +3133,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:124
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:67
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
-#: qcsrc/menu/xonotic/util.qc:746
+#: qcsrc/menu/xonotic/util.qc:754
 msgid "Color:"
 msgstr ""
 
@@ -6711,230 +6725,216 @@ msgstr ""
 msgid "^K1You aren't allowed to vote because you are banned in this server"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:429 qcsrc/common/notifications/all.qh:430
-#: qcsrc/common/notifications/all.qh:431
+#: qcsrc/common/notifications/all.qh:430 qcsrc/common/notifications/all.qh:431
+#: qcsrc/common/notifications/all.qh:432
 #, c-format
 msgid " (near %s)"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:438 qcsrc/common/notifications/all.qh:439
+#: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
 #: qcsrc/common/weapons/all.qc:866
 msgid "primary"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:438 qcsrc/common/notifications/all.qh:439
+#: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
 #: qcsrc/common/weapons/all.qc:867
 msgid "secondary"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:441
-#, c-format
-msgid "%d points"
-msgstr ""
-
-#: qcsrc/common/notifications/all.qh:441
-msgid "1 point"
-msgstr ""
-
-#: qcsrc/common/notifications/all.qh:449
+#: qcsrc/common/notifications/all.qh:450
 msgid "drop flag"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:450
+#: qcsrc/common/notifications/all.qh:451
 msgid "throw nade"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:487
+#: qcsrc/common/notifications/all.qh:488
 #, c-format
 msgid "%s^K1 made a TRIPLE FRAG!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:487
+#: qcsrc/common/notifications/all.qh:488
 #, c-format
 msgid "%s^K1 made a TRIPLE SCORE!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:487
+#: qcsrc/common/notifications/all.qh:488
 msgid "TRIPLE FRAG!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:488
+#: qcsrc/common/notifications/all.qh:489
 #, c-format
 msgid "%s^K1 made FIVE SCORES IN A ROW!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:488
+#: qcsrc/common/notifications/all.qh:489
 #, c-format
 msgid "%s^K1 unlocked RAGE!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:488
+#: qcsrc/common/notifications/all.qh:489
 msgid "RAGE!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:489
+#: qcsrc/common/notifications/all.qh:490
 #, c-format
 msgid "%s^K1 made TEN SCORES IN A ROW!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:489
+#: qcsrc/common/notifications/all.qh:490
 #, c-format
 msgid "%s^K1 started a MASSACRE!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:489
+#: qcsrc/common/notifications/all.qh:490
 msgid "MASSACRE!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:490
+#: qcsrc/common/notifications/all.qh:491
 #, c-format
 msgid "%s^K1 executed MAYHEM!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:490
+#: qcsrc/common/notifications/all.qh:491
 #, c-format
 msgid "%s^K1 made FIFTEEN SCORES IN A ROW!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:490
+#: qcsrc/common/notifications/all.qh:491
 msgid "MAYHEM!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:491
+#: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 is a BERSERKER!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:491
+#: qcsrc/common/notifications/all.qh:492
 #, c-format
 msgid "%s^K1 made TWENTY SCORES IN A ROW!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:491
+#: qcsrc/common/notifications/all.qh:492
 msgid "BERSERKER!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:492
+#: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid "%s^K1 inflicts CARNAGE!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:492
+#: qcsrc/common/notifications/all.qh:493
 #, c-format
 msgid "%s^K1 made TWENTY FIVE SCORES IN A ROW!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:492
+#: qcsrc/common/notifications/all.qh:493
 msgid "CARNAGE!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:493
+#: qcsrc/common/notifications/all.qh:494
 #, c-format
 msgid "%s^K1 made THIRTY SCORES IN A ROW!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:493
+#: qcsrc/common/notifications/all.qh:494
 #, c-format
 msgid "%s^K1 unleashes ARMAGEDDON!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:493
+#: qcsrc/common/notifications/all.qh:494
 msgid "ARMAGEDDON!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:500
+#: qcsrc/common/notifications/all.qh:501
 #, c-format
 msgid "%s(^F1Bot^BG)"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:502
+#: qcsrc/common/notifications/all.qh:503
 #, c-format
 msgid "%s(Ping ^F1%d^BG)"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:509
+#: qcsrc/common/notifications/all.qh:510
 #, c-format
 msgid ""
 "\n"
 "(Health ^1%d^BG / Armor ^2%d^BG)%s"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:511
+#: qcsrc/common/notifications/all.qh:512
 #, c-format
 msgid ""
 "\n"
 "(^F4Dead^BG)%s"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:523 qcsrc/common/notifications/all.qh:533
+#: qcsrc/common/notifications/all.qh:524 qcsrc/common/notifications/all.qh:534
 #, c-format
 msgid "%d score spree!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:532
+#: qcsrc/common/notifications/all.qh:533
 #, c-format
 msgid "%d frag spree!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:542
+#: qcsrc/common/notifications/all.qh:543
 msgid "First blood!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:542
+#: qcsrc/common/notifications/all.qh:543
 msgid "First score!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:544
+#: qcsrc/common/notifications/all.qh:545
 msgid "First casualty!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:544
+#: qcsrc/common/notifications/all.qh:545
 msgid "First victim!"
-msgstr ""
-
-#: qcsrc/common/notifications/all.qh:584
-#, c-format
-msgid "%s^K1 has %d frags in a row!"
 msgstr ""
 
 #: qcsrc/common/notifications/all.qh:585
 #, c-format
-msgid "%s^K1 made %d scores in a row!"
+msgid "%s^K1 has %d frags in a row!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:599
+#: qcsrc/common/notifications/all.qh:586
 #, c-format
-msgid "%s^K1 drew first blood!"
+msgid "%s^K1 made %d scores in a row!"
 msgstr ""
 
 #: qcsrc/common/notifications/all.qh:600
 #, c-format
-msgid "%s^K1 got the first score!"
+msgid "%s^K1 drew first blood!"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:612
+#: qcsrc/common/notifications/all.qh:601
 #, c-format
-msgid ", ending their %d frag spree"
+msgid "%s^K1 got the first score!"
 msgstr ""
 
 #: qcsrc/common/notifications/all.qh:613
 #, c-format
-msgid ", ending their %d score spree"
+msgid ", ending their %d frag spree"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:622
+#: qcsrc/common/notifications/all.qh:614
 #, c-format
-msgid ", losing their %d frag spree"
+msgid ", ending their %d score spree"
 msgstr ""
 
 #: qcsrc/common/notifications/all.qh:623
 #, c-format
-msgid ", losing their %d score spree"
+msgid ", losing their %d frag spree"
 msgstr ""
 
-#: qcsrc/common/notifications/all.qh:638
+#: qcsrc/common/notifications/all.qh:624
 #, c-format
-msgid " with %d %s"
+msgid ", losing their %d score spree"
 msgstr ""
 
 #: qcsrc/common/teams.qh:31
@@ -6952,10 +6952,6 @@ msgstr ""
 #: qcsrc/common/teams.qh:34
 msgid "TEAM^Pink"
 msgstr ""
-
-#: qcsrc/common/teams.qh:35
-msgid "Team"
-msgstr "Tým"
 
 #: qcsrc/common/teams.qh:36
 msgid "Neutral"
@@ -7007,6 +7003,11 @@ msgstr ""
 
 #: qcsrc/common/teams.qh:50
 msgid "GENERATOR^Pink"
+msgstr ""
+
+#: qcsrc/common/teams.qh:229 qcsrc/common/teams.qh:231
+#, c-format
+msgid "%s team"
 msgstr ""
 
 #: qcsrc/common/turrets/cl_turrets.qc:118
@@ -7175,14 +7176,14 @@ msgstr ""
 msgid "Phaser"
 msgstr ""
 
-#: qcsrc/common/turrets/turret/plasma.qc:66
+#: qcsrc/common/turrets/turret/plasma.qc:44
 #, c-format
 msgid ""
 "The %s is a turret that fires electric balls forwards, similar to those of "
 "the %s."
 msgstr ""
 
-#: qcsrc/common/turrets/turret/plasma.qc:67
+#: qcsrc/common/turrets/turret/plasma.qc:45
 #, c-format
 msgid "It is a weaker version of the %s, which has two electric ball cannons."
 msgstr ""
@@ -7191,14 +7192,14 @@ msgstr ""
 msgid "Plasma Cannon"
 msgstr ""
 
-#: qcsrc/common/turrets/turret/plasma_dual.qc:55
+#: qcsrc/common/turrets/turret/plasma_dual.qc:34
 #, c-format
 msgid ""
 "The %s is a turret that fires electric balls forwards from its two cannons, "
 "shooting balls similar to those of the %s."
 msgstr ""
 
-#: qcsrc/common/turrets/turret/plasma_dual.qc:56
+#: qcsrc/common/turrets/turret/plasma_dual.qc:35
 #, c-format
 msgid ""
 "It is a stronger version of the %s, which only has one electric ball cannon."
@@ -7682,35 +7683,35 @@ msgstr "MIDI NOTA%d"
 msgid "Press %s"
 msgstr "Zmáčkni %s"
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:980
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:979
 msgid "No right gunner!"
 msgstr ""
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:986
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:985
 msgid "No left gunner!"
 msgstr ""
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1009
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1008
 #, c-format
 msgid ""
 "The %s vehicle seats up to three passengers, who are given different roles "
 "based on the order they enter."
 msgstr ""
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1010
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1009
 msgid ""
 "The first player to enter will be the pilot, flying the vehicle up into the "
 "skies. The first player can also shoot a green healing wave to heal other "
 "teammates on the ground."
 msgstr ""
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1012
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1011
 msgid ""
 "The second player to enter is the right gunner and the third player to enter "
 "is the left gunner."
 msgstr ""
 
-#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1013
+#: qcsrc/common/vehicles/vehicle/bumblebee.qc:1012
 msgid ""
 "When the pilot exits the vehicle, the players switch roles by moving up in "
 "position."
@@ -8523,202 +8524,407 @@ msgstr ""
 msgid "Vortex"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:9
+#: qcsrc/lib/counting.qh:11
 #, c-format
-msgid "CI_DEC^%s years"
+msgid "ZER^%d shells"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
-msgid "CI_ZER^%d years"
+msgid "ONE^%d shell"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
-msgid "CI_FIR^%d year"
+msgid "TWO^%d shells"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
-msgid "CI_SEC^%d years"
+msgid "THR^%d shells"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
-msgid "CI_THI^%d years"
+msgid "MUL^%d shells"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:16
+#: qcsrc/lib/counting.qh:19
 #, c-format
-msgid "CI_MUL^%d years"
+msgid "ZER^%d bullets"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:18
+#: qcsrc/lib/counting.qh:20
 #, c-format
-msgid "CI_DEC^%s weeks"
+msgid "ONE^%d bullet"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
-msgid "CI_ZER^%d weeks"
+msgid "TWO^%d bullets"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
-msgid "CI_FIR^%d week"
+msgid "THR^%d bullets"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
-msgid "CI_SEC^%d weeks"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:24
-#, c-format
-msgid "CI_THI^%d weeks"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:25
-#, c-format
-msgid "CI_MUL^%d weeks"
+msgid "MUL^%d bullets"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
-msgid "CI_DEC^%s days"
+msgid "ZER^%d rockets"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:28
+#, c-format
+msgid "ONE^%d rocket"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:29
+#, c-format
+msgid "TWO^%d rockets"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
-msgid "CI_ZER^%d days"
+msgid "THR^%d rockets"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
-msgid "CI_FIR^%d day"
+msgid "MUL^%d rockets"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:32
+#: qcsrc/lib/counting.qh:35
 #, c-format
-msgid "CI_SEC^%d days"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:33
-#, c-format
-msgid "CI_THI^%d days"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:34
-#, c-format
-msgid "CI_MUL^%d days"
+msgid "ZER^%d cells"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
-msgid "CI_DEC^%s hours"
+msgid "ONE^%d cell"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:37
+#, c-format
+msgid "TWO^%d cells"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:38
+#, c-format
+msgid "THR^%d cells"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
-msgid "CI_ZER^%d hours"
+msgid "MUL^%d cells"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:40
+#: qcsrc/lib/counting.qh:44
 #, c-format
-msgid "CI_FIR^%d hour"
+msgid "ZER^%d votes"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:41
+#: qcsrc/lib/counting.qh:45
 #, c-format
-msgid "CI_SEC^%d hours"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:42
-#, c-format
-msgid "CI_THI^%d hours"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:43
-#, c-format
-msgid "CI_MUL^%d hours"
+msgid "ONE^%d vote"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
-msgid "CI_DEC^%s minutes"
+msgid "TWO^%d votes"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:49
+#: qcsrc/lib/counting.qh:47
 #, c-format
-msgid "CI_ZER^%d minutes"
+msgid "THR^%d votes"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:50
+#: qcsrc/lib/counting.qh:48
 #, c-format
-msgid "CI_FIR^%d minute"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:51
-#, c-format
-msgid "CI_SEC^%d minutes"
+msgid "MUL^%d votes"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
-msgid "CI_THI^%d minutes"
+msgid "ZER^%d matches"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
-msgid "CI_MUL^%d minutes"
+msgid "ONE^%d match"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:54
+#, c-format
+msgid "TWO^%d matches"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
-msgid "CI_DEC^%s seconds"
+msgid "THR^%d matches"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:56
+#, c-format
+msgid "MUL^%d matches"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
-msgid "CI_ZER^%d seconds"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:59
-#, c-format
-msgid "CI_FIR^%d second"
-msgstr ""
-
-#: qcsrc/lib/counting.qh:60
-#, c-format
-msgid "CI_SEC^%d seconds"
+msgid "DEC^%s points"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
-msgid "CI_THI^%d seconds"
+msgid "ZER^%d points"
 msgstr ""
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
-msgid "CI_MUL^%d seconds"
+msgid "ONE^%d point"
 msgstr ""
 
-#: qcsrc/lib/counting.qh:78
+#: qcsrc/lib/counting.qh:63
+#, c-format
+msgid "TWO^%d points"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:64
+#, c-format
+msgid "THR^%d points"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:65
+#, c-format
+msgid "MUL^%d points"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:69
+#, c-format
+msgid "ZER^%d results"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:70
+#, c-format
+msgid "ONE^%d result"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:71
+#, c-format
+msgid "TWO^%d results"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:72
+#, c-format
+msgid "THR^%d results"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:73
+#, c-format
+msgid "MUL^%d results"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:76
+#, c-format
+msgid "DEC^%s years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:79
+#, c-format
+msgid "ZER^%d years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:80
+#, c-format
+msgid "ONE^%d year"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:81
+#, c-format
+msgid "TWO^%d years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:82
+#, c-format
+msgid "THR^%d years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:83
+#, c-format
+msgid "MUL^%d years"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:85
+#, c-format
+msgid "DEC^%s weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:88
+#, c-format
+msgid "ZER^%d weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:89
+#, c-format
+msgid "ONE^%d week"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:90
+#, c-format
+msgid "TWO^%d weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:91
+#, c-format
+msgid "THR^%d weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:92
+#, c-format
+msgid "MUL^%d weeks"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:94
+#, c-format
+msgid "DEC^%s days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:97
+#, c-format
+msgid "ZER^%d days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:98
+#, c-format
+msgid "ONE^%d day"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:99
+#, c-format
+msgid "TWO^%d days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:100
+#, c-format
+msgid "THR^%d days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:101
+#, c-format
+msgid "MUL^%d days"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:103
+#, c-format
+msgid "DEC^%s hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:106
+#, c-format
+msgid "ZER^%d hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:107
+#, c-format
+msgid "ONE^%d hour"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:108
+#, c-format
+msgid "TWO^%d hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:109
+#, c-format
+msgid "THR^%d hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:110
+#, c-format
+msgid "MUL^%d hours"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:112
+#, c-format
+msgid "DEC^%s minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:115
+#, c-format
+msgid "ZER^%d minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:116
+#, c-format
+msgid "ONE^%d minute"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:117
+#, c-format
+msgid "TWO^%d minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:118
+#, c-format
+msgid "THR^%d minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:119
+#, c-format
+msgid "MUL^%d minutes"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:121
+#, c-format
+msgid "DEC^%s seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:124
+#, c-format
+msgid "ZER^%d seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:125
+#, c-format
+msgid "ONE^%d second"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:126
+#, c-format
+msgid "TWO^%d seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:127
+#, c-format
+msgid "THR^%d seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:128
+#, c-format
+msgid "MUL^%d seconds"
+msgstr ""
+
+#: qcsrc/lib/counting.qh:144
 #, c-format
 msgid "%dst"
 msgstr "%d."
 
-#: qcsrc/lib/counting.qh:79
+#: qcsrc/lib/counting.qh:145
 #, c-format
 msgid "%dnd"
 msgstr "%d."
 
-#: qcsrc/lib/counting.qh:80
+#: qcsrc/lib/counting.qh:146
 #, c-format
 msgid "%drd"
 msgstr "%d."
 
-#: qcsrc/lib/counting.qh:83
+#: qcsrc/lib/counting.qh:149
 #, c-format
 msgid "%dth"
 msgstr "%d."
@@ -9002,15 +9208,6 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:523
 msgid "Past Contributors"
-msgstr ""
-
-#: qcsrc/menu/xonotic/cvarlist.qc:24
-#, c-format
-msgid "%d results"
-msgstr ""
-
-#: qcsrc/menu/xonotic/cvarlist.qc:24
-msgid "1 result"
 msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.qc:118
@@ -9387,16 +9584,12 @@ msgstr "Dynamická velikost"
 msgid "Items Time Panel"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:23
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:26
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:19
 #, c-format
 msgid "GAMETYPE^%s:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:21
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:24
-#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:27
+#: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
 msgid "Show icons"
 msgstr ""
 
@@ -9545,7 +9738,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:45
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:72
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:132
-#: qcsrc/menu/xonotic/util.qc:764
+#: qcsrc/menu/xonotic/util.qc:772
 msgid "Opacity:"
 msgstr ""
 
@@ -9877,27 +10070,27 @@ msgstr ""
 msgid "Panel background defaults:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:737
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:75 qcsrc/menu/xonotic/util.qc:745
 msgid "Background:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:88 qcsrc/menu/xonotic/util.qc:755
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:88 qcsrc/menu/xonotic/util.qc:763
 msgid "Border size:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:100
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:134
-#: qcsrc/menu/xonotic/util.qc:772
+#: qcsrc/menu/xonotic/util.qc:780
 msgid "Team color:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:108
-#: qcsrc/menu/xonotic/util.qc:783
+#: qcsrc/menu/xonotic/util.qc:791
 msgid "Test team color in configure mode"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:111
-#: qcsrc/menu/xonotic/util.qc:786
+#: qcsrc/menu/xonotic/util.qc:794
 msgid "Padding:"
 msgstr ""
 
@@ -10168,10 +10361,10 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
-#: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:740
-#: qcsrc/menu/xonotic/util.qc:752 qcsrc/menu/xonotic/util.qc:757
-#: qcsrc/menu/xonotic/util.qc:766 qcsrc/menu/xonotic/util.qc:775
-#: qcsrc/menu/xonotic/util.qc:788
+#: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:748
+#: qcsrc/menu/xonotic/util.qc:760 qcsrc/menu/xonotic/util.qc:765
+#: qcsrc/menu/xonotic/util.qc:774 qcsrc/menu/xonotic/util.qc:783
+#: qcsrc/menu/xonotic/util.qc:796
 msgid "Default"
 msgstr "Výchozí"
 
@@ -10618,7 +10811,7 @@ msgstr "Povolit používání Vaší přezdívky v hráčské statistice"
 msgid "Allow player statistics to rank you in leaderboards"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:155
+#: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:160
 msgid "Select language..."
 msgstr "Vybrat Jazyk..."
 
@@ -13634,108 +13827,106 @@ msgstr ""
 msgid "FADESPEED^Fast"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:28
+#: qcsrc/menu/xonotic/statslist.qc:36
 msgid "January"
 msgstr "Leden"
 
-#: qcsrc/menu/xonotic/statslist.qc:29
+#: qcsrc/menu/xonotic/statslist.qc:37
 msgid "February"
 msgstr "Únor"
 
-#: qcsrc/menu/xonotic/statslist.qc:30
+#: qcsrc/menu/xonotic/statslist.qc:38
 msgid "March"
 msgstr "Březen"
 
-#: qcsrc/menu/xonotic/statslist.qc:31
+#: qcsrc/menu/xonotic/statslist.qc:39
 msgid "April"
 msgstr "Duben"
 
-#: qcsrc/menu/xonotic/statslist.qc:32
+#: qcsrc/menu/xonotic/statslist.qc:40
 msgid "May"
 msgstr "Květen"
 
-#: qcsrc/menu/xonotic/statslist.qc:33
+#: qcsrc/menu/xonotic/statslist.qc:41
 msgid "June"
 msgstr "Červen"
 
-#: qcsrc/menu/xonotic/statslist.qc:34
+#: qcsrc/menu/xonotic/statslist.qc:42
 msgid "July"
 msgstr "Červenec"
 
-#: qcsrc/menu/xonotic/statslist.qc:35
+#: qcsrc/menu/xonotic/statslist.qc:43
 msgid "August"
 msgstr "Srpen"
 
-#: qcsrc/menu/xonotic/statslist.qc:36
+#: qcsrc/menu/xonotic/statslist.qc:44
 msgid "September"
 msgstr "Září"
 
-#: qcsrc/menu/xonotic/statslist.qc:37
+#: qcsrc/menu/xonotic/statslist.qc:45
 msgid "October"
 msgstr "Říjen"
 
-#: qcsrc/menu/xonotic/statslist.qc:38
+#: qcsrc/menu/xonotic/statslist.qc:46
 msgid "November"
 msgstr "Listopad"
 
-#: qcsrc/menu/xonotic/statslist.qc:39
+#: qcsrc/menu/xonotic/statslist.qc:47
 msgid "December"
 msgstr "Prosinec"
 
-#: qcsrc/menu/xonotic/statslist.qc:45
+#: qcsrc/menu/xonotic/statslist.qc:53
 #, no-c-format
-msgid "DATE^%m %d, %Y"
+msgid "DATE^%MMMM %d, %y"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:96
+#: qcsrc/menu/xonotic/statslist.qc:108
 msgid "Joined:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:103
+#: qcsrc/menu/xonotic/statslist.qc:113
 msgid "Last match:"
 msgstr "Poslední zápas:"
 
-#: qcsrc/menu/xonotic/statslist.qc:110
+#: qcsrc/menu/xonotic/statslist.qc:118
 msgid "Time played:"
 msgstr "Odehraný čas:"
 
-#: qcsrc/menu/xonotic/statslist.qc:117 qcsrc/menu/xonotic/statslist.qc:215
+#: qcsrc/menu/xonotic/statslist.qc:123 qcsrc/menu/xonotic/statslist.qc:209
 msgid "Favorite map:"
 msgstr "Oblíbená mapa:"
 
-#: qcsrc/menu/xonotic/statslist.qc:149 qcsrc/menu/xonotic/statslist.qc:201
-#: qcsrc/menu/xonotic/statslist.qc:229
+#: qcsrc/menu/xonotic/statslist.qc:146
 #, c-format
 msgid "Matches:"
 msgstr "Zápasy:"
 
-#: qcsrc/menu/xonotic/statslist.qc:154
+#: qcsrc/menu/xonotic/statslist.qc:151
 #, c-format
 msgid "Wins/Losses:"
 msgstr "Výhry/Prohry:"
 
-#: qcsrc/menu/xonotic/statslist.qc:155
+#: qcsrc/menu/xonotic/statslist.qc:152
 #, c-format
 msgid "Win percentage:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:166
+#: qcsrc/menu/xonotic/statslist.qc:163
 #, c-format
 msgid "Kills/Deaths:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:172
+#: qcsrc/menu/xonotic/statslist.qc:169
 #, c-format
-msgid "Kill ratio:"
+msgid "Kill-death ratio:"
 msgstr ""
 
-#: qcsrc/menu/xonotic/statslist.qc:208
+#: qcsrc/menu/xonotic/statslist.qc:204
 msgid "Skill:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/statslist.qc:231
-#, c-format
-msgid "%d (unranked)"
+msgid "* = unranked"
 msgstr ""
 
 #: qcsrc/menu/xonotic/util.qc:420
@@ -13757,6 +13948,6 @@ msgid ""
 "^1Expect visual problems."
 msgstr ""
 
-#: qcsrc/menu/xonotic/util.qc:798
+#: qcsrc/menu/xonotic/util.qc:806
 msgid "Hide on death"
 msgstr ""
