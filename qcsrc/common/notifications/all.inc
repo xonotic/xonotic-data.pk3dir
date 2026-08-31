@@ -367,7 +367,10 @@ string multiteam_info_sprintf(string input, string teamname)
 
 	MULTITEAM_INFO(DEATH_TEAMKILL,                          N_CONSOLE,  3, 1, "s1 s2 s3loc spree_end", "s2 s1",     "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "", NAME)
 
-	MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1points f2", "",       "",     strcat("^BG%s^BG%s^BG ", _("(%s every %s seconds)")), "") // example for translators: Red Team has captured the Strength control point (2 points every 5 seconds)
+	// NOTE howmuch string is in a separate line so that the translators comment is parsed correctly by xgettext
+	// TRANSLATORS: e.g.: 2 points every 5 seconds. Translate only "every", do not add either points or seconds.
+	string howmuch = _("%s every %s");
+	MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1points f2secs", "",       "",     strcat("^BG%s^BG%s^BG", _(" (%s)"), howmuch), "")
 
 	MSG_INFO_NOTIF(FREEZETAG_FREEZE,                        N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K1 was frozen by ^BG%s"), "")
 	MSG_INFO_NOTIF(FREEZETAG_REVIVED,                       N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K3 was revived by ^BG%s"), "")
