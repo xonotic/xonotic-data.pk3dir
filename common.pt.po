@@ -8888,182 +8888,182 @@ msgstr ""
 #: qcsrc/lib/counting.qh:76
 #, c-format
 msgid "DEC^%s years"
-msgstr ""
+msgstr "%s anos"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "ZER^%d years"
-msgstr ""
+msgstr "%d anos"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "ONE^%d year"
-msgstr ""
+msgstr "%d ano"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "TWO^%d years"
-msgstr ""
+msgstr "%d anos"
 
 #: qcsrc/lib/counting.qh:82
 #, c-format
 msgid "THR^%d years"
-msgstr ""
+msgstr "%d anos"
 
 #: qcsrc/lib/counting.qh:83
 #, c-format
 msgid "MUL^%d years"
-msgstr ""
+msgstr "%d anos"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "DEC^%s weeks"
-msgstr ""
+msgstr "%s semanas"
 
 #: qcsrc/lib/counting.qh:88
 #, c-format
 msgid "ZER^%d weeks"
-msgstr ""
+msgstr "%d semanas"
 
 #: qcsrc/lib/counting.qh:89
 #, c-format
 msgid "ONE^%d week"
-msgstr ""
+msgstr "%d semana"
 
 #: qcsrc/lib/counting.qh:90
 #, c-format
 msgid "TWO^%d weeks"
-msgstr ""
+msgstr "%d semanas"
 
 #: qcsrc/lib/counting.qh:91
 #, c-format
 msgid "THR^%d weeks"
-msgstr ""
+msgstr "%d semanas"
 
 #: qcsrc/lib/counting.qh:92
 #, c-format
 msgid "MUL^%d weeks"
-msgstr ""
+msgstr "%d semanas"
 
 #: qcsrc/lib/counting.qh:94
 #, c-format
 msgid "DEC^%s days"
-msgstr ""
+msgstr "%s dias"
 
 #: qcsrc/lib/counting.qh:97
 #, c-format
 msgid "ZER^%d days"
-msgstr ""
+msgstr "%d dias"
 
 #: qcsrc/lib/counting.qh:98
 #, c-format
 msgid "ONE^%d day"
-msgstr ""
+msgstr "%d dia"
 
 #: qcsrc/lib/counting.qh:99
 #, c-format
 msgid "TWO^%d days"
-msgstr ""
+msgstr "%d dias"
 
 #: qcsrc/lib/counting.qh:100
 #, c-format
 msgid "THR^%d days"
-msgstr ""
+msgstr "%d dias"
 
 #: qcsrc/lib/counting.qh:101
 #, c-format
 msgid "MUL^%d days"
-msgstr ""
+msgstr "%d dias"
 
 #: qcsrc/lib/counting.qh:103
 #, c-format
 msgid "DEC^%s hours"
-msgstr ""
+msgstr "%s horas"
 
 #: qcsrc/lib/counting.qh:106
 #, c-format
 msgid "ZER^%d hours"
-msgstr ""
+msgstr "%d horas"
 
 #: qcsrc/lib/counting.qh:107
 #, c-format
 msgid "ONE^%d hour"
-msgstr ""
+msgstr "%d hora"
 
 #: qcsrc/lib/counting.qh:108
 #, c-format
 msgid "TWO^%d hours"
-msgstr ""
+msgstr "%d horas"
 
 #: qcsrc/lib/counting.qh:109
 #, c-format
 msgid "THR^%d hours"
-msgstr ""
+msgstr "%d horas"
 
 #: qcsrc/lib/counting.qh:110
 #, c-format
 msgid "MUL^%d hours"
-msgstr ""
+msgstr "%d horas"
 
 #: qcsrc/lib/counting.qh:112
 #, c-format
 msgid "DEC^%s minutes"
-msgstr ""
+msgstr "%s minutos"
 
 #: qcsrc/lib/counting.qh:115
 #, c-format
 msgid "ZER^%d minutes"
-msgstr ""
+msgstr "%d minutos"
 
 #: qcsrc/lib/counting.qh:116
 #, c-format
 msgid "ONE^%d minute"
-msgstr ""
+msgstr "%d minuto"
 
 #: qcsrc/lib/counting.qh:117
 #, c-format
 msgid "TWO^%d minutes"
-msgstr ""
+msgstr "%d minutos"
 
 #: qcsrc/lib/counting.qh:118
 #, c-format
 msgid "THR^%d minutes"
-msgstr ""
+msgstr "%d minutos"
 
 #: qcsrc/lib/counting.qh:119
 #, c-format
 msgid "MUL^%d minutes"
-msgstr ""
+msgstr "%d minutos"
 
 #: qcsrc/lib/counting.qh:121
 #, c-format
 msgid "DEC^%s seconds"
-msgstr ""
+msgstr "%s segundos"
 
 #: qcsrc/lib/counting.qh:124
 #, c-format
 msgid "ZER^%d seconds"
-msgstr ""
+msgstr "%d segundos"
 
 #: qcsrc/lib/counting.qh:125
 #, c-format
 msgid "ONE^%d second"
-msgstr ""
+msgstr "%d segundo"
 
 #: qcsrc/lib/counting.qh:126
 #, c-format
 msgid "TWO^%d seconds"
-msgstr ""
+msgstr "%d segundos"
 
 #: qcsrc/lib/counting.qh:127
 #, c-format
 msgid "THR^%d seconds"
-msgstr ""
+msgstr "%d segundos"
 
 #: qcsrc/lib/counting.qh:128
 #, c-format
 msgid "MUL^%d seconds"
-msgstr ""
+msgstr "%d segundos"
 
 #: qcsrc/lib/counting.qh:144
 #, c-format

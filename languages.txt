@@ -1,34 +1,34 @@
-ast   "Asturian" "Asturianu" 54%
+ast   "Asturian" "Asturianu" 55%
 id_ID "Indonesian" "Bahasa Indonesia" 31%
-de    "German" "Deutsch" 76%
-de_CH "German (Switzerland)" "Deutsch (Schweiz)" 76%
+de    "German" "Deutsch" 77%
+de_CH "German (Switzerland)" "Deutsch (Schweiz)" 77%
 en    "English" "English" 100%
-en_AU "English (Australia)" "English (Australia)" 96%
-en_GB "English (United Kingdom)" "English (United Kingdom)" 96%
-es    "Spanish" "Español" 73%
-fr    "French" "Français" 95%
-gl    "Galician" "Galego" 96%
-ga    "Irish" "Irish" 22%
-it    "Italian" "Italiano" 97%
-la    "Latin" "Lingua Latina" 87%
+en_AU "English (Australia)" "English (Australia)" 100%
+en_GB "English (United Kingdom)" "English (United Kingdom)" 100%
+es    "Spanish" "Español" 74%
+fr    "French" "Français" 96%
+gl    "Galician" "Galego" 97%
+ga    "Irish" "Irish" 23%
+it    "Italian" "Italiano" 100%
+la    "Latin" "Lingua Latina" 88%
 hu    "Hungarian" "Magyar" 34%
-nl    "Dutch" "Nederlands" 49%
-pl    "Polish" "Polski" 93%
-pt    "Portuguese" "Português" 75%
-pt_BR "Portuguese (Brazil)" "Português (Brasil)" 96%
-ro    "Romanian" "Romana" 52%
-fi    "Finnish" "Suomi" 83%
-sv    "Swedish" "Svenska" 96%
-tr    "Turkish" "Türkçe" 41%
+nl    "Dutch" "Nederlands" 50%
+pl    "Polish" "Polski" 94%
+pt    "Portuguese" "Português" 76%
+pt_BR "Portuguese (Brazil)" "Português (Brasil)" 100%
+ro    "Romanian" "Romana" 53%
+fi    "Finnish" "Suomi" 89%
+sv    "Swedish" "Svenska" 97%
+tr    "Turkish" "Türkçe" 42%
 cs    "Czech" "Čeština" 23%
-el    "Greek" "Ελληνική" 36%
-be    "Belarusian" "Беларуская" 36%
-bg    "Bulgarian" "Български" 51%
-ru    "Russian" "Русский" 97%
-sr    "Serbian" "Српски" 93%
-uk    "Ukrainian" "Українська" 96%
-zh_TW "Chinese (Taiwan)" "中文（正體字）" 93%
-zh_CN "Chinese (China)" "中文（简体字）" 93%
-zh_HK "Chinese (Hong Kong)" "中文（香港字）" 93%
-ja_JP "Japanese" "日本語" 73%
+el    "Greek" "Ελληνική" 37%
+be    "Belarusian" "Беларуская" 37%
+bg    "Bulgarian" "Български" 53%
+ru    "Russian" "Русский" 100%
+sr    "Serbian" "Српски" 94%
+uk    "Ukrainian" "Українська" 100%
+zh_TW "Chinese (Taiwan)" "中文（正體字）" 94%
+zh_CN "Chinese (China)" "中文（简体字）" 94%
+zh_HK "Chinese (Hong Kong)" "中文（香港字）" 94%
+ja_JP "Japanese" "日本語" 74%
 ko    "Korean" "한국의" 26%

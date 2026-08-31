@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-30 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Kostiantyn Tsebro, 2026\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -264,7 +264,7 @@ msgstr "Команди не збалансовані!"
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #, c-format
 msgid "UNBALTEAMS^%s Press ^3%s%s to adjust"
-msgstr ""
+msgstr "UNBALTEAMS^%s Натисніть ^3%s%s для налаштування"
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #: qcsrc/menu/xonotic/keybinder.qc:164
@@ -602,12 +602,12 @@ msgstr "Спостерігати за гравцем"
 #: qcsrc/common/notifications/all.qh:639 qcsrc/menu/xonotic/serverlist.qc:1058
 #, c-format
 msgid " (%s)"
-msgstr ""
+msgstr " (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:67
 #, c-format
 msgid "LAP_DIFF^%+dL"
-msgstr ""
+msgstr "%+dК"
 
 #: qcsrc/client/hud/panel/racetimer.qc:87
 msgid "Start line"
@@ -621,19 +621,19 @@ msgstr "Фініш"
 #: qcsrc/client/hud/panel/racetimer.qc:108
 #, c-format
 msgid "TIMEDIFF_PLAYER^%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:226
 #: qcsrc/client/hud/panel/racetimer.qc:282
 #, c-format
 msgid "SPEED^ %d%s"
-msgstr ""
+msgstr "%d%s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:230
 #: qcsrc/client/hud/panel/racetimer.qc:284
 #, c-format
 msgid "SPEED_DIFF^%+d%s"
-msgstr ""
+msgstr "%+d%s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:236 qcsrc/client/main.qc:1235
 msgid "missing a checkpoint"
@@ -644,7 +644,7 @@ msgstr "загублено контрольну точку"
 #: qcsrc/client/hud/panel/racetimer.qc:393
 #, c-format
 msgid "PENALTY: %.1f"
-msgstr ""
+msgstr "ШТРАФ: %.1f"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select spawn location"
@@ -1440,16 +1440,16 @@ msgstr "від:"
 #: qcsrc/client/main.qc:1431
 #, c-format
 msgid "%d maximum"
-msgstr ""
+msgstr "%d максимум"
 
 #: qcsrc/client/main.qc:1433
 #, c-format
 msgid "INTERVAL^%d-%d"
-msgstr ""
+msgstr "%d-%d"
 
 #: qcsrc/client/main.qc:1434
 msgid "Number of players supported by this match:"
-msgstr ""
+msgstr "Кількість дозволених гравців в цьому матчі:"
 
 #: qcsrc/client/main.qc:1439
 msgid "Active modifications:"
@@ -1466,7 +1466,7 @@ msgstr "Повідомлення від серверу"
 #: qcsrc/client/main.qc:1536
 #, c-format
 msgid "not bound"
-msgstr ""
+msgstr "не пов'язані"
 
 #: qcsrc/client/view.qc:1010
 msgid "Nade timer"
@@ -2436,7 +2436,7 @@ msgstr "Командна М'ясорубка"
 #: qcsrc/common/items/item/ammo.qc:13
 #, c-format
 msgid "%d fuel"
-msgstr ""
+msgstr "%d палива"
 
 #: qcsrc/common/items/item/ammo.qc:27
 #, c-format
@@ -2446,7 +2446,7 @@ msgstr "Тип набоїв (%s) використовується у:"
 #: qcsrc/common/items/item/ammo.qc:32 qcsrc/common/items/item/ammo.qc:42
 #, c-format
 msgid "By default, the pickup gives you %s, to a maximum of %s."
-msgstr ""
+msgstr "За замовчуванням, підбір дає %s, до максимуму %s."
 
 #: qcsrc/common/items/item/ammo.qc:41
 #, c-format
@@ -7585,7 +7585,7 @@ msgstr "Рожевий"
 #: qcsrc/common/teams.qh:229 qcsrc/common/teams.qh:231
 #, c-format
 msgid "%s team"
-msgstr ""
+msgstr "%s команди"
 
 #: qcsrc/common/turrets/cl_turrets.qc:118
 #, c-format
@@ -9341,387 +9341,387 @@ msgstr "Вихор"
 #: qcsrc/lib/counting.qh:11
 #, c-format
 msgid "ZER^%d shells"
-msgstr ""
+msgstr "%d патронів"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "ONE^%d shell"
-msgstr ""
+msgstr "%d патрон"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "TWO^%d shells"
-msgstr ""
+msgstr "%d патрони"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "THR^%d shells"
-msgstr ""
+msgstr "%d патрони"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "MUL^%d shells"
-msgstr ""
+msgstr "%d патронів"
 
 #: qcsrc/lib/counting.qh:19
 #, c-format
 msgid "ZER^%d bullets"
-msgstr ""
+msgstr "%d куль"
 
 #: qcsrc/lib/counting.qh:20
 #, c-format
 msgid "ONE^%d bullet"
-msgstr ""
+msgstr "%d куля"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "TWO^%d bullets"
-msgstr ""
+msgstr "%d кулі"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "THR^%d bullets"
-msgstr ""
+msgstr "%d кулі"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "MUL^%d bullets"
-msgstr ""
+msgstr "%d куль"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "ZER^%d rockets"
-msgstr ""
+msgstr "%d ракет"
 
 #: qcsrc/lib/counting.qh:28
 #, c-format
 msgid "ONE^%d rocket"
-msgstr ""
+msgstr "%d ракета"
 
 #: qcsrc/lib/counting.qh:29
 #, c-format
 msgid "TWO^%d rockets"
-msgstr ""
+msgstr "%d ракети"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "THR^%d rockets"
-msgstr ""
+msgstr "%d ракети"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "MUL^%d rockets"
-msgstr ""
+msgstr "%d ракет"
 
 #: qcsrc/lib/counting.qh:35
 #, c-format
 msgid "ZER^%d cells"
-msgstr ""
+msgstr "%d батарейок"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "ONE^%d cell"
-msgstr ""
+msgstr "%d батарейка"
 
 #: qcsrc/lib/counting.qh:37
 #, c-format
 msgid "TWO^%d cells"
-msgstr ""
+msgstr "%d батарейки"
 
 #: qcsrc/lib/counting.qh:38
 #, c-format
 msgid "THR^%d cells"
-msgstr ""
+msgstr "%d батарейки"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "MUL^%d cells"
-msgstr ""
+msgstr "%d батарейок"
 
 #: qcsrc/lib/counting.qh:44
 #, c-format
 msgid "ZER^%d votes"
-msgstr ""
+msgstr "%d голосів"
 
 #: qcsrc/lib/counting.qh:45
 #, c-format
 msgid "ONE^%d vote"
-msgstr ""
+msgstr "%d голос"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "TWO^%d votes"
-msgstr ""
+msgstr "%d голоса"
 
 #: qcsrc/lib/counting.qh:47
 #, c-format
 msgid "THR^%d votes"
-msgstr ""
+msgstr "%d голоса"
 
 #: qcsrc/lib/counting.qh:48
 #, c-format
 msgid "MUL^%d votes"
-msgstr ""
+msgstr "%d голосів"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "ZER^%d matches"
-msgstr ""
+msgstr "%d матчей"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "ONE^%d match"
-msgstr ""
+msgstr "%d матч"
 
 #: qcsrc/lib/counting.qh:54
 #, c-format
 msgid "TWO^%d matches"
-msgstr ""
+msgstr "%d матча"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "THR^%d matches"
-msgstr ""
+msgstr "%d матча"
 
 #: qcsrc/lib/counting.qh:56
 #, c-format
 msgid "MUL^%d matches"
-msgstr ""
+msgstr "%d матчів"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "DEC^%s points"
-msgstr ""
+msgstr "%s очок"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "ZER^%d points"
-msgstr ""
+msgstr "%d очок"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "ONE^%d point"
-msgstr ""
+msgstr "%d очко"
 
 #: qcsrc/lib/counting.qh:63
 #, c-format
 msgid "TWO^%d points"
-msgstr ""
+msgstr "%d очки"
 
 #: qcsrc/lib/counting.qh:64
 #, c-format
 msgid "THR^%d points"
-msgstr ""
+msgstr "%d очки"
 
 #: qcsrc/lib/counting.qh:65
 #, c-format
 msgid "MUL^%d points"
-msgstr ""
+msgstr "%d очок"
 
 #: qcsrc/lib/counting.qh:69
 #, c-format
 msgid "ZER^%d results"
-msgstr ""
+msgstr "%d результатів"
 
 #: qcsrc/lib/counting.qh:70
 #, c-format
 msgid "ONE^%d result"
-msgstr ""
+msgstr "%d результат"
 
 #: qcsrc/lib/counting.qh:71
 #, c-format
 msgid "TWO^%d results"
-msgstr ""
+msgstr "%d результати"
 
 #: qcsrc/lib/counting.qh:72
 #, c-format
 msgid "THR^%d results"
-msgstr ""
+msgstr "%d результати"
 
 #: qcsrc/lib/counting.qh:73
 #, c-format
 msgid "MUL^%d results"
-msgstr ""
+msgstr "%d результатів"
 
 #: qcsrc/lib/counting.qh:76
 #, c-format
 msgid "DEC^%s years"
-msgstr ""
+msgstr "%s років"
 
 #: qcsrc/lib/counting.qh:79
 #, c-format
 msgid "ZER^%d years"
-msgstr ""
+msgstr "%d років"
 
 #: qcsrc/lib/counting.qh:80
 #, c-format
 msgid "ONE^%d year"
-msgstr ""
+msgstr "%d рік"
 
 #: qcsrc/lib/counting.qh:81
 #, c-format
 msgid "TWO^%d years"
-msgstr ""
+msgstr "%d роки"
 
 #: qcsrc/lib/counting.qh:82
 #, c-format
 msgid "THR^%d years"
-msgstr ""
+msgstr "%d роки"
 
 #: qcsrc/lib/counting.qh:83
 #, c-format
 msgid "MUL^%d years"
-msgstr ""
+msgstr "%d років"
 
 #: qcsrc/lib/counting.qh:85
 #, c-format
 msgid "DEC^%s weeks"
-msgstr ""
+msgstr "%s тижнів"
 
 #: qcsrc/lib/counting.qh:88
 #, c-format
 msgid "ZER^%d weeks"
-msgstr ""
+msgstr "%d тижнів"
 
 #: qcsrc/lib/counting.qh:89
 #, c-format
 msgid "ONE^%d week"
-msgstr ""
+msgstr "%d тиждень"
 
 #: qcsrc/lib/counting.qh:90
 #, c-format
 msgid "TWO^%d weeks"
-msgstr ""
+msgstr "%d тижня"
 
 #: qcsrc/lib/counting.qh:91
 #, c-format
 msgid "THR^%d weeks"
-msgstr ""
+msgstr "%d тижня"
 
 #: qcsrc/lib/counting.qh:92
 #, c-format
 msgid "MUL^%d weeks"
-msgstr ""
+msgstr "%d тижнів"
 
 #: qcsrc/lib/counting.qh:94
 #, c-format
 msgid "DEC^%s days"
-msgstr ""
+msgstr "%s днів"
 
 #: qcsrc/lib/counting.qh:97
 #, c-format
 msgid "ZER^%d days"
-msgstr ""
+msgstr "%d днів"
 
 #: qcsrc/lib/counting.qh:98
 #, c-format
 msgid "ONE^%d day"
-msgstr ""
+msgstr "%d день"
 
 #: qcsrc/lib/counting.qh:99
 #, c-format
 msgid "TWO^%d days"
-msgstr ""
+msgstr "%d дня"
 
 #: qcsrc/lib/counting.qh:100
 #, c-format
 msgid "THR^%d days"
-msgstr ""
+msgstr "%d дня"
 
 #: qcsrc/lib/counting.qh:101
 #, c-format
 msgid "MUL^%d days"
-msgstr ""
+msgstr "%d днів"
 
 #: qcsrc/lib/counting.qh:103
 #, c-format
 msgid "DEC^%s hours"
-msgstr ""
+msgstr "%s годин"
 
 #: qcsrc/lib/counting.qh:106
 #, c-format
 msgid "ZER^%d hours"
-msgstr ""
+msgstr "%d годин"
 
 #: qcsrc/lib/counting.qh:107
 #, c-format
 msgid "ONE^%d hour"
-msgstr ""
+msgstr "%d година"
 
 #: qcsrc/lib/counting.qh:108
 #, c-format
 msgid "TWO^%d hours"
-msgstr ""
+msgstr "%d години"
 
 #: qcsrc/lib/counting.qh:109
 #, c-format
 msgid "THR^%d hours"
-msgstr ""
+msgstr "%d години"
 
 #: qcsrc/lib/counting.qh:110
 #, c-format
 msgid "MUL^%d hours"
-msgstr ""
+msgstr "%d годин"
 
 #: qcsrc/lib/counting.qh:112
 #, c-format
 msgid "DEC^%s minutes"
-msgstr ""
+msgstr "%s хвилин"
 
 #: qcsrc/lib/counting.qh:115
 #, c-format
 msgid "ZER^%d minutes"
-msgstr ""
+msgstr "%d хвилин"
 
 #: qcsrc/lib/counting.qh:116
 #, c-format
 msgid "ONE^%d minute"
-msgstr ""
+msgstr "%d хвилина"
 
 #: qcsrc/lib/counting.qh:117
 #, c-format
 msgid "TWO^%d minutes"
-msgstr ""
+msgstr "%d хвилини"
 
 #: qcsrc/lib/counting.qh:118
 #, c-format
 msgid "THR^%d minutes"
-msgstr ""
+msgstr "%d хвилини"
 
 #: qcsrc/lib/counting.qh:119
 #, c-format
 msgid "MUL^%d minutes"
-msgstr ""
+msgstr "%d хвилин"
 
 #: qcsrc/lib/counting.qh:121
 #, c-format
 msgid "DEC^%s seconds"
-msgstr ""
+msgstr "%s секунд"
 
 #: qcsrc/lib/counting.qh:124
 #, c-format
 msgid "ZER^%d seconds"
-msgstr ""
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:125
 #, c-format
 msgid "ONE^%d second"
-msgstr ""
+msgstr "%d секунда"
 
 #: qcsrc/lib/counting.qh:126
 #, c-format
 msgid "TWO^%d seconds"
-msgstr ""
+msgstr "%d секунди"
 
 #: qcsrc/lib/counting.qh:127
 #, c-format
 msgid "THR^%d seconds"
-msgstr ""
+msgstr "%d секунди"
 
 #: qcsrc/lib/counting.qh:128
 #, c-format
 msgid "MUL^%d seconds"
-msgstr ""
+msgstr "%d секунд"
 
 #: qcsrc/lib/counting.qh:144
 #, c-format
@@ -14898,7 +14898,7 @@ msgstr "Грудень"
 #: qcsrc/menu/xonotic/statslist.qc:53
 #, no-c-format
 msgid "DATE^%MMMM %d, %y"
-msgstr ""
+msgstr "%d %MMMM, %y"
 
 #: qcsrc/menu/xonotic/statslist.qc:108
 msgid "Joined:"
@@ -14939,7 +14939,7 @@ msgstr "Вбивств/Смертей:"
 #: qcsrc/menu/xonotic/statslist.qc:169
 #, c-format
 msgid "Kill-death ratio:"
-msgstr ""
+msgstr "Співвідношення вбивств та смертей:"
 
 #: qcsrc/menu/xonotic/statslist.qc:204
 msgid "Skill:"
@@ -14947,7 +14947,7 @@ msgstr "Скіл:"
 
 #: qcsrc/menu/xonotic/statslist.qc:231
 msgid "* = unranked"
-msgstr ""
+msgstr "* = без рейтингу"
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
