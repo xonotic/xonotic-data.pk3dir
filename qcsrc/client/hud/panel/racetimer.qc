@@ -62,9 +62,10 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 
 		if (lapdelta)
 		{
-			// to translators: LAP_DIFF string shows e.g.: "+2L" where L stands for lap(s)
 			// ^%+d forces a plus sign to show on positive numbers
-			lapstr = sprintf(_(" (%s)"), sprintf(CTX(_("LAP_DIFF^%+dL")), -lapdelta));
+			// TRANSLATORS: lap difference, e.g. "+2L" where L stands for lap(s).
+			string lapdiff = sprintf(CTX(_("LAP_DIFF^%+dL")), -lapdelta);
+			lapstr = sprintf(_(" (%s)"), lapdiff);
 			col = lapdelta > 0 ? "^2" : "^1";
 		}
 	}
@@ -104,8 +105,9 @@ string MakeRaceString(int cp, float mytime, float theirtime, float othertime, fl
 		return strcat(col, cpname, sprintf(_(" (%s)"), timestr));
 	else
 	{
-		// to translators: TIMEDIFF_PLAYER string shows e.g.: "+0.54 Bob"
-		string time_and_their_name = sprintf(_(" (%s)"), sprintf(CTX(_("TIMEDIFF_PLAYER^%s %s")), timestr, strcat(theirname, col, lapstr)));
+		// TRANSLATORS: time difference and player, e.g. "+0.54 Bob".
+		string time_and_their_name = sprintf(CTX(_("TIMEDIFF_PLAYER^%s %s")), timestr, strcat(theirname, col, lapstr));
+		time_and_their_name = sprintf(_(" (%s)"), time_and_their_name);
 		if (othertime)
 			return strcat(col, cpname, othercol, sprintf(_(" (%s)"), othertimestr), col, time_and_their_name);
 		else

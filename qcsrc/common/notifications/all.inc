@@ -730,7 +730,8 @@ string multiteam_info_sprintf(string input, string teamname)
 	MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    0, 2, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
 	MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "")
 	MSG_CENTER_NOTIF(ITEM_WEAPON_NOAMMO,                N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "")
-	MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "") // example for translators: Electro primary is unable to fire, but its secondary can
+	// TRANSLATORS: e.g.: "Electro primary is unable to fire, but its secondary can".
+	MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
 	MSG_CENTER_NOTIF(ITEM_WEAPON_UNAVAILABLE,           N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "")
 
 	MSG_CENTER_NOTIF(JOIN_NOSPAWNS,                     N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1No spawnpoints available!\nHope your team can fix it..."), "")
