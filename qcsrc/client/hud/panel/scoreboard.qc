@@ -139,7 +139,7 @@ string Label_getInfo(string label, int mode)
 		SCO_LABEL(_("SCO^fastest"),       "fastest", "            ", _("Time of fastest lap (Race/CTS)"));
 		SCO_LABEL(_("SCO^faults"),        "faults", "             ", _("Number of faults committed"));
 		SCO_LABEL(_("SCO^fckills"),       "fckills", "            ", _("Number of flag carrier kills"));
-		SCO_LABEL(_("SCO^fps"),           "fps", "                ", _("FPS"));
+		SCO_LABEL(_("SCO^fps"),           "fps", "                ", _("Frames per second"));
 		SCO_LABEL(_("SCO^frags"),         "frags", "              ", _("Number of kills minus suicides"));
 		SCO_LABEL(_("SCO^generators"),    "generators", "         ", _("Number of generators destroyed"));
 		SCO_LABEL(_("SCO^goals"),         "goals", "              ", _("Number of goals scored"));
