@@ -1403,7 +1403,7 @@ msgstr "### ВИ НЕ ЗМОЖЕТЕ ПОГРАТИ НА ЦЬОМУ СЕРВЕР
 
 #: qcsrc/client/main.qc:1371
 msgid "Please update!"
-msgstr "Будь-ласка оновіться!"
+msgstr "Будь ласка оновіться!"
 
 #: qcsrc/client/main.qc:1374
 msgid "This server is using an outdated Xonotic version."
@@ -4029,7 +4029,7 @@ msgstr "Типи гранат:"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:96
 msgid "Random"
-msgstr "Випадковий"
+msgstr "Випадковий вибір"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:107
 msgid "Normal nade type, if client selection is disabled"
@@ -14939,7 +14939,7 @@ msgstr "Вбивств/Смертей:"
 #: qcsrc/menu/xonotic/statslist.qc:169
 #, c-format
 msgid "Kill-death ratio:"
-msgstr "Співвідношення вбивств та смертей:"
+msgstr "Коефіцієнт вбивств/смертей:"
 
 #: qcsrc/menu/xonotic/statslist.qc:204
 msgid "Skill:"

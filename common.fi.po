@@ -1592,6 +1592,8 @@ msgid ""
 "The game is won once a team reaches a certain number of \"caps\" (captures), "
 "or has a considerable lead over the other team."
 msgstr ""
+"Peli voitetaan, kun joukkua saa tietyn määrän valtauksia, tai sillä on "
+"huomattava etumatka muihin joukkueisiin nähden."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:11
 msgid ""
@@ -1699,7 +1701,7 @@ msgstr "Mättö (Deathmatch)"
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qh:8
 msgid "Score as many frags as you can"
-msgstr "Tee niin monta tappoa kuin pystyt"
+msgstr "Tee niin monta lahtausta kuin pystyt"
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:8
 #, c-format
@@ -1707,6 +1709,8 @@ msgid ""
 "%s is a gametype where teams compete to dominate the map by capturing and "
 "keeping control points."
 msgstr ""
+"%s on pelityyppi, jossa joukkueet kilpailevat kartan hallinnasta valtaamalla "
+"ja pitämällä hallintapisteitä."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:9
 msgid ""
@@ -1840,6 +1844,7 @@ msgstr ""
 msgid ""
 "A round ends when either all monsters are fragged, or after a time limit."
 msgstr ""
+"Kierros päättyy, kun joko kaikki hirviöt on lahdattu, tai aikarajan jälkeen."
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qh:8
 msgid "Invasion"
@@ -1987,6 +1992,8 @@ msgid ""
 "Since damage is always rewarded in %s, the more you shoot the better, "
 "turning this gametype into chaotic fun at times."
 msgstr ""
+"Koska vahinko palkitaan aina muodossa %s, mitä enemmän ammut, sen parempi, "
+"jolloin tämä pelityyppi muuttuu välillä kaoottisen hauskaksi."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
 #, c-format
@@ -1996,7 +2003,7 @@ msgstr ""
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
 msgstr ""
-"Kilpaile vahingon- ja tappojen määrästä tässä kaoottisessa sekasorrossa!"
+"Kilpaile vahingon ja lahtausten määrästä tässä kaoottisessa sekasorrossa!"
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Mayhem"
@@ -2198,7 +2205,8 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
-msgstr "Auta joukkuettasi tekemään eniten tappoja vihollisjoukkuetta vastaan"
+msgstr ""
+"Auta joukkuettasi tekemään eniten lahtauksia vihollisjoukkuetta vastaan"
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Team Deathmatch"
@@ -2247,8 +2255,8 @@ msgid ""
 "Compete along with your team for the most damage dealt and frags in this "
 "chaotic mayhem"
 msgstr ""
-"Kilpaile joukkueesi kanssa vahingon ja tappojen määrästä tässä kaoottisessa "
-"sekasortossa"
+"Kilpaile joukkueesi kanssa vahingon ja lahtausten määrästä tässä "
+"kaoottisessa sekasortossa"
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid "Team Mayhem"
@@ -2426,11 +2434,11 @@ msgstr "@!#%'n tuubanheitto!"
 #: qcsrc/common/mapinfo.qh:94
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
 msgid "Frag limit:"
-msgstr "Tapporaja:"
+msgstr "Lahtausraja:"
 
 #: qcsrc/common/mapinfo.qh:94
 msgid "The amount of frags needed before the match will end"
-msgstr "Tarvittava tappojen määrä ennen ottelun päättymistä"
+msgstr "Tarvittava lahtausten määrä ennen ottelun päättymistä"
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:293
 msgid "Don't care"
@@ -3379,6 +3387,9 @@ msgid ""
 "The %s mutator gives all players a %s as their offhand weapon, used with %s. "
 "It has unlimited ammo, but the ordinary secondary fire can't be used."
 msgstr ""
+"Muovaaja %s antaa kaikille pelaajille %s toiskäden aseeksi %s mukana. Sillä "
+"on loputtomat ammukset, mutta tavanomainen toissijainen tulitus ei ole "
+"käytössä."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:12
 #: qcsrc/common/mutators/mutator/nades/nades.qc:50
@@ -3459,6 +3470,8 @@ msgid ""
 "The %s powerup acts as armor in %s. If a player is shot while having one or "
 "more extra lives, they will survive the shot but suffer strong knockback."
 msgstr ""
+"Tehonlisäys %s toimii panssarina %s. Jos pelaajaa ammutaan, kun lisäelämiä "
+"on yksi tai useampi, hän selviää osumasta, mutta kärsii vahvasta sysäyksestä."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qh:29
 msgid "Vaporizer ammo"
@@ -3509,6 +3522,8 @@ msgid ""
 "The primary fire also explodes on impact, and the secondary fire shoots "
 "laser prongs"
 msgstr ""
+"Ensisijainen tulitus myös räjähtää osumasta, ja toissijainen tulitus ampuu "
+"laserpiikkejä"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:4
 #, c-format
@@ -3525,6 +3540,8 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode %s orbs with "
 "the %s primary fire."
 msgstr ""
+"Ammuksia ei voi tuhota. Voit, kuitenkin, räjäyttää %spalloja ensisijaisella "
+"%s-tulituksella."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qh:6
 msgid "Invincible projectiles"
@@ -3536,13 +3553,15 @@ msgstr "Voittamaton-aika:"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:22
 msgid "Invincibility time after leaving contact with ground"
-msgstr ""
+msgstr "Voittamaton-aika maakosketuksen jälkeen"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:29
 msgid ""
 "Makes it only possible to inflict damage on your enemy while they're "
 "airborne."
 msgstr ""
+"Mahdollisuus aiheuttaa vahinkoa vihollisillesi vain silloin, kun he ovat "
+"ilmassa"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qh:6 qcsrc/common/util.qc:303
 msgid "Midair"
@@ -3775,7 +3794,7 @@ msgstr "Maks. lisänaatit:"
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:32
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:116
 msgid "Allow client selection"
-msgstr ""
+msgstr "Salli asiakasvalinta"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:33
 msgid "For bonus nades"
@@ -3844,6 +3863,8 @@ msgid ""
 "Automatically replace some normal weapons of the map with their "
 "corresponding additional weapons"
 msgstr ""
+"Automaattisesti korvaa joitakin kartan normaaleja aseita niiden vastaaviin "
+"lisäaseisiin."
 
 #: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:25
 msgid "Randomly"
@@ -3893,6 +3914,9 @@ msgid ""
 "weapon. After some time a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
+"Xonotic ilman esineitä - keräilyesineiden sijasta kaikki pelaavat samalla "
+"aseella. Kotvan kuluttua lähtölaskenta alkaa, minkä loputtua kaikki "
+"vaihtavat toiseen aseeseen."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -3906,6 +3930,9 @@ msgid ""
 "The %s mutator gives all players a %s as their offhand weapon, used with %s. "
 "It can be fired at any time, but the ordinary secondary fire can't be used."
 msgstr ""
+"Muovaaja %s antaa kaikille pelaajille %s toiskäden aseeksi %s mukana. Sillä "
+"voidaan ampua koska tahansa, mutta tavanomainen toissijainen tulitus ei ole "
+"käytössä."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:13
 #, c-format
@@ -3918,6 +3945,7 @@ msgstr ""
 #, c-format
 msgid "Note that it overrides the %s mutator, since they use the same bind."
 msgstr ""
+"Huomaa, että se korvaa %s-muovaajan, koska ne käyttävät samaa näppäinsidosta."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qh:5
 msgid "Offhand blaster"
@@ -4096,7 +4124,7 @@ msgstr "Piñata"
 
 #: qcsrc/common/mutators/mutator/pinata/ui_pinata.qc:17
 msgid "Players will drop all weapons they possessed when they are fragged."
-msgstr ""
+msgstr "Pelaajat pudottavat kaikki aseensa tultuaan lahdatuiksi."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:19
 #, c-format
@@ -4145,6 +4173,8 @@ msgid ""
 "providing increased mobility, maneuverability, and the ability to reach "
 "higher ground."
 msgstr ""
+"Tehonlisäys %s antaa sinun lentää ympäri karttaa lyhyen aikaa antaen lisää "
+"liikkuvuutta, ohjattavuutta sekä kyvyn päästä korkeampaan maastoon."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qc:21
 #, c-format
@@ -5557,7 +5587,7 @@ msgstr "^BG%s^F3 on nyt^BG katsojatilassa"
 #: qcsrc/common/notifications/all.inc:443
 #, c-format
 msgid "^BG%s^F3 has left the join queue"
-msgstr ""
+msgstr "^BG%s^F3 poistui liittymisjonosta"
 
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
@@ -6566,6 +6596,8 @@ msgid ""
 "^K1Teams unbalanced!\n"
 "^BGMoving %s^BG to spectators in ^COUNT..."
 msgstr ""
+"^K1Joukkueet epätasapainossa!\n"
+"^BGSiirretään %s^BG katsojiksi ajassa ^COUNT..."
 
 #: qcsrc/common/notifications/all.inc:700
 #, c-format
@@ -6649,7 +6681,7 @@ msgstr "^K1Sinulla ei ole lupa pelata, koska olet estetty tältä palvelimelta"
 #: qcsrc/common/notifications/all.inc:735
 #, c-format
 msgid "%s^K2 chose your preferred team first."
-msgstr ""
+msgstr "%s^K2 valitse mieluisa joukkue ensin."
 
 #: qcsrc/common/notifications/all.inc:735
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
@@ -6684,12 +6716,12 @@ msgstr "^BGOlet jonossa liittyäksesi saatavilla olevaan joukkueeseen."
 
 #: qcsrc/common/notifications/all.inc:742
 msgid "^BGYou're queued to join the ^TC^TT^BG team."
-msgstr ""
+msgstr "^BGOlet jonossa liittyäksesi joukkueeseen ^TC^TT^BG."
 
 #: qcsrc/common/notifications/all.inc:743
 #, c-format
 msgid "%s^K2 chose ^TC^TT^K2 first."
-msgstr ""
+msgstr "%s^K2 valitse ^TC^TT^K2 ensin."
 
 #: qcsrc/common/notifications/all.inc:743
 msgid "^K2You're queued to join any available team."
@@ -6705,7 +6737,7 @@ msgstr "^BGPoimit pallon matkaan"
 
 #: qcsrc/common/notifications/all.inc:749
 msgid "^BGGet the ball to score points for frags!"
-msgstr ""
+msgstr "^BGTienaa lahtauspisteitä hakemalla pallo!"
 
 #: qcsrc/common/notifications/all.inc:751
 msgid ""
@@ -7574,6 +7606,9 @@ msgid ""
 "and a rocket launcher shooting homing missiles like the %s for long range "
 "targets. It also has the ability to melee close by targets."
 msgstr ""
+"Sillä on kaksi asetta: konekivääri, kuten %s, keskimatkan taisteluun, sekä "
+"raketinheitin, joka ampuu hakeutuvia ohjuksia, kuten %s, pitkän matkan "
+"kohteisiin. Se pystyy myös lähitaisteluun."
 
 #: qcsrc/common/turrets/turret/walker.qh:17
 msgid "Walker Turret"
@@ -8062,6 +8097,8 @@ msgid ""
 "The %s vehicle looks like a jet, but does not fly upwards very well. It "
 "seats only one passenger, who becomes the pilot."
 msgstr ""
+"%s-ajoneuvo näyttää suihkukoneelta, muttei lennä ylöspäin kovin hyvin. "
+"Siihen sopii vain yksi matkustaja, josta tulee pilotti."
 
 #: qcsrc/common/vehicles/vehicle/racer.qc:649
 #, c-format
@@ -8078,6 +8115,8 @@ msgid ""
 "The %s primary weapon is a laser and the secondary weapon shoots energy "
 "balls that explode on impact."
 msgstr ""
+"%s-ajoneuvon pääase on laser ja sivuase ampuu energiapalloja, jotka "
+"räjähtävät osumasta."
 
 #: qcsrc/common/vehicles/vehicle/racer.qh:23
 msgid "Racer"
@@ -8093,6 +8132,8 @@ msgid ""
 "The %s vehicle is a flying vehicle that takes only one pilot, who can "
 "operate both of the weapons."
 msgstr ""
+"%s on lentävä ajoneuvo, joka ottaa vain yhden pilotin, joka voi käyttää "
+"molempia aseita."
 
 #: qcsrc/common/vehicles/vehicle/raptor.qc:851
 #, c-format
@@ -8779,7 +8820,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/seeker.qc:635
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
-msgstr ""
+msgstr "Se kuluttaa %s-ammusta, vaikka tagi ei osuisikaan."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:636
 #, c-format
@@ -8814,6 +8855,8 @@ msgid ""
 "The primary fire consumes %s ammo, although if you spawn in with the %s you "
 "will already have some."
 msgstr ""
+"Ensisijainen tulitus kuluttaa %s-ammuksia, vaikka jos synnyt %s kanssa, "
+"sinulla on jo vähän."
 
 #: qcsrc/common/weapons/weapon/shotgun.qh:34
 msgid "Shotgun"
@@ -8825,10 +8868,14 @@ msgid ""
 "The %s is a unique weapon that makes the ears of nearby enemies bleed by "
 "playing awful sounds, also slightly knocking them back."
 msgstr ""
+"%s on ainutlaatuinen ase, joka saa läheisten vihollisten korvat vuotamaan "
+"verta kamalilla äänillä. Se myös sysää heitä taaksepäin."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:605
 msgid "The secondary fire works the same way, playing a higher pitch."
 msgstr ""
+"Toissijainen tulitus toimii samalla tavalla, soi korkeammalla "
+"sävelkorkeudella."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 msgid "The only ammo it needs to operate is the breath from your lungs."
@@ -8858,6 +8905,9 @@ msgid ""
 "amount of damage. In %s, the beam has the ability to instantly kill enemies "
 "with a single shot, unless they have an %s."
 msgstr ""
+"%s on ainutlaatuinen ase, joka ampuu tappavan energiasäteen, joka tekee "
+"valtavasti vahinkoa. %s, säteellä on kyky tappaa vihollisia kerrasta, paitsi "
+"jos heillä on %s."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:442
 #, c-format
@@ -9945,7 +9995,7 @@ msgstr "Kytke päälle sivustakatselu"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:19
 msgid "Enable even in warmup"
-msgstr ""
+msgstr "Salli jopa lämmittelyssä"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "Text/icon ratio:"
@@ -10341,7 +10391,7 @@ msgstr "Ajastinpaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qc:17
 msgid "Opacity after voting:"
-msgstr ""
+msgstr "Läpinäkyvyys äänestyksen jälkeen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.qh:6
 msgid "Vote Panel"
@@ -10414,7 +10464,7 @@ msgstr "Asepaneeli"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:27
 msgid "Are you sure you want to reset your HUD to this skin?"
-msgstr ""
+msgstr "Haluatko varmasti palauttaa HUD:n tähän ulkoasuun?"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:46
 msgid "HUD skins"
@@ -12616,7 +12666,7 @@ msgstr "Asemallin läpikuultavuus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:113
 msgid "Apply team colors to weapon beam effects:"
-msgstr ""
+msgstr "Käytä joukkuevärejä aseen säde-efekteissä:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:117
 msgid "In team games"
@@ -13402,7 +13452,7 @@ msgstr "Yhteisö"
 #: qcsrc/menu/xonotic/guide/pages.qc:32
 #, c-format
 msgid "%s on Matrix, %s on QuakeNet IRC, or the Discord"
-msgstr ""
+msgstr "%s Matrixissa %s QuakeNet IRC:ssä tai Discordissa"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:34
 msgid ""
@@ -13451,6 +13501,9 @@ msgid ""
 "works will enable you to speed around the map and apply effective weapon "
 "combos in no time."
 msgstr ""
+"Oppimiskäytä on hyvin jyrkkä. Kuten sanottu, pelin toiminnan ymmärtäminen "
+"mahdollistaa sinun kiitää ympäri karttaa ja käyttää tehokkaita asekomboja "
+"alta aikayksikön."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:52
 msgid "XonStat"
@@ -13462,6 +13515,9 @@ msgid ""
 "stores vital stats like your kill-death ratio, weapon damage and accuracy, "
 "and scoreboards from past games."
 msgstr ""
+"XonStat on Xonoticin integroitu pelaajatilastosovellus. Se tallentaa "
+"tärkeitä tilastoja, kuten tappo-kuolema-suhteita, asevahingon ja -tarkkuuden "
+"sekä tulostauluja edellisitä peleistä."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:57
 msgid "Tracking is completely opt-in, and no login is required."
@@ -13473,6 +13529,8 @@ msgid ""
 "Some of the statistics are available in-game on your player profile, while "
 "the rest are accessible at %s."
 msgstr ""
+"Jotkut tilastot ovat saatavilla pelinsisäisessä pelaajaprofiilissasi, kun "
+"taas muut ovat saatavilla %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:65
 msgid ""
@@ -13576,6 +13634,8 @@ msgid ""
 "Note that if you press the strafe key before releasing the forward key, you "
 "will suffer a speed penalty."
 msgstr ""
+"Huomaa, että jos päästät sivuttaispainikkeesta ennen eteenpäinpainikkeen "
+"päästämistä, nopeutesi kärsii."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:97
 msgid ""
@@ -13586,7 +13646,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/guide/pages.qc:159
 #, c-format
 msgid "For an illustration of this technique, see %s."
-msgstr ""
+msgstr "Tämän tekniikan kuvausta varten katso %s."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:104
 #, c-format
@@ -13648,6 +13708,8 @@ msgid ""
 "immediately detonate it. The explosion will push you upwards a little bit, "
 "and can prolong a jump."
 msgstr ""
+"Ilmassa voit myös laukoa raketin alapuolellasi ja räjäyttää se välittömästi. "
+"Räjähdys työntää sinua ylöspäin vähän, ja voit pidentää hyppyäsi."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:130
 #, c-format
@@ -13687,6 +13749,8 @@ msgid ""
 "This is also a good way to save yourself from falling off the map, as it "
 "reliably stops your downfall."
 msgstr ""
+"Tämä on myös hyvä keino pelastaa itsesi putoamasta kartalta, sillä se "
+"luotettavasti pysäyttää perikatosi."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:152
 msgid ""
@@ -13765,8 +13829,8 @@ msgid ""
 "mutator is active, all players have offhand nades."
 msgstr ""
 "Kaikkien aseiden toissijainen tulitus ampuu laserin, joka ei vahingoita tai "
-"työnnä vihollisia, vaan se puskee sinua ympäriinsä. Ja koska mutaattori %s "
-"on aktiivinen, kaikilla pelaajilla on toiskäden naatteja."
+"työnnä vihollisia, vaan se puskee sinua ympäriinsä. Ja koska muovaaja %s on "
+"aktiivinen, kaikilla pelaajilla on toiskäden naatteja."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:179
 #, c-format
@@ -14038,12 +14102,16 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so can only slap "
 "other players."
 msgstr ""
+"Pelaajat syntyvät ilman ammuksia ja aseita, paitsi %s, jolla voi vain läpsiä "
+"muita pelaajia."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
 "Players will be given a set of weapons on spawn along with unlimited ammo, "
 "without weapon pickups on the map."
 msgstr ""
+"Pelaajille annetaan syntyessä asevalikoima sekä rajattomasti ammuksia, ilman "
+"asepoimintoja kartalla."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:300
 msgid "Enabled but pickups give no ammo"
@@ -14400,7 +14468,7 @@ msgstr "Tapot/Kuolemat"
 #: qcsrc/menu/xonotic/statslist.qc:169
 #, c-format
 msgid "Kill-death ratio:"
-msgstr ""
+msgstr "Tappo-kuolema-suhde:"
 
 #: qcsrc/menu/xonotic/statslist.qc:204
 msgid "Skill:"
@@ -14408,7 +14476,7 @@ msgstr "Taito:"
 
 #: qcsrc/menu/xonotic/statslist.qc:231
 msgid "* = unranked"
-msgstr ""
+msgstr "* = ei rankattu"
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
