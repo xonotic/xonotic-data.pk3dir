@@ -2444,7 +2444,7 @@ vector Scoreboard_Spectators_Draw(vector pos)
 			for (tm = teams.sort_next; tm; tm = tm.sort_next)
 				if (tm.team == NUM_SPECTATOR)
 					break;
-			str = sprintf("%s (%d)", _("Spectators"), tm.team_size);
+			str = strcat(_("Spectators"), sprintf(_(" (%s)"), itos(tm.team_size)));
 			draw_beginBoldFont();
 			drawstring(pos, str, hud_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			draw_endBoldFont();
