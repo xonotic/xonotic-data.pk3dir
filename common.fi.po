@@ -1095,6 +1095,8 @@ msgid ""
 "'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 "other gametypes except DM."
 msgstr ""
+"'kenttä3' näytetään vain CTF:ssä, ja 'kenttä4' näytetään kaikissa\n"
+"muissa pelimuodoissa poislukien muoto DM."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1058
 #: qcsrc/client/hud/panel/scoreboard.qc:1072
@@ -1548,6 +1550,8 @@ msgid ""
 "The match ends once a team reaches a certain number of rounds won, or has a "
 "considerable lead over the other team."
 msgstr ""
+"Ottelu päättyy, kun joukkue voittaa tietyn määrän kierroksia, tai sillä on "
+"huomattava etumatka muihin joukkueisiin nähden."
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qc:12
 msgid ""
@@ -1592,7 +1596,7 @@ msgid ""
 "The game is won once a team reaches a certain number of \"caps\" (captures), "
 "or has a considerable lead over the other team."
 msgstr ""
-"Peli voitetaan, kun joukkua saa tietyn määrän valtauksia, tai sillä on "
+"Peli voitetaan, kun joukkue saa tietyn määrän valtauksia, tai sillä on "
 "huomattava etumatka muihin joukkueisiin nähden."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:11
@@ -2019,6 +2023,8 @@ msgstr "Paljonko pisteitä tarvitaan ennen ottelun loppumista"
 msgid ""
 "%s is a fun ball sport game where 2 teams compete to score the most goals."
 msgstr ""
+"%s on hauska pallopeli, jossa kaksi joukkuetta kilpailee siitä, kumpi tekee "
+"eniten maaleja."
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:11
 #, c-format
@@ -2275,7 +2281,7 @@ msgstr "%s ammustyyppiä käyttää:"
 #: qcsrc/common/items/item/ammo.qc:32 qcsrc/common/items/item/ammo.qc:42
 #, c-format
 msgid "By default, the pickup gives you %s, to a maximum of %s."
-msgstr ""
+msgstr "Keräilyesine antaa oletuksena %s , enimmillään %s."
 
 #: qcsrc/common/items/item/ammo.qc:41
 #, c-format

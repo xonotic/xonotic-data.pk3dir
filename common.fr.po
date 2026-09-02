@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-30 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -1450,7 +1450,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1434
 msgid "Number of players supported by this match:"
-msgstr ""
+msgstr "Nombre de joueurs pris en charge par cette partie :"
 
 #: qcsrc/client/main.qc:1439
 msgid "Active modifications:"
@@ -1467,7 +1467,7 @@ msgstr "Message du serveur"
 #: qcsrc/client/main.qc:1536
 #, c-format
 msgid "not bound"
-msgstr ""
+msgstr "non assigné"
 
 #: qcsrc/client/view.qc:1010
 msgid "Nade timer"
@@ -2493,7 +2493,7 @@ msgstr "Grabuge en Équipe"
 #: qcsrc/common/items/item/ammo.qc:13
 #, c-format
 msgid "%d fuel"
-msgstr ""
+msgstr "%d carburant"
 
 #: qcsrc/common/items/item/ammo.qc:27
 #, c-format
@@ -2503,7 +2503,7 @@ msgstr "Le type de munitions %s est utilisé par les armes suivantes :"
 #: qcsrc/common/items/item/ammo.qc:32 qcsrc/common/items/item/ammo.qc:42
 #, c-format
 msgid "By default, the pickup gives you %s, to a maximum of %s."
-msgstr ""
+msgstr "Par défaut, l'objet vous fournit %s munitions, dans la limite de %s."
 
 #: qcsrc/common/items/item/ammo.qc:41
 #, c-format
@@ -3461,14 +3461,14 @@ msgstr "Désactiver"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:22
 msgid "Enable only if placed by mapper"
-msgstr ""
+msgstr "Activer uniquement si placé par le mappeur"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:28
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:34
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:40
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:40
 msgid "Allow maps to spawn:"
-msgstr ""
+msgstr "Permettre aux cartes de faire apparaître :"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:43
 msgid "Replace unavailable buffs with others"
@@ -3477,7 +3477,7 @@ msgstr "Remplacer les bonus indisponibles par d'autres"
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:47
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:76
 msgid "Allow dropping"
-msgstr ""
+msgstr "Permettre de les lâcher"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:50
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:85
@@ -3763,20 +3763,22 @@ msgstr "Vie supplémentaire"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:36
 msgid "Starting ammo:"
-msgstr ""
+msgstr "Munitions de départ :"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:39
 msgid "Ammo from weapons and cells:"
-msgstr ""
+msgstr "Munitions provenant des armes et des cellules :"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:44
 msgid "Extra lives per pickup:"
-msgstr ""
+msgstr "Vies supplémentaires par bonus :"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:47
 msgid ""
 "How many extra lives to reward a player when they pick up the Extra life"
 msgstr ""
+"Nombre de vies supplémentaires à attribuer à un joueur lorsqu'il récupère la "
+"Vie supplémentaire"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qc:52
 #: qcsrc/common/mutators/mutator/overkill/ui_overkill.qc:34
@@ -3824,24 +3826,28 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode %s orbs with "
 "the %s primary fire."
 msgstr ""
+"Les projectiles ne peuvent pas être détruits. En revanche, vous pouvez "
+"toujours faire exploser les %s-orbes avec le tir primaire de l'%s."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qh:6
 msgid "Invincible projectiles"
-msgstr ""
+msgstr "Projectiles invincibles"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:20
 msgid "Invincibility time:"
-msgstr ""
+msgstr "Durée d'invincibilité :"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:22
 msgid "Invincibility time after leaving contact with ground"
-msgstr ""
+msgstr "Durée d'invincibilité après avoir quitté le sol"
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qc:29
 msgid ""
 "Makes it only possible to inflict damage on your enemy while they're "
 "airborne."
 msgstr ""
+"Permet d'infliger des dégâts à votre adversaire uniquement lorsqu'il est en "
+"l'air."
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qh:6 qcsrc/common/util.qc:303
 msgid "Midair"
@@ -4102,17 +4108,19 @@ msgstr "Grenades"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:24
 msgid "Enable bonus nades"
-msgstr ""
+msgstr "Autoriser les grenades bonus"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:25
 msgid ""
 "Gives players a bonus grenade when they reach a certain score or have "
 "Strength"
 msgstr ""
+"Offre aux joueurs une grenade bonus lorsqu'ils atteignent un certain score "
+"ou qu'ils disposent du bonus de puissance Force"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:26
 msgid "Max bonus nades:"
-msgstr ""
+msgstr "Grenades bonus max :"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:32
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:116
@@ -4121,11 +4129,11 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:33
 msgid "For bonus nades"
-msgstr ""
+msgstr "Pour les grenades bonus"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:36
 msgid "Refire time:"
-msgstr ""
+msgstr "Délai avant un nouveau lancer :"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:42
 msgid "Nade types:"
@@ -4198,8 +4206,8 @@ msgstr "Aléatoirement"
 #: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qc:30
 msgid "Allow maps to spawn additional weapons (new toys)."
 msgstr ""
-"Permet aux cartes de faire apparaître des armes supplémentaires (« nouveaux "
-"jouets »)."
+"Permettre aux cartes de faire apparaître des armes supplémentaires "
+"(« nouveaux jouets »)."
 
 #: qcsrc/common/mutators/mutator/nix/nix.qc:8
 #, c-format
@@ -4632,7 +4640,7 @@ msgstr "Toujours activer"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:69
 msgid "Drop on death"
-msgstr ""
+msgstr "Lâcher en cas de mort"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:72
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:79
@@ -4643,12 +4651,12 @@ msgstr "Désactivé"
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:73
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:80
 msgid "Timer continues"
-msgstr ""
+msgstr "Le compte à rebours continue"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:74
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:81
 msgid "Timer pauses"
-msgstr ""
+msgstr "Pause du compte à rebours"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:95
 #, c-format
@@ -4656,6 +4664,8 @@ msgid ""
 "Enable powerup pickups (powerful bonuses like %s and %s) on the maps that "
 "support them."
 msgstr ""
+"Autoriser les bonus de puissance (comme la %s et l'%s) sur les cartes qui "
+"les prennent en charge."
 
 #: qcsrc/common/mutators/mutator/rocketflying/rocketflying.qc:10
 #, c-format
