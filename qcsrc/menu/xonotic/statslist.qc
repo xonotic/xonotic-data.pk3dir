@@ -30,8 +30,9 @@ string XonoticStatsList_convertDate(string input)
 	if (strlen(input) != 10)
 		return input;
 
+	string month_num = substring(input, 5, 2);
 	string monthname;
-	switch (stoi(substring(input, 5, 2)))
+	switch (stoi(month_num))
 	{
 		case 1:  monthname = _("January");    break;
 		case 2:  monthname = _("February");   break;
@@ -49,12 +50,21 @@ string XonoticStatsList_convertDate(string input)
 	}
 
 	// without no-c-format this string looks messed up in Transifex since only %d is a valid c placeholder
+	// TRANSLATORS: %MMMM: Month name, %d: day number, %y: year.
+	// "%MM" (zero-padded month number), "%M" (month number), "%dd" (zero-padded day number), "%yy" (last two digits of the year) are supported too.
 	/* xgettext:no-c-format */
-	string date = CTX(_("DATE^%MMMM %d, %y")); // %MMMM: Month name, %d: day of month, %y: year
-	// see https://cldr.unicode.org/translation/date-time/date-time-symbols
+	string date = CTX(_("DATE^%MMMM %d, %y"));
+
+	date = strreplace("%yy", substring(input, 2, 2), date);
 	date = strreplace("%y", substring(input, 0, 4), date);
-	date = strreplace("%d", ftos(stof(substring(input, 8, 2))), date); // ftos-stof removes leading 0
+
+	string day_num = substring(input, 8, 2);
+	date = strreplace("%dd", day_num, date); // day number as-is (zero-padded)
+	date = strreplace("%d", itos(stoi(day_num)), date); // remove leading 0
+
 	date = strreplace("%MMMM", monthname, date);
+	date = strreplace("%MM", month_num, date); // month number as-is (zero-padded)
+	date = strreplace("%M", itos(stoi(month_num)), date); // remove leading 0
 	return strzone(date);
 }
 
