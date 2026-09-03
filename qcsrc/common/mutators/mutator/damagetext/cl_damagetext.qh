@@ -17,6 +17,7 @@ vector autocvar_cl_damagetext_offset_world;
 float autocvar_cl_damagetext_accumulate_alpha_rel;
 int autocvar_cl_damagetext_friendlyfire;
 vector autocvar_cl_damagetext_friendlyfire_color;
+bool autocvar_cl_damagetext_received;
 
 bool autocvar_cl_damagetext_2d;
 vector autocvar_cl_damagetext_2d_pos;

@@ -885,6 +885,117 @@ void View_EventChase(entity this)
 	}
 }
 
+#define HITINDICATOR_EXPIRED(i) (time >= HitIndicator_time[i] + HitIndicator_fade_time)
+
+void HitIndicatorUpdate(float dmg, entity attacker)
+{
+	HitIndicator_fade_time = bound(0.1, autocvar_cl_hit_indicator_fade_time, 2);
+
+	int i = 0;
+	int first_free_spot = -1;
+	for (i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
+	{
+		if (first_free_spot == -1 && HITINDICATOR_EXPIRED(i))
+			first_free_spot = i;
+		else if (attacker == HitIndicator_attacker[i] && !HITINDICATOR_EXPIRED(i))
+			break;
+	}
+
+	bool is_new = false;
+	if (i == HITINDICATOR_MAX_COUNT) // if no matching attacker found
+	{
+		if (first_free_spot == -1) // if no free spot found
+			return; // too many hits, ignore this new hit
+		i = first_free_spot;
+		is_new = true;
+	}
+
+	HitIndicator_attacker[i] = attacker;
+	HitIndicator_time[i] = time;
+	if (is_new)
+		HitIndicator_damage[i] = dmg;
+	else
+		HitIndicator_damage[i] += dmg;
+}
+
+void HitIndicatorShow()
+{
+	if (!autocvar_cl_hit_indicator || autocvar_cl_hit_indicator_scale <= 0 || autocvar_chase_active)
+		return;
+
+	float alpha_max = bound(0, autocvar_cl_hit_indicator_fade_alpha_max, 1);
+	if (alpha_max == 0)
+		return;
+
+	float alpha_min = bound(0, autocvar_cl_hit_indicator_fade_alpha_min, alpha_max);
+	vector scr_center = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+
+	for (int i = 0; i < HITINDICATOR_MAX_COUNT; ++i)
+	{
+		entity attacker = HitIndicator_attacker[i];
+		if (!attacker)
+			continue;
+		if (HITINDICATOR_EXPIRED(i) || entcs_IsDead(attacker.sv_entnum) || wasfreed(attacker))
+		{
+			// if the attacker dies or disconnects remove the related hit indicator
+			HitIndicator_attacker[i] = NULL;
+			HitIndicator_attacker_pos_exists[i] = false;
+			continue;
+		}
+
+		float alpha = alpha_min + (alpha_max - alpha_min) * (1 - (time - HitIndicator_time[i]) / HitIndicator_fade_time);
+		if (alpha <= 0.5/255) // Guaranteed invisible - don't show.
+			continue;
+
+		vector attacker_org = attacker.origin + eZ * (STAT(PL_MIN).z + (-STAT(PL_MIN).z + STAT(PL_MAX).z) * 0.5);
+		// indicator follows attacker if in front of us and visible (check ported from shownames.qc)
+		// otherwise points to the last position where the attacker was visible
+		if (view_forward * (attacker_org - view_origin) >= 0) // in front of us
+		{
+			traceline(view_origin, attacker_org, MOVE_NOMONSTERS, attacker);
+			if (!(trace_fraction < 1 && trace_networkentity != attacker.sv_entnum && trace_ent.entnum != attacker.sv_entnum))
+			{
+				HitIndicator_attacker_pos[i] = attacker_org;
+				HitIndicator_attacker_pos_exists[i] = true;
+			}
+		}
+		if (!HitIndicator_attacker_pos_exists[i])
+			continue;
+
+		vector org = project_3d_to_2d(HitIndicator_attacker_pos[i]);
+		bool attacker_infront = (org.z >= 0);
+		attacker_org = org - eZ * org.z;
+
+		float radius_percent = bound(0.1, autocvar_cl_hit_indicator_radius, 1);
+		float radius = radius_percent * 0.5 * min(vid_conwidth, vid_conheight);
+		vector ofs = normalize(attacker_org - scr_center) * radius;
+		float ang = atan2(-ofs.x, -ofs.y);
+		if (!attacker_infront)
+		{
+			ang += M_PI;
+			ofs = -ofs;
+		}
+		org = scr_center + ofs;
+		float size = autocvar_cl_hit_indicator_scale;
+		size = map_bound_ranges(HitIndicator_damage[i], 30, 90, size, size * 2);
+		float base_scale = bound(1, radius_percent * 5, 3);
+		// if inverted is true drawspritearrow inverts the arrow without changing the returned position
+		bool inverted = (attacker_infront && vdist(scr_center - attacker_org, <, radius));
+		float base_alpha = alpha * autocvar_cl_hit_indicator_base_alpha;
+		org = drawspritearrow(org, ang, autocvar_cl_hit_indicator_color, alpha, base_alpha, size, base_scale, inverted, true);
+
+		if (autocvar_cl_hit_indicator_text)
+		{
+			string text = ftos(HitIndicator_damage[i]);
+			vector t_size = autocvar_cl_hit_indicator_text_size * '1 1 0';
+			org.x += map_ranges(ofs.x, -radius, radius, 0, -1) * stringwidth(text, false, t_size);
+			org.y -= t_size.y * 0.5;
+			drawstring_builtin(org, text, t_size, autocvar_cl_hit_indicator_text_color,
+				autocvar_cl_hit_indicator_text_alpha, DRAWFLAG_NORMAL);
+		}
+	}
+}
+
 vector damage_blurpostprocess, content_blurpostprocess;
 
 void UpdateDamage()
@@ -1033,6 +1144,8 @@ void HUD_Draw(entity this)
 			HUD_Scale_Disable();
 		}
 	}
+
+	HitIndicatorShow();
 
 	// crosshair goes VERY LAST
 	UpdateDamage();
