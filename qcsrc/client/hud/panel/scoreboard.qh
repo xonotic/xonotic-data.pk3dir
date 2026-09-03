@@ -11,7 +11,7 @@ string autocvar__nextmap;
 // macro to not have an unnecessary function call stackframe
 #define GET_NEXTMAP() autocvar__nextmap
 
-bool sb_showscores; // set by +showscores engine command
+bool sb_showscores; ///< set by +showscores engine command
 
 bool scoreboard_active;
 float scoreboard_fade_alpha;
@@ -24,9 +24,10 @@ float scoreboard_left;
 float scoreboard_right;
 
 int numplayers;
-int ts_min, ts_max; ///< team size
+int ts_min; ///< minimum team size
+int ts_max; ///< maximum team size
 
-.bool ignored; // player is ignored
+.bool ignored; ///< player is ignored
 
 void Cmd_Scoreboard_SetFields(int argc);
 void Scoreboard_InitScores();
@@ -47,7 +48,7 @@ entity scoreboard_selected_team;
 int scoreboard_selected_columns_layout;
 
 // start from 1
-int SB_PANEL_FIRST       = 1;
-int SB_PANEL_SCOREBOARD  = 1;
-int SB_PANEL_RANKINGS    = 2;
-int SB_PANEL_MAX         = 2;
+const int SB_PANEL_FIRST       = 1;
+const int SB_PANEL_SCOREBOARD  = 1;
+const int SB_PANEL_RANKINGS    = 2;
+const int SB_PANEL_MAX         = 2;
