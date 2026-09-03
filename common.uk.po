@@ -264,7 +264,7 @@ msgstr "Команди не збалансовані!"
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #, c-format
 msgid "UNBALTEAMS^%s Press ^3%s%s to adjust"
-msgstr "UNBALTEAMS^%s Натисніть ^3%s%s для налаштування"
+msgstr "%s Натисніть ^3%s%s для налаштування"
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #: qcsrc/menu/xonotic/keybinder.qc:164
@@ -627,7 +627,7 @@ msgstr "%s %s"
 #: qcsrc/client/hud/panel/racetimer.qc:282
 #, c-format
 msgid "SPEED^ %d%s"
-msgstr "%d%s"
+msgstr " %d%s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:230
 #: qcsrc/client/hud/panel/racetimer.qc:284

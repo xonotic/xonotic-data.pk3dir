@@ -168,7 +168,7 @@ msgstr "^1Vaihda kameratilaa painamalla ^3%s^1"
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #, c-format
 msgid "^1Press ^3%s^1 for gametype info"
-msgstr "^1Katso pelitilatiedot painamalla ^3%s^1"
+msgstr "^1Katso pelimuototiedot painamalla ^3%s^1"
 
 #: qcsrc/client/hud/panel/infomessages.qc:130
 #: qcsrc/menu/xonotic/keybinder.qc:153
@@ -1425,7 +1425,7 @@ msgstr "^BGLiity peliin painamalla ^F2%s^BG"
 #: qcsrc/client/main.qc:1419
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:37
 msgid "Gametype:"
-msgstr "Pelityyppi"
+msgstr "Pelimuoto:"
 
 #: qcsrc/client/main.qc:1423
 msgid "by:"
@@ -1483,7 +1483,7 @@ msgstr "virhe luodessa: curl handle"
 msgid ""
 "%s is a team-based gametype involving an attacking and a defending team."
 msgstr ""
-"%s on joukkuepohjainen pelityyppi, johon kuuluu hyökkäävä ja puolustava "
+"%s on joukkuepohjainen pelimuoto, johon kuuluu hyökkäävä ja puolustava "
 "joukkue."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qc:9
@@ -1713,7 +1713,7 @@ msgid ""
 "%s is a gametype where teams compete to dominate the map by capturing and "
 "keeping control points."
 msgstr ""
-"%s on pelityyppi, jossa joukkueet kilpailevat kartan hallinnasta valtaamalla "
+"%s on pelimuoto, jossa joukkueet kilpailevat kartan hallinnasta valtaamalla "
 "ja pitämällä hallintapisteitä."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:9
@@ -1997,12 +1997,13 @@ msgid ""
 "turning this gametype into chaotic fun at times."
 msgstr ""
 "Koska vahinko palkitaan aina muodossa %s, mitä enemmän ammut, sen parempi, "
-"jolloin tämä pelityyppi muuttuu välillä kaoottisen hauskaksi."
+"jolloin tämä pelimuoto muuttuu välillä kaoottisen hauskaksi."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
 #, c-format
 msgid "This gametype is often seen as a more newbie-friendly version of %s."
 msgstr ""
+"Tämä pelimuoto nähdään usein aloittelijaystävällisenä versiona muodosta %s."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:10
 msgid "Compete for the most damage dealt and frags in this chaotic mayhem"
@@ -2355,6 +2356,8 @@ msgid ""
 "It tends to be one of the most highly contested items on a map, particularly "
 "in gametypes like %s."
 msgstr ""
+"Se tapaa olla yksi kartan kilpailluimmista esineistä, etenkin pelimuodoissa, "
+"kuten %s."
 
 #: qcsrc/common/items/item/armor.qh:44
 msgid "Small armor"
@@ -2457,7 +2460,7 @@ msgstr "Ehdottaa: %s"
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:413
 msgid "Decide the gametype"
-msgstr "Valitse pelitila"
+msgstr "Valitse pelimuoto"
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:413
 msgid "Vote for a map"
@@ -4024,7 +4027,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:32
 msgid "Overkill MachineGun"
-msgstr "Yliampuva konekivääri"
+msgstr "Yliampuva konetykki"
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:357
 #: qcsrc/common/weapons/weapon/vortex.qc:367
@@ -4260,7 +4263,7 @@ msgstr "Voima"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:34
 msgid "Dependent on gametype"
-msgstr "Pelitilasta riippuvainen"
+msgstr "Pelimuodosta riippuvainen"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:36
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
@@ -5198,7 +5201,7 @@ msgstr "^BG%s^K1 ei voinut piiloutua Hunter-tykkitornilta%s%s"
 #: qcsrc/common/notifications/all.inc:349
 #, c-format
 msgid "^BG%s^K1 was riddled full of holes by a Machinegun turret%s%s"
-msgstr "^BG%s^K1 ammuttiin seulaksi Machinegun-tykkitornin toimesta%s%s"
+msgstr "^BG%s^K1 ammuttiin seulaksi konetykkitornin toimesta%s%s"
 
 #: qcsrc/common/notifications/all.inc:350
 #, c-format
@@ -5857,7 +5860,7 @@ msgstr "^BG%s%s^K1 paloi poroksi tulimiinasta tekijänä ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:500
 #, c-format
 msgid "^BG%s^K1 should have used a smaller gun%s%s"
-msgstr "^BG%s^K1 huomasi että olisi pitänyt käyttää pienempää pyssyä%s%s"
+msgstr "^BG%s^K1 huomasi, että olisi pitänyt käyttää pienempää pyssyä%s%s"
 
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
@@ -5910,12 +5913,12 @@ msgstr "^BG%s^K1 hajottivat omat korvansa @!#%%'n Klein-pullolla%s%s"
 #: qcsrc/common/notifications/all.inc:510
 #, c-format
 msgid "^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 laitettiin nippuun Konekiväärillä ampujana ^BG%s^K1 %s%s"
+msgstr "^BG%s%s^K1 laitettiin nippuun konetuliaseella ampujana ^BG%s^K1 %s%s"
 
 #: qcsrc/common/notifications/all.inc:511
 #, c-format
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
-msgstr "^BG%s%s^K1 rei'itettiin Konekiväärillä tekijänä ^BG%s^K1%s%s"
+msgstr "^BG%s%s^K1 rei'itettiin konetuliaseella tekijänä ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications/all.inc:512
 #: qcsrc/common/notifications/all.inc:843
@@ -5965,7 +5968,7 @@ msgstr ""
 msgid ""
 "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Overkill Machine Gun%s%s"
 msgstr ""
-"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Yliampuvalla konekiväärillä%s%s"
+"^BG%s%s^K1 ropisi täyteen reikiä ^BG%s^K1'n Yliampuvalla konetuliaseella%s%s"
 
 #: qcsrc/common/notifications/all.inc:521
 #, c-format
@@ -7612,7 +7615,7 @@ msgid ""
 "and a rocket launcher shooting homing missiles like the %s for long range "
 "targets. It also has the ability to melee close by targets."
 msgstr ""
-"Sillä on kaksi asetta: konekivääri, kuten %s, keskimatkan taisteluun, sekä "
+"Sillä on kaksi asetta: konetuliase, kuten %s, keskimatkan taisteluun, sekä "
 "raketinheitin, joka ampuu hakeutuvia ohjuksia, kuten %s, pitkän matkan "
 "kohteisiin. Se pystyy myös lähitaisteluun."
 
@@ -8846,6 +8849,8 @@ msgid ""
 "The %s is one of the two main default weapons, firing a single shotgun round "
 "which spreads into multiple pellets upon exiting the barrel."
 msgstr ""
+"%s on yksi kahdesta päävakioaseista, joka ampuu yhden haulikon laukauksen, "
+"joka leviää moneksi hauleksi piipusta lähdettyään."
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:421
 #, c-format
@@ -10030,7 +10035,7 @@ msgstr "Esineiden aikapalkki"
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:19
 #, c-format
 msgid "GAMETYPE^%s:"
-msgstr "PELITYYPPI^%s:"
+msgstr "GAMETYPE^%s:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:20
 msgid "Show icons"
@@ -10832,7 +10837,7 @@ msgstr "Näytä kaikki"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
 msgid "Show all available gametypes"
-msgstr "Näytä kaikki saatavilla olevat pelityypit"
+msgstr "Näytä kaikki saatavilla olevat pelimuodot"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
 msgid "Time limit:"
@@ -11005,7 +11010,7 @@ msgstr "Tekijä:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:63
 msgid "Gametypes:"
-msgstr "Pelityypit:"
+msgstr "Pelimuodot:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:220
@@ -12299,7 +12304,7 @@ msgstr "Lisää lahtauksen sijaintitieto kuolinviesteihin kun saatavilla"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:68
 msgid "Gametype Settings"
-msgstr "Pelityypin asetukset"
+msgstr "Pelimuodon asetukset"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:70
 #, c-format
@@ -13394,7 +13399,7 @@ msgstr "Johdanto"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:11
 msgid "Gametypes"
-msgstr "Pelitilat"
+msgstr "Pelimuodot"
 
 #: qcsrc/menu/xonotic/guide/guide.qh:12
 msgid "Movement"
@@ -14071,8 +14076,8 @@ msgid ""
 "Huh? Can't play this (invalid gametype). Refiltering so this won't happen "
 "again."
 msgstr ""
-"Täh? Tätä ei voi pelata (viallinen pelityyppi). Uudelleensuodatetaan jotta "
-"näin ei tapahtuisi enää."
+"Täh? Tätä ei voi pelata (viallinen pelimuoto). Suodatetaan udelleen, jotta "
+"näin ei tapahdu enää."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:206
 msgid "All weapons"
