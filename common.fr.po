@@ -3190,7 +3190,7 @@ msgstr "Hémorragie"
 #: qcsrc/menu/xonotic/mutatortab.qc:30 qcsrc/menu/xonotic/mutatortab.qc:302
 #: qcsrc/menu/xonotic/util.qc:736
 msgid "Enable"
-msgstr "Afficher"
+msgstr "Activer"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:24
 msgid "Bleed below health:"
@@ -4125,7 +4125,7 @@ msgstr "Grenades bonus max :"
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:32
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:116
 msgid "Allow client selection"
-msgstr ""
+msgstr "Autoriser la sélection côté client"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:33
 msgid "For bonus nades"
@@ -4145,11 +4145,11 @@ msgstr "Aléatoire"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:107
 msgid "Normal nade type, if client selection is disabled"
-msgstr ""
+msgstr "Type de grenade standard, si la sélection côté client est désactivée"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:111
 msgid "Bonus nade type, if client selection is disabled"
-msgstr ""
+msgstr "Type de grenade bonus, si la sélection côté client est désactivée"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:123
 #, c-format
@@ -4157,6 +4157,8 @@ msgid ""
 "Enable throwable grenades which explode with a variety of effects. Press %s "
 "or %s to use them."
 msgstr ""
+"Activer des grenades à lancer qui explosent en produisant divers effets. "
+"Appuyer sur %s ou %s pour les utiliser."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
 #, c-format
@@ -4251,6 +4253,9 @@ msgid ""
 "weapon. After some time a countdown will start, after which everyone will "
 "switch to another weapon."
 msgstr ""
+"No Items Xonotic - au lieu de ramasser des objets, tous les joueurs "
+"utilisent la même arme. Au bout d'un certain temps, un compte à rebours "
+"démarre, à l'issue duquel tout le monde change d'arme."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/cl_offhand_blaster.qc:11
 #, c-format
@@ -4467,6 +4472,10 @@ msgid ""
 "a short time to kill for rapid gameplay. The secondary fire of all weapons "
 "shoots a %s-like projectile. It also enables %s and %s."
 msgstr ""
+"Mutateur d'arène unique qui remplace toutes les armes par une majorité "
+"d'armes à tir instantané, avec un niveau de dégâts élevé, afin de favoriser "
+"un gameplay rapide. Le tir secondaire de toutes les armes lance un "
+"projectile de type %s. Il active également %s et %s."
 
 #: qcsrc/common/mutators/mutator/pinata/pinata.qc:8
 #, c-format
@@ -4486,6 +4495,8 @@ msgstr "Piñata"
 #: qcsrc/common/mutators/mutator/pinata/ui_pinata.qc:17
 msgid "Players will drop all weapons they possessed when they are fragged."
 msgstr ""
+"Lorsque les joueurs sont éliminés, ils lâchent toutes les armes qu'ils "
+"possédaient."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/fuelregen.qc:19
 #, c-format
@@ -4630,7 +4641,7 @@ msgstr "Force"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:34
 msgid "Dependent on gametype"
-msgstr ""
+msgstr "En fonction du type de partie"
 
 #: qcsrc/common/mutators/mutator/powerups/ui_powerups.qc:36
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:17
@@ -4689,7 +4700,7 @@ msgstr "Vol à la roquette"
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:19
 msgid "Disable projectile detonation delay"
-msgstr ""
+msgstr "Désactiver le délai de détonation des projectiles"
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qc:26
 #, c-format
@@ -4698,10 +4709,14 @@ msgid ""
 "This allows players to fire and detonate a rocket while mid-air for a strong "
 "boost even while moving fast."
 msgstr ""
+"Les roquettes du %s peuvent exploser instantanément (sinon, il y a un léger "
+"délai). Cela permet aux joueurs de tirer et de déclencher une roquette en "
+"plein vol pour bénéficier d'une puissante accélération, même lorsqu'ils se "
+"déplacent rapidement."
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qh:6
 msgid "Rocket flying"
-msgstr ""
+msgstr "Vol à la roquette"
 
 #: qcsrc/common/mutators/mutator/status_effects/status_effect/burning.qh:16
 msgid "Burning"
@@ -7786,7 +7801,7 @@ msgstr "Rose"
 #: qcsrc/common/teams.qh:229 qcsrc/common/teams.qh:231
 #, c-format
 msgid "%s team"
-msgstr ""
+msgstr "équipe %s"
 
 #: qcsrc/common/turrets/cl_turrets.qc:118
 #, c-format
@@ -11664,7 +11679,7 @@ msgstr "Informations sur la carte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:16
 msgid "Gameplay mutators:"
-msgstr "Mutateurs mode de jeu :"
+msgstr "Mutateurs de gameplay :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:16
 msgid "Weapon & item mutators:"
