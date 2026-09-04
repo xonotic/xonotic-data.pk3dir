@@ -9372,3 +9372,42 @@ effect dom_capture
 	size 8 12
 	tex 41 41
 	velocityjitter 200 200 50
+effect tr_tag_start
+	type static
+	airfriction 10
+	alpha 72 96 512
+	color 0xff9172 0x810013
+	lightcolor 3 1 1.5
+	lightradius 50
+	sizeincrease -12
+	size 3 4
+	tex 48 55
+	trailspacing 4
+	velocityjitter 32 32 32
+	velocitymultiplier -0.300000
+effect tr_tag_start
+	type bubble
+	alpha 256 256 256
+	bounce 1.500000
+	gravity -0.125000
+	liquidfriction 5
+	size 1 2
+	tex 62 62
+	trailspacing 24
+	underwater
+	velocityjitter 16 16 16
+	velocitymultiplier -0.200000
+effect tr_tag_start
+	type spark
+	airfriction 5
+	alpha 256 384 1024
+	bounce 1
+	color 0xFFD9E9 0xFFD9E9
+	notunderwater
+	originjitter 1 1 1
+	size 0.500000 0.500000
+	stretchfactor 0.200000
+	tex 40 40
+	trailspacing 12
+	velocityjitter 80 80 80
+	velocitymultiplier -0.200000
