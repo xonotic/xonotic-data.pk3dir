@@ -8129,19 +8129,19 @@ msgstr "Pas de bonus de puissance"
 
 #: qcsrc/common/util.qc:314
 msgid "Buffs Replace Powerups"
-msgstr ""
+msgstr "Les bonus standards remplacent les bonus de puissance"
 
 #: qcsrc/common/util.qc:315
 msgid "Touch Explode"
-msgstr ""
+msgstr "Explosion au toucher"
 
 #: qcsrc/common/util.qc:316
 msgid "Wall Jumping"
-msgstr ""
+msgstr "Sauts sur les murs"
 
 #: qcsrc/common/util.qc:317
 msgid "No Start Weapons"
-msgstr ""
+msgstr "Aucune arme de départ"
 
 #: qcsrc/common/util.qc:319 qcsrc/menu/xonotic/mutatortab.qc:335
 msgid "Offhand Blaster"
@@ -9613,207 +9613,207 @@ msgstr "Vortex"
 #: qcsrc/lib/counting.qh:11
 #, c-format
 msgid "ZER^%d shells"
-msgstr ""
+msgstr "%d cartouche"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "ONE^%d shell"
-msgstr ""
+msgstr "%d cartouche"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "TWO^%d shells"
-msgstr ""
+msgstr "%d cartouches"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "THR^%d shells"
-msgstr ""
+msgstr "%d cartouches"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "MUL^%d shells"
-msgstr ""
+msgstr "%d cartouches"
 
 #: qcsrc/lib/counting.qh:19
 #, c-format
 msgid "ZER^%d bullets"
-msgstr ""
+msgstr "%d balle"
 
 #: qcsrc/lib/counting.qh:20
 #, c-format
 msgid "ONE^%d bullet"
-msgstr ""
+msgstr "%d balle"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "TWO^%d bullets"
-msgstr ""
+msgstr "%d balles"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "THR^%d bullets"
-msgstr ""
+msgstr "%d balles"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "MUL^%d bullets"
-msgstr ""
+msgstr "%d balles"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "ZER^%d rockets"
-msgstr ""
+msgstr "%d roquette"
 
 #: qcsrc/lib/counting.qh:28
 #, c-format
 msgid "ONE^%d rocket"
-msgstr ""
+msgstr "%d roquette"
 
 #: qcsrc/lib/counting.qh:29
 #, c-format
 msgid "TWO^%d rockets"
-msgstr ""
+msgstr "%d roquettes"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "THR^%d rockets"
-msgstr ""
+msgstr "%d roquettes"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "MUL^%d rockets"
-msgstr ""
+msgstr "%d roquettes"
 
 #: qcsrc/lib/counting.qh:35
 #, c-format
 msgid "ZER^%d cells"
-msgstr ""
+msgstr "%d cellule"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "ONE^%d cell"
-msgstr ""
+msgstr "%d cellule"
 
 #: qcsrc/lib/counting.qh:37
 #, c-format
 msgid "TWO^%d cells"
-msgstr ""
+msgstr "%d cellules"
 
 #: qcsrc/lib/counting.qh:38
 #, c-format
 msgid "THR^%d cells"
-msgstr ""
+msgstr "%d cellules"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "MUL^%d cells"
-msgstr ""
+msgstr "%d cellules"
 
 #: qcsrc/lib/counting.qh:44
 #, c-format
 msgid "ZER^%d votes"
-msgstr ""
+msgstr "%d vote"
 
 #: qcsrc/lib/counting.qh:45
 #, c-format
 msgid "ONE^%d vote"
-msgstr ""
+msgstr "%d vote"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "TWO^%d votes"
-msgstr ""
+msgstr "%d votes"
 
 #: qcsrc/lib/counting.qh:47
 #, c-format
 msgid "THR^%d votes"
-msgstr ""
+msgstr "%d votes"
 
 #: qcsrc/lib/counting.qh:48
 #, c-format
 msgid "MUL^%d votes"
-msgstr ""
+msgstr "%d votes"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "ZER^%d matches"
-msgstr ""
+msgstr "%d partie"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "ONE^%d match"
-msgstr ""
+msgstr "%d partie"
 
 #: qcsrc/lib/counting.qh:54
 #, c-format
 msgid "TWO^%d matches"
-msgstr ""
+msgstr "%d parties"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "THR^%d matches"
-msgstr ""
+msgstr "%d parties"
 
 #: qcsrc/lib/counting.qh:56
 #, c-format
 msgid "MUL^%d matches"
-msgstr ""
+msgstr "%d parties"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "DEC^%s points"
-msgstr ""
+msgstr "%s points"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "ZER^%d points"
-msgstr ""
+msgstr "%d point"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "ONE^%d point"
-msgstr ""
+msgstr "%d point"
 
 #: qcsrc/lib/counting.qh:63
 #, c-format
 msgid "TWO^%d points"
-msgstr ""
+msgstr "%d points"
 
 #: qcsrc/lib/counting.qh:64
 #, c-format
 msgid "THR^%d points"
-msgstr ""
+msgstr "%d points"
 
 #: qcsrc/lib/counting.qh:65
 #, c-format
 msgid "MUL^%d points"
-msgstr ""
+msgstr "%d points"
 
 #: qcsrc/lib/counting.qh:69
 #, c-format
 msgid "ZER^%d results"
-msgstr ""
+msgstr "%d résultat"
 
 #: qcsrc/lib/counting.qh:70
 #, c-format
 msgid "ONE^%d result"
-msgstr ""
+msgstr "%d résultat"
 
 #: qcsrc/lib/counting.qh:71
 #, c-format
 msgid "TWO^%d results"
-msgstr ""
+msgstr "%d résultats"
 
 #: qcsrc/lib/counting.qh:72
 #, c-format
 msgid "THR^%d results"
-msgstr ""
+msgstr "%d résultats"
 
 #: qcsrc/lib/counting.qh:73
 #, c-format
 msgid "MUL^%d results"
-msgstr ""
+msgstr "%d résultats"
 
 #: qcsrc/lib/counting.qh:76
 #, c-format
@@ -15012,6 +15012,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/mutatortab.qc:451
 msgid "Various fun changes to physics and movement."
 msgstr ""
+"Diverses modifications amusantes apportées à la physique et aux mouvements."
 
 #: qcsrc/menu/xonotic/mutatortab.qh:33
 msgid "Weapon arena"
@@ -15233,7 +15234,7 @@ msgstr "Décembre"
 #: qcsrc/menu/xonotic/statslist.qc:53
 #, no-c-format
 msgid "DATE^%MMMM %d, %y"
-msgstr ""
+msgstr "%d %MMMM %y"
 
 #: qcsrc/menu/xonotic/statslist.qc:108
 msgid "Joined:"
@@ -15274,7 +15275,7 @@ msgstr "Élims/Morts :"
 #: qcsrc/menu/xonotic/statslist.qc:169
 #, c-format
 msgid "Kill-death ratio:"
-msgstr ""
+msgstr "Ratio élims/morts :"
 
 #: qcsrc/menu/xonotic/statslist.qc:204
 msgid "Skill:"
@@ -15282,7 +15283,7 @@ msgstr "Niveau :"
 
 #: qcsrc/menu/xonotic/statslist.qc:231
 msgid "* = unranked"
-msgstr ""
+msgstr "* = non classé"
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
