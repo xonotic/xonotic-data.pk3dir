@@ -25,6 +25,7 @@ void Scoreboard_Draw_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_scoreboard_fadeinspeed");
 	HUD_Write_Cvar("hud_panel_scoreboard_fadeoutspeed");
+	HUD_Write_Cvar("hud_panel_scoreboard_hide_panels");
 	HUD_Write_Cvar("hud_panel_scoreboard_minimal");
 	HUD_Write_Cvar("hud_panel_scoreboard_respawntime_decimals");
 	HUD_Write_Cvar("hud_panel_scoreboard_table_bg_alpha");
@@ -1752,7 +1753,7 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 
 	vector scoreboard_selected_hl_pos = pos;
 	vector scoreboard_selected_hl_size = '0 0 0';
-	scoreboard_selected_hl_size.x = scoreboard_right - scoreboard_left;
+	scoreboard_selected_hl_size.x = fixed_scoreboard_width;
 	scoreboard_selected_hl_size.y = panel_size.y;
 
 	HUD_Panel_DrawBg();
@@ -2372,7 +2373,7 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 		pos.y += panel_bg_border;
 
 	vector scoreboard_selected_hl_size = '0 0 0';
-	scoreboard_selected_hl_size.x = scoreboard_right - scoreboard_left;
+	scoreboard_selected_hl_size.x = fixed_scoreboard_width;
 	scoreboard_selected_hl_size.y = pos.y - scoreboard_selected_hl_pos.y;
 
 	panel_pos = pos;
@@ -2605,10 +2606,8 @@ void Scoreboard_Draw(bool should_draw)
 		panel_pos.y = max((autocvar_con_notify * autocvar_con_notifysize), panel_pos.y);
 
 	float excess = max(0, max_namesize - autocvar_hud_panel_scoreboard_namesize * hud_fontsize.x);
-	float fixed_scoreboard_width = bound(vid_conwidth * autocvar_hud_panel_scoreboard_minwidth, vid_conwidth - excess, vid_conwidth * 0.9);
-	scoreboard_left = 0.5 * (vid_conwidth - fixed_scoreboard_width);
-	scoreboard_right = scoreboard_left + fixed_scoreboard_width;
-	panel_pos.x = scoreboard_left;
+	fixed_scoreboard_width = bound(vid_conwidth * autocvar_hud_panel_scoreboard_minwidth, vid_conwidth - excess, vid_conwidth * 0.9);
+	panel_pos.x = 0.5 * (vid_conwidth - fixed_scoreboard_width);
 	panel_size.x = fixed_scoreboard_width;
 
 	// field sizes can be initialized now after panel_size.x calculation
@@ -2621,8 +2620,8 @@ void Scoreboard_Draw(bool should_draw)
 
 	Scoreboard_UpdatePlayerTeams();
 
-	scoreboard_top = panel_pos.y;
 	vector pos = panel_pos;
+	scoreboard_pos = pos;
 
 	if (scoreboard_ui_enabled)
 		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '0 0 0', 0.7 * panel_fade_alpha, DRAWFLAG_NORMAL);
@@ -2968,23 +2967,25 @@ void Scoreboard_Draw(bool should_draw)
 	}
 
 	pos.y += hud_fontsize.y;
+	scoreboard_size = vec2(panel_size.x, pos.y - scoreboard_pos.y);
+	scoreboard_bottom.x = scoreboard_pos.x + scoreboard_size.x;
 	if (scoreboard_fade_alpha < 1)
-		scoreboard_bottom = scoreboard_top + (pos.y - scoreboard_top) * scoreboard_fade_alpha;
-	else if (pos.y != scoreboard_bottom)
+		scoreboard_bottom.y = scoreboard_pos.y + scoreboard_size.y * scoreboard_fade_alpha;
+	else if (pos.y != scoreboard_bottom.y)
 	{
-		if (pos.y > scoreboard_bottom)
-			scoreboard_bottom = min(pos.y, scoreboard_bottom + frametime * 10 * (pos.y - scoreboard_top));
+		if (pos.y > scoreboard_bottom.y)
+			scoreboard_bottom.y = min(pos.y, scoreboard_bottom.y + frametime * 10 * scoreboard_size.y);
 		else
-			scoreboard_bottom = max(pos.y, scoreboard_bottom - frametime * 10 * (pos.y - scoreboard_top));
+			scoreboard_bottom.y = max(pos.y, scoreboard_bottom.y - frametime * 10 * scoreboard_size.y);
 	}
 
 	if (rankings_cnt)
 	{
 		if (scoreboard_fade_alpha == 1)
 		{
-			if (scoreboard_bottom > 0.95 * vid_conheight)
+			if (scoreboard_bottom.y > 0.95 * vid_conheight)
 				rankings_rows = max(1, rankings_rows - 1);
-			else if (scoreboard_bottom + 1.25 * hud_fontsize.y < 0.95 * vid_conheight)
+			else if (scoreboard_bottom.y + 1.25 * hud_fontsize.y < 0.95 * vid_conheight)
 				rankings_rows = min(ceil(RANKINGS_RECEIVED_CNT / rankings_columns), rankings_rows + 1);
 		}
 		rankings_cnt = rankings_rows * rankings_columns;

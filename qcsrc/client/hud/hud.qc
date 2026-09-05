@@ -517,8 +517,14 @@ void HUD_Panel_Draw(entity panent)
 		return;
 	}
 
+	bool show_if_sb = (autocvar_hud_panel_scoreboard_hide_panels <= 0 || panel == HUD_PANEL(SCOREBOARD));
+	if (!show_if_sb && autocvar_hud_panel_scoreboard_hide_panels <= 2)
+		show_if_sb = (panel.panel_showflags & PANEL_SHOW_WITH_SB);
+	if (!show_if_sb && autocvar_hud_panel_scoreboard_hide_panels <= 1)
+		show_if_sb = !boxesoverlap(panel.current_panel_pos, panel.current_panel_pos + panel.current_panel_size, scoreboard_pos, scoreboard_pos + scoreboard_size);
+
 	bool should_draw = false;
-	if (scoreboard_fade_alpha && panel.panel_showflags & PANEL_SHOW_WITH_SB)
+	if (scoreboard_fade_alpha && show_if_sb)
 		should_draw = true;
 	else if (active_minigame && HUD_MinigameMenu_IsOpened())
 	{
@@ -535,7 +541,7 @@ void HUD_Panel_Draw(entity panent)
 
 	if (should_draw)
 	{
-		if (panel.panel_showflags & PANEL_SHOW_WITH_SB)
+		if (show_if_sb)
 		{
 			if (scoreboard_fade_alpha && intermission == 2 && !(panel.panel_showflags & PANEL_SHOW_MAPVOTE))
 				panel_fade_alpha = scoreboard_fade_alpha;
