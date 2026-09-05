@@ -140,18 +140,7 @@ void GameTypeVote_ReadOption(int i)
 		mv_desc[i] = MapInfo_Type_Description(type);
 	}
 
-	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, mv_entries[i]);
-	if (precache_pic(mv_picpath) == "")
-	{
-		mv_picpath = strcat("gfx/menu/wickedx/gametype_", mv_entries[i]);
-		if (precache_pic(mv_picpath) == "")
-		{
-			mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, basetype);
-			if (precache_pic(mv_picpath) == "")
-				mv_picpath = strcat("gfx/menu/wickedx/gametype_", basetype);
-		}
-	}
-	mv_pics[i] = strzone(mv_picpath);
+	mv_pics[i] = strzone(MapInfo_Type_ToIconPath(mv_entries[i], basetype));
 	mv_preview[i] = PreviewExists(mv_pics[i]);
 }
 #endif

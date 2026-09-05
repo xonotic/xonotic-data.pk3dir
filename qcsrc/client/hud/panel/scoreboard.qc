@@ -2524,6 +2524,8 @@ string Scoreboard_Fraglimit_Draw(float limit, bool is_leadlimit, bool is_last)
 		(s_label == "fastest") ? "" : TranslateScoresLabel(s_label)));
 }
 
+string sb_gameinfo_type_iconpath = string_null;
+vector sb_gameinfo_type_iconsize;
 void Scoreboard_Draw(bool should_draw)
 {
 	if (!should_draw)
@@ -2623,50 +2625,47 @@ void Scoreboard_Draw(bool should_draw)
 	vector pos = panel_pos;
 
 	if (scoreboard_ui_enabled)
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0 0 0', 0.7 * panel_fade_alpha, DRAWFLAG_NORMAL);
-
-	vector sb_gameinfo_type_fontsize, sb_gameinfo_detail_fontsize;
+		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '0 0 0', 0.7 * panel_fade_alpha, DRAWFLAG_NORMAL);
 
 	// Begin of Game Info Section
-	sb_gameinfo_type_fontsize = hud_fontsize * 2.5;
-	sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
+	vector sb_gameinfo_type_fontsize = hud_fontsize * 2;
+	vector sb_gameinfo_detail_fontsize = hud_fontsize * 1.3;
+	vector tmp, type_pos = pos;
+	if (!autocvar_hud_panel_scoreboard_minimal) // will draw the gametype name, keep space for it
+		pos.y += sb_gameinfo_type_fontsize.y;
+	else // no gametype name, but keep space for the Next map text
+		pos.y += hud_fontsize.y * 1.25;
 
+	// Game Info: game detail
 	string str;
-	if (GET_NEXTMAP() != "")
-	{
-		// NOTE: nextmap is drawn before title to avoid covering title in case of long map name
-		str = strcat("^7", _("Next map:"), " ^9", GET_NEXTMAP());
-		drawcolorcodedstring(pos + vec2(hud_fontsize.x * 0.5, sb_gameinfo_type_fontsize.y - hud_fontsize.y * 1.25),
-			str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
-
-	// Game Info: Gametype
-	if (scoreboard_ui_enabled == 2)
-		str = _("Team Selection");
-	else if (gametype_custom_name != "")
-		str = gametype_custom_name;
-	else
-		str = MapInfo_Type_ToText(gametype);
-	draw_beginBoldFont();
-	drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_type_fontsize)), str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-	draw_endBoldFont();
-
-	pos.y += sb_gameinfo_type_fontsize.y;
-	// Game Info: Game Detail
 	if (scoreboard_ui_enabled == 2)
 	{
 		if (scoreboard_selected_team)
 			str = sprintf(_("^7Press ^3%s^7 to join the selected team"), translate_key("SPACE"));
 		else
 			str = sprintf(_("^7Press ^3%s^7 to auto-select a team and join"), translate_key("SPACE"));
-		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-
+		tmp = pos;
+		tmp.x += 0.5 * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)); // center
+		drawcolorcodedstring(tmp, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3;
+
 		str = sprintf(_("^7Press ^3%s ^7to select a specific team"), translate_key("TAB"));
-		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		tmp = pos;
+		tmp.x += 0.5 * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)); // center
+		drawcolorcodedstring(tmp, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else
 	{
+		// Next map
+		if (GET_NEXTMAP() != "")
+		{
+			str = strcat("^7", _("Next map:"), " ^9", GET_NEXTMAP());
+			tmp = pos;
+			tmp.x += hud_fontsize.x * 0.5;
+			tmp.y -= hud_fontsize.y * 1.25;
+			drawcolorcodedstring(tmp, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+
 		float tl = STAT(TIMELIMIT);
 		float fl = STAT(FRAGLIMIT);
 		float ll = STAT(LEADLIMIT);
@@ -2695,8 +2694,11 @@ void Scoreboard_Draw(bool should_draw)
 				str = strcat(str, Scoreboard_Fraglimit_Draw(ll, true, true));
 			}
 		}
-		drawcolorcodedstring(pos + '1 0 0' * (panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize)), str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align right
-		// map name and player count
+		tmp = pos;
+		tmp.x += panel_size.x - stringwidth(str, true, sb_gameinfo_detail_fontsize); // align right
+		drawcolorcodedstring(tmp, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		// Map name and player count
 		if (campaign)
 			str = "";
 		else
@@ -2705,8 +2707,45 @@ void Scoreboard_Draw(bool should_draw)
 			str = strcat("^2", mi_shortname, "    ", str);
 		else
 			str = strcat("^7", _("Map:"), " ^2", mi_shortname, "    ", str); // reusing "Map:" translatable string
-		drawcolorcodedstring(pos, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
+
+		tmp = pos;
+		if (autocvar_hud_panel_scoreboard_minimal) // gametype icon
+		{
+			string pic = (gametype_custom_name != "")
+				? MapInfo_Type_ToIconPath(gametype_custom_netname, gametype_custom_basetype)
+				: MapInfo_Type_ToIconPath(MapInfo_Type_ToString(gametype), "");
+			if (pic != sb_gameinfo_type_iconpath)
+			{
+				sb_gameinfo_type_iconpath = pic;
+				sb_gameinfo_type_iconsize = draw_getimagesize(sb_gameinfo_type_iconpath);
+				// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sb_gameinfo_type_iconsize == 0) case
+				if (sb_gameinfo_type_iconsize == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
+					sb_gameinfo_type_iconsize = '1 1 0';
+				sb_gameinfo_type_iconsize = vec2(sb_gameinfo_detail_fontsize.x * (sb_gameinfo_type_iconsize.x / sb_gameinfo_type_iconsize.y), sb_gameinfo_detail_fontsize.y);
+			}
+
+			drawpic(pos, sb_gameinfo_type_iconpath, sb_gameinfo_type_iconsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			tmp.x += sb_gameinfo_type_iconsize.x + sb_gameinfo_detail_fontsize.x * 0.25;
+		}
+		drawcolorcodedstring(tmp, str, sb_gameinfo_detail_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL); // align left
 	}
+
+	// Game Info: gametype name, drawn last to be on top
+	if (!autocvar_hud_panel_scoreboard_minimal)
+	{
+		if (scoreboard_ui_enabled == 2)
+			str = _("Team Selection");
+		else if (gametype_custom_name != "")
+			str = gametype_custom_name;
+		else
+			str = MapInfo_Type_ToText(gametype);
+
+		draw_beginBoldFont();
+		type_pos.x += 0.5 * (panel_size.x - stringwidth(str, true, sb_gameinfo_type_fontsize)); // center
+		drawcolorcodedstring(type_pos, str, sb_gameinfo_type_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
+	}
+
 	// End of Game Info Section
 
 	pos.y += sb_gameinfo_detail_fontsize.y + hud_fontsize.y * 0.3; // space between Game Info Section and score table

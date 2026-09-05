@@ -216,6 +216,8 @@ void Shutdown()
 	localcmd("\n-button12\n");
 
 	strfree(gametype_custom_name);
+	strfree(gametype_custom_netname);
+	strfree(gametype_custom_basetype);
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
@@ -1065,10 +1067,21 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
 	gametype = ReadRegistered(Gametypes);
-	strcpy(gametype_custom_name, ReadString());
+	strcpy(gametype_custom_netname, ReadString()); // may be ""
+	if (gametype_custom_netname != "")
+	{
+		strcpy(gametype_custom_name, ReadString());
+		strcpy(gametype_custom_basetype, ReadString());
+	}
+	else
+	{
+		strcpy(gametype_custom_name, "");
+		strcpy(gametype_custom_basetype, "");
+	}
 	teamplay = _MapInfo_GetTeamPlayBool(gametype);
 	HUD_ModIcons_SetFunc();
-	FOREACH(Scores, true, {
+	FOREACH(Scores, true,
+	{
 		strcpy(scores_label(it), ReadString());
 		scores_flags(it) = ReadByte();
 	});
