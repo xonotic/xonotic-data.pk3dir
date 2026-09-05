@@ -2917,7 +2917,9 @@ void Scoreboard_Draw(bool should_draw)
 			}
 			name = textShortenToWidth(ColorTranslateRGB(race_speedaward_alltimebest_holder), namesize, hud_fontsize, stringwidth_colors);
 			str = strcat(str, sprintf(_("All-time fastest: %d%s ^7(%s^7)"), race_speedaward_alltimebest * conversion_factor, unit, name));
-			drawcolorcodedstring(pos, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			tmp = pos;
+			tmp.x += 0.5 * (panel_size.x - stringwidth_colors(str, hud_fontsize)); // center
+			drawcolorcodedstring(tmp, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			pos.y += 1.25 * hud_fontsize.y; // line height + line spacing
 		}
 		pos = Scoreboard_Rankings_Draw(pos, ranktitle, playerslots[player_localnum], panel_bg_color, bg_size);
@@ -2960,7 +2962,9 @@ void Scoreboard_Draw(bool should_draw)
 			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey(_("jump"), "+jump"));
 
 		pos.y += 1.2 * hud_fontsize.y;
-		drawcolorcodedstring(pos + '0.5 0 0' * (panel_size.x - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		tmp = pos;
+		tmp.x += 0.5 * (panel_size.x - stringwidth(str, true, hud_fontsize)); // center
+		drawcolorcodedstring(tmp, str, hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 
 	pos.y += hud_fontsize.y;
