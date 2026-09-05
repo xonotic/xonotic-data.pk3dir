@@ -1718,11 +1718,11 @@ vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity 
 	return vec2(item_pos.x, item_pos.y + i * hud_fontsize.y * 1.25);
 }
 
-vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
+vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size, bool is_header)
 {
-	// if tm == NULL, we're drawing the header table (minimal scoreboard)
+	// is_header is whether we're drawing the header table (minimal scoreboard)
 	int max_players = 999;
-	int tm_size = (tm ? tm.team_size : 0);
+	int tm_size = (!is_header ? tm.team_size : 0);
 	if (autocvar_hud_panel_scoreboard_maxheight > 0)
 	{
 		float height = autocvar_hud_panel_scoreboard_maxheight * vid_conheight;
@@ -1745,10 +1745,10 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 			max_players = 999;
 	}
 
-	bool draw_header = !(autocvar_hud_panel_scoreboard_minimal && teamplay && tm);
+	bool draw_header = !(autocvar_hud_panel_scoreboard_minimal && teamplay && !is_header);
 
 	panel_pos = pos;
-	panel_size.y = 1.25 * hud_fontsize.y * (draw_header + bound((tm ? 1 : 0), tm_size, max_players));
+	panel_size.y = 1.25 * hud_fontsize.y * (draw_header + bound(!is_header, tm_size, max_players));
 	panel_size.y += panel_bg_padding * 2;
 
 	vector scoreboard_selected_hl_pos = pos;
@@ -1789,7 +1789,7 @@ vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 	// highlight columns, and print header row if draw_header
 	pos = Scoreboard_DrawHeader(panel_pos, rgb, (max_players < tm_size), draw_header);
 
-	if (tm)
+	if (!is_header)
 	{
 		// fill the table and draw the rows
 		bool is_self = false;
@@ -2797,7 +2797,7 @@ void Scoreboard_Draw(bool should_draw)
 		}
 
 		if (autocvar_hud_panel_scoreboard_minimal) // draw header table first
-			pos = Scoreboard_MakeTable(pos, NULL, '0.5 0.5 0.5', bg_size);
+			pos = Scoreboard_MakeTable(pos, NULL, '0.5 0.5 0.5', bg_size, true);
 
 		vector str_pos;
 		for (tm = teams.sort_next; tm; tm = tm.sort_next)
@@ -2864,7 +2864,7 @@ void Scoreboard_Draw(bool should_draw)
 				panel_bg_color = rgb * panel_bg_color_team;
 			else
 				panel_bg_color = rgb;
-			pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
+			pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size, false);
 		}
 		panel_bg_color = panel_bg_color_save;
 
@@ -2878,7 +2878,7 @@ void Scoreboard_Draw(bool should_draw)
 				break;
 
 		// display it anyway
-		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size);
+		pos = Scoreboard_MakeTable(pos, tm, panel_bg_color, bg_size, false);
 	}
 
 	// if the name column is too small, try to compress all other field titles
