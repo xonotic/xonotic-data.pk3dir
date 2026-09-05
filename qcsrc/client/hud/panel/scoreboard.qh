@@ -5,6 +5,7 @@ bool autocvar_cl_deathscoreboard;
 float autocvar_cl_deathscoreboard_delay = 1;
 string autocvar_scoreboard_columns;
 float autocvar_hud_panel_scoreboard_namesize = 15;
+int autocvar_hud_panel_scoreboard_hide_panels = 1;
 
 string autocvar__nextmap;
 // no reason for get_nextmap to be a function for now
@@ -18,10 +19,10 @@ float scoreboard_fade_alpha;
 float scoreboard_acc_fade_alpha;
 float scoreboard_itemstats_fade_alpha;
 
-float scoreboard_top;
-float scoreboard_bottom;
-float scoreboard_left;
-float scoreboard_right;
+vector scoreboard_pos;
+vector scoreboard_size;
+vector scoreboard_bottom; ///< Bottom right scoreboard corner, changes as the scoreboard fades in/out
+float fixed_scoreboard_width;
 
 int numplayers;
 int ts_min; ///< minimum team size
