@@ -647,10 +647,12 @@ Gametype MapInfo_Type_FromString(string gtype, bool dowarn, bool is_q3compat)
 	return NULL;
 }
 
+#ifndef SVQC
 string MapInfo_Type_Description(Gametype t)
 {
 	return t ? t.m_description : "";
 }
+#endif
 
 string MapInfo_Type_ToString(Gametype t)
 {
@@ -662,6 +664,24 @@ string MapInfo_Type_ToText(Gametype t)
 	/* xgettext:no-c-format */
 	return t ? t.message : _("@!#%'n Tuba Throwing");
 }
+
+#ifdef CSQC
+string MapInfo_Type_ToIconPath(string gtype, string basetype)
+{
+	string pic = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, gtype);
+	if (precache_pic(pic) == "")
+	{
+		pic = strcat("gfx/menu/wickedx/gametype_", gtype);
+		if (basetype != "" && precache_pic(pic) == "")
+		{
+			pic = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, basetype);
+			if (precache_pic(pic) == "")
+				pic = strcat("gfx/menu/wickedx/gametype_", basetype);
+		}
+	}
+	return pic;
+}
+#endif
 
 void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, float recurse)
 {
