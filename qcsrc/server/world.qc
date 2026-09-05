@@ -2332,6 +2332,14 @@ void DropToFloor_QC(entity this)
 		end.z -= 128;
 	else
 		end.z -= 256; // Quake, QuakeWorld
+
+	// make sure that even items touching the floor are moved up collision_impactnudge qu
+	// consistently with items spawning in the air and dropped to the floor
+	// and with items spawning partially in the floor and nudged out of solid
+	tracebox(this.origin, this.mins, this.maxs, this.origin + eZ * cvar("collision_impactnudge"), MOVE_NOMONSTERS, this);
+	if (!trace_startsolid && trace_fraction == 1)
+		this.origin = trace_endpos;
+
 	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NOMONSTERS, this);
 
 	if (!autocvar_sv_mapformat_is_quake3 && !autocvar_sv_mapformat_is_quake2 && (trace_allsolid || trace_fraction == 1)) // Quake
