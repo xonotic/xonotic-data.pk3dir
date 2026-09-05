@@ -229,11 +229,11 @@ void HUD_CenterPrint(bool should_draw)
 	}
 	else if (!autocvar__hud_configure && scoreboard_fade_alpha)
 	{
-		vector target_pos = vec2(0.5 * (vid_conwidth - panel_size.x), scoreboard_bottom);
+		vector target_pos = vec2(0.5 * (vid_conwidth - panel_size.x), scoreboard_bottom.y);
 		if (target_pos.y > panel_pos.y)
 		{
 			panel_pos += (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
-			panel_size.y = min(panel_size.y, vid_conheight - scoreboard_bottom);
+			panel_size.y = min(panel_size.y, vid_conheight - scoreboard_bottom.y);
 		}
 
 		// move the panel below the scoreboard
