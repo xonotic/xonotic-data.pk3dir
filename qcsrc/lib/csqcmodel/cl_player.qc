@@ -35,7 +35,6 @@ float pmove_onground; // weird engine flag we shouldn't really use but have to f
 vector csqcplayer_origin, csqcplayer_velocity;
 float csqcplayer_sequence;
 int player_pmflags;
-float csqcplayer_moveframe;
 vector csqcplayer_predictionerroro;
 vector csqcplayer_predictionerrorv;
 float csqcplayer_predictionerrortime;
