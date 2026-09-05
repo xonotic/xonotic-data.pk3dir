@@ -15,7 +15,7 @@ void delay_use(entity this, entity actor, entity trigger)
 	this.enemy = actor;
 	this.goalentity = trigger;
 	setthink(this, delay_delayeduse);
-	this.nextthink = time + this.wait;
+	this.nextthink = time + this.wait + this.rnd * crandom();
 }
 
 void delay_reset(entity this)
@@ -28,11 +28,27 @@ void delay_reset(entity this)
 
 spawnfunc(trigger_delay)
 {
-    if(!this.wait)
-        this.wait = 1;
+	G_SpawnFloat("random", 0, this, rnd);
+	if(!this.wait)
+		this.wait = 1;
 
-    this.use = delay_use;
-    this.reset = delay_reset;
-    this.active = ACTIVE_ACTIVE;
+	this.use = delay_use;
+	this.reset = delay_reset;
+	this.active = ACTIVE_ACTIVE;
+}
+
+/*QUAKED target_delay (1 0 0) (-8 -8 -8) (8 8 8)
+"wait" seconds to pause before firing targets.
+"random" delay variance, total delay = delay +/- random seconds
+*/
+spawnfunc(target_delay)
+{
+	// Q3: check delay for backwards compatability
+	if (this.delay)
+	{
+		this.wait = this.delay;
+		this.delay = 0; // don't spawn delay entities in SUB_UseTargets() as well
+	}
+	spawnfunc_trigger_delay(this);
 }
 #endif
