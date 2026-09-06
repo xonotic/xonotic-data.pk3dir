@@ -627,7 +627,6 @@ void autobalance() {
 	bprint("balancing teams by skill...\n");
 	// make a POST request to https://stats.xonotic.org/balance to get the team assignments
     string balance_url = "https://stats.xonotic.org/balance";
-	LOG_INFO("Balance URL is: ", balance_url);
 	url_single_fopen(balance_url, FILE_WRITE, autobalance_handler, NULL);
 	return;
 }
