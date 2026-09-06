@@ -592,11 +592,12 @@ void autobalance_handler(entity fh, entity p, float status)
 						int team_number = stof(substring(s, 2, -1));
 						player_team = team_number;
 						LOG_INFOF("Player %d should be assigned to team: %d", current_player_id, team_number);
-						//this is the simplest way to do it, instead of having to store the player -> id mappings between the read and write phases
-						//since the max number of players is a pretty low count realistically, this should be efficient enough.
-						FOREACH_CLIENT(it.playerid == current_player_id, {
-							MoveToTeam(it, Team_TeamToIndex(team_number), 6);
-						});
+						if (Team_IsValidTeam(team_number))
+						{
+							FOREACH_CLIENT(it.playerid == current_player_id, {
+								MoveToTeam(it, Team_TeamToIndex(team_number), 6);
+							});
+						}
 					}
 					else if (strstrofs(s, "e skill ", 0) == 0 && player_name && Team_IsValidTeam(player_team))
 					{
