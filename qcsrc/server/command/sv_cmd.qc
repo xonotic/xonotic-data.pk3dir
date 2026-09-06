@@ -478,15 +478,50 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 }
 
 
+
+/*
+ Handler for autobalance requests
+ Need to construct the plain/text body xonstat is expecting, it looks like this
+V 9   
+R test
+G tdm
+O Xonotic
+M testmap
+I 0.123456789
+S Test Server
+C 0
+U 26000
+D 100.000000
+Q team#5
+e scoreboard-score 0
+Q team#14
+e scoreboard-score 0
+P hashkey-of-player
+i 1
+n Alice
+t 5
+e scoreboard-score 30
+e acc-blaster-cnt-fired 1
+e alivetime 100
+e matches 1
+e scoreboardvalid 1
+e joins 1
+... repeat for each P (player)
+
+see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
+
+ */
+
 void autobalance_handler(entity fh, entity p, float status)
 {
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
 		{
-
-			//TODO: This needs to be dynamically populated
 			LOG_INFO("URL_READY_CANWRITE case");
+
+			//first , placing the top level information V, R, G, O, M, I, S, C, U, D, and each Q 
+			//TODO fetch the game / server level info to populate this properly
 			url_fputs(fh, "V 9\n");
 			url_fputs(fh, "R test\n");
 			url_fputs(fh, "G tdm\n");
@@ -497,41 +532,34 @@ void autobalance_handler(entity fh, entity p, float status)
 			url_fputs(fh, "C 0\n");
 			url_fputs(fh, "U 26000\n");
 			url_fputs(fh, "D 100.000000\n");
-			url_fputs(fh, "Q team#5\n");
-			url_fputs(fh, "e scoreboard-score 0\n");
-			url_fputs(fh, "Q team#14\n");
-			url_fputs(fh, "e scoreboard-score 0\n");
-			url_fputs(fh, "P A\n");
-			url_fputs(fh, "i 1\n");
-			url_fputs(fh, "n Alice\n");
-			url_fputs(fh, "t 5\n");
-			url_fputs(fh, "e scoreboard-score 30\n");
-			url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
-			url_fputs(fh, "e alivetime 100\n");
-			url_fputs(fh, "e matches 1\n");
-			url_fputs(fh, "e scoreboardvalid 1\n");
-			url_fputs(fh, "e joins 1\n");
-			url_fputs(fh, "P B\n");
-			url_fputs(fh, "i 2\n");
-			url_fputs(fh, "n Bob\n");
-			url_fputs(fh, "t 5\n");
-			url_fputs(fh, "e scoreboard-score 20\n");
-			url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
-			url_fputs(fh, "e alivetime 100\n");
-			url_fputs(fh, "e matches 1\n");
-			url_fputs(fh, "e scoreboardvalid 1\n");
-			url_fputs(fh, "e joins 1\n");
-			url_fputs(fh, "P C\n");
-			url_fputs(fh, "i 3\n");
-			url_fputs(fh, "n Carol\n");
-			url_fputs(fh, "t 14\n");
-			url_fputs(fh, "e scoreboard-score 40\n");
-			url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
-			url_fputs(fh, "e alivetime 100\n");
-			url_fputs(fh, "e matches 1\n");
-			url_fputs(fh, "e scoreboardvalid 1\n");
-			url_fputs(fh, "e joins 1\n");
-			url_fputs(fh, "\n");
+
+			//fetch all the player info, construct the plain text body required for the xonstat /balance endpoint (each P entry)
+			FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
+				LOG_INFOF("client slot=%d entity=%d name='%s' classname='%s' team=%d flags=%d origin=%s playerid=%d",
+				i,
+				etof(it),
+				it.netname,
+				it.classname,
+				it.team,
+				it.flags,
+				vtos(it.origin),
+				it.playerid
+    			);
+
+				//append the P entry for this player
+				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); //the hashkey
+				url_fputs(fh, sprintf("i %d\n", it.playerid));
+				url_fputs(fh, sprintf("n %s\n", it.netname));
+				url_fputs(fh, sprintf("t %d\n", it.team)); 
+				url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE)));
+				url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
+				url_fputs(fh, "e alivetime 100\n");
+				url_fputs(fh, "e matches 1\n");
+				url_fputs(fh, "e scoreboardvalid 1\n");
+				url_fputs(fh, "e joins 1\n");
+			});
+
+			url_fputs(fh, "\n"); //need this \n at the end or else validation will fail
 			url_fclose(fh);
 			return;
 		}
@@ -540,10 +568,30 @@ void autobalance_handler(entity fh, entity p, float status)
 		{
 			LOG_INFO("URL_READY_CANREAD case");
 			string response_data = "";
+			int current_player_id = 0;
 			for (string s; (s = url_fgets(fh)); )
 			{
 				if (response_data != "")
+				{
 					response_data = strcat(response_data, "\n", s);
+
+					//if the current line starts with i, we need to track it, as the upcoming t entry will tell us which team player i needs to be assigned to
+					if (strstrofs(s, "i ", 0) == 0)
+					{
+						current_player_id = stof(substring(s, 2, -1));
+					}
+					else if (strstrofs(s, "t ", 0) == 0)
+					{
+						int team_number = stof(substring(s, 2, -1));
+						LOG_INFOF("Player %d should be assigned to team: %d", current_player_id, team_number);
+						//this is the simplest way to do it, instead of having to store the player -> id mappings between the read and write phases
+						//since the max number of players is a pretty low count realistically, this should be efficient enough.
+						FOREACH_CLIENT(it.playerid == current_player_id, {
+							MoveToTeam(it, Team_TeamToIndex(team_number), 6);
+						});
+					}
+
+				}
 				else
 					response_data = s;
 			}
@@ -553,7 +601,6 @@ void autobalance_handler(entity fh, entity p, float status)
 		}
 		case URL_READY_CLOSED:
 		{
-			// url_fclose has finished
 			LOG_INFO("URL_READY_CLOSED");
 			bprint("Successfully autobalanced teams.\n");
 			return;
@@ -562,8 +609,8 @@ void autobalance_handler(entity fh, entity p, float status)
 		case URL_READY_ERROR:
 		default:
 		{
-			LOG_INFO("URL_READY_ERROR or default case with status: ", ftos(status));
 			LOG_INFO("Receiving balance data failed: ", ftos(status));
+			bprint("Failed to autobalance teams: status code from xonstat API is ", ftos(status), "\n");
 			break;
 		}
 	}
@@ -571,35 +618,49 @@ void autobalance_handler(entity fh, entity p, float status)
 
 void autobalance() {
 
-	LOG_INFO("Placeholder, autobalancer");
+	if (!teamplay)
+	{
+		LOG_INFO("Can't balance teams when currently not playing a team game.");
+		return;
+	}
 
-	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
-		LOG_INFOF("client slot=%d entity=%d name='%s' classname='%s' team=%d flags=%d origin=%s playerid=%d",
-        i,
-        etof(it),
-        it.netname,
-        it.classname,
-        it.team,
-        it.flags,
-        vtos(it.origin),
-		it.playerid
-    );
-	});
-
-	// make a POST request to https://stats.xonotic.org/balance via url_single_fopen to get the optimal team balance
+	bprint("balancing teams by skill...\n");
+	// make a POST request to https://stats.xonotic.org/balance to get the team assignments
     string balance_url = "https://stats.xonotic.org/balance";
 	LOG_INFO("Balance URL is: ", balance_url);
 	url_single_fopen(balance_url, FILE_WRITE, autobalance_handler, NULL);
-
-	// parse the response using json_parse() and assign players to the optimal teams
-
-	// bprint("Successfully autobalanced teams.\n");
 	return;
 }
 
 void GameCommand_autobalance(int request, int argc)
 {
-	autobalance();
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
+			if (autobalance_on_reset_map)
+			{
+				bprint("Players will be balanced by skill when this round is over.\n");
+				autobalance_on_reset_map = true;
+			}
+			else
+				autobalance();
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd autobalance");
+			LOG_HELP("  Balances teams by skill.");
+			return;
+		}
+	}
 }
 
 void GameCommand_cointoss(int request, int argc)
