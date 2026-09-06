@@ -524,7 +524,7 @@ void autobalance_handler(entity fh, entity p, float status)
 			//TODO fetch the game / server level info to populate this properly
 			url_fputs(fh, "V 9\n");
 			url_fputs(fh, "R test\n");
-			url_fputs(fh, "G tdm\n");
+			url_fputs(fh, sprintf("G %s\n", MapInfo_CurrentGametype().mdl));
 			url_fputs(fh, "O Xonotic\n");
 			url_fputs(fh, "M testmap\n");
 			url_fputs(fh, "I 0.123456789\n");
@@ -568,6 +568,9 @@ void autobalance_handler(entity fh, entity p, float status)
 		{
 			LOG_INFO("URL_READY_CANREAD case");
 			string response_data = "";
+			string team_rows = "";
+			string player_name = string_null;
+			int player_team = 0;
 			int current_player_id = 0;
 			for (string s; (s = url_fgets(fh)); )
 			{
@@ -580,9 +583,14 @@ void autobalance_handler(entity fh, entity p, float status)
 					{
 						current_player_id = stof(substring(s, 2, -1));
 					}
+					else if (strstrofs(s, "n ", 0) == 0)
+					{
+						player_name = substring(s, 2, -1);
+					}
 					else if (strstrofs(s, "t ", 0) == 0)
 					{
 						int team_number = stof(substring(s, 2, -1));
+						player_team = team_number;
 						LOG_INFOF("Player %d should be assigned to team: %d", current_player_id, team_number);
 						//this is the simplest way to do it, instead of having to store the player -> id mappings between the read and write phases
 						//since the max number of players is a pretty low count realistically, this should be efficient enough.
@@ -590,12 +598,18 @@ void autobalance_handler(entity fh, entity p, float status)
 							MoveToTeam(it, Team_TeamToIndex(team_number), 6);
 						});
 					}
+					else if (strstrofs(s, "e skill ", 0) == 0 && player_name && Team_IsValidTeam(player_team))
+					{
+						team_rows = strcat(team_rows, Static_Team_ColorName_Upper(player_team), ": ", player_name,
+							", ", substring(s, 8, -1), "\n");
+					}
 
 				}
 				else
 					response_data = s;
 			}
 			LOG_INFO("Received player stats data: ", response_data);
+			bprint("Team assignments and Elo:\n", team_rows);
 			url_fclose(fh);
 			break;
 		}
