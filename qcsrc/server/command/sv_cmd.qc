@@ -477,6 +477,131 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 	}
 }
 
+
+void autobalance_handler(entity fh, entity p, float status)
+{
+	switch(status)
+	{
+		case URL_READY_CANWRITE:
+		{
+
+			//TODO: This needs to be dynamically populated
+			LOG_INFO("URL_READY_CANWRITE case");
+			url_fputs(fh, "V 9\n");
+			url_fputs(fh, "R test\n");
+			url_fputs(fh, "G tdm\n");
+			url_fputs(fh, "O Xonotic\n");
+			url_fputs(fh, "M testmap\n");
+			url_fputs(fh, "I 0.123456789\n");
+			url_fputs(fh, "S Test Server\n");
+			url_fputs(fh, "C 0\n");
+			url_fputs(fh, "U 26000\n");
+			url_fputs(fh, "D 100.000000\n");
+			url_fputs(fh, "Q team#5\n");
+			url_fputs(fh, "e scoreboard-score 0\n");
+			url_fputs(fh, "Q team#14\n");
+			url_fputs(fh, "e scoreboard-score 0\n");
+			url_fputs(fh, "P A\n");
+			url_fputs(fh, "i 1\n");
+			url_fputs(fh, "n Alice\n");
+			url_fputs(fh, "t 5\n");
+			url_fputs(fh, "e scoreboard-score 30\n");
+			url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
+			url_fputs(fh, "e alivetime 100\n");
+			url_fputs(fh, "e matches 1\n");
+			url_fputs(fh, "e scoreboardvalid 1\n");
+			url_fputs(fh, "e joins 1\n");
+			url_fputs(fh, "P B\n");
+			url_fputs(fh, "i 2\n");
+			url_fputs(fh, "n Bob\n");
+			url_fputs(fh, "t 5\n");
+			url_fputs(fh, "e scoreboard-score 20\n");
+			url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
+			url_fputs(fh, "e alivetime 100\n");
+			url_fputs(fh, "e matches 1\n");
+			url_fputs(fh, "e scoreboardvalid 1\n");
+			url_fputs(fh, "e joins 1\n");
+			url_fputs(fh, "P C\n");
+			url_fputs(fh, "i 3\n");
+			url_fputs(fh, "n Carol\n");
+			url_fputs(fh, "t 14\n");
+			url_fputs(fh, "e scoreboard-score 40\n");
+			url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
+			url_fputs(fh, "e alivetime 100\n");
+			url_fputs(fh, "e matches 1\n");
+			url_fputs(fh, "e scoreboardvalid 1\n");
+			url_fputs(fh, "e joins 1\n");
+			url_fputs(fh, "\n");
+			url_fclose(fh);
+			return;
+		}
+
+		case URL_READY_CANREAD:
+		{
+			LOG_INFO("URL_READY_CANREAD case");
+			string response_data = "";
+			for (string s; (s = url_fgets(fh)); )
+			{
+				if (response_data != "")
+					response_data = strcat(response_data, "\n", s);
+				else
+					response_data = s;
+			}
+			LOG_INFO("Received player stats data: ", response_data);
+			url_fclose(fh);
+			break;
+		}
+		case URL_READY_CLOSED:
+		{
+			// url_fclose has finished
+			LOG_INFO("URL_READY_CLOSED");
+			bprint("Successfully autobalanced teams.\n");
+			return;
+		}
+
+		case URL_READY_ERROR:
+		default:
+		{
+			LOG_INFO("URL_READY_ERROR or default case with status: ", ftos(status));
+			LOG_INFO("Receiving balance data failed: ", ftos(status));
+			break;
+		}
+	}
+}
+
+void autobalance() {
+
+	LOG_INFO("Placeholder, autobalancer");
+
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
+		LOG_INFOF("client slot=%d entity=%d name='%s' classname='%s' team=%d flags=%d origin=%s playerid=%d",
+        i,
+        etof(it),
+        it.netname,
+        it.classname,
+        it.team,
+        it.flags,
+        vtos(it.origin),
+		it.playerid
+    );
+	});
+
+	// make a POST request to https://stats.xonotic.org/balance via url_single_fopen to get the optimal team balance
+    string balance_url = "https://stats.xonotic.org/balance";
+	LOG_INFO("Balance URL is: ", balance_url);
+	url_single_fopen(balance_url, FILE_WRITE, autobalance_handler, NULL);
+
+	// parse the response using json_parse() and assign players to the optimal teams
+
+	// bprint("Successfully autobalanced teams.\n");
+	return;
+}
+
+void GameCommand_autobalance(int request, int argc)
+{
+	autobalance();
+}
+
 void GameCommand_cointoss(int request, int argc)
 {
 	switch (request)
@@ -1330,6 +1455,7 @@ void GameCommand_setbots(int request, int argc)
 	}
 }
 
+
 void shuffleteams()
 {
 	if (!teamplay)
@@ -1775,6 +1901,7 @@ SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(r
 SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }
 SERVER_COMMAND(animbench, "Benchmark model animation (LAGS)") { GameCommand_animbench(request, arguments); }
 SERVER_COMMAND(bbox, "Print detailed information about world size") { GameCommand_bbox(request); }
+SERVER_COMMAND(autobalance, "Automatically balance teams by skill") { GameCommand_autobalance(request, arguments); }
 SERVER_COMMAND(bot_cmd, "Control and send commands to bots") { GameCommand_bot_cmd(request, arguments, command); }
 SERVER_COMMAND(cointoss, "Flip a virtual coin and give random result") { GameCommand_cointoss(request, arguments); }
 SERVER_COMMAND(database, "Extra controls of the serverprogs database") { GameCommand_database(request, arguments); }
