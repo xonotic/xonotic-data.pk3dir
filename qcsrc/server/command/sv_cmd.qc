@@ -8,6 +8,7 @@
 #include <common/monsters/sv_monsters.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
+#include <common/playerstats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <server/anticheat.qh>
