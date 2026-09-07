@@ -316,7 +316,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "sal / bonŝancon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
@@ -329,7 +329,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "Team chat"
-msgstr ""
+msgstr "Teama babilejo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "strength soon"

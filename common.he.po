@@ -309,7 +309,7 @@ msgstr "צ׳אט"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "Send public message to"
-msgstr ""
+msgstr "שליחת הודעה פומבית אל"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid ":-) / nice one"
@@ -317,19 +317,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "good game"
-msgstr ""
+msgstr "משחק טוב"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "אהלן / בהצלחה"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
-msgstr ""
+msgstr "אהלן / בהצלחה ושיהיה כיף"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Send in English"
-msgstr ""
+msgstr "לשלוח באנגלית"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867

@@ -306,72 +306,72 @@ msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "Send public message to"
-msgstr ""
+msgstr "Send offentlig melding til"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid ":-) / nice one"
-msgstr ""
+msgstr ":-) / pent"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "good game"
-msgstr ""
+msgstr "bra spilt"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "hei / lykke til"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
-msgstr ""
+msgstr "hei / lykke til å ha det gøy"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Send in English"
-msgstr ""
+msgstr "Send på engelsk"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "Team chat"
-msgstr ""
+msgstr "Lagchat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "strength soon"
-msgstr ""
+msgstr "styrke snart"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "gratis gjenstand %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item, icon"
-msgstr ""
+msgstr "gratis gjenstand, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item (l:%l^7)"
-msgstr ""
+msgstr "tok gjenstand (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item, icon"
-msgstr ""
+msgstr "tok gjenstand, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "negative"
-msgstr ""
+msgstr "negativ"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "positive"
-msgstr ""
+msgstr "positivt"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "trenger hjelp (l:%l^7) (h:%h^7 a:^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help, icon"
-msgstr ""
+msgstr "trenger hjelp, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen (l:%y^7)"
-msgstr ""
+msgstr "fiende oppdaget (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen, icon"
@@ -482,12 +482,12 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "Net graph"
-msgstr ""
+msgstr "Nettgraf"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:882
 #: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "Sound settings"
-msgstr ""
+msgstr "Lydinnstillinger"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -501,24 +501,24 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "Change spectator camera"
-msgstr ""
+msgstr "Endre tilskuerkamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 #: qcsrc/client/hud/panel/quickmenu.qc:897
 msgid "Observer camera"
-msgstr ""
+msgstr "Observatorkamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "Increase speed"
-msgstr ""
+msgstr "Øk hastigheten"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "Decrease speed"
-msgstr ""
+msgstr "Senk hastigheten"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Wall collision"
-msgstr ""
+msgstr "Veggkollisjon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:32
@@ -528,27 +528,27 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 #: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "Call a vote"
-msgstr ""
+msgstr "Lag en avstemming"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "Restart the map"
-msgstr ""
+msgstr "Restart kartet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "End match"
-msgstr ""
+msgstr "Slutt kamp"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:908
 msgid "Reduce match time"
-msgstr ""
+msgstr "Reduser rundetiden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "Extend match time"
-msgstr ""
+msgstr "Utvid rundetiden"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "Shuffle teams"
-msgstr ""
+msgstr "Omrokker lagene"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "Server quick menu"
@@ -568,7 +568,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "Spectate a player"
-msgstr ""
+msgstr "Se på en spiller"
 
 #. TRANSLATORS: lap difference, e.g. "+2L" where L stands for lap(s).
 #: qcsrc/client/hud/panel/racetimer.qc:67

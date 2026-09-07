@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Kostiantyn Tsebro, 2026\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -327,145 +327,145 @@ msgstr "Чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "Send public message to"
-msgstr ""
+msgstr "Публічне повідомлення гравцю"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid ":-) / nice one"
-msgstr ""
+msgstr ":-) / файно"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "good game"
-msgstr ""
+msgstr "гарна гра"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "привіт / успіхів"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
-msgstr ""
+msgstr "привіт / успіхів та веселощів"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Send in English"
-msgstr ""
+msgstr "Надіслати англійською мовою"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "Team chat"
-msgstr ""
+msgstr "Командний чат"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "strength soon"
-msgstr ""
+msgstr "сила незабаром"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "вільний предмет %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item, icon"
-msgstr ""
+msgstr "вільний предмет, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item (l:%l^7)"
-msgstr ""
+msgstr "взяв річ (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item, icon"
-msgstr ""
+msgstr "взяв річ, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "negative"
-msgstr ""
+msgstr "негативно"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "positive"
-msgstr ""
+msgstr "позитивно"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "потрібна допомога (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help, icon"
-msgstr ""
+msgstr "потрібна допомога, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen (l:%y^7)"
-msgstr ""
+msgstr "помічено ворога (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen, icon"
-msgstr ""
+msgstr "помічено ворога, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen (l:%y^7)"
-msgstr ""
+msgstr "помічено прапор (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen, icon"
-msgstr ""
+msgstr "помічено прапор, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "захищаю (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending, icon"
-msgstr ""
+msgstr "захищаю, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "патрулюю (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming, icon"
-msgstr ""
+msgstr "патрулюю, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "атакую (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking, icon"
-msgstr ""
+msgstr "атакую, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "вбито носія прапора (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier, icon"
-msgstr ""
+msgstr "вбито носія прапора, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 #, c-format
 msgid "dropped flag (l:%d^7)"
-msgstr ""
+msgstr "втратив прапор (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "dropped flag, icon"
-msgstr ""
+msgstr "втратив прапор, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "drop weapon, icon"
-msgstr ""
+msgstr "скинув зброю, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "скинув зброю %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "drop flag/key, icon"
-msgstr ""
+msgstr "втратив прапор/ключ, значок"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "втратив прапор/ключ %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "Send private message to"
-msgstr ""
+msgstr "Приватне повідомлення гравцю"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 #: qcsrc/client/hud/panel/quickmenu.qc:901
@@ -477,7 +477,7 @@ msgstr "Налаштування"
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "View/HUD settings"
-msgstr ""
+msgstr "Налаштування видимості/HUD-у"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:58
@@ -491,11 +491,11 @@ msgstr "Застосувати мою модель до всіх"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "Names above players"
-msgstr ""
+msgstr "Імена понад гравцями"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "Crosshair per weapon"
-msgstr ""
+msgstr "Приціл під зброю"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "FPS"
@@ -503,12 +503,12 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "Net graph"
-msgstr ""
+msgstr "Мережевий графік"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:882
 #: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "Sound settings"
-msgstr ""
+msgstr "Налаштування звуку"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -522,24 +522,24 @@ msgstr "Звук чату"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "Change spectator camera"
-msgstr ""
+msgstr "Змінити камеру спостерігача"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 #: qcsrc/client/hud/panel/quickmenu.qc:897
 msgid "Observer camera"
-msgstr ""
+msgstr "Камера спостерігача"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "Increase speed"
-msgstr ""
+msgstr "Збільшити швидкість"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "Decrease speed"
-msgstr ""
+msgstr "Зменшити швидкість"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Wall collision"
-msgstr ""
+msgstr "Зіткнення стін"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:32
@@ -549,27 +549,27 @@ msgstr "Повний екран"
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 #: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "Call a vote"
-msgstr ""
+msgstr "Провести голосування"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "Restart the map"
-msgstr ""
+msgstr "Перезапустити мапу"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "End match"
-msgstr ""
+msgstr "Завершити матч"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:908
 msgid "Reduce match time"
-msgstr ""
+msgstr "Зменшити час матчу"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "Extend match time"
-msgstr ""
+msgstr "Збільшити час матчу"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "Shuffle teams"
-msgstr ""
+msgstr "Перетасувати команди"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "Server quick menu"
@@ -589,7 +589,7 @@ msgstr "Серверне швидке меню за замовчуванням"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "Spectate a player"
-msgstr ""
+msgstr "Спостерігати за гравцем"
 
 #. TRANSLATORS: lap difference, e.g. "+2L" where L stands for lap(s).
 #: qcsrc/client/hud/panel/racetimer.qc:67
@@ -759,7 +759,7 @@ msgstr "нпвбито"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Frames per second"
-msgstr ""
+msgstr "Кадрів за секунду"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^fps"
@@ -1157,12 +1157,12 @@ msgstr "Спостерігачі"
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "+%s %s"
-msgstr ""
+msgstr "+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2473
 msgid "SCO^points"
@@ -5549,7 +5549,7 @@ msgstr "^BG%s^K1 був зраджений ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:372
 #, c-format
 msgid "%s every %s"
-msgstr ""
+msgstr "%s кожні %s"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
@@ -10441,7 +10441,7 @@ msgstr "Вмикати навіть під час спостереження"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:20
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:35
 msgid "Enable only in Race/CTS"
-msgstr "Вмикати лише у Перегонках/CTS"
+msgstr "Вмикати лише у Перегонках/ПЕ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 msgid "Flip speed/acceleration positions"
@@ -11008,7 +11008,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:47
 msgid "Auto record demos"
-msgstr "Автоматично записувати демки"
+msgstr "Автоматичний запис демок"
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:56
 msgid "Timedemo"
@@ -12994,7 +12994,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:65
 msgid "Auto switch in CTS:"
-msgstr "Автоматично перемикатись в CTS"
+msgstr "Автоперемикання в ПЕ"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:76
 msgid "Weapon Visuals"
@@ -13620,7 +13620,7 @@ msgstr "Вимкнуто"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:178
 msgid "Idle limit:"
-msgstr "Ліміт часу бездіяльності:"
+msgstr "Коли гра неактивна:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:183
 msgid "IDLFPS^Unlimited"
@@ -13652,7 +13652,7 @@ msgstr "Миттєва гра з ботами!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:167
 msgid "Campaign Difficulty:"
-msgstr "Важкість кампанії:"
+msgstr "Складність кампанії:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.qc:168
 msgid "CSKL^Easy"
@@ -13983,7 +13983,7 @@ msgid ""
 "different CPMA-like physics that remove this cap."
 msgstr ""
 "За стандартних налаштувань, швидкість під час бані-хопінгу обмежена до 900 "
-"qu/с (\"юнітів на секунду\"). Сервери CTS/DeFRaG зазвичай працюють з іншою, "
+"qu/с (\"юнітів на секунду\"). Сервери ПЕ/DeFRaG зазвичай працюють з іншою, "
 "CPMA-подібною фізикою, яка знімає це обмеження."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:92
@@ -14237,7 +14237,7 @@ msgid ""
 msgstr ""
 "Такі просунуті техніки як \"стрейф-джампінг\" (\"стрейфінг\") або \"сьоркл-"
 "джамп\" (\"CJ\") дають незначну перевагу в звичайній грі, проте вони є "
-"вирішальними на серверах CTS/DeFRaG, у яких злегка змінені налаштування "
+"вирішальними на серверах ПЕ/DeFRaG, у яких злегка змінені налаштування "
 "фізики."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167

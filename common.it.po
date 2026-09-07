@@ -312,145 +312,145 @@ msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "Send public message to"
-msgstr ""
+msgstr "Manda un messaggio pubblico a"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid ":-) / nice one"
-msgstr ""
+msgstr ":-) / bella"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "good game"
-msgstr ""
+msgstr "bella partita"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "ciao / buona fortuna"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
-msgstr ""
+msgstr "ciao / buona fortuna e divertiti"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Send in English"
-msgstr ""
+msgstr "Invia in inglese"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "Team chat"
-msgstr ""
+msgstr "Chat di squadra"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "strength soon"
-msgstr ""
+msgstr "la forza fra poco"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "oggetto disponibile %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item, icon"
-msgstr ""
+msgstr "oggetto disponibile, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item (l:%l^7)"
-msgstr ""
+msgstr "preso oggetto (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item, icon"
-msgstr ""
+msgstr "preso oggetto, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "negative"
-msgstr ""
+msgstr "negativo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "positive"
-msgstr ""
+msgstr "positivo"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "aiuto (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help, icon"
-msgstr ""
+msgstr "aiuto, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen (l:%y^7)"
-msgstr ""
+msgstr "avvistato nemico (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen, icon"
-msgstr ""
+msgstr "avvistato nemico, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen (l:%y^7)"
-msgstr ""
+msgstr "avvistata bandiera (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen, icon"
-msgstr ""
+msgstr "avvistata bandiera, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "difendendo (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending, icon"
-msgstr ""
+msgstr "difendendo, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "vagando (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming, icon"
-msgstr ""
+msgstr "vagando, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "attaccando (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking, icon"
-msgstr ""
+msgstr "attaccando, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "ucciso portabandiera (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier, icon"
-msgstr ""
+msgstr "ucciso portabandiera, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 #, c-format
 msgid "dropped flag (l:%d^7)"
-msgstr ""
+msgstr "bandiera buttata (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "dropped flag, icon"
-msgstr ""
+msgstr "bandiera buttata, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "drop weapon, icon"
-msgstr ""
+msgstr "butta arma, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "arma buttata %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "drop flag/key, icon"
-msgstr ""
+msgstr "butta bandiera/chiave, icona"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "bandiera/chiave buttata %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "Send private message to"
-msgstr ""
+msgstr "Invia messaggio privato a"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 #: qcsrc/client/hud/panel/quickmenu.qc:901
@@ -462,7 +462,7 @@ msgstr "Impostazioni"
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "View/HUD settings"
-msgstr ""
+msgstr "Impostazioni vista/HUD"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:58
@@ -476,11 +476,11 @@ msgstr "Forza modelli dei giocatori come il mio"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "Names above players"
-msgstr ""
+msgstr "Nomi sopra i giocatori"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "Crosshair per weapon"
-msgstr ""
+msgstr "Mirino specifico per arma"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "FPS"
@@ -488,12 +488,12 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "Net graph"
-msgstr ""
+msgstr "Grafico rete"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:882
 #: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "Sound settings"
-msgstr ""
+msgstr "Impostazioni suono"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -507,24 +507,24 @@ msgstr "Suono per messaggio di chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "Change spectator camera"
-msgstr ""
+msgstr "Cambia camera spettatore"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 #: qcsrc/client/hud/panel/quickmenu.qc:897
 msgid "Observer camera"
-msgstr ""
+msgstr "Telecamera osservatore"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "Increase speed"
-msgstr ""
+msgstr "Aumenta velocità"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "Decrease speed"
-msgstr ""
+msgstr "Diminuisci velocità"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Wall collision"
-msgstr ""
+msgstr "Collisione con i muri"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:32
@@ -534,27 +534,27 @@ msgstr "Schermo intero"
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 #: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "Call a vote"
-msgstr ""
+msgstr "Indici una votazione"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "Restart the map"
-msgstr ""
+msgstr "Riavvia la mappa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "End match"
-msgstr ""
+msgstr "Fine partita"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:908
 msgid "Reduce match time"
-msgstr ""
+msgstr "Riduci tempo partita"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "Extend match time"
-msgstr ""
+msgstr "Estendi tempo partita"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "Shuffle teams"
-msgstr ""
+msgstr "Mischia le squadre"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "Server quick menu"
@@ -574,7 +574,7 @@ msgstr "Menu veloce del server come predefinito"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "Spectate a player"
-msgstr ""
+msgstr "Guarda un giocatore"
 
 #. TRANSLATORS: lap difference, e.g. "+2L" where L stands for lap(s).
 #: qcsrc/client/hud/panel/racetimer.qc:67
@@ -745,7 +745,7 @@ msgstr "pb uccisi"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Frames per second"
-msgstr ""
+msgstr "Fotogrammi al secondo"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^fps"
@@ -1147,12 +1147,12 @@ msgstr "Spettatori"
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "+%s %s"
-msgstr ""
+msgstr "+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2473
 msgid "SCO^points"
@@ -5666,7 +5666,7 @@ msgstr "^BG%s^K1 è stato tradito da ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:372
 #, c-format
 msgid "%s every %s"
-msgstr ""
+msgstr "%s ogni %s"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
@@ -5775,7 +5775,7 @@ msgstr "^BGNon hai abbastanza munizioni per l'arma ^F1%s"
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "^F1Il ^F1%s %s^BG non può sparare, ma il suo ^F1%s^BG può"
+msgstr "^BGIl ^F1%2$s del %1$s^BG non può sparare, ma il suo ^F1%3$s^BG può"
 
 #: qcsrc/common/notifications/all.inc:399
 #: qcsrc/common/notifications/all.inc:735

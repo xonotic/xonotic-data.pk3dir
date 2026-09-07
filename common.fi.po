@@ -322,145 +322,145 @@ msgstr "Keskustelu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "Send public message to"
-msgstr ""
+msgstr "Lähetä julkinen viesti"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid ":-) / nice one"
-msgstr ""
+msgstr ":-) / se oli hieno"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "good game"
-msgstr ""
+msgstr "hyvä peli"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "hei / onnea matkaan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
-msgstr ""
+msgstr "hei / onnea matkaan ja pidä hauskaa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Send in English"
-msgstr ""
+msgstr "Lähetä suomeksi"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "Team chat"
-msgstr ""
+msgstr "joukkuekeskustelu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "strength soon"
-msgstr ""
+msgstr "vahvistus pian"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "vapauta esine %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item, icon"
-msgstr ""
+msgstr "vapaa esine, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item (l:%l^7)"
-msgstr ""
+msgstr "otti esineen (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item, icon"
-msgstr ""
+msgstr "otti esineen, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "negative"
-msgstr ""
+msgstr "negatiivinen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "positive"
-msgstr ""
+msgstr "positiivinen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "avuntarve (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help, icon"
-msgstr ""
+msgstr "avuntarve, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen (l:%y^7)"
-msgstr ""
+msgstr "vihollinen havaittu (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen, icon"
-msgstr ""
+msgstr "vihollinen havaittu, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen (l:%y^7)"
-msgstr ""
+msgstr "lippu havaittu (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen, icon"
-msgstr ""
+msgstr "lippu havaittu, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "puolustaa (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending, icon"
-msgstr ""
+msgstr "puolustaa, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "kuljeskelee (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming, icon"
-msgstr ""
+msgstr "kuljeskelee, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "hyökkäämässä (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking, icon"
-msgstr ""
+msgstr "hyökkäämässä, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "lipunkantaja tapettu (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier, icon"
-msgstr ""
+msgstr "lipunkantaja tapettu, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 #, c-format
 msgid "dropped flag (l:%d^7)"
-msgstr ""
+msgstr "lippu pudotettu (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "dropped flag, icon"
-msgstr ""
+msgstr "lippu pudotettu, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "drop weapon, icon"
-msgstr ""
+msgstr "pudota ase, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "ase pudotettu %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "drop flag/key, icon"
-msgstr ""
+msgstr "pudota lippu/avain, kuvake"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "pudotettu lippu/avain %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "Send private message to"
-msgstr ""
+msgstr "Lähetä yksityisviesti"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 #: qcsrc/client/hud/panel/quickmenu.qc:901
@@ -472,7 +472,7 @@ msgstr "Asetukset"
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "View/HUD settings"
-msgstr ""
+msgstr "Katso/HUD-asetukset"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:58
@@ -486,11 +486,11 @@ msgstr "Pakota pelaajamallit kuten oma on"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "Names above players"
-msgstr ""
+msgstr "Nimet pelaajien yläpuolella"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "Crosshair per weapon"
-msgstr ""
+msgstr "Asekohtainen tähtäin"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "FPS"
@@ -498,12 +498,12 @@ msgstr "FPS-kehystaajuus"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "Net graph"
-msgstr ""
+msgstr "Nettomallinnus"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:882
 #: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "Sound settings"
-msgstr ""
+msgstr "Ääniasetukset"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -517,24 +517,24 @@ msgstr "Keskustelun piippausääni"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "Change spectator camera"
-msgstr ""
+msgstr "Muuta katselijakameraa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 #: qcsrc/client/hud/panel/quickmenu.qc:897
 msgid "Observer camera"
-msgstr ""
+msgstr "Tarkkailijakamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "Increase speed"
-msgstr ""
+msgstr "Lisää nopeutta"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "Decrease speed"
-msgstr ""
+msgstr "Vähennä nopeutta"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Wall collision"
-msgstr ""
+msgstr "Seinätörmäys"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:32
@@ -544,27 +544,27 @@ msgstr "Kokoruutu"
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 #: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "Call a vote"
-msgstr ""
+msgstr "Pyydä äänestystä"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "Restart the map"
-msgstr ""
+msgstr "Uudelleenkäynnistä kartta"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "End match"
-msgstr ""
+msgstr "Lopeta ottelu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:908
 msgid "Reduce match time"
-msgstr ""
+msgstr "Vähennä otteluaikaa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "Extend match time"
-msgstr ""
+msgstr "Lisää otteluaikaa"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "Shuffle teams"
-msgstr ""
+msgstr "Sekoita joukkueet"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "Server quick menu"
@@ -584,7 +584,7 @@ msgstr "Palvelimen pikavalikko oletuksena"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "Spectate a player"
-msgstr ""
+msgstr "Katsele pelaajaa"
 
 #. TRANSLATORS: lap difference, e.g. "+2L" where L stands for lap(s).
 #: qcsrc/client/hud/panel/racetimer.qc:67

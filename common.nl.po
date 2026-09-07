@@ -314,60 +314,60 @@ msgstr "Chat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "Send public message to"
-msgstr ""
+msgstr "Stuur publiek bericht naar"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid ":-) / nice one"
-msgstr ""
+msgstr ":-) / goed gedaan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "good game"
-msgstr ""
+msgstr "goede wedstrijd"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "hoi / succes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
-msgstr ""
+msgstr "hoi / succes en veel plezier"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Send in English"
-msgstr ""
+msgstr "Stuur in het engels"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "Team chat"
-msgstr ""
+msgstr "Teamchat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "strength soon"
-msgstr ""
+msgstr "kracht binnenkort"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "gratis voorwerp %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item, icon"
-msgstr ""
+msgstr "gratis voorwerp, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item (l:%l^7)"
-msgstr ""
+msgstr "nam voorwerp (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item, icon"
-msgstr ""
+msgstr "nam voorwerp, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "negative"
-msgstr ""
+msgstr "negatief"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "positive"
-msgstr ""
+msgstr "positief"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -375,39 +375,39 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help, icon"
-msgstr ""
+msgstr "hulp nodig, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen (l:%y^7)"
-msgstr ""
+msgstr "vijand gezien (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen, icon"
-msgstr ""
+msgstr "vijand gezien, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen (l:%y^7)"
-msgstr ""
+msgstr "vlag gezien (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen, icon"
-msgstr ""
+msgstr "vlag gezien, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "verdedigen (I:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending, icon"
-msgstr ""
+msgstr "verdedigen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "zwerven (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming, icon"
-msgstr ""
+msgstr "zwerven, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
@@ -415,15 +415,15 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking, icon"
-msgstr ""
+msgstr "aanvallen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "doodde vaandeldrager (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier, icon"
-msgstr ""
+msgstr "vaandeldrager gedood, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 #, c-format
@@ -432,11 +432,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "dropped flag, icon"
-msgstr ""
+msgstr "vlag laten vallen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "drop weapon, icon"
-msgstr ""
+msgstr "wapen neerleggen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "dropped weapon %w^7 (l:%l^7)"
@@ -444,7 +444,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "drop flag/key, icon"
-msgstr ""
+msgstr "vlag/sleutel neerleggen, icoon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "dropped flag/key %w^7 (l:%l^7)"
@@ -452,7 +452,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "Send private message to"
-msgstr ""
+msgstr "Stuur privébericht aan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 #: qcsrc/client/hud/panel/quickmenu.qc:901
@@ -464,7 +464,7 @@ msgstr "Instellingen"
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "View/HUD settings"
-msgstr ""
+msgstr "Beeld/HUD-instellingen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:58
@@ -478,11 +478,11 @@ msgstr "Forceer modellen naar de mijne:"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "Names above players"
-msgstr ""
+msgstr "Namen boven spelers"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "Crosshair per weapon"
-msgstr ""
+msgstr "Dradenkruis naar wapen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "FPS"
@@ -490,12 +490,12 @@ msgstr "FPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "Net graph"
-msgstr ""
+msgstr "Netwerkgrafiek"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:882
 #: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "Sound settings"
-msgstr ""
+msgstr "Geluidsinstellingen"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -514,19 +514,19 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 #: qcsrc/client/hud/panel/quickmenu.qc:897
 msgid "Observer camera"
-msgstr ""
+msgstr "Observatorscamera"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "Increase speed"
-msgstr ""
+msgstr "Verhoog snelheid"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "Decrease speed"
-msgstr ""
+msgstr "Verlaag snelheid"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Wall collision"
-msgstr ""
+msgstr "Wandbotsing"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:32
@@ -536,27 +536,27 @@ msgstr "Volledig scherm"
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 #: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "Call a vote"
-msgstr ""
+msgstr "Roep een stemronde uit"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "Restart the map"
-msgstr ""
+msgstr "Herstart de kaart"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "End match"
-msgstr ""
+msgstr "Beëindig wedstrijd"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:908
 msgid "Reduce match time"
-msgstr ""
+msgstr "Verminder wedstrijdtijd"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "Extend match time"
-msgstr ""
+msgstr "Verleng wedstrijdtijd"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "Shuffle teams"
-msgstr ""
+msgstr "Meng teams"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "Server quick menu"
@@ -576,7 +576,7 @@ msgstr "Server snelmenu als standaard"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "Spectate a player"
-msgstr ""
+msgstr "Bekijk een speler"
 
 #. TRANSLATORS: lap difference, e.g. "+2L" where L stands for lap(s).
 #: qcsrc/client/hud/panel/racetimer.qc:67

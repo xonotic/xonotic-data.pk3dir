@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -260,7 +260,7 @@ msgstr "Les équipes ne sont pas équilibrées !"
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #, c-format
 msgid "UNBALTEAMS^%s Press ^3%s%s to adjust"
-msgstr ""
+msgstr "%s Appuyez sur ^3%s%s pour ajuster"
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #: qcsrc/menu/xonotic/keybinder.qc:164
@@ -324,145 +324,145 @@ msgstr "Tchat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:841
 msgid "Send public message to"
-msgstr ""
+msgstr "Envoyer un message public à"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid ":-) / nice one"
-msgstr ""
+msgstr ":-) / joli"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "good game"
-msgstr ""
+msgstr "belle partie"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "salut / bonne chance"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
-msgstr ""
+msgstr "salut / bonne chance et amusez-vous bien"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Send in English"
-msgstr ""
+msgstr "Envoyer en anglais"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "Team chat"
-msgstr ""
+msgstr "Tchat d'équipe"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "strength soon"
-msgstr ""
+msgstr "bientôt le bonus de Force"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "objet disponible %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item, icon"
-msgstr ""
+msgstr "objet disponible, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item (l:%l^7)"
-msgstr ""
+msgstr "pris l'objet (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item, icon"
-msgstr ""
+msgstr "pris l'objet, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "negative"
-msgstr ""
+msgstr "négatif"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:856
 msgid "positive"
-msgstr ""
+msgstr "affirmatif"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "besoin d'aide (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:857
 msgid "need help, icon"
-msgstr ""
+msgstr "besoin d'aide, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen (l:%y^7)"
-msgstr ""
+msgstr "ennemi aperçu (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:858
 msgid "enemy seen, icon"
-msgstr ""
+msgstr "ennemi aperçu, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen (l:%y^7)"
-msgstr ""
+msgstr "drapeau aperçu (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:859
 msgid "flag seen, icon"
-msgstr ""
+msgstr "drapeau aperçu, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "en défense (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:860
 msgid "defending, icon"
-msgstr ""
+msgstr "en défense, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "en itinérance (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:861
 msgid "roaming, icon"
-msgstr ""
+msgstr "en itinérance, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
-msgstr ""
+msgstr "en attaque (l:%l^7) (h:%h^7 a:%a^7 w:%w^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:862
 msgid "attacking, icon"
-msgstr ""
+msgstr "en attaque, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier (l:%y^7)"
-msgstr ""
+msgstr "éliminé le porteur de drapeau (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:863
 msgid "killed flagcarrier, icon"
-msgstr ""
+msgstr "éliminé le porteur de drapeau, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 #, c-format
 msgid "dropped flag (l:%d^7)"
-msgstr ""
+msgstr "lâché le drapeau (l:%d^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:864
 msgid "dropped flag, icon"
-msgstr ""
+msgstr "lâché le drapeau, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "drop weapon, icon"
-msgstr ""
+msgstr "lâché l'arme, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:865
 msgid "dropped weapon %w^7 (l:%l^7)"
-msgstr ""
+msgstr "lâché l'arme %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "drop flag/key, icon"
-msgstr ""
+msgstr "lâcher le drapeau / la clé, icône"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:866
 msgid "dropped flag/key %w^7 (l:%l^7)"
-msgstr ""
+msgstr "lâché le drapeau / la clé %w^7 (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:870
 msgid "Send private message to"
-msgstr ""
+msgstr "Envoyer un message privé à"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:872
 #: qcsrc/client/hud/panel/quickmenu.qc:901
@@ -474,7 +474,7 @@ msgstr "Paramètres"
 #: qcsrc/client/hud/panel/quickmenu.qc:873
 #: qcsrc/client/hud/panel/quickmenu.qc:880
 msgid "View/HUD settings"
-msgstr ""
+msgstr "Paramètres de vue/ATH"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:58
@@ -488,11 +488,11 @@ msgstr "Apparence des joueurs semblable à la mienne"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:876
 msgid "Names above players"
-msgstr ""
+msgstr "Noms au-dessus des joueurs"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:877
 msgid "Crosshair per weapon"
-msgstr ""
+msgstr "Réticule selon l'arme"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:878
 msgid "FPS"
@@ -500,12 +500,12 @@ msgstr "IPS"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:879
 msgid "Net graph"
-msgstr ""
+msgstr "Netgraphe"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:882
 #: qcsrc/client/hud/panel/quickmenu.qc:885
 msgid "Sound settings"
-msgstr ""
+msgstr "Paramètres sonores"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:883
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
@@ -519,24 +519,24 @@ msgstr "Sons du tchat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:889
 msgid "Change spectator camera"
-msgstr ""
+msgstr "Changer de caméra spectateur"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:893
 #: qcsrc/client/hud/panel/quickmenu.qc:897
 msgid "Observer camera"
-msgstr ""
+msgstr "Caméra libre"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:894
 msgid "Increase speed"
-msgstr ""
+msgstr "Augmenter la vitesse"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:895
 msgid "Decrease speed"
-msgstr ""
+msgstr "Réduire la vitesse"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:896
 msgid "Wall collision"
-msgstr ""
+msgstr "Collision avec les murs"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:900
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:32
@@ -546,27 +546,27 @@ msgstr "Plein écran"
 #: qcsrc/client/hud/panel/quickmenu.qc:903
 #: qcsrc/client/hud/panel/quickmenu.qc:913
 msgid "Call a vote"
-msgstr ""
+msgstr "Lancer un vote"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:904
 msgid "Restart the map"
-msgstr ""
+msgstr "Relancer la carte"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:905
 msgid "End match"
-msgstr ""
+msgstr "Terminer la partie"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:908
 msgid "Reduce match time"
-msgstr ""
+msgstr "Réduire la durée de jeu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:909
 msgid "Extend match time"
-msgstr ""
+msgstr "Étendre la durée de jeu"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:912
 msgid "Shuffle teams"
-msgstr ""
+msgstr "Mélanger les équipes"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:917
 msgid "Server quick menu"
@@ -586,7 +586,7 @@ msgstr "Menu rapide du serveur par défaut"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:930
 msgid "Spectate a player"
-msgstr ""
+msgstr "Observer un joueur"
 
 #. TRANSLATORS: lap difference, e.g. "+2L" where L stands for lap(s).
 #: qcsrc/client/hud/panel/racetimer.qc:67
@@ -648,7 +648,7 @@ msgstr "raté un point de contrôle"
 #: qcsrc/client/hud/panel/racetimer.qc:395
 #, c-format
 msgid "PENALTY: %.1f"
-msgstr ""
+msgstr "PÉNALITÉ : %.1f"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select spawn location"
@@ -756,7 +756,7 @@ msgstr "drap. élims"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Frames per second"
-msgstr ""
+msgstr "Images par seconde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^fps"
@@ -1453,12 +1453,12 @@ msgstr "par :"
 #: qcsrc/client/main.qc:1431
 #, c-format
 msgid "%d maximum"
-msgstr ""
+msgstr "%d maximum"
 
 #: qcsrc/client/main.qc:1433
 #, c-format
 msgid "INTERVAL^%d-%d"
-msgstr ""
+msgstr "%d-%d"
 
 #: qcsrc/client/main.qc:1434
 msgid "Number of players supported by this match:"
@@ -3863,7 +3863,7 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/midair/ui_midair.qh:6 qcsrc/common/util.qc:303
 msgid "Midair"
-msgstr "Midair"
+msgstr "En plein vol"
 
 #: qcsrc/common/mutators/mutator/nades/cl_nades.qc:76
 #: qcsrc/menu/xonotic/keybinder.qc:83
@@ -8131,7 +8131,7 @@ msgstr "Arène de mêlée uniquement"
 
 #: qcsrc/common/util.qc:307
 msgid "Weapons Stay"
-msgstr ""
+msgstr "Conservation des armes"
 
 #: qcsrc/common/util.qc:308
 msgid "Blood Loss"
@@ -14876,7 +14876,7 @@ msgstr "Armes standard"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:214
 msgid "Extended weapons (includes New Toys)"
-msgstr ""
+msgstr "Armes étendues (incluent les « Nouveaux jouets »)"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:218
 msgid "Custom weapons"
@@ -14900,6 +14900,8 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so can only slap "
 "other players."
 msgstr ""
+"Les joueurs apparaissent sans munitions ni armes, à l'exception du %s ; ils "
+"peuvent donc seulement frapper les autres joueurs."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
@@ -14913,7 +14915,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:308
 msgid "Weapons stay on the map after they are picked up."
-msgstr ""
+msgstr "Les armes restent sur la carte une fois qu'elles ont été ramassées."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:343
 msgid "Consume ammo"
@@ -14940,11 +14942,12 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:404
 msgid "Midair jumps:"
-msgstr ""
+msgstr "Sauts dans les airs :"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:406
 msgid "How many times players can jump while midair"
 msgstr ""
+"Nombre de sauts que les joueurs peuvent réaliser lorsqu'ils sont en l'air"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:407
 msgid "Infinite"
@@ -14952,20 +14955,22 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:412
 msgid "Additive velocity"
-msgstr ""
+msgstr "Vitesse additive"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:413
 msgid ""
 "Add on, rather than set, their vertical velocity each time the player jumps"
 msgstr ""
+"Augmenter, plutôt que de la définir, la vitesse verticale à chaque fois que "
+"le joueur saute"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:418
 msgid "Jump away from walls when running alongside them"
-msgstr ""
+msgstr "S'éloigner des murs d'un bond lorsque vous courez le long de ceux-ci"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:421
 msgid "Delay between walljumps:"
-msgstr ""
+msgstr "Délai entre les sauts muraux :"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:428
 msgid "Double jumps"

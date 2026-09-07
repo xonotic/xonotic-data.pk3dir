@@ -308,19 +308,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:842
 msgid ":-) / nice one"
-msgstr ""
+msgstr ":-) / hebat"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:843
 msgid "good game"
-msgstr ""
+msgstr "terbaiklah"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck"
-msgstr ""
+msgstr "hai / semoga berjaya"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:844
 msgid "hi / good luck and have fun"
-msgstr ""
+msgstr "hai / semoga berjaya dan bergembiralah"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:846
 msgid "Send in English"
@@ -329,7 +329,7 @@ msgstr ""
 #: qcsrc/client/hud/panel/quickmenu.qc:851
 #: qcsrc/client/hud/panel/quickmenu.qc:867
 msgid "Team chat"
-msgstr ""
+msgstr "Sembang pasukan"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:852
 msgid "strength soon"
@@ -337,19 +337,19 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item %x^7 (l:%y^7)"
-msgstr ""
+msgstr "item percuma %x^7 (l:%y^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:853
 msgid "free item, icon"
-msgstr ""
+msgstr "item percuma, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item (l:%l^7)"
-msgstr ""
+msgstr "mengambil item (l:%l^7)"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:854
 msgid "took item, icon"
-msgstr ""
+msgstr "mengambil item, ikon"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:855
 msgid "negative"
