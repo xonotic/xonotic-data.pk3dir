@@ -396,12 +396,12 @@ void autobalance()
 	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		++active_player_count;
 	});
-	if (active_player_count < 3)
+	if (active_player_count < AVAILABLE_TEAMS)
 	{
-		bprint("You need at least 3 players to balance teams. Skipping autobalance.\n");
+		bprintf("You need at least %d players to balance teams. Skipping autobalance.\n", AVAILABLE_TEAMS);
 		return;
 	}
-	bprint("Attempting to Balance Teams by Skill...\n");
+	bprint("Attempting to balance teams by skill...\n");
 	url_single_fopen(autocvar_g_playerstats_balance_uri, FILE_WRITE, autobalance_handler, NULL);
 }
 
