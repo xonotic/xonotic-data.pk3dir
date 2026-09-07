@@ -267,7 +267,6 @@ void GameCommand_anticheat(int request, int argc)
 	}
 }
 
-
 /*
  * Handler for autobalance requests
  * Need to construct the plain/text body xonstat is expecting, it looks like this. 
@@ -275,7 +274,6 @@ void GameCommand_anticheat(int request, int argc)
  * see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
  *
  */
-
 void autobalance_handler(entity fh, entity p, float status)
 {
 	switch(status)
@@ -295,15 +293,12 @@ void autobalance_handler(entity fh, entity p, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
-
 			//fetch all the player info, construct the plain text body required for the xonstat /balance endpoint (each P entry)
 			FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
-
 				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); 
 				url_fputs(fh, sprintf("i %d\n", it.playerid));
 				url_fputs(fh, sprintf("n %s\n", it.netname));
 				url_fputs(fh, sprintf("t %d\n", it.team)); 
-
 				// we need to account for warmup, if players call autobalance during warmup where people are messing around, you could get inaccurate skill ratings and worse balance
 				// the 'e' entries in the body can be placed in any order, so handling the warmup logic for scoreboard-score and alivetime here. 
 				if(warmup_stage)
@@ -318,7 +313,6 @@ void autobalance_handler(entity fh, entity p, float status)
 					alivetime += max(0, time - it.alivetime_start);
 					url_fputs(fh, sprintf("e alivetime %g\n", alivetime));
 				}
-					
 				// this is required to satisfy the API contract, but is not used
 				url_fputs(fh, "e acc-blaster-cnt-fired 1\n"); 
 				url_fputs(fh, "e matches 1\n");
@@ -326,7 +320,6 @@ void autobalance_handler(entity fh, entity p, float status)
 				url_fputs(fh, "e joins 1\n");
 
 			});
-
 			url_fputs(fh, "\n"); //need this \n at the end or else validation will fail
 			url_fclose(fh);
 			break;
@@ -344,7 +337,6 @@ void autobalance_handler(entity fh, entity p, float status)
 				if (response_data != "")
 				{
 					response_data = strcat(response_data, "\n", s);
-
 					//if the current line starts with i, we need to track it, as the upcoming t entry will tell us which team player i needs to be assigned to
 					if (strstrofs(s, "i ", 0) == 0)
 					{
@@ -384,7 +376,6 @@ void autobalance_handler(entity fh, entity p, float status)
 			bprintf("Balancing completed successfully\n.");
 			break;
 		}
-
 		case URL_READY_ERROR:
 		default:
 		{
@@ -396,13 +387,11 @@ void autobalance_handler(entity fh, entity p, float status)
 
 void autobalance() 
 {
-
 	if (!teamplay)
 	{
 		bprint("Can't balance teams when currently not playing a team game.\n");
 		return;
 	}
-
 	// IS_PLAYER(it) || INGAME(it) handles the scenario where players are dead but still active in the game, like in clan arena where you are waiting to respawn. 
 	int active_player_count = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
@@ -413,8 +402,6 @@ void autobalance()
 		bprint("You need at least 3 players to balance teams. Skipping autobalance.\n");
 		return;
 	}
-	
-	
 	bprint("Attempting to Balance Teams by Skill...\n");
 	url_single_fopen(autocvar_g_playerstats_balance_uri, FILE_WRITE, autobalance_handler, NULL);
 }
@@ -437,7 +424,6 @@ void GameCommand_autobalance(int request, int argc)
 				autobalance();
 			return;
 		}
-
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -659,9 +645,6 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 		}
 	}
 }
-
-
-
 
 void GameCommand_cointoss(int request, int argc)
 {
@@ -1515,7 +1498,6 @@ void GameCommand_setbots(int request, int argc)
 		}
 	}
 }
-
 
 void shuffleteams()
 {
