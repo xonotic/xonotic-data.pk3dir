@@ -9,6 +9,7 @@
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
 #include <common/playerstats.qh>
+#include <common/stats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <server/anticheat.qh>
@@ -269,33 +270,34 @@ void GameCommand_anticheat(int request, int argc)
 
 /*
  Handler for autobalance requests
- Need to construct the plain/text body xonstat is expecting, it looks like this
- -- describes what the row is for, not included in actual payload
+ Need to construct the plain/text body xonstat is expecting, it looks like this. 
+ Some of these aren't needed for the balance endpoint logic, but need to be included to satisfy the api contract, in that place substituting dummy values.
+ -- describes what the row is for
 
-V 9                    -- version of the submission format
-R test                 --
-G tdm                  -- game mode being played, valid ones for /balance are tdm,ca,ctf,ft
-O Xonotic              -- 
-M testmap
-I 0.123456789
-S Test Server
-C 0
-U 26000
-D 100.000000
-Q team#5
-e scoreboard-score 0
-Q team#14
-e scoreboard-score 0
-P hashkey-of-player
-i 1
-n Alice
-t 5
-e scoreboard-score 30
-e acc-blaster-cnt-fired 1
-e alivetime 100
-e matches 1
-e scoreboardvalid 1
-e joins 1
+* V 9                       -- version of the submission format
+* R test                    -- release information on the server
+* G tdm                     -- game mode being played, valid ones for /balance are tdm,ca,ctf,ft
+* O Xonotic                 -- mod name (icon request) as in server browser
+* M testmap                 -- map name currently being played
+* I 0.123456789             -- match ID (see "matchid" in world.qc)
+S Test Server               -- "hostname" of the server
+C 0                         -- number of "unpure" cvar changes
+U 26000                     -- UDP port number of the server
+D 100.000000                -- duration of the match        
+Q team#5                    -- lists a team which is currently in the match, doesn't need to be there as teams can also be determined from the following entries
+e scoreboard-score 10       -- score for the team above
+Q team#14                   
+e scoreboard-score 30       
+P hashkey-of-player         -- player hash key
+i 1                         -- player id
+n Alice						-- player name	
+t 5							-- team id the player currently assigned to
+e scoreboard-score 30       -- xonstat needs this to update the skill rating based on current performance (useful for players who have stats disabled)
+e acc-blaster-cnt-fired 1   -- satisfy the api contract, not used for balancing
+e alivetime 100             -- xonstat needs this to update the skill rating based on current performance (useful for players who have stats disabled)
+e matches 1                 -- satisfy the api contract, not used for balancing
+e scoreboardvalid 1         -- satisfy the api contract, not used for balancing
+e joins 1                   -- satisfy the api contract, not used for balancing	
 ... repeat for each P (player)
 
 see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
@@ -308,45 +310,36 @@ void autobalance_handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			LOG_INFO("URL_READY_CANWRITE case");
-
-			//first , placing the top level information V, R, G, O, M, I, S, C, U, D, and each Q 
-			//TODO fetch the game / server level info to populate this properly
+		
 			url_fputs(fh, "V 9\n");
-			url_fputs(fh, "R test\n");
-			url_fputs(fh, sprintf("G %s\n", MapInfo_CurrentGametype().mdl));
-			url_fputs(fh, "O Xonotic\n");
-			url_fputs(fh, "M testmap\n");
-			url_fputs(fh, "I 0.123456789\n");
-			url_fputs(fh, "S Test Server\n");
-			url_fputs(fh, "C 0\n");
-			url_fputs(fh, "U 26000\n");
-			url_fputs(fh, "D 100.000000\n");
+			#ifdef WATERMARK
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
+			#endif
+			url_fputs(fh, sprintf("G %s\n", MapInfo_CurrentGametype().mdl)); 
+			url_fputs(fh, sprintf("O %s\n", modname));
+			url_fputs(fh, sprintf("M %s\n", GetMapname()));
+			url_fputs(fh, sprintf("I %s\n", matchid));
+			url_fputs(fh, sprintf("S %s\n", cvar_string("hostname")));
+			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
+			url_fputs(fh, sprintf("U %d\n", cvar("port")));
+			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
 
 			//fetch all the player info, construct the plain text body required for the xonstat /balance endpoint (each P entry)
 			FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
-				LOG_INFOF("client slot=%d entity=%d name='%s' classname='%s' team=%d flags=%d origin=%s playerid=%d",
-				i,
-				etof(it),
-				it.netname,
-				it.classname,
-				it.team,
-				it.flags,
-				vtos(it.origin),
-				it.playerid
-    			);
 
-				//append the P entry for this player
 				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); 
 				url_fputs(fh, sprintf("i %d\n", it.playerid));
 				url_fputs(fh, sprintf("n %s\n", it.netname));
 				url_fputs(fh, sprintf("t %d\n", it.team)); 
-				url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE))); //this can be used by xonstat to estimate the skill of players with stats disabled
+				url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE))); 
 				url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
-				url_fputs(fh, "e alivetime 100\n");
+				float alivetime = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0); 
+					alivetime += max(0, time - it.alivetime_start);
+				url_fputs(fh, sprintf("e alivetime %g\n", alivetime));
 				url_fputs(fh, "e matches 1\n");
 				url_fputs(fh, "e scoreboardvalid 1\n");
 				url_fputs(fh, "e joins 1\n");
+
 			});
 
 			url_fputs(fh, "\n"); //need this \n at the end or else validation will fail
@@ -356,7 +349,6 @@ void autobalance_handler(entity fh, entity p, float status)
 
 		case URL_READY_CANREAD:
 		{
-			LOG_INFO("URL_READY_CANREAD case");
 			string response_data = "";
 			string team_rows = "";
 			string player_name = string_null;
@@ -406,7 +398,6 @@ void autobalance_handler(entity fh, entity p, float status)
 		}
 		case URL_READY_CLOSED:
 		{
-			LOG_INFO("URL_READY_CLOSED");
 			bprint("Belugas Assembled\n");
 			return;
 		}
@@ -414,7 +405,6 @@ void autobalance_handler(entity fh, entity p, float status)
 		case URL_READY_ERROR:
 		default:
 		{
-			LOG_INFO("Receiving balance data failed: ", ftos(status));
 			bprint("Failed to autobalance teams: status code from xonstat API is ", ftos(status), "\n");
 			break;
 		}
@@ -454,12 +444,10 @@ void GameCommand_autobalance(int request, int argc)
 			if (!world_initialized)
 			{
 				LOG_HELPF("This command works only when the server is running.");
-				return;
 			}
-			if (autobalance_on_reset_map)
+			else if (autobalance_on_reset_map)
 			{
 				bprint("Players will be balanced by skill when this round is over.\n");
-				autobalance_on_reset_map = true;
 			}
 			else
 				autobalance();
