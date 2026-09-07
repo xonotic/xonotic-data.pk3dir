@@ -348,12 +348,11 @@ void autobalance_handler(entity fh, entity p, float status)
 					}
 					else if (strstrofs(s, "t ", 0) == 0)
 					{
-						int team_number = stoi(substring(s, 2, -1));
-						player_team = team_number;
-						if (Team_IsValidTeam(team_number))
+						player_team = stoi(substring(s, 2, -1));
+						if (Team_IsValidTeam(player_team))
 						{
 							FOREACH_CLIENT(it.playerid == current_player_id, {
-								MoveToTeam(it, Team_TeamToIndex(team_number), 6);
+								MoveToTeam(it, Team_TeamToIndex(player_team), 6);
 							});
 						}
 					}
@@ -379,7 +378,7 @@ void autobalance_handler(entity fh, entity p, float status)
 		case URL_READY_ERROR:
 		default:
 		{
-			bprint("Failed to autobalance teams: status code from xonstat API is ", ftos(status), "\n");
+			bprint("Failed to autobalance teams: status code from XonStat API is ", ftos(status), "\n");
 			break;
 		}
 	}
