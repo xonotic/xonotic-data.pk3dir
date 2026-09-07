@@ -396,9 +396,10 @@ void autobalance()
 	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		++active_player_count;
 	});
-	if (active_player_count <= AVAILABLE_TEAMS + 1)
+	// for 2 teams, we need 3 players at least, 3 teams, 4 players. 
+	if (active_player_count < AVAILABLE_TEAMS + 1)
 	{
-		bprintf("You need at least %d players to balance teams.\n", AVAILABLE_TEAMS);
+		bprintf("You need at least %d players to balance teams.\n", AVAILABLE_TEAMS + 1);
 		return;
 	}
 	bprint("Attempting to balance teams by skill...\n");
