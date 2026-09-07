@@ -2,7 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <common/gametypes/gametype/keepaway/cl_keepaway.qh>
 #include <common/mutators/base.qh>
 

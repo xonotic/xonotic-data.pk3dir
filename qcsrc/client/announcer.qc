@@ -2,7 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/centerprint.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/mutators/_mod.qh>
 #include <common/notifications/all.qh>
 #include <common/stats.qh>

@@ -2,14 +2,13 @@
 
 // ==============================================
 //  CSQC client commands code, written by Samual
-//  Last updated: December 28th, 2011
 // ==============================================
 
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/radar.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/hud/panel/vote.qh>
 #include <client/mutators/_mod.qh>
 #include <client/view.qh>
