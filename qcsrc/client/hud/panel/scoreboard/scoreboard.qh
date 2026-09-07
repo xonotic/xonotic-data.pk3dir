@@ -1,11 +1,19 @@
 #pragma once
-#include <client/hud/panel.qh>
 
-bool autocvar_cl_deathscoreboard;
-float autocvar_cl_deathscoreboard_delay = 1;
+#include "fields.qh"
+
+#include <client/hud/panel.qh>
+#include <common/scores.qh>
+#include <common/teams.qh>
+
+
 string autocvar_scoreboard_columns;
-float autocvar_hud_panel_scoreboard_namesize = 15;
+
 int autocvar_hud_panel_scoreboard_hide_panels = 1;
+bool autocvar_hud_panel_scoreboard_minimal = false;
+float autocvar_hud_panel_scoreboard_namesize = 15;
+bool autocvar_hud_panel_scoreboard_scores_per_round;
+int autocvar_hud_panel_scoreboard_team_size_position = 0;
 
 string autocvar__nextmap;
 // no reason for get_nextmap to be a function for now
@@ -14,15 +22,71 @@ string autocvar__nextmap;
 
 bool sb_showscores; ///< set by +showscores engine command
 
+
+const string SCOREBOARD_BG_PATH = "gfx/scoreboard/scoreboard_bg";
+
+const int MAX_SBT_FIELDS = MAX_SCORE;
+
+PlayerScoreField sbt_field[MAX_SBT_FIELDS + 1];
+float sbt_field_size[MAX_SBT_FIELDS + 1];
+string sbt_field_title[MAX_SBT_FIELDS + 1];
+float sbt_field_title_condense_factor[MAX_SBT_FIELDS + 1];
+float sbt_field_title_width[MAX_SBT_FIELDS + 1];
+int sbt_num_fields;
+float sbt_field_title_maxwidth;
+float sbt_field_title_maxwidth_factor;
+
+float sbt_bg_alpha;
+float sbt_fg_alpha;
+float sbt_fg_alpha_self;
+bool sbt_highlight;
+float sbt_highlight_alpha;
+float sbt_highlight_alpha_self;
+float sbt_highlight_alpha_eliminated;
+
+vector sbt_field_rgb;
+// These are drawn overlapping
+const string sbt_field_icon_playercolor[3] = { "gfx/scoreboard/playercolor_base", "gfx/scoreboard/playercolor_shirt", "gfx/scoreboard/playercolor_pants" };
+vector sbt_field_icon_playercolor_rgb[3];
+int sbt_field_icon_playercolor_set;
+
+const int MAX_SBT_FIELD_ICON_EXTRA = 3;
+// These are drawn side-by-side, next to playercolor (if present),
+// filled in this order: player_ready, player_handicap, player_ignored
+string sbt_field_icon_extra[MAX_SBT_FIELD_ICON_EXTRA];
+vector sbt_field_icon_extra_rgb[MAX_SBT_FIELD_ICON_EXTRA];
+int sbt_field_icon_extra_set;
+
+const int MAX_SBT_FIELD_ICON_GAMETYPE = NUM_TEAMS; ///< Maximum number of gametype status icons that can be drawn, for any gametype
+// These are drawn in the name column, on the opposite side to the playercolor & icon
+string sbt_field_icon_gametype[MAX_SBT_FIELD_ICON_GAMETYPE];
+int sbt_field_icon_gametype_set;
+
+float sbt_fixcolumnwidth_len;
+float sbt_fixcolumnwidth_iconlen_playercolor;
+float sbt_fixcolumnwidth_iconlen_extra[MAX_SBT_FIELD_ICON_EXTRA];
+float sbt_fixcolumnwidth_iconlen_gametype[MAX_SBT_FIELD_ICON_GAMETYPE];
+float sbt_fixcolumnwidth_marginlen;
+
+
+int scoreboard_selected_panel;
+float scoreboard_selected_panel_time;
+entity scoreboard_selected_player;
+entity scoreboard_selected_team;
+int scoreboard_selected_columns_layout;
+
 bool scoreboard_active;
 float scoreboard_fade_alpha;
-float scoreboard_acc_fade_alpha;
-float scoreboard_itemstats_fade_alpha;
+
+float scoreboard_time;
+
+bool scoreboard_showscores_force;
 
 vector scoreboard_pos;
 vector scoreboard_size;
 vector scoreboard_bottom; ///< Bottom right scoreboard corner, changes as the scoreboard fades in/out
 float fixed_scoreboard_width;
+
 
 int numplayers;
 int ts_min; ///< minimum team size
@@ -30,7 +94,7 @@ int ts_max; ///< maximum team size
 
 .bool ignored; ///< player is ignored
 
-void Cmd_Scoreboard_SetFields(int argc);
+
 void Scoreboard_InitScores();
 void Scoreboard_UpdatePlayerTeams();
 void Scoreboard_UpdatePlayerPos(entity pl);
@@ -43,11 +107,6 @@ int scoreboard_ui_enabled;
 bool autocvar__scoreboard_team_selection;
 float HUD_Scoreboard_InputEvent(float bInputType, float nPrimary, float nSecondary);
 
-int scoreboard_selected_panel;
-float scoreboard_selected_panel_time;
-entity scoreboard_selected_player;
-entity scoreboard_selected_team;
-int scoreboard_selected_columns_layout;
 
 // start from 1
 const int SB_PANEL_FIRST       = 1;

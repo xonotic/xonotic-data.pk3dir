@@ -1,0 +1,6 @@
+#pragma once
+
+vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, bool draw_text);
+void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, int pl_number);
+vector Scoreboard_DrawOthers(vector item_pos, vector rgb, int this_team, entity excluded_pl, entity pl, int pl_number);
+vector Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size, bool is_header);
