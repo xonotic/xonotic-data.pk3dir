@@ -404,6 +404,7 @@ void autobalance()
 		return;
 	}
 
+	// IS_PLAYER(it) || INGAME(it) handles the scenario where players are dead but still active in the game, like in clan arena where you are waiting to respawn. 
 	int active_player_count = 0;
 	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
 		++active_player_count;
