@@ -5,8 +5,8 @@
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/centerprint.qh>
 #include <client/hud/panel/chat.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/hud/panel/quickmenu.qh>
-#include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
 #include <client/mutators/_mod.qh>
 #include <client/shownames.qh>

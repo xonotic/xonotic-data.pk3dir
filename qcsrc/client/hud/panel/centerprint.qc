@@ -1,7 +1,7 @@
 #include "centerprint.qh"
 
 #include <client/draw.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <common/notifications/all.qh>
 
 // CenterPrint (#16)

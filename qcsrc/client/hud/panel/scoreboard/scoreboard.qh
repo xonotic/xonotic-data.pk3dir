@@ -1,5 +1,5 @@
 #pragma once
-#include "../panel.qh"
+#include <client/hud/panel.qh>
 
 bool autocvar_cl_deathscoreboard;
 float autocvar_cl_deathscoreboard_delay = 1;

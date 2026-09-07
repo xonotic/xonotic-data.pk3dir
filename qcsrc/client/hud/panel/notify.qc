@@ -1,7 +1,7 @@
 #include "notify.qh"
 
 #include <client/draw.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/view.qh>
 
 // Notifications (#4)
