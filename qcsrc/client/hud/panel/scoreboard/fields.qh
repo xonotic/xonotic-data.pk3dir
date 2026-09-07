@@ -1,0 +1,21 @@
+#pragma once
+
+#include <common/scores.qh>
+
+bool autocvar_hud_panel_scoreboard_playerid = false;
+
+int sb_field_sizes_init;
+float max_namesize;
+float name_field_index;
+
+string TranslateScoresLabel(string label);
+
+void Cmd_Scoreboard_Help();
+void Cmd_Scoreboard_SetFields(int argc);
+
+string Scoreboard_AddPlayerId(string pl_name, entity pl);
+void Scoreboard_AddGametypeIcon(string icon);
+
+string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round);
+string Scoreboard_FixColumnWidth(int i, string str, bool init);
+void Scoreboard_InitFieldSizes(bool compress_more);
