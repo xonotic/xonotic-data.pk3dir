@@ -1,0 +1,6 @@
+#pragma once
+
+float scoreboard_acc_fade_alpha;
+float scoreboard_itemstats_fade_alpha;
+
+vector Scoreboard_AccuracyAndItemStats_Draw(vector pos, vector rgb, vector bg_size);
