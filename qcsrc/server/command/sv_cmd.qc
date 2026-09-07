@@ -269,39 +269,11 @@ void GameCommand_anticheat(int request, int argc)
 
 
 /*
- Handler for autobalance requests
- Need to construct the plain/text body xonstat is expecting, it looks like this. 
- Some of these aren't needed for the balance endpoint logic, but need to be included to satisfy the api contract, in that place substituting dummy values.
- -- describes what the row is for
-
-* V 9                       -- version of the submission format
-* R test                    -- release information on the server
-* G tdm                     -- game mode being played, valid ones for /balance are tdm,ca,ctf,ft
-* O Xonotic                 -- mod name (icon request) as in server browser
-* M testmap                 -- map name currently being played
-* I 0.123456789             -- match ID (see "matchid" in world.qc)
-S Test Server               -- "hostname" of the server
-C 0                         -- number of "unpure" cvar changes
-U 26000                     -- UDP port number of the server
-D 100.000000                -- duration of the match        
-Q team#5                    -- lists a team which is currently in the match, doesn't need to be there as teams can also be determined from the following entries
-e scoreboard-score 10       -- score for the team above
-Q team#14                   
-e scoreboard-score 30       
-P hashkey-of-player         -- player hash key
-i 1                         -- player id
-n Alice						-- player name	
-t 5							-- team id the player currently assigned to
-e scoreboard-score 30       -- xonstat needs this to update the skill rating based on current performance (useful for players who have stats disabled)
-e acc-blaster-cnt-fired 1   -- satisfy the api contract, not used for balancing
-e alivetime 100             -- xonstat needs this to update the skill rating based on current performance (useful for players who have stats disabled)
-e matches 1                 -- satisfy the api contract, not used for balancing
-e scoreboardvalid 1         -- satisfy the api contract, not used for balancing
-e joins 1                   -- satisfy the api contract, not used for balancing	
-... repeat for each P (player)
-
-see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
-
+ * Handler for autobalance requests
+ * Need to construct the plain/text body xonstat is expecting, it looks like this. 
+ * Some of these aren't needed for the balance endpoint logic, but need to be included to satisfy the api contract, in that place substituting dummy values.
+ * see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
+ *
  */
 
 void autobalance_handler(entity fh, entity p, float status)
@@ -391,7 +363,6 @@ void autobalance_handler(entity fh, entity p, float status)
 				else
 					response_data = s;
 			}
-			LOG_INFO("Received player stats data: ", response_data);
 			bprint("Team Assignments and Xonstat Skill Ratings:\n", team_rows);
 			url_fclose(fh);
 			break;
