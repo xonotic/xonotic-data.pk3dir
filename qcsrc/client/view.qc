@@ -4,8 +4,8 @@
 #include <client/csqcmodel_hooks.qh>
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/hud/panel/quickmenu.qh>
-#include <client/hud/panel/scoreboard.qh>
 #include <client/mutators/_mod.qh>
 #include <client/shownames.qh>
 #include <common/anim.qh>

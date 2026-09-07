@@ -1,6 +1,7 @@
 #include "infomessages.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh> // for Scoreboard_UpdatePlayerTeams()
 #include <common/ent_cs.qh>
 
 // Info messages (#14)

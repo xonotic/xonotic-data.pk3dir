@@ -1,7 +1,7 @@
 #include "crosshair.qh"
 
 #include <client/draw.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/view.qh>
 #include <common/deathtypes/all.qh>
 #include <common/ent_cs.qh>
