@@ -287,7 +287,7 @@ void autobalance_handler(entity fh, entity p, float status)
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 			#endif
-			url_fputs(fh, sprintf("G %s\n", MapInfo_CurrentGametype().mdl)); 
+			url_fputs(fh, sprintf("G %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype()))); 
 			url_fputs(fh, sprintf("O %s\n", modname));
 			url_fputs(fh, sprintf("M %s\n", GetMapname()));
 			url_fputs(fh, sprintf("I %s\n", matchid));
