@@ -270,10 +270,12 @@ void GameCommand_anticheat(int request, int argc)
 /*
  Handler for autobalance requests
  Need to construct the plain/text body xonstat is expecting, it looks like this
-V 9   
-R test
-G tdm
-O Xonotic
+ -- describes what the row is for, not included in actual payload
+
+V 9                    -- version of the submission format
+R test                 --
+G tdm                  -- game mode being played, valid ones for /balance are tdm,ca,ctf,ft
+O Xonotic              -- 
 M testmap
 I 0.123456789
 S Test Server
@@ -335,11 +337,11 @@ void autobalance_handler(entity fh, entity p, float status)
     			);
 
 				//append the P entry for this player
-				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); //the hashkey
+				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); 
 				url_fputs(fh, sprintf("i %d\n", it.playerid));
 				url_fputs(fh, sprintf("n %s\n", it.netname));
 				url_fputs(fh, sprintf("t %d\n", it.team)); 
-				url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE)));
+				url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE))); //this can be used by xonstat to estimate the skill of players with stats disabled
 				url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
 				url_fputs(fh, "e alivetime 100\n");
 				url_fputs(fh, "e matches 1\n");
@@ -398,14 +400,14 @@ void autobalance_handler(entity fh, entity p, float status)
 					response_data = s;
 			}
 			LOG_INFO("Received player stats data: ", response_data);
-			bprint("Team assignments and Elo:\n", team_rows);
+			bprint("Team Assignments and Xonstat Skill Ratings:\n", team_rows);
 			url_fclose(fh);
 			break;
 		}
 		case URL_READY_CLOSED:
 		{
 			LOG_INFO("URL_READY_CLOSED");
-			bprint("Successfully autobalanced teams.\n");
+			bprint("Belugas Assembled\n");
 			return;
 		}
 
@@ -419,19 +421,28 @@ void autobalance_handler(entity fh, entity p, float status)
 	}
 }
 
-void autobalance() {
+void autobalance() 
+{
 
 	if (!teamplay)
 	{
-		LOG_INFO("Can't balance teams when currently not playing a team game.");
+		bprint("Can't balance teams when currently not playing a team game.\n");
 		return;
 	}
 
-	bprint("balancing teams by skill...\n");
-	// make a POST request to https://stats.xonotic.org/balance to get the team assignments
-    string balance_url = "https://stats.xonotic.org/balance";
-	url_single_fopen(balance_url, FILE_WRITE, autobalance_handler, NULL);
-	return;
+	int active_player_count = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
+		++active_player_count;
+	});
+	if (active_player_count < 3)
+	{
+		bprint("You need at least 3 players to balance teams. Skipping autobalance.\n");
+		return;
+	}
+	
+	
+	bprint("Attempting to Balance Teams by Skill...\n");
+	url_single_fopen(autocvar_g_playerstats_balance_uri, FILE_WRITE, autobalance_handler, NULL);
 }
 
 void GameCommand_autobalance(int request, int argc)
