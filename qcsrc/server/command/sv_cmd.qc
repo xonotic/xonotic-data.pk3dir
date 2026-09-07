@@ -358,7 +358,6 @@ void autobalance_handler(entity fh, entity p, float status)
 					{
 						int team_number = stof(substring(s, 2, -1));
 						player_team = team_number;
-						LOG_INFOF("Player %d should be assigned to team: %d", current_player_id, team_number);
 						if (Team_IsValidTeam(team_number))
 						{
 							FOREACH_CLIENT(it.playerid == current_player_id, {
