@@ -60,6 +60,8 @@ bool PlayerStats_GameReport_DelayMapVote;
 
 void PlayerStats_GameReport_Reset_All();
 
+string PlayerStats_GetGametype();
+
 // call at initialization
 void PlayerStats_GameReport_Init();
 
