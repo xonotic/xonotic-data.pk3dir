@@ -391,9 +391,9 @@ void autobalance()
 		bprint("Can't balance teams when currently not playing a team game.\n");
 		return;
 	}
-	// IS_PLAYER(it) || INGAME(it) handles the scenario where players are dead but still active in the game, like in clan arena where you are waiting to respawn. 
+	// We want all players in the game, even if they are dead and waiting to respawn (for example in clan arena), but not bots.
 	int active_player_count = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
+	FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
 		++active_player_count;
 	});
 	// for 2 teams, we need 3 players at least, 3 teams, 4 players. 
