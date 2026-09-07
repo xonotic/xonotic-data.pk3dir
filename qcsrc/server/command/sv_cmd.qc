@@ -303,8 +303,8 @@ void autobalance_handler(entity fh, entity p, float status)
 				// the 'e' entries in the body can be placed in any order, so handling the warmup logic for scoreboard-score and alivetime here. 
 				if(warmup_stage)
 				{
-					url_fputs(fh, "e scoreboard-score 0\n"); 
-					url_fputs(fh, "e alivetime 0\n");
+					url_fputs(fh, "e scoreboard-score 0 \n"); 
+					url_fputs(fh, "e alivetime 0 \n");
 				}
 				else 
 				{
