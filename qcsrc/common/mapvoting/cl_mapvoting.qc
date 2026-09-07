@@ -4,7 +4,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/_mod.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <common/util.qh>
 
 // MapVote (#21)
