@@ -329,7 +329,7 @@ void autobalance_handler(entity fh, entity p, float status)
 
 			url_fputs(fh, "\n"); //need this \n at the end or else validation will fail
 			url_fclose(fh);
-			return;
+			break;
 		}
 
 		case URL_READY_CANREAD:
@@ -356,7 +356,7 @@ void autobalance_handler(entity fh, entity p, float status)
 					}
 					else if (strstrofs(s, "t ", 0) == 0)
 					{
-						int team_number = stof(substring(s, 2, -1));
+						int team_number = stoi(substring(s, 2, -1));
 						player_team = team_number;
 						if (Team_IsValidTeam(team_number))
 						{
@@ -375,14 +375,14 @@ void autobalance_handler(entity fh, entity p, float status)
 				else
 					response_data = s;
 			}
-			bprint("Team Assignments and Xonstat Skill Ratings:\n", team_rows);
+			bprint("Team assignments and skill ratings:\n", team_rows);
 			url_fclose(fh);
 			break;
 		}
 		case URL_READY_CLOSED:
 		{
-			bprint("Belugas Assembled\n");
-			return;
+			bprintf("Balancing completed successfully\n.");
+			break;
 		}
 
 		case URL_READY_ERROR:
