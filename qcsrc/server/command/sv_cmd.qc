@@ -303,11 +303,24 @@ void autobalance_handler(entity fh, entity p, float status)
 				url_fputs(fh, sprintf("i %d\n", it.playerid));
 				url_fputs(fh, sprintf("n %s\n", it.netname));
 				url_fputs(fh, sprintf("t %d\n", it.team)); 
-				url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE))); 
-				url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
-				float alivetime = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0); 
+
+				// we need to account for warmup, if players call autobalance during warmup where people are messing around, you could get inaccurate skill ratings and worse balance
+				// the 'e' entries in the body can be placed in any order, so handling the warmup logic for scoreboard-score and alivetime here. 
+				if(warmup_stage)
+				{
+					url_fputs(fh, sprintf("e scoreboard-score %g\n", 0)); 
+					url_fputs(fh, sprintf("e alivetime %g\n", 0));
+				}
+				else 
+				{
+					url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE))); 
+					float alivetime = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0); 
 					alivetime += max(0, time - it.alivetime_start);
-				url_fputs(fh, sprintf("e alivetime %g\n", alivetime));
+					url_fputs(fh, sprintf("e alivetime %g\n", alivetime));
+				}
+					
+				// this is required to satisfy the API contract, but is not used
+				url_fputs(fh, "e acc-blaster-cnt-fired 1\n"); 
 				url_fputs(fh, "e matches 1\n");
 				url_fputs(fh, "e scoreboardvalid 1\n");
 				url_fputs(fh, "e joins 1\n");
