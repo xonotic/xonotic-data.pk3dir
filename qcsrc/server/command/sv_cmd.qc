@@ -399,13 +399,18 @@ void autobalance()
 		++active_player_count;
 	});
 	// for 2 teams, we need 3 players at least, 3 teams, 4 players. 
-	if (active_player_count < 0)
+	if (active_player_count < AVAILABLE_TEAMS + 1)
 	{
 		bprintf("You need at least %d players to balance teams.\n", AVAILABLE_TEAMS + 1);
 		return;
 	}
 	bprint("Attempting to balance teams by skill...\n");
-	url_single_fopen(autocvar_g_playerstats_balance_uri, FILE_WRITE, autobalance_handler, NULL);
+	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&cardinality=%d&stability=%d"
+		, autocvar_g_playerstats_balance_uri
+		, autocvar_g_playerstats_balance_scorefactor
+		, autocvar_g_playerstats_balance_cardinality
+		, autocvar_g_playerstats_balance_stability);
+	url_single_fopen(balance_uri_with_query_params, FILE_WRITE, autobalance_handler, NULL);
 }
 
 void GameCommand_autobalance(int request, int argc)
