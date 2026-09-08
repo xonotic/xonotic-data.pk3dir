@@ -294,7 +294,7 @@ void autobalance_handler(entity fh, entity p, float status)
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
 			//fetch all the player info, construct the plain text body required for the xonstat /balance endpoint (each P entry)
-			FOREACH_CLIENT(IS_PLAYER(it) || INGAME(it), {
+			FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
 				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); 
 				url_fputs(fh, sprintf("i %d\n", it.playerid));
 				url_fputs(fh, sprintf("n %s\n", it.netname));
@@ -303,7 +303,9 @@ void autobalance_handler(entity fh, entity p, float status)
 				// the 'e' entries in the body can be placed in any order, so handling the warmup logic for scoreboard-score and alivetime here. 
 				if(warmup_stage)
 				{
-					url_fputs(fh, sprintf("e scoreboard-score %g\n", 0)); 
+					// The API is expecting a positive value for scoreboard-score or fails validation, so setting it to 1 since alivetime can be safely set to 0
+					// alivetime and scoreboard-score are used to calculate score per second which influences the skill rating
+					url_fputs(fh, sprintf("e scoreboard-score %g\n", 1)); 
 					url_fputs(fh, sprintf("e alivetime %g\n", 0));
 				}
 				else 
@@ -397,7 +399,7 @@ void autobalance()
 		++active_player_count;
 	});
 	// for 2 teams, we need 3 players at least, 3 teams, 4 players. 
-	if (active_player_count < AVAILABLE_TEAMS + 1)
+	if (active_player_count < 0)
 	{
 		bprintf("You need at least %d players to balance teams.\n", AVAILABLE_TEAMS + 1);
 		return;
