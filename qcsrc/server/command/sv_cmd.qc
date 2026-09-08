@@ -305,8 +305,8 @@ void autobalance_handler(entity fh, entity p, float status)
 				{
 					// The API is expecting a positive value for scoreboard-score or fails validation, so setting it to 1 since alivetime can be safely set to 0
 					// alivetime and scoreboard-score are used to calculate score per second which influences the skill rating
-					url_fputs(fh, sprintf("e scoreboard-score %g\n", 1)); 
-					url_fputs(fh, sprintf("e alivetime %g\n", 0));
+					url_fputs(fh, "e scoreboard-score 1\n"); 
+					url_fputs(fh, "e alivetime 0\n");
 				}
 				else 
 				{
