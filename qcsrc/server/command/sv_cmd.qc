@@ -410,11 +410,11 @@ void autobalance()
 		return;
 	}
 	bprint("Attempting to balance teams by skill...\n");
-	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&cardinality=%d&stability=%d"
-		, autocvar_g_playerstats_balance_uri
-		, autocvar_g_playerstats_balance_scorefactor
-		, autocvar_g_playerstats_balance_cardinality
-		, autocvar_g_playerstats_balance_stability);
+	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&cardinality=%d&stability=%d",
+		autocvar_g_playerstats_balance_uri,
+		autocvar_g_playerstats_balance_scorefactor,
+		autocvar_g_playerstats_balance_cardinality,
+		autocvar_g_playerstats_balance_stability);
 	url_single_fopen(balance_uri_with_query_params, FILE_WRITE, autobalance_handler, NULL);
 }
 
