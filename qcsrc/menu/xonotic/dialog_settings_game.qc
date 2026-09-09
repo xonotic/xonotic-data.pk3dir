@@ -1,24 +1,26 @@
 #include "dialog_settings_game.qh"
 
-METHOD(SettingSource, getEntry, entity(entity me, int i, void(string name, string icon) returns))
+// NOTE: file format similar to dialog_settings_videoeffects.qc, please keep in sync
+
+METHOD(GameSettingsSource, getEntry, entity(entity me, int i, void(string name, string icon) returns))
 {
-	Lazy l = REGISTRY_GET(Settings, i);
+	Lazy l = REGISTRY_GET(GameSettings, i);
 	entity it = l.m_get();
 	if (returns)
 		returns(it.title, string_null);
 	return it;
 }
-METHOD(SettingSource, getEntryTooltip, entity(entity me, int i, void(string theTooltip) returns))
+METHOD(GameSettingsSource, getEntryTooltip, entity(entity me, int i, void(string theTooltip) returns))
 {
-	Lazy l = REGISTRY_GET(Settings, i);
+	Lazy l = REGISTRY_GET(GameSettings, i);
 	entity it = l.m_get();
 	if (returns)
 		returns(it.titleTooltip);
 	return it;
 }
-METHOD(SettingSource, reload, int(entity me, string filter))
+METHOD(GameSettingsSource, reload, int(entity me, string filter))
 {
-	return REGISTRY_COUNT(Settings);
+	return REGISTRY_COUNT(GameSettings);
 }
 
 entity makeXonoticGameSettingsTab()
