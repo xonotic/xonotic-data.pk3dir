@@ -374,7 +374,7 @@ void balanceteams_handler(entity fh, entity p, float status)
 		}
 		case URL_READY_CLOSED:
 		{
-			bprintf("Balancing completed successfully\n.");
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
 			break;
 		}
 		case URL_READY_ERROR:
