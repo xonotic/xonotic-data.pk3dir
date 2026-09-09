@@ -67,7 +67,6 @@
 #include <menu/xonotic/dialog_settings.qh>
 #include <menu/xonotic/dialog_settings_audio.qh>
 #include <menu/xonotic/dialog_settings_bindings_reset.qh>
-#include <menu/xonotic/dialog_settings_effects.qh>
 #include <menu/xonotic/dialog_settings_game.qh>
 #include <menu/xonotic/dialog_settings_game_crosshair.qh>
 #include <menu/xonotic/dialog_settings_game_hud.qh>
@@ -76,6 +75,12 @@
 #include <menu/xonotic/dialog_settings_game_model.qh>
 #include <menu/xonotic/dialog_settings_game_view.qh>
 #include <menu/xonotic/dialog_settings_game_weapons.qh>
+#include <menu/xonotic/dialog_settings_graphics.qh>
+#include <menu/xonotic/dialog_settings_graphics_dynamic.qh>
+#include <menu/xonotic/dialog_settings_graphics_lighting.qh>
+#include <menu/xonotic/dialog_settings_graphics_rendering.qh>
+#include <menu/xonotic/dialog_settings_graphics_static.qh>
+#include <menu/xonotic/dialog_settings_graphics_video.qh>
 #include <menu/xonotic/dialog_settings_input.qh>
 #include <menu/xonotic/dialog_settings_input_userbind.qh>
 #include <menu/xonotic/dialog_settings_misc.qh>
@@ -83,7 +88,6 @@
 #include <menu/xonotic/dialog_settings_misc_reset.qh>
 #include <menu/xonotic/dialog_settings_user.qh>
 #include <menu/xonotic/dialog_settings_user_languagewarning.qh>
-#include <menu/xonotic/dialog_settings_video.qh>
 #include <menu/xonotic/dialog_singleplayer.qh>
 #include <menu/xonotic/dialog_singleplayer_winner.qh>
 #include <menu/xonotic/dialog_teamselect.qh>

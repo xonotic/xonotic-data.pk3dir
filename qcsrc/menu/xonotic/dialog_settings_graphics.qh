@@ -1,0 +1,51 @@
+#pragma once
+
+#include "topictab.qh"
+
+void GraphicsSettings_addPresetButtons(entity me, entity apply_button);
+
+// NOTE: file format similar to dialog_settings_game.qh, please keep in sync
+
+#include "dialog_settings_graphics_dynamic.qh"
+#include "dialog_settings_graphics_lighting.qh"
+#include "dialog_settings_graphics_rendering.qh"
+#include "dialog_settings_graphics_static.qh"
+#include "dialog_settings_graphics_video.qh"
+
+REGISTRY(GraphicsSettings, 5)
+REGISTER_REGISTRY(GraphicsSettings)
+REGISTRY_DEFINE_GET(GraphicsSettings, NULL)
+#define REGISTER_GRAPHICS_SETTINGS(id, impl) TOPIC_REGISTER(GraphicsSettings, id, impl)
+
+REGISTER_GRAPHICS_SETTINGS(Video,       makeXonoticGraphicsVideoSettingsTab());
+REGISTER_GRAPHICS_SETTINGS(Rendering,   makeXonoticGraphicsRenderingSettingsTab());
+REGISTER_GRAPHICS_SETTINGS(Lighting,    makeXonoticGraphicsLightingSettingsTab());
+REGISTER_GRAPHICS_SETTINGS(Static,      makeXonoticGraphicsStaticSettingsTab());
+REGISTER_GRAPHICS_SETTINGS(Dynamic,     makeXonoticGraphicsDynamicSettingsTab());
+#undef REGISTER_GRAPHICS_SETTINGS
+
+CLASS(GraphicsSettingsSource, XonoticTopicTabSource)
+	METHOD(GraphicsSettingsSource, getEntry, entity(entity this, int i, void(string name, string icon) returns));
+	METHOD(GraphicsSettingsSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns));
+	METHOD(GraphicsSettingsSource, reload, int(entity this, string filter));
+ENDCLASS(GraphicsSettingsSource)
+
+CLASS(XonoticGraphicsSettingsList, XonoticTopicTabList)
+	ATTRIB(XonoticGraphicsSettingsList, alphaBG, float, 0);
+	ATTRIB(XonoticGraphicsSettingsList, rowsPerItem, float, 2);
+	ATTRIB(XonoticGraphicsSettingsList, source, DataSource, NEW(GraphicsSettingsSource));
+	INIT(XonoticGraphicsSettingsList)
+	{
+		this.configureXonoticListBox(this);
+		this.refilter(this);
+	}
+ENDCLASS(XonoticGraphicsSettingsList)
+
+CLASS(XonoticGraphicsSettingsTab, XonoticTopicTab)
+	ATTRIB(XonoticGraphicsSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGraphicsSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGraphicsSettingsTab, columns, float, 6.5);
+	ATTRIB(XonoticGraphicsSettingsTab, name, string, "videosettings");
+	ATTRIB(XonoticGraphicsSettingsTab, topicList, entity, NEW(XonoticGraphicsSettingsList));
+ENDCLASS(XonoticGraphicsSettingsTab)
+entity makeXonoticGraphicsSettingsTab();
