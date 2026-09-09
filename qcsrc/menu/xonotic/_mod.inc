@@ -73,11 +73,13 @@
 #include <menu/xonotic/dialog_settings_game_hudconfirm.qc>
 #include <menu/xonotic/dialog_settings_game_messages.qc>
 #include <menu/xonotic/dialog_settings_game_model.qc>
-#include <menu/xonotic/dialog_settings_game_view.qc>
+#include <menu/xonotic/dialog_settings_game_waypoints.qc>
 #include <menu/xonotic/dialog_settings_game_weapons.qc>
+#include <menu/xonotic/dialog_settings_game_zooming.qc>
 #include <menu/xonotic/dialog_settings_graphics.qc>
 #include <menu/xonotic/dialog_settings_graphics_dynamic.qc>
 #include <menu/xonotic/dialog_settings_graphics_lighting.qc>
+#include <menu/xonotic/dialog_settings_graphics_perspective.qc>
 #include <menu/xonotic/dialog_settings_graphics_rendering.qc>
 #include <menu/xonotic/dialog_settings_graphics_static.qc>
 #include <menu/xonotic/dialog_settings_graphics_video.qc>
