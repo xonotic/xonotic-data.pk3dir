@@ -236,7 +236,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Quality:")));
 			setDependent(e, "cl_particles", 1, 1);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 3.0, 0.25, "cl_particles_quality",
-			_("Multiplier for amount of particles. Less means less particles, which in turn gives for better performance")));
+			_("Multiplier for number of particles. Less means less particles, which in turn gives for better performance")));
 			e.formatString = _("%sx");
 			setDependent(e, "cl_particles", 1, 1);
 	me.TR(me);
