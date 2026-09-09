@@ -268,13 +268,13 @@ void GameCommand_anticheat(int request, int argc)
 }
 
 /*
- * Handler for autobalance requests
+ * Handler for balanceteams requests
  * Need to construct the plain/text body xonstat is expecting, it looks like this. 
  * Some of these aren't needed for the balance endpoint logic, but need to be included to satisfy the api contract, in that place substituting dummy values.
  * see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
  *
  */
-void autobalance_handler(entity fh, entity p, float status)
+void balanceteams_handler(entity fh, entity p, float status)
 {
 	switch(status)
 	{
@@ -299,7 +299,7 @@ void autobalance_handler(entity fh, entity p, float status)
 				url_fputs(fh, sprintf("i %d\n", it.playerid));
 				url_fputs(fh, sprintf("n %s\n", it.netname));
 				url_fputs(fh, sprintf("t %d\n", it.team)); 
-				// we need to account for warmup, if players call autobalance during warmup where people are messing around, you could get inaccurate skill ratings and worse balance
+				// we need to account for warmup, if players call balanceteams during warmup where people are messing around, you could get inaccurate skill ratings and worse balance
 				// the 'e' entries in the body can be placed in any order, so handling the warmup logic for scoreboard-score and alivetime here. 
 				if(warmup_stage)
 				{
@@ -380,13 +380,13 @@ void autobalance_handler(entity fh, entity p, float status)
 		case URL_READY_ERROR:
 		default:
 		{
-			bprint("Failed to autobalance teams: status code from XonStat API is ", ftos(status), "\n");
+			bprint("Failed to balanceteams teams: status code from XonStat API is ", ftos(status), "\n");
 			break;
 		}
 	}
 }
 
-void autobalance() 
+void balanceteams() 
 {
 	if (!teamplay)
 	{
@@ -415,10 +415,10 @@ void autobalance()
 		autocvar_g_playerstats_balance_scorefactor,
 		autocvar_g_playerstats_balance_cardinality,
 		autocvar_g_playerstats_balance_stability);
-	url_single_fopen(balance_uri_with_query_params, FILE_WRITE, autobalance_handler, NULL);
+	url_single_fopen(balance_uri_with_query_params, FILE_WRITE, balanceteams_handler, NULL);
 }
 
-void GameCommand_autobalance(int request, int argc)
+void GameCommand_balanceteams(int request, int argc)
 {
 	switch (request)
 	{
@@ -428,18 +428,18 @@ void GameCommand_autobalance(int request, int argc)
 			{
 				LOG_HELPF("This command works only when the server is running.");
 			}
-			else if (autobalance_on_reset_map)
+			else if (balanceteams_on_reset_map)
 			{
 				bprint("Players will be balanced by skill when this round is over.\n");
 			}
 			else
-				autobalance();
+				balanceteams();
 			return;
 		}
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			LOG_HELP("Usage:^3 sv_cmd autobalance");
+			LOG_HELP("Usage:^3 sv_cmd balanceteams");
 			LOG_HELP("  Balances teams by skill.");
 			return;
 		}
@@ -1955,7 +1955,7 @@ SERVER_COMMAND(allready, "Ends warmup and starts the match") { GameCommand_allre
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
 SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }
 SERVER_COMMAND(animbench, "Benchmark model animation (LAGS)") { GameCommand_animbench(request, arguments); }
-SERVER_COMMAND(autobalance, "Automatically balance teams by skill") { GameCommand_autobalance(request, arguments); }
+SERVER_COMMAND(balanceteams, "Automatically balance teams by skill") { GameCommand_balanceteams(request, arguments); }
 SERVER_COMMAND(bbox, "Print detailed information about world size") { GameCommand_bbox(request); }
 SERVER_COMMAND(bot_cmd, "Control and send commands to bots") { GameCommand_bot_cmd(request, arguments, command); }
 SERVER_COMMAND(cointoss, "Flip a virtual coin and give random result") { GameCommand_cointoss(request, arguments); }

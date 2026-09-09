@@ -365,10 +365,10 @@ void reset_map(bool is_fake_round_start)
 			round_handler_Reset(game_starttime);
 	}
 
-	if (autobalance_on_reset_map)
+	if (balanceteams_on_reset_map)
 	{
-		autobalance();
-		autobalance_on_reset_map = false;
+		balanceteams();
+		balanceteams_on_reset_map = false;
 	}
 
 	if (shuffleteams_on_reset_map)
