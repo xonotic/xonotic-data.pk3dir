@@ -404,6 +404,11 @@ void balanceteams()
 	FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
 		++active_player_count;
 	});
+	if(active_player_count <= 1)
+	{
+		bprint("You need more than 1 player to balance the teams.\n");
+		return;
+	}
 	// For convenience, just assign each player to a team as there is only one possible assignment which makes sense here.
 	// To justify calling the XonStat API, we would need 3 players for 2 teams, or 4 players for 3 teams. 
 	if (active_player_count <= AVAILABLE_TEAMS)
@@ -416,7 +421,7 @@ void balanceteams()
 				++current_open_team;
 			}
 		});
-		bprint("Assigning each player to their own team, no other balancing required.\n");
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
 		return;
 	}
 	// Perform this check after the previous one, since assigning each player an empty team is possible even with > 4 teams available, but don't call the XonStat API. 
