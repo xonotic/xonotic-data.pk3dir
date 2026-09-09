@@ -272,7 +272,6 @@ void GameCommand_anticheat(int request, int argc)
  * Need to construct the plain/text body xonstat is expecting, it looks like this. 
  * Some of these aren't needed for the balance endpoint logic, but need to be included to satisfy the api contract, in that place substituting dummy values.
  * see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
- *
  */
 void balanceteams_handler(entity fh, entity p, float status)
 {
@@ -409,6 +408,11 @@ void balanceteams()
 		bprint("You need more than 1 player to balance the teams.\n");
 		return;
 	}
+	if (AVAILABLE_TEAMS > 4)
+	{
+		bprint("XonStat does not support balancing with more than 4 teams.\n");
+		return;
+	}
 	// For convenience, just assign each player to a team as there is only one possible assignment which makes sense here.
 	// To justify calling the XonStat API, we would need 3 players for 2 teams, or 4 players for 3 teams. 
 	if (active_player_count <= AVAILABLE_TEAMS)
@@ -422,12 +426,6 @@ void balanceteams()
 			}
 		});
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
-		return;
-	}
-	// Perform this check after the previous one, since assigning each player an empty team is possible even with > 4 teams available, but don't call the XonStat API. 
-	if (AVAILABLE_TEAMS > 4)
-	{
-		bprint("XonStat does not support balancing with more than 4 teams.\n");
 		return;
 	}
 	bprint("Attempting to balance teams by skill...\n");
