@@ -399,11 +399,6 @@ void balanceteams()
 		bprint("Can't balance teams when currently not playing a team game.\n");
 		return;
 	}
-	if (AVAILABLE_TEAMS > 4)
-	{
-		bprint("XonStat does not support balancing with more than 4 teams.\n");
-		return;
-	}
 	// We want all players in the game, even if they are dead and waiting to respawn (for example in clan arena), but not bots.
 	int active_player_count = 0;
 	FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
@@ -422,6 +417,12 @@ void balanceteams()
 			}
 		});
 		bprint("Assigning each player to their own team, no other balancing required.\n");
+		return;
+	}
+	// Perform this check after the previous one, since assigning each player an empty team is possible even with > 4 teams available, but don't call the XonStat API. 
+	if (AVAILABLE_TEAMS > 4)
+	{
+		bprint("XonStat does not support balancing with more than 4 teams.\n");
 		return;
 	}
 	bprint("Attempting to balance teams by skill...\n");
