@@ -60,11 +60,14 @@ void XonoticGameWaypointsSettingsTab_fill(entity me)
 			setDependentNOT(e, "g_waypointsprite_alpha", 0);
 			setDependentAND(e, "cl_hidewaypoints", 0, 0);
 
-	//me.TR(me);
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Player Names")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players")));
+		me.TD(me, 1, 3/2, e = makeXonoticCheckBox(0, "hud_shownames", _("Show names above players")));
+		me.TD(me, 1, 3/2, e = makeXonoticCheckBox(0, "hud_shownames_status", _("Display health and armor")));
+			setDependentNOT(e, "hud_shownames_alpha", 0);
+			setDependentAND(e, "hud_shownames", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Opacity:")));
@@ -104,11 +107,6 @@ void XonoticGameWaypointsSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(25, 0, "hud_shownames_crosshairdistance", _("Only when near crosshair")));
-			setDependentNOT(e, "hud_shownames_alpha", 0);
-			setDependentAND(e, "hud_shownames", 1, 1);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "hud_shownames_status", _("Display health and armor")));
 			setDependentNOT(e, "hud_shownames_alpha", 0);
 			setDependentAND(e, "hud_shownames", 1, 1);
 }
