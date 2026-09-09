@@ -293,6 +293,12 @@ void balanceteams_handler(entity fh, entity p, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
+			// Add Q entries: this tells the XonStat API how many teams there are so that it doesn't guess based on the current team assignments.
+			// For example if there are teams Red: {1,2} , Blue: {3,4,5} , Yellow: {} and no Q entries are present then XonStat thinks only 2 teams exist.
+			for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
+			{
+				url_fputs(fh, sprintf("Q team#%d\n", Team_IndexToTeam(i)));
+			}
 			//fetch all the player info, construct the plain text body required for the xonstat /balance endpoint (each P entry)
 			FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
 				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); 
@@ -403,6 +409,20 @@ void balanceteams()
 	FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
 		++active_player_count;
 	});
+	// For convenience, just assign each player to a team as there is only one possible assignment which makes sense here.
+	if (active_player_count == AVAILABLE_TEAMS)
+	{
+		int current_open_team = 1;
+		FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
+			if(Team_IsValidTeam(current_open_team))
+			{
+				MoveToTeam(it, Team_TeamToIndex(current_open_team), 6);
+				++current_open_team;
+			}
+		});
+		bprint("Assigning each player to their own team, no other balancing required.\n");
+		return;
+	}
 	// for 2 teams, we need 3 players at least, 3 teams, 4 players. 
 	if (active_player_count < AVAILABLE_TEAMS + 1)
 	{
@@ -440,6 +460,7 @@ void GameCommand_balanceteams(int request, int argc)
 		case CMD_REQUEST_USAGE:
 		{
 			LOG_HELP("Usage:^3 sv_cmd balanceteams");
+			LOG_HELP("  No arguments required.");
 			LOG_HELP("  Balances teams by skill.");
 			return;
 		}
