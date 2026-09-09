@@ -1,0 +1,13 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticVideoEffectsPerspectiveSettingsTab, XonoticTab)
+	METHOD(XonoticVideoEffectsPerspectiveSettingsTab, fill, void(entity));
+	METHOD(XonoticVideoEffectsPerspectiveSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticVideoEffectsPerspectiveSettingsTab, title, string, _("Perspective"));
+	ATTRIB(XonoticVideoEffectsPerspectiveSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticVideoEffectsPerspectiveSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticVideoEffectsPerspectiveSettingsTab, columns, float, 5);
+ENDCLASS(XonoticVideoEffectsPerspectiveSettingsTab)
+entity makeXonoticVideoEffectsPerspectiveSettingsTab();
+
