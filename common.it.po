@@ -2270,7 +2270,7 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Onslaught"
-msgstr "Attacco (Onslaught)"
+msgstr "Assalto (Onslaught)"
 
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:110
 msgid "Personal best"

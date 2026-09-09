@@ -592,7 +592,7 @@ msgstr "Observer un joueur"
 #: qcsrc/client/hud/panel/racetimer.qc:67
 #, c-format
 msgid "LAP_DIFF^%+dL"
-msgstr ""
+msgstr "%+dT"
 
 #: qcsrc/client/hud/panel/racetimer.qc:68
 #: qcsrc/client/hud/panel/racetimer.qc:105
@@ -625,19 +625,19 @@ msgstr "Ligne d'arrivée"
 #: qcsrc/client/hud/panel/racetimer.qc:109
 #, c-format
 msgid "TIMEDIFF_PLAYER^%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:228
 #: qcsrc/client/hud/panel/racetimer.qc:284
 #, c-format
 msgid "SPEED^ %d%s"
-msgstr ""
+msgstr " %d%s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:232
 #: qcsrc/client/hud/panel/racetimer.qc:286
 #, c-format
 msgid "SPEED_DIFF^%+d%s"
-msgstr ""
+msgstr "%+d%s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:238 qcsrc/client/main.qc:1235
 msgid "missing a checkpoint"
@@ -1157,12 +1157,12 @@ msgstr "Spectateurs"
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "+%s %s"
-msgstr ""
+msgstr "+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2473
 msgid "SCO^points"
@@ -3206,13 +3206,15 @@ msgstr "Activer"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:24
 msgid "Bleed below health:"
-msgstr ""
+msgstr "Saigner sous le seuil de santé :"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:30
 msgid ""
 "Amount of health below which players start bleeding out (health rots and "
 "they can't jump)."
 msgstr ""
+"Niveau de santé en dessous duquel les joueurs commencent à se vider de leur "
+"sang (leur santé diminue progressivement et ils ne peuvent plus sauter)."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/ammo.qc:69
 #, c-format
@@ -5715,7 +5717,7 @@ msgstr "^BG%s^K1 a été trahi par ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:372
 #, c-format
 msgid "%s every %s"
-msgstr ""
+msgstr "%s toutes les %s"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
@@ -8131,11 +8133,11 @@ msgstr "Arène de mêlée uniquement"
 
 #: qcsrc/common/util.qc:307
 msgid "Weapons Stay"
-msgstr "Conservation des armes"
+msgstr "Armes persistantes"
 
 #: qcsrc/common/util.qc:308
 msgid "Blood Loss"
-msgstr ""
+msgstr "Hémorragie"
 
 #: qcsrc/common/util.qc:312
 msgid "No Powerups"
@@ -14892,7 +14894,7 @@ msgstr "Aucune arme au départ"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:258
 msgid "Melee only arena"
-msgstr ""
+msgstr "Arène de combat au corps à corps"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:259
 #, c-format
@@ -14908,10 +14910,12 @@ msgid ""
 "Players will be given a set of weapons on spawn along with unlimited ammo, "
 "without weapon pickups on the map."
 msgstr ""
+"Les joueurs disposent par défaut d'un ensemble d'armes ainsi que de "
+"munitions illimitées, sans qu'il y ait d'armes à ramasser sur la carte."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:300
 msgid "Enabled but pickups give no ammo"
-msgstr ""
+msgstr "Activé, mais n'augmente pas les munitions"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:308
 msgid "Weapons stay on the map after they are picked up."
@@ -14919,18 +14923,22 @@ msgstr "Les armes restent sur la carte une fois qu'elles ont été ramassées."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:343
 msgid "Consume ammo"
-msgstr ""
+msgstr "Consommer des munitions"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:348
 #, c-format
 msgid ""
 "Players spawn with an Offhand Blaster or Grappling Hook. Press %s to use it."
 msgstr ""
+"Les joueurs apparaissent avec le Blaster mains libres ou avec le Grappin. "
+"Appuyer sur la touche %s pour l'utiliser."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:374
 #, c-format
 msgid "Players spawn with the %s. Double-tap %s or press %s to use it."
 msgstr ""
+"Les joueurs apparaissent avec le %s. Appuyer deux fois sur %s or appuyer sur "
+"la touche %s pour l'utiliser."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:400
 msgid ""
@@ -14951,7 +14959,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:407
 msgid "Infinite"
-msgstr ""
+msgstr "Infinis"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:412
 msgid "Additive velocity"
@@ -14992,11 +15000,11 @@ msgstr "Faible gravité"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:445
 msgid "Global forces"
-msgstr ""
+msgstr "Forces globales"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:446
 msgid "Knockback experienced by any player affects all players"
-msgstr ""
+msgstr "Le recul subi par un joueur affecte tous les joueurs"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:451
 msgid "Various fun changes to physics and movement."
@@ -15009,7 +15017,7 @@ msgstr "Arène d'arme"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:43
 msgid "Weapons stay"
-msgstr "Les armes ne disparaissent pas"
+msgstr "Armes persistantes"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:53
 msgid "Offhand weapons"
