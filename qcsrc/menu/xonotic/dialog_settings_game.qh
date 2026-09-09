@@ -8,11 +8,12 @@
 #include "dialog_settings_game_crosshair.qh"
 #include "dialog_settings_game_messages.qh"
 #include "dialog_settings_game_model.qh"
+#include "dialog_settings_game_waypoints.qh"
 #include "dialog_settings_game_weapons.qh"
 #include "dialog_settings_game_zooming.qh"
 #include <common/mutators/mutator/damagetext/ui_damagetext.qh>
 
-REGISTRY(GameSettings, BITS(3))
+REGISTRY(GameSettings, 8)
 REGISTER_REGISTRY(GameSettings)
 REGISTRY_DEFINE_GET(GameSettings, NULL)
 #define REGISTER_GAME_SETTINGS(id, impl) TOPIC_REGISTER(GameSettings, id, impl)
@@ -20,10 +21,11 @@ REGISTRY_DEFINE_GET(GameSettings, NULL)
 REGISTER_GAME_SETTINGS(HUD,        makeXonoticGameHUDSettingsTab());
 REGISTER_GAME_SETTINGS(Crosshair,  makeXonoticGameCrosshairSettingsTab());
 REGISTER_GAME_SETTINGS(Weapons,    makeXonoticGameWeaponsSettingsTab());
+REGISTER_GAME_SETTINGS(Waypoints,  makeXonoticGameWaypointsSettingsTab());
+REGISTER_GAME_SETTINGS(damagetext, makeXonoticDamageTextSettingsTab());
 REGISTER_GAME_SETTINGS(Zooming,    makeXonoticGameZoomingSettingsTab());
 REGISTER_GAME_SETTINGS(Models,     makeXonoticGameModelSettingsTab());
 REGISTER_GAME_SETTINGS(Messages,   makeXonoticGameMessageSettingsTab());
-REGISTER_GAME_SETTINGS(damagetext, makeXonoticDamageTextSettingsTab());
 #undef REGISTER_GAME_SETTINGS
 
 CLASS(GameSettingsSource, XonoticTopicTabSource)
