@@ -116,7 +116,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 				setDependentAND(e, "vid_gl20", 1, 1);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_shadow_gloss", _("Gloss"),
-			_("Enable the use of glossmaps on textures supporting it")));
+			_("Enable the use of glossmaps on textures supporting them")));
 				setDependent(e, "mod_q3bsp_nolightmaps", 0, 0);
 				setDependentAND(e, "r_glsl_deluxemapping", 1, 1);
 			if(cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)

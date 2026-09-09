@@ -256,7 +256,7 @@ void XonoticMutatorWeaponArenaTab_fill(entity me)
 		me.TD(me, 1, 4 - 0.2, // ...
 #endif
 			e = makeXonoticRadioButton_T(1, "g_melee_only", "1", _("Melee only arena"),
-			sprintf(_("Players spawn with no ammo and no weapons except the %s, so can only slap other players."), UNCOLORED_NAME(WEP_SHOTGUN))));
+			sprintf(_("Players spawn with no ammo and no weapons except the %s, so they can only slap other players."), UNCOLORED_NAME(WEP_SHOTGUN))));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
