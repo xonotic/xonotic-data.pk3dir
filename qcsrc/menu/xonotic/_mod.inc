@@ -73,6 +73,7 @@
 #include <menu/xonotic/dialog_settings_game_hudconfirm.qc>
 #include <menu/xonotic/dialog_settings_game_messages.qc>
 #include <menu/xonotic/dialog_settings_game_model.qc>
+#include <menu/xonotic/dialog_settings_game_waypoints.qc>
 #include <menu/xonotic/dialog_settings_game_weapons.qc>
 #include <menu/xonotic/dialog_settings_game_zooming.qc>
 #include <menu/xonotic/dialog_settings_input.qc>
