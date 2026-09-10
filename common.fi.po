@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Antonio <piuntn@gmail.com>, 2026
 # Dr. Jaska <drjaska83@gmail.com>, 2020
 # Dr. Jaska <drjaska83@gmail.com>, 2020
 # heidi.wenger, 2022
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oftox, 2023\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2026\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -4105,7 +4106,7 @@ msgid ""
 "for close combat or sometimes medium range combat."
 msgstr ""
 "%s-vahinko laskee pian välimatkan kasvaessa, joten se on hyödyllinen vain "
-"lähitaistelussa tai joskus keskimatkan taistelussa.  "
+"lähitaistelussa tai joskus keskimatkan taistelussa."
 
 #: qcsrc/common/mutators/mutator/overkill/okshotgun.qh:28
 msgid "Overkill Shotgun"
@@ -13240,7 +13241,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:165
 msgid "MAXFPS^Unlimited"
-msgstr "MAXFPS^Rajaton "
+msgstr "MAXFPS^Rajaton"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:168
 msgid "Target:"

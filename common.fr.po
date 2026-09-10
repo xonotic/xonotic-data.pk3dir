@@ -479,7 +479,7 @@ msgstr "Paramètres de vue/ATH"
 #: qcsrc/client/hud/panel/quickmenu.qc:874
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:58
 msgid "3rd person perspective"
-msgstr "Vue à la 3è personne"
+msgstr "Vue à la 3e personne"
 
 #: qcsrc/client/hud/panel/quickmenu.qc:875
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:53
@@ -998,7 +998,7 @@ msgstr "prises"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:180
 msgid "Number of teamkills"
-msgstr "Nombre d'éliminations équipe"
+msgstr "Nombre d'éliminations de coéquipiers"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:180
 msgid "SCO^teamkills"
@@ -1633,7 +1633,7 @@ msgstr ""
 "%s est un type de partie en équipe courant où l'objectif est de voler un "
 "drapeau ennemi et de le ramener sur le vôtre pour le capturer. Un drapeau ne "
 "peut être capturé que si votre propre drapeau se trouve également dans sa "
-"base. Il est donc important de récupérer votre drapeau après qu'il ait été "
+"base. Il est donc important de récupérer votre drapeau après qu'il a été "
 "lâché."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:10
@@ -1965,7 +1965,7 @@ msgstr ""
 "desquelles une horde de monstres apparaît tout autour de la carte, les "
 "joueurs devant essayer d'en éliminer le plus possible. Comme les joueurs ne "
 "peuvent pas s'infliger mutuellement des dégâts, ils se battent alors pour "
-"éliminer les monstres aux dépends des autres. Le joueur qui élimine le plus "
+"éliminer les monstres aux dépens des autres. Le joueur qui élimine le plus "
 "de monstres remporte la partie."
 
 #: qcsrc/common/gametypes/gametype/invasion/invasion.qc:11
@@ -2019,7 +2019,7 @@ msgid ""
 "%s rewards good fragging but also good movement, since the better you can "
 "evade attacks, the longer you can keep the ball."
 msgstr ""
-"Les frags sont recompensés en %s, ainsi que les mouvements rusés, car mieux "
+"Les frags ainsi que les mouvements rusés sont récompensés en %s, car mieux "
 "vous savez esquiver les attaques, plus longtemps vous pouvez garder la balle."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qh:11
@@ -2478,7 +2478,7 @@ msgstr ""
 "%s est un type de partie en équipe basé sur %s, utilisant le même système de "
 "points. Il présente de nombreuses similitudes avec %s, l'une des principales "
 "différences étant que %s est un type de partie joué en plusieurs manches, "
-"sans oublier bien sûr les différences en terme de système de points."
+"sans oublier bien sûr les différences en termes de système de points."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -2752,11 +2752,11 @@ msgstr "Rejoindre"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:527
 msgid "Minigames"
-msgstr "Mini jeux"
+msgstr "Mini-jeux"
 
 #: qcsrc/common/minigames/cl_minigames_hud.qc:589
 msgid "Minigame message"
-msgstr "Message d'un mini jeu"
+msgstr "Message d'un mini-jeu"
 
 #: qcsrc/common/minigames/minigame/bd.qc:2
 msgid "Bulldozer"
@@ -3627,7 +3627,7 @@ msgid ""
 "while in contact with a wall, allowing quick speed gain if done repeatedly "
 "against a long wall."
 msgstr ""
-"%s est un mutateur qui rend possible des manœuvres d'esquive, permettant "
+"%s est un mutateur qui rend possibles des manœuvres d'esquive, permettant "
 "d'éviter plus facilement les attaques en combat rapproché. Lorsqu'il est "
 "activé, si vous êtes au sol et que vous appuyez deux fois sur une touche de "
 "déplacement, vous bondirez dans la direction correspondante. Cela fonctionne "
@@ -3830,7 +3830,7 @@ msgid ""
 msgstr ""
 "Les joueurs ne disposent que d'une seule arme, le %s, capable de tuer "
 "instantanément l'adversaire d'un seul tir. Si le joueur vient à manquer de "
-"munitions, il disposera de 10 secondes pour en trouver ; s'il n'y parvient "
+"munitions, il disposera de 10 secondes pour en trouver ; s'il n'y parvient "
 "pas, il mourra. Le tir secondaire n'inflige aucun dégât, mais permet "
 "d'effectuer des sauts acrobatiques."
 
@@ -4771,7 +4771,7 @@ msgstr "Explosion au toucher"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:19
 msgid "Damage:"
-msgstr "Blessures (vision brouillée quand vous êtes blessé) :"
+msgstr "Blessures (vision brouillée quand vous êtes blessé) :"
 
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qc:22
 msgid "Force:"
@@ -6013,14 +6013,14 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:443
 #, c-format
 msgid "^BG%s^F3 was kicked for excessive teamkilling"
-msgstr "^BG%s^F3 a été expulsé pour des éliminations équipe excessives"
+msgstr "^BG%s^F3 a été expulsé pour des éliminations de coéquipiers excessives"
 
 #: qcsrc/common/notifications/all.inc:444
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
 msgstr ""
 "^BG%s^F3 a été déplacé de force vers les spectateurs en raison "
-"d'éliminations équipe excessives"
+"d'éliminations de coéquipiers excessives"
 
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
@@ -6060,12 +6060,12 @@ msgstr "^BG%s^BG a terminé la course"
 #, c-format
 msgid "^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"
 msgstr ""
-"^BG%s^BG a battu le record au classement de %s^BG's %s%s^BG avec %s%s %s"
+"^BG%s^BG a battu le record au classement de %s^BG de %s%s^BG avec %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:453
 #, c-format
 msgid "^BG%s^BG improved their %s%s^BG place record with %s%s %s"
-msgstr "^BG%s^BG a amélioré son record au classement de  %s%s^BG avec %s%s %s"
+msgstr "^BG%s^BG a amélioré son record au classement de %s%s^BG avec %s%s %s"
 
 #: qcsrc/common/notifications/all.inc:454
 #, c-format
@@ -6662,7 +6662,7 @@ msgstr "^BGVous avez le drapeau !"
 #: qcsrc/common/notifications/all.inc:599
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr "^BGVous avez le drapeau de votre équipe %s^BG, retournez-le !"
+msgstr "^BGVous avez le drapeau de votre équipe %s^BG, rapportez-le !"
 
 #: qcsrc/common/notifications/all.inc:600
 #, c-format
@@ -7015,12 +7015,12 @@ msgstr "^K1Attention à la marche !"
 #: qcsrc/common/notifications/all.inc:696
 #, c-format
 msgid "^K1Traitor! You betrayed teammate ^BG%s"
-msgstr "^K1Traitre ! Vous avez trahi votre coéquipier ^BG%s"
+msgstr "^K1Traître ! Vous avez trahi votre coéquipier ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:696
 #, c-format
 msgid "^K1Traitor! You team killed ^BG%s"
-msgstr "^K1Traitre ! Vous avez tué votre coéquipier ^BG%s"
+msgstr "^K1Traître ! Vous avez tué votre coéquipier ^BG%s"
 
 #: qcsrc/common/notifications/all.inc:697
 #, c-format
@@ -7118,7 +7118,7 @@ msgstr "^K1Un %s est arrivé !"
 
 #: qcsrc/common/notifications/all.inc:727
 msgid "^BGYou got the ^F1Fuel regenerator"
-msgstr "^BGVous avez le ^F1regénérateur de carburant"
+msgstr "^BGVous avez le ^F1régénérateur de carburant"
 
 #: qcsrc/common/notifications/all.inc:728
 msgid "^BGYou got the ^F1Jetpack"
@@ -7160,7 +7160,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:743
 msgid "^K1Cannot join given minigame session!"
-msgstr "^K1Impossible de rejoindre cette session de mini jeux !"
+msgstr "^K1Impossible de rejoindre cette session de mini-jeux !"
 
 #: qcsrc/common/notifications/all.inc:744
 msgid ""
@@ -7189,7 +7189,7 @@ msgstr "%s^K2 a choisi ^TC^TT^K2 en premier."
 #: qcsrc/common/notifications/all.inc:747
 msgid "^K2You're queued to join any available team."
 msgstr ""
-"^2Vous êtes en file d'attente pour rejoindre n'importe quelle équipe "
+"^K2Vous êtes en file d'attente pour rejoindre n'importe quelle équipe "
 "disponible."
 
 #: qcsrc/common/notifications/all.inc:748
@@ -7318,7 +7318,7 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:780
 msgid "^BGThe ^TCenemy^BG generator is no longer shielded!"
-msgstr "^BGLe générateur ennemi n'est plus protégé !"
+msgstr "^BGLe générateur ^TCennemi^BG n'est plus protégé !"
 
 #: qcsrc/common/notifications/all.inc:781
 msgid ""
@@ -7907,7 +7907,7 @@ msgstr "Réacteur à fusion"
 msgid ""
 "The %s fires homing missiles similar to those of the %s towards its targets."
 msgstr ""
-"La %s tire des missiles à guidage similaire à ceux du %s vers ses cibles."
+"La %s tire des missiles à guidage similaires à ceux du %s vers ses cibles."
 
 #: qcsrc/common/turrets/turret/hellion.qc:35
 #, c-format
@@ -8574,7 +8574,7 @@ msgid ""
 "is the left gunner."
 msgstr ""
 "Le second joueur à entrer est le tireur droit et le troisième joueur à "
-"entrer est le le tireur gauche."
+"entrer est le tireur gauche."
 
 #: qcsrc/common/vehicles/vehicle/bumblebee.qc:1012
 msgid ""
@@ -8827,7 +8827,7 @@ msgid ""
 "on ammo and need to preserve some."
 msgstr ""
 "Cette arme ne nécessite pas de munitions, ce qui en fait un excellent choix "
-"si vous être presque à court de munitions et devez en préserver."
+"si vous êtes à court de munitions et que vous devez en économiser."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:170
 #, c-format
@@ -9536,7 +9536,7 @@ msgstr ""
 #: qcsrc/common/weapons/weapon/tuba.qc:606
 msgid "The only ammo it needs to operate is the breath from your lungs."
 msgstr ""
-"Les seules munitions dont il a besoin pour fonctionner est l'air que vous "
+"Les seules munitions dont il a besoin pour fonctionner sont l'air que vous "
 "expirez."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:607
@@ -9586,8 +9586,7 @@ msgid ""
 "players spawn with it."
 msgstr ""
 "Il s'agit d'une super-arme, on ne le retrouve donc pas souvent dans le jeu, "
-"sauf en %s où tous les joueurs sont équipés de cette arme lorsqu’ils "
-"réapparaissent."
+"excepté en %s où tous les joueurs apparaissent équipés de cette arme."
 
 #: qcsrc/common/weapons/weapon/vaporizer.qc:444
 #, c-format
@@ -10355,7 +10354,7 @@ msgid ""
 "menu system."
 msgstr ""
 "Bienvenue sur Xonotic, veuillez sélectionner votre langue et entrer votre "
-"nom de joueur pour commencer.  Vous pouvez changer ces options plus tard via "
+"nom de joueur pour commencer. Vous pouvez changer ces options plus tard via "
 "le système de menus."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
@@ -10823,7 +10822,7 @@ msgstr "Chronomètre de Course"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Enable in team games"
-msgstr "Activer dans les jeux en équipe"
+msgstr "Activer dans les parties en équipe"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:24
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
@@ -12472,7 +12471,9 @@ msgstr "Brillance des textures"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Enable the use of glossmaps on textures supporting it"
-msgstr "Activer le reflet des textures"
+msgstr ""
+"Activer l'utilisation des cartes de brillance sur les textures qui les "
+"prennent en charge"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:125
 msgid "Offset mapping"
@@ -13073,12 +13074,12 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team"
 msgstr ""
-"Attention : si activé dans les jeux en équipe, la couleur de votre équipe "
+"Attention : si activé dans les parties en équipe, la couleur de votre équipe "
 "risque d'être la même que celle de l'équipe ennemie."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Except in team games"
-msgstr "Sauf dans les jeux en équipe"
+msgstr "Sauf dans les parties en équipe"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 msgid "Only in Duel"
@@ -13086,11 +13087,11 @@ msgstr "Seulement en Duel"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:62
 msgid "Only in team games"
-msgstr "Seulement dans les jeux en équipe"
+msgstr "Seulement dans les parties en équipe"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "In team games and Duel"
-msgstr "Dans les jeux en équipe et duels"
+msgstr "Dans les parties en équipe et duels"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "Body fading:"
@@ -13140,7 +13141,7 @@ msgstr "Champ de vision en degrés"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:34
 msgid "1st person perspective"
-msgstr "Vue à la 1ère personne"
+msgstr "Vue à la 1re personne"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:37
 msgid "Slide to third person upon death"
@@ -13233,7 +13234,7 @@ msgstr "Afficher le réticule 2D lors du zoom"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:152
 msgid "Release zoom when you die or respawn"
-msgstr "Relâcher le zoom quand vous mourrez ou réapparaissez"
+msgstr "Relâcher le zoom quand vous mourez ou réapparaissez"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:156
 msgid "Release zoom when you switch weapons"
@@ -13301,7 +13302,7 @@ msgstr "Visuels des armes"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:78
 msgid "Draw 1st person weapon model"
-msgstr "Afficher l'arme en vue à la 1ère personne"
+msgstr "Afficher l'arme en vue à la 1re personne"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:79
 msgid "Draw the weapon model"
@@ -13341,7 +13342,7 @@ msgstr "Appliquer les couleurs d'équipe au faisceau de l'arme :"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:117
 msgid "In team games"
-msgstr "Dans les jeux en équipe"
+msgstr "Dans les parties en équipe"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
 #: qcsrc/menu/xonotic/guide/guide.qh:10 qcsrc/menu/xonotic/keybinder.qc:77
@@ -13775,7 +13776,7 @@ msgid ""
 "help slow GPUs"
 msgstr ""
 "Multiplicateur de taille d'écran ou de fenêtre, permet l'anticrénelage au-"
-"dessus de 1x, en-dessous de 1x cela peut aider les petits GPUs"
+"dessus de 1x, en dessous de 1x cela peut aider les petits GPU"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:85
 msgid "Anisotropy:"
@@ -13991,7 +13992,7 @@ msgstr "Vainqueur"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:33
 msgid "join 'best' team (auto-select)"
-msgstr "rejoindre la ’meilleure’ équipe (auto-sélection)"
+msgstr "rejoindre la « meilleure » équipe (auto-sélection)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:34
 msgid "Auto-select team (recommended)"
@@ -14328,9 +14329,9 @@ msgid ""
 "turn direction (%s or %s), then start turning smoothly into the turn "
 "direction. As always, during the entire strafe turn keep %s held."
 msgstr ""
-"Lorsque que vous effectuez un bunny hopping, relâchez d'abord la touche %s, "
-"puis appuyez sur la touche de déplacement latéral dans le sens du virage (%s "
-"ou %s), enfin commencez à tourner doucement dans le sens du virage. Comme "
+"Lorsque vous effectuez un bunny hopping, relâchez d'abord la touche %s, puis "
+"appuyez sur la touche de déplacement latéral dans le sens du virage (%s ou "
+"%s), enfin commencez à tourner doucement dans le sens du virage. Comme "
 "toujours, pendant tout le virage en strafe, maintenez la touche %s enfoncée."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:95
@@ -14652,8 +14653,8 @@ msgstr ""
 "empêchant les joueurs ayant 100 points ou plus de santé ou d'armure de "
 "ramasser la %s, la %s, la %s et la %s, afin de donner aux autres joueurs une "
 "chance plus équitable de revenir dans la partie. La protection lors de la "
-"réapparition est également désactivée, et les tirs amis dans les modes de "
-"jeu en équipe sont activés."
+"réapparition est également désactivée, et les tirs amis dans les types de "
+"partie en équipe sont activés."
 
 #: qcsrc/menu/xonotic/keybinder.qc:61
 msgid "Moving"
@@ -14730,7 +14731,7 @@ msgstr "agrandir le radar"
 
 #: qcsrc/menu/xonotic/keybinder.qc:139
 msgid "3rd person view"
-msgstr "vue à la 3ème personne"
+msgstr "vue à la 3e personne"
 
 #: qcsrc/menu/xonotic/keybinder.qc:140
 msgid "enter spectator mode"
@@ -14878,7 +14879,7 @@ msgstr "Armes standard"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:214
 msgid "Extended weapons (includes New Toys)"
-msgstr "Armes étendues (incluent les « Nouveaux jouets »)"
+msgstr "Armes étendues (incluant les « Nouveaux jouets »)"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:218
 msgid "Custom weapons"
@@ -14937,7 +14938,7 @@ msgstr ""
 #, c-format
 msgid "Players spawn with the %s. Double-tap %s or press %s to use it."
 msgstr ""
-"Les joueurs apparaissent avec le %s. Appuyer deux fois sur %s or appuyer sur "
+"Les joueurs apparaissent avec le %s. Appuyer deux fois sur %s ou appuyer sur "
 "la touche %s pour l'utiliser."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:400
@@ -14945,7 +14946,7 @@ msgid ""
 "Enable dodging (quick acceleration in a given direction). Double-tap a "
 "directional key to dodge"
 msgstr ""
-"Activer l’esquive (accélération rapide dans une direction donnée). Appuyer "
+"Activer l'esquive (accélération rapide dans une direction donnée). Appuyer "
 "deux fois sur une touche directionnelle pour esquiver"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:404
@@ -15052,8 +15053,8 @@ msgid ""
 "Bookmark the currently highlighted server so that it's faster to find in the "
 "future"
 msgstr ""
-"Mettre le serveur en haut de la liste pour pouvoir le repérer plus "
-"facilement plus tard"
+"Ajouter le serveur actuellement sélectionné aux favoris pour pouvoir le "
+"retrouver plus rapidement à l'avenir"
 
 #: qcsrc/menu/xonotic/serverlist.qc:753
 msgid "Ping"

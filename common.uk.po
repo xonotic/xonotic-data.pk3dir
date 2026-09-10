@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Antonio <piuntn@gmail.com>, 2026
 # Baker Doge, 2023
 # Baker Doge, 2023
 # Basil <cigariscigar@gmail.com>, 2011,2013
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Kostiantyn Tsebro, 2026\n"
+"Last-Translator: Antonio <piuntn@gmail.com>, 2026\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -14265,7 +14266,7 @@ msgstr ""
 "З точки зору озброєння, у гравців нескінчена кількість набоїв, та "
 "з'являються з такою зброєю як %s, %s, та %s, а також можна інколи підібрати "
 "на мапі таку суперзброю як %s і %s. Вся ця зброя є набагато сильнішою за "
-"звичайну зброю, то ж їхній час вбивства є доволі низьким.  "
+"звичайну зброю, то ж їхній час вбивства є доволі низьким."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:177
 #, c-format
