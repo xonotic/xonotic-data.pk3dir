@@ -1493,14 +1493,18 @@ string get_model_datafilename(string m, float sk, string fil)
 
 float get_model_parameters(string m, float sk)
 {
+#ifdef MENUQC
 	get_model_parameters_modelname = string_null;
 	get_model_parameters_modelskin = -1;
 	get_model_parameters_name = string_null;
-	get_model_parameters_species = -1;
 	get_model_parameters_sex = string_null;
 	get_model_parameters_weight = -1;
 	get_model_parameters_age = -1;
 	get_model_parameters_desc = string_null;
+	get_model_parameters_hidden = false;
+#elifdef SVQC
+	get_model_parameters_species = -1;
+#elifdef CSQC
 	get_model_parameters_bone_upperbody = string_null;
 	get_model_parameters_bone_weapon = string_null;
 	for(int i = 0; i < MAX_AIM_BONES; ++i)
@@ -1509,7 +1513,7 @@ float get_model_parameters(string m, float sk)
 		get_model_parameters_bone_aimweight[i] = 0;
 	}
 	get_model_parameters_fixbone = 0;
-	get_model_parameters_hidden = false;
+#endif
 
 #ifdef GAMEQC
 	MUTATOR_CALLHOOK(ClearModelParams);
@@ -1518,14 +1522,13 @@ float get_model_parameters(string m, float sk)
 	if (!m)
 		return 1;
 
-	if(substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")
+	if (substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")
 		m = strcat(substring(m, 0, -10), substring(m, -4, -1));
 
-	if(sk < 0)
+	if (sk < 0)
 	{
-		if(substring(m, -4, -1) != ".txt")
-			return 0;
-		if(substring(m, -6, 1) != "_")
+		if (substring(m, -4, -1) != ".txt"
+		||  substring(m, -6,  1) != "_")
 			return 0;
 		sk = stof(substring(m, -5, 1));
 		m = substring(m, 0, -7);
@@ -1533,77 +1536,82 @@ float get_model_parameters(string m, float sk)
 
 	string fn = get_model_datafilename(m, sk, "txt");
 	int fh = fopen(fn, FILE_READ);
-	if(fh < 0)
+	if (fh < 0)
 	{
 		sk = 0;
 		fn = get_model_datafilename(m, sk, "txt");
 		fh = fopen(fn, FILE_READ);
-		if(fh < 0)
+		if (fh < 0)
 			return 0;
 	}
 
+#ifdef MENUQC
 	get_model_parameters_modelname = m;
 	get_model_parameters_modelskin = sk;
+#endif
+
 	string s, c;
-	while((s = fgets(fh)))
+	while ((s = fgets(fh)))
 	{
-		if(s == "")
+		if (s == "")
 			break; // next lines will be description
 		c = car(s);
 		s = cdr(s);
-		if(c == "name")
-			get_model_parameters_name = s;
-		if(c == "species")
-			switch(s)
-			{
-				case "human":       get_model_parameters_species = SPECIES_HUMAN;       break;
-				case "alien":       get_model_parameters_species = SPECIES_ALIEN;       break;
-				case "robot_shiny": get_model_parameters_species = SPECIES_ROBOT_SHINY; break;
-				case "robot_rusty": get_model_parameters_species = SPECIES_ROBOT_RUSTY; break;
-				case "robot_solid": get_model_parameters_species = SPECIES_ROBOT_SOLID; break;
-				case "animal":      get_model_parameters_species = SPECIES_ANIMAL;      break;
-				case "reserved":    get_model_parameters_species = SPECIES_RESERVED;    break;
-			}
-		if(c == "sex")
+		switch (c)
 		{
-			if (s == "Male")				s = _("Male");
-			else if (s == "Female")			s = _("Female");
-			else if (s == "Undisclosed")	s = _("Undisclosed");
-			get_model_parameters_sex = s;
+		#ifdef MENUQC
+			case "name":        get_model_parameters_name = s;            break;
+			case "weight":      get_model_parameters_weight = stof(s);    break;
+			case "age":         get_model_parameters_age = stof(s);       break;
+			case "description": get_model_parameters_description = s;     break;
+			case "hidden":      get_model_parameters_hidden = stob(s);    break;
+			case "sex":
+				switch (s)
+				{
+					case "Male":         get_model_parameters_sex = _("Male");         break;
+					case "Female":       get_model_parameters_sex = _("Female");       break;
+					case "Undisclosed":  get_model_parameters_sex = _("Undisclosed");  break;
+					default:             get_model_parameters_sex = s;                 break;
+				}
+				break;
+		#elifdef SVQC
+			case "species":
+				switch (s)
+				{
+					case "human":        get_model_parameters_species = SPECIES_HUMAN;        break;
+					case "alien":        get_model_parameters_species = SPECIES_ALIEN;        break;
+					case "robot_shiny":  get_model_parameters_species = SPECIES_ROBOT_SHINY;  break;
+					case "robot_rusty":  get_model_parameters_species = SPECIES_ROBOT_RUSTY;  break;
+					case "robot_solid":  get_model_parameters_species = SPECIES_ROBOT_SOLID;  break;
+					case "animal":       get_model_parameters_species = SPECIES_ANIMAL;       break;
+					case "reserved":     get_model_parameters_species = SPECIES_RESERVED;     break;
+				}
+				break;
+		#elifdef CSQC
+			case "bone_upperbody":  get_model_parameters_bone_upperbody = s;  break;
+			case "bone_weapon":     get_model_parameters_bone_weapon = s;     break;
+			case "fixbone":         get_model_parameters_fixbone = stof(s);   break;
+		#endif
 		}
-		if(c == "weight")
-			get_model_parameters_weight = stof(s);
-		if(c == "age")
-			get_model_parameters_age = stof(s);
-		if(c == "description")
-			get_model_parameters_description = s;
-		if(c == "bone_upperbody")
-			get_model_parameters_bone_upperbody = s;
-		if(c == "bone_weapon")
-			get_model_parameters_bone_weapon = s;
+
 	#ifdef GAMEQC
 		MUTATOR_CALLHOOK(GetModelParams, c, s);
 	#endif
-		for(int i = 0; i < MAX_AIM_BONES; ++i)
-			if(c == strcat("bone_aim", ftos(i)))
+
+	#ifdef CSQC
+		for (int i = 0; i < MAX_AIM_BONES; ++i)
+			if (c == strcat("bone_aim", ftos(i)))
 			{
 				get_model_parameters_bone_aimweight[i] = stof(car(s));
 				get_model_parameters_bone_aim[i] = cdr(s);
 			}
-		if(c == "fixbone")
-			get_model_parameters_fixbone = stof(s);
-		if(c == "hidden")
-			get_model_parameters_hidden = stob(s);
+	#endif
 	}
 
-	while((s = fgets(fh)))
-	{
-		if(get_model_parameters_desc)
-			get_model_parameters_desc = strcat(get_model_parameters_desc, "\n");
-		if(s != "")
-			get_model_parameters_desc = strcat(get_model_parameters_desc, s);
-	}
-
+#ifdef MENUQC
+	while ((s = fgets(fh)))
+		get_model_parameters_desc = cons_mid(get_model_parameters_desc, "\n", s);
+#endif
 	fclose(fh);
 
 	return 1;
