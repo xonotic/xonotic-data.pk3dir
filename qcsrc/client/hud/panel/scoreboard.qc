@@ -139,7 +139,7 @@ string Label_getInfo(string label, bool log_all)
 		SCO_LABEL(_("SCO^caps"),          "caps", "               ", _("How often a flag (CTF) or a key (Key Hunt) was captured"));
 		SCO_LABEL(_("SCO^captime"),       "captime", "            ", _("Time of fastest capture (CTF)"));
 		SCO_LABEL(_("SCO^deaths"),        "deaths", "             ", _("Number of deaths"));
-		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of keys destroyed by pushing them into void"));
+		SCO_LABEL(_("SCO^destructions"),  "destructions", "       ", _("Number of keys destroyed by pushing them into the void"));
 		SCO_LABEL(_("SCO^damage dealt"),  "dmg", "                ", _("The total damage dealt"));
 		SCO_LABEL(_("SCO^damage taken"),  "dmgtaken", "           ", _("The total damage taken"));
 		SCO_LABEL(_("SCO^drops"),         "drops", "              ", _("Number of flag drops"));
@@ -165,7 +165,7 @@ string Label_getInfo(string label, bool log_all)
 		SCO_LABEL(_("SCO^pickups"),       "pickups", "            ", _("How often a flag (CTF), a key (Key Hunt), or a ball (Keepaway) was picked up"));
 		SCO_LABEL(_("SCO^ping"),          "ping", "               ", _("Ping time"));
 		SCO_LABEL(_("SCO^pl"),            "pl", "                 ", _("Packet loss"));
-		SCO_LABEL(_("SCO^pushes"),        "pushes", "             ", _("Number of players pushed into void"));
+		SCO_LABEL(_("SCO^pushes"),        "pushes", "             ", _("Number of players pushed into the void"));
 		SCO_LABEL(_("SCO^rank"),          "rank", "               ", _("Player rank"));
 		SCO_LABEL(_("SCO^returns"),       "returns", "            ", _("Number of flag returns"));
 		SCO_LABEL(_("SCO^revivals"),      "revivals", "           ", _("Number of revivals"));

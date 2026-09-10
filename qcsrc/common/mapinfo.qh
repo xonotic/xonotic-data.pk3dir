@@ -91,7 +91,7 @@ CLASS(Gametype, Object)
     METHOD(Gametype, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
     {
         TC(Gametype, this);
-        returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The amount of frags needed before the match will end"));
+        returns(menu, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The number of frags required to conclude the match"));
     }
 
 #ifdef MENUQC
