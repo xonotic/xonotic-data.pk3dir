@@ -7,6 +7,6 @@ CLASS(XonoticGraphicsDynamicSettingsTab, XonoticTab)
 	ATTRIB(XonoticGraphicsDynamicSettingsTab, title, string, _("Dynamic"));
 	ATTRIB(XonoticGraphicsDynamicSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGraphicsDynamicSettingsTab, rows, float, 15.5);
-	ATTRIB(XonoticGraphicsDynamicSettingsTab, columns, float, 5);
+	ATTRIB(XonoticGraphicsDynamicSettingsTab, columns, float, 4.5);
 ENDCLASS(XonoticGraphicsDynamicSettingsTab)
 entity makeXonoticGraphicsDynamicSettingsTab();

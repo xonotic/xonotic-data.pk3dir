@@ -35,7 +35,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	// threshold: hud_damage_pain_threshold_lower_health
 	// scoreboard_alpha*
 
-	me.gotoRC(me, 0, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, (me.columns - 3) * 0.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));

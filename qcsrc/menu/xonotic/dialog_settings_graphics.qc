@@ -7,10 +7,12 @@ void GraphicsSettings_addPresetButtons(entity me, entity apply_button)
 {
 	entity e;
 
+	float col = (me.columns - 3) * 0.5;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(1, _("Quality preset:")));
+		me.TD(me, 1, col, e = makeXonoticTextLabel(1, _("Quality preset:")));
+			e.marginLeft = 0.2;
 			e.marginRight = 0.2;
-		float width = (me.columns - 1) / 5;
+		float width = (me.columns - col) / 5;
 	#define ADD_PRESET_BUTTON(translated_name, file_name) \
 		me.TD(me, 1, width, e = makeXonoticCommandButton(ZCTX(translated_name), '0 0 0', "exec effects-" file_name ".cfg", 0)); \
 			e.applyButton = apply_button;

@@ -28,7 +28,7 @@ void XonoticGraphicsDynamicSettingsTab_fill(entity me)
 
 	GraphicsSettings_addPresetButtons(me, effectsApplyButton);
 
-	me.gotoRC(me, 2, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 2, (me.columns - 3) * 0.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "r_bloom", _("Bloom"),
 			_("Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance.")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx_T(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects"),

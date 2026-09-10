@@ -28,7 +28,7 @@ void XonoticGraphicsStaticSettingsTab_fill(entity me)
 
 	GraphicsSettings_addPresetButtons(me, effectsApplyButton);
 
-	me.gotoRC(me, 2, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 2, (me.columns - 3) * 0.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Geometry detail:")));
 		me.TD(me, 1, 1.9, e = makeXonoticMixedSlider_T("r_subdivisions_tolerance",
 			_("Change the smoothness of the curves on the map")));

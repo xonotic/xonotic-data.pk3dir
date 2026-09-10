@@ -7,6 +7,6 @@ CLASS(XonoticGraphicsLightingSettingsTab, XonoticTab)
 	ATTRIB(XonoticGraphicsLightingSettingsTab, title, string, _("Lighting"));
 	ATTRIB(XonoticGraphicsLightingSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGraphicsLightingSettingsTab, rows, float, 15.5);
-	ATTRIB(XonoticGraphicsLightingSettingsTab, columns, float, 5);
+	ATTRIB(XonoticGraphicsLightingSettingsTab, columns, float, 4.5);
 ENDCLASS(XonoticGraphicsLightingSettingsTab)
 entity makeXonoticGraphicsLightingSettingsTab();
