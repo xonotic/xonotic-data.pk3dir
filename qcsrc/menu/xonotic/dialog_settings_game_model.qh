@@ -8,6 +8,6 @@ CLASS(XonoticGameModelSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameModelSettingsTab, titleTooltip, string, _("Customize how players and items are displayed in game"));
 	ATTRIB(XonoticGameModelSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGameModelSettingsTab, rows, float, 15.5);
-	ATTRIB(XonoticGameModelSettingsTab, columns, float, 5);
+	ATTRIB(XonoticGameModelSettingsTab, columns, float, 4.5);
 ENDCLASS(XonoticGameModelSettingsTab)
 entity makeXonoticGameModelSettingsTab();

@@ -7,6 +7,6 @@ CLASS(XonoticVideoEffectsEffectsSettingsTab, XonoticTab)
 	ATTRIB(XonoticVideoEffectsEffectsSettingsTab, title, string, _("Effects"));
 	ATTRIB(XonoticVideoEffectsEffectsSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticVideoEffectsEffectsSettingsTab, rows, float, 15.5);
-	ATTRIB(XonoticVideoEffectsEffectsSettingsTab, columns, float, 5);
+	ATTRIB(XonoticVideoEffectsEffectsSettingsTab, columns, float, 4.5);
 ENDCLASS(XonoticVideoEffectsEffectsSettingsTab)
 entity makeXonoticVideoEffectsEffectsSettingsTab();

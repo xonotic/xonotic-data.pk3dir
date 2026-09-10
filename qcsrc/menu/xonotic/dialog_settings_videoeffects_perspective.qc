@@ -20,7 +20,7 @@ void XonoticVideoEffectsPerspectiveSettingsTab_fill(entity me)
 {
 	entity e;
 
-	me.gotoRC(me, 0, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, (me.columns - 3) * 0.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Perspective")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));

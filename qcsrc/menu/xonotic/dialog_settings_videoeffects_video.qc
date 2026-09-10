@@ -32,7 +32,7 @@ void XonoticVideoEffectsVideoSettingsTab_fill(entity me)
 		COMMANDBUTTON_APPLY);
 		videoApplyButton.disableOnClick = true;
 
-	me.gotoRC(me, 0, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, (me.columns - 3) * 0.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Video")));
 	me.TR(me);
 		me.TD(me, 1, 3/2, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));

@@ -26,7 +26,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 	// There is really not many other decent places for these options, additionally
 	// later I would like quite a few more options in this tab.
 
-	me.gotoRC(me, 0, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, (me.columns - 3) * 0.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Items")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_simple_items", _("Use simple 2D images instead of item models")));

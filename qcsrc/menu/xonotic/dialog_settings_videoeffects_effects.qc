@@ -35,12 +35,13 @@ void XonoticVideoEffectsEffectsSettingsTab_fill(entity me)
 	entity effectsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY);
 		effectsApplyButton.disableOnClick = true;
 
+	float col = (me.columns - 3) * 0.5;
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Quality preset:")));
+		me.TD(me, 1, col, e = makeXonoticTextLabel(0, _("Quality preset:")));
 			e.align = 1;
+			e.marginLeft = 0.2;
 			e.marginRight = 0.2;
-		float width = (me.columns - 0.2 - 0.8) / 5;
+		float width = (me.columns - col) / 5;
 	#define ADD_PRESET_BUTTON(translated_name, file_name) \
 		me.TD(me, 1, width, e = makeXonoticCommandButton(ZCTX(translated_name), '0 0 0', "exec effects-" file_name ".cfg", 0)); \
 			e.applyButton = effectsApplyButton;
@@ -51,7 +52,7 @@ void XonoticVideoEffectsEffectsSettingsTab_fill(entity me)
 			ADD_PRESET_BUTTON(_("PRE^Ultra"),  "ultra")
 	#undef ADD_PRESET_BUTTON
 
-	me.gotoRC(me, 2, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 2, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "r_shadow_realtime_dlight", _("Realtime dynamic lights"),
 			_("Temporary realtime light sources such as explosions, rockets and powerups")));
 			makeMulti(e, "!gl_flashblend");

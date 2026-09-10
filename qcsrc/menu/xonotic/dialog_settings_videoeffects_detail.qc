@@ -24,12 +24,13 @@ void XonoticVideoEffectsDetailSettingsTab_fill(entity me)
 	entity detailApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY);
 		detailApplyButton.disableOnClick = true;
 
+	float col = (me.columns - 3) * 0.5;
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Quality preset:")));
+		me.TD(me, 1, col, e = makeXonoticTextLabel(0, _("Quality preset:")));
 			e.align = 1;
+			e.marginLeft = 0.2;
 			e.marginRight = 0.2;
-		float width = (me.columns - 0.2 - 0.8) / 5;
+		float width = (me.columns - col) / 5;
 	#define ADD_PRESET_BUTTON(translated_name, file_name) \
 		me.TD(me, 1, width, e = makeXonoticCommandButton(ZCTX(translated_name), '0 0 0', "exec detail-" file_name ".cfg", 0)); \
 			e.applyButton = detailApplyButton;
@@ -40,7 +41,7 @@ void XonoticVideoEffectsDetailSettingsTab_fill(entity me)
 			ADD_PRESET_BUTTON(_("PRE^Ultra"),  "ultra")
 	#undef ADD_PRESET_BUTTON
 
-	me.gotoRC(me, 2, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 2, col); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Geometry detail:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("r_subdivisions_tolerance",
 			_("Change the smoothness of the curves on the map")));

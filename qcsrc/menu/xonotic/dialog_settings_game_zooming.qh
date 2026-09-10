@@ -7,6 +7,6 @@ CLASS(XonoticGameZoomingSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameZoomingSettingsTab, title, string, _("Zooming"));
 	ATTRIB(XonoticGameZoomingSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGameZoomingSettingsTab, rows, float, 15.5);
-	ATTRIB(XonoticGameZoomingSettingsTab, columns, float, 5);
+	ATTRIB(XonoticGameZoomingSettingsTab, columns, float, 4.5);
 ENDCLASS(XonoticGameZoomingSettingsTab)
 entity makeXonoticGameZoomingSettingsTab();
