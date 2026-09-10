@@ -2,7 +2,9 @@
 
 use strict;
 use warnings;
+use FindBin;
 
+my $base = "$FindBin::Bin/../.."; # go from ./qcsrc/tools/ to ./
 my @files = qw/effects detail/;
 my @cols = qw/omg low med normal high ultra ultimate/;
 my %table = ();
@@ -11,7 +13,7 @@ for my $file(@files)
 {
 	for my $col(@cols)
 	{
-		my $fn = "$file-$col.cfg";
+		my $fn = "$base/$file-$col.cfg";
 		open my $fh, "<", "$fn"
 			or die "<$fn: $!";
 		while(<$fh>)
