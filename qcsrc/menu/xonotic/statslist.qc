@@ -16,6 +16,7 @@ void XonoticStatsList_configureXonoticStatsList(entity me)
 	me.configureXonoticListBox(me);
 	me.getStats(me);
 
+	// Precache images
 	for (int i = 0; i < GameType_GetTotalCount(); ++i)
 		if (SKINBOOL_STATSLIST_ICON_BLUR)
 			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);

@@ -15,6 +15,7 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 	me.configureXonoticListBox(me);
 	me.nItems = GameType_GetCount();
 
+	// Precache images
 	for (int i = 0; i < GameType_GetTotalCount(); ++i)
 		if (SKINBOOL_GAMETYPELIST_ICON_BLUR)
 			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
