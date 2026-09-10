@@ -7,6 +7,6 @@ CLASS(XonoticGameWaypointsSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameWaypointsSettingsTab, title, string, _("Waypoints"));
 	ATTRIB(XonoticGameWaypointsSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGameWaypointsSettingsTab, rows, float, 15.5);
-	ATTRIB(XonoticGameWaypointsSettingsTab, columns, float, 5);
+	ATTRIB(XonoticGameWaypointsSettingsTab, columns, float, 4.5);
 ENDCLASS(XonoticGameWaypointsSettingsTab)
 entity makeXonoticGameWaypointsSettingsTab();

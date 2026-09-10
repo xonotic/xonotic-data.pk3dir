@@ -7,6 +7,6 @@ CLASS(XonoticGraphicsRenderingSettingsTab, XonoticTab)
 	ATTRIB(XonoticGraphicsRenderingSettingsTab, title, string, _("Rendering"));
 	ATTRIB(XonoticGraphicsRenderingSettingsTab, intendedWidth, float, 0.9);
 	ATTRIB(XonoticGraphicsRenderingSettingsTab, rows, float, 15.5);
-	ATTRIB(XonoticGraphicsRenderingSettingsTab, columns, float, 5);
+	ATTRIB(XonoticGraphicsRenderingSettingsTab, columns, float, 4.5);
 ENDCLASS(XonoticGraphicsRenderingSettingsTab)
 entity makeXonoticGraphicsRenderingSettingsTab();
