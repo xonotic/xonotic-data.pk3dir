@@ -38,7 +38,7 @@ CLASS(ClanArena, Gametype)
 	METHOD(ClanArena, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
 	{
 		TC(Gametype, this);
-		returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of rounds won needed before the match will end"));
+		returns(menu, _("Round limit:"),     5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The number of rounds won required to conclude the match"));
 	}
 #ifdef CSQC
 	ATTRIB(ClanArena, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_CA);
