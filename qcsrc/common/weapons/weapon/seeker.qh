@@ -47,7 +47,7 @@ CLASS(Seeker, Weapon)
 #endif
 /* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
 /* refname   */ ATTRIB(Seeker, netname, string, "seeker");
-/* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
+/* wepname   */ ATTRIB(Seeker, m_name, string, _("Seeker"));
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
@@ -68,6 +68,7 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, missile_ammo, float, NONE) \
 		P(class, prefix, missile_animtime, float, NONE) \
 		P(class, prefix, missile_count, float, NONE) \
+		P(class, prefix, missile_count_lastdelay, float, NONE) \
 		P(class, prefix, missile_damageforcescale, float, NONE) \
 		P(class, prefix, missile_damage, float, NONE) \
 		P(class, prefix, missile_decel, float, NONE) \
@@ -91,6 +92,7 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, missile_speed_z, float, NONE) \
 		P(class, prefix, missile_spread, float, NONE) \
 		P(class, prefix, missile_turnrate, float, NONE) \
+		P(class, prefix, mode, float, NONE) \
 		P(class, prefix, pickup_ammo, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
 		P(class, prefix, reload_time, float, NONE) \
@@ -98,14 +100,19 @@ CLASS(Seeker, Weapon)
 		P(class, prefix, switchdelay_raise, float, NONE) \
 		P(class, prefix, tag_ammo, float, NONE) \
 		P(class, prefix, tag_animtime, float, NONE) \
+		P(class, prefix, tag_damage, float, NONE) \
 		P(class, prefix, tag_damageforcescale, float, NONE) \
+		P(class, prefix, tag_guidedelay, float, NONE) \
+		P(class, prefix, tag_guidegoal, float, NONE) \
+		P(class, prefix, tag_guideratedelay, float, NONE) \
+		P(class, prefix, tag_guiderate, float, NONE) \
+		P(class, prefix, tag_guidestop, float, NONE) \
 		P(class, prefix, tag_health, float, NONE) \
 		P(class, prefix, tag_lifetime, float, NONE) \
 		P(class, prefix, tag_refire, float, NONE) \
 		P(class, prefix, tag_speed, float, NONE) \
 		P(class, prefix, tag_spread, float, NONE) \
 		P(class, prefix, tag_tracker_lifetime, float, NONE) \
-		P(class, prefix, type, float, NONE) \
 		P(class, prefix, weaponreplace, string, NONE) \
 		P(class, prefix, weaponstartoverride, float, NONE) \
 		P(class, prefix, weaponstart, float, NONE) \
@@ -120,8 +127,10 @@ REGISTER_WEAPON(SEEKER, NEW(Seeker));
 SPAWNFUNC_WEAPON(weapon_seeker, WEP_SEEKER)
 
 #ifdef SVQC
-.entity tag_target, wps_tag_tracker;
-.float tag_time;
+.entity tag_target;
+.entity wps_tag_tracker;
+.float tag_time; ///< seeker_tag: time when the tag was fired; tag_tracker: time when tracking started
+.bool tag_release;
 
 IntrusiveList g_seeker_trackers;
 STATIC_INIT(g_seeker_trackers)

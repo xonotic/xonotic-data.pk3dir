@@ -97,6 +97,7 @@ EFFECT(0, SEEKER_EXPLODE,           "seeker_explode")
 EFFECT(0, SEEKER_MUZZLEFLASH,       "seeker_muzzleflash")
 EFFECT(0, SEEKER_TAG_IMPACT,        "tag_impact")
 EFFECT(1, SEEKER_TAG,               "tr_tag")
+EFFECT(1, SEEKER_TAG_START,         "tr_tag_start")
 EFFECT(1, SEEKER_MISSILE,           "TR_SEEKER")
 EFFECT(1, SEEKER_FLAC,              "TR_SEEKER")
 
