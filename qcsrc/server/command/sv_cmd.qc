@@ -444,6 +444,8 @@ void balanceteams()
 			++team_i;
 			MoveToTeam(switch_players[i], team_i + 1, 6);
 		}
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
+		return;
 
 	}
 	bprint("Attempting to balance teams by skill...\n");
