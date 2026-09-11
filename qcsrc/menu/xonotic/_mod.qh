@@ -126,6 +126,7 @@
 #include <menu/xonotic/textbox.qh>
 #include <menu/xonotic/textlabel.qh>
 #include <menu/xonotic/textslider.qh>
+#include <menu/xonotic/topictab.qh>
 #include <menu/xonotic/util.qh>
 #include <menu/xonotic/weaponslist.qh>
 
