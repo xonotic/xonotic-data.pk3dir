@@ -408,25 +408,43 @@ void balanceteams()
 		bprint("You need more than 1 player to balance the teams.\n");
 		return;
 	}
+	if(active_player_count > 128)
+	{
+		bprint("Balancing is only supported for max 128 players, you currently have %d players.\n", active_player_count);
+		return;
+	}
 	if (AVAILABLE_TEAMS > 4)
 	{
 		bprint("XonStat does not support balancing with more than 4 teams.\n");
 		return;
 	}
-	// For convenience, just assign each player to a team as there is only one possible assignment which makes sense here.
-	// To justify calling the XonStat API, we would need 3 players for 2 teams, or 4 players for 3 teams. 
+	// To justify calling the XonStat API, we need `AVAILABLE_TEAMS + 1` players
 	if (active_player_count <= AVAILABLE_TEAMS)
 	{
-		int current_open_team = 1;
-		FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
-			if(Team_IsValidTeam(current_open_team))
-			{
-				MoveToTeam(it, Team_TeamToIndex(current_open_team), 6);
-				++current_open_team;
-			}
-		});
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
-		return;
+		entity switch_players[NUM_TEAMS - 1];
+		bool team_not_empty[NUM_TEAMS];		
+		for (int i = 0; i < AVAILABLE_TEAMS; ++i)
+			team_not_empty[i] = false;
+		int switch_count = 0;
+
+		// Find doubling-up players
+		FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)),
+		{
+			if (team_not_empty[Team_TeamToIndex(it.team) - 1])
+					switch_players[switch_count++] = it;
+			else				
+				team_not_empty[Team_TeamToIndex(it.team) - 1] = true;
+ 		});
+
+		// Move doubling-up players
+		int team_i = 0;
+		for (int i = 0; i < switch_count; ++i)
+		{
+			while (team_not_empty[team_i]) // find an empty team
+			++team_i;
+			MoveToTeam(switch_players[i], team_i + 1, 6);
+		}
+
 	}
 	bprint("Attempting to balance teams by skill...\n");
 	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&cardinality=%d&stability=%d",
