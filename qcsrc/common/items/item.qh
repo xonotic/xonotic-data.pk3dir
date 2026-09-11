@@ -94,14 +94,15 @@ const vector ITEM_L_MAXS = '30 30 70';  // 0.8.6 set '16 16 80' for powerups, '1
 .float invincible_finished; // ditto
 .float buffs_finished; // ditts
 
+void InitializeEntity(entity e, void(entity this) func, int order);
 #define SPAWNFUNC_BODY(item) \
 	if (item && Item_IsDefinitionAllowed(item)) \
-		StartItem(this, item); \
-	else \
 	{ \
-		startitem_failed = true; \
-		delete(this); \
-	}
+		this.itemdef = item; \
+		InitializeEntity(this, StartItem, INITPRIO_DROPTOFLOOR); \
+	} \
+	else \
+		delete(this);
 
 #define SPAWNFUNC_ITEM(name, item) \
 	spawnfunc(name) \

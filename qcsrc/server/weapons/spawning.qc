@@ -35,7 +35,7 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		if (wpn.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
 			//LOG_WARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
-			startitem_failed = true;
+			delete(this);
 			return;
 		}
 
@@ -45,7 +45,6 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		if (s == "")
 		{
 			delete(this);
-			startitem_failed = true;
 			return;
 		}
 		int t = tokenize_console(s);
@@ -73,7 +72,6 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 		if (wpn == WEP_Null)
 		{
 			delete(this);
-			startitem_failed = true;
 			return;
 		}
 	}
@@ -84,7 +82,6 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	if (!Item_IsDefinitionAllowed(wpn.m_pickup))
 	{
 		delete(this);
-		startitem_failed = true;
 		return;
 	}
 
@@ -127,12 +124,10 @@ void weapon_defaultspawnfunc(entity this, Weapon wpn)
 	if (autocvar_g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
 
-	if (!this.owner)
-		this.glowmod = wpn.m_color;
-	else
-		this.glowmod = colormapPaletteColor(this.owner.clientcolors & 0x0F, true);
+	this.glowmod = wpn.m_color;
 
-	StartItem(this, wpn.m_pickup);
+	this.itemdef = wpn.m_pickup;
+	InitializeEntity(this, StartItem, INITPRIO_DROPTOFLOOR);
 
 	#if 0 // WEAPONTODO
 	if (this.modelindex) // don't precache if this was removed

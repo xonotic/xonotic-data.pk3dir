@@ -640,8 +640,8 @@ void lms_replace_with_extralife(entity this)
 {
 	entity e = new(item_extralife);
 	Item_CopyFields(this, e);
-
-	StartItem(e, ITEM_ExtraLife);
+	e.itemdef = ITEM_ExtraLife;
+	StartItem(e);
 }
 
 MUTATOR_HOOKFUNCTION(lms, FilterItem)
