@@ -452,7 +452,7 @@ void balanceteams()
 	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&cardinality=%d&stability=%d",
 		autocvar_g_playerstats_balance_uri,
 		autocvar_g_playerstats_balance_scorefactor,
-		autocvar_g_playerstats_balance_cardinality,
+		autocvar_g_playerstats_balance_maxdifference,
 		autocvar_g_playerstats_balance_stability);
 	url_single_fopen(balance_uri_with_query_params, FILE_WRITE, balanceteams_handler, NULL);
 }
