@@ -431,7 +431,7 @@ void balanceteams()
 		FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)),
 		{
 			if (team_not_empty[Team_TeamToIndex(it.team) - 1])
-					switch_players[switch_count++] = it;
+				switch_players[switch_count++] = it;
 			else				
 				team_not_empty[Team_TeamToIndex(it.team) - 1] = true;
  		});
@@ -441,7 +441,7 @@ void balanceteams()
 		for (int i = 0; i < switch_count; ++i)
 		{
 			while (team_not_empty[team_i]) // find an empty team
-			++team_i;
+				++team_i;
 			MoveToTeam(switch_players[i], team_i + 1, 6);
 		}
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
