@@ -474,6 +474,7 @@ string multiteam_info_sprintf(string input, string teamname)
 	MSG_INFO_NOTIF(TEAMCHANGE_SAME,                         N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're already on that team!"), "")
 	MSG_INFO_NOTIF(TEAMCHANGE_STRONGERTEAM,                 N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're not allowed to join a stronger team!"), "")
 
+	MSG_INFO_NOTIF(TEAMS_BALANCED,                          N_CHATCON,  0, 0, "", "",           "",                     _("^F2Teams have been balanced."), "")
 	MSG_INFO_NOTIF(TEAMS_LOCKED,                            N_CHATCON,  0, 0, "", "",           "",                     _("^F4The teams are now locked."), "")
 	MSG_INFO_NOTIF(TEAMS_UNLOCKED,                          N_CHATCON,  0, 0, "", "",           "",                     _("^F1The teams are now unlocked."), "")
 
