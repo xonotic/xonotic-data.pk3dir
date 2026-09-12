@@ -449,11 +449,12 @@ void balanceteams()
 
 	}
 	bprint("Attempting to balance teams by skill...\n");
-	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&maxdifference=%d&stability=%d",
+	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&maxdifference=%d&stability=%d&sigmarange=%d",
 		autocvar_g_playerstats_balance_uri,
 		autocvar_g_playerstats_balance_scorefactor,
 		autocvar_g_playerstats_balance_maxdifference,
-		autocvar_g_playerstats_balance_stability);
+		autocvar_g_playerstats_balance_stability,
+		autocvar_g_playerstats_balance_sigmarange);
 	url_single_fopen(balance_uri_with_query_params, FILE_WRITE, balanceteams_handler, NULL);
 }
 

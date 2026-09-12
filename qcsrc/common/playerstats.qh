@@ -108,6 +108,7 @@ string autocvar_g_playerstats_balance_uri = "https://stats.xonotic.org/balance";
 int autocvar_g_playerstats_balance_scorefactor = 25;
 int autocvar_g_playerstats_balance_maxdifference = 1;
 int autocvar_g_playerstats_balance_stability = 0;
+int autocvar_g_playerstats_balance_sigmarange = 2;
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest);
 void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer);
