@@ -54,7 +54,7 @@ void func_ladder_link(entity this)
 
 void func_ladder_init(entity this)
 {
-	WarpZoneLib_ExactTrigger_Init(this, false);
+	WarpZoneLib_ExactTrigger_Init(this, false, true);
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	func_ladder_link(this);
 	setthink(this, func_ladder_think);

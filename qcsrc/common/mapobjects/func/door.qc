@@ -27,63 +27,46 @@ void door_go_up(entity this, entity actor, entity trigger);
 
 void door_blocked(entity this, entity blocker)
 {
-	bool reverse = false;
-	if((this.spawnflags & DOOR_CRUSH)
-		&& !Q3COMPAT_COMMON
 #ifdef SVQC
-		&& (blocker.takedamage != DAMAGE_NO)
-#elif defined(CSQC)
-		&& !IS_DEAD(blocker)
-#endif
-	)
-	{ // KIll Kill Kill!!
-#ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
-#endif
-	}
-	else
+	if (this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
 	{
-#ifdef SVQC
-		if (this.dmg && blocker.takedamage != DAMAGE_NO)    // Shall we bite?
+		if (blocker.dmgtime2 <= time)
+		{
 			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+			blocker.dmgtime2 = time + 1/32; // A Q3 team of doors deals damage once per tick: 20hz in Q3, 30hz in CPMA
+		}
+
+		//gib dying stuff just to make sure
+		if (IS_DEAD(blocker))    // Shall we bite?
+			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+	}
 #endif
 
-		// don't change direction for dead or dying stuff
-		if (!IS_DEAD(blocker)
+	// don't change direction for dead or dying stuff
+	if (!IS_DEAD(blocker)
 #ifdef SVQC
-			&& blocker.takedamage != DAMAGE_NO
+	&& blocker.takedamage != DAMAGE_NO
 #endif
-			&& this.wait >= 0
-			&& !(Q3COMPAT_COMMON && (this.spawnflags & Q3_DOOR_CRUSHER))
-		)
+	&& this.wait >= 0
+	&& !(Q3COMPAT_COMMON && (this.spawnflags & CRUSH))) // Q3: crushers don't reverse
+	{
+		if (this.state == STATE_DOWN)
 		{
-			if (this.state == STATE_DOWN)
-			{
-				if (this.classname == "door")
-					door_go_up(this, NULL, NULL);
-				else
-					door_rotating_go_up(this, blocker);
-			}
+			if (this.classname == "door")
+				door_go_up(this, NULL, NULL);
 			else
-			{
-				if (this.classname == "door")
-					door_go_down(this);
-				else
-					door_rotating_go_down(this);
-			}
-			reverse = true;
+				door_rotating_go_up(this, blocker);
 		}
-#ifdef SVQC
 		else
 		{
-			//gib dying stuff just to make sure
-			if (this.dmg && blocker.takedamage != DAMAGE_NO && IS_DEAD(blocker))    // Shall we bite?
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
+			if (this.classname == "door")
+				door_go_down(this);
+			else
+				door_rotating_go_down(this);
 		}
-#endif
 	}
 	// if we didn't change direction and are using a non-linear movement controller, we must pause it
-	if (!reverse && this.classname == "door" && this.move_controller)
+	else if (this.classname == "door" && this.move_controller)
 		SUB_CalcMovePause(this);
 }
 
@@ -109,6 +92,10 @@ void door_hit_bottom(entity this)
 	if (this.noise1 != "")
 		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	this.state = STATE_BOTTOM;
+
+#ifdef SVQC
+	this.dmg_inflictor = world; // should be redundant but just in case spurious credits might occur somehow
+#endif
 }
 
 void door_go_down(entity this)
@@ -222,6 +209,10 @@ void door_use(entity this, entity actor, entity trigger)
 		return;
 	this = this.owner;
 
+#ifdef SVQC
+	this.dmg_inflictor = actor; // for kill and dmg credits via MOVETYPE_PUSH
+#endif
+
 	if (this.spawnflags & DOOR_TOGGLE)
 	{
 		if (this.state == STATE_UP || this.state == STATE_TOP)
@@ -315,42 +306,6 @@ void door_touch(entity this, entity toucher)
 #endif
 }
 
-void door_generic_plat_blocked(entity this, entity blocker)
-{
-	if((this.spawnflags & DOOR_CRUSH) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
-#ifdef SVQC
-		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
-#endif
-	}
-	else
-	{
-
-#ifdef SVQC
-		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
-#endif
-
-		 //Dont chamge direction for dead or dying stuff
-		if(IS_DEAD(blocker) && (blocker.takedamage == DAMAGE_NO))
-		{
-			if (this.wait >= 0)
-			{
-				if (this.state == STATE_DOWN)
-					door_rotating_go_up (this, blocker);
-				else
-					door_rotating_go_down (this);
-			}
-		}
-#ifdef SVQC
-		else
-		{
-			//gib dying stuff just to make sure
-			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, blocker.origin, '0 0 0');
-		}
-#endif
-	}
-}
 
 /*
 =========================================
@@ -655,6 +610,7 @@ void door_reset(entity this)
 	this.nextthink = 0;
 
 #ifdef SVQC
+	this.dmg_inflictor = world;
 	this.SendFlags |= SF_TRIGGER_RESET;
 	door_init_keys(this);
 #endif
@@ -739,18 +695,13 @@ void door_init_shared(entity this)
 	}
 
 	if(autocvar_sv_doors_always_open)
-	{
 		this.wait = -1;
-	}
 	else if (!this.wait)
-	{
 		this.wait = q3compat ? 2 : 3;
-	}
+	else if (q3compat && this.wait < 0)
+		this.wait = 1/1024; // return immediately
 
-	if (!this.lip)
-	{
-		this.lip = 8;
-	}
+	G_SpawnFloat("lip", 8, this, lip); // explicit 0 is supported
 
 	this.state = STATE_BOTTOM;
 
@@ -776,6 +727,7 @@ spawnfunc(func_door)
 
 	if (!InitMovingBrushTrigger(this))
 		return;
+	SetBrushEntityModel2(this); // TODO: when CSQC movers are enabled move model2 ents to CSQC
 	this.effects |= EF_LOWPRECISION;
 	this.classname = "door";
 
@@ -815,8 +767,7 @@ spawnfunc(func_door)
 
 	if (q3compat)
 	{
-		if (!this.dmg)
-			this.dmg = 2;
+		G_SpawnFloat("dmg", 2, this, dmg); // explicit 0 is supported
 
 		if (!this.team)
 		{
@@ -825,6 +776,8 @@ spawnfunc(func_door)
 			if (t) this.team = crc16(false, t);
 		}
 	}
+	else if (this.spawnflags & DOOR_CRUSH)
+		this.dmg = 10000;
 
 	settouch(this, door_touch);
 

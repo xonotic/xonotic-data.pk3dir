@@ -215,7 +215,7 @@ spawnfunc(func_clientillusionary) { g_clientmodel_init(this, SOLID_NOT); } // br
 // solid brush entities
 spawnfunc(func_wall)              { g_model_init(this, SOLID_BSP); } // Q1 name
 spawnfunc(func_clientwall)        { g_clientmodel_init(this, SOLID_BSP); } // brush entity (WARNING: MISPREDICTED)
-spawnfunc(func_static)            { g_model_init(this, SOLID_BSP); } // DEPRECATED old alias name from some other game
+spawnfunc(func_static)            { g_model_init(this, SOLID_BSP); SetBrushEntityModel2(this); } // Q3 name
 #elif defined(CSQC)
 .float alpha;
 .float scale;

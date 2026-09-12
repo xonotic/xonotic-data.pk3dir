@@ -482,11 +482,19 @@ string GetField_fullspawndata(entity e, string fieldname, bool vfspath)
 	if (v && vfspath)
 	{
 		v = strreplace("\\", "/", v);
-		if (whichpack(v) == "")
-			return string_null;
+		return whichpack(v) ? v : string_null;
 	}
 
 	return v;
+}
+
+/// Equivalent to G_SpawnFloat() in Q3, supports explicit 0 and a default if not set
+bool G_SpawnFloat(string key, float defaultval, entity e, .float field)
+{
+	string s = GetField_fullspawndata(e, key, false);
+	bool present = s != "";
+	e.(field) = present ? stof(s) : defaultval;
+	return present;
 }
 
 /*
