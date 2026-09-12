@@ -11,8 +11,8 @@ void WriteWepSet(float dest, WepSet w);
 #endif
 
 #ifdef CSQC
-WepSet WepSet_GetFromStat();
-WepSet WepSet_GetFromStat_InMap();
+#define WepSet_GetFromStat()       STAT(WEAPONS)
+#define WepSet_GetFromStat_InMap() STAT(WEAPONSINMAP)
 WepSet ReadWepSet();
 #endif
 
@@ -476,9 +476,11 @@ string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif // GAMEQC
 
 // functions:
-string W_FixWeaponOrder(string order, float complete);
-string W_NameWeaponOrder(string order);
-string W_NumberWeaponOrder(string order);
+string W_NameWeaponOrder_MapFunc(string s);
+string W_NumberWeaponOrder_MapFunc(string s);
+#define W_NameWeaponOrder(order) mapPriorityList(order, W_NameWeaponOrder_MapFunc)
+#define W_NumberWeaponOrder(order) mapPriorityList(order, W_NumberWeaponOrder_MapFunc)
+#define W_FixWeaponOrder(order, complete) fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete)
 string W_FixWeaponOrder_BuildImpulseList(string o);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);
