@@ -402,7 +402,9 @@ METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 	if (loadable_secondary)
 		W_Hagar_Attack2_Load(thiswep, actor, weaponentity); // must always run each frame
 
-	if (autocvar_g_balance_hagar_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_HAGAR, ammo), WEP_CVAR_SEC(WEP_HAGAR, ammo))) // forced reload
+	if (autocvar_g_balance_hagar_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_HAGAR, ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR_SEC(WEP_HAGAR, ammo))
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 	else if ((fire & 1) && !actor.(weaponentity).hagar_load && !actor.(weaponentity).hagar_loadblock) // not while secondary is loaded or awaiting reset
 	{

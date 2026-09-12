@@ -264,23 +264,22 @@ METHOD(Mortar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	PHYS_INPUT_BUTTON_ATCK(actor)  = false;
 	PHYS_INPUT_BUTTON_ATCK2(actor) = false;
-	if (!actor.bot_secondary_grenademooth) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
+
+	bool is_primary = !actor.bot_secondary_grenademooth;
+	if (!bot_aim(actor, weaponentity, WEP_CVAR_BOTH(WEP_MORTAR, is_primary, speed), WEP_CVAR_BOTH(WEP_MORTAR, is_primary, speed_up), WEP_CVAR_BOTH(WEP_MORTAR, is_primary, lifetime), true, true))
+		return;
+
+	if (is_primary)
 	{
-		if (bot_aim(actor, weaponentity, WEP_CVAR_PRI(WEP_MORTAR, speed), WEP_CVAR_PRI(WEP_MORTAR, speed_up), WEP_CVAR_PRI(WEP_MORTAR, lifetime), true, true))
-		{
-			PHYS_INPUT_BUTTON_ATCK(actor) = true;
-			if (random() < 0.01)
-				actor.bot_secondary_grenademooth = true;
-		}
+		PHYS_INPUT_BUTTON_ATCK(actor) = true;
+		if (random() < 0.01)
+			actor.bot_secondary_grenademooth = true;
 	}
 	else
 	{
-		if (bot_aim(actor, weaponentity, WEP_CVAR_SEC(WEP_MORTAR, speed), WEP_CVAR_SEC(WEP_MORTAR, speed_up), WEP_CVAR_SEC(WEP_MORTAR, lifetime), true, true))
-		{
-			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
-			if (random() < 0.02)
-				actor.bot_secondary_grenademooth = false;
-		}
+		PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+		if (random() < 0.02)
+			actor.bot_secondary_grenademooth = false;
 	}
 }
 
@@ -303,8 +302,10 @@ METHOD(Mortar, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 
 METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (autocvar_g_balance_mortar_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_MORTAR, ammo), WEP_CVAR_SEC(WEP_MORTAR, ammo)))
-	{ // forced reload
+	if (autocvar_g_balance_mortar_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_MORTAR, ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR_SEC(WEP_MORTAR, ammo))
+	{
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 		return;
 	}

@@ -160,8 +160,10 @@ METHOD(HLAC, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 
 METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (autocvar_g_balance_hlac_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_HLAC, ammo), WEP_CVAR_SEC(WEP_HLAC, ammo)))
-	{ // forced reload
+	if (autocvar_g_balance_hlac_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_HLAC, ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR_SEC(WEP_HLAC, ammo))
+	{
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 		return;
 	}

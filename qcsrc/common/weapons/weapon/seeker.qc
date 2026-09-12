@@ -482,8 +482,10 @@ METHOD(Seeker, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 
 METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (autocvar_g_balance_seeker_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR(WEP_SEEKER, missile_ammo), WEP_CVAR(WEP_SEEKER, tag_ammo)))
-	{ // forced reload
+	if (autocvar_g_balance_seeker_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR(WEP_SEEKER, missile_ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR(WEP_SEEKER, tag_ammo))
+	{
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 		return;
 	}
