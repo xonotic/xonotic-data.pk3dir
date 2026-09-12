@@ -1,6 +1,9 @@
 #pragma once
 
 #include <common/mapinfo.qh>
+#ifdef CSQC
+	#include "cl_onslaught.qh"
+#endif
 
 CLASS(Onslaught, Gametype)
 	INIT(Onslaught)
@@ -18,12 +21,19 @@ CLASS(Onslaught, Gametype)
 		returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
 	}
 	ATTRIB(Onslaught, m_legacydefaults, string, "20 0");
+#ifdef CSQC
+	ATTRIB(Onslaught, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_Ons);
+	ATTRIB(Onslaught, m_modicons_export, void(int fh), HUD_Mod_Ons_Export);
+#endif
 ENDCLASS(Onslaught)
 REGISTER_GAMETYPE(ONSLAUGHT, NEW(Onslaught));
 
 #ifdef GAMEQC
 REGISTER_NET_LINKED(ENT_CLIENT_GENERATOR)
 REGISTER_NET_LINKED(ENT_CLIENT_CONTROLPOINT_ICON)
+REGISTER_NET_LINKED(ENT_CLIENT_ONS_STATUSES)
+const int SF_ONS_COUNTS    = BIT(0);
+const int SF_ONS_GEN_MASK  = BIT(1);
 #endif
 
 #ifdef CSQC

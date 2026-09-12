@@ -1,4 +1,9 @@
 #pragma once
 
 entity eliminatedPlayers;
-void EliminatedPlayers_Init(float(entity) isEliminated_func);
+void EliminatedPlayers_Init(bool(entity) isEliminated_func);
+void EliminatedPlayers_RecountAlivePlayers();
+
+.bool(entity) isEliminated;
+
+int total_alive_players; ///< Total alive (non-eliminated) players

@@ -14,6 +14,9 @@
 	#include <common/gametypes/gametype/onslaught/sv_generator.qc>
 #endif
 #include <common/gametypes/gametype/onslaught/onslaught.qc>
+#ifdef CSQC
+	#include <common/gametypes/gametype/onslaught/cl_onslaught.qc>
+#endif
 #ifdef SVQC
 	#include <common/gametypes/gametype/onslaught/sv_onslaught.qc>
 #endif

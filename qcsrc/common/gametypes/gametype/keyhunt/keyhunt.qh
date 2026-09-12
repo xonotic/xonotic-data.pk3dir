@@ -46,3 +46,9 @@ CLASS(KeyHunt, Gametype)
     ATTRIB(KeyHunt, m_legacydefaults, string, "1000 20 3 0");
 ENDCLASS(KeyHunt)
 REGISTER_GAMETYPE(KEYHUNT, NEW(KeyHunt));
+
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_KH_KEYSTATUSES)
+const int SF_KH_RESET  = BIT(0);
+const int SF_KH_KEYS   = BIT(1);
+#endif
