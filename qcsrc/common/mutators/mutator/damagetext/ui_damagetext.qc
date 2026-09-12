@@ -18,7 +18,7 @@ void XonoticDamageTextSettings_fill(entity me)
 {
 	entity e;
 
-	me.gotoRC(me, 0, 1); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, (me.columns - 3) * 0.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Damage Text")));
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "cl_damagetext", _("Draw damage numbers")));
