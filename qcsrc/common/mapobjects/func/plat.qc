@@ -10,6 +10,9 @@ void plat_delayedinit(entity this)
 	// Q3 uses only a truth check of .targetname to decide whether to spawn a trigger
 	if (!Q3COMPAT_COMMON || this.targetname == "")
 		plat_spawn_inside_trigger(this); // the "start moving" trigger
+
+	// stay at the top while a player is standing on it
+	settouch(this, plat_center_touch);
 }
 
 float plat_send(entity this, entity to, float sf)
@@ -146,6 +149,7 @@ spawnfunc(func_plat)
 	if (!this.speed) this.speed = q3compat ? 200 : 150;
 	if (!this.lip) this.lip = q3compat ? 8 : 16;
 	if (!this.height) this.height = this.size.z - this.lip;
+	if (!this.wait) this.wait = 1; // Q3 hard-coded 1s, nex/xon hard-coded 3s but by then players are climbing the walls
 
 	this.pos1 = this.origin;
 	this.pos2 = this.origin;
@@ -209,6 +213,8 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 		if (!Q3COMPAT_COMMON || this.targetname == "")
 			plat_spawn_inside_trigger(this);
+
+		settouch(this, plat_center_touch);
 	}
 
 	if(sf & SF_TRIGGER_RESET)

@@ -85,9 +85,6 @@ void CSQC_Init(float apilevel, string enginename, float engineversion)
 	registercvar("cl_nade_type", "3");
 	registercvar("cl_pokenade_type", "zombie");
 
-	registercvar("cl_jumpspeedcap_min", "");
-	registercvar("cl_jumpspeedcap_max", "");
-
 	registercvar("cl_shootfromfixedorigin", "");
 
 	registercvar("cl_multijump", "-1");

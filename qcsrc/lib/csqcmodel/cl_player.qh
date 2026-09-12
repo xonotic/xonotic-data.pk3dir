@@ -25,6 +25,7 @@ bool autocvar_cl_movement = true;
 
 entity csqcplayer;
 float csqcplayer_status;
+float csqcplayer_moveframe;
 const int CSQCPLAYERSTATUS_UNPREDICTED = 0;
 const int CSQCPLAYERSTATUS_FROMSERVER = 1;
 const int CSQCPLAYERSTATUS_PREDICTED = 2;

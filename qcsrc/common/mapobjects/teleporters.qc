@@ -175,6 +175,18 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		player.lastteleport_origin = from;
 	}
 #endif
+
+	if (PHYS_SKIMMING(player) == 2)
+	{
+		#ifdef CSQC
+		csqcplayer_current_moveflags |= PMF_TIME_KNOCKBACK | PMF_SKIMMING;
+		if (csqcplayer_moveframe == clientcommandframe)
+		#endif
+		{
+			player.pm_time = 0.16;
+			player.flags |= FL_KNOCKBACK;
+		}
+	}
 }
 
 entity Simple_TeleportPlayer(entity teleporter, entity player)

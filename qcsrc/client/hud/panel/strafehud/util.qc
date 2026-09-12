@@ -317,12 +317,14 @@ bool StrafeHUD_DetermineJumpHeld(entity e, int keys, bool is_local)
 {
 	if (is_local)
 	{
-		if ((PHYS_INPUT_BUTTON_JUMP(e) || PHYS_INPUT_BUTTON_JETPACK(e)) && !PHYS_CL_TRACK_CANJUMP(e))
+		if (!PHYS_CL_TRACK_CANJUMP(e))
+		if ((PHYS_INPUT_BUTTON_JUMP(e) && !((PHYS_CROUCHFLAGS(e) & 8) && PHYS_INPUT_BUTTON_CROUCH(e)))
+		|| PHYS_INPUT_BUTTON_JETPACK(e))
 			return true;
 	}
 	else
 	{
-		if ((keys & KEY_JUMP) && !PHYS_TRACK_CANJUMP(e))
+		if ((keys & KEY_JUMP) && !((PHYS_CROUCHFLAGS(e) & 8) && (keys & KEY_CROUCH)) && !PHYS_TRACK_CANJUMP(e))
 			return true;
 	}
 
