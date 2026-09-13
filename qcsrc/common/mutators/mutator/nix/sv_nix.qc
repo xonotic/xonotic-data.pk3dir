@@ -20,7 +20,6 @@ bool autocvar_g_nix_with_healtharmor;
 bool autocvar_g_nix_with_blaster;
 bool autocvar_g_nix_with_powerups;
 
-float g_nix_with_blaster;
 // WEAPONTODO
 int nix_weapon;
 float nix_nextchange;
@@ -35,8 +34,6 @@ REGISTER_MUTATOR(nix, expr_evaluate(cvar_string("g_nix")) && !MUTATOR_IS_ENABLED
 {
 	MUTATOR_ONADD
 	{
-		g_nix_with_blaster = autocvar_g_nix_with_blaster;
-
 		nix_nextchange = 0;
 		nix_nextweapon = 0;
 
@@ -83,7 +80,7 @@ bool NIX_CanChooseWeapon(int wpn)
 	}
 	else
 	{
-		if(wpn == WEP_BLASTER.m_id && g_nix_with_blaster)
+		if(wpn == WEP_BLASTER.m_id && autocvar_g_nix_with_blaster)
 			return false;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return false;
@@ -200,7 +197,7 @@ void NIX_GiveCurrentWeapon(entity this)
 	}
 
 	STAT(WEAPONS, this) = '0 0 0';
-	if(g_nix_with_blaster)
+	if (autocvar_g_nix_with_blaster)
 		STAT(WEAPONS, this) |= WEPSET(BLASTER);
 	STAT(WEAPONS, this) |= wpn.m_wepset;
 

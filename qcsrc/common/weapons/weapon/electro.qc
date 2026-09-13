@@ -612,19 +612,12 @@ METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 
 METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
+	if (autocvar_g_balance_electro_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_ELECTRO, ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR_SEC(WEP_ELECTRO, ammo))
 	{
-		float ammo_amount = 0;
-		if (actor.(weaponentity).clip_load >= WEP_CVAR_PRI(WEP_ELECTRO, ammo))
-			ammo_amount = 1;
-		if (actor.(weaponentity).clip_load >= WEP_CVAR_SEC(WEP_ELECTRO, ammo))
-			++ammo_amount;
-
-		if (!ammo_amount)
-		{
-			thiswep.wr_reload(thiswep, actor, weaponentity);
-			return;
-		}
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+		return;
 	}
 
 	if (fire & 1)
