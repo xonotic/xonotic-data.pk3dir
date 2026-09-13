@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 07:22+0200\n"
+"POT-Creation-Date: 2026-09-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Logan Zerfass, 2023\n"
 "Language-Team: Swedish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -683,8 +683,8 @@ msgid "SCO^deaths"
 msgstr "död"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
-msgid "Number of keys destroyed by pushing them into void"
-msgstr "Mängden nycklar förstörda genom att putta dem i void"
+msgid "Number of keys destroyed by pushing them into the void"
+msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^destructions"
@@ -885,8 +885,8 @@ msgid "SCO^pl"
 msgstr "pf"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
-msgid "Number of players pushed into void"
-msgstr "Mängden spelare puttade ner i void"
+msgid "Number of players pushed into the void"
+msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^pushes"
@@ -1590,8 +1590,8 @@ msgstr "Rondgräns:"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:41
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:41
-msgid "The amount of rounds won needed before the match will end"
-msgstr "Antal ronder som måste vinnas innan matchen slutar"
+msgid "The number of rounds won required to conclude the match"
+msgstr ""
 
 #: qcsrc/common/gametypes/gametype/ctf/cl_ctf.qc:207
 msgid "Capture time rankings"
@@ -1665,8 +1665,8 @@ msgid "Capture limit:"
 msgstr "Fångningsgräns:"
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:29
-msgid "The amount of captures needed before the match will end"
-msgstr "Antal tagningar som krävs innan matchen slutar"
+msgid "The number of captures required to conclude the match"
+msgstr ""
 
 #: qcsrc/common/gametypes/gametype/cts/cl_cts.qc:41
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:192
@@ -1795,8 +1795,8 @@ msgstr "Domination"
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:41
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:59
-msgid "The amount of points needed before the match will end"
-msgstr "Antal poäng som krävs för att matchen ska ta slut"
+msgid "The number of points required to conclude the match"
+msgstr ""
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:12
 #, c-format
@@ -2171,8 +2171,8 @@ msgid "Goal limit:"
 msgstr "Målgräns:"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
-msgid "The amount of goals needed before the match will end"
-msgstr "Antal mål som krävs innan matchen slutar"
+msgid "The number of goals required to conclude the match"
+msgstr ""
 
 #: qcsrc/common/gametypes/gametype/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -2182,12 +2182,9 @@ msgstr "Bollstjälare"
 #, c-format
 msgid ""
 "%s is a team-based gametype similar to %s where the final goal is to destroy "
-"the enemy team core generator. In order to destroy the generator, control "
+"the enemy team's core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
-"%s är ett lagbaserat spelläge som liknar %s, där det slutliga målet är att "
-"förstöra fiendelagets kärngenerator. För att kunna förstöra generatorn måste "
-"kontrollpunkter på kartan (liknande dem i %s) först erövras."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2353,11 +2350,9 @@ msgstr ""
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
-"Careful team coordination and map control is often key to winning a match, "
+"Careful team coordination and map control are often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
-"Noggrann lagsamordning och kontroll över kartan är ofta avgörande för att "
-"vinna en match, och ibland delar spelare vapen med sina lagkamrater."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2379,11 +2374,9 @@ msgstr ""
 #: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
 msgid ""
-"Scoring is similar to in %s, except that points are awarded for frags for "
-"all members of the team of the player holding the ball."
+"Scoring is similar to that in %s, except that points are awarded for frags "
+"for all members of the team of the player holding the ball."
 msgstr ""
-"Poängräkningen liknar den i %s, förutom att hela laget till den spelare som "
-"håller bollen får poäng för frags."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -2410,11 +2403,8 @@ msgstr ""
 msgid ""
 "Since it doesn't have rounds, the chaos is nonstop. As a consequence of the "
 "chaotic nature, team communication is less important in this gametype than "
-"other team-based gametypes."
+"in other team-based gametypes."
 msgstr ""
-"Eftersom det inte finns några omgångar tar kaoset aldrig slut. Som följd av "
-"den kaotiska karaktären är lagkommunikation mindre viktig i detta spelläge "
-"än i andra lagbaserade spellägen."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2605,8 +2595,8 @@ msgid "Frag limit:"
 msgstr "Fraggräns:"
 
 #: qcsrc/common/mapinfo.qh:94
-msgid "The amount of frags needed before the match will end"
-msgstr "Antal fraggningar som krävs innan matchen tar slut"
+msgid "The number of frags required to conclude the match"
+msgstr ""
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:293
 msgid "Don't care"
@@ -3889,11 +3879,8 @@ msgstr "Napalmgranat"
 msgid ""
 "The (normal) %s explodes after a short delay, dealing damage to nearby "
 "players. If other nade types are destroyed before they detonate, they "
-"instead explode similar to this, without doing their special effects."
+"instead explode similarly to this, without doing their special effects."
 msgstr ""
-"Den (vanliga) %s exploderar efter en kort fördröjning och skadar närliggande "
-"spelare. Om andra granattyper förstörs innan de detonerar exploderar de i "
-"stället på liknande sätt, utan sina specialeffekter."
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #, c-format
@@ -4482,11 +4469,9 @@ msgstr ""
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:60
 msgid ""
-"The damage and knockback you deal to yourself also increases but by a "
-"smaller amount."
+"The damage and knockback you deal to yourself also increase but by a smaller "
+"amount."
 msgstr ""
-"Även skadan och knuffkraften du orsakar på dig själv ökar, men i mindre "
-"utsträckning."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:61
 #, c-format
@@ -10087,12 +10072,9 @@ msgstr "Xonotic tack till"
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:44
 msgid ""
 "Welcome to Xonotic, please select your language preference and enter your "
-"player name to get started.  You can change these options later through the "
+"player name to get started. You can change these options later through the "
 "menu system."
 msgstr ""
-"Välkommen till Xonotic, var vänlig att välja ett språk och skriv in ditt "
-"spelarnamn för att komma igång.  Du kan senare ändra dessa inställningar via "
-"menyn."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -10894,11 +10876,9 @@ msgstr "Spara nuvarande skinn"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:65
 msgid ""
-"Note: HUD skins are saved in data/data/ directory and can be manually "
+"Note: HUD skins are saved in the data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
-"Obs! HUD-teman sparas i katalogen data/data/ och kan byta namn på eller tas "
-"bort manuellt därifrån"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -11264,19 +11244,17 @@ msgstr "Spelarplatser:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid ""
-"The maximum amount of players or bots that can be connected to your server "
+"The maximum number of players or bots that can be connected to your server "
 "at once"
 msgstr ""
-"Maximala mängden spelare eller bottar som kan vara uppkopplade mot din "
-"server på samma gång"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
 msgstr "Antal bottar:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
-msgid "Amount of bots on your server"
-msgstr "Antal bottar på din server"
+msgid "Number of bots on your server"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "Bot skill:"
@@ -12198,8 +12176,8 @@ msgid "Gloss"
 msgstr "Glans"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
-msgid "Enable the use of glossmaps on textures supporting it"
-msgstr "Slå på användningen av glanskartor på texturer som stödjer der"
+msgid "Enable the use of glossmaps on textures supporting them"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:125
 msgid "Offset mapping"
@@ -12411,11 +12389,9 @@ msgstr "Kvalitet:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:239
 msgid ""
-"Multiplier for amount of particles. Less means less particles, which in turn "
+"Multiplier for number of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
-"Multiplikator för mängden partiklar. Mindre betyder mindre partiklar, vilket "
-"i tur ger bättre prestanda"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
 msgid "Particles further away than this will not be drawn"
@@ -12788,10 +12764,8 @@ msgstr "Tvinga spelarfärger till mina:"
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:57
 msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
-"enemy team"
+"enemy team's"
 msgstr ""
-"Varning: om påslagen i lagspel kan ditt lags färg kan vara samma som "
-"motståndarens lag"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Except in team games"
@@ -13975,14 +13949,9 @@ msgid ""
 "Due to air control, you can accelerate while in the air far beyond the "
 "maximum ground movement speed. To avoid ground friction, players constantly "
 "hop by simply keeping %s pressed, so that ground contact doesn't slow them "
-"down. This allows you to get around the map much faster than if you would "
-"just walk."
+"down. This allows you to get around the map much faster than if you just "
+"walked."
 msgstr ""
-"Tack vare luftkontrollen kan du accelerera i luften långt över den maximala "
-"rörelsehastigheten på marken. För att undvika markfriktion hoppar spelare "
-"hela tiden genom att helt enkelt hålla %s nedtryckt, så att markkontakt inte "
-"saktar ner dem. Det gör att du kan ta dig runt på kartan mycket snabbare än "
-"om du bara går."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -14575,11 +14544,9 @@ msgstr "Arena endast med närstrid"
 #: qcsrc/menu/xonotic/mutatortab.qc:259
 #, c-format
 msgid ""
-"Players spawn with no ammo and no weapons except the %s, so can only slap "
-"other players."
+"Players spawn with no ammo and no weapons except the %s, so they can only "
+"slap other players."
 msgstr ""
-"Spelarna startar utan ammunition och utan andra vapen än %s, så de kan bara "
-"slå andra spelare."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
