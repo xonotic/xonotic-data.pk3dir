@@ -77,29 +77,16 @@ void WriteWepSet(float dst, WepSet w)
 }
 #endif
 #ifdef CSQC
-WepSet WepSet_GetFromStat()
-{
-	return STAT(WEAPONS);
-}
-WepSet WepSet_GetFromStat_InMap()
-{
-	return STAT(WEAPONSINMAP);
-}
 WepSet ReadWepSet()
 {
 	if (REGISTRY_MAX(Weapons) > 48)
 		return ReadInt72_t();
 	if (REGISTRY_MAX(Weapons) > 24)
 		return ReadInt48_t();
-	return
-		ReadInt24_t() * '1 0 0';
+	return vec3(ReadInt24_t(), 0, 0);
 }
 #endif
 
-string W_FixWeaponOrder(string order, float complete)
-{
-	return fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete);
-}
 string W_NameWeaponOrder_MapFunc(string s)
 {
 	int i = stof(s);
@@ -112,20 +99,12 @@ string W_NameWeaponOrder_MapFunc(string s)
 	return s;
 }
 
-string W_NameWeaponOrder(string order)
-{
-	return mapPriorityList(order, W_NameWeaponOrder_MapFunc);
-}
 string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s))
 		return s;
 	FOREACH(Weapons, it != WEP_Null && (it.netname == s || it.m_deprecated_netname == s), return ftos(i));
 	return s;
-}
-string W_NumberWeaponOrder(string order)
-{
-	return mapPriorityList(order, W_NumberWeaponOrder_MapFunc);
 }
 
 float W_FixWeaponOrder_BuildImpulseList_buf[REGISTRY_MAX(Weapons)];
