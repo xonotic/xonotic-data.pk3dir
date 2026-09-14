@@ -42,3 +42,7 @@ CLASS(Domination, Gametype)
 	ATTRIB(Domination, m_legacydefaults, string, "200 20 0");
 ENDCLASS(Domination)
 REGISTER_GAMETYPE(DOMINATION, NEW(Domination));
+
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_DOM_PPSSTATUSES)
+#endif

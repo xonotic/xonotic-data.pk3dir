@@ -30,7 +30,6 @@ CLASS(CaptureTheFlag, Gametype)
 	}
 #ifdef CSQC
 	ATTRIB(CaptureTheFlag, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_CTF);
-	ATTRIB(CaptureTheFlag, m_modicons_reset, void(), HUD_Mod_CTF_Reset);
 #endif
 	ATTRIB(CaptureTheFlag, m_legacydefaults, string, "300 20 10 0");
 ENDCLASS(CaptureTheFlag)
@@ -38,22 +37,11 @@ REGISTER_GAMETYPE(CTF, NEW(CaptureTheFlag));
 #define g_ctf IS_GAMETYPE(CTF)
 
 #ifdef GAMEQC
-const int CTF_RED_FLAG_TAKEN			= 1;
-const int CTF_RED_FLAG_LOST				= 2;
-const int CTF_RED_FLAG_CARRYING			= 3;
-const int CTF_BLUE_FLAG_TAKEN			= 4;
-const int CTF_BLUE_FLAG_LOST			= 8;
-const int CTF_BLUE_FLAG_CARRYING		= 12;
-const int CTF_YELLOW_FLAG_TAKEN			= 16;
-const int CTF_YELLOW_FLAG_LOST			= 32;
-const int CTF_YELLOW_FLAG_CARRYING		= 48;
-const int CTF_PINK_FLAG_TAKEN			= 64;
-const int CTF_PINK_FLAG_LOST			= 128;
-const int CTF_PINK_FLAG_CARRYING		= 192;
-const int CTF_NEUTRAL_FLAG_TAKEN		= 256;
-const int CTF_NEUTRAL_FLAG_LOST			= 512;
-const int CTF_NEUTRAL_FLAG_CARRYING		= 768;
-const int CTF_FLAG_NEUTRAL				= 2048;
-const int CTF_SHIELDED					= 4096;
-const int CTF_STALEMATE					= 8192;
+REGISTER_NET_LINKED(ENT_CLIENT_CTF_FLAGSTATUSES)
+const int SF_CTF_FLAGS         = BIT(0);
+const int SF_CTF_SPEC          = BIT(1);
+const int SF_CTF_SPEC_CHANGED  = BIT(2);
+const int SF_CTF_ONEFLAG       = BIT(3);
+const int SF_CTF_STALEMATE     = BIT(4);
+const int SF_CTF_SHIELDED      = BIT(5);
 #endif
