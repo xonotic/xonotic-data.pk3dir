@@ -681,9 +681,7 @@ MUTATOR_HOOKABLE(SV_StartFrame, EV_NO_ARGS);
 MUTATOR_HOOKABLE(SetModname, params);
 #undef params
 
-/** Called for each item being spawned on a map, including dropped weapons.
- *  Return 1 to remove an item.
- */
+/// Called for each item being spawned on a map, including dropped weapons.
 #define params(i, o) \
 	i(entity, 0) /* item */ \
 	/**/

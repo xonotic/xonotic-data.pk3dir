@@ -1004,15 +1004,13 @@ void item_setactive(entity this, int act)
 		Item_Show(this, ((this.active == ACTIVE_ACTIVE) ? 1 : -1));
 }
 
-void StartItem(entity this, entity def)
+void StartItem(entity this)
 {
+	entity def = this.itemdef;
 	if (def.m_spawnfunc_hookreplace)
-		def = def.m_spawnfunc_hookreplace(def, this);
-	this.itemdef = def;
+		def = this.itemdef = def.m_spawnfunc_hookreplace(def, this);
 	if (def.m_canonical_spawnfunc != "") // FIXME why do weapons set itemdef to an entity that doesn't have this?
 		this.classname = def.m_canonical_spawnfunc;
-
-	startitem_failed = true; // early return means failure
 
 	// some mutators check for resources set by m_iteminit in FilterItem
 	if(def.m_iteminit)
@@ -1145,7 +1143,11 @@ void StartItem(entity this, entity def)
 		if (this.noalign <= 0)
 		{
 			if (!this.noalign)
-				DropToFloor_QC_DelayedInit(this);
+			{
+				DropToFloor_QC(this);
+				if (wasfreed(this))
+					return;
+			}
 			waypoint_spawnforitem(this);
 		}
 
@@ -1167,6 +1169,7 @@ void StartItem(entity this, entity def)
 			this.is_item = true;
 		}
 
+		// DO NOT DELETE AFTER THIS POINT //
 		weaponsInMap |= WepSet_FromWeapon(REGISTRY_GET(Weapons, this.weapon));
 
 		if (	    def.instanceOfPowerup
@@ -1229,11 +1232,7 @@ void StartItem(entity this, entity def)
 	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), 0, ItemSend);
 
 	// call this hook after everything else has been done
-	if (MUTATOR_CALLHOOK(Item_Spawn, this))
-	{
-		delete(this);
-		return;
-	}
+	MUTATOR_CALLHOOK(Item_Spawn, this);
 
 	// we should be sure this item will spawn before loading its assets
 	// CSQC handles model precaching: it may not use this model (eg simple items) and may not have connected yet
@@ -1241,8 +1240,6 @@ void StartItem(entity this, entity def)
 	precache_sound(this.item_pickupsound);
 
 	setItemGroup(this);
-
-	startitem_failed = false;
 }
 
 #define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))
