@@ -249,6 +249,13 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 	replace_bind("g_waypointsprite_team_danger_d", "waypoint_danger_death");
 	replace_bind("g_waypointsprite_clear_personal", "waypoint_clear_personal");
 	replace_bind("g_waypointsprite_clear", "waypoint_clear");
+
+	// Precache images
+	FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_HIDDEN),
+	{
+		it.display(it, XonoticKeyBinder_cb);
+		draw_PreloadPicture(XonoticKeyBinder_cb_icon);
+	});
 }
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
