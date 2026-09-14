@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -700,7 +700,7 @@ msgstr "morts"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of keys destroyed by pushing them into the void"
-msgstr ""
+msgstr "Nombre de clés détruites en les poussant dans le vide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^destructions"
@@ -902,7 +902,7 @@ msgstr "pl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of players pushed into the void"
-msgstr ""
+msgstr "Nombre de joueurs poussés dans le vide"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^pushes"
@@ -1616,7 +1616,7 @@ msgstr "Limite de manches :"
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:41
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:41
 msgid "The number of rounds won required to conclude the match"
-msgstr ""
+msgstr "Le nombre de manches remportées requis pour mettre fin à la partie"
 
 #: qcsrc/common/gametypes/gametype/ctf/cl_ctf.qc:207
 msgid "Capture time rankings"
@@ -1694,7 +1694,7 @@ msgstr "Limite de captures :"
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:29
 msgid "The number of captures required to conclude the match"
-msgstr ""
+msgstr "Le nombre de captures requis pour mettre fin à la partie"
 
 #: qcsrc/common/gametypes/gametype/cts/cl_cts.qc:41
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:192
@@ -1833,7 +1833,7 @@ msgstr "Domination"
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:59
 msgid "The number of points required to conclude the match"
-msgstr ""
+msgstr "Le nombre de points requis pour mettre fin à la partie"
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:12
 #, c-format
@@ -2229,7 +2229,7 @@ msgstr "Limite de buts :"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "The number of goals required to conclude the match"
-msgstr ""
+msgstr "Le nombre de buts requis pour mettre fin à la partie"
 
 #: qcsrc/common/gametypes/gametype/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -2242,6 +2242,10 @@ msgid ""
 "the enemy team's core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s est un type de partie en équipe similaire à %s où l'objectif final est de "
+"détruire le générateur central de l'équipe adverse. Pour détruire le "
+"générateur, il faut d'abord capturer des points de contrôle sur la carte "
+"(similaires à ceux en %s)."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2422,6 +2426,9 @@ msgid ""
 "Careful team coordination and map control are often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"Une coordination minutieuse au sein de l'équipe et le contrôle de la carte "
+"sont souvent essentiels pour remporter une partie, et il arrive parfois que "
+"les joueurs partagent leurs armes avec leurs coéquipiers."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2446,6 +2453,9 @@ msgid ""
 "Scoring is similar to that in %s, except that points are awarded for frags "
 "for all members of the team of the player holding the ball."
 msgstr ""
+"Le système de points est similaire à celui de %s, sauf que les points "
+"obtenus pour les frags sont attribués à tous les membres de l'équipe du "
+"joueur qui détient la balle."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -2476,6 +2486,9 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "in other team-based gametypes."
 msgstr ""
+"Comme il n'y a pas de manches, le chaos est permanent. En raison de cette "
+"nature chaotique, la communication au sein de l'équipe est moins importante "
+"dans ce type de partie que dans d'autres types de partie en équipe."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2671,7 +2684,7 @@ msgstr "Limite de frags :"
 
 #: qcsrc/common/mapinfo.qh:94
 msgid "The number of frags required to conclude the match"
-msgstr ""
+msgstr "Le nombre de frags requis pour mettre fin à la partie"
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:293
 msgid "Don't care"
@@ -3994,6 +4007,10 @@ msgid ""
 "players. If other nade types are destroyed before they detonate, they "
 "instead explode similarly to this, without doing their special effects."
 msgstr ""
+"La %s (normale) explose après un court délai, infligeant des dégâts aux "
+"joueurs à proximité. Lorsque d'autres types de grenades sont détruits avant "
+"d'exploser, ils explosent de la même manière, sans produire leurs effets "
+"spéciaux."
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #, c-format
@@ -4616,6 +4633,8 @@ msgid ""
 "The damage and knockback you deal to yourself also increase but by a smaller "
 "amount."
 msgstr ""
+"Les dégâts et la force de recul que vous vous infligez à vous-même "
+"augmentent également, mais dans une moindre mesure."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:61
 #, c-format
@@ -10334,6 +10353,9 @@ msgid ""
 "player name to get started. You can change these options later through the "
 "menu system."
 msgstr ""
+"Bienvenue sur Xonotic, veuillez sélectionner votre langue et entrer votre "
+"nom de joueur pour commencer. Vous pouvez changer ces options plus tard via "
+"le système de menus."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -11141,6 +11163,8 @@ msgid ""
 "Note: HUD skins are saved in the data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Remarque : les thèmes de l'ATH sont sauvegardés dans le répertoire data/"
+"data/ et peuvent être manuellement renommés ou supprimés depuis ce répertoire"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -11511,6 +11535,8 @@ msgid ""
 "The maximum number of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Le nombre maximal de joueurs ou de bots pouvant être connectés simultanément "
+"à votre serveur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
@@ -11518,7 +11544,7 @@ msgstr "Nombre de bots :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
 msgid "Number of bots on your server"
-msgstr ""
+msgstr "Nombre de bots sur votre serveur"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "Bot skill:"
@@ -12446,6 +12472,8 @@ msgstr "Brillance des textures"
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Enable the use of glossmaps on textures supporting them"
 msgstr ""
+"Activer l'utilisation des cartes de brillance sur les textures qui les "
+"prennent en charge"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:125
 msgid "Offset mapping"
@@ -12664,6 +12692,9 @@ msgid ""
 "Multiplier for number of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Coefficient multiplicateur du nombre de particules. Une valeur plus faible "
+"correspond à un nombre de particules plus faible, ce qui se traduit par de "
+"meilleures performances."
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
 msgid "Particles further away than this will not be drawn"
@@ -13044,6 +13075,8 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team's"
 msgstr ""
+"Attention : si activé dans les parties en équipe, la couleur de votre équipe "
+"risque d'être la même que celle de l'équipe ennemie."
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Except in team games"
@@ -14249,6 +14282,12 @@ msgid ""
 "down. This allows you to get around the map much faster than if you just "
 "walked."
 msgstr ""
+"Grâce au contrôle aérien, vous pouvez accélérer dans les airs bien au-delà "
+"de la vitesse maximale de déplacement au sol. Pour éviter la friction avec "
+"le sol, les joueurs sautillent constamment en maintenant simplement la "
+"touche %s enfoncée, afin que le contact avec le sol ne les ralentisse pas. "
+"Cela vous permet de vous déplacer sur la carte beaucoup plus rapidement que "
+"si vous marchiez simplement."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -14865,6 +14904,8 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so they can only "
 "slap other players."
 msgstr ""
+"Les joueurs apparaissent sans munitions ni armes, à l'exception du %s ; ils "
+"peuvent donc seulement frapper les autres joueurs."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""

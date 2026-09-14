@@ -704,7 +704,7 @@ msgstr "смерті"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of keys destroyed by pushing them into the void"
-msgstr ""
+msgstr "Кількість зруйнованих ключів з-за викиду в порожнечу"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^destructions"
@@ -906,7 +906,7 @@ msgstr "вп"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of players pushed into the void"
-msgstr ""
+msgstr "Кількість гравців, яких було викинуто в порожнечу"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^pushes"
@@ -1079,9 +1079,9 @@ msgid ""
 "or in all but these gametypes. You can also specify 'all' as a\n"
 "field to show all fields available for the current gametype."
 msgstr ""
-"Перед полем ви можете поставити знак + чи -, потім комою розділити список\n"
-"типів гри, потім слеш, щоб показувати поле тільки в цих\n"
-"або в всіх інших крім цих типів гри. Також можна позначити 'all' замість\n"
+"Перед полем ви можете поставити знак + чи -, потім список режимів\n"
+"через кому, потім слеш, щоб показувати поле тільки в цих\n"
+"або в всіх інших крім цих режимів гри. Також можна позначити 'all' замість\n"
 "назви поля, щоб відобразити всі доступні поля для поточного типу гри."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:740
@@ -1090,7 +1090,7 @@ msgid ""
 "include/exclude ALL teams/noteams gametypes."
 msgstr ""
 "Спеціальні назви 'teams' та 'noteams' дозволяють\n"
-"включати/виключати ВСІ командні/некомандні типи ігор відповідно."
+"включати/виключати ВСІ командні/некомандні режими ігор відповідно."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:744
 msgid "Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4"
@@ -1110,7 +1110,7 @@ msgid ""
 "other gametypes except DM."
 msgstr ""
 "'поле3' буде показане тільки в ЗП, і 'поле4' буде показано в\n"
-"інших типах гри крім БН."
+"інших режимах гри крім БН."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:1064
 #: qcsrc/client/hud/panel/scoreboard.qc:1084
@@ -1334,15 +1334,15 @@ msgstr "Ні"
 
 #: qcsrc/client/hud/panel/weapons.qc:647
 msgid "Out of ammo"
-msgstr "Набої закінчилися"
+msgstr "Пусто"
 
 #: qcsrc/client/hud/panel/weapons.qc:652
 msgid "Don't have"
-msgstr "Відсутня"
+msgstr "Бракує"
 
 #: qcsrc/client/hud/panel/weapons.qc:657
 msgid "Unavailable"
-msgstr "Недоступна"
+msgstr "Немає"
 
 #: qcsrc/client/main.qc:320
 msgid "Trying to remove a team which is not in the teamlist!"
@@ -1444,7 +1444,7 @@ msgstr "^BGНатисніть ^F2%s^BG щоб увійти до гри"
 #: qcsrc/client/main.qc:1419
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:37
 msgid "Gametype:"
-msgstr "Тип гри:"
+msgstr "Режим гри:"
 
 #: qcsrc/client/main.qc:1423
 msgid "by:"
@@ -1564,7 +1564,7 @@ msgid ""
 "life per round. There are no pickups available on the map in %s, making the "
 "gameplay fast-paced and focused on combat."
 msgstr ""
-"%s - це популярний командний тип гри з раундами, де гравці з'являються зі "
+"%s - це популярний командний режим гри з раундами, де гравці з'являються зі "
 "всією доступною зброєю, мають максимум здоров'я та броні, але мають лише "
 "одне життя. На мапах %s немає предметів, що робить геймплей швидким і "
 "зосередженим на чистій битві. "
@@ -1611,7 +1611,7 @@ msgstr "Ліміт раунда:"
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:41
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:41
 msgid "The number of rounds won required to conclude the match"
-msgstr ""
+msgstr "Кількість раундів, які необхідно виграти для завершення матчу"
 
 #: qcsrc/common/gametypes/gametype/ctf/cl_ctf.qc:207
 msgid "Capture time rankings"
@@ -1686,7 +1686,7 @@ msgstr "Ліміт захоплень:"
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:29
 msgid "The number of captures required to conclude the match"
-msgstr ""
+msgstr "Кількість захоплених прапорів, необхідних для завершення матчу"
 
 #: qcsrc/common/gametypes/gametype/cts/cl_cts.qc:41
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:192
@@ -1701,7 +1701,7 @@ msgid ""
 "from start to finish as fast as possible and try to beat the times set by "
 "others."
 msgstr ""
-"%s - це унікальний тип гри, який зосереджений на перегонах між гравцями на "
+"%s - це унікальний режим гри, який зосереджений на перегонах між гравцями на "
 "мапі замість перестрілок. Гравці пробігають мапу від старту до фінішу "
 "якнайшвидше, намагаючись побити час, встановлений іншими."
 
@@ -1721,9 +1721,9 @@ msgid ""
 "heaps of community-made maps available. Also, it only requires one player to "
 "play."
 msgstr ""
-"Хоча цей тип гри значно відрізняється від решти, він досить популярний, адже "
-"це чудовий спосіб відточити навички руху, та є купа доступних користувацьких "
-"мапів. А також, грати в нього можна навіть наодинці."
+"Хоча цей режим гри значно відрізняється від решти, він досить популярний, "
+"адже це чудовий спосіб відточити навички руху, та є купа доступних "
+"користувацьких мапів. А також, грати в нього можна навіть наодинці."
 
 #: qcsrc/common/gametypes/gametype/cts/cts.qh:11
 msgid "Complete the Stage"
@@ -1779,8 +1779,8 @@ msgid ""
 "%s is a gametype where teams compete to dominate the map by capturing and "
 "keeping control points."
 msgstr ""
-"%s - це тип гри, в якому команди змагаються, щоб домінувати над мапою через "
-"захоплення та утримання контрольних точок."
+"%s - це режим гри, в якому команди змагаються, щоб домінувати над мапою "
+"через захоплення та утримання контрольних точок."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qc:9
 msgid ""
@@ -1799,7 +1799,7 @@ msgid ""
 "Scoring is a combination of frags and score automatically generated by any "
 "control points held by your team every few seconds."
 msgstr ""
-"Очки нараховуються за сукупністю фрагів та балів, які автоматично надаються "
+"Очки нараховуються за сукупністю фрагів та очок, які автоматично надаються "
 "за утримання вашою командою контрольних точкок кожні кілька секунд."
 
 #: qcsrc/common/gametypes/gametype/domination/domination.qh:11
@@ -1816,7 +1816,7 @@ msgstr "Домінування"
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:59
 msgid "The number of points required to conclude the match"
-msgstr ""
+msgstr "Кількість очок, необхідних для завершення матчу"
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:12
 #, c-format
@@ -1877,7 +1877,7 @@ msgid ""
 "need to be unfrozen to re-enter the round. The round ends when all players "
 "from all opposing teams are frozen, scoring the remaining team a point."
 msgstr ""
-"%s - це командний тип гри із раундами, де фрагнуті гравці стають "
+"%s - це командний режим гри із раундами, де фрагнуті гравці стають "
 "замороженими, їх потрібно розморозити, щоб вони повернулися в гру. Раунд "
 "завершується, коли всі гравці з команд-суперників будуть заморожені, а "
 "команда, що залишилася, отримує очко."
@@ -1900,9 +1900,9 @@ msgid ""
 "grace period where weapons cannot be fired, meaning it's a good opportunity "
 "to grab as many pickups as you can."
 msgstr ""
-"Як і в багатьох інших типах ігор із раундами, на початку діє десятисекундна "
-"\"пауза\", під час якої не можна стріляти, тому це чудова нагода взяти "
-"якомога більше підборів."
+"Як і в багатьох інших режимах ігор із раундами, на початку діє "
+"десятисекундна \"пауза\", під час якої не можна стріляти, тому це чудова "
+"нагода взяти якомога більше підборів."
 
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qc:13
 msgid ""
@@ -1940,8 +1940,8 @@ msgid ""
 "from each other. The player who frags the most monsters overall wins the "
 "match."
 msgstr ""
-"%s - це унікальний тип гри з раундами, в якому з'являється зграя монстрів по "
-"всій мапі, і гравці мають набити якнайбільше фрагів. Оскільки гравці не "
+"%s - це унікальний режим гри з раундами, в якому з'являється зграя монстрів "
+"по всій мапі, і гравці мають набити якнайбільше фрагів. Оскільки гравці не "
 "можуть шкодити один одному, вони борються за те, хто більше вкраде фрагів у "
 "суперників. Виграє той, хто фрагнув найбільшу кількість монстрів."
 
@@ -2116,12 +2116,11 @@ msgid ""
 "if possible. Points are deducted when you walk into hazards, but not when "
 "you do movement tricks like blaster jumping since self damage is disabled."
 msgstr ""
-"Цей режим відрізняється унікальною системою підрахунку балів, яка враховує "
-"як фраги, так і завдану шкоду. Це означає, що Ви все одно отримаєте бали, "
-"якщо майже вб'єте гравця, проте завдати смертельного удару завжди вигідніше. "
-"Бали віднімаються при потраплянні в небезпечні зони, але не під час трюків "
-"із переміщенням (як-от стрибання з бластеру), оскільки самопошкодження "
-"вимкнено."
+"Цей режим відрізняється унікальною системою очок, яка враховує як фраги, так "
+"і завдану шкоду. Це означає, що ви все одно отримаєте очки, якщо майже "
+"вб'єте гравця, проте завдати смертельного удару завжди вигідніше. Очки "
+"віднімаються при потраплянні в небезпечні зони, але не під час трюків із "
+"переміщенням (як-от стрибання з бластеру), оскільки самопошкодження вимкнено."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:15
 #, c-format
@@ -2129,8 +2128,8 @@ msgid ""
 "Since damage is always rewarded in %s, the more you shoot the better, "
 "turning this gametype into chaotic fun at times."
 msgstr ""
-"Оскільки за завдану шкоду в режимі %s завжди нараховуються бали, чим більше "
-"Ви стріляєте, тим краще - це подекуди перетворює цей ігровий режим в "
+"Оскільки за завдану шкоду в режимі %s завжди нараховуються очки, чим більше "
+"ви стріляєте, тим краще - це подекуди перетворює цей ігровий режим в "
 "хаотичну розвагу."
 
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qc:16
@@ -2192,7 +2191,7 @@ msgstr "Ліміт голів:"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "The number of goals required to conclude the match"
-msgstr ""
+msgstr "Кількість голів, необхідних для завершення матчу"
 
 #: qcsrc/common/gametypes/gametype/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -2205,6 +2204,9 @@ msgid ""
 "the enemy team's core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s - це командний режим гри, схожий на %s, головна мета в якій потрібно "
+"зруйнувати вороже ядро генератора. Щоб зруйнувати генератор, потрібно спершу "
+"захопити контрольні точки на мапі (схожі як в режимі %s)."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2340,9 +2342,9 @@ msgid ""
 "fragged. Extra points are also given to survivors who survive until the "
 "round timer expires."
 msgstr ""
-"Гравці отримують бали за кожного ліквідованого супротивника лише за умови, "
-"що вони самі виживуть у раунд, проте бали віднімаються за вбитих союзників. "
-"Додаткові бали також зараховуються уцілілим, які протрималися до закінчення "
+"Гравці отримують очки за кожного ліквідованого супротивника лише за умови, "
+"що вони самі виживуть у раунд, проте очки віднімаються за вбитих союзників. "
+"Додаткові очки також зараховуються уцілілим, які протрималися до закінчення "
 "часу раунду."
 
 #: qcsrc/common/gametypes/gametype/survival/survival.qh:12
@@ -2364,14 +2366,16 @@ msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
 msgstr ""
-"Система підрахунку балів доволі проста: зараховується бал за кожен фраг, і "
-"втрачається бал за самогубство або вбивство союзника."
+"Система очок доволі проста: зараховується очко за кожен фраг, і втрачається "
+"очко за самогубство або вбивство союзника."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
 "Careful team coordination and map control are often key to winning a match, "
 "and sometimes players will share weapons with their teammates."
 msgstr ""
+"Тісна координація в команді та контроль мапи часто є ключем до перемоги в "
+"матчі, тому гравці іноді діляться зброєю зі своїми союзниками."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:9
 msgid "Help your team score the most frags against the enemy team"
@@ -2396,6 +2400,8 @@ msgid ""
 "Scoring is similar to that in %s, except that points are awarded for frags "
 "for all members of the team of the player holding the ball."
 msgstr ""
+"Система очок схожа на %s, проте очки надаються всім членам команди "
+"утримувача м'яча."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:13
 msgid "Keep the ball in your team's possession to get points for kills"
@@ -2424,6 +2430,8 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "in other team-based gametypes."
 msgstr ""
+"Оскільки раунди відсутні, хаос триває безперервно. Через таку хаотичність "
+"командна взаємодія в цьому режимі менш важлива, ніж в інших командних іграх."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
@@ -2615,7 +2623,7 @@ msgstr "Ліміт фрагів:"
 
 #: qcsrc/common/mapinfo.qh:94
 msgid "The number of frags required to conclude the match"
-msgstr ""
+msgstr "Кількість фрагів, необхідних для завершення матчу"
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:293
 msgid "Don't care"
@@ -3894,6 +3902,9 @@ msgid ""
 "players. If other nade types are destroyed before they detonate, they "
 "instead explode similarly to this, without doing their special effects."
 msgstr ""
+"(Нормальна) %s вибухає після невеличкої затримки, завдаючи шкоди навколишнім "
+"гравцям. Якщо інші види гранат зруйновано перед їхнєю детонацією, вони "
+"вибухають схожим образом без особливих ефектів."
 
 #: qcsrc/common/mutators/mutator/nades/nade/normal.qc:28
 #, c-format
@@ -4483,6 +4494,8 @@ msgid ""
 "The damage and knockback you deal to yourself also increase but by a smaller "
 "amount."
 msgstr ""
+"Шкода та відкидання, які ви завдаєте собі, також збільшується, але не так "
+"сильно."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:61
 #, c-format
@@ -5028,7 +5041,7 @@ msgstr "^F2Кидається монета... Результат: %s^F2!"
 
 #: qcsrc/common/notifications/all.inc:269
 msgid "^BGYou don't have any fuel for the ^F1Jetpack"
-msgstr "^BGУ вас недостатньо палива для ^F1Джетпака"
+msgstr "^F1Джетпак ^BGне має достатньо набоїв"
 
 #: qcsrc/common/notifications/all.inc:271
 msgid "^F2You lack a UID, superspec options will not be saved/restored"
@@ -5638,7 +5651,7 @@ msgstr "^BGВи отримали ^F1%s"
 #: qcsrc/common/notifications/all.inc:732
 #, c-format
 msgid "^BGYou don't have enough ammo for the ^F1%s"
-msgstr "^BGУ вас недостатньо набоїв для ^F1%s"
+msgstr "^F1%s ^BGне має достатньо набоїв"
 
 #. TRANSLATORS: e.g.: "Electro primary is unable to fire, but its secondary can".
 #: qcsrc/common/notifications/all.inc:398
@@ -5908,7 +5921,7 @@ msgstr "^F4Вас запрошує ^BG%s^F4 на свою гру ^F2%s^F4 (^F1%s
 
 #: qcsrc/common/notifications/all.inc:460
 msgid "^TC^TT ^BGteam scores!"
-msgstr "^TC^TT ^BGкоманда заробляє бал!"
+msgstr "^TC^TT ^BGкоманда заробляє очко!"
 
 #: qcsrc/common/notifications/all.inc:462
 #: qcsrc/common/notifications/all.inc:813
@@ -6594,7 +6607,7 @@ msgstr "^K1%sВас фрагнув ^BG%s^K1 на чаті"
 #: qcsrc/common/notifications/all.inc:652
 #, c-format
 msgid "^K1%sYou were scored against by ^BG%s^K1 while typing"
-msgstr "^K1%sВи програли бал у ^BG%s^K1 на чаті"
+msgstr "^K1%sВи програли очко у ^BG%s^K1 на чаті"
 
 #: qcsrc/common/notifications/all.inc:658
 #, c-format
@@ -7452,7 +7465,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.qh:525 qcsrc/common/notifications/all.qh:535
 #, c-format
 msgid "%d score spree!"
-msgstr "%d серія балів!"
+msgstr "%d серія очок!"
 
 #: qcsrc/common/notifications/all.qh:534
 #, c-format
@@ -7483,7 +7496,7 @@ msgstr "%s^K1 здобув %d фрагів поспіль!"
 #: qcsrc/common/notifications/all.qh:587
 #, c-format
 msgid "%s^K1 made %d scores in a row!"
-msgstr "%s^K1 здобув %d балів поспіль!"
+msgstr "%s^K1 здобув %d очок поспіль!"
 
 #: qcsrc/common/notifications/all.qh:601
 #, c-format
@@ -10067,6 +10080,8 @@ msgid ""
 "player name to get started. You can change these options later through the "
 "menu system."
 msgstr ""
+"Вітаємо у Xonotic, будь ласка, для початку оберіть свою мову та вкажіть своє "
+"ім'я. Ви зможете змінити їх через систему меню згодом."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -10871,6 +10886,8 @@ msgid ""
 "Note: HUD skins are saved in the data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Примітка: скіни HUD збережені в каталозі data/data/, та можна буде там "
+"вручну перейменувати/видалити"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -11240,6 +11257,8 @@ msgid ""
 "The maximum number of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Максимальна кількість гравців чи ботів, підключених до вашого сервера "
+"одночасно"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
@@ -11247,7 +11266,7 @@ msgstr "Кількість ботів:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
 msgid "Number of bots on your server"
-msgstr ""
+msgstr "Кількість ботів на вашому сервері"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "Bot skill:"
@@ -12170,7 +12189,7 @@ msgstr "Блиск"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Enable the use of glossmaps on textures supporting them"
-msgstr ""
+msgstr "Вмикає використання мап блиску на текстурах, які їх підтримують"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:125
 msgid "Offset mapping"
@@ -12382,6 +12401,8 @@ msgid ""
 "Multiplier for number of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Множник кількості частинок. Менше значення означає менше частинок, що "
+"підвищує продуктивність"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
 msgid "Particles further away than this will not be drawn"
@@ -12757,6 +12778,8 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team's"
 msgstr ""
+"Попередження: якщо увімкнуто в командних режимах, то колір союзників може "
+"збігатися з кольором противників"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Except in team games"
@@ -13939,6 +13962,10 @@ msgid ""
 "down. This allows you to get around the map much faster than if you just "
 "walked."
 msgstr ""
+"Завдяки контролю в повітрі, ви можете значно перевищувати максимальну "
+"швидкість ходьби. Щоб уникнути тертя об землю, гравці постійно стрибають, "
+"утримуючи %s - так торкання землі їх не сповільнює. Це дозволяє пересуватися "
+"мапою набагато швидше, ніж звичайною ходьбою."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format
@@ -14530,6 +14557,8 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so they can only "
 "slap other players."
 msgstr ""
+"Гравці з'являються без набоїв і зброї, крім такої як %s, тож можуть лише "
+"давати ляпасів іншим гравцям."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
@@ -14691,7 +14720,7 @@ msgstr "Мапа"
 
 #: qcsrc/menu/xonotic/serverlist.qc:756
 msgid "Type"
-msgstr "Тип"
+msgstr "Режим"
 
 #: qcsrc/menu/xonotic/serverlist.qc:1055
 #, c-format

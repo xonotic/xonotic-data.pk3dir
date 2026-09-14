@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-13 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oftox, 2023\n"
+"Last-Translator: Jaakko Muilu, 2025-2026\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -699,7 +699,7 @@ msgstr "SCO^kuolemaa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of keys destroyed by pushing them into the void"
-msgstr ""
+msgstr "Hukkaan työntämällä tuhotut avaimet"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^destructions"
@@ -755,7 +755,7 @@ msgstr "SCO^lktapot"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Frames per second"
-msgstr ""
+msgstr "Kehyksiä sekunnissa"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^fps"
@@ -900,7 +900,7 @@ msgstr "SCO^pr"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of players pushed into the void"
-msgstr ""
+msgstr "Hukkaan työntämällä tuhotut pelaajat"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^pushes"
@@ -1703,6 +1703,8 @@ msgid ""
 "Scoring is quite simple, fragging an opponent adds one to your score, and "
 "fragging yourself subtracts one."
 msgstr ""
+"Pisteyttäminen on aika helppoa, vastustajan lahtaaminen lisää yhden pisteen, "
+"ja itsensä lahtaaminen vähentää yhdellä."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:14
 #, c-format
@@ -1931,6 +1933,8 @@ msgid ""
 "Like in %s the key can be dropped, so you can pass it to your teammates if "
 "you're running low on health."
 msgstr ""
+"Kuten pelissä %s, avaimen voi pudottaa, joten sen voi antaa joukkueen "
+"jäsenelle, jos terveys on vähissä."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qh:11
 msgid "Gather all the keys to win the round"
@@ -2070,7 +2074,7 @@ msgstr "Maaliraja:"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "The number of goals required to conclude the match"
-msgstr ""
+msgstr "Ottelun päättämiseen vaadittujen maalien määrä"
 
 #: qcsrc/common/gametypes/gametype/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -2209,7 +2213,7 @@ msgstr "Selviytyminen"
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:10
 #, c-format
 msgid "%s is the team version of %s, played in teams rather than solo."
-msgstr ""
+msgstr "%s on joukkueversio pelistä %s, jota pelataan joukkueena eikä soolona."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:11
 msgid ""
@@ -2238,6 +2242,8 @@ msgid ""
 "%s is the team version of %s, where teams compete to maintain superior "
 "control over the ball."
 msgstr ""
+"%s on joukkueversio pelistä %s, jossa joukkueet kilpailevat pallon "
+"ylivallasta."
 
 #: qcsrc/common/gametypes/gametype/tka/tka.qc:11
 #, c-format
@@ -2460,7 +2466,7 @@ msgstr "Lahtausraja:"
 
 #: qcsrc/common/mapinfo.qh:94
 msgid "The number of frags required to conclude the match"
-msgstr ""
+msgstr "Ottelun päättämiseen vaadittujen lahtausten määrä"
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:293
 msgid "Don't care"
@@ -3231,7 +3237,7 @@ msgstr "Pois päältä"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:22
 msgid "Enable only if placed by mapper"
-msgstr ""
+msgstr "Ota käyttöön vain, jos kartoittaja on sijoittanut"
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qc:28
 #: qcsrc/common/mutators/mutator/nix/ui_nix.qc:34
@@ -3857,6 +3863,8 @@ msgid ""
 "The %s mutator, enabled by default, allows the spawning of new gimmicky "
 "weapons, sometimes replacing a core weapon."
 msgstr ""
+"Muovaaja %s, joka on käytössä vakiona, mahdollistaa uusien temppuaseiden "
+"luomisen, mikä joskus korvaa ydinaseen."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:30
 #, c-format
@@ -3979,6 +3987,8 @@ msgid ""
 "The %s is a superweapon that rapidly fires harmful bullets with a small "
 "degree of spread."
 msgstr ""
+"%s on superase, joka tulittaa nopeasti vahingoittavia luoteja pienellä "
+"hajonnalla."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:174
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qc:169
@@ -4036,7 +4046,7 @@ msgstr "Yliampuva raskaskonetykki"
 #: qcsrc/common/weapons/weapon/machinegun.qc:445
 #, c-format
 msgid "The %s quickly fires bullets with a small degree of spread."
-msgstr ""
+msgstr "%s ampuu nopeasti luoteja pienellä hajonnalla."
 
 #: qcsrc/common/mutators/mutator/overkill/okmachinegun.qh:32
 msgid "Overkill MachineGun"
@@ -4049,6 +4059,8 @@ msgid ""
 "The %s fires harmful beams of energy that traverse the map instantaneously "
 "and deal a significant chunk of damage on impact."
 msgstr ""
+"%s tulittaa vahingoittavia energiasäteitä, jotka kulkevat kartalla "
+"välittömästi ja tekevät huomattavaa vahinkoa osuessaan."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qc:361
 #, c-format
@@ -4257,6 +4269,8 @@ msgid ""
 "The damage and knockback you deal to yourself also increase but by a smaller "
 "amount."
 msgstr ""
+"Vahinko ja sysäys, joita teet itsellesi, kasvavat myös, mutta vain "
+"pienempänä määränä."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/strength.qc:61
 #, c-format
@@ -4431,6 +4445,9 @@ msgid ""
 "However, unlike the normal %s buff, when this mutator is enabled players' "
 "health can go way above the usual limit of 200."
 msgstr ""
+"Muovaaja %s antaa kaikille pelaajille pysyvän version tehonlisäyksestä %s. "
+"Toisin kuin normaali %s-tehonlisäys, kun tämä muovaaja on käytössä, "
+"pelaajien terveys voi mennä perusrajan 200 yli."
 
 #: qcsrc/common/mutators/mutator/vampire/vampire.qc:12
 #, c-format
@@ -5303,7 +5320,7 @@ msgstr "^BG%s^K1 petettiin, ja syyllinen on ^BG%s^K1%s%s"
 #: qcsrc/common/notifications/all.inc:372
 #, c-format
 msgid "%s every %s"
-msgstr ""
+msgstr "%s joka %s"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
@@ -5576,12 +5593,12 @@ msgstr "^BG%s^F3 siirrettiin osastolle^BG katsojat^F3 idlattuaan %s sekuntia"
 #: qcsrc/common/notifications/all.inc:440
 #, c-format
 msgid "^BG%s^F3 has left the join queue after idling for %s seconds"
-msgstr ""
+msgstr "^BG%s^F3 lähti liittymisjonosta oltuaan jouten %s sekuntia"
 
 #: qcsrc/common/notifications/all.inc:441
 #, c-format
 msgid "^BG%s^F3 was moved to^BG spectators^F3 for balance reasons"
-msgstr ""
+msgstr "^BG%s^F3 siirrettiin osastolle ^BG katsojat^F3 tasapainotussyistä"
 
 #: qcsrc/common/notifications/all.inc:442
 msgid ""
@@ -5600,6 +5617,7 @@ msgstr "^BG%s^F3 potkaistiin jatkuvien oman joukkueen jäsenten tappamisesta"
 #, c-format
 msgid "^BG%s^F3 was forced to spectate for excessive teamkilling"
 msgstr ""
+"^BG%s^F3 pakotettiin katsojaksi jatkuvan oman joukkueen jäsenten tappamisesta"
 
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
@@ -8289,6 +8307,8 @@ msgid ""
 "The secondary fire rapidly shoots electric bolts forward, exploding on "
 "impact and dealing some splash damage."
 msgstr ""
+"Toissijainen tulitus ampuu nopeasti eteenpäin sähkövasamia, jotka räjähtävät "
+"osumasta ja tekevät vähän roiskevahinkoa."
 
 #: qcsrc/common/weapons/weapon/arc.qc:1439
 #, c-format
@@ -8315,6 +8335,9 @@ msgid ""
 "high speed laser, dealing some splash damage but importantly a lot of "
 "knockback."
 msgstr ""
+"%s on yksi kahdesta päävakioaseista, joka ampuu suhteellisen heikon mutta "
+"huippunopean laserin, joka tekee vähän roiskevahinkoa mutta, mikä tärkeintä, "
+"sysää taaksepäin."
 
 #: qcsrc/common/weapons/weapon/blaster.qc:168
 msgid ""
@@ -8689,12 +8712,18 @@ msgid ""
 "enemies if stepped on. Only a couple mines can be placed at any time, and "
 "after some time they will self-detonate."
 msgstr ""
+"%s laskee tulittaessaan maahan miinoja, jotka räjähtävät ja vahingoittavat "
+"vihollisia päälle astuttuina. Vain pari miinaa voidaan laskea kerrallaan, ja "
+"jonkin ajan kuluttua ne räjähtävät itsestään.  "
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:563
 msgid ""
 "Uniquely, the mines explode sooner the closer an enemy comes to them. The "
 "secondary fire can be used to detonate all mines placed by the primary fire."
 msgstr ""
+"Ainutlaatuisesti miinat räjähtävät sitä pikemmin, mitä lähemmäs viholliset "
+"tulevat niitä. Toissijaisella tulituksella voidaan räjäyttää kaikki miinat, "
+"joita on laskettu ensisijaisella tulituksella."
 
 #: qcsrc/common/weapons/weapon/minelayer.qc:565
 #, c-format
@@ -10069,7 +10098,7 @@ msgstr "Salli jopa katselijana"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:20
 #: qcsrc/menu/xonotic/dialog_hudpanel_strafehud.qc:35
 msgid "Enable only in Race/CTS"
-msgstr "Otakäyttöön vain Kilvassa/CTS:ssä"
+msgstr "Ota käyttöön vain Kilvassa/CTS:ssä"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:26
 msgid "Flip speed/acceleration positions"
