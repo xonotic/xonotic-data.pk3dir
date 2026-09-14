@@ -8,6 +8,8 @@
 #include <common/monsters/sv_monsters.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
+#include <common/playerstats.qh>
+#include <common/stats.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 #include <server/anticheat.qh>
@@ -260,6 +262,226 @@ void GameCommand_anticheat(int request, int argc)
 		{
 			LOG_HELP("Usage:^3 sv_cmd anticheat <client>");
 			LOG_HELP("  <client> is the entity number or name of the player.");
+			return;
+		}
+	}
+}
+
+/*
+ * Handler for balanceteams requests
+ * Need to construct the plain/text body xonstat is expecting, it looks like this. 
+ * Some of these aren't needed for the balance endpoint logic, but need to be included to satisfy the api contract, in that place substituting dummy values.
+ * see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
+ */
+void balanceteams_handler(entity fh, entity p, float status)
+{
+	switch(status)
+	{
+		case URL_READY_CANWRITE:
+		{
+		
+			url_fputs(fh, "V 9\n");
+			#ifdef WATERMARK
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
+			#endif
+			url_fputs(fh, sprintf("G %s\n", PlayerStats_GetGametype()));
+			url_fputs(fh, sprintf("O %s\n", modname));
+			url_fputs(fh, sprintf("M %s\n", GetMapname()));
+			url_fputs(fh, sprintf("I %s\n", matchid));
+			url_fputs(fh, sprintf("S %s\n", cvar_string("hostname")));
+			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
+			url_fputs(fh, sprintf("U %d\n", cvar("port")));
+			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
+			// Add Q entries: this tells the XonStat API how many teams there are so that it doesn't guess based on the current team assignments.
+			// For example if there are teams Red: {1,2} , Blue: {3,4,5} , Yellow: {} and no Q entries are present then XonStat thinks only 2 teams exist.
+			for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
+			{
+				url_fputs(fh, sprintf("Q team#%d\n", Team_IndexToTeam(i)));
+			}
+			//fetch all the player info, construct the plain text body required for the xonstat /balance endpoint (each P entry)
+			FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
+				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); 
+				url_fputs(fh, sprintf("i %d\n", it.playerid));
+				url_fputs(fh, sprintf("n %s\n", it.netname));
+				url_fputs(fh, sprintf("t %d\n", it.team)); 
+				// we need to account for warmup, if players call balanceteams during warmup where people are messing around, you could get inaccurate skill ratings and worse balance
+				// the 'e' entries in the body can be placed in any order, so handling the warmup logic for scoreboard-score and alivetime here. 
+				if(warmup_stage)
+				{
+					// The API is expecting a positive value for scoreboard-score or fails validation, so setting it to 1 since alivetime can be safely set to 0
+					// alivetime and scoreboard-score are used to calculate score per second which influences the skill rating
+					url_fputs(fh, "e scoreboard-score 1\n"); 
+					url_fputs(fh, "e alivetime 0\n");
+				}
+				else 
+				{
+					url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE))); 
+					float alivetime = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0); 
+					alivetime += max(0, time - it.alivetime_start);
+					url_fputs(fh, sprintf("e alivetime %g\n", alivetime));
+				}
+				// this is required to satisfy the API contract, but is not used
+				url_fputs(fh, "e acc-blaster-cnt-fired 1\n"); 
+				url_fputs(fh, "e matches 1\n");
+				url_fputs(fh, "e scoreboardvalid 1\n");
+				url_fputs(fh, "e joins 1\n");
+
+			});
+			url_fputs(fh, "\n"); //need this \n at the end or else validation will fail
+			url_fclose(fh);
+			break;
+		}
+
+		case URL_READY_CANREAD:
+		{
+			string response_data = "";
+			string team_rows = "";
+			string player_name = string_null;
+			int player_team = 0;
+			int current_player_id = 0;
+			for (string s; (s = url_fgets(fh)); )
+			{
+				if (response_data != "")
+				{
+					response_data = strcat(response_data, "\n", s);
+					//if the current line starts with i, we need to track it, as the upcoming t entry will tell us which team player i needs to be assigned to
+					if (strstrofs(s, "i ", 0) == 0)
+					{
+						current_player_id = stof(substring(s, 2, -1));
+					}
+					else if (strstrofs(s, "n ", 0) == 0)
+					{
+						player_name = substring(s, 2, -1);
+					}
+					else if (strstrofs(s, "t ", 0) == 0)
+					{
+						player_team = stoi(substring(s, 2, -1));
+						if (Team_IsValidTeam(player_team))
+						{
+							FOREACH_CLIENT(it.playerid == current_player_id, {
+								MoveToTeam(it, Team_TeamToIndex(player_team), 6);
+							});
+						}
+					}
+					else if (strstrofs(s, "e skill ", 0) == 0 && player_name && Team_IsValidTeam(player_team))
+					{
+						team_rows = strcat(team_rows, Static_Team_ColorName_Upper(player_team), ": ", player_name,
+							", ", substring(s, 8, -1), "\n");
+					}
+
+				}
+				else
+					response_data = s;
+			}
+			bprint("Team assignments and skill ratings:\n", team_rows);
+			url_fclose(fh);
+			break;
+		}
+		case URL_READY_CLOSED:
+		{
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
+			break;
+		}
+		case URL_READY_ERROR:
+		default:
+		{
+			bprint("Failed to balanceteams teams: status code from XonStat API is ", ftos(status), "\n");
+			break;
+		}
+	}
+}
+
+void balanceteams() 
+{
+	if (!teamplay)
+	{
+		bprint("Can't balance teams when currently not playing a team game.\n");
+		return;
+	}
+	// We want all players in the game, even if they are dead and waiting to respawn (for example in clan arena), but not bots.
+	int active_player_count = 0;
+	FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
+		++active_player_count;
+	});
+	if(active_player_count <= 1)
+	{
+		bprint("You need more than 1 player to balance the teams.\n");
+		return;
+	}
+	if(active_player_count > 128)
+	{
+		bprint("Balancing is only supported for max 128 players, you currently have %d players.\n", active_player_count);
+		return;
+	}
+	if (AVAILABLE_TEAMS > 4)
+	{
+		bprint("XonStat does not support balancing with more than 4 teams.\n");
+		return;
+	}
+	// To justify calling the XonStat API, we need `AVAILABLE_TEAMS + 1` players
+	if (active_player_count <= AVAILABLE_TEAMS)
+	{
+		entity switch_players[NUM_TEAMS - 1];
+		bool team_not_empty[NUM_TEAMS];		
+		for (int i = 0; i < AVAILABLE_TEAMS; ++i)
+			team_not_empty[i] = false;
+		int switch_count = 0;
+
+		// Find doubling-up players
+		FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)),
+		{
+			if (team_not_empty[Team_TeamToIndex(it.team) - 1])
+				switch_players[switch_count++] = it;
+			else				
+				team_not_empty[Team_TeamToIndex(it.team) - 1] = true;
+ 		});
+
+		// Move doubling-up players
+		int team_i = 0;
+		for (int i = 0; i < switch_count; ++i)
+		{
+			while (team_not_empty[team_i]) // find an empty team
+				++team_i;
+			MoveToTeam(switch_players[i], team_i + 1, 6);
+		}
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
+		return;
+
+	}
+	bprint("Attempting to balance teams by skill...\n");
+	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&maxDifference=%d&stability=%d&sigmaRange=%.2f",
+		autocvar_g_playerstats_balance_uri,
+		autocvar_g_playerstats_balance_scorefactor,
+		autocvar_g_playerstats_balance_maxdifference,
+		autocvar_g_playerstats_balance_stability,
+		autocvar_g_playerstats_balance_sigmarange);
+	url_single_fopen(balance_uri_with_query_params, FILE_WRITE, balanceteams_handler, NULL);
+}
+
+void GameCommand_balanceteams(int request, int argc)
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+			}
+			else if (balanceteams_on_reset_map)
+			{
+				bprint("Players will be balanced by skill when this round is over.\n");
+			}
+			else
+				balanceteams();
+			return;
+		}
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd balanceteams");
+			LOG_HELP("  No arguments required.");
+			LOG_HELP("  Balances teams by skill.");
 			return;
 		}
 	}
@@ -1774,6 +1996,7 @@ SERVER_COMMAND(allready, "Ends warmup and starts the match") { GameCommand_allre
 SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
 SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }
 SERVER_COMMAND(animbench, "Benchmark model animation (LAGS)") { GameCommand_animbench(request, arguments); }
+SERVER_COMMAND(balanceteams, "Automatically balance teams by skill") { GameCommand_balanceteams(request, arguments); }
 SERVER_COMMAND(bbox, "Print detailed information about world size") { GameCommand_bbox(request); }
 SERVER_COMMAND(bot_cmd, "Control and send commands to bots") { GameCommand_bot_cmd(request, arguments, command); }
 SERVER_COMMAND(cointoss, "Flip a virtual coin and give random result") { GameCommand_cointoss(request, arguments); }

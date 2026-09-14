@@ -60,6 +60,8 @@ bool PlayerStats_GameReport_DelayMapVote;
 
 void PlayerStats_GameReport_Reset_All();
 
+string PlayerStats_GetGametype();
+
 // call at initialization
 void PlayerStats_GameReport_Init();
 
@@ -102,6 +104,11 @@ const float PS_B_STATUS_RECEIVED = 1;
 const float PS_B_STATUS_UPDATING = 2;
 .float playerstats_basicstatus;
 string autocvar_g_playerstats_playerbasic_uri = "https://stats.xonotic.org";
+string autocvar_g_playerstats_balance_uri = "https://stats.xonotic.org/balance";
+int autocvar_g_playerstats_balance_scorefactor = 25;
+int autocvar_g_playerstats_balance_maxdifference = 1;
+int autocvar_g_playerstats_balance_stability = 0;
+float autocvar_g_playerstats_balance_sigmarange = 2;
 
 void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest);
 void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer);
