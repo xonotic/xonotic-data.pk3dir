@@ -255,7 +255,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 
 	oldmsg = this.message;
 	this.message = "";
-	SUB_UseTargets(this, act, trigger);
+	SUB_UseTargets(this, act);
 	this.message = oldmsg;
 }
 

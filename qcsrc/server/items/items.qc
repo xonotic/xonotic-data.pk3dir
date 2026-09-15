@@ -737,7 +737,7 @@ void Item_Touch(entity this, entity toucher)
 LABEL(pickup)
 
 	if(this.target != "" && this.target != "###item###") // q3compat
-		SUB_UseTargets(this, toucher, NULL);
+		SUB_UseTargets(this, toucher);
 
 	GameItem def = this.itemdef;
 	int ch = ((def.instanceOfPowerup && def.m_itemid != IT_RESOURCE) ? CH_TRIGGER_SINGLE : CH_TRIGGER);

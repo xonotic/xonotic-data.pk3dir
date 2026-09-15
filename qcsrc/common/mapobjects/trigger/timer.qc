@@ -1,7 +1,7 @@
 #ifdef SVQC
 void trigger_timer_think(entity this)
 {
-	SUB_UseTargets(this, this.enemy, this.goalentity);
+	SUB_UseTargets(this, this.enemy);
 	this.nextthink = time + this.wait + crandom() * this.rnd;
 }
 
