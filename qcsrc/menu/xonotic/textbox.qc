@@ -41,7 +41,9 @@ void XonoticTextBox_setText(entity me, string txt)
 		getWrappedLine_remaining = t;
 		while (getWrappedLine_remaining)
 		{
-			t = getWrappedLine(1 - me.controlWidth, me.realFontSize,
+			// WORKAROUND: correct line width is 1 - me.realFontSize.x, we make it slightly shorter
+			// to prevent text overlapping the scrollbar due to r_font_size_snapping > 0
+			t = getWrappedLine(1 - me.realFontSize.x * 1.75, me.realFontSize,
 				(me.allowColors) ? draw_TextWidth_WithColors : draw_TextWidth_WithoutColors);
 			bufstr_set(buf, line, t);
 			++line;
@@ -55,9 +57,8 @@ void XonoticTextBox_setText(entity me, string txt)
 string XonoticTextBox_getTextBoxLine(entity me, int i)
 {
 	if (me.stringList >= 0)
-	{
 		return bufstr_get(me.stringList, i);
-	}
+
 	return string_null;
 }
 
@@ -80,5 +81,5 @@ void XonoticTextBox_drawListBoxItem(entity me, int i, vector absSize, bool isSel
 	if (me.align == 0.5)
 		draw_CenterText(0.5 * eX, s, me.realFontSize, color, 1, me.allowColors);
 	else
-		draw_Text(vec2(0, 0), s, me.realFontSize, color, me.alpha, me.allowColors);
+		draw_Text(eX * 0.5 * me.realFontSize.x, s, me.realFontSize, color, me.alpha, me.allowColors);
 }
