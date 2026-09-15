@@ -673,7 +673,7 @@ float CheatCommand(entity this, int argc)
 			IS_CHEAT(this, 0, argc, 0);
 			entity e = spawn();
 			e.target = argv(1);
-			SUB_UseTargets(e, this, NULL);
+			SUB_UseTargets(e, this);
 			delete(e);
 			DID_CHEAT();
 			break;
@@ -681,7 +681,7 @@ float CheatCommand(entity this, int argc)
 			IS_CHEAT(this, 0, argc, 0);
 			entity e2 = spawn();
 			e2.killtarget = argv(1);
-			SUB_UseTargets(e2, this, NULL);
+			SUB_UseTargets(e2, this);
 			delete(e2);
 			DID_CHEAT();
 			break;

@@ -35,7 +35,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		{
 			savemessage = ear.message;
 			ear.message = string_null;
-			SUB_UseTargets(ear, source, NULL);
+			SUB_UseTargets(ear, source);
 			ear.message = savemessage;
 		}
 
@@ -122,7 +122,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	{
 		savemessage = ear.message;
 		ear.message = string_null;
-		SUB_UseTargets(ear, source, NULL);
+		SUB_UseTargets(ear, source);
 		ear.message = savemessage;
 	}
 
