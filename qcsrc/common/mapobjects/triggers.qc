@@ -35,11 +35,9 @@ bool isPushable(entity e)
 	return false;
 }
 
-void SUB_UseTargets(entity this, entity actor, entity trigger);
-
 void DelayThink(entity this)
 {
-	SUB_UseTargets (this, this.enemy, NULL);
+	SUB_UseTargets (this, this.enemy);
 	delete(this);
 }
 
@@ -243,10 +241,12 @@ and removes them, so some events can remove other triggers.
 Search for (string)targetname in all entities that
 match (string)this.target and call their .use function
 
+Excludes target fields corresponding to BIT(1) through BIT(4) of the skiptargets parameter.
+
 ==============================
 */
 
-void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventReuse, int skiptargets)
+void SUB_UseTargets_Ex(entity this, entity actor, int skiptargets)
 {
 #ifdef SVQC
 //
@@ -325,7 +325,7 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 					#endif
 					this.(tfield) = string_null; // break loop to shallower point so map works as intended without spamming every time
 				}
-				else if(t != this && t.use && (t.sub_target_used != time || !preventReuse))
+				else if (t != this && t.use)
 				{
 					if(this.target_random)
 					{
@@ -336,8 +336,6 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 						this.loopdetector |= 1;
 						t.use(t, actor, this);
 						this.loopdetector &= ~1;
-						if(preventReuse)
-							t.sub_target_used = time;
 					}
 				}
 			}
@@ -349,11 +347,5 @@ void SUB_UseTargets_Ex(entity this, entity actor, entity trigger, bool preventRe
 		this.loopdetector |= 1;
 		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
 		this.loopdetector &= ~1;
-		if(preventReuse)
-			RandomSelection_chosen_ent.sub_target_used = time;
 	}
 }
-
-void SUB_UseTargets(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, false, 0); }
-void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger) { SUB_UseTargets_Ex(this, actor, trigger, true, 0); }
-void SUB_UseTargets_SkipTargets(entity this, entity actor, entity trigger, int skiptargets) { SUB_UseTargets_Ex(this, actor, trigger, false, skiptargets); }

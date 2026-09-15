@@ -11,18 +11,18 @@ void trigger_relay_teamcheck_use(entity this, entity actor, entity trigger)
 		if(this.spawnflags & RELAYTEAMCHECK_INVERT)
 		{
 			if(DIFF_TEAM(actor, this))
-				SUB_UseTargets(this, actor, trigger);
+				SUB_UseTargets(this, actor);
 		}
 		else
 		{
 			if(SAME_TEAM(actor, this))
-				SUB_UseTargets(this, actor, trigger);
+				SUB_UseTargets(this, actor);
 		}
 	}
 	else
 	{
 		if(this.spawnflags & RELAYTEAMCHECK_NOTEAM)
-			SUB_UseTargets(this, actor, trigger);
+			SUB_UseTargets(this, actor);
 	}
 }
 

@@ -15,7 +15,7 @@ void multi_wait(entity this)
 }
 
 // the trigger was just touched/killed/used
-void multi_trigger(entity this, entity actor, entity trigger)
+void multi_trigger(entity this, entity actor)
 {
 	if (this.noise && this.noise != "")
 		_sound (actor, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
@@ -23,7 +23,7 @@ void multi_trigger(entity this, entity actor, entity trigger)
 	// don't trigger again until reset
 	this.takedamage = DAMAGE_NO;
 
-	SUB_UseTargets(this, actor, trigger);
+	SUB_UseTargets(this, actor);
 
 	if (IS_GAMETYPE(CTS) && IS_CLIENT(actor))
 	{
@@ -108,7 +108,7 @@ bool multi_conds(entity this, entity actor)
 void multi_use(entity this, entity actor, entity trigger)
 {
 	if (multi_conds(this, actor))
-		multi_trigger(this, actor, trigger);
+		multi_trigger(this, actor);
 }
 
 void multi_touch(entity this, entity toucher)
@@ -137,7 +137,7 @@ void multi_touch(entity this, entity toucher)
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
-	multi_trigger(this, toucher, toucher);
+	multi_trigger(this, toucher);
 }
 
 void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
@@ -153,7 +153,7 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 
 	TakeResource(this, RES_HEALTH, damage);
 	if (GetResource(this, RES_HEALTH) <= 0)
-		multi_trigger(this, attacker, inflictor);
+		multi_trigger(this, attacker);
 }
 
 void multi_reset(entity this)

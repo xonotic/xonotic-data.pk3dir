@@ -50,7 +50,7 @@ void button_wait(entity this)
 		this.nextthink = this.ltime + this.wait;
 		setthink(this, button_return);
 	}
-	SUB_UseTargets(this, this.enemy, NULL);
+	SUB_UseTargets(this, this.enemy);
 	this.frame = 1;			// use alternate textures
 }
 

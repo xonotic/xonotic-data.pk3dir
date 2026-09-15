@@ -7,7 +7,7 @@ void train_use(entity this, entity actor, entity trigger);
 #endif
 void train_wait(entity this)
 {
-	SUB_UseTargets(this.enemy, NULL, NULL);
+	SUB_UseTargets(this.enemy, NULL);
 	this.enemy = NULL;
 
 	// if turning is enabled, the train will turn toward the next point while waiting

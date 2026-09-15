@@ -410,7 +410,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 	}
 
 	if(this.enemy.target)
-		SUB_UseTargets(this.enemy, targ, this);
+		SUB_UseTargets(this.enemy, targ);
 
 	if (targ.flags & FL_PROJECTILE)
 	{

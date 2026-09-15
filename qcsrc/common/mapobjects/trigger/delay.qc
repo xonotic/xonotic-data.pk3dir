@@ -3,7 +3,7 @@
 #ifdef SVQC
 void delay_delayeduse(entity this)
 {
-	SUB_UseTargets(this, this.enemy, this.goalentity);
+	SUB_UseTargets(this, this.enemy);
 	this.enemy = this.goalentity = NULL;
 }
 

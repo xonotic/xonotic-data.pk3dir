@@ -8,7 +8,7 @@ void relay_use(entity this, entity actor, entity trigger)
 	if(this.team && this.team != actor.team)
 		return;
 
-	SUB_UseTargets(this, actor, trigger);
+	SUB_UseTargets(this, actor);
 }
 
 /*QUAKED spawnfunc_trigger_relay (.5 .5 .5) (-8 -8 -8) (8 8 8)

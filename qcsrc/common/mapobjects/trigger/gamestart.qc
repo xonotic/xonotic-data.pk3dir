@@ -9,7 +9,7 @@ void gamestart_think(entity this)
 		this.nextthink = time + this.wait;
 	}
 	else
-		SUB_UseTargets(this, world, this);
+		SUB_UseTargets(this, world);
 }
 
 spawnfunc(trigger_gamestart)
