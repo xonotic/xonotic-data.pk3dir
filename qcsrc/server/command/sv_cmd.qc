@@ -49,23 +49,27 @@ void make_mapinfo_Think(entity this)
 //  used by GameCommand_extendmatchtime() and GameCommand_reducematchtime()
 void changematchtime(float delta, float mi, float ma)
 {
-	float cur;
 	float update;
-	float lim;
 
-	if (delta == 0) return;
-	if (autocvar_timelimit < 0) return;
+	if (delta == 0)
+		return;
+	if (autocvar_timelimit < 0)
+		return;
 
-	if (mi <= 10) mi = 10;  // at least ten sec in the future
-	cur = time - game_starttime;
-	if (cur > 0) mi += cur; // from current time!
+	if (mi <= 10)
+		mi = 10;  // at least ten sec in the future
+	float cur = time - game_starttime;
+	if (cur > 0)
+		mi += cur; // from current time!
 
-	lim = autocvar_timelimit * 60;
+	float lim = autocvar_timelimit * 60;
 
 	if (delta > 0)
 	{
-		if (lim == 0) return; // cannot increase any further
-		else if (lim < ma) update = min(ma, lim + delta);
+		if (lim == 0)
+			return; // cannot increase any further
+		else if (lim < ma)
+			update = min(ma, lim + delta);
 		else                  // already above maximum: FAIL
 			return;
 	}
@@ -128,9 +132,7 @@ void GameCommand_adminmsg(int request, int argc)
 
 					// send the centerprint/console print or infomessage
 					if (infobartime)
-					{
 						stuffcmd(client, sprintf("\ninfobar %f \"%s\"\n", infobartime, MakeConsoleSafe(admin_message)));
-					}
 					else
 					{
 						centerprint(client, strcat("^3", GetCallerName(NULL), ":\n^7", admin_message));
@@ -142,8 +144,10 @@ void GameCommand_adminmsg(int request, int argc)
 					continue;
 				}
 
-				if (successful) bprint("Successfully sent message '", admin_message, "' to ", successful, ".\n");
-				else LOG_INFO("No players given (", original_targets, ") could receive the message.");
+				if (successful)
+					bprint("Successfully sent message '", admin_message, "' to ", successful, ".\n");
+				else
+					LOG_INFO("No players given (", original_targets, ") could receive the message.");
 
 				return;
 			}
@@ -175,10 +179,8 @@ void GameCommand_allready(int request)
 				LOG_HELPF("This command works only when the server is running.");
 				return;
 			}
-			if(warmup_stage)
-			{
+			if (warmup_stage)
 				ReadyRestart(true);
-			}
 			else
 				LOG_INFO("Not in warmup.");
 
@@ -250,10 +252,7 @@ void GameCommand_anticheat(int request, int argc)
 				anticheat_report_to_eventlog(client);
 				return;
 			}
-			else
-			{
-				LOG_INFO("anticheat: ", GetClientErrorString(accepted, argv(1)), ".");
-			}
+			LOG_INFO("anticheat: ", GetClientErrorString(accepted, argv(1)), ".");
 		}
 
 		default:
@@ -269,7 +268,7 @@ void GameCommand_anticheat(int request, int argc)
 
 /*
  * Handler for balanceteams requests
- * Need to construct the plain/text body xonstat is expecting, it looks like this. 
+ * Need to construct the plain/text body xonstat is expecting, it looks like this.
  * Some of these aren't needed for the balance endpoint logic, but need to be included to satisfy the api contract, in that place substituting dummy values.
  * see https://gitlab.com/xonotic/xonstat-go/-/blob/master/pkg/submission/rawsubmission.go
  */
@@ -279,7 +278,6 @@ void balanceteams_handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-		
 			url_fputs(fh, "V 9\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -294,40 +292,38 @@ void balanceteams_handler(entity fh, entity p, float status)
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
 			// Add Q entries: this tells the XonStat API how many teams there are so that it doesn't guess based on the current team assignments.
 			// For example if there are teams Red: {1,2} , Blue: {3,4,5} , Yellow: {} and no Q entries are present then XonStat thinks only 2 teams exist.
-			for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
-			{
+			for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 				url_fputs(fh, sprintf("Q team#%d\n", Team_IndexToTeam(i)));
-			}
-			//fetch all the player info, construct the plain text body required for the xonstat /balance endpoint (each P entry)
+			// fetch all the player info, construct the plain text body required for the xonstat /balance endpoint (each P entry)
 			FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
-				url_fputs(fh, sprintf("P %s\n", it.playerstats_id)); 
+				url_fputs(fh, sprintf("P %s\n", it.playerstats_id));
 				url_fputs(fh, sprintf("i %d\n", it.playerid));
 				url_fputs(fh, sprintf("n %s\n", it.netname));
-				url_fputs(fh, sprintf("t %d\n", it.team)); 
+				url_fputs(fh, sprintf("t %d\n", it.team));
 				// we need to account for warmup, if players call balanceteams during warmup where people are messing around, you could get inaccurate skill ratings and worse balance
-				// the 'e' entries in the body can be placed in any order, so handling the warmup logic for scoreboard-score and alivetime here. 
-				if(warmup_stage)
+				// the 'e' entries in the body can be placed in any order, so handling the warmup logic for scoreboard-score and alivetime here.
+				if (warmup_stage)
 				{
 					// The API is expecting a positive value for scoreboard-score or fails validation, so setting it to 1 since alivetime can be safely set to 0
 					// alivetime and scoreboard-score are used to calculate score per second which influences the skill rating
-					url_fputs(fh, "e scoreboard-score 1\n"); 
+					url_fputs(fh, "e scoreboard-score 1\n");
 					url_fputs(fh, "e alivetime 0\n");
 				}
-				else 
+				else
 				{
-					url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE))); 
-					float alivetime = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0); 
+					url_fputs(fh, sprintf("e scoreboard-score %g\n", PlayerScore_Get(it, SP_SCORE)));
+					float alivetime = PlayerStats_GameReport_Event_Player(it, PLAYERSTATS_ALIVETIME, 0);
 					alivetime += max(0, time - it.alivetime_start);
 					url_fputs(fh, sprintf("e alivetime %g\n", alivetime));
 				}
 				// this is required to satisfy the API contract, but is not used
-				url_fputs(fh, "e acc-blaster-cnt-fired 1\n"); 
+				url_fputs(fh, "e acc-blaster-cnt-fired 1\n");
 				url_fputs(fh, "e matches 1\n");
 				url_fputs(fh, "e scoreboardvalid 1\n");
 				url_fputs(fh, "e joins 1\n");
 
 			});
-			url_fputs(fh, "\n"); //need this \n at the end or else validation will fail
+			url_fputs(fh, "\n"); // need this \n at the end or else validation will fail
 			url_fclose(fh);
 			break;
 		}
@@ -344,23 +340,19 @@ void balanceteams_handler(entity fh, entity p, float status)
 				if (response_data != "")
 				{
 					response_data = strcat(response_data, "\n", s);
-					//if the current line starts with i, we need to track it, as the upcoming t entry will tell us which team player i needs to be assigned to
+					// if the current line starts with i, we need to track it, as the upcoming t entry will tell us which team player i needs to be assigned to
 					if (strstrofs(s, "i ", 0) == 0)
-					{
 						current_player_id = stof(substring(s, 2, -1));
-					}
 					else if (strstrofs(s, "n ", 0) == 0)
-					{
 						player_name = substring(s, 2, -1);
-					}
 					else if (strstrofs(s, "t ", 0) == 0)
 					{
 						player_team = stoi(substring(s, 2, -1));
 						if (Team_IsValidTeam(player_team))
 						{
-							FOREACH_CLIENT(it.playerid == current_player_id, {
+							FOREACH_CLIENT(it.playerid == current_player_id,
 								MoveToTeam(it, Team_TeamToIndex(player_team), 6);
-							});
+							);
 						}
 					}
 					else if (strstrofs(s, "e skill ", 0) == 0 && player_name && Team_IsValidTeam(player_team))
@@ -391,7 +383,7 @@ void balanceteams_handler(entity fh, entity p, float status)
 	}
 }
 
-void balanceteams() 
+void balanceteams()
 {
 	if (!teamplay)
 	{
@@ -403,12 +395,12 @@ void balanceteams()
 	FOREACH_CLIENT(!IS_BOT_CLIENT(it) && (IS_PLAYER(it) || INGAME(it)), {
 		++active_player_count;
 	});
-	if(active_player_count <= 1)
+	if (active_player_count <= 1)
 	{
 		bprint("You need more than 1 player to balance the teams.\n");
 		return;
 	}
-	if(active_player_count > 128)
+	if (active_player_count > 128)
 	{
 		bprint("Balancing is only supported for max 128 players, you currently have %d players.\n", active_player_count);
 		return;
@@ -422,7 +414,7 @@ void balanceteams()
 	if (active_player_count <= AVAILABLE_TEAMS)
 	{
 		entity switch_players[NUM_TEAMS - 1];
-		bool team_not_empty[NUM_TEAMS];		
+		bool team_not_empty[NUM_TEAMS];
 		for (int i = 0; i < AVAILABLE_TEAMS; ++i)
 			team_not_empty[i] = false;
 		int switch_count = 0;
@@ -432,7 +424,7 @@ void balanceteams()
 		{
 			if (team_not_empty[Team_TeamToIndex(it.team) - 1])
 				switch_players[switch_count++] = it;
-			else				
+			else
 				team_not_empty[Team_TeamToIndex(it.team) - 1] = true;
  		});
 
@@ -446,7 +438,6 @@ void balanceteams()
 		}
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_BALANCED);
 		return;
-
 	}
 	bprint("Attempting to balance teams by skill...\n");
 	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&maxDifference=%d&stability=%d&sigmaRange=%.2f",
@@ -465,13 +456,9 @@ void GameCommand_balanceteams(int request, int argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			if (!world_initialized)
-			{
 				LOG_HELPF("This command works only when the server is running.");
-			}
 			else if (balanceteams_on_reset_map)
-			{
 				bprint("Players will be balanced by skill when this round is over.\n");
-			}
 			else
 				balanceteams();
 			return;
@@ -586,7 +573,8 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 				cvar_settemp("bot_number", "0");
 				bot_fixcount(false);  // Kill all bots.
 				cvar_settemp("bot_number", argv(2));
-				if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
+				if (!bot_fixcount(true))
+					LOG_INFO("Sorry, could not set requested bot count");
 				return;
 			}
 			else if (argv(1) == "load" && argc == 3)
@@ -608,9 +596,7 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 					if (argc >= 3 && argv(0) == "sv_cmd" && argv(1) == "bot_cmd")
 					{
 						if (argv(2) == "reset")
-						{
 							bot_resetqueues();
-						}
 						else if (argv(2) == "setbots")
 						{
 							cvar_settemp("bot_vs_human", "0");
@@ -619,26 +605,27 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 							cvar_settemp("bot_number", "0");
 							bot_fixcount(false);  // Kill all bots.
 							cvar_settemp("bot_number", argv(3));
-							if (!bot_fixcount(true)) LOG_INFO("Sorry, could not set requested bot count");
+							if (!bot_fixcount(true))
+								LOG_INFO("Sorry, could not set requested bot count");
 						}
 						else
 						{
-							if(argv(2) == "*" || argv(2) == "all")
+							if (argv(2) == "*" || argv(2) == "all")
 								FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 									bot_queuecommand(it, substring(s, argv_start_index(3), -1));
 								});
 							else
 							{
 								bot = find_bot_by_number(stof(argv(2)));
-								if (bot == NULL) bot = find_bot_by_name(argv(2));
-								if (bot) bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
+								if (bot == NULL)
+									bot = find_bot_by_name(argv(2));
+								if (bot)
+									bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
 							}
 						}
 					}
 					else
-					{
 						localcmd(strcat(s, "\n"));
-					}
 
 					++i;
 				}
@@ -648,27 +635,30 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 			}
 			else if (argv(1) == "help")
 			{
-				if (argv(2)) bot_cmdhelp(argv(2));
-				else bot_list_commands();
+				if (argv(2))
+					bot_cmdhelp(argv(2));
+				else
+					bot_list_commands();
 				return;
 			}
 			else if (argc >= 3)  // this comes last
 			{
-				if(argv(1) == "*" || argv(1) == "all")
+				if (argv(1) == "*" || argv(1) == "all")
 				{
 					int bot_num = 0;
 					FOREACH_CLIENT(IS_BOT_CLIENT(it), {
 						bot_queuecommand(it, substring(command, argv_start_index(2), -1));
 						++bot_num;
 					});
-					if(bot_num)
+					if (bot_num)
 						LOG_INFO("Command '", substring(command, argv_start_index(2), -1), "' sent to all bots (", ftos(bot_num), ")");
 					return;
 				}
 				else
 				{
 					bot = find_bot_by_number(stof(argv(1)));
-					if (bot == NULL) bot = find_bot_by_name(argv(1));
+					if (bot == NULL)
+						bot = find_bot_by_name(argv(1));
 					if (bot)
 					{
 						LOG_INFO("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname);
@@ -676,9 +666,7 @@ void GameCommand_bot_cmd(int request, int argc, string command)
 						return;
 					}
 					else
-					{
 						LOG_INFO("Error: Can't find bot with the name or id '", argv(1), "' - Did you mistype the command?");  // don't return so that usage is shown
-					}
 				}
 			}
 		}
@@ -795,7 +783,8 @@ void GameCommand_defer_clear(int request, int argc)
 					stuffcmd(client, "defer clear\n");
 					LOG_INFO("defer clear stuffed to ", playername(client.netname, client.team, false));
 				}
-				else { LOG_INFO("defer_clear: ", GetClientErrorString(accepted, argv(1)), "."); }
+				else
+					LOG_INFO("defer_clear: ", GetClientErrorString(accepted, argv(1)), ".");
 
 				return;
 			}
@@ -832,7 +821,8 @@ void GameCommand_defer_clear_all(int request)
 				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
 				++n;
 			});
-			if (n)   LOG_INFO("Successfully stuffed defer clear to all clients (", ftos(n), ")");  // should a message be added if no players were found?
+			if (n)
+				LOG_INFO("Successfully stuffed defer clear to all clients (", ftos(n), ")");  // should a message be added if no players were found?
 			return;
 		}
 
@@ -855,8 +845,10 @@ void GameCommand_delrec(int request, int argc)  // perhaps merge later with reco
 		{
 			if (argv(1))
 			{
-				if (argv(2)) race_deleteTime(argv(2), stof(argv(1)));
-				else race_deleteTime(GetMapname(), stof(argv(1)));
+				if (argv(2))
+					race_deleteTime(argv(2), stof(argv(1)));
+				else
+					race_deleteTime(GetMapname(), stof(argv(1)));
 				return;
 			}
 		}
@@ -875,7 +867,7 @@ void GameCommand_delrec(int request, int argc)  // perhaps merge later with reco
 }
 
 void print_Effect_Index(int d, string effect_name)
-{ 
+{
 	// this is inside a function to avoid expanding it on compilation everytime
 	LOG_INFO("effect ", effect_name, " is ", ftos(_particleeffectnum(effect_name)), "\n");
 	db_put(d, effect_name, "1");
@@ -939,7 +931,8 @@ void GameCommand_effectindexdump(int request)
 					if (db_get(d, argv(1)) != "1")
 					{
 						int i = _particleeffectnum(argv(1));
-						if (i >= 0) LOG_INFO("effect ", argv(1), " is ", ftos(i));
+						if (i >= 0)
+							LOG_INFO("effect ", argv(1), " is ", ftos(i));
 						db_put(d, argv(1), "1");
 					}
 				}
@@ -1033,13 +1026,9 @@ void GameCommand_gettaginfo(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity tmp_entity;
-			float i;
-			vector v;
-
 			if (argc >= 4)
 			{
-				tmp_entity = spawn();
+				entity tmp_entity = spawn();
 				if (argv(1) == "w")
 				{
 					.entity weaponentity = weaponentities[0];
@@ -1051,11 +1040,14 @@ void GameCommand_gettaginfo(int request, int argc)
 					_setmodel(tmp_entity, argv(1));
 				}
 				tmp_entity.frame = stof(argv(2));
-				if (substring(argv(3), 0, 1) == "#") i = stof(substring(argv(3), 1, -1));
-				else i = gettagindex(tmp_entity, argv(3));
+				float i;
+				if (substring(argv(3), 0, 1) == "#")
+					i = stof(substring(argv(3), 1, -1));
+				else
+					i = gettagindex(tmp_entity, argv(3));
 				if (i)
 				{
-					v = gettaginfo(tmp_entity, i);
+					vector v = gettaginfo(tmp_entity, i);
 					LOG_HELPF("model %s frame %s tag %s index %s parent %s",
 						tmp_entity.model, ftos(tmp_entity.frame), gettaginfo_name, ftos(i), ftos(gettaginfo_parent)
 					);
@@ -1071,9 +1063,7 @@ void GameCommand_gettaginfo(int request, int argc)
 					}
 				}
 				else
-				{
 					LOG_INFO("bone not found");
-				}
 
 				delete(tmp_entity);
 				return;
@@ -1097,11 +1087,9 @@ void GameCommand_animbench(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity tmp_entity;
-
 			if (argc >= 4)
 			{
-				tmp_entity = spawn();
+				entity tmp_entity = spawn();
 				if (argv(1) == "w")
 				{
 					.entity weaponentity = weaponentities[0];
@@ -1199,9 +1187,7 @@ void GameCommand_lockteams(int request)
 				FOREACH_CLIENT(it.wants_join, it.wants_join = it.team_selected = 0);
 			}
 			else
-			{
 				bprint("lockteams command can only be used in a team-based gametype.\n");
-			}
 			return;
 		}
 
@@ -1275,9 +1261,7 @@ void GameCommand_moveplayer(int request, int argc)
 					string client_num_str = ftos(etof(client));
 
 					if (accepted <= 0)
-					{
 						LOG_INFO("moveplayer: ", GetClientErrorString(accepted, t), ".");
-					}
 					else if (destination == "spectator")
 					{
 						string pl_name = playername(client.netname, client.team, false);
@@ -1288,9 +1272,7 @@ void GameCommand_moveplayer(int request, int argc)
 							successful = strcat(successful, (successful ? ", " : ""), pl_name);
 						}
 						else
-						{
 							LOG_INFO("Player #", client_num_str, " (", pl_name, ") is already spectating.");
-						}
 					}
 					else
 					{
@@ -1317,14 +1299,11 @@ void GameCommand_moveplayer(int request, int argc)
 								Team_ColoredFullName(team_num), ".");
 							continue;
 						}
-						else if (team_num == 0)  // auto team
-						{
-							balance = TeamBalance_CheckAllowedTeams(client);
-							team_num = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
-						}
 						else
 						{
 							balance = TeamBalance_CheckAllowedTeams(client);
+							if (team_num == 0)  // auto team
+								team_num = Team_IndexToTeam(TeamBalance_FindBestTeam(balance, client, false));
 						}
 
 						// Check to see if the destination team is even available
@@ -1358,14 +1337,14 @@ void GameCommand_moveplayer(int request, int argc)
 								Team_ColoredFullName(team_num), ".");
 						}
 						else
-						{
 							LOG_INFO("Unable to move player #", client_num_str, " (", pl_name, ")");
-						}
 					}
 				} // loop end
 
-				if (successful) bprint("Successfully moved players ", successful, " to destination ", destination, ".\n");
-				else LOG_INFO("No players given (", original_targets, ") are able to move.");
+				if (successful)
+					bprint("Successfully moved players ", successful, " to destination ", destination, ".\n");
+				else
+					LOG_INFO("No players given (", original_targets, ") are able to move.");
 
 				return;  // still correct parameters so return to avoid usage print
 			}
@@ -1482,7 +1461,8 @@ void GameCommand_radarmap(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (RadarMap_Make(argc)) return;
+			if (RadarMap_Make(argc))
+				return;
 		}
 
 		default:
@@ -1573,21 +1553,15 @@ void shuffleteams()
 	int number_of_teams = 0;
 	entity balance = TeamBalance_CheckAllowedTeams(NULL);
 	for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
-	{
 		if (TeamBalance_IsTeamAllowed(balance, i))
-		{
 			number_of_teams = max(i, number_of_teams);
-		}
-	}
 	TeamBalance_Destroy(balance);
 
 	int team_index = 0;
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) || INGAME(it), {
 		int target_team_index = team_index + 1;
 		if (Entity_GetTeamIndex(it) != target_team_index)
-		{
 			MoveToTeam(it, target_team_index, 6);
-		}
 		team_index = (team_index + 1) % number_of_teams;
 	});
 
@@ -1678,9 +1652,7 @@ void GameCommand_stuffto(int request, int argc)
 						LOG_INFO("Command: \"", argv(next_token), "\" sent to ", GetCallerName(client), " (", argv(1), ").");
 					}
 					else
-					{
 						LOG_INFO("stuffto: ", GetClientErrorString(accepted, argv(1)), ".");
-					}
 
 					return;
 				}
@@ -1757,12 +1729,14 @@ void GameCommand_trace(int request, int argc)
 									tracebox(pos, PL_MIN_CONST, PL_MAX_CONST, pos, MOVE_NOMONSTERS, NULL);
 									if (trace_startsolid)
 									{
-										if ((safe + unsafe) * 0.5 == unsafe) break;
+										if ((safe + unsafe) * 0.5 == unsafe)
+											break;
 										unsafe = (safe + unsafe) * 0.5;
 									}
 									else
 									{
-										if ((safe + unsafe) * 0.5 == safe) break;
+										if ((safe + unsafe) * 0.5 == safe)
+											break;
 										safe = (safe + unsafe) * 0.5;
 									}
 								}
@@ -1771,9 +1745,12 @@ void GameCommand_trace(int request, int argc)
 								LOG_INFO("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu");
 
 								tracebox(p, PL_MIN_CONST + '0.1 0.1 0.1', PL_MAX_CONST - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, NULL);
-								if (trace_startsolid) LOG_INFO("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p));
-								else LOG_INFO("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p));
-								if (++hitcount >= 10) break;
+								if (trace_startsolid)
+									LOG_INFO("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p));
+								else
+									LOG_INFO("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p));
+								if (++hitcount >= 10)
+									break;
 							}
 							else
 							{
@@ -1783,10 +1760,13 @@ void GameCommand_trace(int request, int argc)
 								for ( ; ; )
 								{
 									q = p + normalize(end - p) * (dq + dqf);
-									if (q == q0) break;
+									if (q == q0)
+										break;
 									tracebox(p, PL_MIN_CONST, PL_MAX_CONST, q, MOVE_NOMONSTERS, NULL);
-									if (trace_startsolid) error("THIS ONE cannot happen");
-									if (trace_fraction > 0) dq += dqf * trace_fraction;
+									if (trace_startsolid)
+										error("THIS ONE cannot happen");
+									if (trace_fraction > 0)
+										dq += dqf * trace_fraction;
 									dqf *= 0.5;
 									q0 = q;
 								}
@@ -1795,7 +1775,8 @@ void GameCommand_trace(int request, int argc)
 									worst_endpos_bug = dq;
 									LOG_INFO("trace_endpos still before solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p));
 									LOG_INFO("could go ", ftos(dq), " units further to ", vtos(q));
-									if (++hitcount >= 10) break;
+									if (++hitcount >= 10)
+										break;
 								}
 							}
 						}
@@ -1817,9 +1798,11 @@ void GameCommand_trace(int request, int argc)
 					for (i = 0; i < 100000; ++i)
 					{
 						dv = randomvec();
-						if (dv.z > 0) dv = -1 * dv;
+						if (dv.z > 0)
+							dv = -1 * dv;
 						tracebox(vv, e.mins, e.maxs, vv + dv, MOVE_NORMAL, e);
-						if (trace_startsolid) LOG_INFO("bug 1");
+						if (trace_startsolid)
+							LOG_INFO("bug 1");
 						if (trace_fraction == 1)
 						{
 							if (dv.z < f)
@@ -1898,9 +1881,7 @@ void GameCommand_unlockteams(int request)
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_TEAMS_UNLOCKED);
 			}
 			else
-			{
 				bprint("unlockteams command can only be used in a team-based gametype.\n");
-			}
 			return;
 		}
 
@@ -1940,9 +1921,7 @@ void GameCommand_warp(int request, int argc)
 				}
 			}
 			else
-			{
 				LOG_INFO("Not in campaign, can't level warp");
-			}
 			return;
 		}
 
@@ -1961,27 +1940,27 @@ void GameCommand_warp(int request, int argc)
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void GameCommand_(int request)
 {
-    switch(request)
-    {
-        case CMD_REQUEST_COMMAND:
-        {
-		    if (!world_initialized)
-		    {
-		        LOG_HELPF("This command works only when the server is running.");
-		        return;
-		    }
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (!world_initialized)
+			{
+				LOG_HELPF("This command works only when the server is running.");
+				return;
+			}
 
-            return;
-        }
+			return;
+		}
 
-        default:
-        case CMD_REQUEST_USAGE:
-        {
-            LOG_HELP("Usage:^3 sv_cmd ");
-            LOG_HELP("  No arguments required.");
-            return;
-        }
-    }
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_HELP("Usage:^3 sv_cmd ");
+			LOG_HELP("  No arguments required.");
+			return;
+		}
+	}
 }
 */
 
@@ -2092,42 +2071,24 @@ void GameCommand(string command)
 			return;
 		}
 		else if (BanCommand_macro_usage(argc))  // Instead of trying to call a command, we're going to see detailed information about it
-		{
 			return;
-		}
 		else if (CommonCommand_macro_usage(argc, NULL))  // same here, but for common commands instead
-		{
 			return;
-		}
 		else if (GenericCommand_macro_usage(argc))  // same here, but for generic commands instead
-		{
 			return;
-		}
 		else if (GameCommand_macro_usage(argc))  // finally try for normal commands too
-		{
 			return;
-		}
 	}
 	else if (MUTATOR_CALLHOOK(SV_ParseServerCommand, strtolower(argv(0)), argc, command))
-	{
 		return;  // handled by a mutator
-	}
 	else if (BanCommand(command))
-	{
 		return;  // handled by server/command/ipban.qc
-	}
 	else if (CommonCommand_macro_command(argc, NULL, command))
-	{
 		return;  // handled by server/command/common.qc
-	}
 	else if (GenericCommand(command))
-	{
 		return;                                        // handled by common/command/generic.qc
-	}
 	else if (GameCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
-	{
 		return;                                        // handled by one of the above GameCommand_* functions
-	}
 
 	// nothing above caught the command, must be invalid
 	LOG_INFO(((command != "") ? strcat("Unknown server command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try sv_cmd help.");
