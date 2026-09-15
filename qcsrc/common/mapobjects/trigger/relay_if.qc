@@ -14,7 +14,7 @@ void trigger_relay_if_use(entity this, entity actor, entity trigger)
 		n = !n;
 
 	if(n)
-		SUB_UseTargets(this, actor, trigger);
+		SUB_UseTargets(this, actor);
 }
 
 spawnfunc(trigger_relay_if)

@@ -23,7 +23,7 @@ THINK FUNCTIONS
 */
 
 void door_go_down(entity this);
-void door_go_up(entity this, entity actor, entity trigger);
+void door_go_up(entity this, entity actor);
 
 void door_blocked(entity this, entity blocker)
 {
@@ -53,9 +53,9 @@ void door_blocked(entity this, entity blocker)
 		if (this.state == STATE_DOWN)
 		{
 			if (this.classname == "door")
-				door_go_up(this, NULL, NULL);
+				door_go_up(this, blocker.owner ? blocker.owner : blocker);
 			else
-				door_rotating_go_up(this, blocker);
+				door_rotating_go_up(this, blocker.owner ? blocker.owner : blocker);
 		}
 		else
 		{
@@ -112,7 +112,7 @@ void door_go_down(entity this)
 	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, door_hit_bottom);
 }
 
-void door_go_up(entity this, entity actor, entity trigger)
+void door_go_up(entity this, entity actor)
 {
 	if (this.state == STATE_UP)
 		return;		// already going up
@@ -130,7 +130,7 @@ void door_go_up(entity this, entity actor, entity trigger)
 
 	string oldmessage = this.message;
 	this.message = "";
-	SUB_UseTargets(this, actor, trigger);
+	SUB_UseTargets(this, actor);
 	this.message = oldmessage;
 }
 
@@ -234,7 +234,7 @@ void door_use(entity this, entity actor, entity trigger)
 	entity e = this;
 	do {
 		if (e.classname == "door") {
-			door_go_up(e, actor, trigger);
+			door_go_up(e, actor);
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
 			if ((e.spawnflags & DOOR_ROTATING_BIDIR) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
@@ -245,7 +245,7 @@ void door_use(entity this, entity actor, entity trigger)
 			if (!((e.spawnflags & DOOR_ROTATING_BIDIR) &&  (e.spawnflags & DOOR_ROTATING_BIDIR_IN_DOWN) && e.state == STATE_DOWN
 				&& (((e.lip == 666) && (trigger.trigger_reverse == 0)) || ((e.lip != 666) && (trigger.trigger_reverse != 0)))))
 			{
-				door_rotating_go_up(e, trigger);
+				door_rotating_go_up(e, actor);
 			}
 		}
 		e = e.enemy;
