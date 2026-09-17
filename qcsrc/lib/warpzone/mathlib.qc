@@ -116,9 +116,13 @@ float logb(float e)
 {
 	return floor(log2(fabs(e)));
 }
+float fract(float f)
+{
+	return f - trunc(f);
+}
 vector modf(float f)
 {
-	return '1 0 0' * (f - trunc(f)) + '0 1 0' * trunc(f);
+	return '1 0 0' * fract(f) + '0 1 0' * trunc(f);
 }
 
 float scalbn(float e, int n)
