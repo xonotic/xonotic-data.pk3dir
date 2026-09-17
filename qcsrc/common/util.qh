@@ -135,12 +135,12 @@ vector mi_min;
 vector mi_max;
 void get_mi_min_max(float mode);
 
-vector mi_picmin; // adjusted mins that map to the picture (square)
-vector mi_picmax; // adjusted maxs that map to the picture (square)
-vector mi_pictexcoord0; // texcoords of the image corners (after transforming, these are 2D coords too)
-vector mi_pictexcoord1; // texcoords of the image corners (after transforming, these are 2D coords too)
-vector mi_pictexcoord2; // texcoords of the image corners (after transforming, these are 2D coords too)
-vector mi_pictexcoord3; // texcoords of the image corners (after transforming, these are 2D coords too)
+vector mi_picmin; ///< adjusted mins that map to the picture (square)
+vector mi_picmax; ///< adjusted maxs that map to the picture (square)
+vector mi_pictexcoord0; ///< texcoords of the top left image corner (after transforming, these are 2D coords too)
+vector mi_pictexcoord1; ///< texcoords of the bottom left image corner (after transforming, these are 2D coords too)
+vector mi_pictexcoord2; ///< texcoords of the bottom right image corner (after transforming, these are 2D coords too)
+vector mi_pictexcoord3; ///< texcoords of the top right image corner (after transforming, these are 2D coords too)
 void get_mi_min_max_texcoords(float mode);
 #endif
 

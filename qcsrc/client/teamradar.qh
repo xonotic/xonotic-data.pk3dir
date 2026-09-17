@@ -32,9 +32,9 @@ vector teamradar_3dcoord_to_texcoord(vector in);
 
 vector teamradar_texcoord_to_2dcoord(vector in);
 
-vector teamradar_texcoord_to_3dcoord(vector in,float oz);
+vector teamradar_texcoord_to_3dcoord(vector in, float oz);
 
-void draw_teamradar_background(float fg);
+void draw_teamradar_background(float fg, vector size, int edges);
 
 void draw_teamradar_player(vector coord3d, vector pangles, vector rgb);
 
