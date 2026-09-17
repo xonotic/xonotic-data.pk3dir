@@ -55,29 +55,42 @@ vector teamradar_texcoord_to_3dcoord(vector in, float oz)
 	return out;
 }
 
-void draw_teamradar_background(float fg)
+void draw_teamradar_background(float fg, vector size, int edges)
 {
-	if(fg > 0 && minimapname != "")
+	if (fg <= 0 || minimapname == "")
+		return;
+
+	vector fgc = '1 1 1' * fg;
+	R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP, true);
+	if (edges < 3)
 	{
-		vector fgc = '1 1 1' * fg;
-		float fga = 1;
-		R_BeginPolygon(minimapname, DRAWFLAG_SCREEN | DRAWFLAG_MIPMAP, true);
-		if(v_flipped)
-		{
-			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord3), yinvert(mi_pictexcoord3), fgc, fga);
-			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord2), yinvert(mi_pictexcoord2), fgc, fga);
-			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord1), yinvert(mi_pictexcoord1), fgc, fga);
-			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord0), yinvert(mi_pictexcoord0), fgc, fga);
-		}
-		else
-		{
-			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord0), yinvert(mi_pictexcoord0), fgc, fga);
-			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord1), yinvert(mi_pictexcoord1), fgc, fga);
-			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord2), yinvert(mi_pictexcoord2), fgc, fga);
-			R_PolygonVertex(teamradar_texcoord_to_2dcoord(mi_pictexcoord3), yinvert(mi_pictexcoord3), fgc, fga);
-		}
-		R_EndPolygon();
+	#define ADD_RADAR_VERT(coord) R_PolygonVertex(teamradar_texcoord_to_2dcoord(coord), yinvert(coord), fgc, 1)
+		ADD_RADAR_VERT(mi_pictexcoord0);
+		ADD_RADAR_VERT(mi_pictexcoord1);
+		ADD_RADAR_VERT(mi_pictexcoord2);
+		ADD_RADAR_VERT(mi_pictexcoord3);
+	#undef ADD_RADAR_VERT
 	}
+	else
+	{
+		vector coord, center = teamradar_texcoord_to_2dcoord(teamradar_origin3d_in_texcoord); // must be centered on the player; not zooming
+		coord.z = 0;
+		float half_angle = M_PI / edges;
+		float rad = min( // bounding box of an n-gon is the smaller of:
+			size.x * 0.5,                  // half the width
+			size.y / (1 + cos(half_angle)) // the height over 1 + cos(pi/n)
+		); // NOTE: the polygon could be bigger if the player wasn't forced to be at the exact center, e.g., triangle
+		float angle = 2 * half_angle;
+		float ang = -(half_angle + M_PI_2);
+		for (int i = 0; i < edges; ++i)
+		{
+			coord.x = center.x + rad * cos(ang);
+			coord.y = center.y + rad * sin(ang);
+			R_PolygonVertex(coord, yinvert(teamradar_2dcoord_to_texcoord(coord)), fgc, 1);
+			ang += angle;
+		}
+	}
+	R_EndPolygon();
 }
 
 void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)

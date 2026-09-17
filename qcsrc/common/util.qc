@@ -765,8 +765,6 @@ void get_mi_min_max(float mode)
 
 void get_mi_min_max_texcoords(float mode)
 {
-	vector extend;
-
 	get_mi_min_max(mode);
 
 	mi_picmin = mi_min;
@@ -774,16 +772,18 @@ void get_mi_min_max_texcoords(float mode)
 
 	// extend mi_picmax to get a square aspect ratio
 	// center the map in that area
-	extend = mi_picmax - mi_picmin;
-	if(extend.y > extend.x)
+	vector extend = mi_picmax - mi_picmin;
+	if (extend.y > extend.x)
 	{
-		mi_picmin.x -= (extend.y - extend.x) * 0.5;
-		mi_picmax.x += (extend.y - extend.x) * 0.5;
+		float adjust = (extend.y - extend.x) * 0.5;
+		mi_picmin.x -= adjust;
+		mi_picmax.x += adjust;
 	}
 	else
 	{
-		mi_picmin.y -= (extend.x - extend.y) * 0.5;
-		mi_picmax.y += (extend.x - extend.y) * 0.5;
+		float adjust = (extend.x - extend.y) * 0.5;
+		mi_picmin.y -= adjust;
+		mi_picmax.y += adjust;
 	}
 
 	// add another some percent
@@ -792,17 +792,17 @@ void get_mi_min_max_texcoords(float mode)
 	mi_picmax += extend;
 
 	// calculate the texcoords
-	mi_pictexcoord0 = mi_pictexcoord1 = mi_pictexcoord2 = mi_pictexcoord3 = '0 0 0';
+	mi_pictexcoord0.z = mi_pictexcoord1.z = mi_pictexcoord2.z = mi_pictexcoord3.z = 0;
 	// first the two corners of the origin
-	mi_pictexcoord0_x = (mi_min.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
-	mi_pictexcoord0_y = (mi_min.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
-	mi_pictexcoord2_x = (mi_max.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
-	mi_pictexcoord2_y = (mi_max.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
+	mi_pictexcoord0.x = (mi_min.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	mi_pictexcoord0.y = (mi_min.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
+	mi_pictexcoord2.x = (mi_max.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	mi_pictexcoord2.y = (mi_max.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
 	// then the other corners
-	mi_pictexcoord1_x = mi_pictexcoord0_x;
-	mi_pictexcoord1_y = mi_pictexcoord2_y;
-	mi_pictexcoord3_x = mi_pictexcoord2_x;
-	mi_pictexcoord3_y = mi_pictexcoord0_y;
+	mi_pictexcoord1.x = mi_pictexcoord0.x;
+	mi_pictexcoord1.y = mi_pictexcoord2.y;
+	mi_pictexcoord3.x = mi_pictexcoord2.x;
+	mi_pictexcoord3.y = mi_pictexcoord0.y;
 }
 #endif
 
