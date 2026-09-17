@@ -68,6 +68,9 @@ void round_handler_Think(entity this)
 			this.wait = true;
 			this.nextthink = time + this.delay;
 			round_handler_ResetEndDelayTime();
+
+			// new round = last round ended
+			MUTATOR_CALLHOOK(RoundEnd);
 		}
 		else
 		{

@@ -168,6 +168,9 @@ MUTATOR_HOOKABLE(MatchEnd_BeforeScores, EV_NO_ARGS);
 /// Called when the match ends
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 
+/// Called when a round ends
+MUTATOR_HOOKABLE(RoundEnd, EV_NO_ARGS);
+
 /** Allows adjusting allowed teams. Return true to use the bitmask value and set
  *  non-empty string to use team entity name. Both behaviors can be active at the
  *  same time and will stack allowed teams.
