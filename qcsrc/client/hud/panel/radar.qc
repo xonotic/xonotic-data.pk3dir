@@ -10,10 +10,13 @@
 
 // Radar (#6)
 
+int autocvar_hud_panel_radar_polygonedges = 0;
+
 void HUD_Radar_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
 	HUD_Write_Cvar("hud_panel_radar_foreground_alpha");
+	HUD_Write_Cvar("hud_panel_radar_polygonedges");
 	HUD_Write_Cvar("hud_panel_radar_rotation");
 	HUD_Write_Cvar("hud_panel_radar_zoommode");
 	HUD_Write_Cvar("hud_panel_radar_scale");
@@ -296,7 +299,7 @@ void HUD_Radar(bool should_draw)
 
 	drawsetcliparea(pos.x, pos.y, mySize.x, mySize.y);
 
-	draw_teamradar_background(hud_panel_radar_foreground_alpha);
+	draw_teamradar_background(hud_panel_radar_foreground_alpha, mySize, zoom_factor ? 0 : autocvar_hud_panel_radar_polygonedges);
 
 	IL_EACH(g_radarlinks, true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
