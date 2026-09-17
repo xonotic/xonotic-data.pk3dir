@@ -1,0 +1,40 @@
+#pragma once
+
+#ifdef SVQC
+float autocvar_sv_race_checkpoint_outline = true;
+void Outline_Spawn(entity tgt, vector org);
+#elif defined(CSQC)
+float autocvar_cl_race_checkpoint_outline = 0;
+float autocvar_cl_race_checkpoint_outline_fill = 0;
+float autocvar_cl_race_checkpoint_outline_width = 1;
+vector autocvar_cl_race_checkpoint_outline_color = '1 0 1';
+
+// corner masks
+// those are used to determine which sides are extended to form the corners
+const int CORNER_MASK_NONE     = 0;
+const int CORNER_MASK_0        = BIT(0);
+const int CORNER_MASK_1        = BIT(1);
+const int CORNER_MASK_2        = BIT(2);
+const int CORNER_MASK_3        = BIT(3);
+
+// labelled versions, the position depends on the axis
+// those are determined by the axis_1 and axis_2 assignment in outline_drawline()
+const int CORNER_MASK_X_BOTTOM = CORNER_MASK_0;
+const int CORNER_MASK_Y_BOTTOM = CORNER_MASK_0;
+const int CORNER_MASK_Z_RIGHT  = CORNER_MASK_0;
+const int CORNER_MASK_X_TOP    = CORNER_MASK_1;
+const int CORNER_MASK_Y_TOP    = CORNER_MASK_1;
+const int CORNER_MASK_Z_LEFT   = CORNER_MASK_1;
+const int CORNER_MASK_X_RIGHT  = CORNER_MASK_2;
+const int CORNER_MASK_Y_FRONT  = CORNER_MASK_2;
+const int CORNER_MASK_Z_FRONT  = CORNER_MASK_2;
+const int CORNER_MASK_X_LEFT   = CORNER_MASK_3;
+const int CORNER_MASK_Y_BACK   = CORNER_MASK_3;
+const int CORNER_MASK_Z_BACK   = CORNER_MASK_3;
+
+// polygon face orientation is used to determine which coordinates to trim
+// this is used for the drawfill mode to not overlap with the outlines
+const int FACE_X_AXIS = 0;
+const int FACE_Y_AXIS = 1;
+const int FACE_Z_AXIS = 2;
+#endif
