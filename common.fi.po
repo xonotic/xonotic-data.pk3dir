@@ -4351,6 +4351,9 @@ msgid ""
 "This allows players to fire and detonate a rocket while mid-air for a strong "
 "boost even while moving fast."
 msgstr ""
+"%s-raketit voidaan räjäyttää välittömästi (muutoin on pieni viive). Tällöin "
+"pelaajat voivat ampua ja räjäyttää raketin ilmassa saaden vahvaa "
+"ilmanostetta jopa liikkuessaan nopeasti."
 
 #: qcsrc/common/mutators/mutator/rocketflying/ui_rocketflying.qh:6
 msgid "Rocket flying"
@@ -4384,6 +4387,8 @@ msgid ""
 "This is a nice way to add some silly fun to a server, but it also does allow "
 "for the use of new tactics in some gametypes."
 msgstr ""
+"Tämä on kiva tapa tuoda vähän hupia palvelimeen, mutta sen avulla voidaan "
+"myös käyttää uusia taktiikoita joissakin pelimuodoissa."
 
 #: qcsrc/common/mutators/mutator/touchexplode/touchexplode.qh:5
 #: qcsrc/common/mutators/mutator/touchexplode/ui_touchexplode.qh:6
@@ -6298,12 +6303,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:611
 #, c-format
 msgid "^BGYour %steammate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGSinun %sjoukkuekaverisi^BG sai ^TC^TT^BG lipun! Suojelua!"
 
 #: qcsrc/common/notifications/all.inc:612
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGSinun %sjoukkuekaverisi (^BG%s%s)^BG sai ^TC^TT^BG lipun! Suojelua!"
 
 #: qcsrc/common/notifications/all.inc:613
 #, c-format
@@ -6313,7 +6318,7 @@ msgstr "^BG%s-joukkuekaverisi^BG sai lipun! Suojele häntä!"
 #: qcsrc/common/notifications/all.inc:614
 #, c-format
 msgid "^BGYour %steammate (^BG%s%s)^BG got the flag! Protect them!"
-msgstr ""
+msgstr "^BGSinun %sjoukkuekaverisi (^BG%s%s)^BG sai lipun! Suojelua!"
 
 #: qcsrc/common/notifications/all.inc:615
 #: qcsrc/common/notifications/all.inc:763
