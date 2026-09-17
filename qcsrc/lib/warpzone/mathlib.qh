@@ -46,6 +46,7 @@ float log10(float e);
 float log1p(float e);
 float log2(float e);
 float logb(float e);
+float fract(float f);
 /// Fraction as .x, integer as .y
 vector modf(float f);
 

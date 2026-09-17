@@ -2,3 +2,5 @@
 
 void HUD_Mod_FT(vector myPos, vector mySize, bool should_draw);
 void HUD_Mod_FT_Export(int fh);
+
+void DrawRevivalRing(vector pos, float size, string pic, float progress, vector color, float alpha, int drawflags);
