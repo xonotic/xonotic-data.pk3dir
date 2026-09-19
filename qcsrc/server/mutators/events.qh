@@ -75,6 +75,13 @@ MUTATOR_HOOKABLE(reset_map_players, EV_NO_ARGS);
 /// Return 1 if player score shall be cleared with g_score_resetonjoin -1
 MUTATOR_HOOKABLE(PreferPlayerScore_Clear, EV_NO_ARGS);
 
+/// Called when a player's score is cleared, if the PreferPlayerScore_Clear check was passed
+#define params(i, o) \
+	i(entity, 0) /* player */ \
+	/**/
+MUTATOR_HOOKABLE(PlayerScore_Clear, params);
+#undef params
+
 /// Called when a player disconnects
 #define params(i, o) \
 	i(entity, 0) /* player */ \
@@ -97,6 +104,7 @@ MUTATOR_HOOKABLE(PlayerDies, params);
 /// Called after a player died
 #define params(i, o) \
 	i(entity, 0) /* player */ \
+	i(entity, 1) /* attacker */ \
 	/**/
 MUTATOR_HOOKABLE(PlayerDied, params);
 #undef params
@@ -1345,6 +1353,8 @@ MUTATOR_HOOKABLE(HavocBot_Aim, params);
 /// Return true to skip respawn time calculations
 #define params(i, o) \
 	i(entity, 0) /* player */ \
+	i(float,  1) /* spawn delay */ \
+	o(float,  1) /* spawn delay */ \
 	/**/
 MUTATOR_HOOKABLE(CalculateRespawnTime, params);
 #undef params
