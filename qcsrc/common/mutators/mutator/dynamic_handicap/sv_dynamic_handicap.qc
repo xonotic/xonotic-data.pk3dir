@@ -1,13 +1,6 @@
 #include "sv_dynamic_handicap.qh"
-/// \file
-/// \brief Source file that contains implementation of the Dynamic handicap
-/// mutator.
-/// \author Lyberta
-/// \copyright GNU GPLv2 or any later version.
 
-//======================= Global variables ====================================
-
-int autocvar_g_dynamic_handicap; ///< Whether to enable dynamic handicap.
+bool autocvar_g_dynamic_handicap; ///< enable dynamic handicap
 /// \brief The scale of the handicap. Larger values mean more penalties for
 /// strong players and more buffs for weak players.
 float autocvar_g_dynamic_handicap_scale;
@@ -15,50 +8,56 @@ float autocvar_g_dynamic_handicap_scale;
 /// more than 1 mean stronger non-linear handicap. Values less than 1 mean
 /// weaker non-linear handicap.
 float autocvar_g_dynamic_handicap_exponent;
-float autocvar_g_dynamic_handicap_min; ///< The minimum value of the handicap.
-float autocvar_g_dynamic_handicap_max; ///< The maximum value of the handicap.
+float autocvar_g_dynamic_handicap_min; ///< minimum dynamic handicap, can be < 1
+float autocvar_g_dynamic_handicap_max; ///< maximum dynamic handicap
 
-//====================== Forward declarations =================================
 
-/// \brief Clamps the value of the handicap.
-/// \param[in] handicap Value to clamp.
-/// \return Clamped value.
-float DynamicHandicap_ClampHandicap(float handicap);
+/// Clamps the value of the handicap
+float DynamicHandicap_ClampHandicap(float handicap)
+{
+	if (handicap < 0)
+		return 0;
 
-//========================= Free functions ====================================
+	if (autocvar_g_dynamic_handicap_min <= autocvar_g_dynamic_handicap_max
+	&&  autocvar_g_dynamic_handicap_min > 0)
+		return bound(autocvar_g_dynamic_handicap_min, handicap, autocvar_g_dynamic_handicap_max);
 
-/// \brief Updates the handicap of all players.
-/// \return No return.
+	return handicap;
+}
+
+/// Updates the handicap of all players
 void DynamicHandicap_UpdateHandicap()
 {
-	float total_score = 0;
-	float totalplayers = 0;
+	int total_players = 0;
+	int scoring_players = 0;
+	float score, total_score = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		total_score += PlayerScore_Get(it, SP_SCORE);
-		++totalplayers;
+		++total_players;
+		score = PlayerScore_Get(it, SP_SCORE);
+		if (score <= 0) // negative scores can make the mean be negative or small,
+			continue;   // which amplifies handicap for scores close to the mean
+		total_score += score;
+		++scoring_players;
 	});
-	if (totalplayers == 0)
+	if (!total_players)
 		return;
 
-	float mean_score = total_score / totalplayers;
-	FOREACH_CLIENT(true,
+	float handicap, mean_score = (scoring_players)
+		? total_score / scoring_players
+		: 0;
+	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		float score = PlayerScore_Get(it, SP_SCORE);
-		float handicap = fabs((score - mean_score) *
-			autocvar_g_dynamic_handicap_scale);
-		handicap = handicap ** autocvar_g_dynamic_handicap_exponent;
-		if (score < mean_score)
-		{
-			handicap = -handicap;
-		}
-		if (handicap >= 0)
-		{
-			++handicap;
-		}
+		score = PlayerScore_Get(it, SP_SCORE);
+		if (score <= 0 || mean_score <= 0)
+			handicap = 1;
 		else
 		{
-			handicap = 1 / (fabs(handicap) + 1);
+			handicap = fabs((score - mean_score) / mean_score * autocvar_g_dynamic_handicap_scale);
+			handicap = 1 + (handicap ** autocvar_g_dynamic_handicap_exponent);
+			if (score < mean_score)
+				handicap = 1 / handicap;
+			// Handicap of a score x points below the mean will be equal to the reciprocal of a score x points above
 		}
 		handicap = DynamicHandicap_ClampHandicap(handicap);
 		Handicap_SetForcedHandicap(it, handicap, false);
@@ -66,22 +65,6 @@ void DynamicHandicap_UpdateHandicap()
 	});
 }
 
-float DynamicHandicap_ClampHandicap(float handicap)
-{
-	if ((autocvar_g_dynamic_handicap_min >= 0) && (handicap <
-		autocvar_g_dynamic_handicap_min))
-	{
-		handicap = autocvar_g_dynamic_handicap_min;
-	}
-	if ((autocvar_g_dynamic_handicap_max > 0) && (handicap >
-		autocvar_g_dynamic_handicap_max))
-	{
-		handicap = autocvar_g_dynamic_handicap_max;
-	}
-	return handicap;
-}
-
-//============================= Hooks ========================================
 
 REGISTER_MUTATOR(dynamic_handicap, autocvar_g_dynamic_handicap && !HANDICAP_DISABLED());
 
@@ -112,9 +95,6 @@ MUTATOR_HOOKFUNCTION(dynamic_handicap, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(dynamic_handicap, AddedPlayerScore)
 {
-	if (M_ARGV(0, entity) != SP_SCORE)
-	{
-		return;
-	}
-	DynamicHandicap_UpdateHandicap();
+	if (M_ARGV(0, entity) == SP_SCORE)
+		DynamicHandicap_UpdateHandicap();
 }
