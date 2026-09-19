@@ -1126,7 +1126,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 			this.candrop = false; // killed by mobkill command
 
 		// TODO: fix this?
-		SUB_UseTargets(this, attacker, this.enemy);
+		SUB_UseTargets(this, attacker);
 		this.target2 = this.oldtarget2; // reset to original target on death, incase we respawn
 
 		Monster_Dead(this, attacker, (GetResource(this, RES_HEALTH) <= -100 || deathtype == DEATH_KILL.m_id));

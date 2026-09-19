@@ -75,7 +75,7 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 			if(this.enemy.message)
 				FOREACH_CLIENT(IS_PLAYER(it), { centerprint(it, this.enemy.message); });
 
-			SUB_UseTargets(this.enemy, this, trigger);
+			SUB_UseTargets(this.enemy, this);
 		}
 	}
 }
@@ -152,7 +152,7 @@ void target_assault_roundend_use(entity this, entity actor, entity trigger)
 bool assault_turrets_teamswap_forbidden;
 void assault_roundstart_use(entity this, entity actor, entity trigger)
 {
-	SUB_UseTargets(this, this, trigger);
+	SUB_UseTargets(this, this);
 
 	// (Re)spawn all turrets
 	IL_EACH(g_turrets, true,

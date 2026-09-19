@@ -214,8 +214,8 @@ void WarpZone_Touch(entity this, entity toucher)
 	if (WarpZone_Teleport(this, toucher, f, 0))
 	{
 #ifdef SVQC
-		SUB_UseTargets_SkipTargets(this, toucher, toucher, BIT(1) | BIT(3)); // use toucher too?
-		SUB_UseTargets_SkipTargets(this.enemy, toucher, toucher, BIT(1) | BIT(2)); // use toucher too?
+		SUB_UseTargets_Ex(this, toucher, BIT(1) | BIT(3)); // use toucher too?
+		SUB_UseTargets_Ex(this.enemy, toucher, BIT(1) | BIT(2)); // use toucher too?
 #endif
 	}
 	else
@@ -326,8 +326,8 @@ float WarpZone_CheckProjectileImpact(entity player)
 	player.velocity = player.warpzone_oldvelocity;
 	if (WarpZone_Teleport(wz, player, 0, 1))
 	{
-		SUB_UseTargets_SkipTargets(wz, player, player, BIT(1) | BIT(3));
-		SUB_UseTargets_SkipTargets(wz.enemy, player, player, BIT(1) | BIT(2));
+		SUB_UseTargets_Ex(wz, player, BIT(1) | BIT(3));
+		SUB_UseTargets_Ex(wz.enemy, player, BIT(1) | BIT(2));
 	}
 	else
 	{
@@ -664,7 +664,7 @@ spawnfunc(trigger_warpzone)
 	if (!this.scale)
 		this.scale = 1;
 
-	WarpZoneLib_ExactTrigger_Init(this, false);
+	WarpZoneLib_ExactTrigger_Init(this, false, true);
 
 	setSendEntity(this, WarpZone_Send);
 	this.SendFlags = 0xFFFFFF;
