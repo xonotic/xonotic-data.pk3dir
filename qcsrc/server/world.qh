@@ -151,6 +151,7 @@ void readplayerstartcvars();
 void readlevelcvars();
 
 .vector dropped_origin;
+void DropToFloor_QC(entity this);
 void DropToFloor_QC_DelayedInit(entity this);
 
 IntrusiveList g_moveables;
