@@ -14,8 +14,19 @@ void XonoticWeaponsList_cb(string _name, string _icon)
 entity makeXonoticWeaponsList()
 {
 	entity me = NEW(XonoticWeaponsList);
-	me.configureXonoticListBox(me);
+	me.configureXonoticWeaponsList(me);
 	return me;
+}
+void XonoticWeaponsList_configureXonoticWeaponsList(entity me)
+{
+	me.configureXonoticListBox(me);
+
+	// Precache images
+	FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_HIDDEN),
+	{
+		it.display(it, XonoticWeaponsList_cb);
+		draw_PreloadPicture(XonoticWeaponsList_cb_icon);
+	});
 }
 
 void XonoticWeaponsList_draw(entity me)
