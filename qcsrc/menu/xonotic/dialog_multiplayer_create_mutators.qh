@@ -28,31 +28,32 @@ REGISTRY_DEFINE_GET(MenuMutators, NULL)
 // The "cvar changes" mutator classes are created in mutatortab.qc
 // Arenas
 const int MENU_MUTATOR_HEADER_1 = 0;
-REGISTER_MENU_MUTATOR(weaponarena,     makeXonoticMutatorWeaponArenaTab()); // cvar changes
-REGISTER_MENU_MUTATOR(instagib,        makeXonoticMutatorInstaGibTab());
-REGISTER_MENU_MUTATOR(nix,             makeXonoticMutatorNIXTab());
+REGISTER_MENU_MUTATOR(weaponarena,      makeXonoticMutatorWeaponArenaTab()); // cvar changes
+REGISTER_MENU_MUTATOR(instagib,         makeXonoticMutatorInstaGibTab());
+REGISTER_MENU_MUTATOR(nix,              makeXonoticMutatorNIXTab());
 // Weapon & item mutators
-REGISTER_MENU_MUTATOR(weaponstay,      makeXonoticMutatorWeaponStayTab()); // cvar changes
-REGISTER_MENU_MUTATOR(newtoys,         makeXonoticMutatorNewToysTab());
-REGISTER_MENU_MUTATOR(rocketflying,    makeXonoticMutatorRocketFlyingTab());
-REGISTER_MENU_MUTATOR(offhandweapons,  makeXonoticMutatorOffhandWeaponsTab()); // multiple mutators combined
-REGISTER_MENU_MUTATOR(jetpack,         makeXonoticMutatorJetpackTab()); // cvar changes
-REGISTER_MENU_MUTATOR(invincibleprojs, makeXonoticMutatorInvincibleProjectilesTab());
-REGISTER_MENU_MUTATOR(pinata,          makeXonoticMutatorPinataTab());
+REGISTER_MENU_MUTATOR(weaponstay,       makeXonoticMutatorWeaponStayTab()); // cvar changes
+REGISTER_MENU_MUTATOR(newtoys,          makeXonoticMutatorNewToysTab());
+REGISTER_MENU_MUTATOR(rocketflying,     makeXonoticMutatorRocketFlyingTab());
+REGISTER_MENU_MUTATOR(offhandweapons,   makeXonoticMutatorOffhandWeaponsTab()); // multiple mutators combined
+REGISTER_MENU_MUTATOR(jetpack,          makeXonoticMutatorJetpackTab()); // cvar changes
+REGISTER_MENU_MUTATOR(invincibleprojs,  makeXonoticMutatorInvincibleProjectilesTab());
+REGISTER_MENU_MUTATOR(pinata,           makeXonoticMutatorPinataTab());
 // Gameplay mutators
 const int MENU_MUTATOR_HEADER_2 = 11;
-REGISTER_MENU_MUTATOR(buffs,           makeXonoticMutatorBuffsTab());
-REGISTER_MENU_MUTATOR(powerups,        makeXonoticMutatorPowerupsTab());
+REGISTER_MENU_MUTATOR(buffs,            makeXonoticMutatorBuffsTab());
+REGISTER_MENU_MUTATOR(powerups,         makeXonoticMutatorPowerupsTab());
 #ifdef MENU_INCLUDE_OVERKILL
-REGISTER_MENU_MUTATOR(overkill,        makeXonoticMutatorOverkillTab());
+REGISTER_MENU_MUTATOR(overkill,         makeXonoticMutatorOverkillTab());
 #endif
-REGISTER_MENU_MUTATOR(nades,           makeXonoticMutatorNadesTab());
-REGISTER_MENU_MUTATOR(cloaked,         makeXonoticMutatorCloakedTab());
-REGISTER_MENU_MUTATOR(vampire,         makeXonoticMutatorVampireTab());
-REGISTER_MENU_MUTATOR(bloodloss,       makeXonoticMutatorBloodLossTab());
-REGISTER_MENU_MUTATOR(touchexplode,    makeXonoticMutatorTouchExplodeTab());
-REGISTER_MENU_MUTATOR(midair,          makeXonoticMutatorMidAirTab());
-REGISTER_MENU_MUTATOR(customphysics,   makeXonoticMutatorCustomPhysicsTab()); // cvar changes & multiple mutators combined
+REGISTER_MENU_MUTATOR(nades,            makeXonoticMutatorNadesTab());
+REGISTER_MENU_MUTATOR(cloaked,          makeXonoticMutatorCloakedTab());
+REGISTER_MENU_MUTATOR(vampire,          makeXonoticMutatorVampireTab());
+REGISTER_MENU_MUTATOR(bloodloss,        makeXonoticMutatorBloodLossTab());
+REGISTER_MENU_MUTATOR(touchexplode,     makeXonoticMutatorTouchExplodeTab());
+REGISTER_MENU_MUTATOR(midair,           makeXonoticMutatorMidAirTab());
+REGISTER_MENU_MUTATOR(customphysics,    makeXonoticMutatorCustomPhysicsTab()); // cvar changes & multiple mutators combined
+REGISTER_MENU_MUTATOR(dynamicbalancing, makeXonoticMutatorDynamicBalancingTab());
 
 
 #include "datasource.qh"
@@ -75,7 +76,7 @@ CLASS(XonoticRegisteredMutatorsList, XonoticListBox)
 	ATTRIB(XonoticRegisteredMutatorsList, columnNameOrigin, float, 0);
 	ATTRIB(XonoticRegisteredMutatorsList, columnNameSize, float, 0);
 	ATTRIB(XonoticRegisteredMutatorsList, columnTreeIconSize, float, 0);
-	ATTRIB(XonoticRegisteredMutatorsList, rowsPerItem, float, 1.6);
+	ATTRIB(XonoticRegisteredMutatorsList, rowsPerItem, float, 1.5);
 	ATTRIB(XonoticRegisteredMutatorsList, typeToSearchString, string);
 	ATTRIB(XonoticRegisteredMutatorsList, typeToSearchTime, float, 0);
 	ATTRIB(XonoticRegisteredMutatorsList, source, DataSource, NEW(MenuMutatorSource));
