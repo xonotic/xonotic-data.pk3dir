@@ -1280,6 +1280,7 @@ MUTATOR_HOOKABLE(CopyBody, params);
 	o(int,    1) \
 	i(string, 2) /* message */ \
 	i(entity, 3) /* private msg target */ \
+	i(int,    4) /* teamsay */ \
 	/**/
 MUTATOR_HOOKABLE(ChatMessage, params);
 #undef params
