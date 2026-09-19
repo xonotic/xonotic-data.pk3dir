@@ -23,6 +23,7 @@ const int GAMETYPE_FLAG_PRIORITY        = BIT(3); ///< priority selection when p
 const int GAMETYPE_FLAG_HIDELIMITS      = BIT(4); ///< don't display a score limit needed for winning the match in the scoreboard
 const int GAMETYPE_FLAG_WEAPONARENA     = BIT(5); ///< gametype has a forced weapon arena, weapon arena mutators should disable themselves when this is set
 const int GAMETYPE_FLAG_1V1             = BIT(6); ///< 1v1 gameplay
+const int GAMETYPE_FLAG_ELIMINATIONS    = BIT(7); ///< players can be eliminated (can no longer spawn) in this gametype
 #define GAMETYPE_FLAG(gt, flag_name) ((gt).gflags & GAMETYPE_FLAG_##flag_name)
 
 vector MAPINFO_TYPE_ALL;

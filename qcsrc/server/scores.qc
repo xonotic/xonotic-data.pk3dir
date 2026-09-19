@@ -289,6 +289,8 @@ bool PlayerScore_Clear(entity player)
 	|| (autocvar_g_score_resetonjoin == -1 && !MUTATOR_CALLHOOK(PreferPlayerScore_Clear)))
 		return false;
 
+	MUTATOR_CALLHOOK(PlayerScore_Clear, player);
+
 	entity sk = CS(player).scorekeeper;
 	FOREACH(Scores, true, {
 		if(sk.(scores(it)) != 0 && scores_label(it) != "")
