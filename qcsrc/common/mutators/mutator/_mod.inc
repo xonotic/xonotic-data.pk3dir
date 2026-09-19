@@ -10,6 +10,7 @@
 #include <common/mutators/mutator/dodging/_mod.inc>
 #include <common/mutators/mutator/doublejump/_mod.inc>
 #include <common/mutators/mutator/dynamic_handicap/_mod.inc>
+#include <common/mutators/mutator/dynamic_respawntime/_mod.inc>
 #include <common/mutators/mutator/globalforces/_mod.inc>
 #include <common/mutators/mutator/hook/_mod.inc>
 #include <common/mutators/mutator/instagib/_mod.inc>
