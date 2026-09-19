@@ -5658,7 +5658,7 @@ msgstr "^F1%s ^BGне має достатньо набоїв"
 #: qcsrc/common/notifications/all.inc:734
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "^F1%s %s^BG не може стріляти, але ^F1%s^BG може"
+msgstr "^F1%s^BG: %s^BG не може стріляти, але ^F1%s^BG може"
 
 #: qcsrc/common/notifications/all.inc:399
 #: qcsrc/common/notifications/all.inc:735
@@ -7321,7 +7321,7 @@ msgstr " (біля %s)"
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
 #: qcsrc/common/weapons/all.qc:866
 msgid "primary"
-msgstr "основний режим вогню"
+msgstr "основний"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
 #: qcsrc/common/weapons/all.qc:867

@@ -3491,6 +3491,7 @@ msgid ""
 "The %s is sometimes present on maps when %s is enabled, providing ammo for "
 "the %s."
 msgstr ""
+"%s esiintyy joskus kartoilla, kun %s on käytössä, antaen ammuksia aseelle %s."
 
 #: qcsrc/common/mutators/mutator/instagib/items.qc:19
 #, c-format
@@ -4030,6 +4031,8 @@ msgid ""
 "The %s can be used in a lot of situations, and it works particularly well at "
 "long ranges since the bullets pierce the sky instantaneously."
 msgstr ""
+"%s on käytettävissä monissa tilanteissa, ja se toimii erityisen hyvin "
+"pitkillä matkoilla, koska luodit läpäisevät taivaan välittömästi."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qc:179
 #, c-format
@@ -4037,6 +4040,8 @@ msgid ""
 "Since its bullets deal a lot more damage than the %s bullets, it is often "
 "heavily contested when it spawns in."
 msgstr ""
+"Koska sen luodit tekevät enemmän vahinkoa kuin %s-luodit, siitä usein "
+"kilpaillaan rankasti, kun se ilmaantuu."
 
 #: qcsrc/common/mutators/mutator/overkill/okhmg.qh:35
 msgid "Overkill Heavy MachineGun"
@@ -4216,6 +4221,8 @@ msgid ""
 "It consumes %s ammo while operating, so make sure you don't run out when "
 "you're high up!"
 msgstr ""
+"Se kuluttaa %s ammusta toimiessaan, joten varmista, ettei sinulta lopu, kun "
+"olet huipulla!"
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:38
 #: qcsrc/common/mutators/mutator/powerups/powerup/jetpack.qh:41
@@ -5738,7 +5745,7 @@ msgstr "^K1Selviytyjät^BG voittivat kierroksen"
 #: qcsrc/common/notifications/all.inc:471
 #: qcsrc/common/notifications/all.inc:827
 msgid "^K2You're already on ^TC^TT^K2 team which seems fine."
-msgstr ""
+msgstr "^K2Olet jo joukkueessa ^TC^TT^K2, joka näyttää hyvältä."
 
 #: qcsrc/common/notifications/all.inc:472
 #: qcsrc/common/notifications/all.inc:828
@@ -5751,6 +5758,8 @@ msgid ""
 "^K2Teams are locked, you can't join or change teams until they're unlocked "
 "or the map changes."
 msgstr ""
+"^K2Joukkueet on lukittu, joten et voi liittyä joukkueeseen tai vaihtaa "
+"joukkuetta ennen kuin lukitus poistetaan tai kartta vaihdetaan."
 
 #: qcsrc/common/notifications/all.inc:474
 #: qcsrc/common/notifications/all.inc:830
@@ -8450,8 +8459,9 @@ msgid ""
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr ""
-"Toissijaisella tulituksella laukaistaan raketteja välittömästi, jolloin "
-"vihollista voidaan vahingoittaa, vaikka raketti olisi mennyt heistä ohi."
+"Toissijaisella tulituksella lauotaan raketteja välittömästi, jolloin "
+"vihollista voidaan vahingoittaa, vaikka raketti olisi mennyt heistä juuri ja "
+"juuri ohi."
 
 #: qcsrc/common/weapons/weapon/devastator.qc:596
 #, c-format
@@ -8688,6 +8698,8 @@ msgid ""
 "fire and with no spread, but there's a short delay until it can be used "
 "again."
 msgstr ""
+"Toissijainen tulitus ampuu pikapurskeen luoteja nopeammin kuin ensisijainen "
+"tulitus ja ilman hajontaa, mutta sen uudelleenkäyttöön kuluu hetki."
 
 #: qcsrc/common/weapons/weapon/machinegun.qc:447
 #, c-format
@@ -8705,6 +8717,10 @@ msgid ""
 "secondary fire has no spread, it's the better option when firing over a long "
 "range."
 msgstr ""
+"%s on käytettävissä monissa tilanteissa, ja se toimii erityisen hyvin "
+"pitkillä matkoilla, koska luodit läpäisevät taivaan välittömästi. Koska "
+"toissijaisella tulituksella ei ole hajontaa, se on parempi valinta pitkiltä "
+"matkoilta ammuttaessa."
 
 #: qcsrc/common/weapons/weapon/machinegun.qh:34
 msgid "MachineGun"
@@ -8812,6 +8828,8 @@ msgid ""
 "The %s isn't often placed on maps, but if used well it can make for some "
 "interesting gameplay."
 msgstr ""
+"%s ei yleensä ole kartoilla, mutta oikein käytettyinä se voi tehdä "
+"pelaamisesta mielenkiintoisempaa."
 
 #: qcsrc/common/weapons/weapon/porto.qh:36
 msgid "Port-O-Launch"
@@ -8829,6 +8847,8 @@ msgid ""
 "The secondary fire shoots a few less powerful bullets at once with a bit of "
 "scatter."
 msgstr ""
+"Toissijainen tulitus ampuu muutaman vähemmän voimakkaan luodin kerralla "
+"pikku hajonnalla."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:251
 #, c-format
@@ -8854,6 +8874,8 @@ msgid ""
 "Similar to the %s, the %s can be used at any range, but it stands out at "
 "long ranges."
 msgstr ""
+"Aivan kuin %s, %s on käytettävissä millä matkalla hyvänsä, mutta se loistaa "
+"pitkillä matkoilla."
 
 #: qcsrc/common/weapons/weapon/rifle.qh:34
 msgid "Rifle"
@@ -8866,12 +8888,17 @@ msgid ""
 "missiles if it collides with a player. The homing isn't perfect, so "
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
+"%s on ainutlaatuinen ase, joka ampuu \"tarran\", jolloin se laukoo muutaman "
+"hakeutuvan ohjuksen, jos se törmää pelaajaan. Hakeutuminen ei ole "
+"täydellistä, joten ohjukset voivat joskus osua esteeseen tai kulmaan."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:634
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
+"Toissijainen tulitus laukoo nopean sarjan hajalleen meneviä räjähteitä, "
+"jotka kulkevat vain lyhyen matkaa."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:635
 #, c-format
@@ -9021,27 +9048,27 @@ msgstr "Pyörremyrsky"
 #: qcsrc/lib/counting.qh:11
 #, c-format
 msgid "ZER^%d shells"
-msgstr ""
+msgstr "ZER^%d patruunaa"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "ONE^%d shell"
-msgstr ""
+msgstr "ONE^%d patruuna"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "TWO^%d shells"
-msgstr ""
+msgstr "TWO^%d patruunaa"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "THR^%d shells"
-msgstr ""
+msgstr "THR^%d patruunaa"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "MUL^%d shells"
-msgstr ""
+msgstr "MUL^%d patruunaa"
 
 #: qcsrc/lib/counting.qh:19
 #, c-format
@@ -9746,6 +9773,8 @@ msgid ""
 "player name to get started. You can change these options later through the "
 "menu system."
 msgstr ""
+"Tervetuloa Xonoticiin! Valitse haluamasi kieli ja aloita antamalla "
+"pelaajanimesi. Voit vaihtaa näitä asetuksia jälkikäteen valikoista."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -9983,7 +10012,7 @@ msgstr "Käytä tasoittavaa algoritmia"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qc:23
 msgid "Decimal places:"
-msgstr ""
+msgstr "Decimaalin paikat:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.qh:6
 msgid "Engine Info Panel"
@@ -10547,6 +10576,8 @@ msgid ""
 "Note: HUD skins are saved in the data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Huom. HUD-asut tallennetaan data/data/ hakemistoon ja ne voidaan siellä "
+"nimetä uudelleen/poistaa manuaalisesti"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -10705,6 +10736,8 @@ msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
 msgstr ""
+"Napsauta tätä tai Ctrl-F toimittaaksesi avainsanan luettelon kaventamiseksi. "
+"Ctrl-Delete tyhjentää, paina Enter, kun on valmista."
 
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:36
 msgid "MUSICPL^Add"
@@ -10914,6 +10947,8 @@ msgid ""
 "The maximum number of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Pelaajien tai bottien enimmäismäärä, jotka voivat yhdistää palvelimeesi "
+"kerralla"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
@@ -10921,7 +10956,7 @@ msgstr "Bottien lukumäärä:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
 msgid "Number of bots on your server"
-msgstr ""
+msgstr "Bottien lukumäärä palvelimellasi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "Bot skill:"
@@ -13018,11 +13053,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:76
 msgid "Just the gore"
-msgstr ""
+msgstr "Vain gore"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.qc:81
 msgid "Just the language"
-msgstr ""
+msgstr "Vain kieli"
 
 #: qcsrc/menu/xonotic/dialog_settings_user_languagewarning.qc:11
 msgid ""
@@ -13489,10 +13524,13 @@ msgid ""
 "online and use the in-game chat. You can also connect to the official "
 "communication channels (%s), and of course the official forum."
 msgstr ""
+"Paras tapa olla yhteydessä yhteisöön on alkaa pelata verkossa ja käyttää "
+"pelin sisäistä chat-keskustelua. Voit myös yhdistää virallisiin "
+"keskustelukanaviin (%s) ja tietenkin viralliseen foorumiin."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:40
 msgid "Getting good"
-msgstr ""
+msgstr "Tulla hyväksi"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:43
 msgid ""
@@ -13805,6 +13843,8 @@ msgid ""
 "Note that when trying to make a ramp jump while bunny hopping, it is vital "
 "to time your hops carefully so you get the angle right."
 msgstr ""
+"Huomaa, että kun yrittää hypätä ramppia pupuhyppelyssä, on tärkeää ajoittaa "
+"hypyt tarkoin, jotta kulman saa oikein."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:162
 msgid "Advanced Movement"
@@ -13961,11 +14001,11 @@ msgstr "Keskustelu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:144
 msgid "public chat"
-msgstr "julkinen chat-keskustelu"
+msgstr "julkinen keskustelu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:145
 msgid "team chat"
-msgstr "joukkue-chat-keskustelu"
+msgstr "joukkuekeskustelu"
 
 #: qcsrc/menu/xonotic/keybinder.qc:146
 msgid "show chat history"
@@ -14121,6 +14161,8 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so they can only "
 "slap other players."
 msgstr ""
+"Pelaajat syntyvät ilman ammuksia ja aseita, paitsi %s, jolla voi vain läpsiä "
+"muita pelaajia."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
@@ -14200,7 +14242,7 @@ msgstr "Tuplahypyt"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:429
 msgid "Gain extra height when jumping again shortly after the first jump"
-msgstr ""
+msgstr "Saa lisäkorkeutta, kun hyppää taas piakkoin ensimmäisen hypyn jälkeen."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:435
 msgid "Make things fall to the ground slower (percentage of normal gravity)"
@@ -14214,11 +14256,11 @@ msgstr "Vajaa painovoima"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:445
 msgid "Global forces"
-msgstr ""
+msgstr "Globaalit voimat"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:446
 msgid "Knockback experienced by any player affects all players"
-msgstr ""
+msgstr "Minkä tahansa pelaajan kokema sysäys vaikuttaa kaikkiin pelaajiin."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:451
 msgid "Various fun changes to physics and movement."
