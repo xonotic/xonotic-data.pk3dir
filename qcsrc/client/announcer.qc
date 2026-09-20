@@ -142,7 +142,7 @@ void Announcer_Gamestart()
 		return;
 	}
 
-	if(announcer_countdown && gametype.m_1v1)
+	if(announcer_countdown && GAMETYPE_FLAG(gametype, 1V1))
 		Announcer_Duel();
 
 	if(previous_game_starttime != startTime)
@@ -157,7 +157,7 @@ void Announcer_Gamestart()
 
 			if(!warmup_stage && time < STAT(GAMESTARTTIME))
 			{
-				if (gametype.m_1v1)
+				if (GAMETYPE_FLAG(gametype, 1V1))
 					Announcer_Duel();
 				else
 					centerprint_SetTitle(strcat("^BG", MapInfo_Type_ToText(gametype))); // Show gametype as title
