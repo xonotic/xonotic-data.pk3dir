@@ -143,10 +143,9 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 
 		if (field == SP_NAME)
 		{
-			tmp.x = sbt_field_size[i] + hud_fontsize.x
-				- hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor;
+			tmp.x = sbt_field_size[i] + hud_fontsize.x - sbt_fixcolumnwidth_iconlen_playercolor;
 			for (j = 0; j < sbt_field_icon_extra_set; ++j)
-				tmp.x -= hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
+				tmp.x -= sbt_fixcolumnwidth_iconlen_extra[j];
 			if (sbt_fixcolumnwidth_iconlen_playercolor || sbt_field_icon_extra_set) // playercolor/extra icons next to name
 				tmp.x -= sbt_fixcolumnwidth_marginlen;
 			if (teamplay)
@@ -162,19 +161,19 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			drawcolorcodedstring(pos - tmp, str, hud_fontsize, fg_alpha, DRAWFLAG_NORMAL);
 
 			tmp.x = sbt_field_size[i] + hud_fontsize.x;
-			icon_sz = vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor, hud_fontsize.y);
+			icon_sz = vec2(sbt_fixcolumnwidth_iconlen_playercolor, hud_fontsize.y);
 			for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
 				drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
 			for (j = 0; j < sbt_field_icon_extra_set; ++j)
 			{
 				tmp.x -= icon_sz.x;
-				icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
-				drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+				icon_sz.x = sbt_fixcolumnwidth_iconlen_extra[j];
+				drawpic(pos - tmp, sbt_field_icon_extra_pic[sbt_field_icon_extra[j]], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
 			}
 			tmp.x = hud_fontsize.x * 0.5; // gametype icons on the right
 			for (j = 0; j < sbt_field_icon_gametype_set; ++j)
 			{
-				icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_gametype[j];
+				icon_sz.x = sbt_fixcolumnwidth_iconlen_gametype[j];
 				tmp.x += icon_sz.x;
 				drawpic_skin(pos - tmp, sbt_field_icon_gametype[j], icon_sz, '1 1 1', fg_alpha, DRAWFLAG_NORMAL);
 			}
@@ -208,25 +207,25 @@ void Scoreboard_DrawItem(vector item_pos, vector rgb, entity pl, bool is_self, i
 			{
 				tmp.x = sbt_fixcolumnwidth_len; // left or right aligned? let's put it right...
 				for (j = 0; j < sbt_field_icon_extra_set; ++j)
-					tmp.x += hud_fontsize.x * sbt_fixcolumnwidth_iconlen_gametype[j];
+					tmp.x += sbt_fixcolumnwidth_iconlen_gametype[j];
 				if (sbt_field_icon_gametype_set) // gametype icons next to name
 					tmp.x += sbt_fixcolumnwidth_marginlen;
 				drawcolorcodedstring(pos - tmp, str, hud_fontsize, fg_alpha, DRAWFLAG_NORMAL);
 
 				tmp.x = sbt_field_size[i];
-				icon_sz = vec2(hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor, hud_fontsize.y);
+				icon_sz = vec2(sbt_fixcolumnwidth_iconlen_playercolor, hud_fontsize.y);
 				for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
 					drawpic(pos - tmp, sbt_field_icon_playercolor[j], icon_sz, sbt_field_icon_playercolor_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
 				for (j = 0; j < sbt_field_icon_extra_set; ++j)
 				{
 					tmp.x -= icon_sz.x;
-					icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j];
-					drawpic(pos - tmp, sbt_field_icon_extra[j], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
+					icon_sz.x = sbt_fixcolumnwidth_iconlen_extra[j];
+					drawpic(pos - tmp, sbt_field_icon_extra_pic[sbt_field_icon_extra[j]], icon_sz, sbt_field_icon_extra_rgb[j], fg_alpha, DRAWFLAG_NORMAL);
 				}
 				tmp.x = 0; // gametype icons on the right
 				for (j = 0; j < sbt_field_icon_gametype_set; ++j)
 				{
-					icon_sz.x = hud_fontsize.x * sbt_fixcolumnwidth_iconlen_gametype[j];
+					icon_sz.x = sbt_fixcolumnwidth_iconlen_gametype[j];
 					tmp.x -= icon_sz.x;
 					drawpic_skin(pos + tmp, sbt_field_icon_gametype[j], icon_sz, '1 1 1', fg_alpha, DRAWFLAG_NORMAL);
 				}
