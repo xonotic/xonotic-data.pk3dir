@@ -381,20 +381,20 @@ string Scoreboard_GetName(entity pl)
 	{
 		f = min(1, 1 + sin(2*M_PI * time));
 		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = vec3(f, 1, f); // pulses from white to green
-		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_ready";
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = 0; // ready
 		++sbt_field_icon_extra_set;
 	}
 	if ((i = entcs_GetHandicapLevel(pl.sv_entnum)) != 0)
 	{
 		f = (16 - i) / 15;
 		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = vec3(1, f, f); // goes from white to red over level 1 to 16
-		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_handicap";
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = 1; // handicap
 		++sbt_field_icon_extra_set;
 	}
 	if (pl.ignored)
 	{
 		sbt_field_icon_extra_rgb[sbt_field_icon_extra_set] = '1 1 1';
-		sbt_field_icon_extra[sbt_field_icon_extra_set] = "gfx/scoreboard/player_ignored";
+		sbt_field_icon_extra[sbt_field_icon_extra_set] = 2; // ignored
 		++sbt_field_icon_extra_set;
 	}
 
@@ -570,6 +570,9 @@ string Scoreboard_GetField(entity pl, PlayerScoreField field, bool per_round)
 	//return "error";
 }
 
+string sbt_field_icon_gametype_cache[MAX_SBT_FIELD_ICON_GAMETYPE];
+float sbt_field_icon_gametype_aspect[MAX_SBT_FIELD_ICON_GAMETYPE];
+float sbt_field_icon_extra_aspect[MAX_SBT_FIELD_ICON_EXTRA];
 string Scoreboard_FixColumnWidth(int i, string str, bool init)
 {
 	TC(int, i);
@@ -577,52 +580,56 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 	int j;
 	float f;
 
-	sbt_fixcolumnwidth_iconlen_playercolor = 0;
-	for (j = 0; j < sbt_field_icon_extra_set; ++j)
-		sbt_fixcolumnwidth_iconlen_extra[j] = 0;
-	for (j = 0; j < sbt_field_icon_gametype_set; ++j)
-		sbt_fixcolumnwidth_iconlen_gametype[j] = 0;
-
-	for (j = 0; j < sbt_field_icon_playercolor_set; ++j)
+	// Compute once the max aspect ratio of the playercolor, extra, and gametype icons
+	static float sbt_field_icon_playercolor_aspect = 0;
+	if (!sbt_field_icon_playercolor_aspect)
+		for (j = 0; j < 3; ++j)
+		{
+			sz = draw_getimagesize(sbt_field_icon_playercolor[j]);
+			f = sz.x / sz.y;
+			if (sbt_field_icon_playercolor_aspect < f)
+				sbt_field_icon_playercolor_aspect = f;
+		}
+	static bool sbt_field_icon_extra_aspect_computed = false;
+	if (!sbt_field_icon_extra_aspect_computed)
 	{
-		sz = draw_getimagesize(sbt_field_icon_playercolor[j]);
-		f = sz.x / sz.y;
-		if (sbt_fixcolumnwidth_iconlen_playercolor < f)
-			sbt_fixcolumnwidth_iconlen_playercolor = f;
+		for (j = 0; j < MAX_SBT_FIELD_ICON_EXTRA; ++j)
+		{
+			sz = draw_getimagesize(sbt_field_icon_extra_pic[j]);
+			// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
+			if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
+				sz = '1 1 0';
+			sbt_field_icon_extra_aspect[j] = sz.x / sz.y;
+		}
+		sbt_field_icon_extra_aspect_computed = true;
 	}
-	// NOTE: extra icons (player_ready and player_handicap) are squares (32x32), so this may not be necessary
-	// simply setting sbt_fixcolumnwidth_iconlen_extra* = 1 would be equivalent
-	for (j = 0; j < sbt_field_icon_extra_set; ++j)
-	{
-		sz = draw_getimagesize(sbt_field_icon_extra[j]);
-		// XONRELEASE TODO: xonotic-v0.9.0 after release remove if (sz == 0) case
-		if (sz == '0 0 0') // it happens in previous engine versions (Xonotic 0.8.6 or lower) when the image is missing
-			sz = '1 1 0';
-		sbt_fixcolumnwidth_iconlen_extra[j] = sz.x / sz.y;
-	}
-	for (j = 0; j < sbt_field_icon_gametype_set; ++j)
-	{
-		sz = draw_getimagesize_skin(sbt_field_icon_gametype[j]);
-		sbt_fixcolumnwidth_iconlen_gametype[j] = sz.x / sz.y;;
-	}
+	for (j = 0; j < sbt_field_icon_gametype_set; ++j) // have to check them all, since they can change
+		if (sbt_field_icon_gametype_cache[j] != sbt_field_icon_gametype[j])
+		{
+			strcpy(sbt_field_icon_gametype_cache[j], sbt_field_icon_gametype[j]);
+			sz = draw_getimagesize_skin(sbt_field_icon_gametype[j]);
+			sbt_field_icon_gametype_aspect[j] = sz.x / sz.y;
+		}
 
 	// fix icon aspect
-	sbt_fixcolumnwidth_iconlen_playercolor *= hud_fontsize.y / hud_fontsize.x;
+	sbt_fixcolumnwidth_iconlen_playercolor = (sbt_field_icon_playercolor_set)
+		? sbt_field_icon_playercolor_aspect * hud_fontsize.y
+		: 0;
 	for (j = 0; j < sbt_field_icon_extra_set; ++j)
-		sbt_fixcolumnwidth_iconlen_extra[j] *= hud_fontsize.y / hud_fontsize.x;
+		sbt_fixcolumnwidth_iconlen_extra[j] = sbt_field_icon_extra_aspect[j] * hud_fontsize.y;
 	for (j = 0; j < sbt_field_icon_gametype_set; ++j)
-		sbt_fixcolumnwidth_iconlen_gametype[j] *= hud_fontsize.y / hud_fontsize.x;
+		sbt_fixcolumnwidth_iconlen_gametype[j] = sbt_field_icon_gametype_aspect[j] * hud_fontsize.y;
 
 	sbt_fixcolumnwidth_marginlen = stringwidth(" ", false, hud_fontsize);
 	if (init)
 		sbt_field_title_width[i] = stringwidth(sbt_field_title[i], false, hud_fontsize);
 
 #define ADD_ICON_PADDING(val) \
-	val += hud_fontsize.x * sbt_fixcolumnwidth_iconlen_playercolor; \
+	val += sbt_fixcolumnwidth_iconlen_playercolor; \
 	for (j = 0; j < sbt_field_icon_extra_set; ++j) \
-		val += hud_fontsize.x * sbt_fixcolumnwidth_iconlen_extra[j]; \
+		val += sbt_fixcolumnwidth_iconlen_extra[j]; \
 	for (j = 0; j < sbt_field_icon_gametype_set; ++j) \
-		val += hud_fontsize.x * sbt_fixcolumnwidth_iconlen_gametype[j]; \
+		val += sbt_fixcolumnwidth_iconlen_gametype[j]; \
 	if (sbt_fixcolumnwidth_iconlen_playercolor || sbt_field_icon_extra_set) \
 		val += sbt_fixcolumnwidth_marginlen; \
 	if (sbt_field_icon_gametype_set) \

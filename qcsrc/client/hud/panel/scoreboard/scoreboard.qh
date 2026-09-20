@@ -51,14 +51,14 @@ vector sbt_field_icon_playercolor_rgb[3];
 int sbt_field_icon_playercolor_set;
 
 const int MAX_SBT_FIELD_ICON_EXTRA = 3;
-// These are drawn side-by-side, next to playercolor (if present),
-// filled in this order: player_ready, player_handicap, player_ignored
-string sbt_field_icon_extra[MAX_SBT_FIELD_ICON_EXTRA];
+// These are drawn side-by-side, next to playercolor (if present)
+const string sbt_field_icon_extra_pic[MAX_SBT_FIELD_ICON_EXTRA] = { "gfx/scoreboard/player_ready", "gfx/scoreboard/player_handicap", "gfx/scoreboard/player_ignored" };
+int sbt_field_icon_extra[MAX_SBT_FIELD_ICON_EXTRA]; ///< sbt_field_icon_extra_pic indexes (0/1/2), in increasing order
 vector sbt_field_icon_extra_rgb[MAX_SBT_FIELD_ICON_EXTRA];
 int sbt_field_icon_extra_set;
 
 const int MAX_SBT_FIELD_ICON_GAMETYPE = NUM_TEAMS; ///< Maximum number of gametype status icons that can be drawn, for any gametype
-// These are drawn in the name column, on the opposite side to the playercolor & icon
+// These are drawn in the name column, on the opposite side to the playercolor & extra icons
 string sbt_field_icon_gametype[MAX_SBT_FIELD_ICON_GAMETYPE];
 int sbt_field_icon_gametype_set;
 
