@@ -470,7 +470,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 	if(load_default)
 		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, false);
 
-	if(!pWantedType.frags) // these modes don't use fraglimit
+	if(!GAMETYPE_FLAG(pWantedType, USEPOINTS)) // these gametypes don't use fraglimit
 	{
 		cvar_set("fraglimit", "0");
 	}
@@ -517,7 +517,7 @@ void _MapInfo_Map_ApplyGametype(string s, Gametype pWantedType, Gametype pThisTy
 		s = cdr(s);
 	}
 
-	if(!pWantedType.frags) // these modes don't use fraglimit
+	if(!GAMETYPE_FLAG(pWantedType, USEPOINTS)) // these gametypes don't use fraglimit
 	{
 		cvar_set("leadlimit", "0");
 	}
@@ -537,7 +537,7 @@ string _MapInfo_GetDefaultEx(Gametype t)
 
 float _MapInfo_GetTeamPlayBool(Gametype t)
 {
-	return t ? t.team : false;
+	return t ? GAMETYPE_FLAG(t, TEAMPLAY) : false;
 }
 
 void _MapInfo_Map_ApplyGametypeEx(string s, Gametype pWantedType, Gametype pThisType)
