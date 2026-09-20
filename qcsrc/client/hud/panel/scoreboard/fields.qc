@@ -128,7 +128,7 @@ void Cmd_Scoreboard_Help()
 // otherwise the previous exclusive rule warns anyway
 // e.g. -teams,rc,cts,lms/kills ?+rc/kills
 #define SCOREBOARD_DEFAULT_COLUMNS \
-"ping pl fps skill name |" \
+"ping pl fps +as,ca,ctf,dom,duel,dm,tdm,ka,tka,ft,mayhem,tmayhem,lms,kh/skill name |" \
 " -teams,rc,cts,surv,inv,lms/kills +ft,tdm,tmayhem/kills ?+rc,inv/kills" \
 " -teams,surv,lms/deaths +ft,tdm,tmayhem/deaths" \
 " +tdm/sum" \
