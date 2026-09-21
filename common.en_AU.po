@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-20 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2026\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -5994,7 +5994,7 @@ msgstr "^K2You're not allowed to join a stronger team!"
 
 #: qcsrc/common/notifications/all.inc:477
 msgid "^F2Teams have been balanced."
-msgstr ""
+msgstr "^F2Teams have been balanced."
 
 #: qcsrc/common/notifications/all.inc:478
 msgid "^F4The teams are now locked."
@@ -13988,6 +13988,11 @@ msgid ""
 "down. This allows you to get around the map much faster than if you just "
 "walked."
 msgstr ""
+"Due to air control, you can accelerate while in the air far beyond the "
+"maximum ground movement speed. To avoid ground friction, players constantly "
+"hop by simply keeping %s pressed, so that ground contact doesn't slow them "
+"down. This allows you to get around the map much faster than if you just "
+"walked."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:84
 #, c-format

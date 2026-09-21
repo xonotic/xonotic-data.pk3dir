@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-20 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oftox, 2023\n"
+"Last-Translator: Jaakko Muilu, 2025-2026\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -1589,7 +1589,7 @@ msgstr "Kierrosraja:"
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:41
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:41
 msgid "The number of rounds won required to conclude the match"
-msgstr ""
+msgstr "Ottelun päättämiseen vaadittujen voitettujen kierrosten määrä"
 
 #: qcsrc/common/gametypes/gametype/ctf/cl_ctf.qc:207
 msgid "Capture time rankings"
@@ -1759,7 +1759,7 @@ msgstr "Hallinta (Domination)"
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:59
 msgid "The number of points required to conclude the match"
-msgstr ""
+msgstr "Ottelun päättämiseen vaadittujen pisteiden määrä"
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:12
 #, c-format
@@ -2220,6 +2220,8 @@ msgid ""
 "Scoring is quite simple, adding a point for every frag, and subtracting a "
 "point for fragging yourself or a teammate."
 msgstr ""
+"Pisteyttäminen on aika helppoa, jokainen lahtaus lisää yhden pisteen, ja "
+"itsensä tai joukkueen jäsenen lahtaaminen vähentää yhdellä."
 
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qc:12
 msgid ""
@@ -3478,6 +3480,9 @@ msgid ""
 "of gametypes but particularly %s. Sometimes it's enabled alongside other "
 "mutators such as %s for added movement possibilities."
 msgstr ""
+"Se on aika yleinen muovaaja, jota on monilla palvelimilla ja joka sekoittaa "
+"monia pelimuotoja, etenkin %s. Joskus se on käytössä muiden muovaajien "
+"kanssa, kuten %s, liikkumisen lisämahdollisuuksia varten."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qh:5
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:3
@@ -4073,6 +4078,7 @@ msgid ""
 "Since it is the only %s weapon with no spread, the %s stands out at long "
 "ranges."
 msgstr ""
+"Koska se on vain %s-ase vailla hajontaa, %s loistaa pitkillä matkoilla."
 
 #: qcsrc/common/mutators/mutator/overkill/oknex.qh:33
 msgid "Overkill Nex"
@@ -4237,6 +4243,9 @@ msgid ""
 "expires, having a compounding effect with armor. It also makes you more "
 "resistant to knockback."
 msgstr ""
+"Tehonlisäys %s vähentää suuresti kärsimääsi vahinkoa, kunnes tehonlisäys "
+"lakkaa, ja sillä on yhteisvaikutusta panssarin kanssa. Se myös lisää "
+"vastustuskykyä taaksepäin sysäämistä vastaan."
 
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:45
 #: qcsrc/common/mutators/mutator/powerups/powerup/shield.qh:48
@@ -5773,7 +5782,7 @@ msgstr "^K2Sinulla ei ole lupa liittyä vahvempaan joukkueeseen!"
 
 #: qcsrc/common/notifications/all.inc:477
 msgid "^F2Teams have been balanced."
-msgstr ""
+msgstr "^F2Joukkueet on tasapainotettu."
 
 #: qcsrc/common/notifications/all.inc:478
 msgid "^F4The teams are now locked."

@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-20 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: 11fae04751cc88bf0b4daf15dbd7e33d_68cdff3, 2024\n"
+"Last-Translator: Andrei Stepanov, 2014-2026\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -6070,7 +6070,7 @@ msgstr "^K2Вы не можете присоединиться к более с�
 
 #: qcsrc/common/notifications/all.inc:477
 msgid "^F2Teams have been balanced."
-msgstr ""
+msgstr "^F2Составы команд сбалансированы."
 
 #: qcsrc/common/notifications/all.inc:478
 msgid "^F4The teams are now locked."
@@ -10272,7 +10272,7 @@ msgstr "Управление"
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:62
 #: qcsrc/menu/xonotic/dialog_media.qc:12
 msgid "Guide"
-msgstr "Руководство"
+msgstr "Справка"
 
 #: qcsrc/menu/xonotic/dialog_gamemenu.qc:64
 msgid "Quick menu"
@@ -11120,8 +11120,8 @@ msgid ""
 "Read the guide, listen to Xonotic music tracks, and view your demos and "
 "screenshots"
 msgstr ""
-"Читать руководство, слушать музыкальные дорожки Xonotic и смотреть свои демо-"
-"записи и снимки."
+"Чтение справки, прослушивание музыкальных дорожек Xonotic и просмотр ваших "
+"демо-записей и снимков."
 
 #: qcsrc/menu/xonotic/dialog_media_demo.qc:47
 msgid "Auto record demos"
@@ -13901,7 +13901,7 @@ msgstr "Моды"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:19
 msgid "About this guide"
-msgstr "Об этом руководстве"
+msgstr "Об этой справке"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:22
 msgid "Welcome to Xonotic, the free and fast arena shooter!"
@@ -13913,8 +13913,8 @@ msgid ""
 "other aspects of the game, but most of what you will learn will come from "
 "trying it out in practice."
 msgstr ""
-"Это руководство охватывает основы, которые нужно знать об оружии, предметах "
-"и других аспектах игры, но большая часть знаний придёт только с опытом."
+"Эта справка охватывает основы, которые нужно знать об оружии, предметах и "
+"других аспектах игры, но большая часть знаний придёт только с опытом."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:25
 msgid ""
@@ -13922,7 +13922,7 @@ msgid ""
 "settings. Xonotic is highly customizable and there are tons of servers out "
 "there that run with lightly or highly modified settings."
 msgstr ""
-"Обратите внимание: это руководство описывает поведение игры по умолчанию, со "
+"Обратите внимание: эта справка описывает поведение игры по умолчанию, со "
 "стандартными настройками. Xonotic очень гибок в настройке, и в сети "
 "существует огромное количество серверов, работающих как с незначительно, так "
 "и с сильно изменёнными параметрами."
