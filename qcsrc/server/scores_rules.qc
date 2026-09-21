@@ -1,6 +1,6 @@
 #include "scores_rules.qh"
 
-#include <common/gametypes/rules.qh>
+#include <common/gametypes/sv_rules.qh>
 #include <common/stats.qh>
 #include <common/weapons/_all.qh>
 #include <server/client.qh>
