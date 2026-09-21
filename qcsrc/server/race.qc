@@ -2,7 +2,7 @@
 
 #include <common/deathtypes/all.qh>
 #include <common/gametypes/_mod.qh>
-#include <common/gametypes/rules.qh>
+#include <common/gametypes/sv_rules.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
