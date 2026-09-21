@@ -176,7 +176,7 @@ void Map_Goto_SetIndex(int position)
 	Map_Goto_SetStr(bufstr_get(maplist_buffer, position));
 }
 
-void Map_Goto(float reinit)
+void Map_Goto(bool reinit)
 {
 	MapInfo_LoadMap(getmapname_stored, reinit);
 }
@@ -342,7 +342,7 @@ string GetNextMap(void)
 	return "";
 }
 
-float DoNextMapOverride(float reinit)
+bool DoNextMapOverride(bool reinit)
 {
 	if(autocvar_g_campaign)
 	{
@@ -403,7 +403,7 @@ float DoNextMapOverride(float reinit)
 	return false;
 }
 
-void GotoNextMap(float reinit)
+void GotoNextMap(bool reinit)
 {
 	//string nextmap;
 	//float n, nummaps;
@@ -434,7 +434,7 @@ string GotoMap(string m)
 		cvar_set("_endmatch", "1");
 	if (mapvote_initialized || alreadychangedlevel)
 	{
-		if(DoNextMapOverride(0))
+		if(DoNextMapOverride(false))
 			return "Map switch initiated.";
 		else
 			return "Hm... no. For some reason I like THIS map more.";

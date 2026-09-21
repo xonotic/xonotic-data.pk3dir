@@ -320,7 +320,7 @@ bool MapVote_Finished(int mappos)
 			if (get_nextmap() != "")
 			{
 				Map_Goto_SetStr(get_nextmap());
-				Map_Goto(0);
+				Map_Goto(false);
 				alreadychangedlevel = true;
 				strfree(voted_gametype_string);
 				return true;
@@ -538,7 +538,7 @@ void MapVote_Think()
 			}
 
 			Map_Goto_SetStr(mv_entries[mv_winner]);
-			Map_Goto(0);
+			Map_Goto(false);
 			strfree(voted_gametype_string);
 		}
 		return;
@@ -568,11 +568,11 @@ void MapVote_Think()
 		}
 
 		mapvote_initialized = true;
-		if (DoNextMapOverride(0))
+		if (DoNextMapOverride(false))
 			return;
 		if (!autocvar_g_maplist_votable || player_count <= 0)
 		{
-			GotoNextMap(0);
+			GotoNextMap(false);
 			return;
 		}
 

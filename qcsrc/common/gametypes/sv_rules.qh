@@ -9,14 +9,14 @@ bool autocvar_leadlimit_and_fraglimit;
 int autocvar_leadlimit_override;
 
 // TODO: find a better location for these?
-.int ingame;
+.float ingame;
 #define INGAME_STATUS_NONE 0
 #define INGAME_STATUS_JOINING 0.5
 #define INGAME_STATUS_JOINED 1
 
 // typically used by gametypes that temporarily turn players into spectators/observers
 // when they are eliminated but keeping them "in game", i.e. listed among players
-#define INGAME_STATUS_SET(it, s) (it).ingame = s
+#define INGAME_STATUS_SET(it, s) ((it).ingame = s)
 #define INGAME_STATUS_CLEAR(it) INGAME_STATUS_SET(it, INGAME_STATUS_NONE)
 
 #define INGAME(it) ((it).ingame)
@@ -24,28 +24,22 @@ int autocvar_leadlimit_override;
 #define INGAME_JOINING(it) ((it).ingame == INGAME_STATUS_JOINING)
 
 
-// todo: accept the number of teams as a parameter
+// TODO: accept the number of teams as a parameter
 void GameRules_teams(bool value);
 
-/**
- * Used to disable team spawns in team modes
- */
-#define GameRules_spawning_teams(value) have_team_spawns = (value) ? -1 : 0
+/// Used to disable team spawns in team gametypes
+#define GameRules_spawning_teams(value) (have_team_spawns = (value) ? -1 : 0)
 
-/**
- * Disabling score disables the "score" column on the scoreboard
- */
+/// Disabling score disables the "score" column on the scoreboard
 bool _GameRules_score_enabled = true;
-#define GameRules_score_enabled(value) _GameRules_score_enabled = (value)
+#define GameRules_score_enabled(value) (_GameRules_score_enabled = value)
 
 void GameRules_limit_score(int limit);
 void GameRules_limit_lead(int limit);
 void GameRules_limit_time(int limit);
 void GameRules_limit_time_qualifying(int limit);
 
-/**
- * Set any unspecified rules to their defaults
- */
+/// Set any unspecified rules to their defaults
 void GameRules_limit_fallbacks();
 
 /**
@@ -56,7 +50,7 @@ void GameRules_limit_fallbacks();
 #define GameRules_scoring(teams, spprio, stprio, fields) MACRO_BEGIN \
 	_GameRules_scoring_begin((teams), (spprio), (stprio)); \
 	noref void(entity, string, float) field = _GameRules_scoring_field; \
-	/* todo: just have the one `field` function */ \
+	/* TODO: just have the one `field` function */ \
 	noref void(int, string, float) field_team = _GameRules_scoring_field_team; \
 	LAMBDA(fields) \
 	_GameRules_scoring_end(); \
@@ -67,14 +61,10 @@ MACRO_END
 #define _GameRules_scoring_field_team  ScoreInfo_SetLabel_TeamScore
 #define _GameRules_scoring_end         ScoreRules_basics_end
 
-/**
- * Mark a player as being 'important' (flag carrier, ball carrier, etc)
- * @param player the entity to mark
- * @param value VIP status
- */
-.bool m_GameRules_scoring_vip;
-#define GameRules_scoring_vip(player, value) (player).m_GameRules_scoring_vip = (value)
-#define GameRules_scoring_is_vip(player)     (player).m_GameRules_scoring_vip
+.bool m_GameRules_scoring_vip; ///< Player is 'important' (flag carrier, ball carrier, etc.)
+/// Set the VIP status of a player
+#define GameRules_scoring_vip(player, value) ((player).m_GameRules_scoring_vip = value)
+#define GameRules_scoring_is_vip(player)      (player).m_GameRules_scoring_vip
 
 float _GameRules_scoring_add_float2int(entity client, entity sp, int st, float value, .float float_field, float score_factor, bool team);
 

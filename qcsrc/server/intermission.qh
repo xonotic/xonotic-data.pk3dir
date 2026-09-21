@@ -28,7 +28,7 @@ void IntermissionThink(entity this);
 
 void FixIntermissionClient(entity e);
 
-void GotoNextMap(float reinit);
+void GotoNextMap(bool reinit);
 
 bool Map_IsRecent(string m);
 
@@ -40,10 +40,10 @@ string GetNextMap(void);
 
 void Map_Goto_SetStr(string nextmapname);
 
-void Map_Goto(float reinit);
+void Map_Goto(bool reinit);
 
 void Map_MarkAsRecent(string m);
 
-float DoNextMapOverride(float reinit);
+bool DoNextMapOverride(bool reinit);
 
 string GotoMap(string m);

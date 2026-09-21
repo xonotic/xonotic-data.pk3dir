@@ -1089,7 +1089,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 		flags |= 2;
 	if (CS(this).version < autocvar_gameversion)
 		flags |= 4;
-	MapInfo_Get_ByName(mi_shortname, 0, NULL);
+	MapInfo_Get_ByName(mi_shortname, false, NULL);
 	if (MapInfo_Map_author != "")
 		flags |= 8;
 	WriteByte(msg_type, flags);
