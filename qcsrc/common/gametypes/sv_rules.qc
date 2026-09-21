@@ -2,59 +2,61 @@
 
 void GameRules_teams(bool value)
 {
+	teamplay = value;  // aka AVAILABLE_TEAMS, updated by ScoreRules_basics() after team ents spawn
 	if (value)
 	{
 		serverflags |= SERVERFLAG_TEAMPLAY;
-		teamplay = 1;  // aka AVAILABLE_TEAMS, updated by ScoreRules_basics() after team ents spawn
 		cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
-		GameRules_spawning_teams(true);
 	}
 	else
 	{
 		serverflags &= ~SERVERFLAG_TEAMPLAY;
-		teamplay = 0;
 		cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
-		GameRules_spawning_teams(false);
 	}
+	GameRules_spawning_teams(value);
 }
 
 bool GameRules_limit_score_initialized;
 void GameRules_limit_score(int limit)
 {
-	if (GameRules_limit_score_initialized) return;
-	if (autocvar_g_campaign) return;
-	if (limit < 0) return;
-	cvar_set("fraglimit", ftos(limit));
+	if (GameRules_limit_score_initialized
+	|| autocvar_g_campaign
+	|| limit < 0)
+		return;
+	cvar_set("fraglimit", itos(limit));
 	GameRules_limit_score_initialized = true;
 }
 
 bool GameRules_limit_lead_initialized;
 void GameRules_limit_lead(int limit)
 {
-	if (GameRules_limit_lead_initialized) return;
-	if (autocvar_g_campaign) return;
-	if (limit < 0) return;
-	cvar_set("leadlimit", ftos(limit));
+	if (GameRules_limit_lead_initialized
+	|| autocvar_g_campaign
+	|| limit < 0)
+		return;
+	cvar_set("leadlimit", itos(limit));
 	GameRules_limit_lead_initialized = true;
 }
 
 bool GameRules_limit_time_initialized;
 void GameRules_limit_time(int limit)
 {
-	if (GameRules_limit_time_initialized) return;
-	if (autocvar_g_campaign) return;
-	if (limit < 0) return;
-	cvar_set("timelimit", ftos(limit));
+	if (GameRules_limit_time_initialized
+	|| autocvar_g_campaign
+	|| limit < 0)
+		return;
+	cvar_set("timelimit", itos(limit));
 	GameRules_limit_time_initialized = true;
 }
 
 bool GameRules_limit_time_qualifying_initialized;
 void GameRules_limit_time_qualifying(int limit)
 {
-	if (GameRules_limit_time_qualifying_initialized) return;
-	if (autocvar_g_campaign) return;
-	if (limit < 0) return;
-	cvar_set("g_race_qualifying_timelimit", ftos(limit));
+	if (GameRules_limit_time_qualifying_initialized
+	|| autocvar_g_campaign
+	|| limit < 0)
+		return;
+	cvar_set("g_race_qualifying_timelimit", itos(limit));
 	GameRules_limit_time_qualifying_initialized = true;
 }
 
@@ -81,5 +83,7 @@ float _GameRules_scoring_add_float2int(entity client, entity sp, int st, float v
 	if (!points)
 		return 0;
 	client.(decimal_field) -= points * score_factor;
-	return team ? PlayerTeamScore_Add(client, sp, st, points) : PlayerScore_Add(client, sp, points);
+	return team
+		? PlayerTeamScore_Add(client, sp, st, points)
+		: PlayerScore_Add(client, sp, points);
 }

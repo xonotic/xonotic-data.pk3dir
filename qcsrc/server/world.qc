@@ -125,8 +125,8 @@ void GotoFirstMap(entity this)
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 
-		if(!DoNextMapOverride(1))
-			GotoNextMap(1);
+		if(!DoNextMapOverride(true))
+			GotoNextMap(true);
 
 		return;
 	}
