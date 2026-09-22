@@ -8,7 +8,12 @@
 CLASS(Domination, Gametype)
 	INIT(Domination)
 	{
-		this.gametype_init(this, _("Domination"),"dom","g_domination",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture and defend all the control points to win"));
+		CONSTRUCT(Gametype,
+			_("Domination"), "dom", "g_domination",
+			GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,
+			"", "timelimit=20 pointlimit=200 teams=2 leadlimit=0",
+			_("Capture and defend all the control points to win")
+		);
 	}
 	METHOD(Domination, m_parse_mapinfo, bool(string k, string v))
 	{
@@ -27,7 +32,7 @@ CLASS(Domination, Gametype)
 	}
 	METHOD(Domination, m_generate_mapinfo, void(Gametype this, string v))
 	{
-		if(v == "dom_controlpoint" || v == "team_dom_point")
+		if (v == "dom_controlpoint" || v == "team_dom_point")
 			MapInfo_Map_supportedGametypes |= this.gametype_flags;
 	}
 	METHOD(Domination, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))

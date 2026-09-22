@@ -111,15 +111,16 @@ CLASS(Gametype, Object)
 	}
 #endif
 
-	METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gt_flags, string mutators, string defaults, string gdescription))
+	CONSTRUCTOR(Gametype, string hname, string sname, string g_name, int gt_flags, string mutators, string defaults, string gt_description)
 	{
+		CONSTRUCT(Gametype);
 		this.netname = g_name;
 		this.mdl = sname;
 		this.message = hname;
 		this.m_mutators = cons(sname, mutators);
 		this.model2 = defaults;
 	#ifndef SVQC
-		this.m_description = gdescription;
+		this.m_description = gt_description;
 	#endif
 		this.spawnflags = gt_flags;
 		this.m_priority = ((gt_flags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gt_flags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
