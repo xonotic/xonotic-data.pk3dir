@@ -2,6 +2,7 @@
 
 #include <common/mutators/base.qh>
 #include <common/scores.qh>
+
 void surv_Initialize();
 
 REGISTER_MUTATOR(surv, false)
@@ -14,4 +15,4 @@ REGISTER_MUTATOR(surv, false)
 	return false;
 }
 
-.int survival_validkills; // store the player's valid kills to be given at the end of the match (avoid exposing their score until then)
+.int survival_validkills; ///< Stores the player's valid kills to be given at the end of the match (avoid exposing their score until then)

@@ -7,19 +7,19 @@
 
 void ons_generator_ray_draw(entity this)
 {
-	if(time < this.move_time)
+	if (time < this.move_time)
 		return;
 
 	this.move_time = time + 0.05;
 
-	if(this.count > 10)
+	if (this.count > 10)
 	{
 		IL_REMOVE(g_drawables, this);
 		delete(this);
 		return;
 	}
 
-	if(this.count > 5)
+	if (this.count > 5)
 		this.alpha -= 0.1;
 	else
 		this.alpha += 0.1;
@@ -45,14 +45,14 @@ void ons_generator_ray_spawn(vector org)
 
 void generator_draw(entity this)
 {
-	if(time < this.move_time)
+	if (time < this.move_time)
 		return;
 
-	if(GetResource(this, RES_HEALTH) > 0)
+	if (GetResource(this, RES_HEALTH) > 0)
 	{
 		// damaged fx (less probable the more damaged is the generator)
-		if(random() < 0.9 - GetResource(this, RES_HEALTH) / this.max_health)
-		if(random() < 0.01)
+		if (random() < 0.9 - GetResource(this, RES_HEALTH) / this.max_health
+		&& random() < 0.01)
 		{
 			pointparticles(EFFECT_ONS_ELECTRICITY_EXPLODE, this.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
 			sound(this, CH_TRIGGER, SND_ONS_ELECTRICITY_EXPLODE, VOL_BASE, ATTEN_NORM);
@@ -65,27 +65,23 @@ void generator_draw(entity this)
 		return;
 	}
 
-	if(this.count <= 0)
+	if (this.count <= 0)
 		return;
 
-	vector org;
-	int i;
-
 	// White shockwave
-	if(this.count==40||this.count==20)
+	if (this.count == 40 || this.count == 20)
 	{
 		sound(this, CH_TRIGGER, SND_ONS_SHOCKWAVE, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ONS_SHOCKWAVE, this.origin, '0 0 0', 6);
 	}
 
 	// rays
-	if(random() > 0.25)
-	{
+	if (random() > 0.25)
 		ons_generator_ray_spawn(this.origin);
-	}
 
 	// Spawn fire balls
-	for(i=0;i < 10;++i)
+	vector org;
+	for (int i = 0; i < 10; ++i)
 	{
 		org = this.origin + randompos('-30 -30 -30' * i + '0 0 -20', '30 30 30' * i + '0 0 20');
 		pointparticles(EFFECT_ONS_GENERATOR_GIB, org, '0 0 0', 1);
@@ -103,7 +99,7 @@ void generator_draw(entity this)
 	pointparticles(EFFECT_ONS_GENERATOR_EXPLODE, org, '0 0 0', 1);
 
 	// Final explosion
-	if(this.count==1)
+	if (this.count == 1)
 	{
 		org = this.origin;
 		te_explosion(org);
@@ -118,27 +114,27 @@ void generator_draw(entity this)
 
 void generator_damage(entity this, float hp)
 {
-	if(hp <= 0)
+	if (hp <= 0)
 		setmodel(this, MDL_ONS_GEN_DEAD);
-	else if(hp < this.max_health * 0.10)
+	else if (hp < this.max_health * 0.10)
 		setmodel(this, MDL_ONS_GEN9);
-	else if(hp < this.max_health * 0.20)
+	else if (hp < this.max_health * 0.20)
 		setmodel(this, MDL_ONS_GEN8);
-	else if(hp < this.max_health * 0.30)
+	else if (hp < this.max_health * 0.30)
 		setmodel(this, MDL_ONS_GEN7);
-	else if(hp < this.max_health * 0.40)
+	else if (hp < this.max_health * 0.40)
 		setmodel(this, MDL_ONS_GEN6);
-	else if(hp < this.max_health * 0.50)
+	else if (hp < this.max_health * 0.50)
 		setmodel(this, MDL_ONS_GEN5);
-	else if(hp < this.max_health * 0.60)
+	else if (hp < this.max_health * 0.60)
 		setmodel(this, MDL_ONS_GEN4);
-	else if(hp < this.max_health * 0.70)
+	else if (hp < this.max_health * 0.70)
 		setmodel(this, MDL_ONS_GEN3);
-	else if(hp < this.max_health * 0.80)
+	else if (hp < this.max_health * 0.80)
 		setmodel(this, MDL_ONS_GEN2);
-	else if(hp < this.max_health * 0.90)
+	else if (hp < this.max_health * 0.90)
 		setmodel(this, MDL_ONS_GEN1);
-	else if(hp <= this.max_health || hp >= this.max_health)
+	else if (hp <= this.max_health || hp >= this.max_health)
 		setmodel(this, MDL_ONS_GEN);
 
 	setsize(this, GENERATOR_MIN, GENERATOR_MAX);
@@ -149,7 +145,7 @@ void generator_construct(entity this, bool isnew)
 	this.netname = "Generator";
 	this.classname = "onslaught_generator";
 
-	if(isnew)
+	if (isnew)
 	{
 		IL_PUSH(g_onsgenerators, this);
 		IL_PUSH(g_drawables, this);
@@ -171,7 +167,7 @@ void generator_construct(entity this, bool isnew)
 .vector glowmod;
 void generator_changeteam(entity this)
 {
-	if(this.team)
+	if (this.team)
 	{
 		this.glowmod = Team_ColorRGB(this.team - 1);
 		this.teamradar_color = Team_ColorRGB(this.team - 1);
@@ -190,7 +186,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 	return = true;
 	int sf = ReadByte();
 
-	if(sf & GSF_SETUP)
+	if (sf & GSF_SETUP)
 	{
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
@@ -200,17 +196,17 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 		this.count = ReadByte();
 		this.team = ReadByte();
 
-		if(!this.count)
+		if (!this.count)
 			this.count = 40;
 
 		generator_changeteam(this);
 		generator_construct(this, isnew);
 	}
 
-	if(sf & GSF_STATUS)
+	if (sf & GSF_STATUS)
 	{
 		int _tmp = ReadByte();
-		if(_tmp != this.team)
+		if (_tmp != this.team)
 		{
 			this.team = _tmp;
 			generator_changeteam(this);
@@ -218,7 +214,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 
 		_tmp = ReadByte();
 
-		if(_tmp != GetResource(this, RES_HEALTH))
+		if (_tmp != GetResource(this, RES_HEALTH))
 			generator_damage(this, _tmp);
 
 		SetResourceExplicit(this, RES_HEALTH, _tmp);

@@ -34,18 +34,18 @@ MUTATOR_HOOKFUNCTION(cl_ons, WantEventchase)
 {
 	ons_roundlost = STAT(ROUNDLOST);
 	entity gen = NULL;
-	if(ons_roundlost)
+	if (ons_roundlost)
 	{
 		IL_EACH(g_onsgenerators, GetResource(it, RES_HEALTH) <= 0,
 		{
 			gen = it;
 			break;
 		});
-		if(!gen)
+		if (!gen)
 			ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 	}
 
-	if(ons_roundlost)
+	if (ons_roundlost)
 	{
 		generator_origin = gen.origin;
 		return true;
@@ -55,7 +55,7 @@ MUTATOR_HOOKFUNCTION(cl_ons, WantEventchase)
 
 MUTATOR_HOOKFUNCTION(cl_ons, CustomizeEventchase)
 {
-	if(ons_roundlost)
+	if (ons_roundlost)
 	{
 		M_ARGV(0, vector) = generator_camera.origin;
 		M_ARGV(1, vector) = autocvar_cl_eventchase_generator_viewoffset;

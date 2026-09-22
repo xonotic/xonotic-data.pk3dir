@@ -24,7 +24,7 @@ REGISTER_MUTATOR(kh, false)
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
 
-#define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
+#define FOR_EACH_KH_KEY(v) for (v = kh_worldkeylist; v; v = v.kh_worldkeynext)
 
 // ALL OF THESE should be removed in the future, as other code should not have to care
 

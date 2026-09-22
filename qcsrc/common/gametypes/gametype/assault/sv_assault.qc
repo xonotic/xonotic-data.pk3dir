@@ -20,15 +20,13 @@ void assault_objective_use(entity this, entity actor, entity trigger)
 	//print("Activator is ", actor.classname, "\n");
 
 	IL_EACH(g_assault_objectivedecreasers, it.target == this.targetname,
-	{
-		target_objective_decrease_activate(it);
-	});
+		target_objective_decrease_activate(it));
 }
 
 vector target_objective_spawn_evalfunc(entity this, entity player, entity spot, vector current)
 {
-	float hlth = GetResource(this, RES_HEALTH);
-	if (hlth < 0 || hlth >= ASSAULT_VALUE_INACTIVE)
+	float h = GetResource(this, RES_HEALTH);
+	if (h < 0 || h >= ASSAULT_VALUE_INACTIVE)
 		return '-1 0 0';
 	return current;
 }
@@ -43,16 +41,13 @@ void assault_objective_reset(entity this)
 // decrease the health of targeted objectives
 void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 {
-	if(actor.team != assault_attacker_team)
-	{
-		// wrong team triggered decrease
-		return;
-	}
+	if (actor.team != assault_attacker_team)
+		return; // wrong team triggered decrease
 
-	if(trigger.assault_sprite)
+	if (trigger.assault_sprite)
 	{
 		WaypointSprite_Disown(trigger.assault_sprite, waypointsprite_deadlifetime);
-		if(trigger.classname == "func_assault_destructible")
+		if (trigger.classname == "func_assault_destructible")
 			trigger.sprite = NULL; // TODO: just unsetting it?!
 	}
 	else
@@ -72,8 +67,8 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 			GameRules_scoring_add_team(actor, ASSAULT_OBJECTIVES, 1);
 			SetResourceExplicit(this.enemy, RES_HEALTH, -1);
 
-			if(this.enemy.message)
-				FOREACH_CLIENT(IS_PLAYER(it), { centerprint(it, this.enemy.message); });
+			if (this.enemy.message)
+				FOREACH_CLIENT(IS_PLAYER(it), centerprint(it, this.enemy.message));
 
 			SUB_UseTargets(this.enemy, this, trigger);
 		}
@@ -84,22 +79,21 @@ void assault_setenemytoobjective(entity this)
 {
 	IL_EACH(g_assault_objectives, it.targetname == this.target,
 	{
-		if(this.enemy == NULL)
+		if (this.enemy == NULL)
 			this.enemy = it;
 		else
 			objerror(this, "more than one objective as target - fix the map!");
 		break;
 	});
 
-	if(this.enemy == NULL)
+	if (this.enemy == NULL)
 		objerror(this, "no objective as target - fix the map!");
 }
 
 bool assault_decreaser_sprite_visible(entity this, entity player, entity view)
 {
-	if(GetResource(this.assault_decreaser.enemy, RES_HEALTH) >= ASSAULT_VALUE_INACTIVE)
+	if (GetResource(this.assault_decreaser.enemy, RES_HEALTH) >= ASSAULT_VALUE_INACTIVE)
 		return false;
-
 	return true;
 }
 
@@ -109,10 +103,10 @@ void target_objective_decrease_activate(entity this)
 	this.owner = NULL;
 	FOREACH_ENTITY_STRING(target, this.targetname,
 	{
-		if(it.assault_sprite != NULL)
+		if (it.assault_sprite != NULL)
 		{
 			WaypointSprite_Disown(it.assault_sprite, waypointsprite_deadlifetime);
-			if(it.classname == "func_assault_destructible")
+			if (it.classname == "func_assault_destructible")
 				it.sprite = NULL; // TODO: just unsetting it?!
 		}
 
@@ -120,7 +114,7 @@ void target_objective_decrease_activate(entity this)
 		spr.assault_decreaser = this;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
-		if(it.classname == "func_assault_destructible")
+		if (it.classname == "func_assault_destructible")
 		{
 			WaypointSprite_UpdateSprites(spr, WP_AssaultDefend, WP_AssaultDestroy, WP_AssaultDestroy);
 			WaypointSprite_UpdateMaxHealth(spr, it.max_health);
@@ -160,7 +154,7 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 		if (!assault_turrets_teamswap_forbidden)
 		{
 			// Swap turret teams
-			if(it.team == NUM_TEAM_1)
+			if (it.team == NUM_TEAM_1)
 				it.team = NUM_TEAM_2;
 			else
 				it.team = NUM_TEAM_1;
@@ -177,7 +171,7 @@ void assault_roundstart_use_this(entity this)
 
 void assault_wall_think(entity this)
 {
-	if(GetResource(this.enemy, RES_HEALTH) < 0)
+	if (GetResource(this.enemy, RES_HEALTH) < 0)
 	{
 		this.model = "";
 		this.solid = SOLID_NOT;
@@ -199,16 +193,16 @@ void assault_new_round(entity this)
 	++this.winning;
 
 	// swap attacker/defender roles
-	if(assault_attacker_team == NUM_TEAM_1)
+	if (assault_attacker_team == NUM_TEAM_1)
 		assault_attacker_team = NUM_TEAM_2;
 	else
 		assault_attacker_team = NUM_TEAM_1;
 
 	IL_EACH(g_saved_team, !IS_CLIENT(it),
 	{
-		if(it.team_saved == NUM_TEAM_1)
+		if (it.team_saved == NUM_TEAM_1)
 			it.team_saved = NUM_TEAM_2;
-		else if(it.team_saved == NUM_TEAM_2)
+		else if (it.team_saved == NUM_TEAM_2)
 			it.team_saved = NUM_TEAM_1;
 	});
 
@@ -232,26 +226,22 @@ void as_round_think()
 // they win. Otherwise the defending team wins once the timelimit passes.
 int WinningCondition_Assault()
 {
-	if(as_round)
+	if (as_round)
 		return WINNING_NO;
 
 	WinningConditionHelper(NULL); // set worldstatus
 
 	int status = WINNING_NO;
 	// as the timelimit has not yet passed just assume the defending team will win
-	if(assault_attacker_team == NUM_TEAM_1)
-	{
+	if (assault_attacker_team == NUM_TEAM_1)
 		SetWinners(team, NUM_TEAM_2);
-	}
 	else
-	{
 		SetWinners(team, NUM_TEAM_1);
-	}
 
 	entity ent = find(NULL, classname, "target_assault_roundend");
-	if(ent)
+	if (ent)
 	{
-		if(ent.winning)	// round end has been triggered by attacking team
+		if (ent.winning) // round end has been triggered by attacking team
 		{
 			bprint(Team_ColoredFullName(assault_attacker_team), " destroyed the objective in ", process_time(2, ceil(time - game_starttime)), "\n");
 			SetWinners(team, assault_attacker_team);
@@ -259,10 +249,8 @@ int WinningCondition_Assault()
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
 			// in campaign the game ends when the player destroys the objective, there's no second round
-			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round or the only round in campaign
-			{
+			if (ent.cnt == 1 || autocvar_g_campaign) // this was the second round or the only round in campaign
 				status = WINNING_YES;
-			}
 			else
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ASSAULT_OBJ_DESTROYED, ceil(time - game_starttime));
@@ -273,8 +261,8 @@ int WinningCondition_Assault()
 				game_stopped = true;
 
 				// make sure timelimit isn't hit while the game is blocked
-				if(autocvar_timelimit > 0)
-				if(time + AS_ROUND_DELAY >= game_starttime + autocvar_timelimit * 60)
+				if (autocvar_timelimit > 0
+				&& time + AS_ROUND_DELAY >= game_starttime + autocvar_timelimit * 60)
 					cvar_set("timelimit", ftos(autocvar_timelimit + AS_ROUND_DELAY / 60));
 			}
 		}
@@ -286,7 +274,11 @@ int WinningCondition_Assault()
 // spawnfuncs
 spawnfunc(info_player_attacker)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_assault)
+	{
+		delete(this);
+		return;
+	}
 
 	this.team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
@@ -294,7 +286,11 @@ spawnfunc(info_player_attacker)
 
 spawnfunc(info_player_defender)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_assault)
+	{
+		delete(this);
+		return;
+	}
 
 	this.team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
@@ -302,7 +298,11 @@ spawnfunc(info_player_defender)
 
 spawnfunc(target_objective)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_assault)
+	{
+		delete(this);
+		return;
+	}
 
 	IL_PUSH(g_assault_objectives, this);
 	this.use = assault_objective_use;
@@ -313,11 +313,15 @@ spawnfunc(target_objective)
 
 spawnfunc(target_objective_decrease)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_assault)
+	{
+		delete(this);
+		return;
+	}
 
 	IL_PUSH(g_assault_objectivedecreasers, this);
 
-	if(!this.dmg)
+	if (!this.dmg)
 		this.dmg = 101;
 
 	this.use = assault_objective_decrease_use;
@@ -331,29 +335,31 @@ spawnfunc(target_objective_decrease)
 // destructible walls that can be used to trigger target_objective_decrease
 bool destructible_heal(entity targ, entity inflictor, float amount, float limit)
 {
-	float true_limit = ((limit != RES_LIMIT_NONE) ? limit : targ.max_health);
-	float hlth = GetResource(targ, RES_HEALTH);
-	if (hlth <= 0 || hlth >= true_limit)
+	float true_limit = (limit != RES_LIMIT_NONE ? limit : targ.max_health);
+	float h = GetResource(targ, RES_HEALTH);
+	if (h <= 0 || h >= true_limit)
 		return false;
 
 	GiveResourceWithLimit(targ, RES_HEALTH, amount, true_limit);
-	if(targ.sprite)
-	{
+	if (targ.sprite)
 		WaypointSprite_UpdateHealth(targ.sprite, GetResource(targ, RES_HEALTH));
-	}
 	func_breakable_colormod(targ);
 	return true;
 }
 
 spawnfunc(func_assault_destructible)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_assault)
+	{
+		delete(this);
+		return;
+	}
 
 	this.spawnflags = 3;
 	this.event_heal = destructible_heal;
 	IL_PUSH(g_assault_destructibles, this);
 
-	if(assault_attacker_team == NUM_TEAM_1)
+	if (assault_attacker_team == NUM_TEAM_1)
 		this.team = NUM_TEAM_2;
 	else
 		this.team = NUM_TEAM_1;
@@ -363,7 +369,11 @@ spawnfunc(func_assault_destructible)
 
 spawnfunc(func_assault_wall)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_assault)
+	{
+		delete(this);
+		return;
+	}
 
 	this.mdl = this.model;
 	_setmodel(this, this.mdl);
@@ -375,7 +385,11 @@ spawnfunc(func_assault_wall)
 
 spawnfunc(target_assault_roundend)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_assault)
+	{
+		delete(this);
+		return;
+	}
 
 	this.winning = 0; // round not yet won by attackers
 	this.use = target_assault_roundend_use;
@@ -385,7 +399,11 @@ spawnfunc(target_assault_roundend)
 
 spawnfunc(target_assault_roundstart)
 {
-	if (!g_assault) { delete(this); return; }
+	if (!g_assault)
+	{
+		delete(this);
+		return;
+	}
 
 	assault_attacker_team = NUM_TEAM_1;
 	this.use = assault_roundstart_use;
@@ -405,15 +423,15 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		entity destr = it;
 		IL_EACH(g_assault_objectivedecreasers, it.targetname == destr.target,
 		{
-			float hlth = GetResource(it.enemy, RES_HEALTH);
-			if (hlth > 0 && hlth < ASSAULT_VALUE_INACTIVE)
+			float h = GetResource(it.enemy, RES_HEALTH);
+			if (h > 0 && h < ASSAULT_VALUE_INACTIVE)
 			{
 				found = true;
 				break;
 			}
 		});
 
-		if(!found)
+		if (!found)
 			continue;
 
 		vector p = 0.5 * (it.absmin + it.absmax);
@@ -424,36 +442,34 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		float bestvalue = FLOAT_MAX;
 		entity des = it;
 		for (float radius = 500; radius <= 1500 && !found; radius += 500)
-		{
 			FOREACH_ENTITY_RADIUS(p, radius, it.classname == "waypoint" && !(it.wpflags & WAYPOINTFLAG_GENERATED),
 			{
-				if(checkpvs(it.origin, des))
+				if (checkpvs(it.origin, des))
 				{
 					found = true;
-					if(it.cnt < bestvalue)
+					if (it.cnt < bestvalue)
 					{
 						best = it;
 						bestvalue = it.cnt;
 					}
 				}
 			});
-		}
 
-		if(best)
+		if (best)
 		{
-		///	dprint("waypoints around target were found\n");
-		//	te_lightning2(NULL, '0 0 0', best.origin);
-		//	te_knightspike(best.origin);
+			//dprint("waypoints around target were found\n");
+			//te_lightning2(NULL, '0 0 0', best.origin);
+			//te_knightspike(best.origin);
 
 			navigation_routerating(this, best, ratingscale, 4000);
 			++best.cnt;
 
 			this.havocbot_attack_time = 0;
 
-			if(checkpvs(this.origin + this.view_ofs, it))
-			if(checkpvs(this.origin + this.view_ofs, best))
+			if (checkpvs(this.origin + this.view_ofs, it)
+			&&  checkpvs(this.origin + this.view_ofs, best))
 			{
-			//	dprint("increasing attack time for this target\n");
+				//dprint("increasing attack time for this target\n");
 				this.havocbot_attack_time = time + 2;
 			}
 		}
@@ -462,7 +478,7 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 
 void havocbot_role_ast_offense(entity this)
 {
-	if(IS_DEAD(this))
+	if (IS_DEAD(this))
 	{
 		this.havocbot_attack_time = 0;
 		havocbot_ast_reset_role(this);
@@ -479,7 +495,7 @@ void havocbot_role_ast_offense(entity this)
 		return;
 	}
 
-	if(this.havocbot_attack_time>time)
+	if (this.havocbot_attack_time>time)
 		return;
 
 	if (navigation_goalrating_timeout(this))
@@ -497,7 +513,7 @@ void havocbot_role_ast_offense(entity this)
 
 void havocbot_role_ast_defense(entity this)
 {
-	if(IS_DEAD(this))
+	if (IS_DEAD(this))
 	{
 		this.havocbot_attack_time = 0;
 		havocbot_ast_reset_role(this);
@@ -514,7 +530,7 @@ void havocbot_role_ast_defense(entity this)
 		return;
 	}
 
-	if(this.havocbot_attack_time>time)
+	if (this.havocbot_attack_time>time)
 		return;
 
 	if (navigation_goalrating_timeout(this))
@@ -532,7 +548,7 @@ void havocbot_role_ast_defense(entity this)
 
 void havocbot_role_ast_setrole(entity this, float role)
 {
-	switch(role)
+	switch (role)
 	{
 		case HAVOCBOT_AST_ROLE_DEFENSE:
 			this.havocbot_role = havocbot_role_ast_defense;
@@ -547,10 +563,10 @@ void havocbot_role_ast_setrole(entity this, float role)
 
 void havocbot_ast_reset_role(entity this)
 {
-	if(IS_DEAD(this))
+	if (IS_DEAD(this))
 		return;
 
-	if(this.team == assault_attacker_team)
+	if (this.team == assault_attacker_team)
 		havocbot_role_ast_setrole(this, HAVOCBOT_AST_ROLE_OFFENSE);
 	else
 		havocbot_role_ast_setrole(this, HAVOCBOT_AST_ROLE_DEFENSE);
@@ -561,7 +577,7 @@ MUTATOR_HOOKFUNCTION(as, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.team == assault_attacker_team)
+	if (player.team == assault_attacker_team)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ASSAULT_DEFENDING);

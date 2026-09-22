@@ -30,21 +30,11 @@ float autocvar_g_mayhem_start_ammo_fuel = 0;
 
 .float total_damage_dealt;
 
-/*
-// unused for now
-void mayhem_DelayedInit(entity this)
-{
-	return;
-}
-*/
 
 void mayhem_Initialize()
 {
 	GameRules_limit_score(autocvar_g_mayhem_point_limit);
 	GameRules_limit_lead(autocvar_g_mayhem_point_leadlimit);
-
-	// unused for now
-	//InitializeEntity(NULL, mayhem_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 /*
@@ -76,9 +66,9 @@ MUTATOR_HOOKFUNCTION(mayhem, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(mayhem, PlayerRegen)
 {
-	if(!autocvar_g_mayhem_regenerate)
+	if (!autocvar_g_mayhem_regenerate)
 		M_ARGV(2, float) = 0;
-	if(!autocvar_g_mayhem_rot)
+	if (!autocvar_g_mayhem_rot)
 		M_ARGV(3, float) = 0;
 	return (!autocvar_g_mayhem_regenerate && !autocvar_g_mayhem_rot);
 }
@@ -90,7 +80,8 @@ MUTATOR_HOOKFUNCTION(mayhem, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(mayhem, SetWeaponArena)
 {
-	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+	if (M_ARGV(0, string) == "0"
+	||  M_ARGV(0, string) == "")
 		M_ARGV(0, string) = autocvar_g_mayhem_weaponarena;
 }
 
@@ -99,31 +90,28 @@ MUTATOR_HOOKFUNCTION(mayhem, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	// enable powerups if forced globally or global accepts gametypes to have powerups according to their own settings
-	if (autocvar_g_powerups == 1 || (autocvar_g_powerups == -1 && autocvar_g_mayhem_powerups == 1)){
-		if (item.itemdef.instanceOfPowerup){
-			return false;
-		}
-	}
+	if (item.itemdef.instanceOfPowerup)
+	if (autocvar_g_powerups == 1 || (autocvar_g_powerups == -1 && autocvar_g_mayhem_powerups == 1))
+		return false;
+
 	// disabled powerups if forced off globally or in this gametype
-	if (autocvar_g_powerups == 0 || autocvar_g_mayhem_powerups == 0){
-		if (item.itemdef.instanceOfPowerup){
-			return true;
-		}
-	}
+	if (item.itemdef.instanceOfPowerup)
+	if (autocvar_g_powerups == 0 || autocvar_g_mayhem_powerups == 0)
+		return true;
+
 	// remove all items if items are forced off globally
-	if (autocvar_g_pickup_items == 0){
+	if (autocvar_g_pickup_items == 0)
 		return true;
-	}
+
 	// if items are switched on in this gametype allow the removal of weapons and ammo still
-	if ((autocvar_g_mayhem_pickup_items == 1 && autocvar_g_mayhem_pickup_items_remove_weapons_and_ammo == 1) && autocvar_g_pickup_items <= 0){
-		if (item.itemdef.instanceOfAmmo || item.itemdef.instanceOfWeaponPickup){
-			return true;
-		}
-	}
-	// remove items if not globally set to follow mode's settings and locally set off
-	if (autocvar_g_pickup_items == -1 && autocvar_g_mayhem_pickup_items == 0){
+	if (item.itemdef.instanceOfAmmo || item.itemdef.instanceOfWeaponPickup)
+	if ((autocvar_g_mayhem_pickup_items == 1 && autocvar_g_mayhem_pickup_items_remove_weapons_and_ammo == 1) && autocvar_g_pickup_items <= 0)
 		return true;
-	}
+	
+	// remove items if not globally set to follow mode's settings and locally set off
+	if (autocvar_g_pickup_items == -1 && autocvar_g_mayhem_pickup_items == 0)
+		return true;
+
 	return false;
 }
 
@@ -134,9 +122,9 @@ MUTATOR_HOOKFUNCTION(mayhem, Damage_Calculate)
 	float frag_deathtype = M_ARGV(3, float);
 	float frag_damage = M_ARGV(4, float);
 
-	if (IS_PLAYER(frag_target)) // nullify self-damage if self-damage is disabled and always nullify splat
-	if (!IS_DEAD(frag_target)) // but enable anyone to gib corpses, even their own corpses with delayed damage
-	if ((autocvar_g_mayhem_selfdamage == 0 && frag_target == frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
+	if (IS_PLAYER(frag_target) // nullify self-damage if self-damage is disabled and always nullify splat
+	&& !IS_DEAD(frag_target) // but enable anyone to gib corpses, even their own corpses with delayed damage
+	&& ((autocvar_g_mayhem_selfdamage == 0 && frag_target == frag_attacker) || frag_deathtype == DEATH_FALL.m_id))
 		frag_damage = 0;
 
 	M_ARGV(4, float) = frag_damage;
@@ -144,25 +132,25 @@ MUTATOR_HOOKFUNCTION(mayhem, Damage_Calculate)
 
 void MayhemCalculatePlayerScore(entity scorer)
 {
-	int scoringmethod = 1;
 	float upscaler; // how much score does 1 frag give
 	float frag_weight; // how many frags should a kill be worth
 	float damage_weight; // how many frags is damage worth of player's spawn health+armor
 
-	// if frag is 0.25 , damage is 0.75 and upscaler is 20
+	// if frag is 0.25, damage is 0.75 and upscaler is 20
 	// then killing a full hp opponent is 1 frag which is worth of 20 score
 	// or damage worth of 2 starting health+armor is 1.5 frags or 30 score even if no kills were gotten
 
 	bool disable_selfdamage2score;
 
-	if (teamplay) {
-		// use Team Mayhem values
+	if (teamplay) // use Team Mayhem values
+	{
 		upscaler = autocvar_g_tmayhem_scoring_upscaler;
 		frag_weight = autocvar_g_tmayhem_scoring_kill_weight;
 		damage_weight = autocvar_g_tmayhem_scoring_damage_weight;
 		disable_selfdamage2score = autocvar_g_tmayhem_scoring_disable_selfdamage2score;
-	} else {
-		// use FFA Mayhem values
+	}
+	else // use FFA Mayhem values
+	{
 		upscaler = autocvar_g_mayhem_scoring_upscaler;
 		frag_weight = autocvar_g_mayhem_scoring_kill_weight;
 		damage_weight = autocvar_g_mayhem_scoring_damage_weight;
@@ -170,7 +158,7 @@ void MayhemCalculatePlayerScore(entity scorer)
 	}
 
 	// decide scoringmethod and avoid potential divide by 0 errors
-
+	int scoringmethod = 1;
 	if (frag_weight && damage_weight) // both frag and damage weights have non-zero values
 		scoringmethod = 1;
 	else if (frag_weight) // frag weight has a value
@@ -215,20 +203,21 @@ void MayhemCalculatePlayerScore(entity scorer)
 			GameRules_scoring_add_team(scorer, SCORE, floor(scoretoadd / 100));
 			                                                       //  / 100 to move back to the original decimal level
 
-			#if 0
-				// debug printing
-				if(!IS_BOT_CLIENT(scorer)){
-					print(sprintf("%f", scorer.total_damage_dealt),         " scorer.total_damage_dealt \n");
-					print(sprintf("%f", scorer.hitsound_damage_dealt),      " scorer.hitsound_damage_dealt \n");
-					print(sprintf("%f", playerdamagescore/100),             " playerdamagescore \n");
-					print(sprintf("%f", roundedplayerdamagescore/100),      " rounded playerdamagescore \n");
-					print(sprintf("%f", playerkillscore/100),               " playerkillscore \n");
-					print(sprintf("%f", PlayerScore_Get(scorer, SP_KILLS)), " PlayerScore_Get(scorer, SP_KILLS) \n");
-					print(sprintf("%f", playerscore/100),                   " playerscore \n");
-					print(sprintf("%f", scoretoadd/100),                    " scoretoadd \n");
-					print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE) \n \n");
-				}
-			#endif
+		#if 0
+			// debug printing
+			if (!IS_BOT_CLIENT(scorer))
+			{
+				print(sprintf("%f", scorer.total_damage_dealt),         " scorer.total_damage_dealt\n");
+				print(sprintf("%f", scorer.hitsound_damage_dealt),      " scorer.hitsound_damage_dealt\n");
+				print(sprintf("%f", playerdamagescore / 100),           " playerdamagescore\n");
+				print(sprintf("%f", roundedplayerdamagescore / 100),    " rounded playerdamagescore\n");
+				print(sprintf("%f", playerkillscore / 100),             " playerkillscore\n");
+				print(sprintf("%f", PlayerScore_Get(scorer, SP_KILLS)), " PlayerScore_Get(scorer, SP_KILLS)\n");
+				print(sprintf("%f", playerscore / 100),                 " playerscore\n");
+				print(sprintf("%f", scoretoadd / 100),                  " scoretoadd\n");
+				print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE)\n\n");
+			}
+		#endif
 			return;
 		}
 
@@ -240,39 +229,41 @@ void MayhemCalculatePlayerScore(entity scorer)
 			float scoretoadd = upscaledplayerscore - PlayerScore_Get(scorer, SP_SCORE);
 			GameRules_scoring_add_team(scorer, SCORE, floor(scoretoadd));
 
-			#if 0
-				// debug printing
-				if(!IS_BOT_CLIENT(scorer)){
-					print(sprintf("%f", playerkillscore),                   " playerkillscore \n");
-					print(sprintf("%f", PlayerScore_Get(scorer, SP_KILLS)), " PlayerScore_Get(scorer, SP_KILLS) \n");
-					print(sprintf("%f", upscaledplayerscore),               " upscaled playerscore \n");
-					print(sprintf("%f", scoretoadd),                        " scoretoadd \n");
-					print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE) \n \n");
-				}
-			#endif
+		#if 0
+			// debug printing
+			if (!IS_BOT_CLIENT(scorer))
+			{
+				print(sprintf("%f", playerkillscore),                   " playerkillscore\n");
+				print(sprintf("%f", PlayerScore_Get(scorer, SP_KILLS)), " PlayerScore_Get(scorer, SP_KILLS)\n");
+				print(sprintf("%f", upscaledplayerscore),               " upscaled playerscore\n");
+				print(sprintf("%f", scoretoadd),                        " scoretoadd\n");
+				print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE)\n\n");
+			}
+		#endif
 			return;
 		}
 
 		case 3:
 		{
 			// calculate how much score the player should have based on their damage dealt and then add the missing score
-			float playerdamagescore = ((scorer.total_damage_dealt / (start_health + start_armorvalue)) * 100);
+			float playerdamagescore = (scorer.total_damage_dealt / (start_health + start_armorvalue)) * 100;
 			float roundedplayerdamagescore = rint(playerdamagescore * 10) / 10;
 			float upscaledplayerscore = roundedplayerdamagescore * upscaler;
 			float scoretoadd = upscaledplayerscore - (PlayerScore_Get(scorer, SP_SCORE) * 100);
 			GameRules_scoring_add_team(scorer, SCORE, floor(scoretoadd / 100));
 
-			#if 0
-				// debug printing
-				if(!IS_BOT_CLIENT(scorer)){
-					print(sprintf("%f", scorer.total_damage_dealt),         " scorer.total_damage_dealt \n");
-					print(sprintf("%f", playerdamagescore),                 " playerdamagescore \n");
-					print(sprintf("%f", roundedplayerdamagescore),          " rounded playerdamagescore \n");
-					print(sprintf("%f", upscaledplayerscore),               " upscaled playerscore \n");
-					print(sprintf("%f", scoretoadd),                        " scoretoadd \n");
-					print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE) \n \n");
-				}
-			#endif
+		#if 0
+			// debug printing
+			if (!IS_BOT_CLIENT(scorer))
+			{
+				print(sprintf("%f", scorer.total_damage_dealt),         " scorer.total_damage_dealt\n");
+				print(sprintf("%f", playerdamagescore),                 " playerdamagescore\n");
+				print(sprintf("%f", roundedplayerdamagescore),          " rounded playerdamagescore\n");
+				print(sprintf("%f", upscaledplayerscore),               " upscaled playerscore\n");
+				print(sprintf("%f", scoretoadd),                        " scoretoadd\n");
+				print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE)\n\n");
+			}
+		#endif
 			return;
 		}
 	}
@@ -280,11 +271,13 @@ void MayhemCalculatePlayerScore(entity scorer)
 
 MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 {
-	if (!autocvar_g_mayhem_scoring_damage_weight) return;
+	if (!autocvar_g_mayhem_scoring_damage_weight)
+		return;
 
 	entity frag_target = M_ARGV(2, entity);
 
-	if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage >= 1) return;
+	if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage >= 1)
+		return;
 
 	entity frag_attacker = M_ARGV(1, entity);
 	float frag_deathtype = M_ARGV(6, float);
@@ -293,7 +286,8 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 
 	float realdmg = damage_take + damage_save;
 
-	if (realdmg == 0) return;
+	if (realdmg == 0)
+		return;
 
 	if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage)
 		realdmg *= 1 - autocvar_g_spawnshield_blockdamage;
@@ -321,26 +315,27 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 		// kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
 		// camp = campcheck, lava = lava, slime = slime
 		// team change / rebalance suicides are currently not included
-		if (!autocvar_g_mayhem_scoring_disable_selfdamage2score && (
-				frag_deathtype == DEATH_KILL.m_id ||
-				frag_deathtype == DEATH_DROWN.m_id ||
-				frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-				frag_deathtype == DEATH_CAMP.m_id ||
-				frag_deathtype == DEATH_LAVA.m_id ||
-				frag_deathtype == DEATH_SLIME.m_id ||
-				frag_deathtype == DEATH_SWAMP.m_id))
+		if (!autocvar_g_mayhem_scoring_disable_selfdamage2score)
+		if (frag_deathtype == DEATH_KILL.m_id
+		||  frag_deathtype == DEATH_DROWN.m_id
+		||  frag_deathtype == DEATH_HURTTRIGGER.m_id
+		||  frag_deathtype == DEATH_CAMP.m_id
+		||  frag_deathtype == DEATH_LAVA.m_id
+		||  frag_deathtype == DEATH_SLIME.m_id
+		||  frag_deathtype == DEATH_SWAMP.m_id)
 			frag_target.total_damage_dealt -= realdmg;
 
 		scorer = frag_target;
 	}
 
-	#if 0
-		// debug printing
-		if(!IS_BOT_CLIENT(scorer)){
-			print(sprintf("%f", realdmg), " total real dmg from PlayerDamage_SplitHealthArmor \n");
-			print(sprintf("%f", scorer.total_damage_dealt), "scorer.total_damage_dealt\n");
-		}
-	#endif
+#if 0
+	// debug printing
+	if (!IS_BOT_CLIENT(scorer))
+	{
+		print(sprintf("%f", realdmg), " total real dmg from PlayerDamage_SplitHealthArmor\n");
+		print(sprintf("%f", scorer.total_damage_dealt), " scorer.total_damage_dealt\n");
+	}
+#endif
 
 	MayhemCalculatePlayerScore(scorer);
 }
@@ -348,9 +343,10 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 MUTATOR_HOOKFUNCTION(mayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	entity frag_attacker = M_ARGV(0, entity);
-	M_ARGV(2, float) = 0; //score to give for the frag directly
+	M_ARGV(2, float) = 0; // score to give for the frag directly
 
-	if (IS_PLAYER(frag_attacker)) MayhemCalculatePlayerScore(frag_attacker);
+	if (IS_PLAYER(frag_attacker))
+		MayhemCalculatePlayerScore(frag_attacker);
 
 	return true;
 }
@@ -358,9 +354,6 @@ MUTATOR_HOOKFUNCTION(mayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(mayhem, reset_map_players)
 {
 	// reset damage dealt on reset
-	FOREACH_CLIENT(true, {
-		it.total_damage_dealt = 0;
-	});
+	FOREACH_CLIENT(true, it.total_damage_dealt = 0);
 	return false;
 }
-

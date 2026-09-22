@@ -53,10 +53,10 @@ bool autocvar_g_frozen_damage_trigger;
 float autocvar_g_frozen_force;
 
 // frozen (eliminated) state
-.float revival_time; // time at which player was last revived
-.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.float revival_time; ///< Time at which player was last revived
+.float revive_speed; ///< Revive speed multiplier (anything above 1 is instaheal)
 .float freeze_time;
 .entity iceblock;
-.entity frozen_by; // for ice fields
+.entity frozen_by; ///< For ice fields
 
 void freezetag_Unfreeze(entity targ, bool reset_health);

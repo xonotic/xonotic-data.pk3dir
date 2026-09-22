@@ -32,21 +32,21 @@ int CA_PreventStalemate()
 		int winnerTeam = 0;
 		int secondTeam = 0;
 
-		for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
+		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 		{
-			if(!winnerTeam || Team_GetTeamFromIndex(i).m_num_players_alive > Team_GetTeam(winnerTeam).m_num_players_alive)
+			if (!winnerTeam || Team_GetTeamFromIndex(i).m_num_players_alive > Team_GetTeam(winnerTeam).m_num_players_alive)
 			{
 				secondTeam = winnerTeam;
 				winnerTeam = Team_IndexToTeam(i);
 			}
 			else
 			{
-				if(!secondTeam || Team_GetTeamFromIndex(i).m_num_players_alive > Team_GetTeam(secondTeam).m_num_players_alive)
+				if (!secondTeam || Team_GetTeamFromIndex(i).m_num_players_alive > Team_GetTeam(secondTeam).m_num_players_alive)
 					secondTeam = Team_IndexToTeam(i);
 			}
 		}
 
-		if(Team_GetTeam(winnerTeam).m_num_players_alive != Team_GetTeam(secondTeam).m_num_players_alive)
+		if (Team_GetTeam(winnerTeam).m_num_players_alive != Team_GetTeam(secondTeam).m_num_players_alive)
 		{
 			bprint(sprintf("Stalemate broken by alive players. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)\n",
 				Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), Team_GetTeam(winnerTeam).m_num_players_alive,
@@ -64,7 +64,7 @@ int CA_PreventStalemate()
 		int secondTeamHealth = 0;
 		int teamIndex, teamHealth;
 
-		for(int i = 1; i <= AVAILABLE_TEAMS; ++i)
+		for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 		{
 			teamIndex = i;
 			teamHealth = 0;
@@ -81,24 +81,21 @@ int CA_PreventStalemate()
 			teamHealth = rint(teamHealth);
 
 			// Set the winner teams
-			if(!winnerTeam || teamHealth > winnerTeamHealth)
+			if (!winnerTeam || teamHealth > winnerTeamHealth)
 			{
 				secondTeam = winnerTeam;
 				secondTeamHealth = winnerTeamHealth;
 				winnerTeam = Team_IndexToTeam(i);
 				winnerTeamHealth = teamHealth;
 			}
-			else
+			else if (!secondTeam || teamHealth > secondTeamHealth)
 			{
-				if(!secondTeam || teamHealth > secondTeamHealth)
-				{
-					secondTeam = Team_IndexToTeam(i);
-					secondTeamHealth = teamHealth;
-				}
+				secondTeam = Team_IndexToTeam(i);
+				secondTeamHealth = teamHealth;
 			}
 		}
 
-		if(winnerTeamHealth != secondTeamHealth)
+		if (winnerTeamHealth != secondTeamHealth)
 		{
 			bprint(sprintf("Stalemate broken by team health. Best team: %s%s (%d)^7 - Trailing team: %s%s (%d)\n",
 				Team_ColorCode(winnerTeam), Team_ColorName(winnerTeam), winnerTeamHealth,
@@ -114,13 +111,13 @@ float CA_CheckWinner()
 {
 	int winner_team = 0;
 
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		// attempt to prevent stalemate by survivor count AND/OR total team health?
 		bool prevent_stalemate_by_survivors = (autocvar_g_ca_prevent_stalemate & BIT(0));
 		bool prevent_stalemate_by_health    = (autocvar_g_ca_prevent_stalemate & BIT(1));
 
-		if(prevent_stalemate_by_survivors || prevent_stalemate_by_health)
+		if (prevent_stalemate_by_survivors || prevent_stalemate_by_health)
 			winner_team = CA_PreventStalemate();
 		else
 			winner_team = -2;
@@ -139,8 +136,8 @@ float CA_CheckWinner()
 
 	// delay round ending a bit
 	if (autocvar_g_ca_round_enddelay
-		&& round_handler_GetEndTime() > 0
-		&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	&& round_handler_GetEndTime() > 0
+	&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
 	{
 		if (round_handler_GetEndDelayTime() == -1)
 		{
@@ -148,23 +145,21 @@ float CA_CheckWinner()
 			return 0;
 		}
 		else if (round_handler_GetEndDelayTime() >= time)
-		{
 			return 0;
-		}
 	}
 
-	if(winner_team > 0)
+	if (winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
 	}
-	else if(winner_team == -1)
+	else if (winner_team == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
-	else if(winner_team == -2)
+	else if (winner_team == -2)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
@@ -174,9 +169,7 @@ float CA_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), {
-		nades_RemovePlayer(it);
-	});
+	FOREACH_CLIENT(IS_PLAYER(it), nades_RemovePlayer(it));
 
 	return 1;
 }
@@ -205,32 +198,34 @@ bool CA_CheckTeams()
 
 bool ca_isEliminated(entity e)
 {
-	if(INGAME_JOINED(e) && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
+	if (INGAME_JOINED(e) && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
-	if(INGAME_JOINING(e))
+	if (INGAME_JOINING(e))
 		return true;
 	return false;
 }
 
-/** Returns next available player to spectate if g_ca_spectate_enemies == 0 */
+/// Returns next available player to spectate if g_ca_spectate_enemies == 0
 entity CA_SpectateNext(entity player, entity start)
 {
-	if (SAME_TEAM(start, player)) return start;
+	if (SAME_TEAM(start, player))
+		return start;
+
 	// continue from current player
 	for (entity e = start; (e = find(e, classname, STR_PLAYER)); )
-	{
-		if (SAME_TEAM(player, e)) return e;
-	}
+		if (SAME_TEAM(player, e))
+			return e;
+
 	// restart from the beginning
 	for (entity e = NULL; (e = find(e, classname, STR_PLAYER)); )
-	{
-		if (SAME_TEAM(player, e)) return e;
-	}
+		if (SAME_TEAM(player, e))
+			return e;
+
 	return start;
 }
 
 
-// field where the decimal part of SCORE is accumulated (shared with other gametypes)
+/// field where the decimal part of SCORE is accumulated (shared with other gametypes)
 .float float2int_decimal_fld;
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
@@ -279,7 +274,8 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 	// we can avoid sending observe_blocked_if_eliminated to all clients here (with ClientData_Touch)
 	// since it will get sent whenever the client spectates someone anyway
 
-	FOREACH_CLIENT(true, {
+	FOREACH_CLIENT(true,
+	{
 		CS(it).killcount = 0;
 		if (INGAME(it) || IS_BOT_CLIENT(it))
 		{
@@ -406,7 +402,7 @@ MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 {
 	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	if(!cvar("g_use_ammunition"))
+	if (!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
 	start_health       = warmup_start_health       = autocvar_g_ca_start_health;
@@ -426,9 +422,9 @@ MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	float frag_mirrordamage = M_ARGV(5, float);
 
-	if (IS_PLAYER(frag_target))
-	if (!IS_DEAD(frag_target))
-	if (frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
+	if (IS_PLAYER(frag_target)
+	&& !IS_DEAD(frag_target)
+	&& (frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL.m_id))
 		frag_damage = 0;
 
 	frag_mirrordamage = 0;
@@ -441,8 +437,8 @@ MUTATOR_HOOKFUNCTION(ca, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if (autocvar_g_powerups <= 0)
-	if (item.itemdef.instanceOfPowerup)
+	if (autocvar_g_powerups <= 0
+	&& item.itemdef.instanceOfPowerup)
 		return true;
 
 	if (autocvar_g_pickup_items <= 0)
@@ -462,7 +458,8 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 
 	float realdmg = damage_take + damage_save;
 
-	if (autocvar_g_ca_damage2score <= 0 || realdmg == 0) return;
+	if (autocvar_g_ca_damage2score <= 0 || realdmg == 0)
+		return;
 
 	entity scorer = NULL;
 	float scorer_damage = 0;
@@ -483,13 +480,13 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 		//kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
 		//camp = campcheck, lava = lava, slime = slime
 		//team change / rebalance suicides are currently not included
-		if (frag_deathtype == DEATH_KILL.m_id ||
-			frag_deathtype == DEATH_DROWN.m_id ||
-			frag_deathtype == DEATH_HURTTRIGGER.m_id ||
-			frag_deathtype == DEATH_CAMP.m_id ||
-			frag_deathtype == DEATH_LAVA.m_id ||
-			frag_deathtype == DEATH_SLIME.m_id ||
-			frag_deathtype == DEATH_SWAMP.m_id)
+		if (frag_deathtype == DEATH_KILL.m_id
+		||  frag_deathtype == DEATH_DROWN.m_id
+		||  frag_deathtype == DEATH_HURTTRIGGER.m_id
+		||  frag_deathtype == DEATH_CAMP.m_id
+		||  frag_deathtype == DEATH_LAVA.m_id
+		||  frag_deathtype == DEATH_SLIME.m_id
+		||  frag_deathtype == DEATH_SWAMP.m_id)
 		{
 			scorer_damage = -realdmg;
 			scorer = frag_target;
@@ -523,8 +520,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 	entity client = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (g_ca_spectate_enemies != 1 && INGAME(client))
-	if (DIFF_TEAM(targ, client))
+	if (g_ca_spectate_enemies != 1 && INGAME(client)
+	&& DIFF_TEAM(targ, client))
 		return true;
 }
 
@@ -550,8 +547,9 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	if (g_ca_spectate_enemies != 1 && INGAME(client)
 	&& Entity_GetTeam(client).m_num_players_alive)
 	{
-		do { targ = targ.chain; }
-		while(targ && DIFF_TEAM(targ, client));
+		do
+			targ = targ.chain;
+		while (targ && DIFF_TEAM(targ, client));
 
 		if (!targ)
 		{
@@ -571,7 +569,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 
 MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
 		if (IS_PLAYER(it) || INGAME_JOINED(it))
 			++M_ARGV(0, int);
 		++M_ARGV(1, int);

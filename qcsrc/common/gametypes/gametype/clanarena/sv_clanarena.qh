@@ -42,9 +42,7 @@ REGISTER_MUTATOR(ca, false)
 
 		teamplay_bitmask = BITS(bound(2, ca_teams, 4));
 		GameRules_scoring(teamplay_bitmask, SFL_SORT_PRIO_PRIMARY, 0,
-		{
-			field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
-		});
+			field_team(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY));
 
 		allowed_to_spawn = true;
 		g_ca_spectate_enemies = autocvar_g_ca_spectate_enemies;

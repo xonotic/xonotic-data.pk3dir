@@ -29,6 +29,7 @@ float autocvar_g_keepawayball_respawntime;
 int autocvar_g_keepawayball_trail_color;
 int autocvar_g_keepawayball_tracking;
 
+
 bool ka_BallStatuses_SendEntity(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_KA_BALLSTATUSES);
@@ -52,13 +53,14 @@ void ka_BallStatuses_Init()
 	Net_LinkEntity(kaballStatuses = new_pure(kaballStatuses), false, 0, ka_BallStatuses_SendEntity);
 }
 
-bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
+/// Runs on waypoints which are attached to ballcarriers, updates once per frame
+bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)
 {
-	if(view.ballcarried && IS_SPEC(player))
+	if (view.ballcarried && IS_SPEC(player))
 		return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
-	if(IS_SPEC(player) || warmup_stage)
+	if (IS_SPEC(player) || warmup_stage)
 		return true;
-	if(IS_INVISIBLE(this.owner))
+	if (IS_INVISIBLE(this.owner))
 		return false; // hide the waypointsprite if the owner is invisible
 
 	return autocvar_g_keepawayball_tracking == 1;
@@ -66,16 +68,18 @@ bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player
 
 void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
-	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":ka:", mode, ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
+	if (autocvar_sv_eventlog)
+		GameLogEcho(strcat(":ka:", mode, (actor != NULL ? strcat(":", ftos(actor.playerid)) : "")));
 }
 
-void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
+/// Runs whenever the ball needs to be relocated
+void ka_RespawnBall(entity this)
 {
-	if(game_stopped) return;
+	if (game_stopped)
+		return;
 	vector oldballorigin = this.origin;
 
-	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+	if (!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 		setorigin(this, SelectSpawnPoint(this, true).origin);
 
 	set_movetype(this, MOVETYPE_BOUNCE);
@@ -89,7 +93,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	Send_Effect(EFFECT_ITEM_TELEPORT, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_ITEM_TELEPORT, this.origin, '0 0 0', 1);
 
-	if(autocvar_g_keepawayball_tracking || warmup_stage)
+	if (autocvar_g_keepawayball_tracking || warmup_stage)
 	{
 		WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 		WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
@@ -98,18 +102,15 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
-// field where the decimal part of SCORE is accumulated (shared with other gametypes)
+/// Field where the decimal part of SCORE is accumulated (shared with other gametypes)
 .float float2int_decimal_fld;
 MUTATOR_HOOKFUNCTION(ka, reset_map_global)
 {
-	FOREACH_CLIENT(true,
-	{
-		it.float2int_decimal_fld = 0;
-	});
+	FOREACH_CLIENT(true, it.float2int_decimal_fld = 0);
 	return true;
 }
 
-/// runs (only) while a player is carrying the ball
+/// Runs (only) while a player is carrying the ball
 void ka_BallThink_Carried(entity this)
 {
 	if (autocvar_g_keepaway_score_timepoints)
@@ -119,10 +120,12 @@ void ka_BallThink_Carried(entity this)
 	this.nextthink = time;
 
 	// animate, this is ~copied from KH
-#define BALL_XYSPEED 100 // KH 45
-#define BALL_XYDIST 24 // KH 24
-	makevectors(vec3(0, (360 * this.cnt / this.owner.ballcarried.cnt) + (time % 360) * BALL_XYSPEED, 0));
+#define BALL_XYSPEED 100 /* KH 45 */
+#define BALL_XYDIST 24 /* KH 24 */
+	makevectors(vec3(0, 360 * this.cnt / this.owner.ballcarried.cnt + (time % 360) * BALL_XYSPEED, 0));
 	setorigin(this, vec3(v_forward.x * BALL_XYDIST, v_forward.y * BALL_XYDIST, this.origin.z));
+#undef BALL_XYSPEED
+#undef BALL_XYDIST
 
 	// sync any invisibility effect
 	this.alpha = this.owner.alpha;
@@ -130,30 +133,32 @@ void ka_BallThink_Carried(entity this)
 
 void ka_DamageEvent(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+	if (ITEM_DAMAGE_NEEDKILL(deathtype))
 		ka_RespawnBall(this);
 }
 
-void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball comes in contact with something
+/// Runs any time that the ball comes in contact with something
+void ka_TouchEvent(entity this, entity toucher)
 {
 	if (!this || game_stopped)
 		return;
 
-	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-	{ // The ball fell off the map, respawn it since players can't get to it
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) // the ball fell off the map, respawn it since players can't get to it
+	{
 		ka_RespawnBall(this);
 		return;
 	}
 	// TODO: mutator hook to prevent picking up objectives
-	if(IS_INDEPENDENT_PLAYER(toucher)) { return; }
-	if(IS_DEAD(toucher)) { return; }
-	if (!IS_PLAYER(toucher))
-	{  // The ball just touched an object, most likely the world
+	if (IS_INDEPENDENT_PLAYER(toucher)
+	|| IS_DEAD(toucher))
+		return;
+	if (!IS_PLAYER(toucher)) // the ball just touched an object, most likely the world
+	{
 		Send_Effect(EFFECT_BALL_SPARKS, this.origin, '0 0 0', 1);
 		sound(this, CH_TRIGGER, SND_KA_TOUCH, VOL_BASE, ATTEN_NORM);
 		return;
 	}
-	else if(this.wait > time && this.previous_owner == toucher)
+	else if (this.wait > time && this.previous_owner == toucher)
 		return;
 
 	if (toucher.ballcarried) // multiple balls exist
@@ -212,11 +217,12 @@ void ka_PlayerReset(entity player)
 	WaypointSprite_Kill(player.waypointsprite_attachedforcarrier);
 }
 
-void ka_DropEvent(entity player) // runs any time that a player is supposed to lose the ball
+/// Runs any time that a player is supposed to lose the ball
+void ka_DropEvent(entity player)
 {
 	entity ball = player.ballcarried;
-
-	if(!ball) { return; }
+	if (!ball)
+		return;
 
 	// reset the ball
 	setattachment(ball, NULL, "");
@@ -245,7 +251,7 @@ void ka_DropEvent(entity player) // runs any time that a player is supposed to l
 	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// waypoints
-	if(autocvar_g_keepawayball_tracking || warmup_stage)
+	if (autocvar_g_keepawayball_tracking || warmup_stage)
 	{
 		WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 		WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
@@ -281,7 +287,7 @@ void ka_RemoveBalls()
 void ka_SpawnBalls()
 {
 	int i = 0;
-	do // never allow less than 1 ball to spawn
+	do // do: never allow less than 1 ball to spawn
 	{
 		entity e = new(keepawayball);
 		setmodel(e, MDL_KA_BALL);
@@ -307,16 +313,14 @@ void ka_SpawnBalls()
 		navigation_dynamicgoal_init(e, false);
 
 		ka_RespawnBall(e);
-
-		++i;
 	}
-	while (i < autocvar_g_keepawayball_count);
+	while (++i < autocvar_g_keepawayball_count);
 	kaballStatuses.SendFlags |= SF_KA_BALLS;
 }
 
 void ka_Handler_CheckBall(entity this)
 {
-	if(time < game_starttime)
+	if (time < game_starttime)
 	{
 		if (!IL_EMPTY(g_kaballs))
 			ka_RemoveBalls();
@@ -338,12 +342,11 @@ void ka_Handler_CheckBall(entity this)
 bool ka_waypointsprite_visible_for_bot(entity this, entity e, bool dropped)
 {
 	entity ball_wp = e.waypointsprite_attachedforcarrier;
-	if (!ball_wp)
-	if (dropped || !ball_wp.waypointsprite_visible_for_player(ball_wp, this, WaypointSprite_getviewentity(this)))
-	{ // has no waypoint, or waypoint not visible
-		if (!checkpvs(this.origin + this.view_ofs, e)) // ball cannot be seen
-			return false;
-	}
+	if (!ball_wp // has no waypoint
+	&& (dropped || !ball_wp.waypointsprite_visible_for_player(ball_wp, this, WaypointSprite_getviewentity(this))) // waypoint not visible
+	&& !checkpvs(this.origin + this.view_ofs, e)) // ball cannot be seen
+		return false;
+
 	return true;
 }
 
@@ -430,21 +433,21 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
+	if (frag_attacker != frag_target && IS_PLAYER(frag_attacker))
 	{
-		if(frag_target.ballcarried) // add to amount of times killing carrier
+		if (frag_target.ballcarried) // add to amount of times killing carrier
 		{
 			GameRules_scoring_add(frag_attacker, KEEPAWAY_CARRIERKILLS, 1);
-			if(autocvar_g_keepaway_score_bckill) // add bckills to the score
+			if (autocvar_g_keepaway_score_bckill) // add bckills to the score
 				GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_bckill);
 		}
-		else if(!frag_attacker.ballcarried)
+		else if (!frag_attacker.ballcarried)
 		{
-			if(autocvar_g_keepaway_noncarrier_warn)
+			if (autocvar_g_keepaway_noncarrier_warn)
 				Send_Notification(NOTIF_ONE_ONLY, frag_attacker, MSG_CENTER, CENTER_KEEPAWAY_WARN);
 		}
 
-		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
+		if (frag_attacker.ballcarried) // add to amount of kills while ballcarrier
 			GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_killac);
 	}
 
@@ -472,8 +475,8 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(MUTATOR_RETURNVALUE == 0)
-	if(player.ballcarried)
+	if (MUTATOR_RETURNVALUE == 0
+	&& player.ballcarried)
 	{
 		ka_DropEvent(player);
 		kaballStatuses.SendFlags |= SF_KA_BALLS;
@@ -554,7 +557,7 @@ MUTATOR_HOOKFUNCTION(ka, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
 {
-//	entity player = M_ARGV(0, entity);
+	//entity player = M_ARGV(0, entity);
 
 	// In the future this hook is supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
 	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player()
@@ -566,7 +569,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPhysics_UpdateStats)
 	entity player = M_ARGV(0, entity);
 	// these automatically reset, no need to worry
 
-	if(player.ballcarried)
+	if (player.ballcarried)
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_keepaway_ballcarrier_highspeed;
 }
 
@@ -582,7 +585,8 @@ MUTATOR_HOOKFUNCTION(ka, Bot_ForbidAttack)
 		have_held_ball = true;
 		break;
 	});
-	if(!targ.ballcarried && !bot.ballcarried && have_held_ball)
+
+	if (!targ.ballcarried && !bot.ballcarried && have_held_ball)
 		return true;
 }
 
