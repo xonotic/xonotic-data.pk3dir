@@ -13,5 +13,3 @@ REGISTER_MUTATOR(mayhem, false)
 	}
 	return 0;
 }
-
-void MayhemCalculatePlayerScore(entity scorer);

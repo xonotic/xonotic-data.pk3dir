@@ -1,0 +1,11 @@
+#pragma once
+
+void mayhem_util_SetStartItems(bool unlimited_ammo, float health, float armor, float shells, float nails, float rockets, float cells, float fuel);
+bool mayhem_util_PlayerRegen(bool regen, bool rot);
+bool mayhem_util_ForbidThrowCurrentWeapon();
+void mayhem_util_SetWeaponArena(string weaponarena);
+bool mayhem_util_FilterItem(bool powerups, int pickup_items, bool pickup_items_remove_weapons_and_ammo);
+void mayhem_util_Damage_Calculate(bool selfdamage);
+void mayhem_util_PlayerDamage_SplitHealthArmor(float upscaler, float frag_weight, float damage_weight, bool disable_selfdamage2score);
+bool mayhem_util_GiveFragsForKill(float upscaler, float frag_weight, float damage_weight, bool disable_selfdamage2score);
+bool mayhem_util_reset_map_players();
