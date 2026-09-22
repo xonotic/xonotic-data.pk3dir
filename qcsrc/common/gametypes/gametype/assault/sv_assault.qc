@@ -92,9 +92,7 @@ void assault_setenemytoobjective(entity this)
 
 bool assault_decreaser_sprite_visible(entity this, entity player, entity view)
 {
-	if (GetResource(this.assault_decreaser.enemy, RES_HEALTH) >= ASSAULT_VALUE_INACTIVE)
-		return false;
-	return true;
+	return (GetResource(this.assault_decreaser.enemy, RES_HEALTH) < ASSAULT_VALUE_INACTIVE);
 }
 
 void target_objective_decrease_activate(entity this)

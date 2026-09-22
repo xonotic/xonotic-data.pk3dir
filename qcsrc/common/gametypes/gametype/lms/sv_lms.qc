@@ -183,10 +183,7 @@ bool lms_waypointsprite_visible_for_player(entity this, entity player, entity vi
 	&& IS_SPEC(player))
 		return false; // we don't want spectators of leaders to see the attached waypoint on the top of their screen
 
-	if (!lms_visible_leaders)
-		return false;
-
-	return true;
+	return lms_visible_leaders;
 }
 
 void lms_UpdateLeaders()
@@ -364,10 +361,7 @@ MUTATOR_HOOKFUNCTION(lms, ForbidSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (warmup_stage || lms_AddPlayer(player))
-		return false;
-
-	return true;
+	return !(warmup_stage || lms_AddPlayer(player));
 }
 
 void lms_RemovePlayer(entity player)
@@ -482,34 +476,31 @@ MUTATOR_HOOKFUNCTION(lms, SV_StartFrame)
 	if (lms_visible_leaders != lms_visible_leaders_prev)
 		lmsStats.SendFlags = 0xFFFFFF;
 
-	FOREACH_CLIENT(true,
+	FOREACH_CLIENT(IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME,
 	{
-		if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
+		if (it.lms_leader)
 		{
-			if (it.lms_leader)
+			if (!it.waypointsprite_attachedforcarrier)
 			{
-				if (!it.waypointsprite_attachedforcarrier)
-				{
-					WaypointSprite_AttachCarrier(WP_LmsLeader, it, RADARICON_FLAGCARRIER);
-					it.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = lms_waypointsprite_visible_for_player;
-					WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-					vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
-					WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
-					WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
-				}
+				WaypointSprite_AttachCarrier(WP_LmsLeader, it, RADARICON_FLAGCARRIER);
+				it.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = lms_waypointsprite_visible_for_player;
+				WaypointSprite_UpdateRule(it.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
+				vector pl_color = colormapPaletteColor(it.clientcolors & 0x0F, false);
+				WaypointSprite_UpdateTeamRadar(it.waypointsprite_attachedforcarrier, RADARICON_FLAGCARRIER, pl_color);
+				WaypointSprite_Ping(it.waypointsprite_attachedforcarrier);
+			}
+			if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
+				Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_LEADER);
+		}
+		else
+		{
+			if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
+			{
 				if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
-					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_LEADER);
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_OTHER);
 			}
-			else
-			{
-				if (IS_PLAYER(it) && it.frags != FRAGS_PLAYER_OUT_OF_GAME)
-				{
-					if (!lms_visible_leaders_prev && lms_visible_leaders && IS_REAL_CLIENT(it))
-						Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_LMS_VISIBLE_OTHER);
-				}
-				if (it.waypointsprite_attachedforcarrier)
-					WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
-			}
+			if (it.waypointsprite_attachedforcarrier)
+				WaypointSprite_Kill(it.waypointsprite_attachedforcarrier);
 		}
 	});
 }
@@ -656,10 +647,8 @@ MUTATOR_HOOKFUNCTION(lms, FilterItemDefinition)
 		return false;
 
 	entity def = M_ARGV(0, entity);
-	if (autocvar_g_powerups && autocvar_g_lms_extra_lives && (def == ITEM_ExtraLife || def == ITEM_HealthMega))
-		return false;
 
-	return true;
+	return !(autocvar_g_powerups && autocvar_g_lms_extra_lives && (def == ITEM_ExtraLife || def == ITEM_HealthMega));
 }
 
 void lms_replace_with_extralife(entity this)

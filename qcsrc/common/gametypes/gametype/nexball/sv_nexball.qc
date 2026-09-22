@@ -81,7 +81,7 @@ void nb_BallStatuses_Init()
 	Net_LinkEntity(nexballStatuses = new_pure(nexballStatuses), false, 0, nb_BallStatuses_SendEntity);
 }
 
-float OtherTeam(float t)  //works only if there are two teams on the map!
+int OtherTeam(int t) // works only if there are two teams on the map!
 {
 	entity e = find(NULL, classname, "nexball_team");
 	if (e.team == t)
@@ -107,7 +107,7 @@ void LogNB(string mode, entity actor)
 
 	string s = strcat(":nexball:", mode);
 	if (actor != NULL)
-		s = strcat(s, ":", ftos(actor.playerid));
+		s = strcat(s, ":", itos(actor.playerid));
 	GameLogEcho(s);
 }
 
@@ -279,7 +279,7 @@ void ResetBall(entity this)
 	}
 	else if (this.cnt < 4) // step 2 and 3
 	{
-		//dprint("Step ", ftos(this.cnt), ": Calculated velocity: ", vtos(this.spawnorigin - this.origin), ", time: ", ftos(time), "\n");
+		//dprint("Step ", itos(this.cnt), ": Calculated velocity: ", vtos(this.spawnorigin - this.origin), ", time: ", ftos(time), "\n");
 		this.velocity = (this.spawnorigin - this.origin) * (this.cnt - 1); // 1 or 0.5 second movement
 		this.nextthink = time + 0.5;
 		++this.cnt;
@@ -385,7 +385,7 @@ void GoalTouch(entity this, entity toucher)
 
 	EXACTTRIGGER_TOUCH(this, toucher);
 
-	float otherteam = (AVAILABLE_TEAMS == 2)
+	int otherteam = (AVAILABLE_TEAMS == 2)
 		? OtherTeam(ball.team)
 		: 0;
 	bool is_client = IS_CLIENT(ball.pusher);
@@ -393,7 +393,7 @@ void GoalTouch(entity this, entity toucher)
 		? ball.pusher.netname
 		: "Someone (?)";
 
-	float pscore;
+	int pscore;
 	if (ball.team == this.team)		 //owngoal (regular goals)
 	{
 		LogNB("owngoal", ball.pusher);
@@ -420,7 +420,7 @@ void GoalTouch(entity this, entity toucher)
 	}
 	else // score
 	{
-		LogNB(strcat("goal:", ftos(this.team)), ball.pusher);
+		LogNB(strcat("goal:", itos(this.team)), ball.pusher);
 		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", Team_ColoredFullName(ball.team), ".\n");
 		pscore = 1;
 	}
@@ -467,7 +467,7 @@ spawnfunc(nexball_team)
 	this.team = this.cnt + 1;
 }
 
-void nb_spawnteam(string teamname, float teamcolor)
+void nb_spawnteam(string teamname, int teamcolor)
 {
 	LOG_TRACE("^2spawned team ", teamname);
 	entity e = new_pure(nexball_team);
@@ -631,10 +631,8 @@ bool nb_Goal_Customize(entity this, entity client)
 {
 	entity e = WaypointSprite_getviewentity(client);
 	entity wp_owner = this.owner;
-	if (SAME_TEAM(e, wp_owner))
-		return false;
 
-	return true;
+	return DIFF_TEAM(e, wp_owner);
 }
 
 void SpawnGoal(entity this)
@@ -917,11 +915,8 @@ MUTATOR_HOOKFUNCTION(nb, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if (ITEM_IS_LOOT(item)
-	&& item.weapon == WEP_NEXBALL.m_id)
-		return true;
-
-	return false;
+	return (ITEM_IS_LOOT(item)
+		&& item.weapon == WEP_NEXBALL.m_id);
 }
 
 MUTATOR_HOOKFUNCTION(nb, ItemTouch)

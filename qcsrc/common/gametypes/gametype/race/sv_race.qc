@@ -28,21 +28,18 @@ void havocbot_role_race(entity this)
 		int cp = this.race_checkpoint;
 
 		LABEL(search_racecheckpoints)
-		IL_EACH(g_racecheckpoints, true,
+		IL_EACH(g_racecheckpoints, it.cnt == cp || cp == -1,
 		{
-			if (it.cnt == cp || cp == -1)
+			// redirect bot to next goal if it touched the waypoint of an untouchable checkpoint
+			// e.g. checkpoint in front of Stormkeep's warpzone
+			// the same workaround is applied in CTS gametype
+			if (raw_touch_check && vdist(this.origin - it.nearestwaypoint.origin, <, 30))
 			{
-				// redirect bot to next goal if it touched the waypoint of an untouchable checkpoint
-				// e.g. checkpoint in front of Stormkeep's warpzone
-				// the same workaround is applied in CTS gametype
-				if (raw_touch_check && vdist(this.origin - it.nearestwaypoint.origin, <, 30))
-				{
-					cp = race_NextCheckpoint(cp);
-					raw_touch_check = false;
-					goto search_racecheckpoints;
-				}
-				navigation_routerating(this, it, 1000000, 5000);
+				cp = race_NextCheckpoint(cp);
+				raw_touch_check = false;
+				goto search_racecheckpoints;
 			}
+			navigation_routerating(this, it, 1000000, 5000);
 		});
 
 		navigation_goalrating_end(this);
@@ -72,13 +69,13 @@ void race_ScoreRules()
 void race_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":race:", mode, ":", (actor != NULL ? strcat(":", ftos(actor.playerid)) : "")));
+		GameLogEcho(strcat(":race:", mode, ":", (actor != NULL ? strcat(":", itos(actor.playerid)) : "")));
 }
 
 float WinningCondition_Race(float fraglimit)
 {
-	float n = 0;
-	float c = 0;
+	int n = 0;
+	int c = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		++n;
@@ -93,8 +90,7 @@ float WinningCondition_Race(float fraglimit)
 	if (wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
 		// do NOT support equality when the laps are all raced!
 		return WINNING_STARTSUDDENDEATHOVERTIME;
-	else
-		return WINNING_NEVER;
+	return WINNING_NEVER;
 }
 
 float WinningCondition_QualifyingThenRace(float limit)
@@ -320,7 +316,8 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 	int record_page = M_ARGV(0, int);
 	string ret_string = M_ARGV(1, string);
 
-	for (int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
+	int start = record_page * 200;
+	for (int i = start; i < MapInfo_count && i < start + 200; ++i)
 		if (MapInfo_Get_ByID(i))
 		{
 			float r = race_readTime(MapInfo_Map_bspname, 1);
@@ -390,7 +387,7 @@ void rc_SetLimits()
 	int leadlimit_override = 0; // currently not supported by race
 	float timelimit_override = autocvar_timelimit_override;
 
-	float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
+	bool want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
 
 	record_type = RACE_RECORD;
 

@@ -76,7 +76,7 @@ void Surv_UpdateScores(bool timed_out)
 	});
 }
 
-float Surv_CheckWinner()
+bool Surv_CheckWinner()
 {
 	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
 	&& autocvar_g_survival_round_enddelay == -1)
@@ -93,7 +93,7 @@ float Surv_CheckWinner()
 		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 		surv_state = SURV_STATE_REVEAL;
 		survStatuses.SendFlags |= SF_SURV_REVEAL;
-		return 1;
+		return true;
 	}
 
 	int survivor_count = 0, hunter_count = 0;
@@ -110,7 +110,7 @@ float Surv_CheckWinner()
 		// reset delay time here only for consistency
 		// Survival players currently have no known ways to resurrect
 		round_handler_ResetEndDelayTime();
-		return 0;
+		return false;
 	}
 
 	// delay round ending a bit
@@ -121,10 +121,10 @@ float Surv_CheckWinner()
 		if (round_handler_GetEndDelayTime() == -1)
 		{
 			round_handler_SetEndDelayTime(min(time + autocvar_g_survival_round_enddelay, round_handler_GetEndTime()));
-			return 0;
+			return false;
 		}
 		else if (round_handler_GetEndDelayTime() >= time)
-			return 0;
+			return false;
 	}
 
 	if (hunter_count > 0) // hunters win
@@ -153,7 +153,7 @@ float Surv_CheckWinner()
 
 	FOREACH_CLIENT(IS_PLAYER(it), nades_RemovePlayer(it));
 
-	return 1;
+	return true;
 }
 
 void Surv_RoundStart()
@@ -289,9 +289,7 @@ MUTATOR_HOOKFUNCTION(surv, ForbidSpawn)
 	// spectators / observers that weren't playing can join; they are
 	// immediately forced to observe in the PutClientInServer hook
 	// this way they are put in a team and can play in the next round
-	if (!allowed_to_spawn && INGAME(player))
-		return true;
-	return false;
+	return (!allowed_to_spawn && INGAME(player));
 }
 
 MUTATOR_HOOKFUNCTION(surv, PutClientInServer)

@@ -30,6 +30,8 @@ float autocvar_g_mayhem_start_ammo_fuel = 0;
 
 .float total_damage_dealt;
 
+//#define MAYHEM_DEBUG
+
 
 void mayhem_Initialize()
 {
@@ -203,22 +205,21 @@ void MayhemCalculatePlayerScore(entity scorer)
 			GameRules_scoring_add_team(scorer, SCORE, floor(scoretoadd / 100));
 			                                                       //  / 100 to move back to the original decimal level
 
-		#if 0
-			// debug printing
+		#ifdef MAYHEM_DEBUG
 			if (!IS_BOT_CLIENT(scorer))
 			{
-				print(sprintf("%f", scorer.total_damage_dealt),         " scorer.total_damage_dealt\n");
-				print(sprintf("%f", scorer.hitsound_damage_dealt),      " scorer.hitsound_damage_dealt\n");
-				print(sprintf("%f", playerdamagescore / 100),           " playerdamagescore\n");
-				print(sprintf("%f", roundedplayerdamagescore / 100),    " rounded playerdamagescore\n");
-				print(sprintf("%f", playerkillscore / 100),             " playerkillscore\n");
-				print(sprintf("%f", PlayerScore_Get(scorer, SP_KILLS)), " PlayerScore_Get(scorer, SP_KILLS)\n");
-				print(sprintf("%f", playerscore / 100),                 " playerscore\n");
-				print(sprintf("%f", scoretoadd / 100),                  " scoretoadd\n");
-				print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE)\n\n");
+				printf("%f scorer.total_damage_dealt\n",            scorer.total_damage_dealt);
+				printf("%f scorer.hitsound_damage_dealt\n",         scorer.hitsound_damage_dealt);
+				printf("%f playerdamagescore\n",                    playerdamagescore / 100);
+				printf("%f rounded playerdamagescore\n",            roundedplayerdamagescore / 100);
+				printf("%f playerkillscore\n",                      playerkillscore / 100);
+				printf("%f PlayerScore_Get(scorer, SP_KILLS)\n",    PlayerScore_Get(scorer, SP_KILLS));
+				printf("%f playerscore\n",                          playerscore / 100);
+				printf("%f scoretoadd\n",                           scoretoadd / 100);
+				printf("%f PlayerScore_Get(scorer, SP_SCORE)\n\n",  PlayerScore_Get(scorer, SP_SCORE));
 			}
 		#endif
-			return;
+			break;
 		}
 
 		case 2:
@@ -229,18 +230,17 @@ void MayhemCalculatePlayerScore(entity scorer)
 			float scoretoadd = upscaledplayerscore - PlayerScore_Get(scorer, SP_SCORE);
 			GameRules_scoring_add_team(scorer, SCORE, floor(scoretoadd));
 
-		#if 0
-			// debug printing
+		#ifdef MAYHEM_DEBUG
 			if (!IS_BOT_CLIENT(scorer))
 			{
-				print(sprintf("%f", playerkillscore),                   " playerkillscore\n");
-				print(sprintf("%f", PlayerScore_Get(scorer, SP_KILLS)), " PlayerScore_Get(scorer, SP_KILLS)\n");
-				print(sprintf("%f", upscaledplayerscore),               " upscaled playerscore\n");
-				print(sprintf("%f", scoretoadd),                        " scoretoadd\n");
-				print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE)\n\n");
+				printf("%f playerkillscore\n",                      playerkillscore);
+				printf("%f PlayerScore_Get(scorer, SP_KILLS)\n",    PlayerScore_Get(scorer, SP_KILLS));
+				printf("%f upscaled playerscore\n",                 upscaledplayerscore);
+				printf("%f scoretoadd\n",                           scoretoadd);
+				printf("%f PlayerScore_Get(scorer, SP_SCORE)\n\n",  PlayerScore_Get(scorer, SP_SCORE));
 			}
 		#endif
-			return;
+			break;
 		}
 
 		case 3:
@@ -252,19 +252,18 @@ void MayhemCalculatePlayerScore(entity scorer)
 			float scoretoadd = upscaledplayerscore - (PlayerScore_Get(scorer, SP_SCORE) * 100);
 			GameRules_scoring_add_team(scorer, SCORE, floor(scoretoadd / 100));
 
-		#if 0
-			// debug printing
+		#ifdef MAYHEM_DEBUG
 			if (!IS_BOT_CLIENT(scorer))
 			{
-				print(sprintf("%f", scorer.total_damage_dealt),         " scorer.total_damage_dealt\n");
-				print(sprintf("%f", playerdamagescore),                 " playerdamagescore\n");
-				print(sprintf("%f", roundedplayerdamagescore),          " rounded playerdamagescore\n");
-				print(sprintf("%f", upscaledplayerscore),               " upscaled playerscore\n");
-				print(sprintf("%f", scoretoadd),                        " scoretoadd\n");
-				print(sprintf("%f", PlayerScore_Get(scorer, SP_SCORE)), " PlayerScore_Get(scorer, SP_SCORE)\n\n");
+				printf("%f scorer.total_damage_dealt\n",            scorer.total_damage_dealt);
+				printf("%f playerdamagescore\n",                    playerdamagescore);
+				printf("%f rounded playerdamagescore\n",            roundedplayerdamagescore);
+				printf("%f upscaled playerscore\n",                 upscaledplayerscore);
+				printf("%f scoretoadd\n",                           scoretoadd);
+				printf("%f PlayerScore_Get(scorer, SP_SCORE)\n\n",  PlayerScore_Get(scorer, SP_SCORE));
 			}
 		#endif
-			return;
+			break;
 		}
 	}
 }
@@ -328,12 +327,11 @@ MUTATOR_HOOKFUNCTION(mayhem, PlayerDamage_SplitHealthArmor)
 		scorer = frag_target;
 	}
 
-#if 0
-	// debug printing
+#ifdef MAYHEM_DEBUG
 	if (!IS_BOT_CLIENT(scorer))
 	{
-		print(sprintf("%f", realdmg), " total real dmg from PlayerDamage_SplitHealthArmor\n");
-		print(sprintf("%f", scorer.total_damage_dealt), " scorer.total_damage_dealt\n");
+		printf("%f total real dmg from PlayerDamage_SplitHealthArmor\n",  realdmg);
+		printf("%f scorer.total_damage_dealt\n",                          scorer.total_damage_dealt);
 	}
 #endif
 

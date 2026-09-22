@@ -69,7 +69,7 @@ bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player
 void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":ka:", mode, (actor != NULL ? strcat(":", ftos(actor.playerid)) : "")));
+		GameLogEcho(strcat(":ka:", mode, (actor != NULL ? strcat(":", itos(actor.playerid)) : "")));
 }
 
 /// Runs whenever the ball needs to be relocated

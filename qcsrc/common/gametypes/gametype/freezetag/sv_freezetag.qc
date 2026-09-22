@@ -250,9 +250,7 @@ void freezetag_Unfreeze(entity targ, bool reset_health)
 
 bool freezetag_isEliminated(entity e)
 {
-	if (IS_PLAYER(e) && (STAT(FROZEN, e) || IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
-		return true;
-	return false;
+	return (IS_PLAYER(e) && (STAT(FROZEN, e) || IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME));
 }
 
 
@@ -789,7 +787,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			if (n == -1)
 			{
 				if (autocvar_sv_eventlog)
-					GameLogEcho(strcat(":ft:autorevival:", ftos(player.playerid)));
+					GameLogEcho(strcat(":ft:autorevival:", itos(player.playerid)));
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, frozen_time);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, frozen_time);
 				return true;
@@ -811,9 +809,9 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			{
 				string revivers = "";
 				for (entity it = revivers_first; it; it = it.chain)
-					revivers = strcat(revivers, ftos(it.playerid), ",");
+					revivers = strcat(revivers, itos(it.playerid), ",");
 				revivers = substring(revivers, 0, strlen(revivers) - 1);
-				GameLogEcho(strcat(":ft:revival:", ftos(player.playerid), ":", revivers));
+				GameLogEcho(strcat(":ft:revival:", itos(player.playerid), ":", revivers));
 			}
 		}
 

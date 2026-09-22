@@ -107,7 +107,7 @@ int CA_PreventStalemate()
 	return -2; // Equality. Can't avoid the stalemate.
 }
 
-float CA_CheckWinner()
+bool CA_CheckWinner()
 {
 	int winner_team = 0;
 
@@ -142,10 +142,10 @@ float CA_CheckWinner()
 		if (round_handler_GetEndDelayTime() == -1)
 		{
 			round_handler_SetEndDelayTime(min(time + autocvar_g_ca_round_enddelay, round_handler_GetEndTime()));
-			return 0;
+			return false;
 		}
 		else if (round_handler_GetEndDelayTime() >= time)
-			return 0;
+			return false;
 	}
 
 	if (winner_team > 0)
@@ -171,7 +171,7 @@ float CA_CheckWinner()
 
 	FOREACH_CLIENT(IS_PLAYER(it), nades_RemovePlayer(it));
 
-	return 1;
+	return true;
 }
 
 void CA_RoundStart()

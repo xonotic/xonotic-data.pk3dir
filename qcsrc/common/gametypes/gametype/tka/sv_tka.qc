@@ -65,7 +65,7 @@ bool tka_ballcarrier_waypointsprite_visible_for_player(entity this, entity playe
 void tka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":tka:", mode, (actor != NULL ? strcat(":", ftos(actor.team), ":", ftos(actor.playerid)) : "")));
+		GameLogEcho(strcat(":tka:", mode, (actor != NULL ? strcat(":", itos(actor.team), ":", itos(actor.playerid)) : "")));
 }
 
 /// Runs whenever the ball needs to be relocated
@@ -586,7 +586,10 @@ MUTATOR_HOOKFUNCTION(tka, Bot_ForbidAttack)
 	{
 		have_held_ball = true;
 		if (SAME_TEAM(bot, it.owner))
+		{
 			team_has_ball = true;
+			break;
+		}
 	});
 
 	if (!targ.ballcarried && !bot.ballcarried && have_held_ball && !(autocvar_g_tka_score_team && team_has_ball))
