@@ -1,5 +1,6 @@
 #include "sv_tmayhem.qh"
-#include <common/gametypes/gametype/mayhem/sv_mayhem.qh>
+
+#include <common/gametypes/gametype/mayhem/sv_util.qh>
 
 float autocvar_g_tmayhem_point_limit;
 float autocvar_g_tmayhem_point_leadlimit;
@@ -13,6 +14,10 @@ bool autocvar_g_tmayhem_rot;
 string autocvar_g_tmayhem_weaponarena;
 bool autocvar_g_tmayhem_powerups;
 bool autocvar_g_tmayhem_selfdamage;
+float autocvar_g_tmayhem_scoring_upscaler;
+float autocvar_g_tmayhem_scoring_kill_weight;
+float autocvar_g_tmayhem_scoring_damage_weight;
+bool autocvar_g_tmayhem_scoring_disable_selfdamage2score;
 bool autocvar_g_tmayhem_pickup_items;
 bool autocvar_g_tmayhem_pickup_items_remove_weapons_and_ammo;
 bool autocvar_g_tmayhem_unlimited_ammo;
@@ -24,8 +29,6 @@ float autocvar_g_tmayhem_start_ammo_nails = 320;
 float autocvar_g_tmayhem_start_ammo_rockets = 160;
 float autocvar_g_tmayhem_start_ammo_cells = 180;
 float autocvar_g_tmayhem_start_ammo_fuel = 0;
-
-.float total_damage_dealt;
 
 
 void tmayhem_DelayedInit(entity this)
@@ -61,166 +64,62 @@ MUTATOR_HOOKFUNCTION(tmayhem, Scores_CountFragsRemaining)
 
 MUTATOR_HOOKFUNCTION(tmayhem, SetStartItems)
 {
-	start_items       &= ~(IT_UNLIMITED_AMMO | IT_UNLIMITED_SUPERWEAPONS);
-	if (!cvar("g_use_ammunition") || autocvar_g_tmayhem_unlimited_ammo)
-		start_items |= IT_UNLIMITED_AMMO;
-
-	start_health       = warmup_start_health       = autocvar_g_tmayhem_start_health;
-	start_armorvalue   = warmup_start_armorvalue   = autocvar_g_tmayhem_start_armor;
-	start_ammo_shells  = warmup_start_ammo_shells  = autocvar_g_tmayhem_start_ammo_shells;
-	start_ammo_nails   = warmup_start_ammo_nails   = autocvar_g_tmayhem_start_ammo_nails;
-	start_ammo_rockets = warmup_start_ammo_rockets = autocvar_g_tmayhem_start_ammo_rockets;
-	start_ammo_cells   = warmup_start_ammo_cells   = autocvar_g_tmayhem_start_ammo_cells;
-	start_ammo_fuel    = warmup_start_ammo_fuel    = autocvar_g_tmayhem_start_ammo_fuel;
+	mayhem_util_SetStartItems(autocvar_g_tmayhem_unlimited_ammo,
+		autocvar_g_tmayhem_start_health,
+		autocvar_g_tmayhem_start_armor,
+		autocvar_g_tmayhem_start_ammo_shells,
+		autocvar_g_tmayhem_start_ammo_nails,
+		autocvar_g_tmayhem_start_ammo_rockets,
+		autocvar_g_tmayhem_start_ammo_cells,
+		autocvar_g_tmayhem_start_ammo_fuel);
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, PlayerRegen)
 {
-	if (!autocvar_g_tmayhem_regenerate)
-		M_ARGV(2, float) = 0;
-	if (!autocvar_g_tmayhem_rot)
-		M_ARGV(3, float) = 0;
-	return (!autocvar_g_tmayhem_regenerate && !autocvar_g_tmayhem_rot);
+	return mayhem_util_PlayerRegen(autocvar_g_tmayhem_regenerate, autocvar_g_tmayhem_rot);
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, ForbidThrowCurrentWeapon)
 {
-	return true;
+	return mayhem_util_ForbidThrowCurrentWeapon();
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, SetWeaponArena)
 {
-	if (M_ARGV(0, string) == "0"
-	||  M_ARGV(0, string) == "")
-		M_ARGV(0, string) = autocvar_g_tmayhem_weaponarena;
+	mayhem_util_SetWeaponArena(autocvar_g_tmayhem_weaponarena);
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, FilterItem)
 {
-	entity item = M_ARGV(0, entity);
-
-	// enable powerups if forced globally or global accepts gametypes to have powerups according to their own settings
-	if (item.itemdef.instanceOfPowerup)
-	if (autocvar_g_powerups == 1 || (autocvar_g_powerups == -1 && autocvar_g_tmayhem_powerups == 1))
-		return false;
-
-	// disabled powerups if forced off globally or in this gametype
-	if (item.itemdef.instanceOfPowerup)
-	if (autocvar_g_powerups == 0 || autocvar_g_tmayhem_powerups == 0)
-		return true;
-
-	// remove all items if items are forced off globally
-	if (autocvar_g_pickup_items == 0)
-		return true;
-
-	// if items are switched on in this gametype allow the removal of weapons and ammo still
-	if (item.itemdef.instanceOfAmmo || item.itemdef.instanceOfWeaponPickup)
-	if ((autocvar_g_tmayhem_pickup_items == 1 && autocvar_g_tmayhem_pickup_items_remove_weapons_and_ammo == 1) && autocvar_g_pickup_items <= 0)
-		return true;
-
-	// remove items if not globally set to follow mode's settings and locally set off
-	if (autocvar_g_pickup_items == -1 && autocvar_g_tmayhem_pickup_items == 0)
-		return true;
-
-	return false;
+	return mayhem_util_FilterItem(autocvar_g_tmayhem_powerups,
+		autocvar_g_tmayhem_pickup_items,
+		autocvar_g_tmayhem_pickup_items_remove_weapons_and_ammo);
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, Damage_Calculate)
 {
-	entity frag_attacker = M_ARGV(1, entity);
-	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(3, float);
-	float frag_damage = M_ARGV(4, float);
-	float frag_mirrordamage = M_ARGV(5, float);
+	mayhem_util_Damage_Calculate(autocvar_g_tmayhem_selfdamage);
 
-	if (IS_PLAYER(frag_target) // nullify self-damage if self-damage is disabled and always nullify splat
-	&& !IS_DEAD(frag_target) // but enable anyone to gib corpses, even their own corpses with delayed damage
-	&& ((autocvar_g_tmayhem_selfdamage == 0 && frag_target == frag_attacker) || frag_deathtype == DEATH_FALL.m_id))
-		frag_damage = 0;
-
-	frag_mirrordamage = 0; // no mirror damaging
-
-	M_ARGV(4, float) = frag_damage;
-	M_ARGV(5, float) = frag_mirrordamage;
+	M_ARGV(5, float) = 0; // no mirror damaging
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 {
-	if (!autocvar_g_tmayhem_scoring_damage_weight)
-		return;
-
-	entity frag_target = M_ARGV(2, entity);
-
-	if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage >= 1)
-		return;
-
-	entity frag_attacker = M_ARGV(1, entity);
-	float frag_deathtype = M_ARGV(6, float);
-	float damage_take = M_ARGV(4, float);
-	float damage_save = M_ARGV(5, float);
-
-	float realdmg = damage_take + damage_save;
-
-	if (realdmg == 0)
-		return;
-
-	if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage)
-		realdmg *= 1 - autocvar_g_spawnshield_blockdamage;
-
-	entity scorer = NULL; // entity which needs their score to be updated
-
-	if (IS_PLAYER(frag_attacker))
-	{
-		// non-friendly fire
-		if (!SAME_TEAM(frag_target, frag_attacker))
-			frag_attacker.total_damage_dealt += realdmg;
-
-		// friendly fire aka self damage
-		if (SAME_TEAM(frag_target, frag_attacker) || (frag_target == frag_attacker && !autocvar_g_tmayhem_scoring_disable_selfdamage2score))
-			frag_attacker.total_damage_dealt -= realdmg;
-
-		scorer = frag_attacker;
-	}
-	else
-	{
-		// handle (environmental hazard) suiciding, check first if the player
-		// has a registered attacker who most likely pushed them there to
-		// avoid punishing pushed players as pushers are already rewarded
-		// deathtypes:
-		// kill = suicide, drown = drown in water/liquid, hurttrigger = out of the map void or hurt triggers inside maps like electric sparks
-		// camp = campcheck, lava = lava, slime = slime
-		// team change / rebalance suicides are currently not included
-		if (!autocvar_g_tmayhem_scoring_disable_selfdamage2score)
-		if (frag_deathtype == DEATH_KILL.m_id
-		||  frag_deathtype == DEATH_DROWN.m_id
-		||  frag_deathtype == DEATH_HURTTRIGGER.m_id
-		||  frag_deathtype == DEATH_CAMP.m_id
-		||  frag_deathtype == DEATH_LAVA.m_id
-		||  frag_deathtype == DEATH_SLIME.m_id
-		||  frag_deathtype == DEATH_SWAMP.m_id)
-			frag_target.total_damage_dealt -= realdmg;
-
-		scorer = frag_target;
-	}
-
-	MayhemCalculatePlayerScore(scorer);
+	mayhem_util_PlayerDamage_SplitHealthArmor(autocvar_g_tmayhem_scoring_upscaler,
+		autocvar_g_tmayhem_scoring_kill_weight,
+		autocvar_g_tmayhem_scoring_damage_weight,
+		autocvar_g_tmayhem_scoring_disable_selfdamage2score);
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	entity frag_attacker = M_ARGV(0, entity);
-	M_ARGV(2, float) = 0; // score to give for the frag directly
-
-	if (IS_PLAYER(frag_attacker))
-		MayhemCalculatePlayerScore(frag_attacker);
-
-	return true;
+	return mayhem_util_GiveFragsForKill(autocvar_g_tmayhem_scoring_upscaler,
+		autocvar_g_tmayhem_scoring_kill_weight,
+		autocvar_g_tmayhem_scoring_damage_weight,
+		autocvar_g_tmayhem_scoring_disable_selfdamage2score);
 }
 
 MUTATOR_HOOKFUNCTION(tmayhem, reset_map_players)
 {
-	// reset damage dealt on reset
-	FOREACH_CLIENT(true, it.total_damage_dealt = 0);
-	return false;
+	return mayhem_util_reset_map_players();
 }
-

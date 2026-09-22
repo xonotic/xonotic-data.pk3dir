@@ -2,4 +2,5 @@
 #include <common/gametypes/gametype/mayhem/mayhem.qc>
 #ifdef SVQC
 	#include <common/gametypes/gametype/mayhem/sv_mayhem.qc>
+	#include <common/gametypes/gametype/mayhem/sv_util.qc>
 #endif
