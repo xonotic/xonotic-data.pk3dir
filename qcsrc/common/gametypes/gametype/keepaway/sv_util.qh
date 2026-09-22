@@ -1,0 +1,17 @@
+#pragma once
+
+bool ka_util_reset_map_global();
+bool ka_util_GiveFragsForKill();
+bool ka_util_PlayerUseKey(void(entity) DropEvent_func, void() BallStatuses_SendBalls_func);
+void ka_util_Damage_Calculate(vector carrier_damage, vector carrier_force, vector noncarrier_damage, vector noncarrier_force);
+void ka_util_ClientDisconnect(void(entity) DropPlayersBalls_func);
+void ka_util_MakePlayerObserver(void(entity) DropPlayersBalls_func);
+void ka_util_PlayerPhysics_UpdateStats(float highspeed);
+bool ka_util_HavocBot_ChooseRole(void(entity) havocbot_role_carrier_func, void(entity) havocbot_role_collector_func);
+void ka_util_DropSpecialItems(void(entity) DropPlayersBalls_func);
+bool ka_util_PreferPlayerScore_Clear();
+
+void ka_util_havocbot_goalrating_ball(entity this, void(entity, entity, entity, float, float) returns,
+	IntrusiveList ball_list, float ratingscale, float ratingscale_sameteam, vector org);
+void ka_util_havocbot_role_carrier(entity this, void(entity) havocbot_role_collector_func);
+void ka_util_havocbot_role_collector(entity this, void(entity, float, float, vector) havocbot_goalrating_func, void(entity) havocbot_role_carrier_func);
