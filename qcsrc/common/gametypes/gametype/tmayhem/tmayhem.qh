@@ -7,7 +7,12 @@
 CLASS(tmayhem, Gametype)
 	INIT(tmayhem)
 	{
-		this.gametype_init(this, _("Team Mayhem"),"tmayhem","g_tmayhem",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=1500 teams=2 leadlimit=0",_("Compete along with your team for the most damage dealt and frags in this chaotic mayhem"));
+		CONSTRUCT(Gametype,
+			_("Team Mayhem"), "tmayhem", "g_tmayhem",
+			GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,
+			"", "timelimit=20 pointlimit=1500 teams=2 leadlimit=0",
+			_("Compete along with your team for the most damage dealt and frags in this chaotic mayhem")
+		);
 	}
 	METHOD(tmayhem, m_parse_mapinfo, bool(string k, string v))
 	{
@@ -30,12 +35,10 @@ CLASS(tmayhem, Gametype)
 	}
 	METHOD(tmayhem, m_isForcedSupported, bool(Gametype this))
 	{
-		if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags)){
+		if (!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
 			return true;
-		}
-		if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags)){
+		if (!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags))
 			return true;
-		}
 		return false;
 	}
 	METHOD(tmayhem, m_setTeams, void(string sa))

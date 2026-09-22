@@ -116,8 +116,9 @@ CLASS(Gametype, Object)
 	}
 #endif
 
-	METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription))
+	CONSTRUCTOR(Gametype, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription)
 	{
+		CONSTRUCT(Gametype);
 		this.netname = g_name;
 		this.mdl = sname;
 		this.message = hname;

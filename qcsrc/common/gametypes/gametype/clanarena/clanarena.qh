@@ -8,7 +8,12 @@
 CLASS(ClanArena, Gametype)
 	INIT(ClanArena)
 	{
-		this.gametype_init(this, _("Clan Arena"),"ca","g_ca",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill all enemy teammates to win the round"));
+		CONSTRUCT(Gametype,
+			_("Clan Arena"), "ca", "g_ca",
+			GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,
+			"", "timelimit=20 pointlimit=10 teams=2 leadlimit=6",
+			_("Kill all enemy teammates to win the round")
+		);
 	}
 	METHOD(ClanArena, m_parse_mapinfo, bool(string k, string v))
 	{
@@ -27,7 +32,7 @@ CLASS(ClanArena, Gametype)
 	}
 	METHOD(ClanArena, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
-		if(spawnpoints >= 8 && diameter > 3250)
+		if (spawnpoints >= 8 && diameter > 3250)
 			return true;
 		return false;
 	}

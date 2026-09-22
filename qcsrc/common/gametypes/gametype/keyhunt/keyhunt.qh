@@ -8,7 +8,12 @@
 CLASS(KeyHunt, Gametype)
 	INIT(KeyHunt)
 	{
-		this.gametype_init(this, _("Key Hunt"),"kh","g_keyhunt",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
+		CONSTRUCT(Gametype,
+			_("Key Hunt"), "kh", "g_keyhunt",
+			GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,
+			"", "timelimit=20 pointlimit=1000 teams=3 leadlimit=0",
+			_("Gather all the keys to win the round")
+		);
 	}
 	METHOD(KeyHunt, m_parse_mapinfo, bool(string k, string v))
 	{
@@ -27,7 +32,7 @@ CLASS(KeyHunt, Gametype)
 	}
 	METHOD(KeyHunt, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
-		if(spawnpoints >= 12 && diameter > 5120)
+		if (spawnpoints >= 12 && diameter > 5120)
 			return true;
 		return false;
 	}

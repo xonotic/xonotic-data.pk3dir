@@ -8,7 +8,12 @@
 CLASS(Keepaway, Gametype)
 	INIT(Keepaway)
 	{
-		this.gametype_init(this, _("Keepaway"),"ka","g_keepaway",GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=30",_("Hold the ball to get points for kills"));
+		CONSTRUCT(Gametype,
+			_("Keepaway"), "ka", "g_keepaway",
+			GAMETYPE_FLAG_USEPOINTS,
+			"", "timelimit=20 pointlimit=30",
+			_("Hold the ball to get points for kills")
+		);
 	}
 	METHOD(Keepaway, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
