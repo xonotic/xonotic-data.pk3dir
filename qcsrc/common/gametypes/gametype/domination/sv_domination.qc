@@ -531,10 +531,10 @@ void ScoreRules_dom(int teams)
 {
 	if(domination_roundbased)
 	{
-	    GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-            field_team(ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_DOM_TAKES, "takes", 0);
-	    });
+		GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+			field_team(ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
+			field(SP_DOM_TAKES, "takes", 0);
+		});
 	}
 	else
 	{
@@ -545,9 +545,9 @@ void ScoreRules_dom(int teams)
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
 		GameRules_scoring(teams, sp_score, sp_score, {
-            field_team(ST_DOM_TICKS, "ticks", sp_domticks);
-            field(SP_DOM_TICKS, "ticks", sp_domticks);
-            field(SP_DOM_TAKES, "takes", 0);
+			field_team(ST_DOM_TICKS, "ticks", sp_domticks);
+			field(SP_DOM_TICKS, "ticks", sp_domticks);
+			field(SP_DOM_TAKES, "takes", 0);
 		});
 	}
 }

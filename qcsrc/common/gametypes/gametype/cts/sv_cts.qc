@@ -54,16 +54,16 @@ void havocbot_role_cts(entity this)
 
 void cts_ScoreRules()
 {
-    GameRules_score_enabled(false);
-    GameRules_scoring(0, 0, 0, {
-        if (g_race_qualifying) {
-            field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-        } else {
-            field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
-            field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-            field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
-        }
-    });
+	GameRules_score_enabled(false);
+	GameRules_scoring(0, 0, 0, {
+		if (g_race_qualifying) {
+			field(SP_RACE_FASTEST, "fastest", SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		} else {
+			field(SP_RACE_LAPS, "laps", SFL_SORT_PRIO_PRIMARY);
+			field(SP_RACE_TIME, "time", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+			field(SP_RACE_FASTEST, "fastest", SFL_LOWER_IS_BETTER | SFL_TIME);
+		}
+	});
 }
 
 void cts_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later

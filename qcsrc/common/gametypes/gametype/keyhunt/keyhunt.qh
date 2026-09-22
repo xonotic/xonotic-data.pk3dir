@@ -41,9 +41,9 @@ CLASS(KeyHunt, Gametype)
 		returns(menu, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The number of points required to conclude the match"));
 	}
 #ifdef CSQC
-    ATTRIB(KeyHunt, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_KH);
+	ATTRIB(KeyHunt, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_KH);
 #endif
-    ATTRIB(KeyHunt, m_legacydefaults, string, "1000 20 3 0");
+	ATTRIB(KeyHunt, m_legacydefaults, string, "1000 20 3 0");
 ENDCLASS(KeyHunt)
 REGISTER_GAMETYPE(KEYHUNT, NEW(KeyHunt));
 

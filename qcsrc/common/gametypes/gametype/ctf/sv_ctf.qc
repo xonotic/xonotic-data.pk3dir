@@ -2873,13 +2873,13 @@ spawnfunc(team_CTL_bluelolly)  { spawnfunc_item_flag_team2(this);    }
 void ctf_ScoreRules(int teams)
 {
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-        field_team(ST_CTF_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
-        field(SP_CTF_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
-        field(SP_CTF_CAPTIME, "captime", SFL_LOWER_IS_BETTER | SFL_TIME);
-        field(SP_CTF_PICKUPS, "pickups", 0);
-        field(SP_CTF_FCKILLS, "fckills", 0);
-        field(SP_CTF_RETURNS, "returns", 0);
-        field(SP_CTF_DROPS, "drops", SFL_LOWER_IS_BETTER);
+		field_team(ST_CTF_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
+		field(SP_CTF_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+		field(SP_CTF_CAPTIME, "captime", SFL_LOWER_IS_BETTER | SFL_TIME);
+		field(SP_CTF_PICKUPS, "pickups", 0);
+		field(SP_CTF_FCKILLS, "fckills", 0);
+		field(SP_CTF_RETURNS, "returns", 0);
+		field(SP_CTF_DROPS, "drops", SFL_LOWER_IS_BETTER);
 	});
 }
 
