@@ -5,4 +5,5 @@
 #endif
 #ifdef SVQC
 	#include <common/gametypes/gametype/race/sv_race.qh>
+	#include <common/gametypes/gametype/race/sv_util.qh>
 #endif
