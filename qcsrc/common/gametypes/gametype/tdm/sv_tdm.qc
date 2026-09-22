@@ -11,14 +11,20 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(tdm_team)
 {
-	if(!g_tdm || !this.cnt) { delete(this); return; }
+	if (!g_tdm || !this.cnt)
+	{
+		delete(this);
+		return;
+	}
 
 	this.team = this.cnt + 1;
 }
 
 void tdm_DelayedInit(entity this)
 {
-	int numteams = autocvar_g_tdm_teams_override >= 2 ? autocvar_g_tdm_teams_override : autocvar_g_tdm_teams;
+	int numteams = (autocvar_g_tdm_teams_override >= 2)
+		? autocvar_g_tdm_teams_override
+		: autocvar_g_tdm_teams;
 	teamplay_bitmask = Team_MapEnts_FindOrSpawn("tdm_team", BITS(bound(2, numteams, 4)));
 }
 

@@ -15,8 +15,6 @@ MUTATOR_HOOKFUNCTION(duel, FilterItemDefinition)
 {
 	entity definition = M_ARGV(0, entity);
 
-	if(definition.instanceOfPowerup)
-	{
+	if (definition.instanceOfPowerup)
 		return !autocvar_g_duel_with_powerups;
-	}
 }
