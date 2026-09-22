@@ -1,11 +1,12 @@
 #include "sv_keyhunt.qh"
 
 #include <common/checkextension.qh>
+#include <common/mapobjects/triggers.qh>
+#include <common/mutators/mutator/nades/sv_nades.qh>
 #include <server/command/vote.qh>
 #include <server/gamelog.qh>
 #include <server/damage.qh>
 #include <server/items/items.qh>
-#include <common/mapobjects/triggers.qh>
 
 float autocvar_g_balance_keyhunt_damageforcescale;
 float autocvar_g_balance_keyhunt_delay_collect;
@@ -207,9 +208,9 @@ void kh_Scores_Event(entity player, entity key, string what, float frags_player,
 	if (!autocvar_sv_eventlog)  //output extra info to the console or text file
 		return;
 
-	string s = strcat(":keyhunt:", what, ":", ftos(player.playerid), ":", ftos(frags_player));
+	string s = strcat(":keyhunt:", what, ":", itos(player.playerid), ":", ftos(frags_player));
 	if (key && key.owner)
-		s = strcat(s, ":", ftos(key.owner.playerid));
+		s = strcat(s, ":", itos(key.owner.playerid));
 	else
 		s = strcat(s, ":0");
 	s = strcat(s, ":", ftos(frags_owner), ":");
@@ -390,42 +391,30 @@ void kh_Key_AssignTo(entity key, entity player)
 	key.pusher = NULL;
 
 	int ownerteam = kh_Key_AllOwnedByWhichTeam();
-	if (ownerteam != ownerteam0)
+	if (ownerteam == ownerteam0)
+		return;
+
+	if (ownerteam != -1)
 	{
-		entity k;
-		if (ownerteam != -1)
-		{
-			kh_interferemsg_time = time + 0.2;
-			kh_interferemsg_team = player.team;
+		kh_interferemsg_time = time + 0.2;
+		kh_interferemsg_team = player.team;
+	}
+	else
+		kh_interferemsg_time = 0;
 
-			// audit all key carrier sprites, update them to "Run here"
-			FOR_EACH_KH_KEY(k)
-			{
-				if (!k.owner)
-					continue;
-				entity first = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, { first = it; break; });
-				entity third = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, { third = it; break; });
-				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFinish, third);
-			}
-		}
-		else
-		{
-			kh_interferemsg_time = 0;
+	// Audit all key carrier sprites
+	entity k, first, third;
+	FOR_EACH_KH_KEY(k)
+	{
+		if (!k.owner)
+			continue;
+		first = WP_Null;
+		third = WP_Null;
+		FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, { first = it; break; });
+		FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, { third = it; break; });
 
-			// audit all key carrier sprites, update them to "Key Carrier"
-			FOR_EACH_KH_KEY(k)
-			{
-				if (!k.owner)
-					continue;
-				entity first = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, { first = it; break; });
-				entity third = WP_Null;
-				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, { third = it; break; });
-				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFriend, third);
-			}
-		}
+		// Update to "Run here" if ownerteam != -1, otherwise "Key Carrier"
+		WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, (ownerteam != -1 ? WP_KeyCarrierFinish : WP_KeyCarrierFriend), third);
 	}
 }
 
@@ -501,18 +490,12 @@ void kh_Key_Remove(entity key)
 	if (kh_worldkeylist == key)
 		kh_worldkeylist = kh_worldkeylist.kh_worldkeynext;
 	else
-	{
-		o = kh_worldkeylist;
-		while (o)
-		{
+		FOR_EACH_KH_KEY(o)
 			if (o.kh_worldkeynext == key)
 			{
 				o.kh_worldkeynext = o.kh_worldkeynext.kh_worldkeynext;
 				break;
 			}
-			o = o.kh_worldkeynext;
-		}
-	}
 
 	delete(key);
 }
@@ -533,8 +516,6 @@ void kh_FinishRound()
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 	keyStatuses.SendFlags = SF_KH_RESET;
 }
-
-void nades_GiveBonus(entity player, float score);
 
 /// Runs when a team wins
 void kh_WinnerTeam(int winner_team)
@@ -690,13 +671,13 @@ void kh_Key_Think(entity this)  // runs all the time
 	if (game_stopped)
 		return;
 
+#ifndef KH_PLAYER_USE_ATTACHMENT
 	if (this.owner)
 	{
-#ifndef KH_PLAYER_USE_ATTACHMENT
-		makevectors('0 1 0' * (this.cnt + (time % 360) * KH_KEY_XYSPEED));
+		makevectors(vec2(0, this.cnt + (time % 360) * KH_KEY_XYSPEED));
 		setorigin(this, v_forward * KH_KEY_XYDIST + '0 0 1' * this.origin.z);
-#endif
 	}
+#endif
 
 	// if in nodrop or time over, end the round
 	if (!this.owner
@@ -714,11 +695,15 @@ void kh_Key_Think(entity this)  // runs all the time
 
 		entity key;
 		vector p = this.owner.origin;
+		bool winning = true;
 		FOR_EACH_KH_KEY(key)
 			if (vdist(key.owner.origin - p, >, autocvar_g_balance_keyhunt_maxdist))
-				goto not_winning;
-		kh_WinnerTeam(this.team);
-LABEL(not_winning)
+			{
+				winning = false;
+				break;
+			}
+		if (winning)
+			kh_WinnerTeam(this.team);
 	}
 
 	if (kh_interferemsg_time && time > kh_interferemsg_time)
@@ -756,7 +741,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)
 	setthink(key, kh_Key_Think);
 	key.nextthink = time;
 	key.cnt = _angle;
-	key.angles = '0 360 0' * random();
+	key.angles = vec2(0, 360 * random());
 	key.event_damage = kh_Key_Damage;
 	key.takedamage = DAMAGE_YES;
 	key.damagedbytriggers = autocvar_g_balance_keyhunt_return_when_unreachable;
@@ -795,7 +780,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)
 
 	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM(initial_owner.team, CENTER_KEYHUNT_START));
 
-	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, NULL, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
+	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, vec3(0, 0, KH_KEY_WP_ZSHIFT), NULL, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
 
 	kh_Key_AssignTo(key, initial_owner);
@@ -1130,7 +1115,7 @@ void havocbot_role_kh_defense(entity this)
 	{
 		navigation_goalrating_start(this);
 
-		float key_owner_team = kh_Key_AllOwnedByWhichTeam();
+		int key_owner_team = kh_Key_AllOwnedByWhichTeam();
 		if (key_owner_team == this.team)
 			havocbot_goalrating_kh(this, 10, 0.1, 0.05); // defend key carriers
 		else if (key_owner_team == -1)
@@ -1170,7 +1155,7 @@ void havocbot_role_kh_offense(entity this)
 	{
 		navigation_goalrating_start(this);
 
-		float key_owner_team = kh_Key_AllOwnedByWhichTeam();
+		int key_owner_team = kh_Key_AllOwnedByWhichTeam();
 		if (key_owner_team == this.team)
 			havocbot_goalrating_kh(this, 10, 0.1, 0.05); // defend anyway
 		else if (key_owner_team == -1)

@@ -43,10 +43,10 @@ void dom_PPSStatuses_Init()
 	Net_LinkEntity(dom_ppsStatuses = new_pure(dom_ppsStatuses), false, 0, dom_PPSStatuses_SendEntity);
 }
 
-void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
+void dom_EventLog(string mode, int team_before, entity actor) // use an alias for easy changing and quick editing later
 {
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":dom:", mode, ":", ftos(team_before), (actor != NULL ? strcat(":", ftos(actor.playerid)) : "")));
+		GameLogEcho(strcat(":dom:", mode, ":", itos(team_before), (actor != NULL ? strcat(":", itos(actor.playerid)) : "")));
 }
 
 void dompoint_captured(entity this)
@@ -54,7 +54,7 @@ void dompoint_captured(entity this)
 	// now that the delay has expired, switch to the latest team to lay claim to this point
 	entity head = this.owner;
 
-	float real_team = this.cnt;
+	int real_team = this.cnt;
 	this.cnt = -1;
 
 	dom_EventLog("taken", this.team, this.dmg_inflictor);
@@ -96,7 +96,7 @@ void dompoint_captured(entity this)
 
 	// do trigger work
 	float old_delay = this.delay;
-	float old_team = this.team;
+	int old_team = this.team;
 	this.team = real_team;
 	this.delay = 0;
 	SUB_UseTargets(this, this, NULL);
@@ -518,7 +518,7 @@ void ScoreRules_dom(int teams)
 		});
 	else
 	{
-		float sp_domticks, sp_score;
+		int sp_domticks, sp_score;
 		if (autocvar_g_domination_disable_frags)
 		{
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;

@@ -174,7 +174,7 @@ void onslaught_updatelinks()
 	}
 	// flow power outward from the generators through the network
 	bool stop = false;
-	while (!stop)
+	do
 	{
 		stop = true;
 		for (l = ons_worldlinklist; l; l = l.ons_worldlinknext)
@@ -198,6 +198,7 @@ void onslaught_updatelinks()
 				}
 			}
 	}
+	while (!stop);
 	// now that we know which points are powered we can mark their neighbors
 	// as unshielded if team differs
 	for (l = ons_worldlinklist; l; l = l.ons_worldlinknext)
@@ -579,9 +580,10 @@ void ons_ControlPoint_Icon_Think(entity this)
 	{
 		Send_Effect(EFFECT_ELECTRIC_SPARKS, this.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
-		if (random() > 0.8)
+		float r = random();
+		if (r > 0.8) // 20%
 			sound(this, CH_PAIN, SND_ONS_SPARK1, VOL_BASE, ATTEN_NORM);
-		else if (random() > 0.5)
+		else if (r > 0.4) // 50%
 			sound(this, CH_PAIN, SND_ONS_SPARK2, VOL_BASE, ATTEN_NORM);
 	}
 }
@@ -695,15 +697,15 @@ entity ons_ControlPoint_Waypoint(entity e)
 		int a = ons_ControlPoint_Attackable(e, e.team);
 		if (a == -2)
 			return WP_OnsCPDefend; // defend now
-		if (a == -1 || a == 1 || a == 2)
+		else if (a == -1 || a == 1 || a == 2)
 			return WP_OnsCP; // touch
-		if (a == 3 || a == 4)
+		else if (a == 3 || a == 4)
 			return WP_OnsCPAttack; // attack
+		else
+			return WP_Null;
 	}
-	else
-		return WP_OnsCP;
 
-	return WP_Null;
+	return WP_OnsCP;
 }
 
 void ons_ControlPoint_UpdateSprite(entity e)
@@ -926,7 +928,7 @@ void ons_camSetup(entity this)
 	vector ang = '0 0 0';
 	vector best_ang = '0 0 0';
 	float best_trace_fraction = 0;
-	while (ang.y < 360)
+	do
 	{
 		dir = vec2(cos(ang.y * DEG2RAD), sin(ang.y * DEG2RAD));
 		dir *= 500;
@@ -942,6 +944,7 @@ void ons_camSetup(entity this)
 		if (ang.y == 360)
 			ang.y = 45;
 	}
+	while (ang.y < 360);
 	cam.origin = this.origin;
 	setorigin(cam, cam.origin);
 	cam.angles = best_ang;
@@ -1470,8 +1473,6 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 			if (checkpvs(this.origin + this.view_ofs, g)
 			&&  checkpvs(this.origin + this.view_ofs, bestwp))
 				this.havocbot_attack_time = time + 5;
-
-			return true;
 		}
 		else
 		{
@@ -1479,8 +1480,9 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 			// if there aren't waypoints near the generator go straight to it
 			navigation_routerating(this, g, ratingscale, 10000);
 			this.havocbot_attack_time = 0;
-			return true;
 		}
+
+		return true;
 	}
 	return false;
 }
@@ -1571,35 +1573,36 @@ entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 {
 	entity closest_target = NULL;
 	vector delta;
-	float smallest_distance = 0, distance;
+	float dist2, smallest_dist2 = 0;
+	float max_dist2 = max_dist ** 2;
 
 	for (entity cp = ons_worldcplist; cp; cp = cp.ons_worldcpnext)
 	{
 		delta = cp.origin - pos;
 		delta_z = 0;
-		distance = vlen(delta);
+		dist2 = vlen2(delta);
 
 		if (SAME_TEAM(cp, this)
 		&& cp.iscaptured
-		&& (max_dist <= 0 || distance <= max_dist)
-		&& (closest_target == NULL || distance <= smallest_distance))
+		&& (max_dist2 <= 0 || dist2 <= max_dist2)
+		&& (closest_target == NULL || dist2 <= smallest_dist2))
 		{
 			closest_target = cp;
-			smallest_distance = distance;
+			smallest_dist2 = dist2;
 		}
 	}
 	for (entity gen = ons_worldgeneratorlist; gen; gen = gen.ons_worldgeneratornext)
 	{
 		delta = gen.origin - pos;
 		delta_z = 0;
-		distance = vlen(delta);
+		dist2 = vlen2(delta);
 
 		if (SAME_TEAM(gen, this)
-		&& (max_dist <= 0 || distance <= max_dist)
-		&& (closest_target == NULL || distance <= smallest_distance))
+		&& (max_dist2 <= 0 || dist2 <= max_dist2)
+		&& (closest_target == NULL || dist2 <= smallest_dist2))
 		{
 			closest_target = gen;
-			smallest_distance = distance;
+			smallest_dist2 = dist2;
 		}
 	}
 
@@ -1643,7 +1646,8 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 		loc.z = 0;
 		loc *= random() * range * iteration_scale;
 
-		loc += tele_target.origin + '0 0 128' * iteration_scale;
+		loc += tele_target.origin;
+		loc.z += 128 * iteration_scale;
 
 		tracebox(loc, STAT(PL_MIN, player), STAT(PL_MAX, player), loc, MOVE_NORMAL, player);
 		if (trace_fraction == 1.0 && !trace_startsolid)
@@ -1657,7 +1661,9 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 					sound(player, CH_TRIGGER, SND_TELEPORT, VOL_BASE, ATTEN_NORM);
 				}
 				setorigin(player, loc);
-				player.angles = vec2(0, theta * RAD2DEG + 180);
+				player.angles.x = 0;
+				player.angles.z = 0;
+				player.angles.y = theta * RAD2DEG + 180;
 				makevectors(player.angles);
 				player.fixangle = true;
 				if (IS_BOT_CLIENT(player))
@@ -1766,8 +1772,9 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 			for (float i = 0; i < 10; ++i)
 			{
 				iteration_scale -= i / 10;
-				loc = closest_target.origin + '0 0 96' * iteration_scale;
-				loc += vec2(0, random() * 128 * iteration_scale);
+				loc = closest_target.origin;
+				loc.z += 96 * iteration_scale;
+				loc.y += random() * 128 * iteration_scale;
 				tracebox(loc, STAT(PL_MIN, player), STAT(PL_MAX, player), loc, MOVE_NORMAL, player);
 				if (trace_fraction == 1.0 && !trace_startsolid)
 				{
@@ -1815,8 +1822,9 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 			for (float i = 0; i < 10; ++i)
 			{
 				iteration_scale -= i / 10;
-				loc = closest_target.origin + '0 0 128' * iteration_scale;
-				loc += vec2(0, random() * 256 * iteration_scale);
+				loc = closest_target.origin;
+				loc.z += 128 * iteration_scale;
+				loc.y += random() * 256 * iteration_scale;
 				tracebox(loc, STAT(PL_MIN, player), STAT(PL_MAX, player), loc, MOVE_NORMAL, player);
 				if (trace_fraction == 1.0 && !trace_startsolid)
 				{

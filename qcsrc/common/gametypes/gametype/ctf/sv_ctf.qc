@@ -4,6 +4,7 @@
 #include <common/effects/all.qh>
 #include <common/mapobjects/teleporters.qh>
 #include <common/mapobjects/triggers.qh>
+#include <common/mutators/mutator/nades/sv_nades.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/vehicles/all.qh>
 #include <server/command/vote.qh>
@@ -167,8 +168,8 @@ void ctf_FakeTimeLimit(entity e, float t)
 void ctf_EventLog(string mode, int flagteam, entity actor) // use an alias for easy changing and quick editing later
 {
 	if (autocvar_sv_eventlog)
-		GameLogEcho(sprintf(":ctf:%s:%d:%d:%s", mode, flagteam, actor.team, (actor != NULL ? ftos(actor.playerid) : "")));
-		//GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), (actor != NULL ? strcat(":", ftos(actor.playerid)) : "")));
+		GameLogEcho(sprintf(":ctf:%s:%d:%d:%s", mode, flagteam, actor.team, (actor != NULL ? itos(actor.playerid) : "")));
+		//GameLogEcho(strcat(":ctf:", mode, ":", itos(flagteam), (actor != NULL ? strcat(":", itos(actor.playerid)) : "")));
 }
 
 void ctf_CaptureRecord(entity flag, entity player)
@@ -587,7 +588,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
 
-	vector flag_velocity;
+	vector flag_vel;
 	switch (droptype)
 	{
 		case DROP_PASS:
@@ -618,9 +619,9 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 		case DROP_THROW:
 			makevectors(vec2(bound(autocvar_g_ctf_throw_angle_min, player.v_angle.x, autocvar_g_ctf_throw_angle_max), player.v_angle.y));
 
-			flag_velocity = '0 0 1' * autocvar_g_ctf_throw_velocity_up
-				+ v_forward * autocvar_g_ctf_throw_velocity_forward * (StatusEffects_active(STATUSEFFECT_Strength, player) ? autocvar_g_ctf_throw_strengthmultiplier : 1);
-			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, flag_velocity, false);
+			flag_vel = v_forward * autocvar_g_ctf_throw_velocity_forward * (StatusEffects_active(STATUSEFFECT_Strength, player) ? autocvar_g_ctf_throw_strengthmultiplier : 1);
+			flag_vel.z += autocvar_g_ctf_throw_velocity_up;
+			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, flag_vel, false);
 			ctf_Handle_Drop(flag, player, droptype);
 			navigation_dynamicgoal_set(flag, player);
 			break;
@@ -631,9 +632,9 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 		default:
 		case DROP_NORMAL:
-			flag_velocity = '0 0 1' * autocvar_g_ctf_drop_velocity_up
-				+ vec2(crandom(), crandom()) * autocvar_g_ctf_drop_velocity_side;
-			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, flag_velocity, false);
+			flag_vel = vec2(crandom(), crandom()) * autocvar_g_ctf_drop_velocity_side;
+			flag_vel.z += autocvar_g_ctf_drop_velocity_up;
+			flag.velocity = W_CalculateProjectileVelocity(player, player.velocity, flag_vel, false);
 			ctf_Handle_Drop(flag, player, droptype);
 			navigation_dynamicgoal_set(flag, player);
 			break;
@@ -664,8 +665,6 @@ void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 // ==============
 // Event Handlers
 // ==============
-
-void nades_GiveBonus(entity player, float score);
 
 void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 {
@@ -1069,7 +1068,6 @@ void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage
 		// reduce health and check if it should be returned
 		TakeResource(this, RES_HEALTH, damage);
 		ctf_CheckFlagReturn(this, RETURN_DAMAGE);
-		return;
 	}
 }
 
@@ -1092,15 +1090,14 @@ void ctf_FlagThink(entity this)
 		{
 			if (autocvar_g_ctf_dropped_capture_radius)
 			{
-				IL_EACH(g_flags, true,
+				IL_EACH(g_flags, it.ctf_status == FLAG_DROPPED,
 				{
-					if (it.ctf_status == FLAG_DROPPED
-					&& vdist(this.origin - it.origin, <, autocvar_g_ctf_dropped_capture_radius)
+					if (vdist(this.origin - it.origin, <, autocvar_g_ctf_dropped_capture_radius)
 					&& ((this.noalign || it.ctf_landtime) && time > (this.noalign ? it.ctf_droptime : it.ctf_landtime) + autocvar_g_ctf_dropped_capture_delay))
 						ctf_Handle_Capture(this, it, CAPTURE_DROPPED);
 				});
 			}
-			return;
+			break;
 		}
 
 		case FLAG_DROPPED:
@@ -1130,22 +1127,22 @@ void ctf_FlagThink(entity this)
 				{
 					SetResourceExplicit(this, RES_HEALTH, 0);
 					ctf_CheckFlagReturn(this, RETURN_DROPPED);
-					return;
+					break;
 				}
 			}
 			if (this.ctf_flagdamaged_byworld)
 			{
 				TakeResource(this, RES_HEALTH, (this.max_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
-				return;
+				break;
 			}
 			else if (autocvar_g_ctf_flag_return_time > 0)
 			{
 				TakeResource(this, RES_HEALTH, (this.max_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(this, RETURN_TIMEOUT);
-				return;
+				break;
 			}
-			return;
+			break;
 		}
 
 		case FLAG_CARRY:
@@ -1170,7 +1167,7 @@ void ctf_FlagThink(entity this)
 				else if (vdist(this.owner.origin - this.ctf_spawnorigin, <=, autocvar_g_ctf_flag_return_carried_radius))
 					ctf_Handle_Return(this, this.owner);
 			}
-			return;
+			break;
 
 		case FLAG_PASSING:
 		{
@@ -1189,12 +1186,12 @@ void ctf_FlagThink(entity this)
 			else
 				// still a viable target, go for it
 				ctf_CalculatePassVelocity(this, targ_origin, this.origin, true);
-			return;
+			break;
 		}
 
 		default: // this should never happen
 			LOG_TRACE("ctf_FlagThink(): Flag exists with no status?");
-			return;
+			break;
 	}
 }
 
@@ -1469,16 +1466,16 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	// sounds
 #define X(s, b) \
 	if (flag.s == "") \
-		flag.s = b; \
+		flag.s = strzone(SND(b)); \
 	precache_sound(flag.s);
 
-	X(snd_flag_taken,     strzone(SND(CTF_TAKEN(teamnum))))
-	X(snd_flag_returned,  strzone(SND(CTF_RETURNED(teamnum))))
-	X(snd_flag_capture,   strzone(SND(CTF_CAPTURE(teamnum))))
-	X(snd_flag_dropped,   strzone(SND(CTF_DROPPED(teamnum))))
-	X(snd_flag_respawn,   strzone(SND(CTF_RESPAWN)))
-	X(snd_flag_touch,     strzone(SND(CTF_TOUCH)))
-	X(snd_flag_pass,      strzone(SND(CTF_PASS)))
+	X(snd_flag_taken,     CTF_TAKEN(teamnum))
+	X(snd_flag_returned,  CTF_RETURNED(teamnum))
+	X(snd_flag_capture,   CTF_CAPTURE(teamnum))
+	X(snd_flag_dropped,   CTF_DROPPED(teamnum))
+	X(snd_flag_respawn,   CTF_RESPAWN)
+	X(snd_flag_touch,     CTF_TOUCH)
+	X(snd_flag_pass,      CTF_PASS)
 #undef X
 
 	// precache
@@ -1745,12 +1742,7 @@ void havocbot_goalrating_ctf_droppedflags(entity this, float ratingscale, vector
 		if (it.ctf_status != FLAG_BASE
 		&& it.tag_entity == NULL) // dropped
 		{
-			if (df_radius)
-			{
-				if (vdist(org - it.origin, <, df_radius))
-					navigation_routerating(this, it, ratingscale, 10000);
-			}
-			else
+			if (!df_radius || vdist(org - it.origin, <, df_radius))
 				navigation_routerating(this, it, ratingscale, 10000);
 		}
 	});
@@ -2179,14 +2171,14 @@ void havocbot_role_ctf_defense(entity this)
 
 		// if enemies are closer to our base, go there
 		entity closest_player = NULL;
-		float distance, bestdistance = 10000;
+		float dist2, best_dist2 = 10000 ** 2;
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 		{
-			distance = vlen(org - it.origin);
-			if (distance < bestdistance)
+			dist2 = vlen2(org - it.origin);
+			if (dist2 < best_dist2)
 			{
 				closest_player = it;
-				bestdistance = distance;
+				best_dist2 = dist2;
 			}
 		});
 
@@ -2612,7 +2604,8 @@ MUTATOR_HOOKFUNCTION(ctf, GetRecords)
 	int record_page = M_ARGV(0, int);
 	string ret_string = M_ARGV(1, string);
 
-	for (int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
+	int start = record_page * 200;
+	for (int i = start; i < MapInfo_count && i < start + 200; ++i)
 		if (MapInfo_Get_ByID(i))
 		{
 			float r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));

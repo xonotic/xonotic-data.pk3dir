@@ -29,21 +29,18 @@ void havocbot_role_cts(entity this)
 		int cp = this.race_checkpoint;
 
 		LABEL(search_racecheckpoints)
-		IL_EACH(g_racecheckpoints, true,
+		IL_EACH(g_racecheckpoints, it.cnt == cp || cp == -1,
 		{
-			if (it.cnt == cp || cp == -1)
+			// redirect bot to next goal if it touched the waypoint of an untouchable checkpoint
+			// e.g. checkpoint in front of Stormkeep's warpzone
+			// the same workaround is applied in Race gametype
+			if (raw_touch_check && vdist(this.origin - it.nearestwaypoint.origin, <, 30))
 			{
-				// redirect bot to next goal if it touched the waypoint of an untouchable checkpoint
-				// e.g. checkpoint in front of Stormkeep's warpzone
-				// the same workaround is applied in Race gametype
-				if (raw_touch_check && vdist(this.origin - it.nearestwaypoint.origin, <, 30))
-				{
-					cp = race_NextCheckpoint(cp);
-					raw_touch_check = false;
-					goto search_racecheckpoints;
-				}
-				navigation_routerating(this, it, 1000000, 5000);
+				cp = race_NextCheckpoint(cp);
+				raw_touch_check = false;
+				goto search_racecheckpoints;
 			}
+			navigation_routerating(this, it, 1000000, 5000);
 		});
 
 		navigation_goalrating_end(this);
@@ -71,7 +68,7 @@ void cts_ScoreRules()
 void cts_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if (autocvar_sv_eventlog)
-		GameLogEcho(strcat(":cts:", mode, ":", (actor != NULL ? strcat(":", ftos(actor.playerid)) : "")));
+		GameLogEcho(strcat(":cts:", mode, ":", (actor != NULL ? strcat(":", itos(actor.playerid)) : "")));
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
@@ -275,11 +272,7 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	if (ITEM_IS_LOOT(item))
-	{
-		if (item.monster_item && autocvar_g_cts_drop_monster_items)
-			return false;
-		return true;
-	}
+		return !(item.monster_item && autocvar_g_cts_drop_monster_items);
 }
 
 MUTATOR_HOOKFUNCTION(cts, MonsterDropItem)
@@ -308,7 +301,8 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 	int record_page = M_ARGV(0, int);
 	string ret_string = M_ARGV(1, string);
 
-	for (int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
+	int start = record_page * 200;
+	for (int i = start; i < MapInfo_count && i < start + 200; ++i)
 		if (MapInfo_Get_ByID(i))
 		{
 			float r = race_readTime(MapInfo_Map_bspname, 1);
