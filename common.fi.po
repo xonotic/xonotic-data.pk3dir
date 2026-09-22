@@ -11891,7 +11891,7 @@ msgstr "Kiilto"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Enable the use of glossmaps on textures supporting them"
-msgstr ""
+msgstr "Ota käyttöön tuettuja hohtokarttoja niitä tukevissa tekstuureissa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:125
 msgid "Offset mapping"
@@ -12106,6 +12106,8 @@ msgid ""
 "Multiplier for number of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Partikkelimäärän kerroin. Vähemmän tarkoittaa vähemmän partikkeleita, mikä "
+"puolestaan parantaa suorituskykyä"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
 msgid "Particles further away than this will not be drawn"
@@ -12481,6 +12483,8 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team's"
 msgstr ""
+"Varoitus: Jos tämä on päällä joukkuepeleissä, joukkueesi väri voi ilmetä "
+"samana kuin vastapuolen väri"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Except in team games"
