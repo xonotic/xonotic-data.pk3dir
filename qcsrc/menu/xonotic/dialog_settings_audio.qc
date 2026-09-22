@@ -25,6 +25,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 	audioApplyButton.disableOnClick = true;
 
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Volume")));
+	me.TR(me);
 		s = makeXonoticDecibelsSlider_T(-40, 0, 0.4, "mastervolume", "-");
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Master:")));
 		me.TD(me, 1, 2, s);
@@ -102,6 +104,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "snd_mutewhenidle", _("Mute sounds when not active")));
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Sound Settings")));
+	me.TR(me);
 		me.TD(me, 1, 1, makeXonoticTextLabel(0, _("Frequency:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider_T("snd_speed",
 			_("Sound output frequency")));

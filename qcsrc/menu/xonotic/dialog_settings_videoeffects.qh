@@ -1,0 +1,49 @@
+#pragma once
+
+#include "topictab.qh"
+
+// NOTE: file format similar to dialog_settings_game.qh, please keep in sync
+
+#include "dialog_settings_videoeffects_detail.qh"
+#include "dialog_settings_videoeffects_effects.qh"
+#include "dialog_settings_videoeffects_perspective.qh"
+#include "dialog_settings_videoeffects_rendering.qh"
+#include "dialog_settings_videoeffects_video.qh"
+
+REGISTRY(VideoEffectsSettings, 5)
+REGISTER_REGISTRY(VideoEffectsSettings)
+REGISTRY_DEFINE_GET(VideoEffectsSettings, NULL)
+#define REGISTER_VIDEOEFFECTS_SETTINGS(id, impl) TOPIC_REGISTER(VideoEffectsSettings, id, impl)
+
+REGISTER_VIDEOEFFECTS_SETTINGS(Video,       makeXonoticVideoEffectsVideoSettingsTab());
+REGISTER_VIDEOEFFECTS_SETTINGS(Rendering,   makeXonoticVideoEffectsRenderingSettingsTab());
+REGISTER_VIDEOEFFECTS_SETTINGS(Detail,      makeXonoticVideoEffectsDetailSettingsTab());
+REGISTER_VIDEOEFFECTS_SETTINGS(Effects,     makeXonoticVideoEffectsEffectsSettingsTab());
+REGISTER_VIDEOEFFECTS_SETTINGS(Perspective, makeXonoticVideoEffectsPerspectiveSettingsTab());
+#undef REGISTER_VIDEOEFFECTS_SETTINGS
+
+CLASS(VideoEffectsSettingsSource, XonoticTopicTabSource)
+	METHOD(VideoEffectsSettingsSource, getEntry, entity(entity this, int i, void(string name, string icon) returns));
+	METHOD(VideoEffectsSettingsSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns));
+	METHOD(VideoEffectsSettingsSource, reload, int(entity this, string filter));
+ENDCLASS(VideoEffectsSettingsSource)
+
+CLASS(XonoticVideoEffectsSettingsList, XonoticTopicTabList)
+	ATTRIB(XonoticVideoEffectsSettingsList, alphaBG, float, 0);
+	ATTRIB(XonoticVideoEffectsSettingsList, rowsPerItem, float, 2);
+	ATTRIB(XonoticVideoEffectsSettingsList, source, DataSource, NEW(VideoEffectsSettingsSource));
+	INIT(XonoticVideoEffectsSettingsList)
+	{
+		this.configureXonoticListBox(this);
+		this.refilter(this);
+	}
+ENDCLASS(XonoticVideoEffectsSettingsList)
+
+CLASS(XonoticVideoEffectsSettingsTab, XonoticTopicTab)
+	ATTRIB(XonoticVideoEffectsSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticVideoEffectsSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticVideoEffectsSettingsTab, columns, float, 6.5);
+	ATTRIB(XonoticVideoEffectsSettingsTab, name, string, "videosettings");
+	ATTRIB(XonoticVideoEffectsSettingsTab, topicList, entity, NEW(XonoticVideoEffectsSettingsList));
+ENDCLASS(XonoticVideoEffectsSettingsTab)
+entity makeXonoticVideoEffectsSettingsTab();
