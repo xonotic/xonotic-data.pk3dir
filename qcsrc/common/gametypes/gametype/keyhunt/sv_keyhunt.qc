@@ -126,13 +126,13 @@ const int ST_KH_CAPS = 1;
 void kh_ScoreRules(int teams)
 {
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, {
-        field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
-        field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
-        field(SP_KH_PUSHES, "pushes", 0);
-        field(SP_KH_DESTRUCTIONS, "destructions", SFL_LOWER_IS_BETTER);
-        field(SP_KH_PICKUPS, "pickups", 0);
-        field(SP_KH_KCKILLS, "kckills", 0);
-        field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);
+		field_team(ST_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+		field(SP_KH_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+		field(SP_KH_PUSHES, "pushes", 0);
+		field(SP_KH_DESTRUCTIONS, "destructions", SFL_LOWER_IS_BETTER);
+		field(SP_KH_PICKUPS, "pickups", 0);
+		field(SP_KH_KCKILLS, "kckills", 0);
+		field(SP_KH_LOSSES, "losses", SFL_LOWER_IS_BETTER);
 	});
 }
 
@@ -1325,7 +1325,7 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 {
-    entity bot = M_ARGV(0, entity);
+	entity bot = M_ARGV(0, entity);
 
 	if(IS_DEAD(bot))
 		return true;

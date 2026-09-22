@@ -2068,10 +2068,10 @@ MUTATOR_HOOKFUNCTION(ons, PlayHitsound)
 
 MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
 {
-    entity wp = M_ARGV(0, entity);
-    entity to = M_ARGV(1, entity);
-    int sf = M_ARGV(2, int);
-    int wp_flag = M_ARGV(3, int);
+	entity wp = M_ARGV(0, entity);
+	entity to = M_ARGV(1, entity);
+	int sf = M_ARGV(2, int);
+	int wp_flag = M_ARGV(3, int);
 
 	if(sf & 16)
 	{
@@ -2108,7 +2108,7 @@ MUTATOR_HOOKFUNCTION(ons, TurretValidateTarget)
 
 MUTATOR_HOOKFUNCTION(ons, TurretThink)
 {
-    entity turret = M_ARGV(0, entity);
+	entity turret = M_ARGV(0, entity);
 
 	// ONS uses somewhat backwards linking.
 	if(turret.target)
@@ -2196,9 +2196,9 @@ void ons_ScoreRules()
 			teams |= Team_TeamToBit(tmp_entity.team);
 
 	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-	    field_team(ST_ONS_GENS, "generators", SFL_SORT_PRIO_PRIMARY);
-	    field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
-	    field(SP_ONS_TAKES,	"takes", 0);
+		field_team(ST_ONS_GENS, "generators", SFL_SORT_PRIO_PRIMARY);
+		field(SP_ONS_CAPS, "caps", SFL_SORT_PRIO_SECONDARY);
+		field(SP_ONS_TAKES,	"takes", 0);
 	});
 }
 

@@ -92,11 +92,11 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 const int ST_NEXBALL_GOALS = 1;
 void nb_ScoreRules(int teams)
 {
-    GameRules_scoring(teams, 0, 0, {
-        field_team(ST_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
-        field(SP_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
-        field(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
-    });
+	GameRules_scoring(teams, 0, 0, {
+		field_team(ST_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
+		field(SP_NEXBALL_GOALS, "goals", SFL_SORT_PRIO_PRIMARY);
+		field(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	});
 }
 
 void LogNB(string mode, entity actor)
@@ -125,13 +125,13 @@ void relocate_nexball(entity this)
 		vector o = this.origin;
 		if (!move_out_of_solid(this)) {
 			objerror(this, "could not get out of solid at all!");
-        }
-        LOG_INFOF(
-            "^1NOTE: this map needs FIXING. %s at %s needs to be moved out of solid, e.g. by %s",
-            this.classname,
-            vtos(o - '0 0 1'),
-            vtos(this.origin - o)
-        );
+		}
+		LOG_INFOF(
+			"^1NOTE: this map needs FIXING. %s at %s needs to be moved out of solid, e.g. by %s",
+			this.classname,
+			vtos(o - '0 0 1'),
+			vtos(this.origin - o)
+		);
 		this.origin = o;
 	}
 }

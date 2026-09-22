@@ -8,7 +8,7 @@ void ons_Initialize();
 
 REGISTER_MUTATOR(ons, false)
 {
-    MUTATOR_STATIC();
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
 		GameRules_teams(true);
