@@ -1,0 +1,14 @@
+#pragma once
+
+void race_util_PlayerPhysics();
+void race_util_AbortSpeedrun();
+void race_util_reset_map_global(void(string, entity) log);
+void race_util_ClientConnect();
+void race_util_MakePlayerObserver();
+void race_util_PlayerSpawn();
+void race_util_PutClientInServer();
+void race_util_PlayerDies();
+bool race_util_HavocBot_ChooseRole();
+void race_util_GetPressedKeys();
+void race_util_GetRecords();
+void race_util_FixClientCvars();
