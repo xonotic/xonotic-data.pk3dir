@@ -1,10 +1,10 @@
 #include "sv_tka.qh"
 
+#include <common/gametypes/gametype/keepaway/sv_ball.qh>
+#include <common/gametypes/gametype/keepaway/sv_util.qh>
+
 #include <common/checkextension.qh>
 #include <common/effects/all.qh>
-
-.entity ballcarried;
-.entity previous_owner; // also used on kh keys
 
 int autocvar_g_tka_ballcarrier_maxballs;
 float autocvar_g_tka_ballcarrier_highspeed;
@@ -31,10 +31,7 @@ bool tka_BallStatuses_SendEntity(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TKA_BALLSTATUSES);
 	WriteByte(MSG_ENTITY, sf);
 	if (sf & SF_TKA_BALLS)
-	{
-		WriteShort(MSG_ENTITY, max(1, autocvar_g_tkaball_count));
-		IL_EACH(g_tkaballs, true, WriteByte(MSG_ENTITY, (it.owner ? etof(it.owner) : 0)));
-	}
+		kaball_BallStatuses_SendBalls(g_tkaballs, autocvar_g_tkaball_count);
 	return true;
 }
 
@@ -47,6 +44,11 @@ void tka_BallStatuses_Init()
 		return;
 	}
 	Net_LinkEntity(tkaballStatuses = new_pure(tkaballStatuses), false, 0, tka_BallStatuses_SendEntity);
+}
+
+void tka_BallStatuses_SendBalls()
+{
+	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
 }
 
 /// Runs on waypoints which are attached to ballcarriers, updates once per frame
@@ -71,122 +73,34 @@ void tka_EventLog(string mode, entity actor) // use an alias for easy changing a
 /// Runs whenever the ball needs to be relocated
 void tka_RespawnBall(entity this)
 {
-	if (game_stopped)
-		return;
-	vector oldballorigin = this.origin;
-
-	if (!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-		setorigin(this, SelectSpawnPoint(this, true).origin);
-
-	set_movetype(this, MOVETYPE_BOUNCE);
-	this.velocity = '0 0 200';
-	this.angles = '0 0 0';
-	this.effects = autocvar_g_tkaball_effects;
-	setthink(this, tka_RespawnBall);
-	this.nextthink = time + autocvar_g_tkaball_respawntime;
-	navigation_dynamicgoal_set(this, NULL);
-
-	Send_Effect(EFFECT_ITEM_TELEPORT, oldballorigin, '0 0 0', 1);
-	Send_Effect(EFFECT_ITEM_TELEPORT, this.origin, '0 0 0', 1);
-
-	if (autocvar_g_tkaball_tracking || warmup_stage)
-	{
-		WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
-		WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
-	}
-
-	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
-}
-
-/// Field where the decimal part of SCORE is accumulated (shared with other gametypes)
-.float float2int_decimal_fld;
-MUTATOR_HOOKFUNCTION(tka, reset_map_global)
-{
-	FOREACH_CLIENT(true, it.float2int_decimal_fld = 0);
-	return true;
+	kaball_RespawnBall(this, tka_RespawnBall,
+		autocvar_g_tkaball_effects,
+		autocvar_g_tkaball_respawntime,
+		autocvar_g_tkaball_tracking);
 }
 
 /// Runs (only) while a player is carrying the ball
 void tka_BallThink_Carried(entity this)
 {
+	// Handle scoring
 	if (autocvar_g_tka_score_timepoints)
 		GameRules_scoring_add_team_float2int(this.owner, SCORE, autocvar_g_tka_score_timepoints * frametime, float2int_decimal_fld, 1);
 	GameRules_scoring_add(this.owner, TKA_BCTIME, frametime);
 
-	this.nextthink = time;
-
-	// animate, this is ~copied from KH
-#define BALL_XYSPEED 100 // KH 45
-#define BALL_XYDIST 24 // KH 24
-	makevectors(vec3(0, 360 * this.cnt / this.owner.ballcarried.cnt + (time % 360) * BALL_XYSPEED, 0));
-	setorigin(this, vec3(v_forward.x * BALL_XYDIST, v_forward.y * BALL_XYDIST, this.origin.z));
-#undef BALL_XYSPEED
-#undef BALL_XYDIST
-
-	// sync any invisibility effect
-	this.alpha = this.owner.alpha;
+	kaball_BallThink_Carried(this);
 }
 
 /// Runs any time that the ball comes in contact with something
 void tka_TouchEvent(entity this, entity toucher)
 {
-	if (!this || game_stopped)
-		return;
+	kaball_TouchEvent(this, toucher,
+		func_null,
+		tka_RespawnBall,
+		tka_BallThink_Carried,
+		tka_EventLog,
+		tka_BallStatuses_SendBalls,
+		autocvar_g_tka_ballcarrier_maxballs);
 
-	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) // the ball fell off the map, respawn it since players can't get to it
-	{
-		tka_RespawnBall(this);
-		return;
-	}
-
-	if (IS_INDEPENDENT_PLAYER(toucher)
-	|| IS_DEAD(toucher))
-		return;
-	if (!IS_PLAYER(toucher)) // the ball just touched an object, most likely the world
-	{
-		Send_Effect(EFFECT_BALL_SPARKS, this.origin, '0 0 0', 1);
-		sound(this, CH_TRIGGER, SND_KA_TOUCH, VOL_BASE, ATTEN_NORM);
-		return;
-	}
-	else if (this.wait > time && this.previous_owner == toucher)
-		return;
-
-	if (toucher.ballcarried) // multiple balls exist
-	{
-		if (toucher.ballcarried.cnt >= autocvar_g_tka_ballcarrier_maxballs)
-			return;
-		this.ballcarried = toucher.ballcarried; // new ball will be inserted at start of chain
-		this.cnt = toucher.ballcarried.cnt + 1; // for orbit animation offset
-	}
-	else
-		this.cnt = 1;
-
-	// attach the ball to the player
-	this.owner = toucher;
-	toucher.ballcarried = this;
-	GameRules_scoring_vip(toucher, true);
-	setattachment(this, toucher, "");
-	this.solid = SOLID_NOT; // before setorigin to ensure area grid unlinking
-	setorigin(this, '0 0 0');
-
-	// make the ball unable to do anything, set up time scoring
-	this.velocity = '0 0 0';
-	set_movetype(this, MOVETYPE_NONE);
-	this.scale = 12/16; // somewhat smaller while carried
-	setthink(this, tka_BallThink_Carried);
-	this.nextthink = time;
-	this.takedamage = DAMAGE_NO;
-	navigation_dynamicgoal_unset(this);
-
-	// messages and sounds
-	tka_EventLog("pickup", toucher);
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_PICKUP, toucher.netname);
-	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, toucher.netname);
-	Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
-	sound(this.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
-	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
-
-	// scoring
 	GameRules_scoring_add(toucher, TKA_PICKUPS, 1);
 
 	// waypoints
@@ -206,123 +120,47 @@ void tka_TouchEvent(entity this, entity toucher)
 	WaypointSprite_Kill(this.waypointsprite_attachedforcarrier);
 }
 
-void tka_PlayerReset(entity player)
-{
-	player.ballcarried = NULL;
-	GameRules_scoring_vip(player, false);
-	WaypointSprite_Kill(player.waypointsprite_attachedforcarrier);
-}
-
 /// Runs any time that a player is supposed to lose the ball
 void tka_DropEvent(entity player)
 {
-	entity ball = player.ballcarried;
-
-	if (!ball)
-		return;
-
-	// reset the ball
-	setattachment(ball, NULL, "");
-	set_movetype(ball, MOVETYPE_BOUNCE);
-	ball.previous_owner = player;
-	ball.wait = time + 0.5; // same as for thrown weapons
-	setthink(ball, tka_RespawnBall);
-	ball.nextthink = time + autocvar_g_tkaball_respawntime;
-	ball.takedamage = DAMAGE_YES;
-	ball.scale = 1; // it's smaller while carried
-	ball.alpha = 1; // in case the carrier had an invisibility effect
-	ball.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
-	setorigin(ball, player.origin + ball.origin + '0 0 10'); // include attachment offset to reduce jump
-	nudgeoutofsolid_OrFallback(ball); // a ball has a horizontally bigger bbox than a player
-	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	ball.owner = NULL;
-	navigation_dynamicgoal_set(ball, player);
-
-	// messages and sounds
-	tka_EventLog("dropped", player);
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_DROPPED, player.netname);
-	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, player.netname);
-	sound(NULL, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
-
-	// waypoints
-	if (autocvar_g_tkaball_tracking || warmup_stage)
-	{
-		WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
-		WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-		WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
-	}
-
-	if (ball.ballcarried) // >1 ball was chained, first one was just dropped
-	{
-		player.ballcarried = ball.ballcarried; // move the next one up
-		ball.ballcarried = NULL; // prevent infinite loop
-	}
-	else // no balls remaining so remove bc status
-		tka_PlayerReset(player);
+	kaball_DropEvent(player,
+		func_null,
+		tka_RespawnBall,
+		tka_EventLog,
+		autocvar_g_tkaball_respawntime,
+		autocvar_g_tkaball_tracking);
 }
 
-.bool pushable;
+void tka_DropPlayersBalls(entity player)
+{
+	kaball_DropPlayersBalls(player, tka_DropEvent, tka_BallStatuses_SendBalls);
+}
 
 MODEL(TKA_BALL, "models/orbs/orbblue.md3");
 
 void tka_RemoveBalls()
 {
-	IL_EACH(g_tkaballs, true,
-	{
-		if (it.owner) // it was attached
-			tka_PlayerReset(it.owner);
-		else
-			WaypointSprite_DetachCarrier(it);
-		delete(it);
-	});
+	kaball_RemoveBalls(g_tkaballs);
 	tkaballStatuses.SendFlags = SF_TKA_RESET;
 }
 
 void tka_SpawnBalls()
 {
-	int i = 0;
-	do // do: never allow less than 1 ball to spawn
-	{
-		entity e = new(keepawayball);
-		setmodel(e, MDL_TKA_BALL);
-		// 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
-		// bones_was_here: that was WITH sv_legacy_bbox_expand 1 and FL_ITEM (mins -= '15 15 1'; maxs += '15 15 1')
-		// it's round so should have a symmetrical bbox, same height as pickup items so it can't be jumped over in any physics
-		setsize(e, '-24 -24 -24', '24 24 24');
-		e.damageforcescale = autocvar_g_tkaball_damageforcescale;
-		e.takedamage = DAMAGE_YES;
-		e.solid = SOLID_TRIGGER;
-		set_movetype(e, MOVETYPE_BOUNCE);
-		e.glow_color = autocvar_g_tkaball_trail_color;
-		e.glow_trail = true;
-		e.flags = FL_ITEM;
-		IL_PUSH(g_items, e);
-		e.pushable = true;
-		settouch(e, tka_TouchEvent);
-		e.owner = NULL;
-		IL_PUSH(g_tkaballs, e);
-		navigation_dynamicgoal_init(e, false);
-
-		tka_RespawnBall(e);
-	}
-	while (++i < autocvar_g_tkaball_count);
-	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
+	kaball_SpawnBalls(MDL_TKA_BALL, false,
+		autocvar_g_tkaball_damageforcescale,
+		autocvar_g_tkaball_trail_color,
+		autocvar_g_tkaball_count,
+		func_null,
+		tka_TouchEvent,
+		tka_RespawnBall,
+		tka_BallStatuses_SendBalls);
 }
 
 void tka_Handler_CheckBall(entity this)
 {
-	if (time < game_starttime)
-	{
-		if (!IL_EMPTY(g_tkaballs))
-			tka_RemoveBalls();
-	}
-	else
-	{
-		if (IL_EMPTY(g_tkaballs))
-			tka_SpawnBalls();
-	}
-
-	this.nextthink = time;
+	kaball_Handler_CheckBall(this, g_tkaballs,
+		tka_RemoveBalls,
+		tka_SpawnBalls);
 }
 
 
@@ -330,38 +168,8 @@ void tka_Handler_CheckBall(entity this)
 // Bot player logic
 // ================
 
-bool tka_waypointsprite_visible_for_bot(entity this, entity e, bool dropped)
+void _havocbot_goalrating_tkaball(entity this, entity ball, entity ball_carried, float ratingscale, float ratingscale_sameteam)
 {
-	entity ball_wp = e.waypointsprite_attachedforcarrier;
-	if (!ball_wp // has no waypoint
-	&& (dropped || !ball_wp.waypointsprite_visible_for_player(ball_wp, this, WaypointSprite_getviewentity(this))) // not visible
-	&& !checkpvs(this.origin + this.view_ofs, e)) // ball cannot be seen
-		return false;
-
-	return true;
-}
-
-void havocbot_goalrating_tkaball(entity this, float ratingscale, float ratingscale_sameteam, vector org)
-{
-	entity ball = NULL, ball_carried = NULL;
-
-	// stops at last ball, prefers ball without carrier
-	IL_EACH(g_tkaballs, it.owner != this,
-	{
-		if (it.owner)
-		{
-			if (!tka_waypointsprite_visible_for_bot(this, it.owner, false))
-				continue;
-			ball_carried = it.owner;
-		}
-		else
-		{
-			if (!tka_waypointsprite_visible_for_bot(this, it, true))
-				continue;
-			ball = it;
-		}
-	});
-
 	if (ball)
 		navigation_routerating(this, ball, ratingscale, 2000);
 	else if (ball_carried)
@@ -373,56 +181,33 @@ void havocbot_goalrating_tkaball(entity this, float ratingscale, float ratingsca
 	}
 }
 
+void havocbot_goalrating_tkaball(entity this, float ratingscale, float ratingscale_sameteam, vector org)
+{
+	ka_util_havocbot_goalrating_ball(this, _havocbot_goalrating_tkaball, g_tkaballs,
+		ratingscale, ratingscale_sameteam, org);
+}
+
 void havocbot_role_tka_carrier(entity this)
 {
-	if (IS_DEAD(this))
-		return;
-
-	if (navigation_goalrating_timeout(this))
-	{
-		navigation_goalrating_start(this);
-		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
-		havocbot_goalrating_waypoints(this, 1, this.origin, 3000);
-		navigation_goalrating_end(this);
-
-		navigation_goalrating_timeout_set(this);
-	}
-
-	if (!this.ballcarried)
-	{
-		this.havocbot_role = havocbot_role_tka_collector;
-		navigation_goalrating_timeout_expire(this, 2);
-	}
+	ka_util_havocbot_role_carrier(this, havocbot_role_tka_collector);
 }
 
 void havocbot_role_tka_collector(entity this)
 {
-	if (IS_DEAD(this))
-		return;
-
-	if (navigation_goalrating_timeout(this))
-	{
-		navigation_goalrating_start(this);
-		havocbot_goalrating_items(this, 10000, this.origin, 10000);
-		havocbot_goalrating_enemyplayers(this, 500, this.origin, 10000);
-		havocbot_goalrating_tkaball(this, 8000, 4000, this.origin);
-		navigation_goalrating_end(this);
-
-		navigation_goalrating_timeout_set(this);
-	}
-
-	if (this.ballcarried)
-	{
-		this.havocbot_role = havocbot_role_tka_carrier;
-		navigation_goalrating_timeout_expire(this, 2);
-	}
+	ka_util_havocbot_role_collector(this,
+		havocbot_goalrating_tkaball,
+		havocbot_role_tka_carrier);
 }
 
 
 // ==============
 // Hook Functions
 // ==============
+
+MUTATOR_HOOKFUNCTION(tka, reset_map_global)
+{
+	return ka_util_reset_map_global();
+}
 
 MUTATOR_HOOKFUNCTION(tka, PlayerDies)
 {
@@ -453,18 +238,13 @@ MUTATOR_HOOKFUNCTION(tka, PlayerDies)
 			GameRules_scoring_add_team(frag_attacker, SCORE, autocvar_g_tka_score_killac);
 	}
 
-	if (!frag_target.ballcarried)
-		return;
-	do
-		tka_DropEvent(frag_target); // a player with ball(s) has died, drop them
-	while (frag_target.ballcarried);
-	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
+	if (frag_target.ballcarried)
+		tka_DropPlayersBalls(frag_target); // a player with ball(s) has died, drop them
 }
 
 MUTATOR_HOOKFUNCTION(tka, GiveFragsForKill)
 {
-	M_ARGV(2, float) = 0; // no frags counted in keepaway
-	return true; // you deceptive little bugger ;3 This needs to be true in order for this function to even count.
+	return ka_util_GiveFragsForKill();
 }
 
 MUTATOR_HOOKFUNCTION(tka, Scores_CountFragsRemaining)
@@ -475,86 +255,26 @@ MUTATOR_HOOKFUNCTION(tka, Scores_CountFragsRemaining)
 
 MUTATOR_HOOKFUNCTION(tka, PlayerUseKey)
 {
-	entity player = M_ARGV(0, entity);
-
-	if (MUTATOR_RETURNVALUE == 0
-	&& player.ballcarried)
-	{
-		tka_DropEvent(player);
-		tkaballStatuses.SendFlags |= SF_TKA_BALLS;
+	if (ka_util_PlayerUseKey(tka_DropEvent, tka_BallStatuses_SendBalls))
 		return true;
-	}
 }
 
 MUTATOR_HOOKFUNCTION(tka, Damage_Calculate) // for changing damage and force values that are applied to players
 {
-	entity frag_attacker = M_ARGV(1, entity);
-	entity frag_target = M_ARGV(2, entity);
-
-	// as a gametype rule, only apply scaling to player versus player combat
-	if (!IS_PLAYER(frag_attacker) || !IS_PLAYER(frag_target))
-		return;
-
-	if (frag_attacker.ballcarried) // if the attacker is a ballcarrier
-	{
-		if (frag_target == frag_attacker) // damage done to themselves
-		{
-			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.x;
-			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.x;
-		}
-		else if (frag_target.ballcarried) // damage done to other ballcarriers
-		{
-			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.y;
-			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.y;
-		}
-		else // damage done to noncarriers
-		{
-			M_ARGV(4, float) *= autocvar_g_tka_ballcarrier_damage.z;
-			M_ARGV(6, vector) *= autocvar_g_tka_ballcarrier_force.z;
-		}
-	}
-	else
-	{
-		if (frag_target == frag_attacker) // damage done to themselves
-		{
-			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.x;
-			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.x;
-		}
-		else if (frag_target.ballcarried) // damage done to ballcarriers
-		{
-			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.y;
-			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.y;
-		}
-		else // damage done to other noncarriers
-		{
-			M_ARGV(4, float) *= autocvar_g_tka_noncarrier_damage.z;
-			M_ARGV(6, vector) *= autocvar_g_tka_noncarrier_force.z;
-		}
-	}
+	ka_util_Damage_Calculate(autocvar_g_tka_ballcarrier_damage,
+		autocvar_g_tka_ballcarrier_force,
+		autocvar_g_tka_noncarrier_damage,
+		autocvar_g_tka_noncarrier_force);
 }
 
 MUTATOR_HOOKFUNCTION(tka, ClientDisconnect)
 {
-	entity player = M_ARGV(0, entity);
-
-	if (!player.ballcarried)
-		return;
-	do
-		tka_DropEvent(player); // a player with ball(s) has left the match, drop them
-	while (player.ballcarried);
-	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
+	ka_util_ClientDisconnect(tka_DropPlayersBalls);
 }
 
 MUTATOR_HOOKFUNCTION(tka, MakePlayerObserver)
 {
-	entity player = M_ARGV(0, entity);
-
-	if (!player.ballcarried)
-		return;
-	do
-		tka_DropEvent(player); // a player with ball(s) has left the match, drop them
-	while (player.ballcarried);
-	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
+	ka_util_MakePlayerObserver(tka_DropPlayersBalls);
 }
 
 MUTATOR_HOOKFUNCTION(tka, PlayerPowerups)
@@ -568,11 +288,7 @@ MUTATOR_HOOKFUNCTION(tka, PlayerPowerups)
 
 MUTATOR_HOOKFUNCTION(tka, PlayerPhysics_UpdateStats)
 {
-	entity player = M_ARGV(0, entity);
-	// these automatically reset, no need to worry
-
-	if (player.ballcarried)
-		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_tka_ballcarrier_highspeed;
+	ka_util_PlayerPhysics_UpdateStats(autocvar_g_tka_ballcarrier_highspeed);
 }
 
 MUTATOR_HOOKFUNCTION(tka, Bot_ForbidAttack)
@@ -598,30 +314,17 @@ MUTATOR_HOOKFUNCTION(tka, Bot_ForbidAttack)
 
 MUTATOR_HOOKFUNCTION(tka, HavocBot_ChooseRole)
 {
-	entity bot = M_ARGV(0, entity);
-
-	if (bot.ballcarried)
-		bot.havocbot_role = havocbot_role_tka_carrier;
-	else
-		bot.havocbot_role = havocbot_role_tka_collector;
-	return true;
+	return ka_util_HavocBot_ChooseRole(havocbot_role_tka_carrier, havocbot_role_tka_collector);
 }
 
 MUTATOR_HOOKFUNCTION(tka, DropSpecialItems)
 {
-	entity frag_target = M_ARGV(0, entity);
-
-	if (!frag_target.ballcarried)
-		return;
-	do
-		tka_DropEvent(frag_target);
-	while (frag_target.ballcarried);
-	tkaballStatuses.SendFlags |= SF_TKA_BALLS;
+	ka_util_DropSpecialItems(tka_DropPlayersBalls);
 }
 
 MUTATOR_HOOKFUNCTION(tka, PreferPlayerScore_Clear)
 {
-	return true;
+	return ka_util_PreferPlayerScore_Clear();
 }
 
 void tka_Initialize()
