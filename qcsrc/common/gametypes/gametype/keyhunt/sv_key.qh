@@ -1,0 +1,29 @@
+#pragma once
+
+int kh_interferemsg_team;
+float kh_interferemsg_time;
+bool kh_no_radar_circles;
+
+int kh_key_dropped, kh_key_carried;
+
+entity kh_worldkeylist;
+.entity kh_worldkeynext;
+#define FOR_EACH_KH_KEY(v) for (v = kh_worldkeylist; v; v = v.kh_worldkeynext)
+
+.entity previous_owner; // also used on ka balls
+.int kh_previous_owner_playerid;
+
+// Key functions defined here
+int kh_Key_TeamByID(int t);
+int kh_Key_AllOwnedByWhichTeam();
+void kh_Key_Remove(entity key);
+void kh_Key_Spawn(entity initial_owner, float _angle, int i, bool(entity, entity, entity) waypointsprite_visible_for_player_func);
+void kh_Key_DropOne(entity key);
+void kh_Key_DropAll(entity player, float suicide);
+
+// Defined by the gametype
+void kh_KeyStatuses_SendKeys();
+bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view);
+void kh_Scores_Event(entity player, entity key, string what, float frags_player, float frags_owner);
+void kh_WinnerTeam(int winner_team);
+void kh_LoserTeam(int loser_team, entity lostkey);
