@@ -17,17 +17,16 @@ void XonoticPicker_configureXonoticPicker(entity me)
 float XonoticPicker_mouseMove(entity me, vector coords)
 {
 	vector prevFocusedCell = me.focusedCell;
-	me.focusedCell_x = floor(coords.x * me.columns);
-	me.focusedCell_y = floor(coords.y * me.rows);
+	me.focusedCell.x = floor(coords.x * me.columns);
+	me.focusedCell.y = floor(coords.y * me.rows);
 
-	if(me.focusedCell.x < 0 || me.focusedCell.y < 0 ||
-	   me.focusedCell.x >= me.columns || me.focusedCell.y >= me.rows)
+	if (me.focusedCell.x < 0 || me.focusedCell.y < 0 || me.focusedCell.x >= me.columns || me.focusedCell.y >= me.rows)
 	{
 		me.focusedCell = '-1 -1 0';
 		return 0;
 	}
 
-	if(me.focusedCell != prevFocusedCell)
+	if (me.focusedCell != prevFocusedCell)
 		me.focusedCellAlpha = SKINALPHA_LISTBOX_FOCUSED;
 
 	return 1;
@@ -42,7 +41,7 @@ METHOD(XonoticPicker, mousePress, bool(XonoticPicker this, vector pos))
 {
 	this.mouseMove(this, pos);
 
-	if(this.focusedCell.x >= 0)
+	if (this.focusedCell.x >= 0)
 	{
 		this.pressed = 1;
 		this.pressedCell = this.focusedCell;
@@ -53,12 +52,12 @@ METHOD(XonoticPicker, mousePress, bool(XonoticPicker this, vector pos))
 
 float XonoticPicker_mouseRelease(entity me, vector coords)
 {
-	if(!me.pressed)
+	if (!me.pressed)
 		return 0;
 
 	me.mouseMove(me, coords);
 
-	if(me.focusedCell == me.pressedCell)
+	if (me.focusedCell == me.pressedCell)
 		me.cellSelect(me, me.focusedCell);
 
 	me.pressed = 0;
@@ -105,12 +104,11 @@ float XonoticPicker_keyDown(entity me, float key, float ascii, float shift)
 
 void XonoticPicker_moveFocus(entity me, vector initialCell, vector step)
 {
-	me.focusedCell_x = mod(me.focusedCell.x + step.x + me.columns, me.columns);
-	me.focusedCell_y = mod(me.focusedCell.y + step.y + me.rows, me.rows);
+	me.focusedCell.x = mod(me.focusedCell.x + step.x + me.columns, me.columns);
+	me.focusedCell.y = mod(me.focusedCell.y + step.y + me.rows, me.rows);
 
-	if(me.focusedCell != initialCell) // Recursion break
-		if(!me.cellIsValid(me, me.focusedCell))
-			me.moveFocus(me, initialCell, step);
+	if (me.focusedCell != initialCell && !me.cellIsValid(me, me.focusedCell))
+		me.moveFocus(me, initialCell, step);
 
 	me.focusedCellAlpha = SKINALPHA_LISTBOX_FOCUSED;
 }
@@ -131,33 +129,30 @@ void XonoticPicker_cellDraw(entity me, vector cell, vector cellPos)
 
 void XonoticPicker_draw(entity me)
 {
-	float save;
-
 	me.focusable = !me.disabled;
 
-	save = draw_alpha;
-	if(me.disabled)
+	float save = draw_alpha;
+	if (me.disabled)
 		draw_alpha *= me.disabledAlpha;
 
-	vector cell, cellPos;
-	cell = '0 0 0';
-	cellPos = '0 0 0';
+	vector cell = '0 0 0';
+	vector cellPos = '0 0 0';
 
-	for(cell_y = 0; cell.y < me.rows; ++cell.y)
+	for (cell.y = 0; cell.y < me.rows; ++cell.y)
 	{
-		cellPos_y = mod(cell.y, me.rows) / me.rows;
-		for(cell_x = 0; cell.x < me.columns; ++cell.x)
+		cellPos.y = mod(cell.y, me.rows) / me.rows;
+		for (cell.x = 0; cell.x < me.columns; ++cell.x)
 		{
-			if(!me.cellIsValid(me, cell))
+			if (!me.cellIsValid(me, cell))
 				continue;
 
-			cellPos_x = mod(cell.x, me.columns) / me.columns;
+			cellPos.x = mod(cell.x, me.columns) / me.columns;
 
-			if(cell == me.selectedCell)
+			if (cell == me.selectedCell)
 				draw_Fill(cellPos, me.realCellSize, SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-			else if(cell == me.focusedCell && me.focused)
+			else if (cell == me.focusedCell && me.focused)
 			{
-				if(!me.pressed || me.focusedCell == me.pressedCell)
+				if (!me.pressed || me.focusedCell == me.pressedCell)
 				{
 					me.focusedCellAlpha = getFadedAlpha(me.focusedCellAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_LISTBOX_FOCUSED, me.focusedCellAlpha);

@@ -18,7 +18,7 @@ void XonoticScreenshotImage_load(entity me, string theImage)
 {
 	me.screenshotTime = time;
 	me.src = theImage;
-	strcpy(me.screenshotTitle, substring(me.src, 13, strlen(theImage) - 13)); //strip "/screenshots/"
+	strcpy(me.screenshotTitle, substring(me.src, 13, strlen(theImage) - 13)); // strip "/screenshots/"
 
 	me.initZoom(me); // this image may have a different size
 	me.setZoom(me, 0, 0);
@@ -63,6 +63,6 @@ void XonoticScreenshotImage_draw(entity me)
 void XonoticScreenshotImage_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticScreenshotImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.realFontSize_y = me.fontSize / absSize.y;
-	me.realFontSize_x = me.fontSize / absSize.x;
+	me.realFontSize.y = me.fontSize / absSize.y;
+	me.realFontSize.x = me.fontSize / absSize.x;
 }

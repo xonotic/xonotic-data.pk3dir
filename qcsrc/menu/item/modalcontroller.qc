@@ -20,7 +20,8 @@
 
 	void TabButton_Click(entity button, entity tab)
 	{
-		if (tab.ModalController_state == 1) return;
+		if (tab.ModalController_state == 1)
+			return;
 		tab.parent.hideAll(tab.parent, 0);
 		button.forcePressed = true;
 		tab.ModalController_controllingButton = button;
@@ -34,9 +35,12 @@
 
 	void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrigin, vector theSize)
 	{
-		if (tab.ModalController_state) return;
-		if (button) button.forcePressed = true;
-		if (tab.parent.focusedChild) tab.parent.focusedChild.saveFocus(tab.parent.focusedChild);
+		if (tab.ModalController_state)
+			return;
+		if (button)
+			button.forcePressed = true;
+		if (tab.parent.focusedChild)
+			tab.parent.focusedChild.saveFocus(tab.parent.focusedChild);
 		tab.ModalController_controllingButton = button;
 		tab.parent.showChild(tab.parent, tab, theOrigin, theSize, 0);
 	}
@@ -54,7 +58,8 @@
 	void ModalController_switchState(entity me, entity other, float state, float skipAnimation)
 	{
 		float previousState = other.ModalController_state;
-		if (state == previousState && !skipAnimation) return;
+		if (state == previousState && !skipAnimation)
+			return;
 		other.ModalController_state = state;
 		switch (state)
 		{
@@ -82,27 +87,26 @@
 	void ModalController_draw(entity me)
 	{
 		entity e;
-		entity front;
-		float animating;
 		float f;  // animation factor
 		float df; // animation step size
 		float prevFactor, targetFactor;
 		vector targetOrigin, targetSize;
 		float targetAlpha;
-		vector fs;
-		animating = 0;
 
-		front = NULL;
+		entity front = NULL;
 		for (e = me.firstChild; e; e = e.nextSibling)
 			if (e.ModalController_state)
 			{
-				if (front) me.switchState(me, front, 2, 0);
+				if (front)
+					me.switchState(me, front, 2, 0);
 				front = e;
 			}
-		if (front) me.switchState(me, front, 1, 0);
+		if (front)
+			me.switchState(me, front, 1, 0);
 
 		df = frametime * 3;  // animation speed
 
+		bool animating = false;
 		for (e = me.firstChild; e; e = e.nextSibling)
 		{
 			if (e.ModalController_state == 2)
@@ -140,12 +144,10 @@
 			{
 				prevFactor = (1 - f) / (1 - f + df);
 				if (!e.ModalController_state)  // optimize code and avoid precision errors
-				{
 					me.setAlphaOf(me, e, e.Container_alpha  * prevFactor);
-				}
 				else
 				{
-					animating = 1;
+					animating = true;
 					targetFactor = df / (1 - f + df);
 
 					if (e.ModalController_state == 1)
@@ -166,14 +168,16 @@
 
 			if (e.ModalController_state == 1)
 			{
-				fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
-				e.Container_fontscale_x = fs.x * e.ModalController_initialFontScale.x;
-				e.Container_fontscale_y = fs.y * e.ModalController_initialFontScale.y;
+				vector fs = globalToBoxSize(e.Container_size, e.ModalController_initialSize);
+				e.Container_fontscale.x = fs.x * e.ModalController_initialFontScale.x;
+				e.Container_fontscale.y = fs.y * e.ModalController_initialFontScale.y;
 			}
 		}
 
-		if (animating || !me.focused) me.setFocus(me, NULL);
-		else me.setFocus(me, front);
+		if (animating || !me.focused)
+			me.setFocus(me, NULL);
+		else
+			me.setFocus(me, front);
 		SUPER(ModalController).draw(me);
 	}
 
@@ -198,7 +202,8 @@
 		other.ModalController_initialSize = other.Container_size;
 		other.ModalController_initialOrigin = other.Container_origin;
 		other.ModalController_initialAlpha = theAlpha;  // hope Container never modifies this
-		if (other.ModalController_initialFontScale == '0 0 0') other.ModalController_initialFontScale = '1 1 0';
+		if (other.ModalController_initialFontScale == '0 0 0')
+			other.ModalController_initialFontScale = '1 1 0';
 	}
 
 	void ModalController_showChild(entity me, entity other, vector theOrigin, vector theSize, float skipAnimation)
