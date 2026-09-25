@@ -16,13 +16,15 @@ int MapInfo_Map_flags;
 vector MapInfo_Map_mins; // these are '0 0 0' if not supported!
 vector MapInfo_Map_maxs; // these are '0 0 0' if not specified!
 
-const int GAMETYPE_FLAG_TEAMPLAY        = BIT(0); // teamplay based
-const int GAMETYPE_FLAG_USEPOINTS       = BIT(1); // gametype has point-based scoring
-const int GAMETYPE_FLAG_PREFERRED       = BIT(2); // preferred (when available) in random selections
-const int GAMETYPE_FLAG_PRIORITY        = BIT(3); // priority selection when preferred gametype isn't available in random selections
-const int GAMETYPE_FLAG_HIDELIMITS      = BIT(4); // don't display a score limit needed for winning the match in the scoreboard
-const int GAMETYPE_FLAG_WEAPONARENA     = BIT(5); // gametype has a forced weapon arena, weapon arena mutators should disable themselves when this is set
-const int GAMETYPE_FLAG_1V1             = BIT(6); // 1v1 gameplay
+const int GAMETYPE_FLAG_TEAMPLAY        = BIT(0); ///< teamplay based
+const int GAMETYPE_FLAG_USEPOINTS       = BIT(1); ///< gametype has point-based scoring
+const int GAMETYPE_FLAG_PREFERRED       = BIT(2); ///< preferred (when available) in random selections
+const int GAMETYPE_FLAG_PRIORITY        = BIT(3); ///< priority selection when preferred gametype isn't available in random selections
+const int GAMETYPE_FLAG_HIDELIMITS      = BIT(4); ///< don't display a score limit needed for winning the match in the scoreboard
+const int GAMETYPE_FLAG_WEAPONARENA     = BIT(5); ///< gametype has a forced weapon arena, weapon arena mutators should disable themselves when this is set
+const int GAMETYPE_FLAG_1V1             = BIT(6); ///< 1v1 gameplay
+const int GAMETYPE_FLAG_ELIMINATIONS    = BIT(7); ///< players can be eliminated (can no longer spawn) in this gametype
+#define GAMETYPE_FLAG(gt, flag_name) ((gt).gflags & GAMETYPE_FLAG_##flag_name)
 
 vector MAPINFO_TYPE_ALL;
 .vector gametype_flags;
@@ -42,16 +44,8 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, message, string);
     /** color */
     ATTRIB(Gametype, m_color, vector, '1 1 1');
-    /** does this gametype support teamplay? */
-    ATTRIB(Gametype, team, bool, false);
-    /** does this gametype use a point limit? */
-    ATTRIB(Gametype, frags, bool, true);
-    /** should this gametype display a score limit in the scoreboard? */
-    ATTRIB(Gametype, m_hidelimits, bool, false);
-    /** does this gametype enforce its own weapon arena? */
-    ATTRIB(Gametype, m_weaponarena, bool, false);
-    /** 1v1 gameplay? */
-    ATTRIB(Gametype, m_1v1, bool, false);
+    /** gametype flags */
+    ATTRIB(Gametype, gflags, int);
     /** gametype defaults */
     ATTRIB(Gametype, model2, string);
     /** gametype description */
@@ -114,20 +108,16 @@ CLASS(Gametype, Object)
     }
 #endif
 
-    METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gflags, string mutators, string defaults, string gdescription))
+    METHOD(Gametype, gametype_init, void(Gametype this, string hname, string sname, string g_name, int gt_flags, string mutators, string defaults, string gdescription))
     {
         this.netname = g_name;
         this.mdl = sname;
         this.message = hname;
-        this.team = (gflags & GAMETYPE_FLAG_TEAMPLAY);
         this.m_mutators = cons(sname, mutators);
         this.model2 = defaults;
         this.m_description = gdescription;
-        this.frags = (gflags & GAMETYPE_FLAG_USEPOINTS);
-        this.m_priority = ((gflags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gflags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
-        this.m_hidelimits = (gflags & GAMETYPE_FLAG_HIDELIMITS);
-        this.m_weaponarena = (gflags & GAMETYPE_FLAG_WEAPONARENA);
-        this.m_1v1 = (gflags & GAMETYPE_FLAG_1V1);
+        this.gflags = gt_flags;
+        this.m_priority = ((gt_flags & GAMETYPE_FLAG_PREFERRED) ? 2 : ((gt_flags & GAMETYPE_FLAG_PRIORITY) ? 1 : 0));
     }
 ENDCLASS(Gametype)
 
