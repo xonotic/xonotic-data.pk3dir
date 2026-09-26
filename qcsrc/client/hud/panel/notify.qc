@@ -4,6 +4,17 @@
 #include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/view.qh>
 
+const int NOTIFY_MAX_ENTRIES = 10;
+const float NOTIFY_ICON_MARGIN = 0.02;
+
+int notify_index;
+int notify_count;
+float notify_times[NOTIFY_MAX_ENTRIES];
+string notify_attackers[NOTIFY_MAX_ENTRIES];
+string notify_victims[NOTIFY_MAX_ENTRIES];
+string notify_icons[NOTIFY_MAX_ENTRIES];
+bool notify_highlight[NOTIFY_MAX_ENTRIES];
+
 // Notifications (#4)
 
 void HUD_Notify_Export(int fh)
@@ -20,6 +31,11 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 {
 	if (icon == "")
 		return;
+
+	int i, n = tokenizebyseparator(autocvar_hud_panel_notify_list_exclude, " ");
+	for (i = 0; i < n; ++i)
+		if (icon == argv(i))
+			return;
 
 	++notify_count;
 	--notify_index;
@@ -49,6 +65,15 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 		notify_attackers[notify_index] = string_null;
 		notify_victims[notify_index] = strzone(attacker);
 	}
+
+	notify_highlight[notify_index] = false;
+	n = tokenizebyseparator(autocvar_hud_panel_notify_list_highlight, " ");
+	for (i = 0; i < n; ++i)
+		if (icon == argv(i))
+		{
+			notify_highlight[notify_index] = true;
+			break;
+		}
 
 	notify_icons[notify_index] = strzone(icon);
 	notify_times[notify_index] = time;
@@ -168,23 +193,32 @@ void HUD_Notify(bool should_draw)
 			icon = notify_icons[j];
 		}
 
-		if (icon != "" && victim != "")
+		if (icon == "" || victim == "")
+			continue;
+
+		name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size.y));
+		icon_pos = pos + icon_left + eY * i * entry_height;
+
+		victim = textShortenToWidth(ColorTranslateRGB(victim), name_maxwidth, font_size, stringwidth_colors);
+		victim_pos = pos + victim_left + name_top;
+		drawcolorcodedstring(victim_pos, victim, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+
+		if (attacker != "")
 		{
-			name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size.y));
+			attacker = textShortenToWidth(ColorTranslateRGB(attacker), name_maxwidth, font_size, stringwidth_colors);
+			attacker_pos = pos + attacker_right - eX * stringwidth(attacker, true, font_size) + name_top;
+			drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		}
 
-			icon_pos = pos + icon_left + eY * i * entry_height;
-			drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		if (notify_highlight[j])
+			alpha *= blink(0.85, 0.15, 5);
 
-			victim = textShortenToWidth(ColorTranslateRGB(victim), name_maxwidth, font_size, stringwidth_colors);
-			victim_pos = pos + victim_left + name_top;
-			drawcolorcodedstring(victim_pos, victim, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
-
-			if (attacker != "")
-			{
-				attacker = textShortenToWidth(ColorTranslateRGB(attacker), name_maxwidth, font_size, stringwidth_colors);
-				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, true, font_size) + name_top;
-				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
-			}
+		drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		if (notify_highlight[j])
+		{
+			float f = bound(0, (time - notify_times[j]) * 2, 1);
+			if (f < 1)
+				drawpic_aspect_skin_expanding(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL, f);
 		}
 	}
 

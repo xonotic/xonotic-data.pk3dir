@@ -2,6 +2,7 @@
 
 #ifdef CSQC
 	#include <client/announcer.qh>
+	#include <client/hud/panel/notify.qh>
 #elifdef SVQC
 	#include <common/constants.qh>
 	#include <common/net_linked.qh>

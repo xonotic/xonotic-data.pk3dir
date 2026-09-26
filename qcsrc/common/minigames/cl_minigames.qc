@@ -1,5 +1,7 @@
 #include "cl_minigames.qh"
 
+#include <client/hud/panel/notify.qh>
+
 // Draw a square in the center of the avaliable area
 void minigame_hud_simpleboard(vector pos, vector mySize, string board_texture)
 {
