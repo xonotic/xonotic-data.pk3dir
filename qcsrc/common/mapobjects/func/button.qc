@@ -131,8 +131,12 @@ void button_touch(entity this, entity toucher)
 		return;
 	if (!toucher.iscreature)
 		return;
-	if(toucher.velocity * this.movedir < 0)
+	if (vec3(toucher.velocity.x, toucher.velocity.y, IS_ONGROUND(toucher)
+			? -0.25 * PHYS_GRAVITY(toucher) // give onground toucher some "weight"
+			: toucher.velocity.z)
+	   * this.movedir < 40) // default speed because some maps have a high setting
 		return;
+
 	this.enemy = toucher;
 	if (toucher.owner)
 		this.enemy = toucher.owner;
