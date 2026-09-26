@@ -282,7 +282,8 @@ void instagib_replace_item_with(entity this, GameItem def)
 			break;
 	}
 	Item_CopyFields(this, new_item);
-	StartItem(new_item, def);
+	new_item.itemdef = def;
+	StartItem(new_item);
 }
 
 const int INSTAGIB_POWERUP_COUNT = 3;
