@@ -421,17 +421,5 @@ void HUD_Panel_LoadCvars();
 	HUD_Panel_GetBorder(); \
 MACRO_END
 
-const int NOTIFY_MAX_ENTRIES = 10;
-const float NOTIFY_ICON_MARGIN = 0.02;
-
-int notify_index;
-int notify_count;
-float notify_times[NOTIFY_MAX_ENTRIES];
-string notify_attackers[NOTIFY_MAX_ENTRIES];
-string notify_victims[NOTIFY_MAX_ENTRIES];
-string notify_icons[NOTIFY_MAX_ENTRIES];
-
-void HUD_Notify_Push(string icon, string attacker, string victim);
-
 var void HUD_ModIcons_GameType(vector myPos, vector mySize, bool should_draw);
 void HUD_ModIcons_SetFunc();
