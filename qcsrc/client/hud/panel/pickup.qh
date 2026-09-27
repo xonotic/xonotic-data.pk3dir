@@ -3,6 +3,7 @@
 
 bool autocvar_hud_panel_pickup;
 bool autocvar_hud_panel_pickup_dynamichud = true;
+bool autocvar_hud_panel_pickup_showname = true;
 int autocvar_hud_panel_pickup_showtimer = 1;
 float autocvar_hud_panel_pickup_iconsize = 1.5;
 float autocvar_hud_panel_pickup_time = 3;

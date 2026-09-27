@@ -14,6 +14,8 @@ int last_pickup_count;
 void HUD_Pickup_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_pickup_showname");
+	HUD_Write_Cvar("hud_panel_pickup_showtimer");
 }
 
 string HUD_Pickup_GetIcon(entity item)
@@ -91,6 +93,7 @@ void HUD_Pickup(bool should_draw)
 	else
 		a = (last_pickup_time + display_time - time) / fade_out_time;
 
+	// Draw time
 	if (autocvar_hud_panel_pickup_showtimer)
 	{
 		// 1 will show the timer always
@@ -107,12 +110,26 @@ void HUD_Pickup(bool should_draw)
 		}
 	}
 
+	// Draw icon
 	drawpic(pos - eY * (iconsize.y - fontsize.y) * 0.5, icon, sz, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-	pos.x += sz.x + fontsize.x * 0.25;
 
-	string str_name = item.m_name;
-	if (last_pickup_count > 1)
-		str_name = strcat(str_name, sprintf(_(" (%s)"), sprintf("x%d", last_pickup_count)));
+	string str_name;
+	int count = (autocvar__hud_configure && last_pickup_count <= 1)
+		? 2
+		: last_pickup_count;
+	if (autocvar_hud_panel_pickup_showname)
+	{
+		str_name = item.m_name;
+		if (count > 1)
+			str_name = strcat(str_name, sprintf(_(" (%s)"), sprintf("x%d", count)));
+	}
+	else if (count > 1)
+		str_name = sprintf("x%d", count);
+	else
+		return;
+
+	// Draw name & count text
+	pos.x += sz.x + fontsize.x * 0.25;
 	str_name = textShortenToWidth(str_name, size.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
 	drawstring(pos, str_name, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 }
