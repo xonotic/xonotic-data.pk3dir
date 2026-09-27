@@ -10,5 +10,7 @@ float autocvar_hud_panel_notify_time;
 float autocvar_hud_panel_notify_icon_aspect;
 string autocvar_hud_panel_notify_list_exclude = "";
 string autocvar_hud_panel_notify_list_highlight = "strength shield buff_speed buff_invisible superweapons race_newrecordserver";
+string autocvar_hud_panel_notify_list_pickups = "";
 
 void HUD_Notify_Push(string icon, string attacker, string victim);
+void HUD_Notify_PushPickup(entity item, float time);

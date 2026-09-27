@@ -2,6 +2,7 @@
 
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
+#include <client/hud/panel/notify.qh>
 #include <client/hud/panel/timer.qh>
 #include <common/items/inventory.qh>
 
@@ -15,21 +16,33 @@ void HUD_Pickup_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 }
 
-void Pickup_Update(entity item, int count)
+string HUD_Pickup_GetIcon(entity item)
+{
+	string icon = strcat(hud_skin_path, "/", (item.model2) ? item.model2 : item.m_icon);
+	if (precache_pic(icon) == "")
+		return strcat("gfx/hud/default/", (item.model2) ? item.model2 : item.m_icon);
+	return icon;
+}
+
+string HUD_Pickup_Time(float t)
+{
+	float timelimit = (warmup_stage ? STAT(WARMUP_TIMELIMIT) : STAT(TIMELIMIT) * 60);
+
+	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
+		t = floor(t - STAT(GAMESTARTTIME));
+	else
+		t = ceil(timelimit + STAT(GAMESTARTTIME) - t);
+	return seconds_tostring(t);
+}
+
+void HUD_Pickup_Update(entity item, int count)
 {
 	if (last_pickup_item != item || time - STAT(LAST_PICKUP) > autocvar_hud_panel_pickup_time)
 		last_pickup_count = 0;
 	last_pickup_item = item;
 	last_pickup_count += count;
-}
 
-float HUD_Pickup_Time(float t)
-{
-	float timelimit = (warmup_stage ? STAT(WARMUP_TIMELIMIT) : STAT(TIMELIMIT) * 60);
-
-	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
-		return floor(t - STAT(GAMESTARTTIME));
-	return ceil(timelimit + STAT(GAMESTARTTIME) - t);
+	HUD_Notify_PushPickup(item, STAT(LAST_PICKUP));
 }
 
 void HUD_Pickup(bool should_draw)
@@ -63,9 +76,7 @@ void HUD_Pickup(bool should_draw)
 	if (!autocvar__hud_configure && !(last_pickup_time && last_pickup_time > time - display_time && item))
 		return;
 
-	string icon = strcat(hud_skin_path, "/", (item.model2) ? item.model2 : item.m_icon);
-	if (precache_pic(icon) == "")
-		icon = strcat("gfx/hud/default/", (item.model2) ? item.model2 : item.m_icon);
+	string icon = HUD_Pickup_GetIcon(item);
 
 	vector fontsize = '1 1 0' * size.y;
 	vector iconsize = fontsize * autocvar_hud_panel_pickup_iconsize;
@@ -90,7 +101,7 @@ void HUD_Pickup(bool should_draw)
 		{
 			string str_timer = autocvar__hud_configure
 				? "13:02"
-				: seconds_tostring(HUD_Pickup_Time(last_pickup_time));
+				: HUD_Pickup_Time(last_pickup_time);
 			drawstring(pos, str_timer, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			pos.x += stringwidth(str_timer, false, fontsize) + fontsize.x * 0.25;
 		}
