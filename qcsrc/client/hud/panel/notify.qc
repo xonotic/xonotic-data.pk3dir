@@ -1,6 +1,7 @@
 #include "notify.qh"
 
 #include <client/draw.qh>
+#include <client/hud/panel/pickup.qh>
 #include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/view.qh>
 
@@ -73,6 +74,19 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 	strcpy(notify_icons[notify_index], icon);
 	notify_times[notify_index] = time;
+}
+
+void HUD_Notify_PushPickup(entity item, float time)
+{
+	string icon = (item.model2) ? item.model2 : item.m_icon;
+	int n = tokenizebyseparator(autocvar_hud_panel_notify_list_pickups, " ");
+	for (int i = 0; i < n; ++i)
+		if (icon == argv(i))
+		{
+			HUD_Notify_Push(icon, HUD_Pickup_Time(time), "");
+			notify_highlight[notify_index] = false;
+			return;
+		}
 }
 
 void HUD_Notify(bool should_draw)
