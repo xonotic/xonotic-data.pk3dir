@@ -49,4 +49,6 @@ void XonoticHUDPickupDialog_fill(entity me)
 			setDependentNOT(e, "hud_panel_pickup_time", 0);
 		me.TD(me, 1, 3.8/3, e = makeXonoticRadioButton(2, "hud_panel_pickup_showtimer", "1", _("Always")));
 			setDependentNOT(e, "hud_panel_pickup_time", 0);
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_pickup_showname", _("Show name")));
 }
