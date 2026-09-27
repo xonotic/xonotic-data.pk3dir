@@ -43,27 +43,23 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 	if (notify_index == -1)
 		notify_index = NOTIFY_MAX_ENTRIES - 1;
 
-	// Free old strings
-	if (notify_attackers[notify_index])
-		strunzone(notify_attackers[notify_index]);
-	if (notify_victims[notify_index])
-		strunzone(notify_victims[notify_index]);
-	if (notify_icons[notify_index])
-		strunzone(notify_icons[notify_index]);
-
 	// Allocate new strings
 	if (victim != "")
 	{
-		notify_attackers[notify_index] = strzone(attacker);
-		notify_victims[notify_index] = strzone(victim);
+		strcpy(notify_victims[notify_index], victim);
+		strcpy(notify_attackers[notify_index], attacker);
 	}
 	else
 	{
 		// In case of a notification without a victim, the attacker
 		// is displayed on the victim's side. Instead of special
 		// treatment later on, we can simply switch them here.
-		notify_attackers[notify_index] = string_null;
-		notify_victims[notify_index] = strzone(attacker);
+		strcpy(notify_victims[notify_index], attacker);
+		if (notify_attackers[notify_index])
+		{
+			strunzone(notify_attackers[notify_index]);
+			notify_attackers[notify_index] = string_null;
+		}
 	}
 
 	notify_highlight[notify_index] = false;
@@ -75,7 +71,7 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 			break;
 		}
 
-	notify_icons[notify_index] = strzone(icon);
+	strcpy(notify_icons[notify_index], icon);
 	notify_times[notify_index] = time;
 }
 
@@ -124,7 +120,7 @@ void HUD_Notify(bool should_draw)
 
 	float fade_start = max(0, autocvar_hud_panel_notify_time);
 	if (intermission) // fade out in half the time
-		fade_start -= (time - intermission_time);
+		fade_start -= time - intermission_time;
 	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
 	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 
@@ -137,9 +133,9 @@ void HUD_Notify(bool should_draw)
 
 	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
 	vector icon_size = vec2(icon_aspect, 1) * entry_height;
-	vector icon_left = eX * (panel_width_half - icon_width_half);
-	vector attacker_right = eX * name_maxwidth;
-	vector victim_left = eX * (size.x - name_maxwidth);
+	vector icon_left = vec2(panel_width_half - icon_width_half, 0);
+	vector attacker_right = vec2(name_maxwidth, 0);
+	vector victim_left = vec2(size.x - name_maxwidth, 0);
 
 	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
@@ -160,8 +156,8 @@ void HUD_Notify(bool should_draw)
 		limit = -1;
 	}
 
-	float alpha;
 	vector name_top;
+	float alpha;
 	int count = 0;
 	for (int j = notify_index; i != limit; i += step, ++j, ++count)
 	{
@@ -188,16 +184,16 @@ void HUD_Notify(bool should_draw)
 			else
 				break;
 
-			attacker = notify_attackers[j];
 			victim = notify_victims[j];
 			icon = notify_icons[j];
+			if (icon == "" || victim == "")
+				continue;
+			attacker = notify_attackers[j];
 		}
 
-		if (icon == "" || victim == "")
-			continue;
-
-		name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size.y));
-		icon_pos = pos + icon_left + eY * i * entry_height;
+		name_top = vec2(0, i * entry_height + 0.5 * (entry_height - font_size.y));
+		icon_pos = pos + icon_left;
+		icon_pos.y += i * entry_height;
 
 		victim = textShortenToWidth(ColorTranslateRGB(victim), name_maxwidth, font_size, stringwidth_colors);
 		victim_pos = pos + victim_left + name_top;
@@ -206,7 +202,8 @@ void HUD_Notify(bool should_draw)
 		if (attacker != "")
 		{
 			attacker = textShortenToWidth(ColorTranslateRGB(attacker), name_maxwidth, font_size, stringwidth_colors);
-			attacker_pos = pos + attacker_right - eX * stringwidth(attacker, true, font_size) + name_top;
+			attacker_pos = pos + attacker_right + name_top;
+			attacker_pos.x -= stringwidth(attacker, true, font_size); // align right
 			drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 		}
 
