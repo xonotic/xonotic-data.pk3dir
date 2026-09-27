@@ -8,7 +8,4 @@ float autocvar_hud_panel_pickup_iconsize = 1.5;
 float autocvar_hud_panel_pickup_time = 3;
 float autocvar_hud_panel_pickup_fade_out = 0.15;
 
-entity last_pickup_item;
-int last_pickup_count;
-
 void Pickup_Update(entity it, int count);

@@ -5,6 +5,9 @@
 #include <client/hud/panel/timer.qh>
 #include <common/items/inventory.qh>
 
+entity last_pickup_item;
+int last_pickup_count;
+
 // Pickup (#26)
 
 void HUD_Pickup_Export(int fh)
@@ -26,23 +29,19 @@ float HUD_Pickup_Time(float t)
 
 	if (autocvar_hud_panel_timer_increment || timelimit <= 0)
 		return floor(t - STAT(GAMESTARTTIME));
-	else
-		return ceil(timelimit + STAT(GAMESTARTTIME) - t);
+	return ceil(timelimit + STAT(GAMESTARTTIME) - t);
 }
 
 void HUD_Pickup(bool should_draw)
 {
 	if (!should_draw)
 		return;
-	if (!autocvar__hud_configure)
-	{
-		if (!autocvar_hud_panel_pickup)
-			return;
-	}
+	if (!autocvar__hud_configure && !autocvar_hud_panel_pickup)
+		return;
 
 	HUD_Panel_LoadCvars();
 	vector pos = panel_pos;
-	vector mySize = panel_size;
+	vector size = panel_size;
 
 	if (autocvar_hud_panel_pickup_dynamichud)
 		HUD_Scale_Enable();
@@ -51,58 +50,58 @@ void HUD_Pickup(bool should_draw)
 	HUD_Panel_DrawBg();
 	if (panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		pos  += '1 1 0' * panel_bg_padding;
+		size -= '2 2 0' * panel_bg_padding;
 	}
 
 	float last_pickup_time = STAT(LAST_PICKUP);
 	float display_time = min(5, autocvar_hud_panel_pickup_time);
-	entity item = last_pickup_item;
+	entity item = (autocvar__hud_configure && !last_pickup_item)
+		? ITEM_ArmorMega
+		: last_pickup_item;
 
-	if ((last_pickup_time && last_pickup_time > time - display_time && item) || autocvar__hud_configure)
+	if (!autocvar__hud_configure && !(last_pickup_time && last_pickup_time > time - display_time && item))
+		return;
+
+	string icon = strcat(hud_skin_path, "/", (item.model2) ? item.model2 : item.m_icon);
+	if (precache_pic(icon) == "")
+		icon = strcat("gfx/hud/default/", (item.model2) ? item.model2 : item.m_icon);
+
+	vector fontsize = '1 1 0' * size.y;
+	vector iconsize = fontsize * autocvar_hud_panel_pickup_iconsize;
+	vector sz = draw_getimagesize(icon);
+	sz = vec2(iconsize.y * (sz.y ? sz.x / sz.y : 1), iconsize.y);
+
+	float fade_out_time = min(display_time, autocvar_hud_panel_pickup_fade_out);
+	float a;
+	if (autocvar__hud_configure
+	|| time < last_pickup_time + display_time - fade_out_time)
+		a = 1;
+	else
+		a = (last_pickup_time + display_time - time) / fade_out_time;
+
+	if (autocvar_hud_panel_pickup_showtimer)
 	{
-		if (autocvar__hud_configure)
-			item = ITEM_ArmorMega;
-
-		vector fontsize = '1 1 0' * mySize.y;
-		vector iconsize = fontsize * autocvar_hud_panel_pickup_iconsize;
-
-		string icon = strcat(hud_skin_path, "/", (item.model2) ? item.model2 : item.m_icon);
-		if (precache_pic(icon) == "")
-			icon = strcat("gfx/hud/default/", (item.model2) ? item.model2 : item.m_icon);
-
-		vector sz = draw_getimagesize(icon);
-		sz = vec2(iconsize.y * (sz.y ? sz.x / sz.y : 1), iconsize.y);
-
-		float fade_out_time = min(display_time, autocvar_hud_panel_pickup_fade_out);
-		float a;
-		if (autocvar__hud_configure)
-			a = 1;
-		else if (time < last_pickup_time + display_time - fade_out_time)
-			a = 1;
-		else
-			a = (last_pickup_time + display_time - time) / fade_out_time;
-
-		if (autocvar_hud_panel_pickup_showtimer)
+		// 1 will show the timer always
+		// 2 will show the timer only if spectating
+		// forbid serverflag will force the 2nd behavior
+		if ((autocvar_hud_panel_pickup_showtimer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER))
+		|| spectatee_status)
 		{
-			// 1 will show the timer always
-			// 2 will show the timer only if spectating
-			// forbid serverflag will force the 2nd behavior
-			if ((autocvar_hud_panel_pickup_showtimer == 1 && !(serverflags & SERVERFLAG_FORBID_PICKUPTIMER))
-				|| spectatee_status)
-			{
-				string str_timer = autocvar__hud_configure
-					? "13:02"
-					: seconds_tostring(HUD_Pickup_Time(last_pickup_time));
-				drawstring(pos, str_timer, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				pos.x += stringwidth(str_timer, false, fontsize) + fontsize.x * 0.25;
-			}
+			string str_timer = autocvar__hud_configure
+				? "13:02"
+				: seconds_tostring(HUD_Pickup_Time(last_pickup_time));
+			drawstring(pos, str_timer, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			pos.x += stringwidth(str_timer, false, fontsize) + fontsize.x * 0.25;
 		}
-
-		drawpic(pos - eY * (iconsize.y - fontsize.y) * 0.5, icon, sz, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		pos.x += sz.x + fontsize.x * 0.25;
-		string str_name = ((last_pickup_count > 1) ? sprintf("%s (x%d)", item.m_name, last_pickup_count) : item.m_name);
-		str_name = textShortenToWidth(str_name, mySize.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
-		drawstring(pos, str_name, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	}
+
+	drawpic(pos - eY * (iconsize.y - fontsize.y) * 0.5, icon, sz, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+	pos.x += sz.x + fontsize.x * 0.25;
+
+	string str_name = item.m_name;
+	if (last_pickup_count > 1)
+		str_name = strcat(str_name, sprintf(_(" (%s)"), sprintf("x%d", last_pickup_count)));
+	str_name = textShortenToWidth(str_name, size.x - (pos.x - panel_pos.x), fontsize, stringwidth_nocolors);
+	drawstring(pos, str_name, fontsize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 }
