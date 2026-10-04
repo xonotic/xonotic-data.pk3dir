@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-20 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: oblector o, 2022\n"
+"Last-Translator: oblector o, 2022-2026\n"
 "Language-Team: Latin (http://app.transifex.com/team-xonotic/xonotic/language/"
 "la/)\n"
 "Language: la\n"
@@ -241,7 +241,7 @@ msgstr "Manus dispares sunt numeris!"
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #, c-format
 msgid "UNBALTEAMS^%s Press ^3%s%s to adjust"
-msgstr ""
+msgstr "%s ^3%s%s preme ut mutes"
 
 #: qcsrc/client/hud/panel/infomessages.qc:226
 #: qcsrc/menu/xonotic/keybinder.qc:164
@@ -572,7 +572,7 @@ msgstr "Ludentem spectare"
 #: qcsrc/client/hud/panel/racetimer.qc:67
 #, c-format
 msgid "LAP_DIFF^%+dL"
-msgstr ""
+msgstr "%+dC"
 
 #: qcsrc/client/hud/panel/racetimer.qc:68
 #: qcsrc/client/hud/panel/racetimer.qc:105
@@ -590,7 +590,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/serverlist.qc:1058
 #, c-format
 msgid " (%s)"
-msgstr ""
+msgstr " (%s)"
 
 #: qcsrc/client/hud/panel/racetimer.qc:88
 msgid "Start line"
@@ -605,19 +605,19 @@ msgstr "Calx"
 #: qcsrc/client/hud/panel/racetimer.qc:109
 #, c-format
 msgid "TIMEDIFF_PLAYER^%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:228
 #: qcsrc/client/hud/panel/racetimer.qc:284
 #, c-format
 msgid "SPEED^ %d%s"
-msgstr ""
+msgstr " %d%s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:232
 #: qcsrc/client/hud/panel/racetimer.qc:286
 #, c-format
 msgid "SPEED_DIFF^%+d%s"
-msgstr ""
+msgstr "%+d%s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:238 qcsrc/client/main.qc:1235
 msgid "missing a checkpoint"
@@ -628,7 +628,7 @@ msgstr "meta ambita"
 #: qcsrc/client/hud/panel/racetimer.qc:395
 #, c-format
 msgid "PENALTY: %.1f"
-msgstr ""
+msgstr "POENA: %.1f"
 
 #: qcsrc/client/hud/panel/radar.qc:339
 msgid "Click to select spawn location"
@@ -680,7 +680,7 @@ msgstr "SCO^mortes"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "Number of keys destroyed by pushing them into the void"
-msgstr ""
+msgstr "Quot claves deletae sunt postquam in vacuum demissae"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:142
 msgid "SCO^destructions"
@@ -736,7 +736,7 @@ msgstr "SCO^vpinterf"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Frames per second"
-msgstr ""
+msgstr "Quadra in secundum"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^fps"
@@ -880,7 +880,7 @@ msgstr "pl"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of players pushed into the void"
-msgstr ""
+msgstr "Quotiens ludentes in vacuum pepulit"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^pushes"
@@ -1131,12 +1131,12 @@ msgstr "Spectatores"
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "+%s %s"
-msgstr ""
+msgstr "+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2473
 msgid "SCO^points"
@@ -1426,16 +1426,16 @@ msgstr "ab:"
 #: qcsrc/client/main.qc:1431
 #, c-format
 msgid "%d maximum"
-msgstr ""
+msgstr "non plures quam %d"
 
 #: qcsrc/client/main.qc:1433
 #, c-format
 msgid "INTERVAL^%d-%d"
-msgstr ""
+msgstr "%d-%d"
 
 #: qcsrc/client/main.qc:1434
 msgid "Number of players supported by this match:"
-msgstr ""
+msgstr "Quot lusores nunc ludere possunt:"
 
 #: qcsrc/client/main.qc:1439
 msgid "Active modifications:"
@@ -1452,7 +1452,7 @@ msgstr "Moderatri nuntium"
 #: qcsrc/client/main.qc:1536
 #, c-format
 msgid "not bound"
-msgstr ""
+msgstr "sine clavi"
 
 #: qcsrc/client/view.qc:1010
 msgid "Nade timer"
@@ -1583,7 +1583,7 @@ msgstr "Temporum numerus terminalis:"
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:41
 #: qcsrc/common/gametypes/gametype/freezetag/freezetag.qh:41
 msgid "The number of rounds won required to conclude the match"
-msgstr ""
+msgstr "Quot temporibus vincere necesse est ut ludus finiatur"
 
 #: qcsrc/common/gametypes/gametype/ctf/cl_ctf.qc:207
 msgid "Capture time rankings"
@@ -1658,7 +1658,7 @@ msgstr "Captuum numerus terminalis:"
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:29
 msgid "The number of captures required to conclude the match"
-msgstr ""
+msgstr "Quotiens vexillum capere necesse est ut ludus finiatur"
 
 #: qcsrc/common/gametypes/gametype/cts/cl_cts.qc:41
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:192
@@ -1785,7 +1785,7 @@ msgstr "Dominatio"
 #: qcsrc/common/gametypes/gametype/tdm/tdm.qh:49
 #: qcsrc/common/gametypes/gametype/tka/tka.qh:59
 msgid "The number of points required to conclude the match"
-msgstr ""
+msgstr "Quem numerum, cum alicuius ratio attinget, ludus finietur"
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:12
 #, c-format
@@ -2106,7 +2106,7 @@ msgstr "Iniectuum numerus terminalis:"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qh:25
 msgid "The number of goals required to conclude the match"
-msgstr ""
+msgstr "Quotiens follem in portam iacere necesse est ut ludus finiatur"
 
 #: qcsrc/common/gametypes/gametype/nexball/weapon.qh:9
 msgid "Ball Stealer"
@@ -2319,7 +2319,7 @@ msgstr "Manuum Tumultus"
 #: qcsrc/common/items/item/ammo.qc:13
 #, c-format
 msgid "%d fuel"
-msgstr ""
+msgstr "%d ligna"
 
 #: qcsrc/common/items/item/ammo.qc:27
 #, c-format
@@ -2330,6 +2330,8 @@ msgstr "Missilium genus %s pertinet ad:"
 #, c-format
 msgid "By default, the pickup gives you %s, to a maximum of %s."
 msgstr ""
+"In optione ordinaria, res colligenda %s continet, plus quam %s autem tenere "
+"non potes."
 
 #: qcsrc/common/items/item/ammo.qc:41
 #, c-format
@@ -2490,7 +2492,7 @@ msgstr "Caedium numerus terminalis:"
 
 #: qcsrc/common/mapinfo.qh:94
 msgid "The number of frags required to conclude the match"
-msgstr ""
+msgstr "Quotiens interficere necesse est ut ludus finiatur"
 
 #: qcsrc/common/mapvoting/cl_mapvoting.qc:293
 msgid "Don't care"
@@ -3518,7 +3520,7 @@ msgid ""
 "The primary fire also explodes on impact, and the secondary fire shoots "
 "laser prongs"
 msgstr ""
-"Emissio primaria erumpit quoque cum tangit, et emissio secundaria dentes "
+"Emissio primaria erumpitur quoque cum tangit, et emissio secundaria dentes "
 "lucis emittit"
 
 #: qcsrc/common/mutators/mutator/instagib/ui_instagib.qh:4
@@ -3814,7 +3816,7 @@ msgid ""
 "Enable throwable grenades which explode with a variety of effects. Press %s "
 "or %s to use them."
 msgstr ""
-"Granatae iaci possunt et varie erumpunt. %s vel %s preme ut eis utaris."
+"Granatae iaci possunt et varie erumpuntur. %s vel %s preme ut eis utaris."
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:29
 #, c-format
@@ -3833,7 +3835,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qc:31
 #, c-format
 msgid "The current %s weapons are:"
-msgstr ""
+msgstr "%s nunc haec arma habet:"
 
 #: qcsrc/common/mutators/mutator/new_toys/new_toys.qh:7
 #: qcsrc/common/mutators/mutator/new_toys/ui_new_toys.qh:6
@@ -5224,7 +5226,7 @@ msgstr "^BG%s^K1 a ^BG%s^K1 traditus est%s%s"
 #: qcsrc/common/notifications/all.inc:372
 #, c-format
 msgid "%s every %s"
-msgstr ""
+msgstr "%s %snis"
 
 #: qcsrc/common/notifications/all.inc:375
 #, c-format
@@ -5662,7 +5664,7 @@ msgstr "^K2Ire in potentiorem manum non potes!"
 
 #: qcsrc/common/notifications/all.inc:477
 msgid "^F2Teams have been balanced."
-msgstr ""
+msgstr "^F2Manus aequatae sunt."
 
 #: qcsrc/common/notifications/all.inc:478
 msgid "^F4The teams are now locked."
@@ -7277,7 +7279,7 @@ msgstr "Roseum"
 #: qcsrc/common/teams.qh:229 qcsrc/common/teams.qh:231
 #, c-format
 msgid "%s team"
-msgstr ""
+msgstr "Manus %s"
 
 #: qcsrc/common/turrets/cl_turrets.qc:118
 #, c-format
@@ -8078,12 +8080,12 @@ msgstr "Aranea Automata"
 
 #: qcsrc/common/weapons/all.qc:835
 msgid "This weapon has not been bound directly."
-msgstr ""
+msgstr "Non est clavis prompta pro his armis."
 
 #: qcsrc/common/weapons/all.qc:836
 #, c-format
 msgid "You have bound this weapon to: %s."
-msgstr ""
+msgstr "Hanc clavem pro his armis elegisti: %s."
 
 #: qcsrc/common/weapons/all.qc:842 qcsrc/common/weapons/all.qc:843
 #: qcsrc/common/weapons/all.qc:874
@@ -8094,33 +8096,33 @@ msgstr "(VIS: %.2f)"
 #: qcsrc/common/weapons/all.qc:847
 #, c-format
 msgid "It does %s damage"
-msgstr "%s vulneris infert"
+msgstr "Vulnus %sarium infert"
 
 #: qcsrc/common/weapons/all.qc:848
 #, c-format
 msgid "It shoots %s shots doing %s damage each"
-msgstr "Emittit %s missilia, quodque missile %s vulneris infert"
+msgstr "Emittit %s missilia, quodque missile vulnus %sarium infert"
 
 #: qcsrc/common/weapons/all.qc:849
 #, c-format
 msgid "The %s does %s damage"
-msgstr "%s infert %s vulneris"
+msgstr "%s infert vulnus %sarium"
 
 #: qcsrc/common/weapons/all.qc:850
 #, c-format
 msgid "The %s does %s damage per second"
-msgstr "%s infert %s vulneris in secundum"
+msgstr "%s infert vulnus %sarium in secundum"
 
 #: qcsrc/common/weapons/all.qc:851
 #, c-format
 msgid "The %s shoots %s shots doing %s damage each"
-msgstr "%s emittit %s missilia, quodque missile %s vulneris infert"
+msgstr "%s emittit %s missilia, quodque missile vulnus %sarium infert"
 
 #: qcsrc/common/weapons/all.qc:852
 #, c-format
 msgid "The %s shoots up to %s shots doing %s damage each"
 msgstr ""
-"%s emittit non plura quam %s missilia, quodque missile %s vulneris infert"
+"%s emittit non plura quam %s missilia, quodque missile vulnus %sarium infert"
 
 #: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:885
 #: qcsrc/common/weapons/all.qc:906 qcsrc/common/weapons/all.qc:920
@@ -8128,12 +8130,12 @@ msgstr ""
 #: qcsrc/common/weapons/all.qc:963 qcsrc/common/weapons/all.qc:977
 #: qcsrc/common/weapons/all.qc:1001 qcsrc/common/weapons/all.qc:1013
 msgid "Default damage stats:"
-msgstr ""
+msgstr "Stat. ordinariae vulnerum:"
 
 #: qcsrc/common/weapons/all.qc:877
 #, c-format
 msgid "A direct hit does %s damage"
-msgstr ""
+msgstr "Incidere vulnus %sarium infert"
 
 #: qcsrc/common/weapons/all.qc:999
 #, c-format
@@ -8143,7 +8145,7 @@ msgstr "(totum VIS: %.2f)"
 #: qcsrc/common/weapons/all.qc:1004
 #, c-format
 msgid "The combo adds an extra %s damage"
-msgstr ""
+msgstr "Hoc cum vulnere %sario coniungit"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1437
 #, c-format
@@ -8797,207 +8799,207 @@ msgstr "Vortex"
 #: qcsrc/lib/counting.qh:11
 #, c-format
 msgid "ZER^%d shells"
-msgstr ""
+msgstr "%d missile opertum"
 
 #: qcsrc/lib/counting.qh:12
 #, c-format
 msgid "ONE^%d shell"
-msgstr ""
+msgstr "%d missile opertum"
 
 #: qcsrc/lib/counting.qh:13
 #, c-format
 msgid "TWO^%d shells"
-msgstr ""
+msgstr "%d missilia operta"
 
 #: qcsrc/lib/counting.qh:14
 #, c-format
 msgid "THR^%d shells"
-msgstr ""
+msgstr "%d missilia operta"
 
 #: qcsrc/lib/counting.qh:15
 #, c-format
 msgid "MUL^%d shells"
-msgstr ""
+msgstr "%d missilia operta"
 
 #: qcsrc/lib/counting.qh:19
 #, c-format
 msgid "ZER^%d bullets"
-msgstr ""
+msgstr "%d glans"
 
 #: qcsrc/lib/counting.qh:20
 #, c-format
 msgid "ONE^%d bullet"
-msgstr ""
+msgstr "%d glans"
 
 #: qcsrc/lib/counting.qh:21
 #, c-format
 msgid "TWO^%d bullets"
-msgstr ""
+msgstr "%d glandes"
 
 #: qcsrc/lib/counting.qh:22
 #, c-format
 msgid "THR^%d bullets"
-msgstr ""
+msgstr "%d glandes"
 
 #: qcsrc/lib/counting.qh:23
 #, c-format
 msgid "MUL^%d bullets"
-msgstr ""
+msgstr "%d glandes"
 
 #: qcsrc/lib/counting.qh:27
 #, c-format
 msgid "ZER^%d rockets"
-msgstr ""
+msgstr "%d missile igneum"
 
 #: qcsrc/lib/counting.qh:28
 #, c-format
 msgid "ONE^%d rocket"
-msgstr ""
+msgstr "%d missile igneum"
 
 #: qcsrc/lib/counting.qh:29
 #, c-format
 msgid "TWO^%d rockets"
-msgstr ""
+msgstr "%d missilia ignea"
 
 #: qcsrc/lib/counting.qh:30
 #, c-format
 msgid "THR^%d rockets"
-msgstr ""
+msgstr "%d missilia ignea"
 
 #: qcsrc/lib/counting.qh:31
 #, c-format
 msgid "MUL^%d rockets"
-msgstr ""
+msgstr "%d missilia ignea"
 
 #: qcsrc/lib/counting.qh:35
 #, c-format
 msgid "ZER^%d cells"
-msgstr ""
+msgstr "%d cellula"
 
 #: qcsrc/lib/counting.qh:36
 #, c-format
 msgid "ONE^%d cell"
-msgstr ""
+msgstr "%d cellula"
 
 #: qcsrc/lib/counting.qh:37
 #, c-format
 msgid "TWO^%d cells"
-msgstr ""
+msgstr "%d cellulas"
 
 #: qcsrc/lib/counting.qh:38
 #, c-format
 msgid "THR^%d cells"
-msgstr ""
+msgstr "%d cellulas"
 
 #: qcsrc/lib/counting.qh:39
 #, c-format
 msgid "MUL^%d cells"
-msgstr ""
+msgstr "%d cellulas"
 
 #: qcsrc/lib/counting.qh:44
 #, c-format
 msgid "ZER^%d votes"
-msgstr ""
+msgstr "%d suffragium"
 
 #: qcsrc/lib/counting.qh:45
 #, c-format
 msgid "ONE^%d vote"
-msgstr ""
+msgstr "%d suffragium"
 
 #: qcsrc/lib/counting.qh:46
 #, c-format
 msgid "TWO^%d votes"
-msgstr ""
+msgstr "%d suffragia"
 
 #: qcsrc/lib/counting.qh:47
 #, c-format
 msgid "THR^%d votes"
-msgstr ""
+msgstr "%d suffragia"
 
 #: qcsrc/lib/counting.qh:48
 #, c-format
 msgid "MUL^%d votes"
-msgstr ""
+msgstr "%d suffragia"
 
 #: qcsrc/lib/counting.qh:52
 #, c-format
 msgid "ZER^%d matches"
-msgstr ""
+msgstr "%d ludus"
 
 #: qcsrc/lib/counting.qh:53
 #, c-format
 msgid "ONE^%d match"
-msgstr ""
+msgstr "%d ludus"
 
 #: qcsrc/lib/counting.qh:54
 #, c-format
 msgid "TWO^%d matches"
-msgstr ""
+msgstr "%d ludi"
 
 #: qcsrc/lib/counting.qh:55
 #, c-format
 msgid "THR^%d matches"
-msgstr ""
+msgstr "%d ludi"
 
 #: qcsrc/lib/counting.qh:56
 #, c-format
 msgid "MUL^%d matches"
-msgstr ""
+msgstr "%d ludi"
 
 #: qcsrc/lib/counting.qh:58
 #, c-format
 msgid "DEC^%s points"
-msgstr ""
+msgstr "%s in rationem"
 
 #: qcsrc/lib/counting.qh:61
 #, c-format
 msgid "ZER^%d points"
-msgstr ""
+msgstr "%d in rationem"
 
 #: qcsrc/lib/counting.qh:62
 #, c-format
 msgid "ONE^%d point"
-msgstr ""
+msgstr "%d in rationem"
 
 #: qcsrc/lib/counting.qh:63
 #, c-format
 msgid "TWO^%d points"
-msgstr ""
+msgstr "%d in rationem"
 
 #: qcsrc/lib/counting.qh:64
 #, c-format
 msgid "THR^%d points"
-msgstr ""
+msgstr "%d in rationem"
 
 #: qcsrc/lib/counting.qh:65
 #, c-format
 msgid "MUL^%d points"
-msgstr ""
+msgstr "%d in rationem"
 
 #: qcsrc/lib/counting.qh:69
 #, c-format
 msgid "ZER^%d results"
-msgstr ""
+msgstr "%d inventum"
 
 #: qcsrc/lib/counting.qh:70
 #, c-format
 msgid "ONE^%d result"
-msgstr ""
+msgstr "%d inventum"
 
 #: qcsrc/lib/counting.qh:71
 #, c-format
 msgid "TWO^%d results"
-msgstr ""
+msgstr "%d inventa"
 
 #: qcsrc/lib/counting.qh:72
 #, c-format
 msgid "THR^%d results"
-msgstr ""
+msgstr "%d inventa"
 
 #: qcsrc/lib/counting.qh:73
 #, c-format
 msgid "MUL^%d results"
-msgstr ""
+msgstr "%d inventa"
 
 #: qcsrc/lib/counting.qh:76
 #, c-format
@@ -9522,6 +9524,8 @@ msgid ""
 "player name to get started. You can change these options later through the "
 "menu system."
 msgstr ""
+"Salve in Xonotico, linguam tuam elige et lusoris nomen scribe ut incipias. "
+"Optiones mutare semper poteris per indicum systema."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:51
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.qc:28
@@ -10327,6 +10331,8 @@ msgid ""
 "Note: HUD skins are saved in the data/data/ directory and can be manually "
 "renamed/deleted from there"
 msgstr ""
+"Nota: Facies Notarum Superpositarum in data/data/ servantur et eo loco per "
+"iussus computatrales eas movere vel delere potes"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:73
 msgid "Panel background defaults:"
@@ -10697,6 +10703,8 @@ msgid ""
 "The maximum number of players or bots that can be connected to your server "
 "at once"
 msgstr ""
+"Numerus maximus ludentium, hominum vel automatorum, qui cum moderatro tuo se "
+"simul conectere possunt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Number of bots:"
@@ -10704,7 +10712,7 @@ msgstr "Automatorum numerus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
 msgid "Number of bots on your server"
-msgstr ""
+msgstr "Quot sunt ludentes automati in moderatro tuo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "Bot skill:"
@@ -11627,7 +11635,7 @@ msgstr "Superficies illustres"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:119
 msgid "Enable the use of glossmaps on textures supporting them"
-msgstr ""
+msgstr "Illustrationum tabulis utitur in texturis quae eas contineant"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:125
 msgid "Offset mapping"
@@ -11840,6 +11848,8 @@ msgid ""
 "Multiplier for number of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"Cum quo multiplicare numerum particularum. Si multiplicandus parvus est, "
+"erunt paucae particulae, atque computatrum velocius erit"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:247
 msgid "Particles further away than this will not be drawn"
@@ -12217,6 +12227,8 @@ msgid ""
 "Warning: if enabled in team games your team's color may be the same as the "
 "enemy team's"
 msgstr ""
+"NB: si in manus ludis hoc optas, fortasse non distinguuntur coloribus manus "
+"tua et manus hostium"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Except in team games"
@@ -13355,7 +13367,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/guide/pages.qc:74 qcsrc/menu/xonotic/guide/pages.qc:149
 msgid "Ramp Jumping"
-msgstr ""
+msgstr "Saltus a Clivo"
 
 #: qcsrc/menu/xonotic/guide/pages.qc:80
 msgid ""
@@ -13877,6 +13889,8 @@ msgid ""
 "Players spawn with no ammo and no weapons except the %s, so they can only "
 "slap other players."
 msgstr ""
+"Ludentes sine missilibus et sine armis, nisi %s, nascuntur, ut alios alapam "
+"ducere necesse sit."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:271
 msgid ""
@@ -14199,7 +14213,7 @@ msgstr "Decembris"
 #: qcsrc/menu/xonotic/statslist.qc:56
 #, no-c-format
 msgid "DATE^%MMMM %d, %y"
-msgstr ""
+msgstr "%d %MMMM %y"
 
 #: qcsrc/menu/xonotic/statslist.qc:118
 msgid "Joined:"
@@ -14240,7 +14254,7 @@ msgstr "Interfecit/Mortuus:"
 #: qcsrc/menu/xonotic/statslist.qc:179
 #, c-format
 msgid "Kill-death ratio:"
-msgstr ""
+msgstr "Mortium fractio:"
 
 #: qcsrc/menu/xonotic/statslist.qc:214
 msgid "Skill:"
@@ -14248,7 +14262,7 @@ msgstr "Habilitas:"
 
 #: qcsrc/menu/xonotic/statslist.qc:241
 msgid "* = unranked"
-msgstr ""
+msgstr "* = sine gradu"
 
 #: qcsrc/menu/xonotic/util.qc:420
 msgid "Update can be downloaded at:"
