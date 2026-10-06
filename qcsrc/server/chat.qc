@@ -279,7 +279,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		ret = -1; // just hide the message completely
 	}
 
-	MUTATOR_CALLHOOK(ChatMessage, source, ret, msgin, privatesay);
+	MUTATOR_CALLHOOK(ChatMessage, source, ret, msgin, privatesay, teamsay);
 	ret = M_ARGV(1, int);
 
 	string event_log_msg = "";
