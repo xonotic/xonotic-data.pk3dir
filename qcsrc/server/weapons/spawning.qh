@@ -11,4 +11,4 @@ float autocvar_g_pickup_respawntimejitter_weapon;
 
 string W_Apply_Weaponreplace(string in);
 
-void weapon_defaultspawnfunc(entity this, Weapon e);
+void weapon_defaultspawnfunc(entity this, Weapon wpn);

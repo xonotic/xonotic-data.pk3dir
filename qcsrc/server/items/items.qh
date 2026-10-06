@@ -90,7 +90,7 @@ float healtharmor_pickupevalfunc(entity player, entity item);
 
 .bool is_item;
 .entity itemdef;
-void StartItem(entity this, entity def);
+void StartItem(entity this);
 
 .int item_group;
 .int item_group_count;

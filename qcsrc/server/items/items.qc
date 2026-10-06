@@ -25,6 +25,7 @@
 #include <server/teamplay.qh>
 #include <server/weapons/common.qh>
 #include <server/weapons/selection.qh>
+#include <server/weapons/spawning.qh>
 #include <server/weapons/weaponsystem.qh>
 #include <server/world.qh>
 
@@ -1004,15 +1005,23 @@ void item_setactive(entity this, int act)
 		Item_Show(this, ((this.active == ACTIVE_ACTIVE) ? 1 : -1));
 }
 
-void StartItem(entity this, entity def)
+void StartItem(entity this)
 {
-	if (def.m_spawnfunc_hookreplace)
-		def = def.m_spawnfunc_hookreplace(def, this);
-	this.itemdef = def;
-	if (def.m_canonical_spawnfunc != "") // FIXME why do weapons set itemdef to an entity that doesn't have this?
-		this.classname = def.m_canonical_spawnfunc;
-
-	startitem_failed = true; // early return means failure
+	entity def = this.itemdef;
+	if (def.instanceOfWeapon)
+	{
+		weapon_defaultspawnfunc(this, def);
+		if (wasfreed(this))
+			return;
+		def = this.itemdef;
+	}
+	else
+	{
+		if (def.m_spawnfunc_hookreplace)
+			def = this.itemdef = def.m_spawnfunc_hookreplace(def, this);
+		if (def.m_canonical_spawnfunc != "")
+			this.classname = def.m_canonical_spawnfunc;
+	}
 
 	// some mutators check for resources set by m_iteminit in FilterItem
 	if(def.m_iteminit)
@@ -1096,7 +1105,7 @@ void StartItem(entity this, entity def)
 			return;
 		}
 	}
-	else
+	else // it's a level item
 	{
 		// must be done after def.m_iteminit() as that may set ITEM_FLAG_MUTATORBLOCKED
 		if(!have_pickup_item(this))
@@ -1134,18 +1143,19 @@ void StartItem(entity this, entity def)
 			setorigin(this, this.origin);
 		}
 
-		// it's a level item
 		if(this.spawnflags & 1)
 			this.noalign = 1;
 		if (this.noalign > 0)
 			set_movetype(this, MOVETYPE_NONE);
 		else
-			set_movetype(this, MOVETYPE_TOSS);
-		// do item filtering according to gametype and other things
-		if (this.noalign <= 0)
 		{
 			if (!this.noalign)
-				DropToFloor_QC_DelayedInit(this);
+			{
+				DropToFloor_QC(this);
+				if (wasfreed(this))
+					return;
+			}
+			set_movetype(this, MOVETYPE_TOSS);
 			waypoint_spawnforitem(this);
 		}
 
@@ -1167,6 +1177,7 @@ void StartItem(entity this, entity def)
 			this.is_item = true;
 		}
 
+		// DO NOT DELETE AFTER THIS POINT //
 		weaponsInMap |= WepSet_FromWeapon(REGISTRY_GET(Weapons, this.weapon));
 
 		if (	    def.instanceOfPowerup
@@ -1229,11 +1240,7 @@ void StartItem(entity this, entity def)
 	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), 0, ItemSend);
 
 	// call this hook after everything else has been done
-	if (MUTATOR_CALLHOOK(Item_Spawn, this))
-	{
-		delete(this);
-		return;
-	}
+	MUTATOR_CALLHOOK(Item_Spawn, this);
 
 	// we should be sure this item will spawn before loading its assets
 	// CSQC handles model precaching: it may not use this model (eg simple items) and may not have connected yet
@@ -1241,8 +1248,6 @@ void StartItem(entity this, entity def)
 	precache_sound(this.item_pickupsound);
 
 	setItemGroup(this);
-
-	startitem_failed = false;
 }
 
 #define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))
