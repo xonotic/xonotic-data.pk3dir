@@ -423,7 +423,7 @@ METHOD(Shotgun, describe, string(Shotgun this))
 	PAR(_("The primary fire consumes %s ammo, although if you spawn in with the %s you will already have some."), COLORED_NAME(ITEM_Shells), COLORED_NAME(this));
 	PAR(_("The %s damage drops off quickly as the range increases, so it is only useful for close combat or sometimes medium range combat."), COLORED_NAME(this));
 	PAR(W_Guide_Keybinds(this));
-	PAR(W_Guide_DPS_primaryMultishot(this.netname, "primary", "secondary", "primary_bullets", ""));
+	PAR(W_Guide_DPS_primaryMultishot(this.netname, "primary", "secondary", "primary_bullets"));
 	return PAGE_TEXT;
 }
 
