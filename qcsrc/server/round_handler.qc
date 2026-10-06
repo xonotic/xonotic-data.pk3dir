@@ -1,10 +1,12 @@
 #include "round_handler.qh"
 
 #include <common/mapobjects/triggers.qh>
+#include <common/mutators/base.qh>
 #include <common/scores.qh>
 #include <common/util.qh>
 #include <server/campaign.qh>
 #include <server/command/vote.qh>
+#include <server/mutators/events.qh>
 #include <server/scores.qh>
 #include <server/world.qh>
 
@@ -68,6 +70,9 @@ void round_handler_Think(entity this)
 			this.wait = true;
 			this.nextthink = time + this.delay;
 			round_handler_ResetEndDelayTime();
+
+			// new round = last round ended
+			MUTATOR_CALLHOOK(RoundEnd);
 		}
 		else
 		{
