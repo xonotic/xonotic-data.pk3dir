@@ -29,6 +29,29 @@ float autocvar_g_keepawayball_respawntime;
 int autocvar_g_keepawayball_trail_color;
 int autocvar_g_keepawayball_tracking;
 
+bool ka_BallStatuses_SendEntity(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_KA_BALLSTATUSES);
+	WriteByte(MSG_ENTITY, sf);
+	if (sf & SF_KA_BALLS)
+	{
+		WriteShort(MSG_ENTITY, max(1, autocvar_g_keepawayball_count));
+		IL_EACH(g_kaballs, true, WriteByte(MSG_ENTITY, (it.owner ? etof(it.owner) : 0)));
+	}
+	return true;
+}
+
+entity kaballStatuses;
+void ka_BallStatuses_Init()
+{
+	if (kaballStatuses)
+	{
+		backtrace("Can't spawn kaballStatuses again!");
+		return;
+	}
+	Net_LinkEntity(kaballStatuses = new_pure(kaballStatuses), false, 0, ka_BallStatuses_SendEntity);
+}
+
 bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
 	if(view.ballcarried && IS_SPEC(player))
@@ -169,6 +192,7 @@ void ka_TouchEvent(entity this, entity toucher) // runs any time that the ball c
 	Send_Notification(NOTIF_ALL_EXCEPT, toucher, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, toucher.netname);
 	Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
 	sound(this.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	kaballStatuses.SendFlags |= SF_KA_BALLS;
 
 	// scoring
 	GameRules_scoring_add(toucher, KEEPAWAY_PICKUPS, 1);
@@ -251,6 +275,7 @@ void ka_RemoveBalls()
 			WaypointSprite_DetachCarrier(it);
 		delete(it);
 	});
+	kaballStatuses.SendFlags = SF_KA_RESET;
 }
 
 void ka_SpawnBalls()
@@ -286,6 +311,7 @@ void ka_SpawnBalls()
 		++i;
 	}
 	while (i < autocvar_g_keepawayball_count);
+	kaballStatuses.SendFlags |= SF_KA_BALLS;
 }
 
 void ka_Handler_CheckBall(entity this)
@@ -422,8 +448,12 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 			GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_keepaway_score_killac);
 	}
 
-	while (frag_target.ballcarried)
+	if (!frag_target.ballcarried)
+		return;
+	do
 		ka_DropEvent(frag_target); // a player with ball(s) has died, drop them
+	while (frag_target.ballcarried);
+	kaballStatuses.SendFlags |= SF_KA_BALLS;
 }
 
 MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
@@ -438,14 +468,6 @@ MUTATOR_HOOKFUNCTION(ka, Scores_CountFragsRemaining)
 	return !autocvar_g_keepaway_score_timepoints;
 }
 
-MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
-{
-	entity player = M_ARGV(0, entity);
-
-	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
-	STAT(OBJECTIVE_STATUS, player) = BITSET(STAT(OBJECTIVE_STATUS, player), KA_CARRYING, player.ballcarried != NULL);
-}
-
 MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 {
 	entity player = M_ARGV(0, entity);
@@ -454,6 +476,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 	if(player.ballcarried)
 	{
 		ka_DropEvent(player);
+		kaballStatuses.SendFlags |= SF_KA_BALLS;
 		return true;
 	}
 }
@@ -509,16 +532,24 @@ MUTATOR_HOOKFUNCTION(ka, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	while (player.ballcarried)
+	if (!player.ballcarried)
+		return;
+	do
 		ka_DropEvent(player); // a player with ball(s) has left the match, drop them
+	while (player.ballcarried);
+	kaballStatuses.SendFlags |= SF_KA_BALLS;
 }
 
 MUTATOR_HOOKFUNCTION(ka, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	while (player.ballcarried)
+	if (!player.ballcarried)
+		return;
+	do
 		ka_DropEvent(player); // a player with ball(s) has left the match, drop them
+	while (player.ballcarried);
+	kaballStatuses.SendFlags |= SF_KA_BALLS;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
@@ -570,8 +601,12 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 {
 	entity frag_target = M_ARGV(0, entity);
 
-	while (frag_target.ballcarried)
+	if (!frag_target.ballcarried)
+		return;
+	do
 		ka_DropEvent(frag_target);
+	while (frag_target.ballcarried);
+	kaballStatuses.SendFlags |= SF_KA_BALLS;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PreferPlayerScore_Clear)

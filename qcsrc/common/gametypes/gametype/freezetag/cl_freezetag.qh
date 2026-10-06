@@ -1,6 +1,4 @@
 #pragma once
 
-int autocvar_hud_panel_modicons_freezetag_layout;
-
-void HUD_Mod_FreezeTag(vector myPos, vector mySize, bool should_draw);
-void HUD_Mod_FreezeTag_Export(int fh);
+void HUD_Mod_FT(vector myPos, vector mySize, bool should_draw);
+void HUD_Mod_FT_Export(int fh);
