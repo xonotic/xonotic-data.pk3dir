@@ -24,7 +24,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 
 	string message_save = this.message;
 	this.message = ""; // no more message
-	SUB_UseTargets(this, actor, trigger);				// fire all targets / killtargets
+	SUB_UseTargets(this, actor);				// fire all targets / killtargets
 	this.message = message_save;
 
 	this.velocity = '0 0 0';

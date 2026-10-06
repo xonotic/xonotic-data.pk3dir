@@ -64,10 +64,10 @@ void Teleport_Touch(entity this, entity toucher)
 
 #ifdef SVQC
 	string s = this.target; this.target = string_null;
-	SUB_UseTargets(this, player, player); // TODO: should we be using toucher for trigger too?
+	SUB_UseTargets(this, player);
 	if (!this.target) this.target = s;
 
-	SUB_UseTargets(e, player, player);
+	SUB_UseTargets(e, player);
 #endif
 }
 
@@ -85,14 +85,14 @@ void target_teleport_use(entity this, entity actor, entity trigger)
 	entity e = Simple_TeleportPlayer(this, player);
 
 	string s = this.target; this.target = string_null;
-	SUB_UseTargets(this, player, player); // TODO: should we be using toucher for trigger too?
+	SUB_UseTargets(this, player);
 	if (!this.target)
 	{
 		this.target = s;
 	}
 
 	if(e != this) // only activate the target teleporter if target is different
-		SUB_UseTargets(e, player, player);
+		SUB_UseTargets(e, player);
 }
 #endif
 

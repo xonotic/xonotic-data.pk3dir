@@ -163,11 +163,10 @@ spawnfunc(func_vectormamamam)
 	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (!this.message || this.message == ""))
 		this.message = " was squished";
-    if(this.dmg && (!this.message2 || this.message2 == ""))
+	if(this.dmg && (!this.message2 || this.message2 == ""))
 		this.message2 = "was squished by";
 	if(this.dmg && (!this.dmgtime))
 		this.dmgtime = 0.25;
-	this.dmgtime2 = time;
 
 	if (!InitMovingBrushTrigger(this))
 		return;

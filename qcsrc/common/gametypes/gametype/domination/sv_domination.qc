@@ -93,7 +93,7 @@ void dompoint_captured(entity this)
 	old_team = this.team;
 	this.team = real_team;
 	this.delay = 0;
-	SUB_UseTargets (this, this, NULL);
+	SUB_UseTargets (this, this);
 	this.delay = old_delay;
 	this.team = old_team;
 

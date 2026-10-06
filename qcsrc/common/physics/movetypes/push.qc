@@ -51,9 +51,9 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 	MAKE_VECTORS(a, forward, left, up);
 	left *= -1; // actually make it left!
 
-	vector pushorig = this.origin;
-	vector pushang = this.angles;
-	float pushltime = this.ltime;
+	vector prev_origin = this.origin;
+	vector prev_angles = this.angles;
+	float prev_ltime = this.ltime;
 
 	// move the pusher to its final position
 
@@ -128,6 +128,16 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 			continue;
 		}
 
+		#ifdef SVQC
+		if (this.dmg_inflictor) // a player or monster used this mover
+		{
+			// assign kill credit if the entity is pushed into a hazard or killed by this mover
+			check.pusher = this.dmg_inflictor;
+			check.pushltime = time + autocvar_g_maxpushtime;
+			check.istypefrag = PHYS_INPUT_BUTTON_CHAT(check);
+		}
+		#endif
+
 		// try moving the contacted entity
 		int savesolid = this.solid;
 		this.solid = SOLID_NOT;
@@ -173,9 +183,9 @@ void _Movetype_PushMove(entity this, float dt) // SV_PushMove
 				continue;
 			}
 
-			this.origin = pushorig;
-			this.angles = pushang;
-			this.ltime = pushltime;
+			this.origin = prev_origin;
+			this.angles = prev_angles;
+			this.ltime = prev_ltime;
 			_Movetype_LinkEdict(this, false);
 
 			// move back any entities we already moved

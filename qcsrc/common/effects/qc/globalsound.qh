@@ -120,16 +120,13 @@ REGISTER_GLOBALSOUND(STEP_METAL, "misc/metalfootstep0 6")
 REGISTER_GLOBALSOUND(FALL, "misc/hitground 4")
 REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
 
-bool GetPlayerSoundSampleField_notFound;
 void PrecachePlayerSounds(string f);
 //#ifdef CSQC
-	.string GetVoiceMessageSampleField(string type);
-	.string GetPlayerSoundSampleField(string type);
 	void ClearPlayerSounds(entity this);
 	float LoadPlayerSounds(entity this, string f, bool strict);
 	void UpdatePlayerSounds(entity this);
 //#endif
-entity GetVoiceMessage(string type);
+entity GetPlayerSound(string type);
 
 string GlobalSound_sample(string pair, float r);
 

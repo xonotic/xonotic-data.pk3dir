@@ -96,7 +96,7 @@ void misc_laser_think(entity this)
 			{
 				this.count = 1;
 
-				SUB_UseTargets(this.enemy, this.enemy.pusher, NULL);
+				SUB_UseTargets(this.enemy, this.enemy.pusher);
 			}
 		}
 		else
@@ -105,7 +105,7 @@ void misc_laser_think(entity this)
 			{
 				this.count = 0;
 
-				SUB_UseTargets(this.enemy, this.enemy.pusher, NULL);
+				SUB_UseTargets(this.enemy, this.enemy.pusher);
 			}
 		}
 	}

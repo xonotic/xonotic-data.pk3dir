@@ -213,30 +213,10 @@
 		}
 	}
 
-	entity GetVoiceMessage(string type)
-	{
-		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == true, return it);
-		return NULL;
-	}
-
 	entity GetPlayerSound(string type)
 	{
-		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == false, return it);
+		FOREACH(PlayerSounds, it.m_playersoundstr == type, return it);
 		return NULL;
-	}
-
-	.string _GetPlayerSoundSampleField(string type, bool voice)
-	{
-		GetPlayerSoundSampleField_notFound = false;
-		entity e = voice ? GetVoiceMessage(type) : GetPlayerSound(type);
-		if (e) return e.m_playersoundfld;
-		GetPlayerSoundSampleField_notFound = true;
-		return playersound_taunt.m_playersoundfld;
-	}
-
-	.string GetVoiceMessageSampleField(string type)
-	{
-		return _GetPlayerSoundSampleField(type, true);
 	}
 
 	void PrecachePlayerSounds(string f)
@@ -263,11 +243,6 @@
 	}
 
 	//#ifdef CSQC
-
-		.string GetPlayerSoundSampleField(string type)
-		{
-			return _GetPlayerSoundSampleField(type, false);
-		}
 
 		void ClearPlayerSounds(entity this)
 		{
@@ -297,13 +272,13 @@
 					continue;
 				}
 				string key = argv(0);
-				var .string field = GetPlayerSoundSampleField(key);
-				if (GetPlayerSoundSampleField_notFound) field = GetVoiceMessageSampleField(key);
-				if (GetPlayerSoundSampleField_notFound)
+				entity e = GetPlayerSound(key);
+				if (!e)
 				{
 					LOG_TRACEF("Invalid sound info field in player sound file '%s': %s", f, key);
 					continue;
 				}
+				var .string field = e.m_playersoundfld;
 				string file = argv(1);
 				string variants = argv(2);
 				strcpy(this.(field), strcat(file, " ", variants));

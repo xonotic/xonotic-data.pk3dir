@@ -90,7 +90,7 @@ void item_key_touch(entity this, entity toucher)
 
 	string oldmsg = this.message;
 	this.message = "";
-	SUB_UseTargets(this, toucher, toucher); // TODO: should we be using toucher for the trigger here?
+	SUB_UseTargets(this, toucher);
 	this.message = oldmsg;
 }
 
