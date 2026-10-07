@@ -8,19 +8,21 @@ CLASS(Inventory, Object)
     ATTRIBARRAY(Inventory, inv_items, int, REGISTRY_MAX(Items));
 ENDCLASS(Inventory)
 
-/** Player inventory */
-.Inventory inventory;
-/** Player inventory storage (holds previous state) */
-.Inventory inventory_store;
+.Inventory inventory; ///< Player inventory
+.Inventory inventory_store; ///< Player inventory storage (holds previous state)
 
 REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
+REGISTER_NET_TEMP(TE_CSQC_WEAPONPICKUP)
 
 const int Inventory_groups_minor = 8; // must be a multiple of 8 (one byte) to optimize bandwidth usage
 const int Inventory_groups_major = 4; // must be >= ceil(REGISTRY_COUNT(Items) / Inventory_groups_minor)
 #endif
 
+
 // no need to perform these checks on both server and client
 #ifdef CSQC
+#include <client/hud/panel/pickup.qh>
+
 STATIC_INIT(Inventory)
 {
 	if (Inventory_groups_minor / 8 != floor(Inventory_groups_minor / 8))
@@ -29,56 +31,13 @@ STATIC_INIT(Inventory)
 	if (Inventory_groups_major < min_major_value)
 		error(sprintf("Inventory_groups_major can not be < %d.", min_major_value));
 }
-#endif
-
-#ifdef SVQC
-#define G_MAJOR(id) (floor((id) / Inventory_groups_minor))
-#define G_MINOR(id) ((id) % Inventory_groups_minor)
-#endif
-
-#ifdef CSQC
-#include <client/hud/panel/pickup.qh>
 
 Inventory g_inventory;
 
 void Inventory_remove(entity this)
 {
-    if(g_inventory == this)
+    if (g_inventory == this)
         g_inventory = NULL;
-}
-
-NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
-{
-    make_pure(this);
-    g_inventory = this;
-    this.entremove = Inventory_remove;
-    const int majorBits = Readbits(Inventory_groups_major);
-    for (int i = 0; i < Inventory_groups_major; ++i) {
-        if (!(majorBits & BIT(i))) {
-            continue;
-        }
-        const int minorBits = Readbits(Inventory_groups_minor);
-        for (int j = 0; j < Inventory_groups_minor; ++j) {
-            if (!(minorBits & BIT(j))) {
-                continue;
-            }
-            const GameItem it = REGISTRY_GET(Items, Inventory_groups_minor * i + j);
-            .int fld = inv_items[it.m_id];
-            int prev = this.(fld);
-            int next = this.(fld) = ReadByte();
-
-            HUD_Pickup_Update(it, next - prev);
-            LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
-        }
-    }
-    return true;
-}
-
-NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
-{
-	const Weapon it = ReadRegistered(Weapons);
-	HUD_Pickup_Update(it, 1);
-	return true;
 }
 #endif
 
@@ -86,7 +45,10 @@ NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isnew)
 int minorBitsArr[Inventory_groups_major];
 void Inventory_Write(Inventory data, Inventory store)
 {
-    if (!data) {
+#define G_MAJOR(id) (floor((id) / Inventory_groups_minor))
+#define G_MINOR(id) ((id) % Inventory_groups_minor)
+    if (!data)
+	{
         WriteShort(MSG_ENTITY, 0);
         return;
     }
@@ -96,11 +58,13 @@ void Inventory_Write(Inventory data, Inventory store)
 		minorBitsArr[i] = 0;
 
     int majorBits = 0;
-    FOREACH(Items, true, {
+    FOREACH(Items, true,
+	{
         .int fld = inv_items[it.m_id];
         const bool changed = store.(fld) != data.(fld);
         store.(fld) = data.(fld);
-        if (changed) {
+        if (changed)
+		{
 			int maj = G_MAJOR(it.m_id);
 			majorBits = BITSET(majorBits, BIT(maj), true);
 			minorBitsArr[maj] = BITSET(minorBitsArr[maj], BIT(G_MINOR(it.m_id)), true);
@@ -124,20 +88,8 @@ void Inventory_Write(Inventory data, Inventory store)
 			WriteByte(MSG_ENTITY, data.inv_items[it.m_id]);
 		}
 	}
-}
-#endif
-
 #undef G_MAJOR
 #undef G_MINOR
-
-#ifdef SVQC
-bool Inventory_Send(Inventory this, Client to, int sf)
-{
-    TC(Inventory, this);
-    WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
-    TC(PlayerState, this.owner);
-    Inventory_Write(this, to.inventory_store);
-    return true;
 }
 
 bool Inventory_customize(entity this, entity client)
@@ -146,6 +98,7 @@ bool Inventory_customize(entity this, entity client)
     return (PS(client) && PS(client).inventory == this);
 }
 
+bool Inventory_Send(Inventory this, Client to, int sf);
 void Inventory_new(PlayerState this)
 {
     Inventory inv = NEW(Inventory);
@@ -155,8 +108,14 @@ void Inventory_new(PlayerState this)
 	Net_LinkEntity(inv, false, 0, Inventory_Send);
 }
 
-void Inventory_delete(entity e) { delete(e.inventory); }
-void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
+void Inventory_delete(entity e)
+{
+	delete(e.inventory);
+}
+void Inventory_update(entity e)
+{
+	e.inventory.SendFlags = 0xFFFFFF;
+}
 
 void Inventory_pickupitem(Pickup this, entity player)
 {
@@ -171,12 +130,75 @@ void Inventory_clear(entity store)
 {
     // NOTE: you will need to perform Inventory_update after this to update the storage entity
     // (unless store is the storage entity)
-    FOREACH(Items, true, {
+    FOREACH(Items, true,
+	{
         .int fld = inv_items[it.m_id];
         store.(fld) = 0;
     });
 }
 
-void InventoryStorage_attach(entity e) { e.inventory_store = NEW(Inventory); e.inventory_store.drawonlytoclient = e; }
-void InventoryStorage_delete(entity e) { delete(e.inventory_store); }
+void InventoryStorage_attach(entity e)
+{
+	e.inventory_store = NEW(Inventory);
+	e.inventory_store.drawonlytoclient = e;
+}
+void InventoryStorage_delete(entity e)
+{
+	delete(e.inventory_store);
+}
+#endif
+
+
+#ifdef SVQC
+bool Inventory_Send(Inventory this, Client to, int sf)
+{
+    TC(Inventory, this);
+    WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
+    TC(PlayerState, this.owner);
+    Inventory_Write(this, to.inventory_store);
+    return true;
+}
+#elifdef CSQC
+NET_HANDLE(ENT_CLIENT_INVENTORY, bool isNew)
+{
+    make_pure(this);
+    g_inventory = this;
+    this.entremove = Inventory_remove;
+    const int majorBits = Readbits(Inventory_groups_major);
+    for (int i = 0; i < Inventory_groups_major; ++i)
+	{
+        if (!(majorBits & BIT(i)))
+            continue;
+
+        const int minorBits = Readbits(Inventory_groups_minor);
+        for (int j = 0; j < Inventory_groups_minor; ++j)
+		{
+            if (!(minorBits & BIT(j)))
+                continue;
+            const GameItem it = REGISTRY_GET(Items, Inventory_groups_minor * i + j);
+            .int fld = inv_items[it.m_id];
+            int prev = this.(fld);
+            int next = this.(fld) = ReadByte();
+
+            HUD_Pickup_Update(it, next - prev);
+            LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
+        }
+    }
+    return true;
+}
+#endif
+
+#ifdef SVQC
+void WeaponPickup_Send(entity player, entity wep)
+{
+	msg_entity = player;
+	WriteHeader(MSG_ONE, TE_CSQC_WEAPONPICKUP);
+	WriteRegistered(Weapons, MSG_ONE, wep);
+}
+#elifdef CSQC
+NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isNew)
+{
+	HUD_Pickup_Update(ReadRegistered(Weapons), 1);
+	return true;
+}
 #endif

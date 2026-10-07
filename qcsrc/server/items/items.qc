@@ -5,6 +5,7 @@
 #include <common/deathtypes/all.qh>
 #include <common/gametypes/gametype/cts/cts.qh>
 #include <common/items/_mod.qh>
+#include <common/items/inventory.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
@@ -513,11 +514,8 @@ bool Item_GiveAmmoTo(entity item, entity player, Resource res_type, float ammoma
 
 void Item_NotifyWeapon(entity player, entity wep)
 {
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (it == player || (IS_SPEC(it) && it.enemy == player)), {
-		msg_entity = it;
-		WriteHeader(MSG_ONE, TE_CSQC_WEAPONPICKUP);
-		WriteRegistered(Weapons, MSG_ONE, wep);
-	});
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (it == player || (IS_SPEC(it) && it.enemy == player)),
+		WeaponPickup_Send(it, wep));
 }
 
 bool Item_GiveTo(entity item, entity player)
