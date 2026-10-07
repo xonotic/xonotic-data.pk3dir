@@ -194,6 +194,7 @@ void WeaponPickup_Send(entity player, entity wep)
 	msg_entity = player;
 	WriteHeader(MSG_ONE, TE_CSQC_WEAPONPICKUP);
 	WriteRegistered(Weapons, MSG_ONE, wep);
+	STAT(LAST_PICKUP, player) = time;
 }
 #elifdef CSQC
 NET_HANDLE(TE_CSQC_WEAPONPICKUP, bool isNew)
