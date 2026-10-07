@@ -1,0 +1,8 @@
+//TAG: wyvern
+death sound/monsters/wyvern/death 0
+sight sound/monsters/wyvern/sight 0
+ranged sound/monsters/wyvern/ranged 0
+//melee sound/monsters/wyvern/melee 0
+pain sound/monsters/wyvern/pain 0
+//spawn sound/monsters/wyvern/spawn 0
+//idle sound/monsters/wyvern/idle 0

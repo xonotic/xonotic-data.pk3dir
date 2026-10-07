@@ -445,7 +445,11 @@ MUTATOR_HOOKABLE(MonsterMove, params);
 #undef params
 
 /// Called when a monster looks for another target
-MUTATOR_HOOKABLE(MonsterFindTarget, EV_NO_ARGS);
+#define params(i, o) \
+    i(entity, 0) /* monster */ \
+    /**/
+MUTATOR_HOOKABLE(MonsterFindTarget, params);
+#undef params
 
 /// Called when validating a monster's target
 #define params(i, o) \

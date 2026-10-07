@@ -18,6 +18,7 @@ REGISTER_DEATHTYPE(MONSTER_GOLEM_SMASH,   DEATH_SELF_MON_GOLEM_SMASH,     DEATH_
 REGISTER_DEATHTYPE(MONSTER_GOLEM_ZAP,     DEATH_SELF_MON_GOLEM_ZAP,       DEATH_MURDER_MONSTER,          NULL,                 NULL,                   "monster")
 REGISTER_DEATHTYPE(MONSTER_SPIDER,        DEATH_SELF_MON_SPIDER,          DEATH_MURDER_MONSTER,          NULL,                 NULL,                   "monster")
 REGISTER_DEATHTYPE(MONSTER_WYVERN,        DEATH_SELF_MON_WYVERN,          DEATH_MURDER_MONSTER,          NULL,                 NULL,                   "monster")
+REGISTER_DEATHTYPE(MONSTER_WYVERN_MELEE,  DEATH_SELF_MON_WYVERN_MELEE,    DEATH_MURDER_MONSTER,          NULL,                 NULL,                   "monster")
 REGISTER_DEATHTYPE(MONSTER_ZOMBIE_JUMP,   DEATH_SELF_MON_ZOMBIE_JUMP,     DEATH_MURDER_MONSTER,          NULL,                 NULL,                   "monster")
 REGISTER_DEATHTYPE(MONSTER_ZOMBIE_MELEE,  DEATH_SELF_MON_ZOMBIE_MELEE,    DEATH_MURDER_MONSTER,          NULL,                 NULL,                   "monster")
 REGISTER_DEATHTYPE(NADE,                  DEATH_SELF_NADE,                DEATH_MURDER_NADE,             NULL,                 NULL,                   "")
