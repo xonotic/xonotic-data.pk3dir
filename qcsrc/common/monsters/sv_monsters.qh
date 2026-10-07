@@ -116,7 +116,7 @@ void Monster_Move_2D(entity this, float mspeed, float allow_jumpoff);
 
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func);
 
-void Monster_Attack_Melee(entity this, float damg, float er, int deathtype);
+void Monster_Attack_Melee(entity this, float damg, float force, float hit_range, int deathtype);
 bool Monster_Attack_Leap(entity this, vector anm, void(entity this, entity toucher) touchfunc, vector vel, float animtime);
 
 entity Monster_FindTarget(entity this);

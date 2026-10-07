@@ -8,6 +8,7 @@ float autocvar_g_monster_golem_attack_smash_damage;
 float autocvar_g_monster_golem_attack_smash_force = 100;
 float autocvar_g_monster_golem_attack_smash_range = 200;
 float autocvar_g_monster_golem_attack_claw_damage;
+float autocvar_g_monster_golem_attack_claw_force = 80;
 float autocvar_g_monster_golem_attack_lightning_damage;
 float autocvar_g_monster_golem_attack_lightning_damage_zap = 15;
 float autocvar_g_monster_golem_attack_lightning_force;
@@ -24,36 +25,36 @@ float autocvar_g_monster_golem_speed_walk;
 void M_Golem_Attack_Smash(entity this)
 {
 	makevectors(this.angles);
-	Send_Effect(EFFECT_EXPLOSION_MEDIUM, (this.origin + (v_forward * 150)) - ('0 0 1' * this.maxs.z), '0 0 0', 1);
-	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
-	vector loc = this.origin + v_forward * 50;
+	WarpZone_TraceLine(this.origin, this.origin + v_forward * 100 + '0 0 1' * this.mins.z, MOVE_NOMONSTERS, this);
+	vector impact_org = trace_endpos;
 
-	entity dmgent = spawn();
-	dmgent.owner = dmgent.realowner = this;
-	setorigin(dmgent, loc);
-	RadiusDamage(dmgent, this,
+	Send_Effect(EFFECT_EXPLOSION_MEDIUM, impact_org, '0 0 0', 1);
+	soundat(this, impact_org, CH_SHOTS, SND(ROCKET_IMPACT), VOL_BASE, ATTEN_NORM);
+
+	RadiusDamageForSource(this, impact_org, this.velocity, this,
 		autocvar_g_monster_golem_attack_smash_damage * MONSTER_SKILLMOD(this),
 		autocvar_g_monster_golem_attack_smash_damage * MONSTER_SKILLMOD(this) * 0.5,
 		autocvar_g_monster_golem_attack_smash_range,
 		this,
 		NULL,
+		0,
 		autocvar_g_monster_golem_attack_smash_force,
+		'1 1 1',
 		DEATH_MONSTER_GOLEM_SMASH.m_id,
 		DMG_NOWEP,
 		NULL
 	);
-	delete(dmgent);
 }
 
 void M_Golem_Attack_Swing(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_golem_attack_claw_damage, this.attack_range, DEATH_MONSTER_GOLEM_CLAW.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_golem_attack_claw_damage, autocvar_g_monster_golem_attack_claw_force, this.attack_range, DEATH_MONSTER_GOLEM_CLAW.m_id);
 }
 
 void M_Golem_Attack_Slam(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_golem_attack_claw_damage * 1.5, this.attack_range * 0.8, DEATH_MONSTER_GOLEM_CLAW.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_golem_attack_claw_damage * 1.5, autocvar_g_monster_golem_attack_claw_force * 1.5, this.attack_range * 0.8, DEATH_MONSTER_GOLEM_CLAW.m_id);
 }
 
 #include <common/effects/qc/_mod.qh>
@@ -211,7 +212,10 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 			if (time < actor.golem_lastattack || !IS_ONGROUND(actor))
 				return false;
 
-			if (randomness <= 0.5 && vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_golem_attack_smash_range))
+			vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
+			targ_origin = WarpZone_RefSys_TransformOrigin(targ, actor, targ_origin); // origin of target as seen by the monster (us)
+
+			if (randomness <= 0.5 && vdist(targ_origin - actor.origin, <=, autocvar_g_monster_golem_attack_smash_range))
 			{
 				setanim(actor, actor.anim_melee3, false, true, true);
 				Monster_Delay(actor, 1, 1.1, M_Golem_Attack_Smash);
@@ -224,7 +228,7 @@ bool M_Golem_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 				actor.golem_lastattack = time + 3 + random() * 1.5;
 				return true;
 			}
-			else if (randomness <= 0.1 && vdist(actor.enemy.origin - actor.origin, >=, autocvar_g_monster_golem_attack_smash_range * 1.5)) // small chance, don't want this spammed
+			else if (randomness <= 0.1 && vdist(targ_origin - actor.origin, >=, autocvar_g_monster_golem_attack_smash_range * 1.5)) // small chance, don't want this spammed
 			{
 				setanim(actor, actor.anim_shoot, true, true, false);
 				actor.state = MONSTER_STATE_NOMOVE;

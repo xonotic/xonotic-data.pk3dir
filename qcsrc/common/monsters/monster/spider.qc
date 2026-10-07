@@ -7,6 +7,7 @@ float autocvar_g_monster_spider_health;
 string autocvar_g_monster_spider_loot = "health_medium";
 float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_attack_bite_damage;
+float autocvar_g_monster_spider_attack_bite_force = 15;
 float autocvar_g_monster_spider_attack_bite_delay;
 float autocvar_g_monster_spider_attack_web_damagetime;
 float autocvar_g_monster_spider_attack_web_speed;
@@ -94,7 +95,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 
 void M_Spider_Attack_Bite(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_spider_attack_bite_damage, this.attack_range, DEATH_MONSTER_SPIDER.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_spider_attack_bite_damage, autocvar_g_monster_spider_attack_bite_force, this.attack_range, DEATH_MONSTER_SPIDER.m_id);
 }
 
 bool M_Spider_Attack_Web_Explode_cond(entity e)
@@ -183,15 +184,21 @@ bool M_Spider_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	switch (attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
+		{
 			wep.wr_think(wep, actor, weaponentity, 2);
 			return true;
-
+		}
 		case MONSTER_ATTACK_RANGED:
-			if (vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_spider_attack_web_range))
+		{
+			vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
+			targ_origin = WarpZone_RefSys_TransformOrigin(targ, actor, targ_origin);
+			if (vdist(targ_origin - actor.origin, <=, autocvar_g_monster_spider_attack_web_range))
 			{
 				wep.wr_think(wep, actor, weaponentity, 1);
 				return true;
 			}
+			return false;
+		}
 	}
 
 	return false;

@@ -384,10 +384,10 @@ void Monster_Sound(entity this, .string samplefield, float sound_delay, bool del
 // Monster attack handlers
 // =======================
 
-void Monster_Attack_Melee(entity this, float damg, float er, int deathtype)
+void Monster_Attack_Melee(entity this, float damg, float force, float hit_range, int deathtype)
 {
 	// TODO: proper melee akin to the Shotgun secondary
-	traceline(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * er, MOVE_NORMAL, this);
+	WarpZone_TraceLine(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * hit_range, MOVE_NORMAL, this);
 
 	if (trace_ent.takedamage)
 	{
@@ -396,8 +396,8 @@ void Monster_Attack_Melee(entity this, float damg, float er, int deathtype)
 			damg * MONSTER_SKILLMOD(this),
 			deathtype,
 			DMG_NOWEP,
-			trace_ent.origin,
-			normalize(trace_ent.origin - this.origin)
+			trace_endpos,
+			WarpZone_TransformVelocity(WarpZone_trace_transform, v_forward) * force
 		);
 	}
 }
@@ -451,7 +451,12 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 	|| ((autocvar_g_monsters_target_infront || (this.spawnflags & MONSTERFLAG_INFRONT)) && !monster_facing(this, targ)))
 		return;
 
-	if (vdist(targ.origin - this.origin, <=, this.attack_range))
+	vector my_center = CENTER_OR_VIEWOFS(this);
+	vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
+	targ_origin = WarpZone_RefSys_TransformOrigin(targ, this, targ_origin); // origin of target as seen by the monster (us)
+
+	// TODO: separate targeting range for melee strikes
+	if (vdist(targ_origin - my_center, <=, this.attack_range))
 	{
 		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ, weaponentity);
@@ -461,7 +466,7 @@ void Monster_Attack_Check(entity this, entity targ, .entity weaponentity)
 			return;
 	}
 
-	if (vdist(targ.origin - this.origin, >, this.attack_range))
+	if (vdist(targ_origin - my_center, >, this.attack_range))
 	{
 		monster_makevectors(this, targ);
 		int attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ, weaponentity);

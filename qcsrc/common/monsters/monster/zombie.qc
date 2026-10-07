@@ -5,6 +5,7 @@ float autocvar_g_monster_zombie_health;
 string autocvar_g_monster_zombie_loot = "health_medium";
 float autocvar_g_monster_zombie_damageforcescale = 0.55;
 float autocvar_g_monster_zombie_attack_melee_damage;
+float autocvar_g_monster_zombie_attack_melee_force = 50;
 float autocvar_g_monster_zombie_attack_melee_delay;
 float autocvar_g_monster_zombie_attack_leap_damage;
 float autocvar_g_monster_zombie_attack_leap_force;
@@ -16,17 +17,17 @@ float autocvar_g_monster_zombie_speed_walk;
 
 void M_Zombie_Attack_Slam(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage * 1.25, this.attack_range, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage * 1.25, autocvar_g_monster_zombie_attack_melee_force * 1.25, this.attack_range, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
 }
 
 void M_Zombie_Attack_Punch(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage, this.attack_range, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage, autocvar_g_monster_zombie_attack_melee_force, this.attack_range, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
 }
 
 void M_Zombie_Attack_Spin(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage * 0.5, this.attack_range * 0.75, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_zombie_attack_melee_damage * 0.5, autocvar_g_monster_zombie_attack_melee_force * 0.5, this.attack_range * 0.75, DEATH_MONSTER_ZOMBIE_MELEE.m_id);
 }
 
 void M_Zombie_Attack_Leap_Touch(entity this, entity toucher)
@@ -121,7 +122,9 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ, .entity weapone
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(vdist(targ.origin - actor.origin, <, actor.attack_range * 2))
+			vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
+			targ_origin = WarpZone_RefSys_TransformOrigin(targ, actor, targ_origin);
+			if(vdist(targ_origin - actor.origin, <, actor.attack_range * 2))
 				return false;
 			makevectors(actor.angles);
 			return Monster_Attack_Leap(actor, actor.anim_shoot, M_Zombie_Attack_Leap_Touch, v_forward * autocvar_g_monster_zombie_attack_leap_speed + '0 0 200', autocvar_g_monster_zombie_attack_leap_delay);

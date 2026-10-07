@@ -323,7 +323,10 @@ void M_Mage_Attack_Push(entity this)
 
 void M_Mage_Attack_Teleport(entity this, entity targ)
 {
-	if (!targ || vdist(targ.origin - this.origin, >, autocvar_g_monster_mage_attack_teleport_random_range))
+	vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
+	targ_origin = WarpZone_RefSys_TransformOrigin(targ, this, targ_origin); // origin of target as seen by the monster (us)
+
+	if (!targ || vdist(targ_origin - this.origin, >, autocvar_g_monster_mage_attack_teleport_random_range))
 		return;
 
 	vector from = this.origin;

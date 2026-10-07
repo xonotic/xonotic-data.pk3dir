@@ -12,6 +12,7 @@ float autocvar_g_monster_wyvern_attack_fireball_force;
 float autocvar_g_monster_wyvern_attack_fireball_radius;
 float autocvar_g_monster_wyvern_attack_fireball_speed;
 float autocvar_g_monster_wyvern_attack_melee_damage = 25;
+float autocvar_g_monster_wyvern_attack_melee_force = 65;
 float autocvar_g_monster_wyvern_attack_melee_delay = 2;
 float autocvar_g_monster_wyvern_speed_stop;
 float autocvar_g_monster_wyvern_speed_run;
@@ -69,7 +70,7 @@ METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor, .entit
 
 void M_Wyvern_Attack_Slash(entity this)
 {
-	Monster_Attack_Melee(this, autocvar_g_monster_wyvern_attack_melee_damage, this.attack_range, DEATH_MONSTER_WYVERN_MELEE.m_id);
+	Monster_Attack_Melee(this, autocvar_g_monster_wyvern_attack_melee_damage, autocvar_g_monster_wyvern_attack_melee_force, this.attack_range, DEATH_MONSTER_WYVERN_MELEE.m_id);
 }
 
 bool M_Wyvern_Attack_Fireball_Explode_cond(entity e)
