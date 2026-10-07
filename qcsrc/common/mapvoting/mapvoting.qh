@@ -1,0 +1,30 @@
+#pragma once
+
+#ifdef GAMEQC
+#include <common/mapinfo.qh>
+
+const int MAPVOTE_COUNT = 20; ///< Max number of votable maps/gametypes
+
+const int MAPVOTE_SSDIRS_COUNT = 4;
+string mv_ssdirs[MAPVOTE_SSDIRS_COUNT];
+int mv_ssdirs_count;
+
+// Globals in CSQC & SVQC
+// "shared" = maps & gametypes
+int mv_count;                        ///< (shared) number of maps/gametypes
+int mv_count_real;                   ///< (shared) number of maps/gametypes, excluding abstain
+string mv_entries[MAPVOTE_COUNT];    ///< (shared) map name or gametype name
+string mv_suggester[MAPVOTE_COUNT];  ///< (maps)   .netname of the player who suggested the map
+int mv_flags[MAPVOTE_COUNT];         ///< (shared) map/gametype flags
+int mv_votes[MAPVOTE_COUNT];         ///< (shared) number of votes for the map/gametype
+int mv_detail;                       ///< (shared) how much information about the votes/results is revealed
+bool mv_abstain;                     ///< (shared) if abstaining is possible, false in gametype voting
+float mv_reduce_time;
+float mv_timeout;
+int mv_winner;
+
+// Gametype vote flags
+const int GTV_FORBIDDEN  = 0; ///< Cannot be voted
+const int GTV_AVAILABLE  = 1; ///< Can be voted
+const int GTV_CUSTOM     = 2; ///< Custom entry
+#endif // GAMEQC

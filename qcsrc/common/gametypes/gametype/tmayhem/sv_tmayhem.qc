@@ -154,16 +154,15 @@ MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 
 	entity frag_attacker = M_ARGV(1, entity);
 	float frag_deathtype = M_ARGV(6, float);
-	float frag_damage = M_ARGV(7, float);
-	float damage_take = bound(0, M_ARGV(4, float), GetResource(frag_target, RES_HEALTH));
-	float damage_save = bound(0, M_ARGV(5, float), GetResource(frag_target, RES_ARMOR));
-	float excess = max(0, frag_damage - damage_take - damage_save);
-	float total = frag_damage - excess;
+	float damage_take = M_ARGV(4, float);
+	float damage_save = M_ARGV(5, float);
 
-	if (total == 0) return;
+	float realdmg = damage_take + damage_save;
+
+	if (realdmg == 0) return;
 
 	if (StatusEffects_active(STATUSEFFECT_SpawnShield, frag_target) && autocvar_g_spawnshield_blockdamage)
-		total *= 1 - autocvar_g_spawnshield_blockdamage;
+		realdmg *= 1 - autocvar_g_spawnshield_blockdamage;
 
 	entity scorer = NULL; // entity which needs their score to be updated
 
@@ -171,11 +170,11 @@ MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 	{
 		// non-friendly fire
 		if (!SAME_TEAM(frag_target, frag_attacker))
-			frag_attacker.total_damage_dealt += total;
+			frag_attacker.total_damage_dealt += realdmg;
 
 		// friendly fire aka self damage
 		if (SAME_TEAM(frag_target, frag_attacker) || (frag_target == frag_attacker && !autocvar_g_tmayhem_scoring_disable_selfdamage2score))
-			frag_attacker.total_damage_dealt -= total;
+			frag_attacker.total_damage_dealt -= realdmg;
 
 		scorer = frag_attacker;
 	}
@@ -196,7 +195,7 @@ MUTATOR_HOOKFUNCTION(tmayhem, PlayerDamage_SplitHealthArmor)
 				frag_deathtype == DEATH_LAVA.m_id ||
 				frag_deathtype == DEATH_SLIME.m_id ||
 				frag_deathtype == DEATH_SWAMP.m_id))
-			frag_target.total_damage_dealt -= total;
+			frag_target.total_damage_dealt -= realdmg;
 
 		scorer = frag_target;
 	}

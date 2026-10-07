@@ -87,6 +87,8 @@ void nmm_spawn_tile(string id, entity minig, int distance)
 	e.origin = minigame_tile_pos(id,7,7);
 	e.netname = id;
 	e.owner = minig;
+	e.minigame_id = minig.minigame_id;
+	e.descriptor = minig.descriptor;
 	e.team = 0;
 	e.nmm_tile_distance = distance;
 	e.nmm_tile_hmill = strzone(nmm_tile_build_hmill(e));
@@ -121,7 +123,7 @@ void nmm_spawn_tile_square( entity minig, int offset, int skip )
 void nmm_kill_tiles(entity minig)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_nmm_tile" )
 		{
 			strfree(e.netname);
@@ -141,7 +143,7 @@ void nmm_init_tiles(entity minig)
 entity nmm_find_tile(entity minig, string id)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_nmm_tile" && e.netname == id )
 			return e;
 	return NULL;
@@ -162,7 +164,7 @@ bool nmm_tile_adjacent(entity tile1, entity tile2)
 bool nmm_tile_canmove(entity tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,tile.owner) ) )
+	while ( ( e = findfloat(e,minigame_id,tile.minigame_id) ) )
 		if ( e.classname == "minigame_nmm_tile" && !e.nmm_tile_piece
 				&& nmm_tile_adjacent(e,tile) )
 		{
@@ -172,12 +174,12 @@ bool nmm_tile_canmove(entity tile)
 }
 
 // Check if the given tile id appears in the string
-bool nmm_in_mill_string(entity tile, string s)
+bool nmm_in_mill_string(entity minigame, entity tile, string s)
 {
 	int argc = tokenize(s);
 	for ( int i = 0; i < argc; ++i )
 	{
-		entity e = nmm_find_tile(tile.owner,argv(i));
+		entity e = nmm_find_tile(minigame,argv(i));
 		if ( !e || !e.nmm_tile_piece || e.nmm_tile_piece.team != tile.nmm_tile_piece.team )
 			return false;
 	}
@@ -185,11 +187,11 @@ bool nmm_in_mill_string(entity tile, string s)
 }
 
 // Check if a tile is in a mill
-bool nmm_in_mill(entity tile)
+bool nmm_in_mill(entity minigame, entity tile)
 {
 	return tile.nmm_tile_piece &&  (
-		nmm_in_mill_string(tile,tile.nmm_tile_hmill) ||
-		nmm_in_mill_string(tile,tile.nmm_tile_vmill) );
+		nmm_in_mill_string(minigame,tile,tile.nmm_tile_hmill) ||
+		nmm_in_mill_string(minigame,tile,tile.nmm_tile_vmill) );
 }
 
 
@@ -198,7 +200,7 @@ bool nmm_in_mill(entity tile)
 entity nmm_find_piece(entity start, entity minigame, int teamn, int pieceflags)
 {
 	entity e = start;
-	while ( ( e = findentity(e,owner,minigame) ) )
+	while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" &&
 				(e.minigame_flags & pieceflags) && e.team == teamn )
 			return e;
@@ -337,14 +339,14 @@ int nmm_server_event(entity minigame, string event, ...)
 			}
 			else if ( move_ok)
 			{
-				if ( !(minigame.minigame_flags & NMM_TURN_TAKE) && nmm_in_mill(tile) )
+				if ( !(minigame.minigame_flags & NMM_TURN_TAKE) && nmm_in_mill(minigame, tile) )
 				{
 					minigame.minigame_flags = NMM_TURN_TAKE|e.team;
 					int takemill = NMM_TURN_TAKEANY;
 					entity f = NULL;
-					while ( ( f = findentity(f,owner,minigame) ) )
+					while ( ( f = findfloat(f,minigame_id,minigame.minigame_id) ) )
 						if ( f.classname == "minigame_nmm_tile" && f.nmm_tile_piece  &&
-								f.nmm_tile_piece.team == nextteam && !nmm_in_mill(f) )
+								f.nmm_tile_piece.team == nextteam && !nmm_in_mill(minigame, f) )
 						{
 							takemill = 0;
 							break;
@@ -361,7 +363,7 @@ int nmm_server_event(entity minigame, string event, ...)
 					{
 						minigame.minigame_flags = NMM_TURN_WIN|e.team;
 						entity f = NULL;
-						while ( ( f = findentity(f,owner,minigame) ) )
+						while ( ( f = findfloat(f,minigame_id,minigame.minigame_id) ) )
 							if ( f.classname == "minigame_nmm_tile" && f.nmm_tile_piece  &&
 								f.nmm_tile_piece.team == nextteam && nmm_tile_canmove(f) )
 							{
@@ -389,13 +391,13 @@ vector nmm_boardpos;
 vector nmm_boardsize;
 
 // whether the given tile is a valid selection
-bool nmm_valid_selection(entity tile)
+bool nmm_valid_selection(entity minigame, entity tile)
 {
-	if ( ( tile.owner.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
+	if ( ( minigame.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
 		return false; // not our turn
-	if ( tile.owner.minigame_flags & NMM_TURN_PLACE )
+	if ( minigame.minigame_flags & NMM_TURN_PLACE )
 		return !tile.nmm_tile_piece; // need to put a piece on an empty spot
-	if ( tile.owner.minigame_flags & NMM_TURN_MOVE )
+	if ( minigame.minigame_flags & NMM_TURN_MOVE )
 	{
 		if ( tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team &&
 				nmm_tile_canmove(tile) )
@@ -404,27 +406,27 @@ bool nmm_valid_selection(entity tile)
 			return !tile.nmm_tile_piece && nmm_tile_adjacent(nmm_fromtile,tile);
 		return false;
 	}
-	if ( tile.owner.minigame_flags & NMM_TURN_FLY )
+	if ( minigame.minigame_flags & NMM_TURN_FLY )
 	{
 		if ( nmm_fromtile )
 			return !tile.nmm_tile_piece;
 		else
 			return tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team;
 	}
-	if ( tile.owner.minigame_flags & NMM_TURN_TAKE )
+	if ( minigame.minigame_flags & NMM_TURN_TAKE )
 		return tile.nmm_tile_piece && tile.nmm_tile_piece.team != minigame_self.team &&
-			( (tile.owner.minigame_flags & NMM_TURN_TAKEANY) || !nmm_in_mill(tile) );
+			( (minigame.minigame_flags & NMM_TURN_TAKEANY) || !nmm_in_mill(minigame, tile) );
 	return false;
 }
 
 // whether it should highlight valid tile selections
-bool nmm_draw_avaliable(entity tile)
+bool nmm_draw_avaliable(entity minigame, entity tile)
 {
-	if ( ( tile.owner.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
+	if ( ( minigame.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
 		return false;
-	if ( (tile.owner.minigame_flags & NMM_TURN_TAKE) )
+	if ( (minigame.minigame_flags & NMM_TURN_TAKE) )
 		return true;
-	if ( (tile.owner.minigame_flags & (NMM_TURN_FLY|NMM_TURN_MOVE)) && nmm_fromtile )
+	if ( (minigame.minigame_flags & (NMM_TURN_FLY|NMM_TURN_MOVE)) && nmm_fromtile )
 		return !tile.nmm_tile_piece;
 	return false;
 }
@@ -451,7 +453,7 @@ void nmm_hud_board(vector pos, vector mySize)
 				minigame_drawpic_centered( tile_pos, minigame_texture("nmm/tile_active"),
 					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 			}
-			else if ( nmm_draw_avaliable(e) && nmm_valid_selection(e) )
+			else if ( nmm_draw_avaliable(active_minigame, e) && nmm_valid_selection(active_minigame, e) )
 			{
 				minigame_drawpic_centered( tile_pos, minigame_texture("nmm/tile_available"),
 					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
@@ -744,7 +746,7 @@ int nmm_client_event(entity minigame, string event, ...)
 			if ( e.classname == "minigame_nmm_tile" )
 			{
 				tile_pos = minigame_hud_denormalize(e.origin,nmm_boardpos,nmm_boardsize)-tile_size/2;
-				if ( minigame_hud_mouse_in(tile_pos, tile_size) && nmm_valid_selection(e) )
+				if ( minigame_hud_mouse_in(tile_pos, tile_size) && nmm_valid_selection(active_minigame, e) )
 				{
 					nmm_currtile = e;
 					break;

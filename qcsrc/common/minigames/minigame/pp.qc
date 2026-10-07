@@ -31,7 +31,7 @@ const int PP_TILE_SIZE = 7;
 entity pp_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
 	return NULL;
@@ -48,20 +48,20 @@ bool pp_valid_tile(string tile)
 }
 
 // Checks if the given piece completes a row
-bool pp_winning_piece(entity piece)
+bool pp_winning_piece(entity minigame, entity piece)
 {
 	int number = minigame_tile_number(piece.netname);
 	int letter = minigame_tile_letter(piece.netname);
 
 	// here goes
-	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter,number-1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter,number-1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter,number+1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter,number+1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number+1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number+1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number-1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number-1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number-1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number-1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number+1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number+1)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number)) || pp_find_piece(minigame,minigame_tile_buildname(letter-1,number)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number)) || pp_find_piece(minigame,minigame_tile_buildname(letter+1,number)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter,number-1)) || pp_find_piece(minigame,minigame_tile_buildname(letter,number-1)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter,number+1)) || pp_find_piece(minigame,minigame_tile_buildname(letter,number+1)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number+1)) || pp_find_piece(minigame,minigame_tile_buildname(letter+1,number+1)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number-1)) || pp_find_piece(minigame,minigame_tile_buildname(letter-1,number-1)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number-1)) || pp_find_piece(minigame,minigame_tile_buildname(letter+1,number-1)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number+1)) || pp_find_piece(minigame,minigame_tile_buildname(letter-1,number+1)).team == 5)
 		return true;
 
 	return false;
@@ -133,7 +133,7 @@ void pp_move(entity minigame, entity player, string pos )
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 			minigame.pp_nexteam = minigame_next_team(player.team,2);
 			minigame.pp_curr_piece = piece;
-			if ( pp_winning_piece(piece) )
+			if ( pp_winning_piece(minigame, piece) )
 			{
 				if(minigame.pp_team1_score == minigame.pp_team2_score)
 					minigame.minigame_flags = PP_TURN_DRAW;
@@ -185,9 +185,12 @@ void pp_next_match(entity minigame, entity player)
 		minigame.minigame_flags = PP_TURN_PLACE | minigame.pp_nexteam;
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		entity e = NULL;
-		while ( ( e = findentity(e,owner,minigame) ) )
+		while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 			if ( e.classname == "minigame_board_piece" )
+			{
+				strfree(e.netname);
 				delete(e);
+			}
 		minigame.pp_team1_score = 0;
 		minigame.pp_team2_score = 0;
 
@@ -212,7 +215,7 @@ int pp_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);

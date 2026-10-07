@@ -43,46 +43,15 @@ void W_Seeker_Missile_Think(entity this)
 		W_Seeker_Missile_Explode(this, NULL);
 	}
 
-	float spd = vlen(this.velocity);
-	spd = bound(
-		spd - WEP_CVAR(WEP_SEEKER, missile_decel) * frametime,
+	float dist = W_SeekOutEnemy(this,
+		WEP_CVAR(WEP_SEEKER, missile_decel),
+		WEP_CVAR(WEP_SEEKER, missile_accel),
 		WEP_CVAR(WEP_SEEKER, missile_speed_max),
-		spd + WEP_CVAR(WEP_SEEKER, missile_accel) * frametime
-	);
-
-	if (this.enemy != NULL
-	&& (this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy)))
-		this.enemy = NULL;
-
-	float dist;
-	if (this.enemy != NULL)
-	{
-		vector eorg = 0.5 * (this.enemy.absmin + this.enemy.absmax);
-		vector desireddir = normalize(eorg - this.origin);
-		vector olddir = normalize(this.velocity); // get my current direction
-		dist = vlen(eorg - this.origin);
-
-		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
-		if (WEP_CVAR(WEP_SEEKER, missile_smart) && dist > WEP_CVAR(WEP_SEEKER, missile_smart_mindist))
-		{
-			// Is it a better idea (shorter distance) to trace to the target itself?
-			if (vdist(this.origin + olddir * this.wait, <, dist))
-				traceline(this.origin, this.origin + olddir * this.wait, false, this);
-			else
-				traceline(this.origin, eorg, false, this);
-
-			// Setup adaptive tracelength
-			this.wait = bound(WEP_CVAR(WEP_SEEKER, missile_smart_trace_min), vlen(this.origin - trace_endpos), WEP_CVAR(WEP_SEEKER, missile_smart_trace_max));
-
-			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
-			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
-		}
-
-		vector newdir = normalize(olddir + desireddir * WEP_CVAR(WEP_SEEKER, missile_turnrate)); // take the average of the 2 directions; not the best method but simple & easy
-		this.velocity = newdir * spd; // make me fly in the new direction at my flight speed
-	}
-	else
-		dist = 0;
+		WEP_CVAR(WEP_SEEKER, missile_turnrate),
+		WEP_CVAR(WEP_SEEKER, missile_smart),
+		WEP_CVAR(WEP_SEEKER, missile_smart_mindist),
+		WEP_CVAR(WEP_SEEKER, missile_smart_trace_min),
+		WEP_CVAR(WEP_SEEKER, missile_smart_trace_max));
 
 	// Proxy
 	if (WEP_CVAR(WEP_SEEKER, missile_proxy))
@@ -162,18 +131,22 @@ void W_Seeker_Missile_Animate(entity this)
 }
 */
 
-void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, vector f_diff, entity m_target)
+void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, entity m_target, int bullet_count)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_SEEKER, missile_ammo), weaponentity);
 
 	makevectors(actor.v_angle);
+	vector old_movedir = actor.(weaponentity).movedir;
+	if (bullet_count > 0)
+		actor.(weaponentity).movedir += W_SetupShot_GetAlternatingOffset(bullet_count);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-4 -4 -4', '4 4 4', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0, ((m_target != NULL) ? thiswep.m_id | HITTYPE_SECONDARY : thiswep.m_id));
-	w_shotorg += f_diff;
+	actor.(weaponentity).movedir = old_movedir;
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	//actor.detornator = false;
 
 	entity missile = new(seeker_missile);
+	WarpZone_RefSys_Copy(missile, actor);
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = WEP_CVAR(WEP_SEEKER, missile_damage);
@@ -184,7 +157,6 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	missile.nextthink = time; // + 0.2; // + cvar("g_balance_seeker_missile_activate_delay");
 	missile.cnt = time + WEP_CVAR(WEP_SEEKER, missile_lifetime);
 	missile.enemy = m_target;
-	missile.solid = SOLID_BBOX;
 	missile.scale = 2;
 	missile.takedamage = DAMAGE_YES;
 	missile.weaponentity_fld = weaponentity;
@@ -199,6 +171,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 	else
 		missile.projectiledeathtype = thiswep.m_id;
 
+	PROJECTILE_MAKETRIGGER(missile);
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-4 -4 -4', '4 4 4');
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -211,7 +184,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, .entity weaponentity, v
 
 	missile.angles = vectoangles(missile.velocity);
 
-	CSQCProjectile(missile, false, PROJECTILE_SEEKER, true);
+	CSQCProjectile(missile, false, PROJECTILE_SEEKER_MISSILE, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
@@ -240,6 +213,8 @@ void W_Seeker_Flac_Explode(entity this, entity directhitentity)
 
 void W_Seeker_Flac_Touch(entity this, entity toucher)
 {
+	PROJECTILE_TOUCH(this, toucher);
+
 	W_Seeker_Flac_Explode(this, toucher);
 }
 
@@ -252,25 +227,10 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(WEP_SEEKER, flac_ammo), weaponentity);
 
-	vector f_diff;
-	switch (actor.(weaponentity).bulletcounter % 4)
-	{
-		case 0:
-			f_diff = '-1.25 -3.75 0';
-			break;
-		case 1:
-			f_diff = '+1.25 -3.75 0';
-			break;
-		case 2:
-			f_diff = '-1.25 +3.75 0';
-			break;
-		case 3:
-		default:
-			f_diff = '+1.25 +3.75 0';
-			break;
-	}
+	vector old_movedir = actor.(weaponentity).movedir;
+	actor.(weaponentity).movedir += W_SetupShot_GetAlternatingOffset(actor.(weaponentity).bulletcounter);
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FLAC_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_SEEKER, flac_damage), thiswep.m_id | HITTYPE_SECONDARY);
-	w_shotorg += f_diff;
+	actor.(weaponentity).movedir = old_movedir;
 
 	// uses hagar effects!
 	W_MuzzleFlash(WEP_HAGAR, actor, weaponentity, w_shotorg, w_shotdir);
@@ -284,7 +244,6 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.use = W_Seeker_Flac_Explode_use;
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink = time + WEP_CVAR(WEP_SEEKER, flac_lifetime) + WEP_CVAR(WEP_SEEKER, flac_lifetime_rand);
-	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLY);
 	missile.projectiledeathtype = thiswep.m_id | HITTYPE_SECONDARY;
 	missile.weaponentity_fld = weaponentity;
@@ -297,11 +256,12 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor, .entity weaponentity)
 	//missile.angles = vectoangles(missile.velocity);
 	//missile.scale = 0.4; // BUG: the model is too big
 
+	PROJECTILE_MAKETRIGGER(missile);
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-2 -2 -2', '2 2 2');
 
 	W_SetupProjVelocity_UP_PRE(missile, WEP_SEEKER, flac_);
-	CSQCProjectile(missile, true, PROJECTILE_FLAC, true);
+	CSQCProjectile(missile, true, PROJECTILE_SEEKER_FLAC, true);
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
@@ -322,27 +282,26 @@ entity W_Seeker_Tagged_Info(entity isowner, .entity weaponentity, entity istarge
 
 void W_Seeker_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	entity closest_target = NULL;
-
+	entity closest = NULL;
+	vector it_trans_org;
+	float it_dist2, closest_dist2 = 0;
 	IL_EACH(g_seeker_trackers, it.classname == "tag_tracker" && it.realowner == actor,
 	{
-		if (closest_target)
+		// First check line of sight
+		it_trans_org = WarpZone_RefSys_TransformOrigin(it.tag_target, actor, it.tag_target.origin);
+		WarpZone_TraceLine(actor.origin + actor.view_ofs, it_trans_org, MOVE_NOMONSTERS, actor);
+		if (trace_fraction < 1 && trace_ent != it)
+			continue;
+
+		it_dist2 = vlen2(actor.origin - it_trans_org);
+		if (!closest || it_dist2 < closest_dist2) // new closest
 		{
-			if (vlen2(actor.origin - it.tag_target.origin) < vlen2(actor.origin - closest_target.origin))
-				closest_target = it.tag_target;
+			closest_dist2 = it_dist2;
+			closest = it.tag_target;
 		}
-		else
-			closest_target = it.tag_target;
 	});
 
-	if (closest_target)
-	{
-		traceline(actor.origin + actor.view_ofs, closest_target.origin, MOVE_NOMONSTERS, actor);
-		if (!closest_target || (trace_fraction < 1 && trace_ent != closest_target))
-			closest_target = NULL;
-	}
-
-	W_Seeker_Fire_Missile(thiswep, actor, weaponentity, '0 0 0', closest_target);
+	W_Seeker_Fire_Missile(thiswep, actor, weaponentity, closest, -1);
 }
 
 void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seeker_Attack
@@ -364,24 +323,7 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 
 	entity oldenemy = own.enemy;
 	own.enemy = this.enemy;
-
-	switch (own.cnt % 4)
-	{
-		case 0:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 -3.75 0', own.enemy); // TODO
-			break;
-		case 1:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '+1.25 -3.75 0', own.enemy); // TODO
-			break;
-		case 2:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '-1.25 +3.75 0', own.enemy); // TODO
-			break;
-		case 3:
-		default:
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, '+1.25 +3.75 0', own.enemy); // TODO
-			break;
-	}
-
+	W_Seeker_Fire_Missile(thiswep, own, weaponentity, own.enemy, own.cnt);
 	own.enemy = oldenemy;
 }
 
@@ -429,12 +371,6 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
 
-	vector dir;
-	dir = normalize(this.realowner.origin - this.origin);
-	vector org2 = findbetterlocation(this.origin, 8);
-
-	te_knightspike(org2);
-
 	this.event_damage = func_null;
 	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
 
@@ -454,6 +390,7 @@ void W_Seeker_Tag_Touch(entity this, entity toucher)
 		{
 			//sprint(this.realowner, strcat("You just tagged ^2", toucher.netname, "^7 with a tracking device!\n"));
 			entity e = new(tag_tracker);
+			WarpZone_RefSys_Copy(toucher, this); // toucher is in the same reference as the tag, since the tag hit the toucher
 			e.weaponentity_fld = this.weaponentity_fld;
 			e.cnt = WEP_CVAR(WEP_SEEKER, missile_count);
 			e.owner = this.owner;
@@ -493,6 +430,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-2 -2 -2', '2 2 2', false, 2, SND_TAG_FIRE, CH_WEAPON_A, WEP_CVAR(WEP_SEEKER, missile_damage) * WEP_CVAR(WEP_SEEKER, missile_count), thiswep.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY);
 
 	entity missile = new(seeker_tag);
+	WarpZone_RefSys_Copy(missile, actor);
 	missile.weaponentity_fld = weaponentity;
 	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
@@ -501,13 +439,13 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	setthink(missile, SUB_Remove);
 	missile.nextthink = time + WEP_CVAR(WEP_SEEKER, tag_lifetime);
 	set_movetype(missile, MOVETYPE_FLY);
-	missile.solid = SOLID_BBOX;
 
 	missile.takedamage = DAMAGE_YES;
 	missile.event_damage = W_Seeker_Tag_Damage;
 	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(WEP_SEEKER, tag_health));
 	missile.damageforcescale = WEP_CVAR(WEP_SEEKER, tag_damageforcescale);
 
+	PROJECTILE_MAKETRIGGER(missile);
 	setorigin(missile, w_shotorg);
 	setsize(missile, '-2 -2 -2', '2 2 2');
 
@@ -520,7 +458,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupProjVelocity_PRE(missile, WEP_SEEKER, tag_);
 	missile.angles = vectoangles(missile.velocity);
 
-	CSQCProjectile(missile, true, PROJECTILE_TAG, false); // has sound
+	CSQCProjectile(missile, true, PROJECTILE_SEEKER_TAG, false); // has sound
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
@@ -544,8 +482,10 @@ METHOD(Seeker, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 
 METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (autocvar_g_balance_seeker_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR(WEP_SEEKER, missile_ammo), WEP_CVAR(WEP_SEEKER, tag_ammo)))
-	{ // forced reload
+	if (autocvar_g_balance_seeker_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR(WEP_SEEKER, missile_ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR(WEP_SEEKER, tag_ammo))
+	{
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 		return;
 	}
@@ -645,24 +585,39 @@ METHOD(Seeker, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Seeker, wr_impacteffect, void(entity thiswep, entity actor))
 {
+	// XONRELEASE TODO: xonotic-v0.9.0 post-release remove this caching & fallback, use SEEKER_TAG_IMPACT and SEEKER_EXPLODE
+	// See also client/weapons/projectile.qc.
+	static int impact_effnum;
+	if (!impact_effnum)
+		impact_effnum = particleeffectnum(EFFECT_SEEKER_TAG_IMPACT); // can't return 0
+	static entity explode_eff;
+	if (!explode_eff)
+		explode_eff = (particleeffectnum(EFFECT_SEEKER_EXPLODE) < 0)
+			? EFFECT_HAGAR_EXPLODE // compatible with Xonotic v0.8.6 or lower
+			: EFFECT_SEEKER_EXPLODE;
+
 	vector org2 = w_org + w_backoff * 2;
 	if (w_deathtype & HITTYPE_BOUNCE)
 	{
 		if (w_deathtype & HITTYPE_SECONDARY)
 		{
+			if (impact_effnum < 0)
+				te_knightspike(org2); // compatible with Xonotic v0.8.6 or lower
+			else
+				pointparticles(EFFECT_SEEKER_TAG_IMPACT, org2, '0 0 0', 1);
 			if (!w_issilent)
 				sound(actor, CH_SHOTS, SND_TAG_IMPACT, 1, ATTEN_NORM);
 		}
 		else
 		{
-			pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
+			pointparticles(explode_eff, org2, '0 0 0', 1);
 			if (!w_issilent)
 				sound(actor, CH_SHOTS, SND_TAGEXP_RANDOM(w_random), 1, ATTEN_NORM);
 		}
 	}
 	else
 	{
-		pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
+		pointparticles(explode_eff, org2, '0 0 0', 1);
 		if (!w_issilent)
 			sound(actor, CH_SHOTS, SND_SEEKEREXP_RANDOM(w_random), 1, ATTEN_NORM);
 	}

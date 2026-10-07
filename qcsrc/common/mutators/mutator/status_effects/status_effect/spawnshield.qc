@@ -8,8 +8,10 @@ METHOD(SpawnShield, m_remove, void(StatusEffect this, entity actor, int removal_
 }
 METHOD(SpawnShield, m_tick, void(StatusEffect this, entity actor))
 {
+    SUPER(SpawnShield).m_tick(this, actor);
+    if(!this.m_active(this, actor))
+        return;
     if(time >= game_starttime)
         actor.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
-    SUPER(SpawnShield).m_tick(this, actor);
 }
 #endif

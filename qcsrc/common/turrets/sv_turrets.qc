@@ -214,7 +214,7 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	if (!this.active)
 		return;
 
-	if (SAME_TEAM(this, attacker))
+	if (TURRET_SAME_TEAM(this, attacker))
 	{
 		if (autocvar_g_friendlyfire)
 			damage *= autocvar_g_friendlyfire;
@@ -415,25 +415,20 @@ void turret_projectile_explode(entity this)
 	this.event_damage = func_null;
 
 #ifdef TURRET_DEBUG
-	float d = RadiusDamage(this, this.owner,
-#else
-	RadiusDamage(this, this.realowner,
+	this.realowner.tur_debug_dmg_t_f += this.realowner.shot_dmg;
+	this.realowner.tur_debug_dmg_t_h += 
 #endif
-		this.owner.shot_dmg,
+	RadiusDamage(this, this.realowner,
+		this.realowner.shot_dmg,
 		0,
-		this.owner.shot_radius,
+		this.realowner.shot_radius,
 		this,
 		NULL,
-		this.owner.shot_force,
+		this.realowner.shot_force,
 		this.projectiledeathtype,
 		DMG_NOWEP,
 		NULL
 	);
-#ifdef TURRET_DEBUG
-	this.owner.tur_debug_dmg_t_h += d;
-	this.owner.tur_debug_dmg_t_f += this.owner.shot_dmg;
-#endif
-
 	delete(this);
 }
 
@@ -449,7 +444,7 @@ void turret_projectile_damage(entity this, entity inflictor, entity attacker, fl
 	TakeResource(this, RES_HEALTH, damage);
 	//this.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
 	if (GetResource(this, RES_HEALTH) <= 0)
-		W_PrepareExplosionByDamage(this, this.owner, turret_projectile_explode);
+		W_PrepareExplosionByDamage(this, this.realowner, turret_projectile_explode);
 }
 
 entity turret_projectile(entity actor, Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)
@@ -718,7 +713,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	// enemy turrets
 	if ((validate_flags & TFL_TARGETSELECT_NOTURRETS)
 	&& e_target.owner.tur_head == e_target
-	&& DIFF_TEAM(e_target, e_turret)) // Dont break support units.
+	&& TURRET_DIFF_TEAM(e_target, e_turret)) // Dont break support units.
 		return -9;
 
 	// Missile
@@ -735,20 +730,20 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	{
 		if (validate_flags & TFL_TARGETSELECT_OWNTEAM)
 		{
-			if (DIFF_TEAM(e_target, e_turret))
+			if (TURRET_DIFF_TEAM(e_target, e_turret))
 				return -11;
-			if (DIFF_TEAM(e_turret, e_target.owner))
+			if (TURRET_DIFF_TEAM(e_turret, e_target.owner))
 				return -12;
-			if (DIFF_TEAM(e_turret, e_target.aiment))
+			if (TURRET_DIFF_TEAM(e_turret, e_target.aiment))
 				return -12; // portals
 		}
 		else
 		{
-			if (SAME_TEAM(e_target, e_turret))
+			if (TURRET_SAME_TEAM(e_target, e_turret))
 				return -13;
-			if (SAME_TEAM(e_turret, e_target.owner))
+			if (TURRET_SAME_TEAM(e_turret, e_target.owner))
 				return -14;
-			if (SAME_TEAM(e_turret, e_target.aiment))
+			if (TURRET_SAME_TEAM(e_turret, e_target.aiment))
 				return -14; // portals
 		}
 	}
@@ -926,7 +921,7 @@ bool turret_firecheck(entity this)
 
 	// Try to avoid FF?
 	if ((this.firecheck_flags & TFL_FIRECHECK_AFF)
-	&& SAME_TEAM(this.tur_impactent, this))
+	&& TURRET_SAME_TEAM(this.tur_impactent, this))
 		return false;
 
 	// aim<->predicted impact
@@ -951,6 +946,9 @@ bool turret_firecheck(entity this)
 
 bool turret_checkfire(entity this)
 {
+	if (time < game_starttime || game_stopped)
+		return false;
+
 	if (MUTATOR_CALLHOOK(Turret_CheckFire, this))
 		return M_ARGV(1, bool);
 
@@ -1266,7 +1264,8 @@ bool turret_initialize(entity this, Turret tur)
 	this.netname = tur.netname;
 	load_unit_settings(this, 0);
 
-	if (!this.team || !teamplay)         this.team = FLOAT_MAX;
+	// Group all turrets into the same team, so they don't shoot eachother
+	if (!this.team || !teamplay)         this.team = TURRET_TEAM;
 	if (!GetResource(this, RES_HEALTH))  SetResourceExplicit(this, RES_HEALTH, 1000);
 	if (!this.shot_refire)               this.shot_refire = 1;
 	if (!this.tur_shotorg)               this.tur_shotorg = '50 0 50';
@@ -1349,6 +1348,7 @@ bool turret_initialize(entity this, Turret tur)
 
 	this.tur_head.netname     = this.tur_head.classname;
 	this.tur_head.team        = this.team;
+	this.tur_head.realowner   = this;
 	this.tur_head.owner       = this;
 	this.tur_head.takedamage  = DAMAGE_NO;
 	this.tur_head.solid       = SOLID_NOT;

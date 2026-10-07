@@ -114,7 +114,7 @@ REGISTER_MUTATOR(dodging, true);
 #endif
 
 #define X(dir) \
-	tracebox(this.origin, this.mins, this.maxs, this.origin + threshold * dir, true, this); \
+	WarpZone_TraceBox(this.origin, this.mins, this.maxs, this.origin + threshold * (dir), true, this); \
 	if (trace_fraction < 1 && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) \
 		return true;
 

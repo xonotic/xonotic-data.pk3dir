@@ -31,7 +31,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 
 	for(i = 0; i < GameType_GetTotalCount(); ++i)
 	{
-		entity e = me.(typeLabels[i]);
+		entity e = me.(toggleableItems[i]);
 		e.disabled = !(MapInfo_Map_supportedGametypes & GameType_GetID(i).gametype_flags);
 	}
 
@@ -72,7 +72,7 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.TDempty(me, 0.2);
 		}
 		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, MapInfo_Type_ToText(GameType_GetID(i))));
-			me.(typeLabels[i]) = e;
+			me.(toggleableItems[i]) = e;
 	}
 
 	me.gotoRC(me, me.rows - 2, 0);

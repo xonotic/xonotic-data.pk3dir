@@ -32,6 +32,9 @@ METHOD(InvisibilityStatusEffect, m_apply, void(StatusEffect this, entity actor, 
 }
 METHOD(InvisibilityStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
+    SUPER(InvisibilityStatusEffect).m_tick(this, actor);
+    if(!this.m_active(this, actor))
+        return;
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     if(!actor.vehicle)
     {
@@ -39,7 +42,6 @@ METHOD(InvisibilityStatusEffect, m_tick, void(StatusEffect this, entity actor))
         if(actor.exteriorweaponentity)
             actor.exteriorweaponentity.alpha = autocvar_g_balance_powerup_invisibility_alpha;
     }
-    SUPER(InvisibilityStatusEffect).m_tick(this, actor);
 }
 #endif // SVQC
 #ifdef MENUQC

@@ -72,6 +72,9 @@ CLASS(Turret, Object)
 #endif
 ENDCLASS(Turret)
 
+#define TURRET_SAME_TEAM(a, b) (a.team == b.team)
+#define TURRET_DIFF_TEAM(a, b) (a.team != b.team)
+
 // fields:
 .entity tur_head;
 

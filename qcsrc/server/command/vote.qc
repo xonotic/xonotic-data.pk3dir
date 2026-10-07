@@ -365,6 +365,12 @@ void reset_map(bool is_fake_round_start)
 			round_handler_Reset(game_starttime);
 	}
 
+	if (balanceteams_on_reset_map)
+	{
+		balanceteams();
+		balanceteams_on_reset_map = false;
+	}
+
 	if (shuffleteams_on_reset_map)
 	{
 		shuffleteams();

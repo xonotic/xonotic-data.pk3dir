@@ -3,6 +3,7 @@
 #include <common/command/_mod.qh>
 #include <common/constants.qh>
 #include <common/gametypes/_mod.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/monsters/_mod.qh>
 #include <common/net_linked.qh>
 #include <common/notifications/all.qh>
@@ -14,7 +15,6 @@
 #include <server/command/getreplies.qh>
 #include <server/intermission.qh>
 #include <server/main.qh>
-#include <server/mapvoting.qh>
 #include <server/mutators/_mod.qh>
 #include <server/race.qh>
 #include <server/weapons/selection.qh>

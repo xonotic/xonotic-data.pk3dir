@@ -670,7 +670,7 @@ int credits_get()
 void credits_export()
 {
 	int fh = fopen("credits.txt", FILE_WRITE);
-	if(fh < 0)
+	if (fh < 0)
 		return;
 	credits_build(fh, -1);
 }
@@ -700,7 +700,7 @@ void XonoticCreditsList_destroy(entity me)
 }
 void XonoticCreditsList_draw(entity me)
 {
-	if(me.scrolling)
+	if (me.scrolling)
 	{
 		me.scrollPos = bound(0, (time - me.scrolling) * me.itemHeight, me.nItems * me.itemHeight - 1);
 		me.scrollPosTarget = me.scrollPos;
@@ -711,25 +711,24 @@ void XonoticCreditsList_resizeNotify(entity me, vector relOrigin, vector relSize
 {
 	SUPER(XonoticCreditsList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
-	me.realFontSize_y = me.fontSize / (absSize.y * me.itemHeight);
-	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
+	me.realFontSize.y = me.fontSize / (absSize.y * me.itemHeight);
+	me.realFontSize.x = me.fontSize / (absSize.x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 }
 void XonoticCreditsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	string s;
 	float theAlpha;
 	vector theColor;
 
-	s = bufstr_get(me.bufferIndex, i);
+	string s = bufstr_get(me.bufferIndex, i);
 
-	if(substring(s, 0, 2) == "**")
+	if (substring(s, 0, 2) == "**")
 	{
 		s = substring(s, 2, strlen(s) - 2);
 		theColor = SKINCOLOR_CREDITS_TITLE;
 		theAlpha = SKINALPHA_CREDITS_TITLE;
 	}
-	else if(substring(s, 0, 1) == "*")
+	else if (substring(s, 0, 1) == "*")
 	{
 		s = substring(s, 1, strlen(s) - 1);
 		theColor = SKINCOLOR_CREDITS_FUNCTION;

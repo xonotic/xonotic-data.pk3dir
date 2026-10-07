@@ -1,6 +1,5 @@
 #include "ui_damagetext.qh"
 
-#include <menu/gamesettings.qh>
 #include <menu/xonotic/slider.qh>
 #include <menu/xonotic/mixedslider.qh>
 

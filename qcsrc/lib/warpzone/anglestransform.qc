@@ -4,6 +4,18 @@
 /// angles in fixedmakevectors/fixedvectoangles space
 vector AnglesTransform_Apply(vector transform, vector v)
 {
+	// optimize code for common horizontal warpzone transform angles
+	if (transform.x == 0 && transform.z == 0)
+	{
+		// NOTE since transform.x is 0 this code works regardless of POSITIVE_PITCH_IS_DOWN
+		switch(transform.y)
+		{
+			case 0:              return v;
+			case 90:  case -270: return vec3(-v.y, v.x, v.z);
+			case 180: case -180: return vec3(-v.x, -v.y, v.z);
+			case 270:  case -90: return vec3(v.y, -v.x, v.z);
+		}
+	}
 	vector forward, right, up;
 	FIXED_MAKE_VECTORS(transform, forward, right, up);
 	return forward * v.x + right * -v.y + up * v.z;
@@ -15,7 +27,7 @@ vector AnglesTransform_Multiply(vector t1, vector t2)
 	FIXED_MAKE_VECTORS(t2, forward, right, up);
 	forward = AnglesTransform_Apply(t1, forward);
 	up = AnglesTransform_Apply(t1, up);
-	return fixedvectoangles2(forward, up);
+	return angles_remove360(fixedvectoangles2(forward, up));
 }
 
 vector AnglesTransform_Invert(vector transform)
@@ -33,7 +45,7 @@ vector AnglesTransform_Invert(vector transform)
 	i_up.x = forward.z;
 	i_up.y = -right.z;
 	i_up.z = up.z;
-	return fixedvectoangles2(i_forward, i_up);
+	return angles_remove360(fixedvectoangles2(i_forward, i_up));
 }
 
 vector AnglesTransform_TurnDirectionFR(vector transform)
@@ -41,9 +53,11 @@ vector AnglesTransform_TurnDirectionFR(vector transform)
 	// turn 180 degrees around v_up
 	// changes in-direction to out-direction
 	//fixedmakevectors(transform);
-	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
+	//return angles_remove360(fixedvectoangles2(-1 * v_forward, 1 * v_up));
 	transform.x = -transform.x;
 	transform.y = 180 + transform.y;
+	if (transform.y >= 360)
+		transform.y -= 360;
 	transform.z = -transform.z;
 	// pitch: -s +c
 	// yaw:   -s -c
@@ -56,10 +70,14 @@ vector AnglesTransform_TurnDirectionFU(vector transform)
 	// turn 180 degrees around v_up
 	// changes in-direction to out-direction
 	//fixedmakevectors(transform);
-	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
+	//return angles_remove360(fixedvectoangles2(-1 * v_forward, 1 * v_up));
 	transform.x = -transform.x;
 	transform.y = 180 + transform.y;
+	if (transform.y >= 360)
+		transform.y -= 360;
 	transform.z = 180 - transform.z;
+	if (transform.y <= -360)
+		transform.y += 360;
 	return transform;
 }
 

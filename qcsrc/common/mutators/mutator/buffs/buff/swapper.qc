@@ -1,6 +1,11 @@
 #include "swapper.qh"
 
 #ifdef SVQC
+bool buff_Swapper_cond(entity e)
+{
+	return (IS_PLAYER(e) && DIFF_TEAM(e, WarpZone_SearchInRadius_otherent)
+		&& !IS_DEAD(e) && !STAT(FROZEN, e) && !e.vehicle);
+}
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {
 	if (MUTATOR_RETURNVALUE || game_stopped)
@@ -10,29 +15,30 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	if (!StatusEffects_active(BUFF_SWAPPER, player))
 		return;
 
-	entity head = WarpZone_FindRadius(player.origin, autocvar_g_buffs_swapper_range, false);
+	WarpZone_SearchInRadius_otherent = player;
+	entity head = WarpZone_SearchInRadius(player.origin, autocvar_g_buffs_swapper_range, MOVE_NOTHING, buff_Swapper_cond);
 	entity closest = NULL;
-	float head_dist2, best_dist2 = autocvar_g_buffs_swapper_range ** 2;
+	float head_dist2, closest_dist2 = 0;
 	for (; head; head = head.chain)
-		if (IS_PLAYER(head) && DIFF_TEAM(head, player)
-		&& !IS_DEAD(head) && !STAT(FROZEN, head) && !head.vehicle)
+	{
+		head_dist2 = vlen2(head.WarpZone_findradius_dist);
+		if (!closest || head_dist2 < closest_dist2) // new closest
 		{
-			head_dist2 = vlen2(head.WarpZone_findradius_dist);
-			if (head_dist2 < best_dist2)
-			{
-				best_dist2 = head_dist2;
-				closest = head;
-			}
+			closest_dist2 = head_dist2;
+			closest = head;
 		}
+	}
 	if (closest == NULL)
 		return;
 
-	vector my_org = player.origin;
-	vector my_vel = player.velocity;
-	vector my_ang = player.angles;
-	vector their_org = closest.origin;
-	vector their_vel = closest.velocity;
-	vector their_ang = closest.angles;
+	vector my_org    = player.origin;
+	vector my_center = CENTER_OF_ENT(player);
+	vector my_vel    = player.velocity;
+	vector my_ang    = player.angles;
+	vector their_org    = closest.origin;
+	vector their_center = CENTER_OF_ENT(closest);
+	vector their_vel    = closest.velocity;
+	vector their_ang    = closest.angles;
 
 	Drop_Special_Items(closest);
 
@@ -67,8 +73,8 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	closest.pushltime = time + autocvar_g_maxpushtime;
 	closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
 
-	Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
+	Send_Effect(EFFECT_SWAPPER, their_center, '0 0 0', 1);
+	Send_Effect(EFFECT_SWAPPER, my_center,    '0 0 0', 1);
 
 	sound(player,  CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
 	sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);

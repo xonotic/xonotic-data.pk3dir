@@ -12,6 +12,11 @@ MUTATOR_HOOKFUNCTION(cloaked, SetDefaultAlpha)
     return true;
 }
 
+MUTATOR_HOOKFUNCTION(cloaked, PlayerIsInvisible)
+{
+    return true;
+}
+
 MUTATOR_HOOKFUNCTION(cloaked, BuildMutatorsPrettyString)
 {
 	if (!g_cts) M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Cloaked");

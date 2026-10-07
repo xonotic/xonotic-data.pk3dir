@@ -11,11 +11,11 @@
 #include <client/hud/panel/radar.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/hud/panel/vote.qh>
-#include <client/mapvoting.qh>
 #include <client/mutators/_mod.qh>
 #include <client/view.qh>
 #include <common/command/_mod.qh>
 #include <common/mapinfo.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 
 void DrawDebugModel(entity this)

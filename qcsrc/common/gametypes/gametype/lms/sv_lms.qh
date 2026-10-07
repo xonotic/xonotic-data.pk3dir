@@ -8,7 +8,7 @@
 .bool lms_spectate;
 
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
-string autocvar_g_lms_weaponarena = "most_available";
+string autocvar_g_lms_weaponarena;
 
 void lms_Initialize();
 

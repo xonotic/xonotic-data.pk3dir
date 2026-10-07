@@ -13,7 +13,7 @@ SOUND(VaporizerCells, Item_Sound("itempickup"));
 int autocvar_g_instagib_ammo_drop;
 void ammo_vaporizercells_init(Pickup this, entity item)
 {
-    if(!GetResource(item, RES_CELLS))
+    if (!GetResource(item, RES_CELLS))
         SetResourceExplicit(item, RES_CELLS, autocvar_g_instagib_ammo_drop);
 }
 #endif

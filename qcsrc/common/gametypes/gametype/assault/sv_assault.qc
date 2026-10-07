@@ -571,7 +571,7 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 {
 	entity turret = M_ARGV(0, entity);
 
-	if(!turret.team || turret.team == FLOAT_MAX)
+	if (!turret.team || turret.team == TURRET_TEAM)
 		turret.team = assault_attacker_team; // this gets reversed when match starts (assault_roundstart_use)
 }
 

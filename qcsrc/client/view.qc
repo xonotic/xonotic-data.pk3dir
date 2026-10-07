@@ -6,7 +6,6 @@
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/scoreboard.qh>
-#include <client/mapvoting.qh>
 #include <client/mutators/_mod.qh>
 #include <client/shownames.qh>
 #include <common/anim.qh>
@@ -20,6 +19,7 @@
 #include <common/mapinfo.qh>
 #include <common/mapobjects/target/music.qh>
 #include <common/mapobjects/trigger/viewloc.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
@@ -731,7 +731,7 @@ int WantEventchase(entity this, bool want_vehiclechase)
 {
 	if(autocvar_cl_orthoview)
 		return 0;
-	if(STAT(GAME_STOPPED) || intermission)
+	if((STAT(GAME_STOPPED) || intermission) && spectatee_status != -1)
 		return 1;
 	if(this.viewloc)
 		return 1;
@@ -1177,19 +1177,19 @@ void HUD_Contents()
 	{
 		case CONTENT_WATER:
 			liquidalpha = autocvar_hud_contents_water_alpha;
-			liquidcolor = stov(autocvar_hud_contents_water_color);
+			liquidcolor = autocvar_hud_contents_water_color;
 			incontent = 1;
 			break;
 
 		case CONTENT_LAVA:
 			liquidalpha = autocvar_hud_contents_lava_alpha;
-			liquidcolor = stov(autocvar_hud_contents_lava_color);
+			liquidcolor = autocvar_hud_contents_lava_color;
 			incontent = 1;
 			break;
 
 		case CONTENT_SLIME:
 			liquidalpha = autocvar_hud_contents_slime_alpha;
-			liquidcolor = stov(autocvar_hud_contents_slime_color);
+			liquidcolor = autocvar_hud_contents_slime_color;
 			incontent = 1;
 			break;
 
@@ -1298,13 +1298,13 @@ void HUD_Damage()
 				myhealth_gentlergb = randomvec();
 		}
 		else
-			myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
+			myhealth_gentlergb = autocvar_hud_damage_gentle_color;
 
 		if(myhealth_flash_temp > 0)
 			drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 	}
 	else if(myhealth_flash_temp > 0)
-		drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+		drawpic(splash_pos, "gfx/blood", splash_size, autocvar_hud_damage_color, bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 
 	if(autocvar_hud_postprocessing) // we still need to set this anyway even when chase_active is set, this way it doesn't get stuck on.
 	{
@@ -1547,7 +1547,7 @@ void View_CheckButtonStatus()
 			entity e = wepent.activeweapon;
 			if(e.netname != "")
 				localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
-			else if(slot == 0)
+			else if(slot == 0 && wepent.switchweapon == WEP_Null) // make sure we switched to no weapon
 				localcmd("\ncl_hook_activeweapon none\n");
 		}
 	}
@@ -1754,7 +1754,7 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 #endif
 
 	TargetMusic_Advance();
-	Fog_Force();
+	Fog_Set(string_null, false);
 	fpscounter_update();
 
 	if(drawtime == 0)

@@ -100,16 +100,19 @@ void buffs_BuffModel_Update(entity this)
 		buffs_BuffModel_Spawn(this);
 }
 
-void buff_Effect(entity player, string eff)
+void buff_Effect(entity player, entity eff, vector eff_loc, vector eff_vel, int eff_cnt, bool hide)
 {
-	if (!autocvar_g_buffs_effects)
+	if (time < player.buff_effect_delay || !autocvar_g_buffs_effects)
 		return;
 
-	if (time >= player.buff_effect_delay)
-	{
-		Send_Effect_(eff, player.origin + (player.mins + player.maxs) * 0.5, '0 0 0', 1);
-		player.buff_effect_delay = time + 0.05; // prevent spam
-	}
+	float pl_alpha = (!player.alpha ? 1 : player.alpha);
+	if (pl_alpha > 0)
+		Send_Effect_Core(eff, eff_loc, eff_vel, eff_cnt,
+			'0 0 0', '0 0 0',
+			pl_alpha, pl_alpha, -1,
+			(hide ? player : NULL)
+		);
+	player.buff_effect_delay = time + 1/16; // 0.0625; prevent spam
 }
 
 // buff item
@@ -178,8 +181,8 @@ void buff_Respawn(entity this)
 	if (autocvar_g_buffs_random_lifetime > 0)
 		this.lifetime = time + autocvar_g_buffs_random_lifetime;
 
-	Send_Effect(EFFECT_ELECTRO_COMBO, oldbufforigin + ((this.mins + this.maxs) * 0.5), '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_TELEPORT, oldbufforigin + ((this.mins + this.maxs) * 0.5), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_TELEPORT, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 
 	WaypointSprite_Ping(this.buff_waypoint);
 
@@ -691,13 +694,15 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {
-	if (autocvar_g_buffs > 0) // only report as a mutator if they're enabled
+	// Only report as a mutator if they're enabled,
+	// ... and they're not replacing powerups (powerups mutator adds the string for that)
+	if (autocvar_g_buffs > 0 && !autocvar_g_buffs_replace_powerups)
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Buffs");
 }
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 {
-	if (autocvar_g_buffs > 0)
+	if (autocvar_g_buffs > 0 && !autocvar_g_buffs_replace_powerups)
 		M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Buffs");
 }
 

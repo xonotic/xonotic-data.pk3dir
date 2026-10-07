@@ -2,7 +2,7 @@
 
 string autocvar_g_pinata;
 bool autocvar_g_pinata_offhand;
-REGISTER_MUTATOR(pinata, expr_evaluate(autocvar_g_pinata) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok));
+REGISTER_MUTATOR(pinata, expr_evaluate(autocvar_g_pinata) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !MUTATOR_IS_ENABLED(nix) && !MUTATOR_IS_ENABLED(melee_only));
 
 MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {

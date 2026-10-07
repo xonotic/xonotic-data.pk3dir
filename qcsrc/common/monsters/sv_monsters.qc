@@ -135,6 +135,15 @@ bool Monster_ValidTarget(entity this, entity targ, bool skipfacing, bool skiplos
 	return true; // this target is valid!
 }
 
+bool Monster_FindTarget_cond(entity e)
+{
+	vector targ_center = WarpZone_UnTransformOrigin(e, CENTER_OR_VIEWOFS(e));
+	if (PHYS_INPUT_BUTTON_CROUCH(e)
+		&& vdist(targ_center - CENTER_OR_VIEWOFS(WarpZone_SearchInRadius_otherent), >, WarpZone_SearchInRadius_otherent.target_range * 0.5))
+		return false;
+	return (Monster_ValidTarget(WarpZone_SearchInRadius_otherent, e, false, true)
+		&& e != WarpZone_SearchInRadius_otherent);
+}
 entity Monster_FindTarget(entity this)
 {
 	if (MUTATOR_CALLHOOK(MonsterFindTarget, this))
@@ -143,24 +152,16 @@ entity Monster_FindTarget(entity this)
 	entity closest_target = NULL;
 	float closest_dist = 0;
 	vector my_center = CENTER_OR_VIEWOFS(this);
-	entity head = WarpZone_FindRadius(this.origin, this.target_range, true);
 
-	while(head)
+	WarpZone_SearchInRadius_otherent = this;
+	for(entity head = WarpZone_SearchInRadius(this.origin, this.target_range, MOVE_NOMONSTERS, Monster_FindTarget_cond); head; head = head.chain)
 	{
-		entity it = head;
-		head = head.chain;
-
-		vector targ_center = WarpZone_UnTransformOrigin(it, CENTER_OR_VIEWOFS(it));
-		if (PHYS_INPUT_BUTTON_CROUCH(it) && vdist(targ_center - my_center, >, this.target_range * 0.5))
-			continue;
-		if (!Monster_ValidTarget(this, it, false, true))
-			continue;
-
+		vector targ_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
 		float targ_dist = vlen2(my_center - targ_center);
 		if (!closest_target || targ_dist < closest_dist)
 		{
 			closest_dist = targ_dist;
-			closest_target = it;
+			closest_target = head;
 		}
 	}
 
@@ -1087,7 +1088,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	|| (deathtype == DEATH_FALL.m_id && this.draggedby != NULL))
 		return;
 
-	vector v = healtharmor_applydamage(100, GetResource(this, RES_ARMOR) / 100, deathtype, damage);
+	vector v = healtharmor_applydamage(GetResource(this, RES_HEALTH), 100, GetResource(this, RES_ARMOR) / 100, deathtype, damage);
 	float take = v.x;
 	//float save = v.y;
 

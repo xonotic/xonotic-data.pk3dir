@@ -131,7 +131,7 @@ string ignore_list;
 bool ignore_list_apply_time;
 void ignore_list_apply();
 
-void Fog_Force();
+void Fog_Set(string fog, bool force);
 
 string _getcommandkey(string text, string command, bool forcename);
 #define getcommandkey(cmd_name, command) _getcommandkey(cmd_name, command, false)

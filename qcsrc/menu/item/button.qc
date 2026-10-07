@@ -2,8 +2,10 @@
 
 	void Button_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 	{
-		if (me.srcMulti) me.keepspaceLeft = 0;
-		else me.keepspaceLeft = min(0.8, absSize.x == 0 ? 0 : (absSize.y / absSize.x));
+		if (me.srcMulti)
+			me.keepspaceLeft = 0;
+		else
+			me.keepspaceLeft = min(0.8, absSize.x == 0 ? 0 : (absSize.y / absSize.x));
 		SUPER(Button).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 		if(me.disableOnClick)
@@ -18,7 +20,7 @@
 	{
 		if (key == K_ENTER || key == K_SPACE || key == K_KP_ENTER)
 		{
-			if(!me.disabled)
+			if (!me.disabled)
 			{
 				me.playClickSound(me);
 				me.clickTime = 0.1;  // delayed for effect
@@ -29,11 +31,7 @@
 	}
 	float Button_mouseDrag(entity me, vector pos)
 	{
-		me.pressed = 1;
-		if (pos.x < 0) me.pressed = 0;
-		if (pos.y < 0) me.pressed = 0;
-		if (pos.x >= 1) me.pressed = 0;
-		if (pos.y >= 1) me.pressed = 0;
+		me.pressed = (pos.x < 0 || pos.y < 0 || pos.x >= 1 || pos.y >= 1) ? 0 : 1;
 		return 1;
 	}
 	METHOD(Button, mousePress, bool(Button this, vector pos))
@@ -51,10 +49,10 @@
 				me.playClickSound(me);
 				if (me.onClick)
 				{
-					if(me.applyButton)
+					if (me.applyButton)
 						me.applyButton.disabled = false;
 					me.onClick(me, me.onClickEntity);
-					if(me.disableOnClick)
+					if (me.disableOnClick)
 						me.disabled = true;
 				}
 			}
@@ -99,7 +97,7 @@
 			}
 			else
 			{
-				if (me.realFontSize_y == 0)
+				if (me.realFontSize.y == 0)
 				{
 					bOrigin = '0 0 0';
 					bSize = '1 1 0';
@@ -143,10 +141,10 @@
 			// keyboard click timer expired? Fire the event then.
 			if (!me.disabled && me.onClick)
 			{
-				if(me.applyButton)
+				if (me.applyButton)
 					me.applyButton.disabled = false;
 				me.onClick(me, me.onClickEntity);
-				if(me.disableOnClick)
+				if (me.disableOnClick)
 					me.disabled = true;
 			}
 		}
@@ -157,7 +155,10 @@
 	void Dialog_Close(entity button, entity me);
 	void Button_playClickSound(entity me)
 	{
-		if (me.onClick == DialogOpenButton_Click) m_play_click_sound(MENU_SOUND_OPEN);
-		else if (me.onClick == Dialog_Close) m_play_click_sound(MENU_SOUND_CLOSE);
-		else m_play_click_sound(MENU_SOUND_EXECUTE);
+		if (me.onClick == DialogOpenButton_Click)
+			m_play_click_sound(MENU_SOUND_OPEN);
+		else if (me.onClick == Dialog_Close)
+			m_play_click_sound(MENU_SOUND_CLOSE);
+		else
+			m_play_click_sound(MENU_SOUND_EXECUTE);
 	}

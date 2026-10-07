@@ -89,7 +89,7 @@ void XonoticServerListTab_fill(entity me)
 			slist.infoButton = e;
 	me.TR(me);
 		me.TD(me, 1, me.columns * 0.5, e = makeXonoticLeaveMatchButton('0 0 0', 0));
-		me.TD(me, 1, me.columns * 0.5, e = makeXonoticButton(_("Join!"), '0 0 0'));
+		me.TD(me, 1, me.columns * 0.5, e = makeXonoticButton(_("Join!"), '0 1 0'));
 			e.onClick = ServerList_Connect_Click;
 			e.onClickEntity = slist;
 			slist.connectButton = e;

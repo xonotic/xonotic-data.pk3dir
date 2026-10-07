@@ -60,8 +60,8 @@ void tka_RespawnBall(entity this) // runs whenever the ball needs to be relocate
 	this.nextthink = time + autocvar_g_tkaball_respawntime;
 	navigation_dynamicgoal_set(this, NULL);
 
-	Send_Effect(EFFECT_KA_BALL_RESPAWN, oldballorigin, '0 0 0', 1);
-	Send_Effect(EFFECT_KA_BALL_RESPAWN, this.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_TELEPORT, oldballorigin, '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_TELEPORT, this.origin, '0 0 0', 1);
 
 	if(autocvar_g_tkaball_tracking || warmup_stage)
 	{

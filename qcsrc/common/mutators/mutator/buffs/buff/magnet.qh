@@ -3,8 +3,7 @@
 #include <common/mutators/mutator/buffs/buffs.qh>
 
 #ifdef SVQC
-float autocvar_g_buffs_magnet_range_item;
-float autocvar_g_buffs_magnet_range_buff = 100;
+float autocvar_g_buffs_magnet_range;
 #endif // SVQC
 
 CLASS(MagnetBuff, Buff)

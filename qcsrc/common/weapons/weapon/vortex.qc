@@ -195,8 +195,10 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 		actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(WEP_VORTEX, chargepool_pause_regen));
 	}
 
-	if (autocvar_g_balance_vortex_reload_ammo && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_VORTEX, ammo), WEP_CVAR_SEC(WEP_VORTEX, ammo)))
-	{ // forced reload
+	if (autocvar_g_balance_vortex_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_VORTEX, ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR_SEC(WEP_VORTEX, ammo))
+	{
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 		return;
 	}

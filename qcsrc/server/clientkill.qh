@@ -6,6 +6,7 @@ float autocvar_g_balance_kill_antispam;
 // set when showing a kill countdown
 .entity killindicator;
 .int killindicator_teamchange;
+.float clientkill_nexttime; // nospam
 
 void ClientKill_Now_TeamChange(entity this);
 void ClientKill_Now(entity this);

@@ -174,12 +174,12 @@ void bot_setnameandstuff(entity this)
 	}
 	else
 	{
-		entity balance = TeamBalance_CheckAllowedTeams(NULL);
-		TeamBalance_GetTeamCounts(balance, NULL);
 		int smallest_team = -1;
 		int smallest_count = -1;
 		if (teamplay)
 		{
+			entity balance = TeamBalance_CheckAllowedTeams(NULL);
+	                TeamBalance_GetTeamCounts(balance, NULL);
 			for (int i = 1; i <= AVAILABLE_TEAMS; ++i)
 			{
 				// NOTE if (autocvar_g_campaign && autocvar_g_campaign_forceteam == i)
@@ -192,8 +192,8 @@ void bot_setnameandstuff(entity this)
 					smallest_count = count;
 				}
 			}
+			TeamBalance_Destroy(balance);
 		}
-		TeamBalance_Destroy(balance);
 		RandomSelection_Init();
 		while((readfile = fgets(file)))
 		{
@@ -651,9 +651,7 @@ bool bot_fixcount(bool multiple_per_frame)
 		// add bots to reach minplayers if needed
 		bots = max(minbots, minplayers - activerealplayers);
 		// cap bots to the max players allowed by the server
-		int player_limit = GetPlayerLimit();
-		if(player_limit)
-			bots = min(bots, max(player_limit - activerealplayers, 0));
+		bots = min(bots, max(GetPlayerLimit() - activerealplayers, 0));
 		bots = min(bots, maxclients - realplayers);
 
 		bots_would_leave = max(0, bots - minbots);

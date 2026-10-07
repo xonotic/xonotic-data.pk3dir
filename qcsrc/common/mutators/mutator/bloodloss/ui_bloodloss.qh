@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorBloodLossTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorBloodLossTab, fill, void(entity));
+	ATTRIB(XonoticMutatorBloodLossTab, title, string, _("Blood loss"));
+	ATTRIB(XonoticMutatorBloodLossTab, message, string, "g_bloodloss");
+	METHOD(XonoticMutatorBloodLossTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorBloodLossTab)
+entity makeXonoticMutatorBloodLossTab();

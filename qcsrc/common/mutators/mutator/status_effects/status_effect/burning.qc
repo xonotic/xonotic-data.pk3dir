@@ -12,6 +12,9 @@ METHOD(Burning, m_persistent, bool(StatusEffect this, entity actor))
 }
 METHOD(Burning, m_tick, void(StatusEffect this, entity actor))
 {
+    SUPER(Burning).m_tick(this, actor);
+    if(!this.m_active(this, actor))
+        return;
     if(STAT(FROZEN, actor) || (actor.waterlevel && actor.watertype != CONTENT_LAVA))
     {
         this.m_remove(this, actor, STATUSEFFECT_REMOVE_NORMAL);
@@ -19,6 +22,5 @@ METHOD(Burning, m_tick, void(StatusEffect this, entity actor))
     }
     Fire_ApplyDamage(actor);
     actor.effects |= EF_FLAME;
-    SUPER(Burning).m_tick(this, actor);
 }
 #endif

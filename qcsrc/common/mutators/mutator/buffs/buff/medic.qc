@@ -19,6 +19,14 @@ float buff_Medic_CalculateSurviveDamage(float frag_damage, float health)
 		frag_damage = max(5, health - autocvar_g_buffs_medic_survive_health);
 	return frag_damage;
 }
+
+METHOD(MedicBuff, m_tick, void(StatusEffect this, entity actor))
+{
+	SUPER(MedicBuff).m_tick(this, actor);
+	if(!this.m_active(this, actor))
+		return;
+	buff_Effect(actor, EFFECT_HEALING, CENTER_OF_ENT(actor), vec2(actor.velocity), 1, true);
+}
 #endif // SVQC
 #ifdef MENUQC
 METHOD(MedicBuff, describe, string(MedicBuff this))

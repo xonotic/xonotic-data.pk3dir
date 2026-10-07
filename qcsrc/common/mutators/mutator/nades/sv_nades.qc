@@ -5,6 +5,7 @@
 #include <common/mutators/mutator/overkill/okmachinegun.qh>
 #include <common/mutators/mutator/overkill/okshotgun.qh>
 #include <server/command/common.qh>
+#include <lib/warpzone/common.qh>
 
 .float nade_time_primed;
 
@@ -57,25 +58,6 @@ void nade_spawn(entity _nade)
 }
 
 
-void nades_orb_think(entity this)
-{
-	if (time >= this.ltime)
-	{
-		delete(this);
-		return;
-	}
-
-	this.nextthink = time;
-
-	if (time >= this.nade_special_time)
-	{
-		this.nade_special_time = time + 0.05;
-		this.nade_show_particles = true;
-	}
-	else
-		this.nade_show_particles = false;
-}
-
 entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad)
 {
 	// NOTE: this function merely places an orb
@@ -103,9 +85,8 @@ entity nades_spawn_orb(entity this, float orb_lifetime, float orb_rad)
 	Net_LinkEntity(orb, true, 0, orb_send);
 
 	orb.reset = SUB_Remove;
-
-	setthink(orb, nades_orb_think);
-	orb.nextthink = time;
+	setthink(orb, SUB_Remove);
+	orb.nextthink = orb.ltime;
 
 	return orb;
 }
@@ -149,7 +130,7 @@ void nade_boom(entity this)
 #undef SET_NADE_EFFECT
 
 	if (expef)
-		Send_Effect_Except(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, NULL);
+		Send_Effect_Core(expef, findbetterlocation(this.origin, 8), '0 0 0', 1, expcol_min, expcol_max, -1, -1, -1, NULL);
 
 	sound(this, CH_SHOTS_SINGLE, SND_Null,          VOL_BASE, ATTEN_NORM);
 	sound(this, CH_SHOTS,        SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
@@ -334,23 +315,20 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	makevectors(e.v_angle);
 
+	vector size = (STAT(NADES_SMALL, e) ? 16 : 32) * '0.5 0.5 0.5';
 	// NOTE: always throw from first weapon entity?
-	W_SetupShot(e, _nade.weaponentity_fld, false, false, SND_Null, CH_WEAPON_A, 0, DEATH_NADE.m_id);
+	vector old_movedir = e.(_nade.weaponentity_fld).movedir;
+	e.(_nade.weaponentity_fld).movedir.x += autocvar_g_nades_throw_offset.x;
+	e.(_nade.weaponentity_fld).movedir.y -= autocvar_g_nades_throw_offset.y; // k9er: why...
+	e.(_nade.weaponentity_fld).movedir.z += autocvar_g_nades_throw_offset.z;
+	W_SetupShot_ProjectileSize(e, _nade.weaponentity_fld, -size, size, false, false, SND_Null, CH_WEAPON_A, 0, DEATH_NADE.m_id);
+	e.(_nade.weaponentity_fld).movedir = old_movedir;
 
-	vector offset = v_forward * autocvar_g_nades_throw_offset.x
-	              + v_right * autocvar_g_nades_throw_offset.y
-	              + v_up * autocvar_g_nades_throw_offset.z;
-
-	setorigin(_nade, w_shotorg + offset);
+	setorigin(_nade, w_shotorg);
 	//setmodel(_nade, MDL_PROJECTILE_NADE);
 	//setattachment(_nade, NULL, "");
 	PROJECTILE_MAKETRIGGER(_nade);
-	float size;
-	if (STAT(NADES_SMALL, e))
-		size = 16;
-	else
-		size = 32;
-	setsize(_nade, '0.5 0.5 0.5' * -size, '0.5 0.5 0.5' * size);
+	setsize(_nade, -size, size);
 	set_movetype(_nade, MOVETYPE_BOUNCE);
 
 	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, MOVE_NOMONSTERS, _nade);
@@ -529,9 +507,12 @@ Nade Nades_GetType(string ntype)
 
 void spawn_held_nade(entity player, entity nowner, float ntime, string ntype, string pntype)
 {
-	entity n = new(nade), fn = new(fake_nade);
-
 	Nade def = Nades_GetType(ntype);
+
+	entity n = new(nade);
+	if (def == NADE_TYPE_TRANSLOCATE)
+		WarpZone_RefSys_Copy(n, nowner);
+	entity fn = new(fake_nade);
 
 	n.pokenade_type = pntype;
 

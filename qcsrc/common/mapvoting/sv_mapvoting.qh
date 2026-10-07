@@ -1,0 +1,68 @@
+#pragma once
+
+#include "mapvoting.qh"
+
+#define autocvar_g_maplist cvar_string("g_maplist")
+bool autocvar_g_maplist_check_waypoints;
+int autocvar_g_maplist_index;
+string autocvar_g_maplist_mostrecent;
+int autocvar_g_maplist_mostrecent_count;
+bool autocvar_g_maplist_selectrandom;
+float autocvar_g_maplist_shuffle;
+#define autocvar_g_maplist_votable cvar("g_maplist_votable")
+bool autocvar_g_maplist_votable_abstain;
+bool autocvar_g_maplist_votable_show_suggester;
+float autocvar_g_maplist_votable_reduce_time;
+int autocvar_g_maplist_votable_reduce_count;
+int autocvar_g_maplist_votable_detail;
+string autocvar_g_maplist_votable_screenshot_dir;
+bool autocvar_g_maplist_votable_suggestions;
+bool autocvar_g_maplist_votable_suggestions_override_mostrecent;
+float autocvar_g_maplist_votable_timeout;
+bool autocvar_g_maplist_ignore_sizes;
+bool autocvar_g_maplist_sizes_count_maxplayers = true;
+bool autocvar_g_maplist_sizes_count_bots = true;
+int autocvar_rescan_pending;
+bool autocvar_sv_vote_gametype;
+float autocvar_sv_vote_gametype_timeout;
+string autocvar_sv_vote_gametype_options;
+float autocvar_sv_vote_gametype_reduce_time;
+int autocvar_sv_vote_gametype_reduce_count;
+int autocvar_sv_vote_gametype_detail;
+bool autocvar_sv_vote_gametype_default_current;
+bool autocvar_sv_vote_gametype_maplist_reset = true;
+
+// Definitions for functions used outside sv_mapvoting.qc
+void MapVote_Start();
+void MapVote_Think();
+bool GameTypeVote_SetGametype(Gametype type, string gametype_string, bool call_hooks);
+float GameTypeVote_Start();
+float GameTypeVote_Finished(int pos);
+string GameTypeVote_MapInfo_FixName(string m);
+
+// Globals, beyond those in mapvoting.qh
+int mv_ssdir_i[MAPVOTE_COUNT];         ///< (shared) where to look for screenshots (mv_ssdirs index), set to 0 for gametype voting
+string mv_pakfile[MAPVOTE_COUNT];      ///< (maps)   pk3 file location
+bool mv_show_suggester;                ///< (maps)   whether to show suggesters, only for maps since you can't suggest gametypes
+string mv_suggestions[MAPVOTE_COUNT];  ///< (maps)   name of the suggested map, later copied into mv_entries
+// Suggestions need mv_suggestions (can't use mv_entries, since it's shared by gametype voting so will be overridden)
+int mv_suggestion_ptr;                 ///< (maps)   index of where the next suggestion should be (starts as 0)
+int mv_voters;                         ///< (shared) number of human voters present
+int mv_ranked[MAPVOTE_COUNT];          ///< (shared) maps/gametypes ranked by most votes, first = most
+float mv_rng[MAPVOTE_COUNT];           ///< (shared) random() value for each map/gametype to determine tiebreakers
+/* NOTE: mv_rng array can be replaced with a randomly selected index of the tie-winner.
+ * If the tie-winner isn't included in the tie, choose the nearest index that is included.
+ * This would use less storage but isn't truly random and can sometimes be predictable.
+ */
+int mv_reduce_count;
+bool mapvote_run;
+.int mapvote;
+
+float mv_winner_time;
+bool gametypevote;
+string getmapname_stored;
+bool mapvote_initialized;
+
+string voted_gametype_string;
+Gametype voted_gametype;
+Gametype match_gametype;

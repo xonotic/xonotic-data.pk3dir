@@ -1,38 +1,12 @@
 #include "napalm.qh"
 
 #ifdef SVQC
-void napalm_damage(entity this, float dist, float damage, float edgedamage, float burntime)
+bool napalm_damage_cond(entity e)
 {
-	if (damage < 0)
-		return;
-
-	float d;
-	RandomSelection_Init();
-	for (entity e = WarpZone_FindRadius(this.origin, dist, true); e; e = e.chain)
-		if (e.takedamage == DAMAGE_AIM
-		&& (this.realowner != e || autocvar_g_nades_napalm_selfdamage)
-		&& (!IS_PLAYER(e) || !this.realowner || DIFF_TEAM(e, this))
-		&& !STAT(FROZEN, e))
-		{
-			vector p = e.origin;
-			p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
-			p.y += e.mins.y + random() * (e.maxs.y - e.mins.y);
-			p.z += e.mins.z + random() * (e.maxs.z - e.mins.z);
-			d = vlen(WarpZone_UnTransformOrigin(e, this.origin) - p);
-			if (d < dist)
-			{
-				e.fireball_impactvec = p;
-				RandomSelection_AddEnt(e, 1 / (1 + d), !StatusEffects_active(STATUSEFFECT_Burning, e));
-			}
-		}
-	if (RandomSelection_chosen_ent)
-	{
-		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, this.origin) - RandomSelection_chosen_ent.fireball_impactvec);
-		d = damage + (edgedamage - damage) * (d / dist);
-		Fire_AddDamage(RandomSelection_chosen_ent, this.realowner, d * burntime, burntime, this.projectiledeathtype);
-		//trailparticles(this, particleeffectnum(EFFECT_FIREBALL_LASER), this.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		Send_Effect(EFFECT_FIREBALL_LASER, this.origin, RandomSelection_chosen_ent.fireball_impactvec - this.origin, 1);
-	}
+	return (e.takedamage == DAMAGE_AIM
+		&& (e != WarpZone_SearchInRadius_otherent.realowner || autocvar_g_nades_napalm_selfdamage)
+		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent))
+		&& !STAT(FROZEN, e));
 }
 
 void napalm_ball_think(entity this)
@@ -55,8 +29,12 @@ void napalm_ball_think(entity this)
 
 	this.angles = vectoangles(this.velocity);
 
-	napalm_damage(this, autocvar_g_nades_napalm_ball_radius, autocvar_g_nades_napalm_ball_damage,
-	              autocvar_g_nades_napalm_ball_damage, autocvar_g_nades_napalm_burntime);
+	W_LaserPlay(this,
+		autocvar_g_nades_napalm_ball_radius,
+		autocvar_g_nades_napalm_ball_damage,
+		autocvar_g_nades_napalm_ball_damage, // TODO: missing cvar
+		autocvar_g_nades_napalm_burntime,
+		napalm_damage_cond);
 
 	this.nextthink = time + 0.1;
 }
@@ -120,8 +98,12 @@ void napalm_fountain_think(entity this)
 		UpdateCSQCProjectile(this);
 	}
 
-	napalm_damage(this, autocvar_g_nades_napalm_fountain_radius, autocvar_g_nades_napalm_fountain_damage,
-	              autocvar_g_nades_napalm_fountain_edgedamage, autocvar_g_nades_napalm_burntime);
+	W_LaserPlay(this,
+		autocvar_g_nades_napalm_fountain_radius,
+		autocvar_g_nades_napalm_fountain_damage,
+		autocvar_g_nades_napalm_fountain_edgedamage,
+		autocvar_g_nades_napalm_burntime,
+		napalm_damage_cond);
 
 	this.nextthink = time + 0.1;
 	if (time >= this.nade_special_time)

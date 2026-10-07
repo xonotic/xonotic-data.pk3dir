@@ -8,7 +8,6 @@
 #include <client/hud/panel/quickmenu.qh>
 #include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
-#include <client/mapvoting.qh>
 #include <client/mutators/_mod.qh>
 #include <client/shownames.qh>
 #include <client/view.qh>
@@ -24,12 +23,14 @@
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
 #include <common/mapobjects/_mod.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/minigames/cl_minigames.qh>
 #include <common/minigames/cl_minigames_hud.qh>
 #include <common/net_linked.qh>
 #include <common/net_notice.qh>
 #include <common/scores.qh>
 #include <common/vehicles/all.qh>
+#include <common/weapons/weapon.qh>
 #include <lib/csqcmodel/cl_model.qh>
 #include <lib/csqcmodel/interpolate.qh>
 #include <lib/warpzone/client.qh>
@@ -1026,22 +1027,29 @@ bool CSQC_Parse_TempEntity()
 
 bool autocvar_r_drawfog;
 bool autocvar_r_fog_exp2;
-string forcefog;
-void Fog_Force()
+void Fog_Set(string fog, bool force)
 {
+	static string saved = string_null;
+	if (force) // else just set the fog once
+		strcpy(saved, fog);
+	else if (saved)
+		fog = saved;
+
 	if (autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
 	{
 		if (autocvar_r_drawfog)
 			cvar_set("r_drawfog", "0");
 	}
-	else if (forcefog != "")
+	else if (fog)
 	{
-		// using cvar_set as it's faster and safer than a command
-		if (!autocvar_r_drawfog)
-			cvar_set("r_drawfog", "1");
+		// "fog none" in the mapinfo just disables r_drawfog, client's worldspawn fog values aren't changed
+		bool drawfog = boolean(fog != "");
+		if (autocvar_r_drawfog != drawfog)
+			cvar_set("r_drawfog", ftos(drawfog));
 		if (autocvar_r_fog_exp2)
 			cvar_set("r_fog_exp2", "0");
-		localcmd(sprintf("\nfog %s\n", forcefog));
+		if (fog != "")
+			localcmd(strcat("\nfog ", fog, " \n"));
 	}
 }
 
@@ -1064,10 +1072,10 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 	}
 	bool welcome_msg_too = ReadByte();
 	if (welcome_msg_too)
-		net_handle_ServerWelcome();
+		net_handle_ServerWelcome(); // executes cl_hook_mutator_* hooks too
 	return = true;
 	Scoreboard_InitScores();
-	Gametype_Init();
+	Gametype_Init(); // executes cl_hook_gamestart_* hooks
 }
 
 NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
@@ -1083,7 +1091,7 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	arc_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	arc_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
-	strcpy(forcefog, ReadString());
+	Fog_Set(ReadString(), ReadByte());
 
 	armorblockpercent = ReadByte() / 255.0;
 	damagepush_speedfactor = ReadByte() / 255.0;
@@ -1327,35 +1335,28 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 	}
 }
 
-string translate_modifications(string s)
+string build_weaponarena_list(int arena_type, WepSet set)
 {
-	return build_mutator_list(s);
-}
-
-string translate_weaponarena(string s)
-{
-	if (s == "") return s;
-	if (s == "All Weapons Arena") return _("All Weapons Arena");
-	if (s == "All Available Weapons Arena") return _("All Available Weapons Arena");
-	if (s == "Most Weapons Arena") return _("Most Weapons Arena");
-	if (s == "Most Available Weapons Arena") return _("Most Available Weapons Arena");
-	if (s == "Dev All Weapons Arena") return s; // development option, do not translate
-	if (s == "Dev All Available Weapons Arena") return s; // development option, do not translate
-	if (s == "No Weapons Arena") return _("No Weapons Arena");
-
-	int n = tokenizebyseparator(s, " & ");
-	string wpn_list = "";
-	for (int i = 0; i < n; ++i)
+	switch (arena_type)
 	{
-		Weapon wep = Weapon_from_name(argv(i));
-		if (wep == WEP_Null)
-			LOG_INFO("^3Warning: ^7server sent an invalid weapon name\n");
-		wpn_list = cons_mid(wpn_list, " & ", wep.m_name);
+		default:
+		case WEPARENA_OFF:                 return "";
+		case WEPARENA_NONE:                return _("No Weapons Arena");
+		case WEPARENA_ALL:                 return _("All Weapons Arena");
+		case WEPARENA_ALL_AVAILABLE:       return _("All Available Weapons Arena");
+		case WEPARENA_STANDARD:            return _("Standard Weapons Arena");
+		case WEPARENA_STANDARD_AVAILABLE:  return _("Standard Available Weapons Arena");
+		case WEPARENA_EXTENDED:            return _("Extended Weapons Arena");
+		case WEPARENA_EXTENDED_AVAILABLE:  return _("Extended Available Weapons Arena");
+		case WEPARENA_DEVALL:              return "Dev All Weapons Arena";           // development option, won't bother translating
+		case WEPARENA_DEVALL_AVAILABLE:    return "Dev All Available Weapons Arena"; // development option, won't bother translating
+		case WEPARENA_CUSTOM:
+		{
+			string wpn_list = "";
+			FOREACH(Weapons, it != WEP_Null && (set & it.m_wepset), wpn_list = cons_mid(wpn_list, " & ", it.m_name));
+			return sprintf(_("%s Arena"), wpn_list); // it shouldn't be empty
+		}
 	}
-	if (wpn_list != "")
-		return sprintf(_("%s Arena"), wpn_list);
-	else
-		return _("No Weapons Arena");
 }
 
 string GetVersionMessage(string hostversion, bool version_mismatch, bool version_check)
@@ -1407,8 +1408,9 @@ bool net_handle_ServerWelcome()
 	MapInfo_Map_author = flags & 8 ? ReadString() : "";
 	srv_minplayers = ReadByte();
 	srv_maxplayers = ReadByte();
-	string modifications = translate_modifications(ReadString());
-	string weaponarena_list = translate_weaponarena(ReadString());
+	string modifications = build_mutator_list(ReadString()); // executes cl_hook_mutator_* hooks too
+	int weaponarena_type = ReadByte();
+	string weaponarena_list = build_weaponarena_list(weaponarena_type, (weaponarena_type == WEPARENA_CUSTOM) ? ReadWepSet() : '0 0 0');
 	string cache_mutatormsg = ReadString();
 	string motd = ReadString();
 
@@ -1422,15 +1424,14 @@ bool net_handle_ServerWelcome()
 
 	if (srv_minplayers || srv_maxplayers)
 	{
-		msg = strcat(msg, "\n", _("This match supports"), " ^5");
+		string interval;
 		if (srv_minplayers == srv_maxplayers)
-			msg = strcat(msg, sprintf(_("%d players"), srv_maxplayers), "\n");
-		else if (srv_minplayers && srv_maxplayers)
-			msg = strcat(msg, sprintf(_("%d to %d players"), srv_minplayers, srv_maxplayers), "\n");
-		else if (srv_maxplayers)
-			msg = strcat(msg, sprintf(_("%d players maximum"), srv_maxplayers), "\n");
+			interval = itos(srv_maxplayers);
+		else if (!srv_minplayers)
+			interval = sprintf(_("%d maximum"), srv_maxplayers);
 		else
-			msg = strcat(msg, sprintf(_("%d players minimum"), srv_minplayers), "\n");
+			interval = sprintf(CTX(_("INTERVAL^%d-%d")), srv_minplayers, srv_maxplayers);
+		msg = strcat(msg, "\n", _("Number of players supported by this match:"), " ^5", interval, "\n");
 	}
 
 	modifications = cons_mid(modifications, ", ", weaponarena_list);
@@ -1532,12 +1533,12 @@ string _getcommandkey(string cmd_name, string command, bool forcename)
 	if (keys == "NO_KEY")
 	{
 		if (autocvar_hud_showbinds > 1)
-			return sprintf(_("%s (not bound)"), cmd_name);
+			return strcat(cmd_name, sprintf(_(" (%s)"), _("not bound")));
 		else
 			return cmd_name;
 	}
 	else if (autocvar_hud_showbinds > 1 || forcename)
-		return sprintf("%s (%s)", cmd_name, keys);
+		return strcat(cmd_name, sprintf(_(" (%s)"), keys));
 	return keys;
 }
 

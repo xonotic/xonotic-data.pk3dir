@@ -7,6 +7,8 @@ void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, 
 #endif
 
 #ifdef GAMEQC
+#define CENTER_OF_ENT(ent) ((ent).origin + '0 0 0.5' * ((ent).mins.z + (ent).maxs.z))
+
 /*
 ==================
 findbetterlocation
@@ -44,12 +46,16 @@ void wordwrap_cb(string s, float l, void(string) callback);
 #ifndef SVQC
 string draw_currentSkin;
 string draw_UseSkinFor(string pic);
+#endif
 
+#ifndef SVQC
 string icon_path_from_HUDskin(string theIcon);
+#endif
 #ifdef MENUQC
 string icon_path_from_menuskin(string theIcon);
 #endif
 
+#ifdef CSQC
 // NOTE they aren't all registered mutators, e.g. jetpack, low gravity
 // TODO add missing "mutators"
 const int MUT_DODGING = 0;
@@ -68,15 +74,16 @@ const int MUT_PINATA = 12;
 const int MUT_WEAPON_STAY = 13;
 const int MUT_BLOODLOSS = 14;
 const int MUT_JETPACK = 15;
-const int MUT_BUFFS = 16;
-const int MUT_OVERKILL = 17;
+const int MUT_OVERKILL = 16;
+const int MUT_BUFFS = 17;
 const int MUT_NO_POWERUPS = 18;
 const int MUT_POWERUPS = 19;
-const int MUT_TOUCHEXPLODE = 20;
-const int MUT_WALLJUMP = 21;
-const int MUT_NO_START_WEAPONS = 22;
-const int MUT_NADES = 23;
-const int MUT_OFFHAND_BLASTER = 24;
+const int MUT_BUFFS_REPLACE_POWERUPS = 20;
+const int MUT_TOUCHEXPLODE = 21;
+const int MUT_WALLJUMP = 22;
+const int MUT_NO_START_WEAPONS = 23;
+const int MUT_NADES = 24;
+const int MUT_OFFHAND_BLASTER = 25;
 
 const int MUT_MAX = 47;
 
@@ -164,7 +171,7 @@ string records_reply[10];
 
 #ifdef GAMEQC
 vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
-vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage); // returns vector: take, save, 0
+vector healtharmor_applydamage(float h, float a, float armorblock, int deathtype, float damage); // returns vector: take, save, 0
 #endif
 
 string getcurrentmod();

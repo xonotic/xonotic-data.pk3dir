@@ -185,7 +185,7 @@ bool StatusEffects_active(StatusEffect this, entity actor);
 // called by HUD_Powerups_add on the client
 void StatusEffects_tick(entity actor);
 
-// accesses the status effect timer, returns 0 if the entity has no statuseffects object
+// accesses the status effect timer, returns 0 if the effect isn't active
 // pass g_statuseffects as the actor on client side
 // pass the entity with a .statuseffects on server side
 float StatusEffects_gettime(StatusEffect this, entity actor);

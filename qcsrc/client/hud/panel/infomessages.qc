@@ -223,7 +223,7 @@ void HUD_InfoMessages(bool should_draw)
 				s = strcat(blinkcolor, _("Teams are unbalanced!"));
 				entity tm = GetTeam(myteam, false);
 				if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
-					s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team selection"), "team_selection_show"), blinkcolor));
+					s = sprintf(CTX(_("UNBALTEAMS^%s Press ^3%s%s to adjust")), s, getcommandkey(_("team selection"), "team_selection_show"), blinkcolor);
 				fontsize *= 1.125; // perfect float
 				draw_beginBoldFont();
 				InfoMessage(s);

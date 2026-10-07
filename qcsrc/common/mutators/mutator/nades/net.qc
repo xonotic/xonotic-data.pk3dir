@@ -97,8 +97,7 @@ NET_HANDLE(Nade_Orb, bool isNew)
 		orb_setup(this);
 	return true;
 }
-#endif // CSQC
-#ifdef SVQC
+#elifdef SVQC
 bool orb_send(entity this, entity to, int sf)
 {
 	sf = 0;
@@ -126,6 +125,38 @@ bool orb_send(entity this, entity to, int sf)
 
 	return true;
 }
-#endif // SVQC
+#endif
+
+REGISTER_NET_TEMP(Nade_Orb_Effect)
+
+#ifdef CSQC
+NET_HANDLE(Nade_Orb_Effect, bool isNew)
+{
+	entity player = CSQCModel_server2csqc(ReadByte() - 1);
+	int cnt_and_type = ReadByte();
+	if (player)
+	{
+		vector org = CENTER_OF_ENT(player);
+		vector vel = vec2(player.velocity);
+		particles_alphamin = particles_alphamax = (!player.alpha ? 1 : player.alpha); // scale by player alpha
+		boxparticles(particleeffectnum((cnt_and_type & 1) ? EFFECT_AMMO_REGEN : EFFECT_HEALING), player, org, org, vel, vel, cnt_and_type >> 1, PARTICLES_USEALPHA);
+	}
+	return true;
+}
+#elifdef SVQC
+void nade_Effect(entity player, entity eff, int eff_cnt)
+{
+	if (time < player.nade_special_time)
+		return;
+	player.nade_special_time = time + 1/16; // 0.0625; prevent spam
+
+	if (player.alpha >= 0 && eff_cnt)
+	{
+		WriteHeader(MSG_BROADCAST, Nade_Orb_Effect);
+		WriteByte(MSG_BROADCAST, etof(player));
+		WriteByte(MSG_BROADCAST, (min(eff_cnt, BITS(7)) << 1) | (eff == EFFECT_AMMO_REGEN)); // bit 0 is the effect type, remaining are the count (right-shifted by 1)
+	}
+}
+#endif
 
 #endif // GAMEQC

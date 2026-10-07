@@ -1,0 +1,10 @@
+#pragma once
+
+#include <menu/xonotic/mutatortab.qh>
+CLASS(XonoticMutatorVampireTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorVampireTab, fill, void(entity));
+	ATTRIB(XonoticMutatorVampireTab, title, string, _("Vampire"));
+	ATTRIB(XonoticMutatorVampireTab, message, string, "g_vampire");
+	METHOD(XonoticMutatorVampireTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorVampireTab)
+entity makeXonoticMutatorVampireTab();

@@ -169,11 +169,12 @@ void make_safe_for_remove(entity this);
 
 #define objerror(this, msg) MACRO_BEGIN \
 	LOG_WARN("======OBJECT ERROR======"); \
+	string _msg = msg; /* evaluating it may require reading a field of the entity */ \
 	entity _e = (this); \
 	eprint(_e); \
 	objerror_safe(_e); \
 	delete(_e); \
-	LOG_WARNF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, msg); \
+	LOG_WARNF("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information", PROGNAME, __FUNC__, _msg); \
 MACRO_END
 
 #ifdef MENUQC

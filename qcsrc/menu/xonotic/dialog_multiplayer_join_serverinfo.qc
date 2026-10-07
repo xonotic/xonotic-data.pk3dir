@@ -224,7 +224,7 @@ void XonoticServerInfoDialog_fill(entity me)
 		//	e.onClick = ServerList_Favorite_Click;
 		//	e.onClickEntity = slist;
 		//	slist.favoriteButton = e;
-		me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Join!"), '0 0 0'));
+		me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Join!"), '0 1 0'));
 			e.onClick = Join_Click;
 			e.onClickEntity = me;
 }

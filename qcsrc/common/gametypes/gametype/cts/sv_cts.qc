@@ -195,11 +195,6 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(GameRules_scoring_add(player, RACE_FASTEST, 0))
-		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
-	else
-		player.frags = FRAGS_SPECTATOR;
-
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
 }
@@ -346,6 +341,11 @@ MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 	// useful to prevent cheating by running back to the start line and starting out with more speed
 	if(autocvar_g_cts_finish_kill_delay)
 		ClientKill_Silent(player, autocvar_g_cts_finish_kill_delay);
+}
+
+MUTATOR_HOOKFUNCTION(cts, ReadLevelCvars)
+{
+	warmup_stage = 0;
 }
 
 MUTATOR_HOOKFUNCTION(cts, FixClientCvars)

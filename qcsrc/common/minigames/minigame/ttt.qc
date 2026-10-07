@@ -29,38 +29,38 @@ const int TTT_TILE_SIZE = 3;
 entity ttt_find_piece(entity minig, string tile)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
 	return NULL;
 }
 
 // Checks if the given piece completes a row
-bool ttt_winning_piece(entity piece)
+bool ttt_winning_piece(entity minigame, entity piece)
 {
 	int number = minigame_tile_number(piece.netname);
 	int letter = minigame_tile_letter(piece.netname);
 
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,number)).team == piece.team )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,number)).team == piece.team )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,number)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(0,number)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(1,number)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(2,number)).team == piece.team )
 		return true;
 
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,0)).team == piece.team )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,1)).team == piece.team )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,2)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(letter,0)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(letter,1)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(letter,2)).team == piece.team )
 		return true;
 
 	if ( number == letter )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,0)).team == piece.team )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,1)).team == piece.team )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,2)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(0,0)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(1,1)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(2,2)).team == piece.team )
 		return true;
 
 	if ( number == 2-letter )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,2)).team == piece.team )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,1)).team == piece.team )
-	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,0)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(0,2)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(1,1)).team == piece.team )
+	if ( ttt_find_piece(minigame,minigame_tile_buildname(2,0)).team == piece.team )
 		return true;
 
 	return false;
@@ -92,7 +92,7 @@ void ttt_move(entity minigame, entity player, string pos )
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 			++minigame.ttt_npieces;
 			minigame.ttt_nexteam = minigame_next_team(player.team,2);
-			if ( ttt_winning_piece(piece) )
+			if ( ttt_winning_piece(minigame, piece) )
 			{
 				++player.minigame_flags;
 				minigame_server_sendflags(player, TTT_SF_PLAYERSCORE);
@@ -124,9 +124,15 @@ void ttt_next_match(entity minigame, entity player)
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		minigame.ttt_npieces = 0;
 		entity e = NULL;
-		while ( ( e = findentity(e,owner,minigame) ) )
+		while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 			if ( e.classname == "minigame_board_piece" )
-				delete(e);
+			{
+				// since this is done on both sides, we don't want to kill networked pieces early
+				// but we don't want their slots taking up ai positions, so clear their location
+				strfree(e.netname);
+				if (e.minigame_autoclean)
+					delete(e);
+			}
 	}
 }
 
@@ -146,7 +152,7 @@ int ttt_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
@@ -260,7 +266,7 @@ void ttt_hud_board(vector pos, vector mySize)
 
 			if ( active_minigame.minigame_flags & TTT_TURN_WIN )
 			if ( !e.ttt_checkwin )
-				e.ttt_checkwin = ttt_winning_piece(e) ? 1 : -1;
+				e.ttt_checkwin = ttt_winning_piece(active_minigame, e) ? 1 : -1;
 
 			float icon_color = 1;
 			if ( e.ttt_checkwin == -1 )
@@ -487,7 +493,7 @@ void ttt_aimove(entity minigame)
 	if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame.ttt_ai) )
 	{
 		entity aiplayer = NULL;
-		while ( ( aiplayer = findentity(aiplayer,owner,minigame) ) )
+		while ( ( aiplayer = findfloat(aiplayer,minigame_id,minigame.minigame_id) ) )
 			if ( aiplayer.classname == "minigame_player" && !aiplayer.minigame_playerslot )
 				break;
 
@@ -679,6 +685,8 @@ int ttt_client_event(entity minigame, string event, ...)
 					{
 						entity aiplayer = new(minigame_player);
 						aiplayer.owner = minigame;
+						aiplayer.minigame_id = minigame.minigame_id;
+						aiplayer.descriptor = minigame.descriptor;
 						aiplayer.team = ai;
 						aiplayer.minigame_playerslot = 0;
 						aiplayer.minigame_autoclean = 1;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <lib/warpzone/common.qh>
+
 int autocvar_g_antilag;
 float autocvar_g_antilag_nudge;
 
@@ -19,18 +21,17 @@ float antilag_getlag(entity e); // returns antilag latency for clients, plus any
 #define ANTILAG_LATENCY(e) min(0.4, CS(e).ping * 0.001)
 // add one ticrate?
 
-/*
-==================
-traceline_antilag
 
-A version of traceline that must be used by SOLID_SLIDEBOX things that want to hit SOLID_CORPSE things with a trace attack
-Additionally it moves players back into the past before the trace and restores them afterward.
-==================
-*/
-void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz);
-void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
-void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
-void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag);
-void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
-void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
-void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag);
+/// A version of traceline that must be used by SOLID_SLIDEBOX things that want to hit SOLID_CORPSE things with a trace attack
+/// Additionally it moves players back into the past before the trace and restores them afterward.
+void tracebox_antilag_force_wz(entity source, vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float lag, bool wz, WarpZone_trace_callback_t cb);
+
+void traceline_antilag(entity source, vector v1, vector v2, float nomonsters, entity forent, float lag);
+void WarpZone_traceline_antilag(entity source, vector v1, vector v2, float nomonsters, entity forent, float lag);
+#define traceline_antilag_force(source, v1, v2, nomonsters, forent, lag) \
+	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonsters, forent, lag, false, func_null)
+#define WarpZone_traceline_antilag_force(source, v1, v2, nomonsters, forent, lag) \
+	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonsters, forent, lag, true,  func_null)
+
+void tracebox_antilag(entity source, vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float lag);
+void WarpZone_tracebox_antilag(entity source, vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float lag);

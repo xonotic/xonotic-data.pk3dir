@@ -30,10 +30,8 @@
 	{
 		if (me.text == "")
 			return 0;
-		if (pos.x >= 1 + me.cb_offset - me.cb_width)
-			if (pos.x < 1 + me.cb_offset)
-				if (pos.y >= 0)
-					if (pos.y < 1) return 1;
+		if (pos.x >= 1 + me.cb_offset - me.cb_width && pos.x < 1 + me.cb_offset && pos.y >= 0 && pos.y < 1)
+			return 1;
 		return 0;
 	}
 
@@ -75,12 +73,11 @@
 
 	METHOD(InputBox, mousePress, bool(InputBox this, vector pos))
 	{
-		if (this.enableClearButton)
-			if (over_ClearButton(this, pos))
-			{
-				this.cb_pressed = true;
-				return true;
-			}
+		if (this.enableClearButton && over_ClearButton(this, pos))
+		{
+			this.cb_pressed = true;
+			return true;
+		}
 		this.dragScrollTimer = time;
 		this.pressed = 1;
 		return InputBox_mouseDrag(this, pos);
@@ -88,16 +85,15 @@
 
 	float InputBox_mouseRelease(entity me, vector pos)
 	{
-		if (me.cb_pressed)
-			if (over_ClearButton(me, pos))
-			{
-				m_play_click_sound(MENU_SOUND_CLEAR);
-				me.setText(me, "");
-				if(me.applyButton)
-					me.applyButton.disabled = false;
-				me.cb_pressed = false;
-				return 1;
-			}
+		if (me.cb_pressed && over_ClearButton(me, pos))
+		{
+			m_play_click_sound(MENU_SOUND_CLEAR);
+			me.setText(me, "");
+			if (me.applyButton)
+				me.applyButton.disabled = false;
+			me.cb_pressed = false;
+			return 1;
+		}
 		float r = InputBox_mouseDrag(me, pos);
 		// reset cb_pressed after mouseDrag, mouseDrag could set cb_pressed in this case:
 		// mouse press out of the clear button, drag and then mouse release over the clear button
@@ -113,18 +109,22 @@
 		{
 			// if there is a list of allowed characters, forbid all other
 			if (me.allowedCharacters != string_null
-			&&  strstrofs(me.allowedCharacters, substring(ch, i, 1), 0) == -1) return;
+			&& strstrofs(me.allowedCharacters, substring(ch, i, 1), 0) == -1)
+				return;
 
 			// don't allow forbidden characters
-			if (strstrofs(me.forbiddenCharacters, substring(ch, i, 1), 0) > -1) return;
+			if (strstrofs(me.forbiddenCharacters, substring(ch, i, 1), 0) > -1)
+				return;
 		}
 		if (me.maxLength > 0)
 		{
-			if (len + strlen(me.text) > me.maxLength) return;
+			if (len + strlen(me.text) > me.maxLength)
+				return;
 		}
 		else if (me.maxLength < 0)
 		{
-			if (u8_strsize(ch) + u8_strsize(me.text) > -me.maxLength) return;
+			if (u8_strsize(ch) + u8_strsize(me.text) > -me.maxLength)
+				return;
 		}
 		me.setText(me, strcat(substring(me.text, 0, me.cursorPos), ch, substring(me.text, me.cursorPos, strlen(me.text) - me.cursorPos)));
 		me.cursorPos += len;
@@ -137,7 +137,7 @@
 		if (ascii >= 32 && ascii != 127)
 		{
 			me.enterText(me, chr(ascii));
-			if(me.applyButton)
+			if (me.applyButton)
 				me.applyButton.disabled = false;
 			return 1;
 		}
@@ -164,7 +164,7 @@
 				{
 					--me.cursorPos;
 					me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
-					if(me.applyButton)
+					if (me.applyButton)
 						me.applyButton.disabled = false;
 				}
 				return 1;
@@ -177,7 +177,7 @@
 				}
 				else
 					me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
-				if(me.applyButton)
+				if (me.applyButton)
 					me.applyButton.disabled = false;
 				return 1;
 		}
@@ -189,17 +189,22 @@
 		string CURSOR = "_";
 		float cursorPosInWidths, totalSizeInWidths;
 
-		if (me.pressed) me.mouseDrag(me, me.dragScrollPos);  // simulate mouseDrag event
+		if (me.pressed)
+			me.mouseDrag(me, me.dragScrollPos);  // simulate mouseDrag event
 
-		if (me.recalcPos) me.recalcPositionWithText(me, me.text);
+		if (me.recalcPos)
+			me.recalcPositionWithText(me, me.text);
 
 		me.focusable = !me.disabled;
-		if (me.disabled) draw_alpha *= me.disabledAlpha;
+		if (me.disabled)
+			draw_alpha *= me.disabledAlpha;
 
 		if (me.src)
 		{
-			if (me.focused && !me.disabled) draw_ButtonPicture('0 0 0', strcat(me.src, "_f"), '1 1 0', me.colorF, 1);
-			else draw_ButtonPicture('0 0 0', strcat(me.src, "_n"), '1 1 0', me.color, 1);
+			if (me.focused && !me.disabled)
+				draw_ButtonPicture('0 0 0', strcat(me.src, "_f"), '1 1 0', me.colorF, 1);
+			else
+				draw_ButtonPicture('0 0 0', strcat(me.src, "_n"), '1 1 0', me.color, 1);
 		}
 
 		me.cursorPos = bound(0, me.cursorPos, strlen(me.text));
@@ -210,7 +215,8 @@
 		{
 			float save = me.scrollPos;
 			me.scrollPos = bound(cursorPosInWidths - (0.875 - me.keepspaceLeft - me.keepspaceRight), me.scrollPos, cursorPosInWidths - 0.125);
-			if (me.scrollPos != save) me.dragScrollTimer = time + 0.2;
+			if (me.scrollPos != save)
+				me.dragScrollTimer = time + 0.2;
 		}
 		me.scrollPos = min(me.scrollPos, totalSizeInWidths - (1 - me.keepspaceRight - me.keepspaceLeft));
 		me.scrollPos = max(0, me.scrollPos);
@@ -307,7 +313,7 @@
 						else
 						{
 							// red missing
-							// w = draw_TextWidth(substring(me.text, i, 2), 0) * me.realFontSize_x;
+							// w = draw_TextWidth(substring(me.text, i, 2), 0, me.realFontSize);
 							draw_Fill(p, eX * w + eY * me.realFontSize.y, eX, fill_alpha);
 							draw_Text(p, substring(me.text, i, 2), me.realFontSize, '1 1 1', theAlpha, 0);
 						}
@@ -326,9 +332,7 @@
 			}
 		}
 		else
-		{
 			draw_Text(me.realOrigin - eX * me.scrollPos, me.text, me.realFontSize, '1 1 1', 1, 0);
-		}
 
 		if (!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
 			draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);

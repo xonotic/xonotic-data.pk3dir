@@ -2,6 +2,8 @@
 
 #include "bigcommandbutton.qh"
 
+// This dialog is obsolete (for compatibility with old versions).
+
 entity makeTeamButton_T(string theName, vector theColor, string commandtheName, string theTooltip)
 {
 	entity b = makeXonoticBigCommandButton_T(theName, theColor, commandtheName, COMMANDBUTTON_CLOSE, theTooltip);
@@ -28,15 +30,15 @@ void XonoticTeamSelectDialog_fill(entity me)
 {
 	entity e;
 	me.TR(me);
-		me.TD(me, 2, 4, e = makeTeamButton_T(_("join 'best' team (auto-select)"), '0 0 0', "cmd selectteam auto; cmd join",
+		me.TD(me, 2, 4, e = makeTeamButton_T(_("join 'best' team (auto-select)"), '0 0 0', "team_auto",
 			_("Auto-select team (recommended)")));
 			e.preferredFocusPriority = 1;
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 2, 1, e = me.team1 = makeTeamButton(_("red"), '1 0.5 0.5', "cmd selectteam red; cmd join"));
-		me.TD(me, 2, 1, e = me.team2 = makeTeamButton(_("blue"), '0.5 0.5 1', "cmd selectteam blue; cmd join"));
-		me.TD(me, 2, 1, e = me.team3 = makeTeamButton(_("yellow"), '1 1 0.5', "cmd selectteam yellow; cmd join"));
-		me.TD(me, 2, 1, e = me.team4 = makeTeamButton(_("pink"), '1 0.5 1', "cmd selectteam pink; cmd join"));
+		me.TD(me, 2, 1, e = me.team1 = makeTeamButton(_("red"), '1 0.5 0.5', "team_red"));
+		me.TD(me, 2, 1, e = me.team2 = makeTeamButton(_("blue"), '0.5 0.5 1', "team_blue"));
+		me.TD(me, 2, 1, e = me.team3 = makeTeamButton(_("yellow"), '1 1 0.5', "team_yellow"));
+		me.TD(me, 2, 1, e = me.team4 = makeTeamButton(_("pink"), '1 0.5 1', "team_pink"));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", COMMANDBUTTON_CLOSE));

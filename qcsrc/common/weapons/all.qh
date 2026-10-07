@@ -11,8 +11,8 @@ void WriteWepSet(float dest, WepSet w);
 #endif
 
 #ifdef CSQC
-WepSet WepSet_GetFromStat();
-WepSet WepSet_GetFromStat_InMap();
+#define WepSet_GetFromStat()       STAT(WEAPONS)
+#define WepSet_GetFromStat_InMap() STAT(WEAPONSINMAP)
 WepSet ReadWepSet();
 #endif
 
@@ -141,6 +141,7 @@ ENDCLASS(NullWeapon)
 REGISTER_WEAPON(Null, NEW(NullWeapon));
 REGISTRY_DEFINE_GET(Weapons, WEP_Null)
 
+#ifdef SVQC
 Weapon Weapon_from_name(string s)
 {
 	FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
@@ -152,6 +153,7 @@ Weapon Weapon_from_impulse(int imp)
 	FOREACH(Weapons, it != WEP_Null && it.m_unique_impulse == imp, return it);
 	return WEP_Null;
 }
+#endif
 
 
 #ifdef GAMEQC
@@ -474,9 +476,11 @@ string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 #endif // GAMEQC
 
 // functions:
-string W_FixWeaponOrder(string order, float complete);
-string W_NameWeaponOrder(string order);
-string W_NumberWeaponOrder(string order);
+string W_NameWeaponOrder_MapFunc(string s);
+string W_NumberWeaponOrder_MapFunc(string s);
+#define W_NameWeaponOrder(order) mapPriorityList(order, W_NameWeaponOrder_MapFunc)
+#define W_NumberWeaponOrder(order) mapPriorityList(order, W_NumberWeaponOrder_MapFunc)
+#define W_FixWeaponOrder(order, complete) fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete)
 string W_FixWeaponOrder_BuildImpulseList(string o);
 string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);

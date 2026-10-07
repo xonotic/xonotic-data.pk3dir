@@ -5,7 +5,7 @@
 #include <server/scores_rules.qh>
 
 //int autocvar_leadlimit;
-int autocvar_leadlimit_and_fraglimit;
+bool autocvar_leadlimit_and_fraglimit;
 int autocvar_leadlimit_override;
 
 // TODO: find a better location for these?

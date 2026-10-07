@@ -28,7 +28,6 @@ float autocvar_g_monster_mage_attack_teleport_random_range = 1200;
 float autocvar_g_monster_mage_heal_allies;
 float autocvar_g_monster_mage_heal_minhealth;
 float autocvar_g_monster_mage_heal_range;
-float autocvar_g_monster_mage_heal_delay;
 float autocvar_g_monster_mage_shield_time;
 float autocvar_g_monster_mage_shield_delay;
 float autocvar_g_monster_mage_speed_stop;
@@ -111,7 +110,6 @@ void M_Mage_Defend_Shield(entity this);
 
 .entity mage_spike;
 .float mage_shield_delay;
-.float mage_heal_delay;
 
 bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
@@ -188,9 +186,7 @@ void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 	M_Mage_Attack_Spike_Explode(this, toucher);
 }
 
-.float wait;
-
-// copied from W_Seeker_Missile_Think
+// copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think(entity this)
 {
 	if (time > this.ltime
@@ -202,45 +198,15 @@ void M_Mage_Attack_Spike_Think(entity this)
 		return;
 	}
 
-	float spd = vlen(this.velocity);
-	spd = bound(
-		spd - autocvar_g_monster_mage_attack_spike_decel * frametime,
+	W_SeekOutEnemy(this,
+		autocvar_g_monster_mage_attack_spike_decel,
+		autocvar_g_monster_mage_attack_spike_accel,
 		autocvar_g_monster_mage_attack_spike_speed_max,
-		spd + autocvar_g_monster_mage_attack_spike_accel * frametime
-	);
-
-	if (this.enemy && (this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy)))
-		this.enemy = NULL;
-
-	if (this.enemy)
-	{
-		vector eorg = (this.enemy.absmin + this.enemy.absmax) * 0.5;
-		eorg = WarpZone_RefSys_TransformOrigin(this.enemy, this, eorg);
-		float turnrate = autocvar_g_monster_mage_attack_spike_turnrate; // how fast to turn
-		vector desireddir = normalize(eorg - this.origin);
-		vector olddir = normalize(this.velocity); // get my current direction
-
-		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
-		if (autocvar_g_monster_mage_attack_spike_smart && vdist(eorg - this.origin, >, autocvar_g_monster_mage_attack_spike_smart_mindist))
-		{
-			// Is it a better idea (shorter distance) to trace to the target itself?
-			if (vlen2(this.origin + olddir * this.wait) < vlen2(eorg - this.origin))
-				WarpZone_TraceLine(this.origin, this.origin + olddir * this.wait, false, this);
-			else
-				WarpZone_TraceLine(this.origin, eorg, false, this);
-
-			// Setup adaptive tracelength
-			this.wait = bound(autocvar_g_monster_mage_attack_spike_smart_trace_min, vlen(this.origin - trace_endpos), autocvar_g_monster_mage_attack_spike_smart_trace_max);
-
-			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
-			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
-		}
-
-		vector newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
-		this.velocity = newdir * spd; // make me fly in the new direction at my flight speed
-	}
-
-	///////////////
+		autocvar_g_monster_mage_attack_spike_turnrate,
+		autocvar_g_monster_mage_attack_spike_smart,
+		autocvar_g_monster_mage_attack_spike_smart_mindist,
+		autocvar_g_monster_mage_attack_spike_smart_trace_min,
+		autocvar_g_monster_mage_attack_spike_smart_trace_max);
 
 	//this.angles = vectoangles(this.velocity); // turn model in the new flight direction
 	this.nextthink = time;// + 0.05; // csqc projectiles
@@ -249,7 +215,10 @@ void M_Mage_Attack_Spike_Think(entity this)
 
 void M_Mage_Attack_Spike(entity this, vector org, vector dir, entity targ)
 {
-	entity missile = WarpZone_RefSys_SpawnSameRefSys(this);
+	makevectors(this.angles);
+
+	entity missile = new(M_Mage_Attack_Spike);
+	WarpZone_RefSys_Copy(missile, this);
 	missile.owner = missile.realowner = this;
 	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;
@@ -271,57 +240,62 @@ void M_Mage_Attack_Spike(entity this, vector org, vector dir, entity targ)
 	CSQCProjectile(missile, true, PROJECTILE_MAGE_SPIKE, true);
 }
 
+
+bool M_Mage_Defend_Heal_cond_checkvalid;
+bool M_Mage_Defend_Heal_cond(entity e)
+{
+	if (M_Mage_Defend_Heal_cond_checkvalid && e == WarpZone_SearchInRadius_otherent || (!IS_PLAYER(e) && !IS_MONSTER(e)))
+		return false;
+	return M_Mage_Defend_Heal_Check(WarpZone_SearchInRadius_otherent, e);
+}
 void M_Mage_Defend_Heal(entity this)
 {
-	bool washealed = false;
-
-	entity head = WarpZone_FindRadius(this.origin, autocvar_g_monster_mage_heal_range, true);
-	while(head)
+	WarpZone_SearchInRadius_otherent = this;
+	M_Mage_Defend_Heal_cond_checkvalid = false;
+	entity fx, head = WarpZone_SearchInRadius(this.origin, autocvar_g_monster_mage_heal_range, MOVE_NOTHING, M_Mage_Defend_Heal_cond);
+	bool was_healed = (head != NULL);
+	for (; head; head = head.chain)
 	{
-		entity it = head;
-		head = head.chain;
-
-		if (!M_Mage_Defend_Heal_Check(this, it))
-			continue;
-		washealed = true;
-		entity fx = EFFECT_Null;
-		if (IS_PLAYER(it))
+		if (IS_PLAYER(head))
 		{
+			fx = EFFECT_Null;
 			switch (this.skin)
 			{
 				case 0:
-					Heal(it, this, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_health_regenstable);
+					Heal(head, this, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_health_regenstable);
 					fx = EFFECT_HEALING;
 					break;
 				case 1:
-					if (GetResource(it, RES_CELLS))    GiveResourceWithLimit(it, RES_CELLS,   1, autocvar_g_pickup_cells_max);
-					if (GetResource(it, RES_ROCKETS))  GiveResourceWithLimit(it, RES_ROCKETS, 1, autocvar_g_pickup_rockets_max);
-					if (GetResource(it, RES_SHELLS))   GiveResourceWithLimit(it, RES_SHELLS,  2, autocvar_g_pickup_shells_max);
-					if (GetResource(it, RES_BULLETS))  GiveResourceWithLimit(it, RES_BULLETS, 5, autocvar_g_pickup_nails_max);
+					if (GetResource(head, RES_CELLS))    GiveResourceWithLimit(head, RES_CELLS,   1, autocvar_g_pickup_cells_max);
+					if (GetResource(head, RES_ROCKETS))  GiveResourceWithLimit(head, RES_ROCKETS, 1, autocvar_g_pickup_rockets_max);
+					if (GetResource(head, RES_SHELLS))   GiveResourceWithLimit(head, RES_SHELLS,  2, autocvar_g_pickup_shells_max);
+					if (GetResource(head, RES_BULLETS))  GiveResourceWithLimit(head, RES_BULLETS, 5, autocvar_g_pickup_nails_max);
 					// TODO: fuel?
 					fx = EFFECT_AMMO_REGEN;
 					break;
 				case 2:
-					if (GetResource(it, RES_ARMOR) < autocvar_g_balance_armor_regenstable)
+					if (GetResource(head, RES_ARMOR) < autocvar_g_balance_armor_regenstable)
 					{
-						GiveResourceWithLimit(it, RES_ARMOR, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_armor_regenstable);
+						GiveResourceWithLimit(head, RES_ARMOR, autocvar_g_monster_mage_heal_allies, autocvar_g_balance_armor_regenstable);
 						fx = EFFECT_ARMOR_REPAIR;
 					}
 					break;
 			}
 
-			Send_Effect(fx, it.origin, vec2(it.velocity), 5);
+			float pl_alpha = (!head.alpha ? 1 : head.alpha);
+			if (pl_alpha > 0)
+				Send_Effect_Core(fx, head.origin, vec2(head.velocity), 5, '0 0 0', '0 0 0', pl_alpha, pl_alpha, -1, NULL);
 		}
 		else
 		{
-			Send_Effect(EFFECT_HEALING, it.origin, vec2(it.velocity), 5);
-			Heal(it, this, autocvar_g_monster_mage_heal_allies, RES_LIMIT_NONE);
-			if (!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
-				WaypointSprite_UpdateHealth(it.sprite, GetResource(it, RES_HEALTH));
+			Send_Effect(EFFECT_HEALING, head.origin, vec2(head.velocity), 5);
+			Heal(head, this, autocvar_g_monster_mage_heal_allies, RES_LIMIT_NONE);
+			if (!(head.spawnflags & MONSTERFLAG_INVINCIBLE) && head.sprite)
+				WaypointSprite_UpdateHealth(head.sprite, GetResource(head, RES_HEALTH));
 		}
 	}
 
-	if (washealed)
+	if (was_healed)
 	{
 		setanim(this, this.anim_fire2, true, true, true);
 		this.anim_finished = this.animstate_endtime;
@@ -465,12 +439,16 @@ METHOD(Mage, mr_think, bool(Mage this, entity actor))
 {
 	TC(Mage, this);
 
-	// done outside the attack function so it can passively heal
-	if (random() < 0.25 && time >= actor.attack_finished_single[0] && time >= actor.mage_heal_delay)
-	{
+	WarpZone_SearchInRadius_otherent = actor;
+	M_Mage_Defend_Heal_cond_checkvalid = true;
+	entity head = WarpZone_SearchInRadius(actor.origin, autocvar_g_monster_mage_heal_range, MOVE_NOTHING, M_Mage_Defend_Heal_cond);
+	bool should_heal = (head != NULL); // TODO: this could be optimized by changing the WarpZone_SearchInRadius to return as soon as it finds one entity, somehow
+	// heal ourself if it'd also help a nearby friend, even if we don't need healing
+
+	if (random() < 0.5
+	&& time >= actor.attack_finished_single[0]
+	&& (GetResource(actor, RES_HEALTH) < autocvar_g_monster_mage_heal_minhealth || should_heal))
 		M_Mage_Defend_Heal(actor);
-		actor.mage_heal_delay = time + autocvar_g_monster_mage_heal_delay;
-	}
 
 	// TODO: engage defensively (attacks incoming, threatened etc) rather than on first hit
 	if (random() < 0.25

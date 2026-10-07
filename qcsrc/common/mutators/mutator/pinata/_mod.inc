@@ -3,3 +3,6 @@
 #ifdef SVQC
 	#include <common/mutators/mutator/pinata/sv_pinata.qc>
 #endif
+#ifdef MENUQC
+	#include <common/mutators/mutator/pinata/ui_pinata.qc>
+#endif

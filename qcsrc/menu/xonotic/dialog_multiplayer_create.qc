@@ -118,13 +118,13 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player slots:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 32, 1, "menu_maxplayers",
-			_("The maximum amount of players or bots that can be connected to your server at once")));
+			_("The maximum number of players or bots that can be connected to your server at once")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Number of bots:")));
 			setDependent(e, "g_campaign", 0, 0);
 			setDependentAND(e, "bot_vs_human", 0, 0);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 9, 1, "bot_number",
-			_("Amount of bots on your server")));
+			_("Number of bots on your server")));
 			setDependent(e, "g_campaign", 0, 0);
 			setDependentAND(e, "bot_vs_human", 0, 0);
 	me.TR(me);
@@ -209,7 +209,7 @@ void XonoticServerCreateTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, me.columns * 1/12);
 		me.TD(me, 1, me.columns * 5/12, e = makeXonoticLeaveMatchButton('0 0 0', 0));
-		me.TD(me, 1, me.columns * 5/12, e = makeXonoticButton(_("Start multiplayer!"), '0 0 0'));
+		me.TD(me, 1, me.columns * 5/12, e = makeXonoticButton(_("Start multiplayer!"), '0 1 0'));
 			e.onClick = MapList_LoadMap;
 			e.onClickEntity = me.mapListBox;
 			me.mapListBox.startButton = e;

@@ -206,18 +206,22 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 	delete(this);
 }
 
+bool W_Crylink_Touch_WouldHitFriendly_cond(entity e)
+{
+	return (e.takedamage != DAMAGE_NO && !IS_DEAD(e));
+}
 bool W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 {
-	entity head = WarpZone_FindRadius(projectile.origin + (projectile.mins + projectile.maxs) * 0.5, rad + MAX_DAMAGEEXTRARADIUS, false);
+	entity head = WarpZone_SearchInRadius(projectile.origin + (projectile.mins + projectile.maxs) * 0.5, rad + MAX_DAMAGEEXTRARADIUS,
+		MOVE_NOTHING, W_Crylink_Touch_WouldHitFriendly_cond);
 	bool hit_friendly = false;
 	for (; head; head = head.chain)
-		if (head.takedamage != DAMAGE_NO && !IS_DEAD(head))
-		{
-			if (SAME_TEAM(head, projectile.realowner))
-				hit_friendly = true;
-			else
-				return false;
-		}
+	{
+		if (SAME_TEAM(head, projectile.realowner))
+			hit_friendly = true;
+		else
+			return false;
+	}
 
 	return hit_friendly;
 }
@@ -298,6 +302,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	for (int counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
+		WarpZone_RefSys_Copy(proj, actor);
 		proj.dtor = W_Crylink_DeleteLink;
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = actor;
@@ -397,6 +402,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor, .entity weaponentity)
 	for (int counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
+		WarpZone_RefSys_Copy(proj, actor);
 		proj.dtor = W_Crylink_DeleteLink;
 		proj.weaponentity_fld = weaponentity;
 		proj.reset = W_Crylink_Reset;
@@ -492,9 +498,9 @@ METHOD(Crylink, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 
 METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (autocvar_g_balance_crylink_reload_ammo
-	&& actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(WEP_CRYLINK, ammo), WEP_CVAR_SEC(WEP_CRYLINK, ammo)))
-		// forced reload
+	if (autocvar_g_balance_crylink_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_CRYLINK, ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR_SEC(WEP_CRYLINK, ammo))
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 	else if (fire & 1)
 	{

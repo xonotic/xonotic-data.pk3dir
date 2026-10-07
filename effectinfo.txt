@@ -979,12 +979,12 @@ effect grenadelauncher_muzzleflash
 	velocitymultiplier 0.500000
 effect TR_GRENADE
 	type smoke
-	alpha 300 400 780
+	alpha 300 400 384
 	bounce 1
 	color 0x101010 0x000000
 	originjitter 1 1 1
-	sizeincrease 10
-	size 3 2
+	sizeincrease 8
+	size 2 3
 	tex 0 8
 	trailspacing 4
 	velocityjitter 1 1 1
@@ -992,11 +992,11 @@ effect TR_GRENADE
 effect TR_GRENADE
 	type static
 	airfriction 8
-	alpha 100 144 988
-	color 0xffdf72 0x811200
+	alpha 100 156 456
+	color 0xffb672 0x811200
 	notunderwater
-	sizeincrease -15
-	size 5 2
+	sizeincrease -6
+	size 3 5
 	tex 48 55
 	trailspacing 4
 	velocityjitter 32 32 32
@@ -1051,7 +1051,7 @@ effect grenade_explode
 	type decal
 	alpha 256 256 0
 	countabsolute 1
-	lightcolor 8 4 1
+	lightcolor 8 3 1
 	lightradiusfade 400
 	lightradius 250
 	originjitter 26 26 26
@@ -1706,7 +1706,7 @@ effect TR_ROCKET
 	alpha 200 300 200
 	bounce 1
 	color 0x000000 0x666666
-	lightcolor 6 3 1
+	lightcolor 6 4 1
 	lightradius 150
 	notunderwater
 	originjitter 2 2 2
@@ -1721,7 +1721,7 @@ effect TR_ROCKET
 	type static
 	airfriction 8
 	alpha 100 144 588
-	color 0xffdf72 0x811200
+	color 0xffdf72 0x812f00
 	sizeincrease -30
 	size 7 7
 	tex 48 55
@@ -1758,7 +1758,7 @@ effect rocket_explode
 	type decal
 	alpha 256 256 0
 	countabsolute 1
-	lightcolor 8 4 1
+	lightcolor 8 5 1
 	lightradiusfade 750
 	lightradius 400
 	originjitter 23 23 23
@@ -2429,59 +2429,61 @@ effect goldendust
 	tex 38 38
 	velocityjitter 0.1 0.1 0.1
 effect healing_fx
-	type spark
+	type static
 	airfriction -0.500000
-	alpha 256 256 170
+	alpha 256 256 200
 	bounce 1.500000
-	color 0xff0000 0xff0000
-	count 5
+	color 0xff0000 0xfd705b
+	count 3
 	gravity -0.100000
-	originjitter 5 5 100
+	originjitter 5 5 50
 	sizeincrease -0.050000
-	size 1 3
-	tex 40 40
-	velocityjitter 50 50 0
-	velocitymultiplier 0.2
+	size 3 7
+	tex 75 75
+	velocityjitter 40 40 5
+	velocitymultiplier 0.200000
 effect armorrepair_fx
-	type spark
-	airfriction -0.500000
-	alpha 256 256 170
+	type static
+	airfriction 5
+	alpha 200 256 256
 	bounce 1.500000
-	color 0x00ff00 0x00ff00
-	count 5
-	gravity -0.100000
+	color 0x00ff00 0x81f13d
+	count 3
+	gravity -0.010000
 	originjitter 5 5 50
 	sizeincrease -0.050000
-	size 1 3
-	tex 40 40
-	velocityjitter 50 50 0
-	velocitymultiplier 0.2
+	size 3 7
+	tex 76 76
+	velocityjitter 200 200 5
+	velocitymultiplier 0.500000
 effect ammoregen_fx
-	type spark
-	airfriction -0.500000
-	alpha 256 256 170
+	type static
+	airfriction -1
+	alpha 256 256 192
 	bounce 1.500000
-	color 0x0000ff 0x0000ff
-	count 5
+	color 0x0000ff 0x5576ed
+	count 3
 	gravity 0.100000
-	originjitter 5 5 50
+	originjitter 10 10 30
 	sizeincrease -0.050000
-	size 1 3
-	tex 40 40
-	velocityjitter 50 50 0
-	velocitymultiplier 0.2
+	size 3 7
+	tex 77 81
+	velocityjitter 40 40 2
+	velocitymultiplier 0.200000
+	velocityoffset 0 0 10
 effect rage
 	type smoke
 	airfriction 2
-	alpha 256 256 190
+	alpha 128 256 384
 	color 0xff0000 0xff7800
-	count 2.500000
-	gravity -0.060000
-	originjitter 5 5 5
-	sizeincrease 10
+	count 2
+	gravity -0.100000
+	originjitter 8 8 8
+	sizeincrease 20
 	size 1 3
-	tex 35 36
-	velocityjitter 25 25 25
+	tex 35 37
+	velocityjitter 20 20 20
+	velocityoffset 0 0 5
 effect iceorglass
 	type alphastatic
 	airfriction 3
@@ -2511,47 +2513,47 @@ effect poisonfield
 effect darkfield
 	type smoke
 	airfriction 1
-	alpha 256 256 50
+	alpha 256 256 100
 	bounce 1.500000
 	color 0x600089 0x000000
-	count 10
-	gravity -0.010000
+	count 6
+	gravity -0.020000
 	originjitter 333 333 0
-	sizeincrease 10
+	sizeincrease 20
 	size 1 1
 	tex 0 8
-	velocityjitter 5 5 30
+	velocityjitter 10 10 50
 effect darkfield
 	type smoke
-	alpha 256 256 50
+	alpha 256 256 100
 	color 0x600089 0x000000
-	count 5
-	gravity -0.001000
+	count 3
+	gravity -0.002000
 	originjitter 333 333 0
-	sizeincrease 10
+	sizeincrease 20
 	size 1 1
 	tex 48 55
 effect icefield
 	type smoke
 	airfriction 1
-	alpha 256 256 50
+	alpha 256 256 100
 	bounce 1.500000
 	color 0x008aff 0x75e7ff
-	count 10
-	gravity -0.010000
+	count 6
+	gravity -0.020000
 	originjitter 333 333 0
-	sizeincrease 10
+	sizeincrease 20
 	size 1 1
 	tex 0 8
-	velocityjitter 5 5 30
+	velocityjitter 10 10 50
 effect icefield
 	type smoke
-	alpha 256 256 50
+	alpha 256 256 100
 	color 0x008aff 0x75e7ff
-	count 5
-	gravity -0.001000
+	count 3
+	gravity -0.002000
 	originjitter 333 333 0
-	sizeincrease 10
+	sizeincrease 20
 	size 1 1
 	tex 48 55
 effect firefield
@@ -4435,7 +4437,7 @@ effect TR_SEEKER
 	alpha 200 300 200
 	bounce 1
 	color 0x000000 0x666666
-	lightcolor 6 3 1
+	lightcolor 6 2 1
 	lightradius 100
 	notunderwater
 	originjitter 2 2 2
@@ -4450,7 +4452,7 @@ effect TR_SEEKER
 	type static
 	airfriction 8
 	alpha 100 144 588
-	color 0xffdf72 0x811200
+	color 0xff9172 0x810013
 	sizeincrease -30
 	size 5 5
 	tex 48 55
@@ -4474,15 +4476,15 @@ effect TR_SEEKER
 	airfriction 5
 	alpha 444 512 1866
 	bounce 1
-	color 0xFFFDD9 0xFFFDD9
+	color 0xFFD9E9 0xFFD9E9
 	notunderwater
 	originjitter 1 1 1
 	size 0.500000 0.500000
-	stretchfactor 0.300000
+	stretchfactor 0.200000
 	tex 40 40
 	trailspacing 20
 	velocityjitter 100 100 100
-	velocitymultiplier -0.310000
+	velocitymultiplier -0.250000
 effect spiderbot_minigun_trail
 	type smoke
 	airfriction 1
@@ -6118,13 +6120,13 @@ effect robot_damage_rifle
 effect damage_seeker
 	type smoke
 	alpha 512 32 1024
-	color 0x8f0c00 0xff2200
+	color 0x8f0c00 0xff0022
 	count 3
 	gravity -0.300000
 	notunderwater
 	originjitter 2 2 2
 	sizeincrease -10
-	size 4 8
+	size 6 10
 	tex 48 55
 	velocityjitter 22 22 50
 effect damage_seeker
@@ -6136,7 +6138,7 @@ effect damage_seeker
 	notunderwater
 	originjitter 4 4 4
 	sizeincrease 10
-	size 2 4
+	size 3 6
 	tex 0 8
 	velocityjitter 11 11 50
 effect damage_hagar
@@ -8990,7 +8992,7 @@ effect hlac_impact
 effect shotgun_woosh
 	type smoke
 	airfriction 2
-	alpha 32 192 512
+	alpha 32 96 512
 	bounce 0.100000
 	color 0x111111 0x979797
 	count 24
@@ -9041,3 +9043,332 @@ effect EF_SHOCK
 	size 4 4
 	tex 38 38
 	velocitymultiplier 100
+effect EF_SPEED
+	type static
+	alpha 192 256 1024
+	color 0x1affd6 0x1affd6
+	size 3 3
+	tex 34 41
+	trailspacing 1
+effect vampire_fx
+	type spark
+	airfriction -0.250000
+	alpha 256 256 170
+	bounce 1
+	color 0xff003d 0xff003d
+	count 5
+	gravity -0.050000
+	originjitter 5 5 50
+	sizeincrease -0.500000
+	size 3 5
+	tex 70 70
+	velocityjitter 50 50 5
+	velocitymultiplier 0.200000
+effect vengeance_fx
+	type spark
+	airfriction -1
+	alpha 256 256 384
+	bounce 0.100000
+	color 0xff3b9c 0xff3b9c
+	count 2
+	gravity -0.050000
+	originjitter 10 10 50
+	sizeincrease -0.500000
+	size 3 3
+	tex 40 40
+	velocityjitter 150 150 10
+	velocitymultiplier 0.200000
+effect magnet_fx
+	type static
+	airfriction 4.500000
+	alpha 256 256 384
+	bounce 1.500000
+	color 0xffff00 0xf1eb6c
+	countabsolute 1
+	originjitter 5 5 5
+	sizeincrease 3
+	size 3 7
+	tex 75 81
+	velocityjitter 5 5 5
+	velocitymultiplier 5
+effect swapper
+	type decal
+	alpha 256 256 0
+	countabsolute 1
+	lightcolor 5 4 6
+	lightradiusfade 300
+	lightradius 300
+	originjitter 10 10 10
+	size 48 48
+	tex 59 59
+effect swapper
+	type static
+	alpha 128 128 64
+	color 0xC060FF 0xC060FF
+	countabsolute 1
+	size 48 48
+	tex 38 38
+effect swapper
+	type static
+	airfriction 6
+	alpha 156 156 100
+	bounce 2
+	color 0x6020FF 0xC060FF
+	count 4
+	liquidfriction 16
+	sizeincrease 50
+	size 32 32
+	tex 0 7
+	velocityjitter 256 256 256
+effect swapper
+	type spark
+	alpha 444 512 500
+	bounce 1.600000
+	color 0xcaa9cf 0xa15cff
+	count 24
+	originjitter 1 1 1
+	rotate -180 180 4000 -4000
+	size 2 4
+	stretchfactor 2
+	tex 41 41
+	velocityjitter 100 100 100
+	velocitymultiplier 0.300000
+effect swapper
+	type smoke
+	alpha 256 256 256
+	color 0x202020 0x404040
+	count 0.125000
+	originjitter 8 8 8
+	size 24 24
+	tex 0 8
+	velocityjitter 10 10 10
+effect swapper
+	type smoke
+	alpha 64 64 40
+	color 0xcaa9cf 0xa15cff
+	countabsolute 1
+	size 80 80
+	tex 33 33
+	velocitymultiplier 0.300000
+effect item_teleport
+	type decal
+	alpha 256 256 0
+	countabsolute 1
+	lightcolor 4 5 6
+	lightradiusfade 300
+	lightradius 200
+	originjitter 17 17 17
+	size 48 48
+	tex 59 59
+effect item_teleport
+	type static
+	alpha 128 128 64
+	color 0x80C0FF 0x80C0FF
+	countabsolute 1
+	size 32 32
+	tex 38 38
+effect item_teleport
+	type spark
+	alpha 444 512 500
+	bounce 0.500000
+	color 0xa9cacf 0x0054ff
+	count 32
+	originjitter 1 1 1
+	rotate -180 180 4000 -4000
+	size 2 4
+	stretchfactor 2
+	tex 41 41
+	velocityjitter 64 64 64
+effect item_teleport
+	type smoke
+	alpha 64 64 40
+	color 0xa9cacf 0x0054ff
+	countabsolute 1
+	sizeincrease 32
+	size 16 16
+	tex 33 33
+effect hmg_muzzleflash
+	type static
+	alpha 256 256 512
+	color 0x202020 0x404040
+	count 1
+	gravity -0.100000
+	lightcolor 2 1.5 0.2
+	lightradiusfade 2000
+	lightradius 200
+	originjitter 1.5 1.5 1.5
+	size 5 5
+	tex 0 8
+	velocityjitter 1 1 1
+	velocitymultiplier 0.030000
+effect hmg_muzzleflash
+	type spark
+	airfriction 12
+	alpha 0 256 6000
+	color 0xff5800 0xff8e00
+	count 3
+	originjitter 1 1 1
+	size 0.300000 0.400000
+	stretchfactor 0.150000
+	tex 40 40
+	velocityjitter 555 555 555
+	velocitymultiplier 3
+effect seeker_explode
+	type decal
+	alpha 256 256 0
+	countabsolute 1
+	lightcolor 8 3 2
+	lightradiusfade 400
+	lightradius 150
+	originjitter 14 14 14
+	size 28 38
+	tex 8 16
+effect seeker_explode
+	type smoke
+	airfriction 8
+	alpha 80 200 356
+	bounce 1.500000
+	color 0xffe955 0xff5a00
+	count 3.500000
+	liquidfriction 8
+	notunderwater
+	originjitter 8 8 8
+	sizeincrease 5
+	size 16 26
+	tex 48 55
+	velocityjitter 156 156 156
+effect seeker_explode
+	type static
+	airfriction 12
+	alpha 128 256 456
+	bounce 1.500000
+	color 0x8f0d00 0xff5a00
+	count 12
+	liquidfriction 8
+	notunderwater
+	originjitter 8 8 8
+	sizeincrease 15
+	size 20 26
+	tex 48 55
+	velocityjitter 286 286 286
+effect seeker_explode
+	type alphastatic
+	airfriction 5
+	alpha 200 500 600
+	bounce 2
+	color 0x000000 0x111111
+	count 7
+	notunderwater
+	sizeincrease 20
+	size 20 40
+	tex 0 8
+	velocityjitter 244 244 244
+effect seeker_explode
+	type bubble
+	alpha 128 256 64
+	bounce 1.500000
+	color 0x404040 0x808080
+	count 16
+	gravity -0.125000
+	liquidfriction 0.250000
+	originjitter 16 16 16
+	size 3 3
+	tex 62 62
+	underwater
+	velocityjitter 96 96 96
+effect seeker_explode
+	type spark
+	airfriction 1
+	alpha 644 956 684
+	bounce 1.600000
+	color 0xffa35b 0xfff2be
+	count 4
+	gravity 1
+	liquidfriction 0.800000
+	notunderwater
+	originjitter 16 16 16
+	size 1 0.100000
+	tex 40 40
+	velocityjitter 224 224 224
+	velocityoffset 0 0 80
+effect tag_impact
+	type decal
+	alpha 256 256 0
+	countabsolute 1
+	lightcolor 4 1 1.5
+	lightradiusfade 300
+	lightradius 100
+	originjitter 10 10 10
+	size 20 20
+	tex 47 47
+effect tag_impact
+	type static
+	alpha 256 256 768
+	color 0xFF1024 0xFF1024
+	countabsolute 1
+	size 20 20
+	tex 39 39
+effect tag_impact
+	type spark
+	alpha 256 256 512
+	color 0x800000 0xFF1024
+	count 64
+	size 4 4
+	velocityjitter 72 72 72
+effect tr_tag
+	type static
+	airfriction 8
+	alpha 128 192 512
+	color 0xff9172 0x810013
+	lightcolor 3 1 1.5
+	lightradius 80
+	sizeincrease -16
+	size 6 7
+	tex 48 55
+	trailspacing 4
+	velocityjitter 32 32 32
+	velocitymultiplier -0.400000
+effect tr_tag
+	type bubble
+	alpha 256 256 256
+	bounce 1.500000
+	gravity -0.125000
+	liquidfriction 4
+	size 1 2
+	tex 62 62
+	trailspacing 16
+	underwater
+	velocityjitter 16 16 16
+	velocitymultiplier -0.250000
+effect tr_tag
+	type spark
+	airfriction 5
+	alpha 256 384 1024
+	bounce 1
+	color 0xFFD9E9 0xFFD9E9
+	notunderwater
+	originjitter 1 1 1
+	size 0.500000 0.500000
+	stretchfactor 0.200000
+	tex 40 40
+	trailspacing 24
+	velocityjitter 80 80 80
+	velocitymultiplier -0.250000
+effect tr_laser
+	lightcolor 6 1 1
+	lightradius 100
+effect tr_hlac
+	lightcolor 1 2 0.5
+	lightradius 100
+effect dom_capture
+	type spark
+	airfriction 4
+	alpha 224 256 100
+	bounce 1.500000
+	count 25
+	gravity -0.100000
+	originjitter 5 5 5
+	sizeincrease 2
+	size 8 12
+	tex 41 41
+	velocityjitter 200 200 50

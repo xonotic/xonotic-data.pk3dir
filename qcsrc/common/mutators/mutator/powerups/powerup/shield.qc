@@ -27,9 +27,11 @@ METHOD(ShieldStatusEffect, m_apply, void(StatusEffect this, entity actor, float 
 }
 METHOD(ShieldStatusEffect, m_tick, void(StatusEffect this, entity actor))
 {
+    SUPER(ShieldStatusEffect).m_tick(this, actor);
+    if(!this.m_active(this, actor))
+        return;
     play_countdown(actor, StatusEffects_gettime(this, actor), SND_POWEROFF);
     actor.effects |= (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-    SUPER(ShieldStatusEffect).m_tick(this, actor);
 }
 #endif // SVQC
 #ifdef CSQC

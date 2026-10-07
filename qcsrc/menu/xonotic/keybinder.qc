@@ -80,7 +80,7 @@ void KeyBinds_BuildList()
 	KEYBIND_DEF("weapon_last"                           , CTX(_("WEAPON^previously used")));
 	KEYBIND_DEF("weapon_best"                           , CTX(_("WEAPON^best")));
 	KEYBIND_DEF("weapon_reload"                         , _("reload"));
-	KEYBIND_DEF("wepaon_drop"                           , _("drop weapon / throw nade"));
+	KEYBIND_DEF("weapon_drop"                           , _("drop weapon / throw nade"));
 
 	#define SHOWABLE_WEAPON(w) \
 		(!(it.spawnflags & WEP_FLAG_SPECIALATTACK) && \

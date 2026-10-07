@@ -34,7 +34,7 @@ MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it) && it != player, {
 			if(time > it.touchexplode_time && !STAT(FROZEN, it) && !IS_DEAD(it) && !IS_INDEPENDENT_PLAYER(it))
-			if(boxesoverlap(player.absmin, player.absmax, it.absmin, it.absmax))
+			if(boxesoverlap(player.absmin - '1 1 1', player.absmax + '1 1 1', it.absmin, it.absmax))
 			{
 				PlayerTouchExplode(player, it);
 				player.touchexplode_time = it.touchexplode_time = time + 0.2;

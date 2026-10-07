@@ -595,9 +595,8 @@ bool bumblebee_pilot_frame(entity this, float dt)
 						}
 						else if (IS_CLIENT(trace_ent))
 						{
-							float maxarmor = (MUTATOR_IS_ENABLED(mutator_instagib) ? autocvar_g_instagib_extralives : autocvar_g_vehicle_bumblebee_healgun_amax);
-							if (GetResource(trace_ent, RES_ARMOR) <= maxarmor && autocvar_g_vehicle_bumblebee_healgun_aps)
-								GiveResourceWithLimit(trace_ent, RES_ARMOR, autocvar_g_vehicle_bumblebee_healgun_aps * dt, maxarmor);
+							if (autocvar_g_vehicle_bumblebee_healgun_aps && GetResource(trace_ent, RES_ARMOR) <= autocvar_g_vehicle_bumblebee_healgun_amax)
+								GiveResourceWithLimit(trace_ent, RES_ARMOR, autocvar_g_vehicle_bumblebee_healgun_aps * dt, autocvar_g_vehicle_bumblebee_healgun_amax);
 						}
 					}
 				}

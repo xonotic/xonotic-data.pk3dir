@@ -35,26 +35,17 @@ void ClientKill_Now_TeamChange(entity this)
 
 void ClientKill_Now(entity this)
 {
-	if (this.vehicle)
-	{
-		vehicles_exit(this.vehicle, VHEF_RELEASE);
-		if (!this.killindicator_teamchange)
-		{
-			this.vehicle_health = -1;
-			Damage(this, this, this, 1 , DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
-		}
-	}
-
 	if (this.killindicator && !wasfreed(this.killindicator))
 		delete(this.killindicator);
-
 	this.killindicator = NULL;
+
+	// SetPlayerTeam() kills if team changes, (auto-)selecting the current team shouldn't kill.
+	if (this.killindicator_teamchange == -2 || this.killindicator_teamchange == 0)
+	if (IS_PLAYER(this) && !IS_DEAD(this))
+		Damage(this, this, this, INFINITY, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 
 	if (this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
-	// SetPlayerTeam() already killed if team changed, auto-selecting the current team shouldn't kill.
-	else if (!IS_SPEC(this) && !IS_OBSERVER(this) && MUTATOR_CALLHOOK(ClientKill_Now, this) == false)
-		Damage(this, this, this, 100000, DEATH_KILL.m_id, DMG_NOWEP, this.origin, '0 0 0');
 
 	// now I am sure the player IS dead
 }
@@ -90,7 +81,6 @@ void KillIndicator_Think(entity this)
 
 .float lip;
 float clientkilltime;
-.float clientkill_nexttime;
 void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -1 = auto, -2 = spec
 {
 	if (game_stopped)
@@ -126,7 +116,11 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 		TeamBalance_Destroy(balance);
 		if (targetteam == this.team)
 		{
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_TEAMCHANGE_ALREADYBEST);
+			if (this.clientkill_nexttime < time) // don't show conflicting/repeated notifs for legacy selectteam; join
+			{
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, APP_TEAM_NUM(this.team, INFO_TEAMCHANGE_ALREADYBEST));
+				Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_TEAMCHANGE_ALREADYBEST));
+			}
 			return;
 		}
 	}
@@ -206,7 +200,6 @@ void ClientKill_TeamChange(entity this, float targetteam) // 0 = don't change, -
 		if (IS_REAL_CLIENT(this) && this.killindicator.cnt > 0)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, notif, this.killindicator.cnt);
 	}
-
 }
 
 void ClientKill_Silent(entity this, float _delay)

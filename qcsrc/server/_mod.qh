@@ -15,7 +15,6 @@
 #include <server/intermission.qh>
 #include <server/ipban.qh>
 #include <server/main.qh>
-#include <server/mapvoting.qh>
 #include <server/matrix.qh>
 #include <server/player.qh>
 #include <server/portals.qh>

@@ -115,13 +115,15 @@ void XonoticWeaponsList_drawListBoxItem(entity me, int i, vector absSize, bool i
 
 	bool drawStar = e.spawnflags & WEP_FLAG_MUTATORBLOCKED;
 	vector save_fontscale = draw_fontscale;
-	float f = draw_CondensedFontFactor(strcat(msg, drawStar ? "*" : ""), false, me.realFontSize, 1);
+	float f = draw_CondensedFontFactor(strcat(msg, drawStar ? "*" : ""), false, me.realFontSize, 1 - me.columnNameOrigin);
 	draw_fontscale.x *= f;
+
 	vector fs = me.realFontSize;
 	fs.x *= f;
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, msg, fs, SKINCOLOR_TEXT, SKINALPHA_TEXT, 0);
 	if(drawStar)
 		draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + draw_TextWidth(msg, 0, fs)) * eX, "*", fs, SKINCOLOR_HEADER, SKINALPHA_HEADER, 0);
+
 	draw_fontscale = save_fontscale;
 }
 

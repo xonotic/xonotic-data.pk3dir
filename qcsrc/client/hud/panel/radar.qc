@@ -2,9 +2,9 @@
 
 #include <client/draw.qh>
 #include <client/hud/panel/scoreboard.qh>
-#include <client/mapvoting.qh>
 #include <client/teamradar.qh>
 #include <common/ent_cs.qh>
+#include <common/mapvoting/_mod.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/resources/cl_resources.qh>
 

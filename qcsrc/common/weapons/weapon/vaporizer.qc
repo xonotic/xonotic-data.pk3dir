@@ -57,7 +57,7 @@ void VaporizerBeam_Draw(entity this)
 	Draw_VaporizerBeam_trace_callback_rnd = 0;
 	Draw_VaporizerBeam_trace_callback_rgb = rgb;
 	Draw_VaporizerBeam_trace_callback_a = bound(0, fail, 1);
-	WarpZone_TraceBox_ThroughZone(this.vorg1, '0 0 0', '0 0 0', this.vorg2, MOVE_NOTHING, NULL, NULL, Draw_VaporizerBeam_trace_callback);
+	WarpZone_TraceLine_ThroughZone(this.vorg1, this.vorg2, MOVE_NOTHING, NULL, NULL, Draw_VaporizerBeam_trace_callback);
 	Draw_VaporizerBeam_trace_callback_tex = string_null;
 
 	/*if (!MUTATOR_CALLHOOK(Particles_VaporizerBeam, this.vorg1, this.vorg2))
@@ -287,9 +287,10 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 {
 	float vaporizer_ammo = (autocvar_g_instagib ? 1 : WEP_CVAR_PRI(WEP_VAPORIZER, ammo));
 	// if the laser uses load, we also consider its ammo for reloading
-	if (WEP_CVAR(WEP_VAPORIZER, reload_ammo) && WEP_CVAR_PRI(WEP_BLASTER, ammo)
-	&& actor.(weaponentity).clip_load < min(vaporizer_ammo, WEP_CVAR_PRI(WEP_BLASTER, ammo)))
-	{ // forced reload
+	if (WEP_CVAR(WEP_VAPORIZER, reload_ammo) && WEP_CVAR_PRI(WEP_BLASTER, ammo) // forced reload
+	&& actor.(weaponentity).clip_load < vaporizer_ammo
+	&& actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_BLASTER, ammo))
+	{
 		thiswep.wr_reload(thiswep, actor, weaponentity);
 		actor.(weaponentity).hagar_load = false; // rocket minsta exclusive var
 		return;

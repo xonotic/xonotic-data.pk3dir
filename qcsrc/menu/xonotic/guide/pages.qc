@@ -80,7 +80,7 @@ REGISTER_MOVEMENT_PAGE(1, _("Bunny Hopping"))
 	PAR(_("Bunny hopping (\"bhopping\") is a technique known also from other arena shooters."));
 	PAR(_("Due to air control, you can accelerate while in the air far beyond the maximum ground movement speed. "
 	      "To avoid ground friction, players constantly hop by simply keeping %s pressed, so that ground contact doesn't slow them down. "
-	      "This allows you to get around the map much faster than if you would just walk."), strcat("^3", _("jump"), "^7"));
+	      "This allows you to get around the map much faster than if you just walked."), strcat("^3", _("jump"), "^7"));
 	PAR(_("Therefore, keeping %s held while moving quickly is one of the most essential movement strategies, used by all experienced players."), strcat("^3", _("jump"), "^7"));
 	PAR(_("With default settings, the speed you can reach by bunny hopping is capped at 900 qu/s (\"units per second\"). "
 	      "CTS/DeFRaG servers usually run with different CPMA-like physics that remove this cap."));

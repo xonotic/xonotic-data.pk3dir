@@ -589,6 +589,8 @@ void PutPlayerInServer(entity this)
 
 	if (teamplay)
 	{
+		// bones_was_here: this MUST succeed, PutClientInServer->PutPlayerInServer
+		// can't handle failures (must only be called if they'd succeed).
 		if (this.bot_forced_team)
 			SetPlayerTeam(this, this.bot_forced_team, TEAM_CHANGE_MANUAL);
 		else if (this.team <= 0)
@@ -918,10 +920,9 @@ void ClientInit_misc(entity this)
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[2]));
 	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[3]));
 
-	if(autocvar_sv_foginterval && world.fog != "")
-		WriteString(channel, world.fog);
-	else
-		WriteString(channel, "");
+	WriteString(channel, world.fog);
+	WriteByte(channel, autocvar_sv_foginterval && world.fog != ""); // only forced if necessary
+
 	WriteByte(channel, this.count * 255.0); // g_balance_armor_blockpercent
 	WriteByte(channel, this.cnt * 255.0); // g_balance_damagepush_speedfactor
 	WriteByte(channel, serverflags);
@@ -1107,7 +1108,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	string modifications = M_ARGV(0, string);
 
-	if (!g_weaponarena && cvar("g_balance_blaster_weaponstartoverride") == 0)
+	if (g_weaponarena_type == WEPARENA_OFF && cvar("g_balance_blaster_weaponstartoverride") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -1119,7 +1120,9 @@ void SendWelcomeMessage(entity this, int msg_type)
 
 	WriteString(msg_type, modifications);
 
-	WriteString(msg_type, g_weaponarena_list);
+	WriteByte(msg_type, g_weaponarena_type);
+	if (g_weaponarena_type == WEPARENA_CUSTOM)
+		WriteWepSet(msg_type, g_weaponarena_weapons);
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
@@ -1159,7 +1162,6 @@ void ClientConnect(entity this)
 		this.clientcolors = 0;
 
 	this.team = -1;
-	Player_DetermineForcedTeam(this);
 
 	TRANSMUTE(Observer, this);
 
@@ -1216,9 +1218,6 @@ void ClientConnect(entity this)
 		else if (autocvar_sv_quickmenu_file != "" && strstrofs(autocvar_sv_quickmenu_file, "/", 0) && fexists(autocvar_sv_quickmenu_file))
 			stuffcmd(this, sprintf("cl_cmd settemp _hud_panel_quickmenu_file_from_server %s\n", autocvar_sv_quickmenu_file));
 	}
-
-	if (!autocvar_sv_foginterval && world.fog != "")
-		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
 	CSQCMODEL_AUTOINIT(this);
 
@@ -1572,7 +1571,7 @@ void player_powerups(entity this)
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = this.items;
 
-	if (!MUTATOR_IS_ENABLED(mutator_instagib))
+	if (!MUTATOR_CALLHOOK(SuperweaponsImmutable, this))
 	{
 		// NOTE: superweapons are a special case and as such are handled here instead of the status effects system
 		if (this.items & IT_SUPERWEAPON)
@@ -2088,7 +2087,7 @@ void Join(entity this, bool queued_join)
 		int clients_remaining = AVAILABLE_TEAMS;
 		// First we must join player(s) queued for specific team(s) (they chose first)
 		// so TeamBalance_JoinBestTeam() won't select the same team(s).
-		// Assumes `this` was already assigned a team via ClientCommand_selectteam() or is using autoselect.
+		// Assumes `this` was already assigned a team or is using autoselect.
 		FOREACH_CLIENT(it != this && it.wants_join > 0,
 		{
 			// detect any conflict between `this` and a queued player (queuePlayer() handles other conflicts)
@@ -2156,11 +2155,17 @@ int GetPlayerLimit()
 {
 	if(g_duel)
 		return 2; // TODO: this workaround is needed since the mutator hook from duel can't be activated before the gametype is loaded (e.g. switching modes via gametype vote screen)
+
 	// don't return map_maxplayers during intermission as it would interfere with MapHasRightSize()
-	int player_limit = (autocvar_g_maxplayers >= 0 || intermission_running) ? autocvar_g_maxplayers : map_maxplayers;
-	MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
-	player_limit = M_ARGV(0, int);
-	return player_limit < maxclients && player_limit > 0 ? player_limit : 0;
+	int player_limit = autocvar_g_maxplayers > 0 ? autocvar_g_maxplayers : maxclients;
+	if (!intermission_running)
+	{
+		if (autocvar_g_maxplayers == -1 && map_maxplayers > 0)
+			player_limit = map_maxplayers;
+		MUTATOR_CALLHOOK(GetPlayerLimit, player_limit);
+		player_limit = M_ARGV(0, int);
+	}
+	return bound(0, player_limit, maxclients);
 }
 
 /**
@@ -2191,19 +2196,19 @@ int nJoinAllowed(entity this)
 
 	int player_limit = GetPlayerLimit();
 
-	int free_slots = max(0, (player_limit ? player_limit : maxclients) - currentlyPlaying);
+	int free_slots = max(0, player_limit - currentlyPlaying);
 	if (this || maxclients - totalClients) // don't add bot slots in the getstatus case if nobody can connect
 		free_slots += bots_would_leave;
 	if (!this) // getstatus case
 		free_slots = min(free_slots, maxclients - totalClients);
 
 	if(this && !free_slots)
-		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT, player_limit);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_MAXPLAYERS, player_limit);
 
 	return free_slots;
 }
 
-// Callsites other than ClientCommand_selectteam() should pass this.wants_join as team_index
+// Callsites other than ClientCommand_join() teamplay should pass this.wants_join as team_index
 // so the player won't accidentally reset a specific preference by pressing +jump
 // and will see the centreprint with their current preference each time they press +jump.
 bool queuePlayer(entity this, int team_index)
@@ -2269,7 +2274,15 @@ bool joinAllowed(entity this, int team_index)
 		return false;
 	}
 
-	if (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR) return false;
+	int forced_team_index = Player_GetForcedTeamIndex(this);
+	if (forced_team_index < TEAM_FORCE_DEFAULT || (teamplay && forced_team_index > AVAILABLE_TEAMS)) // PutPlayerInServer would bug out
+	{
+		if (forced_team_index > AVAILABLE_TEAMS)
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, APP_TEAM_NUM(Team_IndexToTeam(forced_team_index), CENTER_TEAMCHANGE_FORCEDTEAM));
+		else // handles !teamplay case too
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_PREVENT_FORCEDSPEC);
+		return false;
+	}
 
 	if (!INGAME(this) && PlayerInList(this, autocvar_g_playban_list))
 	{
@@ -2290,8 +2303,8 @@ bool joinAllowed(entity this, int team_index)
 
 	if (QueueNeeded(this, team_index))
 	{
-		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
-			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
+		if (team_index == 0) // so ClientCommand_join() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
+			if (ShowTeamSelection(this)) return false; // only needed by callsites other than ClientCommand_join() teamplay
 		// queuePlayer called here so that only conditions above block queuing (g_maxplayers shouldn't)
 		if (queuePlayer(this, team_index)) return false;
 		if (!nJoinAllowed(this)) return false;
@@ -2299,8 +2312,8 @@ bool joinAllowed(entity this, int team_index)
 	else
 	{
 		if (!nJoinAllowed(this)) return false;
-		if (team_index == 0) // so ClientCommand_selectteam() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
-			if (ShowTeamSelection(this)) return false; // only needed by callsites other than selectteam
+		if (team_index == 0) // so ClientCommand_join() can check joinAllowed() before calling SetPlayerTeam() without chicken/egg problem
+			if (ShowTeamSelection(this)) return false; // only needed by callsites other than ClientCommand_join() teamplay
 	}
 
 	return true;
@@ -2455,8 +2468,7 @@ bool PlayerThink(entity this)
 		this.dualwielding_prev = dualwielding;
 	}
 
-	// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
-	//if(frametime)
+	if (frametime)
 	{
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
@@ -2465,17 +2477,22 @@ bool PlayerThink(entity this)
 				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
-	}
 
-	if (frametime)
-	{
 		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
-			if (WEP_CVAR(WEP_VORTEX, charge_rot_rate) && this.(weaponentity).vortex_charge > WEP_CVAR(WEP_VORTEX, charge_limit) && this.(weaponentity).vortex_charge_rottime < time)
-				this.(weaponentity).vortex_charge = bound(WEP_CVAR(WEP_VORTEX, charge_limit), this.(weaponentity).vortex_charge - WEP_CVAR(WEP_VORTEX, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
+			float chargelimit = WEP_CVAR(WEP_VORTEX, charge_limit);
+			float chargerate = WEP_CVAR(WEP_VORTEX, charge_rot_rate);
+			if(WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_rate) && this.(weaponentity).m_weapon != WEP_VORTEX)
+			{
+				chargelimit = WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_limit);
+				chargerate = WEP_CVAR(WEP_VORTEX, charge_rot_unequipped_rate);
+			}
+
+			if (chargerate && this.(weaponentity).vortex_charge > chargelimit && this.(weaponentity).vortex_charge_rottime < time)
+				this.(weaponentity).vortex_charge = bound(chargelimit, this.(weaponentity).vortex_charge - chargerate * frametime / W_TICSPERFRAME, 1);
 		}
 
 		player_regen(this);
@@ -2607,6 +2624,11 @@ void ObserverOrSpectatorThink(entity this)
 		this.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
+bool PlayerUseKey_EnterVehicle_cond(entity e)
+{
+	return (IS_VEHICLE(e) && !IS_DEAD(e) && e.takedamage != DAMAGE_NO
+		&& (!e.owner || ((e.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(e.owner, WarpZone_SearchInRadius_otherent))));
+}
 void PlayerUseKey(entity this)
 {
 	if (!IS_PLAYER(this))
@@ -2624,29 +2646,23 @@ void PlayerUseKey(entity this)
 	{
 		if(!game_stopped && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 		{
-			entity head, closest_target = NULL;
-			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
-
-			while(head) // find the closest acceptable target to enter
+			WarpZone_SearchInRadius_otherent = this;
+			entity head = WarpZone_SearchInRadius(this.origin, autocvar_g_vehicles_enter_radius, MOVE_NOMONSTERS, PlayerUseKey_EnterVehicle_cond);
+			entity closest = NULL;
+			float head_dist2, closest_dist2 = 0;
+			for (; head; head = head.chain) // find the closest acceptable target to enter
 			{
-				if(IS_VEHICLE(head) && !IS_DEAD(head) && head.takedamage != DAMAGE_NO)
-				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this)))
+				head_dist2 = vlen2(this.origin - WarpZone_UnTransformOrigin(head, head.origin));
+				if (!closest || head_dist2 < closest_dist2) // new closest
 				{
-					if(closest_target)
-					{
-						if(vlen2(this.origin - head.origin) < vlen2(this.origin - closest_target.origin))
-							closest_target = head;
-					}
-					else
-						closest_target = head;
+					closest_dist2 = head_dist2;
+					closest = head;
 				}
-
-				head = head.chain;
 			}
 
-			if(closest_target)
+			if (closest)
 			{
-				vehicles_enter(this, closest_target);
+				vehicles_enter(this, closest);
 				return;
 			}
 		}
@@ -2703,8 +2719,7 @@ void PlayerPreThink (entity this)
 		// don't do this in ClientConnect
 		// many things can go wrong if a client is spawned as player on connection
 		if (early_join_requested || MUTATOR_CALLHOOK(AutoJoinOnConnection, this)
-		|| (!(autocvar_sv_spectate || autocvar_g_campaign || (Player_GetForcedTeamIndex(this) == TEAM_FORCE_SPECTATOR))
-		    && (!teamplay || autocvar_g_balance_teams)))
+		|| (!(autocvar_sv_spectate || autocvar_g_campaign) && (!teamplay || autocvar_g_balance_teams)))
 		{
 			if(joinAllowed(this, this.wants_join))
 				Join(this, teamplay);
@@ -2830,6 +2845,10 @@ void PlayerPostThink (entity this)
 	CS(this).pm_frametime = 0; // CSQCModel_CheckUpdate() and Player_Physics() both read it
 }
 
+bool Vehicle_Enter_cond(entity e)
+{
+	return (IS_VEHICLE(e) && !IS_DEAD(e) && e.takedamage != DAMAGE_NO);
+}
 /*
 =============
 PlayerFrame
@@ -2948,20 +2967,18 @@ void PlayerFrame (entity this)
 	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !game_stopped && !this.vehicle)
 	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !StatusEffects_active(STATUSEFFECT_Frozen, this) && !IS_DEAD(this) && !IS_INDEPENDENT_PLAYER(this))
 	{
-		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it) && !IS_DEAD(it) && it.takedamage != DAMAGE_NO,
+		for (entity head = WarpZone_SearchInRadius(this.origin, autocvar_g_vehicles_enter_radius, MOVE_NOTHING, Vehicle_Enter_cond); head; head = head.chain)
 		{
-			if(!it.owner)
+			if (!head.owner)
 			{
-				if(!it.team || SAME_TEAM(this, it))
+				if (!head.team || SAME_TEAM(this, head))
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
-				else if(autocvar_g_vehicles_steal)
+				else if (autocvar_g_vehicles_steal)
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
 			}
-			else if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
-			{
+			else if ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this))
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
-			}
-		});
+		}
 
 		this.last_vehiclecheck = time + 1;
 	}

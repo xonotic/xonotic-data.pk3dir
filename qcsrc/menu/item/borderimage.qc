@@ -19,10 +19,11 @@
 	void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 	{
 		me.isNexposeeTitleBar = false;
-		if (me.zoomedOutTitleBar)
-			if (me.parent.parent.instanceOfNexposee)
-				if (me.parent.instanceOfDialog)
-					if (me == me.parent.border) me.isNexposeeTitleBar = true;
+		if (me.zoomedOutTitleBar
+		&& me.parent.parent.instanceOfNexposee
+		&& me.parent.instanceOfDialog
+		&& me == me.parent.border)
+			me.isNexposeeTitleBar = true;
 		me.saveRelOrigin = relOrigin;
 		me.saveRelSize = relSize;
 		SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -48,11 +49,13 @@
 	}
 	void BorderImage_draw(entity me)
 	{
-		if (me.src) draw_BorderPicture('0 0 0', me.src, '1 1 0', me.color, 1, me.borderVec);
+		if (me.src)
+			draw_BorderPicture('0 0 0', me.src, '1 1 0', me.color, 1, me.borderVec);
 
 		if (me.fontSize > 0)
 		{
-			if (me.recalcPos) me.recalcPositionWithText(me, me.text);
+			if (me.recalcPos)
+				me.recalcPositionWithText(me, me.text);
 
 			if (me.isNexposeeTitleBar)
 			{
@@ -76,12 +79,8 @@
 				draw_fontscale = df;
 			}
 			else
-			{
 				SUPER(BorderImage).draw(me);
-			}
 		}
 		else
-		{
 			SUPER(BorderImage).draw(me);
-		}
 	}

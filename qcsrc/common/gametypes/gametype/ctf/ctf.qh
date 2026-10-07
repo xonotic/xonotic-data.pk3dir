@@ -26,7 +26,7 @@ CLASS(CaptureTheFlag, Gametype)
 	METHOD(CaptureTheFlag, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
 	{
 		TC(Gametype, this);
-		returns(menu, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The amount of captures needed before the match will end"));
+		returns(menu, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The number of captures required to conclude the match"));
 	}
 #ifdef CSQC
 	ATTRIB(CaptureTheFlag, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_CTF);

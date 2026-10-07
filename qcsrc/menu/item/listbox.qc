@@ -27,8 +27,10 @@
 		else if (i > me.getLastFullyVisibleItemAtScrollPos(me, me.scrollPos))
 		{
 			// below visible area
-			if (i == me.nItems - 1) me.scrollPosTarget = me.getTotalHeight(me) - 1;
-			else me.scrollPosTarget = me.getItemStart(me, i + 1) - 1;
+			if (i == me.nItems - 1)
+				me.scrollPosTarget = me.getTotalHeight(me) - 1;
+			else
+				me.scrollPosTarget = me.getItemStart(me, i + 1) - 1;
 		}
 	}
 
@@ -74,16 +76,13 @@
 	{
 		return me.getItemAtPos(me, pos + 0.001) + 1;
 	}
+
 	float ListBox_keyDown(entity me, float key, float ascii, float shift)
 	{
 		if (key == K_MWHEELUP)
-		{
 			me.scrollPosTarget = max(me.scrollPosTarget - 0.5, 0);
-		}
 		else if (key == K_MWHEELDOWN)
-		{
 			me.scrollPosTarget = min(me.scrollPosTarget + 0.5, max(0, me.getTotalHeight(me) - 1));
-		}
 		else if (key == K_PGUP || key == K_KP_PGUP)
 		{
 			if (me.selectionDoesntMatter)
@@ -92,14 +91,16 @@
 				return 1;
 			}
 
-			float i = me.selectedItem;
+			int i = me.selectedItem;
 			float a = me.getItemHeight(me, i);
 			for ( ; ; )
 			{
 				--i;
-				if (i < 0) break;
+				if (i < 0)
+					break;
 				a += me.getItemHeight(me, i);
-				if (a >= 1) break;
+				if (a >= 1)
+					break;
 			}
 			me.setSelected(me, i + 1);
 		}
@@ -111,14 +112,16 @@
 				return 1;
 			}
 
-			float i = me.selectedItem;
+			int i = me.selectedItem;
 			float a = me.getItemHeight(me, i);
 			for ( ; ; )
 			{
 				++i;
-				if (i >= me.nItems) break;
+				if (i >= me.nItems)
+					break;
 				a += me.getItemHeight(me, i);
-				if (a >= 1) break;
+				if (a >= 1)
+					break;
 			}
 			me.setSelected(me, i - 1);
 		}
@@ -143,30 +146,21 @@
 			me.setSelected(me, me.selectedItem + 1);
 		}
 		else if (key == K_HOME || key == K_KP_HOME)
-		{
 			me.setSelected(me, 0);
-		}
 		else if (key == K_END || key == K_KP_END)
-		{
 			me.setSelected(me, me.nItems - 1);
-		}
 		else
-		{
 			return 0;
-		}
 		return 1;
 	}
 	float ListBox_mouseMove(entity me, vector pos)
 	{
 		me.mouseMoveOffset = -1;
-		if (pos_x < 0) return 0;
-		if (pos_y < 0) return 0;
-		if (pos_x >= 1) return 0;
-		if (pos_y >= 1) return 0;
-		if (pos_x < 1 - me.controlWidth)
-		{
+		if (pos.x < 0 || pos.y < 0 || pos.x >= 1 || pos.y >= 1)
+			return 0;
+
+		if (pos.x < 1 - me.controlWidth)
 			me.mouseMoveOffset = pos.y;
-		}
 		else
 		{
 			me.setFocusedItem(me, -1);
@@ -176,25 +170,20 @@
 	}
 	float ListBox_mouseDrag(entity me, vector pos)
 	{
-		float hit;
 		me.updateControlTopBottom(me);
 		me.dragScrollPos = pos;
 		if (me.pressed == 1 && me.getTotalHeight(me) > 1)
 		{
-			hit = 1;
-			if (pos.x < 1 - me.controlWidth - me.tolerance.x * me.controlWidth) hit = 0;
-			if (pos.y < 0 - me.tolerance.y) hit = 0;
-			if (pos.x >= 1 + me.tolerance.x * me.controlWidth) hit = 0;
-			if (pos.y >= 1 + me.tolerance.y) hit = 0;
-			if (hit)
+			if (pos.x < 1 - me.controlWidth - me.tolerance.x * me.controlWidth
+			|| pos.y < 0 - me.tolerance.y
+			|| pos.x >= 1 + me.tolerance.x * me.controlWidth
+			|| pos.y >= 1 + me.tolerance.y)
+				me.scrollPosTarget = me.previousValue;
+			else // hit
 			{
 				// calculate new pos to v
 				float d = (pos.y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.getTotalHeight(me) - 1);
 				me.scrollPosTarget = me.previousValue + d;
-			}
-			else
-			{
-				me.scrollPosTarget = me.previousValue;
 			}
 			me.scrollPosTarget = min(me.scrollPosTarget, me.getTotalHeight(me) - 1);
 			me.scrollPosTarget = max(me.scrollPosTarget, 0);
@@ -210,10 +199,9 @@
 	}
 	METHOD(ListBox, mousePress, bool(ListBox this, vector pos))
 	{
-		if (pos.x < 0) return false;
-		if (pos.y < 0) return false;
-		if (pos.x >= 1) return false;
-		if (pos.y >= 1) return false;
+		if (pos.x < 0 || pos.y < 0 || pos.x >= 1 || pos.y >= 1)
+			return false;
+
 		this.dragScrollPos = pos;
 		this.updateControlTopBottom(this);
 		if (pos.x >= 1 - this.controlWidth)
@@ -254,7 +242,8 @@
 		if (focusedItem_save != me.focusedItem)
 		{
 			me.focusedItemChangeNotify(me);
-			if (me.focusedItem >= 0) me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
+			if (me.focusedItem >= 0)
+				me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
 		}
 	}
 	float ListBox_mouseRelease(entity me, vector pos)
@@ -338,7 +327,8 @@
 		vector fillSize = '0 0 0';
 
 		// we can't do this in mouseMove as the list can scroll without moving the cursor
-		if (me.mouseMoveOffset != -1) me.setFocusedItem(me, me.getItemAtPos(me, me.scrollPos + me.mouseMoveOffset));
+		if (me.mouseMoveOffset != -1)
+			me.setFocusedItem(me, me.getItemAtPos(me, me.scrollPos + me.mouseMoveOffset));
 
 		if (me.needScrollToItem >= 0)
 		{
@@ -353,13 +343,16 @@
 			// this formula works with whatever framerate
 			float f = averaging_time ? exp(-frametime / averaging_time) : 0;
 			me.scrollPos = me.scrollPos * f + me.scrollPosTarget * (1 - f);
-			if (fabs(me.scrollPos - me.scrollPosTarget) < 0.001) me.scrollPos = me.scrollPosTarget;
+			if (fabs(me.scrollPos - me.scrollPosTarget) < 0.001)
+				me.scrollPos = me.scrollPosTarget;
 		}
 
-		if (me.pressed == 2) me.mouseDrag(me, me.dragScrollPos);  // simulate mouseDrag event
+		if (me.pressed == 2)
+			me.mouseDrag(me, me.dragScrollPos);  // simulate mouseDrag event
 		me.updateControlTopBottom(me);
 		fillSize.x = (1 - me.controlWidth);
-		if (me.alphaBG) draw_Fill('0 0 0', '0 1 0' + fillSize, me.colorBG, me.alphaBG);
+		if (me.alphaBG)
+			draw_Fill('0 0 0', '0 1 0' + fillSize, me.colorBG, me.alphaBG);
 		if (me.controlWidth)
 		{
 			draw_VertButtonPicture(eX * (1 - me.controlWidth), strcat(me.src, "_s"), eX * me.controlWidth + eY, me.color2, 1);
@@ -368,9 +361,12 @@
 				vector o, s;
 				o = eX * (1 - me.controlWidth) + eY * me.controlTop;
 				s = eX * me.controlWidth + eY * (me.controlBottom - me.controlTop);
-				if (me.pressed == 1) draw_VertButtonPicture(o, strcat(me.src, "_c"), s, me.colorC, 1);
-				else if (me.focused) draw_VertButtonPicture(o, strcat(me.src, "_f"), s, me.colorF, 1);
-				else draw_VertButtonPicture(o, strcat(me.src, "_n"), s, me.color, 1);
+				if (me.pressed == 1)
+					draw_VertButtonPicture(o, strcat(me.src, "_c"), s, me.colorC, 1);
+				else if (me.focused)
+					draw_VertButtonPicture(o, strcat(me.src, "_f"), s, me.colorF, 1);
+				else
+					draw_VertButtonPicture(o, strcat(me.src, "_n"), s, me.color, 1);
 			}
 		}
 		draw_SetClip();

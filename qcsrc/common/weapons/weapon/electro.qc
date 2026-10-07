@@ -70,70 +70,62 @@ bool electro_orb_send(entity this, entity to, int sf)
 #ifdef SVQC
 #include <common/effects/qc/_mod.qh>
 
+bool W_Electro_search_cond(entity e)
+{
+	return (e.classname == "electro_orb"
+		&& !(IS_INDEPENDENT_PLAYER(e.realowner) && WarpZone_SearchInRadius_otherent != e.realowner));
+	// check if the ball we are exploding is not owned by an
+	// independent player which is not the player who shot the ball
+}
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
-	entity e = WarpZone_FindRadius(org, rad, !WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall));
+	WarpZone_SearchInRadius_otherent = own;
+	entity e = WarpZone_SearchInRadius(org, rad, (WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall) ? MOVE_NOTHING : MOVE_NOMONSTERS), W_Electro_search_cond);
 	for (; e; e = e.chain)
-		if (e.classname == "electro_orb")
+	{
+		// do we allow thruwall triggering?
+		if (WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall))
 		{
-			// check if the ball we are exploding is not owned by an
-			// independent player which is not the player who shot the ball
-			if (IS_INDEPENDENT_PLAYER(e.realowner) && own != e.realowner)
-				continue;
-
-			// do we allow thruwall triggering?
-			if (WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall))
+			// if distance is greater than thruwall distance, check to make sure it's not through a wall
+			if (vdist(e.WarpZone_findradius_dist, >, WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall)))
 			{
-				// if distance is greater than thruwall distance, check to make sure it's not through a wall
-				if (vdist(e.WarpZone_findradius_dist, >, WEP_CVAR(WEP_ELECTRO, combo_comboradius_thruwall)))
+				WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
+				if (trace_fraction != 1)
 				{
-					WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
-					if (trace_fraction != 1)
-					{
-						// trigger is through a wall and outside of thruwall range, abort
-						continue;
-					}
+					// trigger is through a wall and outside of thruwall range, abort
+					continue;
 				}
 			}
-
-			// change owner to whoever caused the combo explosion
-			e.realowner = own;
-			e.takedamage = DAMAGE_NO;
-			e.classname = "electro_orb_chain";
-
-			// now set the next one to trigger as well
-			setthink(e, W_Electro_ExplodeCombo);
-
-			// delay combo chains, looks cooler
-			float delay = (WEP_CVAR(WEP_ELECTRO, combo_speed))
-				? vlen(e.WarpZone_findradius_dist) / WEP_CVAR(WEP_ELECTRO, combo_speed)
-				: 0;
-			e.nextthink = time + delay;
 		}
+
+		// change owner to whoever caused the combo explosion
+		e.realowner = own;
+		e.takedamage = DAMAGE_NO;
+		e.classname = "electro_orb_chain";
+
+		// now set the next one to trigger as well
+		setthink(e, W_Electro_ExplodeCombo);
+
+		// delay combo chains, looks cooler
+		float delay = (WEP_CVAR(WEP_ELECTRO, combo_speed))
+			? vlen(e.WarpZone_findradius_dist) / WEP_CVAR(WEP_ELECTRO, combo_speed)
+			: 0;
+		e.nextthink = time + delay;
+	}
 }
 
+const float ELECTRO_COMBO_OVERTIME_DELAY = 0.0625; // (1/16) exact multiple of default frametime 0.015625 (1/64)
 void W_Electro_ExplodeComboThink(entity this)
 {
-	if (time >= this.ltime)
-	{
-		delete(this);
-		return;
-	}
-
-	this.nextthink = time;
-
-	RadiusDamage(this, this.realowner,
-		PHYS_INPUT_TIMELENGTH * WEP_CVAR(WEP_ELECTRO, combo_damage),
-		PHYS_INPUT_TIMELENGTH * WEP_CVAR(WEP_ELECTRO, combo_edgedamage),
+	W_DamageOverTime_Think(this,
+		WEP_CVAR(WEP_ELECTRO, combo_duration),
+		1,
+		WEP_CVAR(WEP_ELECTRO, combo_damage),
+		WEP_CVAR(WEP_ELECTRO, combo_edgedamage),
 		WEP_CVAR(WEP_ELECTRO, combo_radius),
-		NULL,
-		NULL,
 		0,
-		this.projectiledeathtype,
-		this.weaponentity_fld,
-		NULL
-	);
-	this.projectiledeathtype |= HITTYPE_SPAM; // ensure it doesn't spam its effect
+		NULL,
+		ELECTRO_COMBO_OVERTIME_DELAY);
 }
 
 void W_Electro_Orb_ExplodeOverTime(entity this)
@@ -150,15 +142,13 @@ void W_Electro_Orb_ExplodeOverTime(entity this)
 	newproj.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_BOUNCE; // use THIS type for a combo because primary can't bounce
 
 	setthink(newproj, W_Electro_ExplodeComboThink);
-	newproj.nextthink = time;
-	newproj.ltime = time + WEP_CVAR(WEP_ELECTRO, combo_duration);
+	newproj.nextthink = time + ELECTRO_COMBO_OVERTIME_DELAY;
+	newproj.teleport_time = time;
+	newproj.dmg_last = 1;
 	set_movetype(newproj, MOVETYPE_NONE);
 
 	Net_LinkEntity(newproj, true, 0, electro_orb_send);
 	newproj.SendFlags = 0xFFFFFF;
-
-	// fire the first damage tick immediately
-	getthink(newproj)(newproj);
 }
 
 void W_Electro_ExplodeCombo(entity this)
@@ -261,45 +251,40 @@ void W_Electro_Bolt_Think(entity this)
 	if (WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_radius))
 	{
 		int found = 0;
-		entity e = WarpZone_FindRadius(this.origin, WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_radius), true);
+		WarpZone_SearchInRadius_otherent = this.realowner;
+		entity e = WarpZone_SearchInRadius(this.origin, WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_radius), MOVE_NOMONSTERS, W_Electro_search_cond);
 
 		// loop through nearby orbs and trigger them
 		for (; e; e = e.chain)
-			if (e.classname == "electro_orb")
+		{
+			bool explode;
+			if (this.owner == e.owner)
+				explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_own);
+			else if (SAME_TEAM(this.owner, e.owner))
+				explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_teammate);
+			else
+				explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_enemy);
+
+			if (explode)
 			{
-				// check if the ball we are exploding is not owned by an
-				// independent player which is not the player who shot the ball
-				if (IS_INDEPENDENT_PLAYER(e.realowner) && this.realowner != e.realowner)
-					continue;
+				// change owner to whoever caused the combo explosion
+				e.realowner = this.realowner;
+				e.takedamage = DAMAGE_NO;
+				e.classname = "electro_orb_chain";
 
-				bool explode;
-				if (this.owner == e.owner)
-					explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_own);
-				else if (SAME_TEAM(this.owner, e.owner))
-					explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_teammate);
-				else
-					explode = WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_enemy);
+				// Only first orb explosion uses midaircombo_speed, others use the normal combo_speed.
+				// This allows to avoid the delay on the first explosion which looks better
+				// (the bolt and orb should explode together because they interacted together)
+				// while keeping the chaining delay.
+				setthink(e, W_Electro_ExplodeCombo);
+				float delay = (WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_speed))
+					? vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_speed)
+					: 0;
+				e.nextthink = time + delay;
 
-				if (explode)
-				{
-					// change owner to whoever caused the combo explosion
-					e.realowner = this.realowner;
-					e.takedamage = DAMAGE_NO;
-					e.classname = "electro_orb_chain";
-
-					// Only first orb explosion uses midaircombo_speed, others use the normal combo_speed.
-					// This allows to avoid the delay on the first explosion which looks better
-					// (the bolt and orb should explode together because they interacted together)
-					// while keeping the chaining delay.
-					setthink(e, W_Electro_ExplodeCombo);
-					float delay = (WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_speed))
-						? vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_speed)
-						: 0;
-					e.nextthink = time + delay;
-
-					++found;
-				}
+				++found;
 			}
+		}
 
 		// if we triggered an orb, should we explode? if not, lets try again next time
 		if (found && WEP_CVAR_PRI(WEP_ELECTRO, midaircombo_explode))
@@ -627,19 +612,12 @@ METHOD(Electro, wr_aim, void(entity thiswep, entity actor, .entity weaponentity)
 
 METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-	if (autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
+	if (autocvar_g_balance_electro_reload_ammo // forced reload
+	&& actor.(weaponentity).clip_load < WEP_CVAR_PRI(WEP_ELECTRO, ammo)
+	&& actor.(weaponentity).clip_load < WEP_CVAR_SEC(WEP_ELECTRO, ammo))
 	{
-		float ammo_amount = 0;
-		if (actor.(weaponentity).clip_load >= WEP_CVAR_PRI(WEP_ELECTRO, ammo))
-			ammo_amount = 1;
-		if (actor.(weaponentity).clip_load >= WEP_CVAR_SEC(WEP_ELECTRO, ammo))
-			++ammo_amount;
-
-		if (!ammo_amount)
-		{
-			thiswep.wr_reload(thiswep, actor, weaponentity);
-			return;
-		}
+		thiswep.wr_reload(thiswep, actor, weaponentity);
+		return;
 	}
 
 	if (fire & 1)

@@ -38,7 +38,7 @@ CLASS(KeyHunt, Gametype)
 	METHOD(KeyHunt, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
 	{
 		TC(Gametype, this);
-		returns(menu, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The amount of points needed before the match will end"));
+		returns(menu, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The number of points required to conclude the match"));
 	}
 #ifdef CSQC
     ATTRIB(KeyHunt, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_KH);

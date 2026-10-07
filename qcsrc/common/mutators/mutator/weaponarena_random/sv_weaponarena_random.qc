@@ -5,7 +5,7 @@ REGISTER_MUTATOR(weaponarena_random, true);
 
 MUTATOR_HOOKFUNCTION(weaponarena_random, SetStartItems)
 {
-	if(g_weaponarena)
+	if(g_weaponarena_type != WEPARENA_OFF)
 		g_weaponarena_random = cvar("g_weaponarena_random");
 	else
 		g_weaponarena_random = 0;

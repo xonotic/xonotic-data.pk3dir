@@ -111,24 +111,24 @@ void W_Shotgun_Melee_Think(entity this)
 	                  + (v_right * WEP_CVAR_SEC(WEP_SHOTGUN, melee_swing_side));
 	// if okay, perform the traces needed for this frame
 	entity target_victim;
-	vector targpos;
+	vector targpos, owner_view_org = this.realowner.origin + this.realowner.view_ofs;
 	float swing_factor, swing_damage, i;
 	for (i = this.swing_prev; i < f; ++i)
 	{
 		swing_factor = (1 - (i / WEP_CVAR_SEC(WEP_SHOTGUN, melee_traces))) * 2 - 1;
 
-		targpos = this.realowner.origin + this.realowner.view_ofs
+		targpos = owner_view_org
 			+ (melee_path * swing_factor)
 			+ (v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, melee_range));
 
-		WarpZone_traceline_antilag(this.realowner, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ((IS_CLIENT(this.realowner)) ? ANTILAG_LATENCY(this.realowner) : 0));
+		WarpZone_traceline_antilag(this.realowner, owner_view_org, targpos, false, this.realowner, (IS_CLIENT(this.realowner) ? ANTILAG_LATENCY(this.realowner) : 0));
 
 		Send_Effect(EFFECT_SHOTGUN_WOOSH, trace_endpos, -melee_path, 1);
 
 		// draw lightning beams for debugging
 	#ifdef SHOTGUN_MELEEDEBUG
-		te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
-		te_customflash(targpos, 40,  2, '1 1 1');
+		te_lightning2(NULL, targpos, owner_view_org + v_forward * 5 - v_up * 5);
+		te_customflash(targpos, 40, 2, '1 1 1');
 	#endif
 
 		bool is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
@@ -141,9 +141,9 @@ void W_Shotgun_Melee_Think(entity this)
 			target_victim = trace_ent; // so it persists through other calls
 
 			if (is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-				swing_damage = (WEP_CVAR_SEC(WEP_SHOTGUN, damage) * min(1, swing_factor + 1));
+				swing_damage = min(1, swing_factor + 1) * WEP_CVAR_SEC(WEP_SHOTGUN, damage);
 			else
-				swing_damage = (WEP_CVAR_SEC(WEP_SHOTGUN, melee_nonplayerdamage) * min(1, swing_factor + 1));
+				swing_damage = min(1, swing_factor + 1) * WEP_CVAR_SEC(WEP_SHOTGUN, melee_nonplayerdamage);
 
 			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
@@ -151,8 +151,8 @@ void W_Shotgun_Melee_Think(entity this)
 				swing_damage,
 				WEP_SHOTGUN.m_id | HITTYPE_SECONDARY,
 				this.weaponentity_fld,
-				this.realowner.origin + this.realowner.view_ofs,
-				v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, force)
+				trace_endpos,
+				WarpZone_TransformVelocity(WarpZone_trace_transform, v_forward * WEP_CVAR_SEC(WEP_SHOTGUN, force))
 			);
 
 			if (accuracy_isgooddamage(this.realowner, target_victim))

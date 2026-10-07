@@ -57,7 +57,7 @@ hashtestcleanup() {
 	rm -fv lock
 	rm -fv data/darkplaces_history.txt
 	rm -fv data/xonotic-data.pk3dir
-	#rm -fv data/stormkeep.pk3
+	#rm -fv data/finalrage.pk3
 	rm -fv data/data/defaultSVQC.cfg
 	rm -fv data/data/hits---1.plot
 	rm -fv data/data/hits---2.plot
@@ -191,8 +191,8 @@ test "$PASS" = "1" || { printf "\033[1;31m%s\033[0m\n" "sv_cmd runtest failed!";
 diff notifications.cfg data/data/notifications_dump.cfg ||
 	{ printf "Please update notifications.cfg using \`dumpnotifs\`!"; exit 1; }
 
-createdtoday "data/stormkeep.pk3" \
-	|| wget -nv -O data/stormkeep.pk3 https://beta.xonotic.org/pipeline-bin/stormkeep.pk3
+createdtoday "data/finalrage.pk3" \
+	|| wget -nv -O data/finalrage.pk3 https://beta.xonotic.org/pipeline-bin/finalrage.pk3
 
 if [ -z "${EXPECT-}" ]
 then

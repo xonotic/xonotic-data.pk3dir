@@ -145,7 +145,7 @@ int TrueAimCheck(entity wepent)
 #if 0
 	// FIXME WHY DOES THIS NOT WORK FOR THE ROCKET LAUNCHER?
 	// or rather, I know why, but see no fix
-	if (vlen(trace_endpos - trueaimpoint) > vlen(ma) + vlen(mi) + 1)
+	if (vdist(trace_endpos - trueaimpoint, >, vlen(ma) + vlen(mi) + 1))
 		// yes, this is an ugly hack... but it seems good enough to find out whether the test hits the same place as the initial trace
 		return SHOTTYPE_HITOBSTRUCTION;
 #endif
@@ -196,7 +196,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 			break;
 LABEL(normalcolor)
 		default:
-			wcross_color = stov(autocvar_crosshair_color);
+			wcross_color = autocvar_crosshair_color;
 			break;
 	}
 
@@ -382,7 +382,7 @@ void HUD_Crosshair(entity this)
 		// todo: make crosshair hit indication dependent on damage dealt
 		if (autocvar_crosshair_hitindication)
 		{
-			vector col = (autocvar_crosshair_color_special == 1 ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
+			vector col = (autocvar_crosshair_color_special == 1 ? autocvar_crosshair_hitindication_per_weapon_color : autocvar_crosshair_hitindication_color);
 
 			if (unaccounted_damage)
 				hitindication_crosshair_size = 1;

@@ -21,6 +21,8 @@ float autocvar_g_pickup_respawntime_ammo;
 float autocvar_g_pickup_respawntimejitter_ammo;
 #endif
 
+string count_ammo(int num, entity res);
+
 CLASS(Ammo, Pickup)
 #ifdef SVQC
     ATTRIB(Ammo, m_pickupevalfunc, float(entity player, entity item), ammo_pickupevalfunc);

@@ -262,7 +262,7 @@ vector W_CalculateSpread(vector dir, float spread, int spread_style, bool must_n
 			v1.x = gsl_ran_ugaussian() * sigma;
 			v1.y = gsl_ran_ugaussian() * sigma;
 			v1.z = gsl_ran_ugaussian() * sigma;
-			if (vlen2(v1) > W_SPREAD_GAUSS_MAX_STDEV ** 2)
+			if (vdist(v1, >, W_SPREAD_GAUSS_MAX_STDEV))
 				v1 = normalize(v1) * W_SPREAD_GAUSS_MAX_STDEV;
 			v2 = dir + v1;
 			return (must_normalize ? normalize(v2) : v2);
@@ -272,7 +272,7 @@ vector W_CalculateSpread(vector dir, float spread, int spread_style, bool must_n
 			v1.x = gsl_ran_ugaussian() * sigma;
 			v1.y = gsl_ran_ugaussian() * sigma;
 			v1.z = gsl_ran_ugaussian() * sigma;
-			if (vlen2(v1) > W_SPREAD_GAUSS_MAX_STDEV ** 2)
+			if (vdist(v1, >, W_SPREAD_GAUSS_MAX_STDEV))
 				v1 = normalize(v1) * W_SPREAD_GAUSS_MAX_STDEV;
 			return normalize(dir + cliptoplane(v1, dir));
 		case 5: // 1-r

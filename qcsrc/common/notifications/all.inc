@@ -368,7 +368,10 @@ string multiteam_info_sprintf(string input, string teamname)
 
 	MULTITEAM_INFO(DEATH_TEAMKILL,                          N_CONSOLE,  3, 1, "s1 s2 s3loc spree_end", "s2 s1",     "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "", NAME)
 
-	MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1points f2", "",       "",     strcat("^BG%s^BG%s^BG ", _("(%s every %s seconds)")), "") // example for translators: Red Team has captured the Strength control point (2 points every 5 seconds)
+	// NOTE howmuch string is in a separate line so that the translators comment is parsed correctly by xgettext
+	// TRANSLATORS: e.g.: 2 points every 5 seconds. Translate only "every", do not add either points or seconds.
+	string howmuch = _("%s every %s");
+	MSG_INFO_NOTIF(DOMINATION_CAPTURE_TIME,                 N_CONSOLE,  2, 2, "s1 s2 f1points f2secs", "",       "",     strcat("^BG%s^BG%s^BG", _(" (%s)"), howmuch), "")
 
 	MSG_INFO_NOTIF(FREEZETAG_FREEZE,                        N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K1 was frozen by ^BG%s"), "")
 	MSG_INFO_NOTIF(FREEZETAG_REVIVED,                       N_CONSOLE,  2, 0, "s1 s2", "",      "",     _("^BG%s^K3 was revived by ^BG%s"), "")
@@ -400,6 +403,7 @@ string multiteam_info_sprintf(string input, string teamname)
 	MSG_INFO_NOTIF(JOIN_CONNECT,                            N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 connected"), "")
 	MSG_INFO_NOTIF(JOIN_PLAY,                               N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing"), "")
 	MULTITEAM_INFO(JOIN_PLAY_TEAM,                          N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing on the ^TC^TT team"), "", NAME)
+	MSG_INFO_NOTIF(JOIN_PREVENT_FORCEDSPEC,                 N_CONSOLE,  0, 0, "", "",           "",     _("^K1You may only spectate at this time."), "")
 	MULTITEAM_INFO(JOIN_WANTS_TEAM,                         N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 wants to play on the ^TC^TT team"), "", NAME)
 	MSG_INFO_NOTIF(JOIN_WANTS,                              N_CHATCON,  1, 0, "s1", "",         "",     _("^BG%s^F3 wants to play"), "")
 
@@ -465,11 +469,13 @@ string multiteam_info_sprintf(string input, string teamname)
 	MSG_INFO_NOTIF(SURVIVAL_HUNTER_WIN,                     N_CONSOLE,  0, 0, "", "",           "",                     _("^K1Hunters^BG win the round"), "")
 	MSG_INFO_NOTIF(SURVIVAL_SURVIVOR_WIN,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^F1Survivors^BG win the round"), "")
 
-	MSG_INFO_NOTIF(TEAMCHANGE_STRONGERTEAM,                 N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're not allowed to join a stronger team!"), "")
-	MSG_INFO_NOTIF(TEAMCHANGE_NOTALLOWED,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're not allowed to join that team!"), "")
+	MULTITEAM_INFO(TEAMCHANGE_ALREADYBEST,                  N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're already on ^TC^TT^K2 team which seems fine."), "", NAME)
+	MULTITEAM_INFO(TEAMCHANGE_FORCEDTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You may only join ^TC^TT^K2 team!"), "", NAME)
 	MSG_INFO_NOTIF(TEAMCHANGE_LOCKED,                       N_CONSOLE,  0, 0, "", "",           "",                     _("^K2Teams are locked, you can't join or change teams until they're unlocked or the map changes."), "")
 	MSG_INFO_NOTIF(TEAMCHANGE_SAME,                         N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're already on that team!"), "")
+	MSG_INFO_NOTIF(TEAMCHANGE_STRONGERTEAM,                 N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're not allowed to join a stronger team!"), "")
 
+	MSG_INFO_NOTIF(TEAMS_BALANCED,                          N_CHATCON,  0, 0, "", "",           "",                     _("^F2Teams have been balanced."), "")
 	MSG_INFO_NOTIF(TEAMS_LOCKED,                            N_CHATCON,  0, 0, "", "",           "",                     _("^F4The teams are now locked."), "")
 	MSG_INFO_NOTIF(TEAMS_UNLOCKED,                          N_CHATCON,  0, 0, "", "",           "",                     _("^F1The teams are now unlocked."), "")
 
@@ -724,20 +730,22 @@ string multiteam_info_sprintf(string input, string teamname)
 	MSG_CENTER_NOTIF(ITEM_WEAPON_DROP,                  N_ENABLE,    0, 2, "item_wepname item_wepammo",          CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
 	MSG_CENTER_NOTIF(ITEM_WEAPON_GOT,                   N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "")
 	MSG_CENTER_NOTIF(ITEM_WEAPON_NOAMMO,                N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "")
-	MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "") // example for translators: Electro primary is unable to fire, but its secondary can
+	// TRANSLATORS: e.g.: "Electro primary is unable to fire, but its secondary can".
+	MSG_CENTER_NOTIF(ITEM_WEAPON_PRIMORSEC,             N_ENABLE,    0, 3, "item_wepname f2primsec f3primsec",   CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
 	MSG_CENTER_NOTIF(ITEM_WEAPON_UNAVAILABLE,           N_ENABLE,    0, 1, "item_wepname",                       CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "")
 
-	MSG_CENTER_NOTIF(JOIN_PREVENT_VERSIONMISMATCH,      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1Your Xonotic version is incompatible with the server's version!"), "")
 	MSG_CENTER_NOTIF(JOIN_NOSPAWNS,                     N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1No spawnpoints available!\nHope your team can fix it..."), "")
 	MSG_CENTER_NOTIF(JOIN_PLAYBAN,                      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  BOLD(_("^K1You aren't allowed to play because you are banned in this server")), "")
-	MSG_CENTER_NOTIF(JOIN_PREVENT,                      N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
+	MULTITEAM_CENTER(JOIN_PLAY_TEAM_QUEUECONFLICT,      N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  strcat(_("^K2You're now playing on ^TC^TT^K2 team!"), "\n", _("%s^K2 chose your preferred team first.")), "", NAME)
+	MULTITEAM_CENTER(JOIN_PLAY_TEAM,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGYou're now playing on ^TC^TT^BG team!"), "", NAME)
+	MSG_CENTER_NOTIF(JOIN_PREVENT_FORCEDSPEC,           N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1You may only spectate at this time."), "")
+	MSG_CENTER_NOTIF(JOIN_PREVENT_MAXPLAYERS,           N_ENABLE,    0, 1, "f1",             CPID_PREVENT_JOIN,      "0 0",  _("^K1You may not join the game at this time.\nThis match is limited to ^F2%s^BG players."), "")
 	MSG_CENTER_NOTIF(JOIN_PREVENT_MINIGAME,             N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^K1Cannot join given minigame session!"), "" )
 	MSG_CENTER_NOTIF(JOIN_PREVENT_PING,                 N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2Your ping (connection latency) is currently too high to play here.\nPlease consider joining a server closer to you."), "")
 	MSG_CENTER_NOTIF(JOIN_PREVENT_QUEUE,                N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join any available team."), "")
 	MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM,           N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^BGYou're queued to join the ^TC^TT^BG team."), "", NAME)
 	MULTITEAM_CENTER(JOIN_PREVENT_QUEUE_TEAM_CONFLICT,  N_ENABLE,    1, 0, "s1",             CPID_PREVENT_JOIN,      "0 0",  strcat(_("^K2You're queued to join any available team."), "\n", _("%s^K2 chose ^TC^TT^K2 first.")), "", NAME)
-	MULTITEAM_CENTER(JOIN_PLAY_TEAM_QUEUECONFLICT,      N_ENABLE,    1, 0, "s1",             CPID_Null,              "0 0",  strcat(_("^K2You're now playing on ^TC^TT^K2 team!"), "\n", _("%s^K2 chose your preferred team first.")), "", NAME)
-	MULTITEAM_CENTER(JOIN_PLAY_TEAM,                    N_ENABLE,    0, 0, "",               CPID_Null,              "0 0",  _("^BGYou're now playing on ^TC^TT^BG team!"), "", NAME)
+	MSG_CENTER_NOTIF(JOIN_PREVENT_VERSIONMISMATCH,      N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K1Your Xonotic version is incompatible with the server's version!"), "")
 
 	MSG_CENTER_NOTIF(KEEPAWAY_DROPPED,                  N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has dropped the ball!"), "")
 	MSG_CENTER_NOTIF(KEEPAWAY_PICKUP,                   N_ENABLE,    1, 0, "s1",             CPID_KEEPAWAY,          "0 0",  _("^BG%s^BG has picked up the ball!"), "")
@@ -816,13 +824,13 @@ string multiteam_info_sprintf(string input, string teamname)
 	MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR_WIN,             N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Survivors^BG win the round"), "")
 
 	MULTITEAM_CENTER(TEAMCHANGE,                        N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "", NAME)
-	MSG_CENTER_NOTIF(TEAMCHANGE_SPECTATE,               N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Spectating in ^COUNT"), "")
-	MSG_CENTER_NOTIF(TEAMCHANGE_SUICIDE,                N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Suicide in ^COUNT"), "")
-	MSG_CENTER_NOTIF(TEAMCHANGE_ALREADYBEST,            N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2Your current team choice seems fine."), "")
-	MSG_CENTER_NOTIF(TEAMCHANGE_STRONGERTEAM,           N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're not allowed to join a stronger team!"), "")
-	MSG_CENTER_NOTIF(TEAMCHANGE_NOTALLOWED,             N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're not allowed to join that team!"), "")
+	MULTITEAM_CENTER(TEAMCHANGE_ALREADYBEST,            N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're already on ^TC^TT^K2 team which seems fine."), "", NAME)
+	MULTITEAM_CENTER(TEAMCHANGE_FORCEDTEAM,             N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You may only join ^TC^TT^K2 team!"), "", NAME)
 	MSG_CENTER_NOTIF(TEAMCHANGE_LOCKED,                 N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2Teams are locked, you can't join or change teams until they're unlocked or the map changes."), "")
 	MSG_CENTER_NOTIF(TEAMCHANGE_SAME,                   N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're already on that team!"), "")
+	MSG_CENTER_NOTIF(TEAMCHANGE_SPECTATE,               N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Spectating in ^COUNT"), "")
+	MSG_CENTER_NOTIF(TEAMCHANGE_STRONGERTEAM,           N_ENABLE,    0, 0, "",               CPID_PREVENT_JOIN,      "0 0",  _("^K2You're not allowed to join a stronger team!"), "")
+	MSG_CENTER_NOTIF(TEAMCHANGE_SUICIDE,                N_ENABLE,    0, 1, "",               CPID_TEAMCHANGE,        "1 f1", _("^K1Suicide in ^COUNT"), "")
 
 	MSG_CENTER_NOTIF(TIMEOUT_BEGINNING,                 N_ENABLE,    0, 1, "",               CPID_TIMEOUT,           "1 f1", _("^F4Timeout begins in ^COUNT"), "")
 	MSG_CENTER_NOTIF(TIMEOUT_ENDING,                    N_ENABLE,    0, 1, "",               CPID_TIMEIN,            "1 f1", _("^F4Timeout ends in ^COUNT"), "")

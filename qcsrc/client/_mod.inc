@@ -4,7 +4,6 @@
 #include <client/csqcmodel_hooks.qc>
 #include <client/draw.qc>
 #include <client/main.qc>
-#include <client/mapvoting.qc>
 #include <client/player_skeleton.qc>
 #include <client/shownames.qc>
 #include <client/spawnpoints.qc>

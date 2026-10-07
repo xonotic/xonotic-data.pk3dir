@@ -72,10 +72,9 @@ string cache_lastmutatormsg;
 float default_player_alpha;
 float default_weapon_alpha;
 
-float g_weaponarena;
 WepSet g_weaponarena_weapons;
 float g_weaponarena_random; // TODO
-string g_weaponarena_list;
+int g_weaponarena_type;
 
 WepSet start_weapons;
 WepSet start_weapons_default;

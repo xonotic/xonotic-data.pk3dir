@@ -23,7 +23,7 @@ float server_skill_average; ///< Scaled inverse-variance weighted mean of all cl
 .float m_skill_mu; ///< Team: members' inverse-variance weighted skill mean.
 .float m_skill_var; ///< Team: members' inverse-variance weighted skill variance (sigma**2).
 
-.int team_forced; ///< can be a team number to force a team, or 0 for default action, or -1 for forced spectator
+.int team_forced; ///< Internally forced team/spec, if set this overrides the g_forced_team* cvars
 
 
 // ========================== Global teams API ================================
@@ -169,10 +169,6 @@ int Player_GetForcedTeamIndex(entity player);
 /// \param[in] team_index Index of the team to set.
 void Player_SetForcedTeamIndex(entity player, int team_index);
 
-/// \brief Determines the forced team of the player using current global config.
-/// \param[in,out] player Player to adjust.
-void Player_DetermineForcedTeam(entity player);
-
 // ========================= Team balance API =================================
 
 /// \brief Assigns the given player to a team that will make the game most
@@ -288,10 +284,6 @@ entity TeamBalance_GetPlayerForTeamSwitch(int source_team_index,
 // ============================ Internal API ==================================
 
 void LogTeamChange(float player_id, float team_number, int type);
-
-/// \brief Kills player as a result of team change.
-/// \param[in,out] player Player to kill.
-void KillPlayerForTeamChange(entity player);
 
 /// \brief Returns whether the team change to the specified team is allowed.
 /// \param[in] balance Team balance entity.

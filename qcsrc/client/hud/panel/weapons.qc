@@ -450,7 +450,7 @@ void Weapons_Draw(
 	// calculate position/size for visual bar displaying ammount of ammo status
 	if (!infinite_ammo && autocvar_hud_panel_weapons_ammo)
 	{
-		ammo_color = stov(autocvar_hud_panel_weapons_ammo_color);
+		ammo_color = autocvar_hud_panel_weapons_ammo_color;
 		ammo_alpha = panel_fg_alpha * autocvar_hud_panel_weapons_ammo_alpha;
 
 		if (weapon_size.x / weapon_size.y > aspect)
@@ -645,17 +645,17 @@ void Weapons_Draw(
 			if (complain_weapon_type == 0)
 			{
 				s = _("Out of ammo");
-				color = stov(autocvar_hud_panel_weapons_complainbubble_color_outofammo);
+				color = autocvar_hud_panel_weapons_complainbubble_color_outofammo;
 			}
 			else if (complain_weapon_type == 1)
 			{
 				s = _("Don't have");
-				color = stov(autocvar_hud_panel_weapons_complainbubble_color_donthave);
+				color = autocvar_hud_panel_weapons_complainbubble_color_donthave;
 			}
 			else
 			{
 				s = _("Unavailable");
-				color = stov(autocvar_hud_panel_weapons_complainbubble_color_unavailable);
+				color = autocvar_hud_panel_weapons_complainbubble_color_unavailable;
 			}
 			float padding = autocvar_hud_panel_weapons_complainbubble_padding;
 			drawpic_aspect_skin(weapon_pos + '1 1 0' * padding, "weapon_complainbubble", weapon_size - '2 2 0' * padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);

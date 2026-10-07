@@ -5,10 +5,10 @@
 #include <common/stats.qh>
 
 #ifdef SVQC
-#include <common/effects/qc/_mod.qh>
+	#include <common/effects/qc/_mod.qh>
 #endif
 #ifndef SVQC
-#include <common/util.qh> // for icon_path_from_HUDskin
+	#include <common/util.qh> // for icon_path_from_HUDskin
 #endif
 
 USING(WepSet, vector);
@@ -26,16 +26,11 @@ int weaponslot(.entity weaponentity)
 
 #ifdef GAMEQC
 // weapon states (actor.(weaponentity).state)
-/** no weapon selected */
-const int WS_CLEAR  = 0;
-/** raise frame */
-const int WS_RAISE  = 1;
-/** deselecting frame */
-const int WS_DROP   = 2;
-/** fire state */
-const int WS_INUSE  = 3;
-/** idle frame */
-const int WS_READY  = 4;
+const int WS_CLEAR  = 0; ///< no weapon selected
+const int WS_RAISE  = 1; ///< raise frame
+const int WS_DROP   = 2; ///< deselecting frame
+const int WS_INUSE  = 3; ///< fire state
+const int WS_READY  = 4; ///< idle frame
 #endif
 
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
@@ -250,23 +245,41 @@ int autocvar_cl_tracers_teamcolor;
 #endif
 
 // weapon flags
-const int WEP_TYPE_OTHER           = BIT(0);  // not for damaging people
-const int WEP_TYPE_SPLASH          = BIT(1);  // splash damage
-const int WEP_TYPE_HITSCAN         = BIT(2);  // hitscan
-const int WEP_FLAG_CANCLIMB        = BIT(3);  // can be used for movement
-const int WEP_FLAG_NORMAL          = BIT(4);  // in "most weapons" set
-const int WEP_FLAG_HIDDEN          = BIT(5);  // hides from menu
-const int WEP_FLAG_RELOADABLE      = BIT(6);  // can has reload
-const int WEP_FLAG_SUPERWEAPON     = BIT(7);  // powerup timer
-const int WEP_FLAG_MUTATORBLOCKED  = BIT(8);  // hides from impulse 99 etc. (mutators are allowed to clear this flag)
-const int WEP_TYPE_MELEE_PRI       = BIT(9);  // primary attack is melee swing (for animation)
-const int WEP_TYPE_MELEE_SEC       = BIT(10); // secondary attack is melee swing (for animation)
-const int WEP_FLAG_DUALWIELD       = BIT(11); // weapon can be dual wielded
-const int WEP_FLAG_NODUAL          = BIT(12); // weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
-const int WEP_FLAG_PENETRATEWALLS  = BIT(13); // weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
-const int WEP_FLAG_BLEED           = BIT(14); // weapon pierces and causes bleeding (used for damage effects)
-const int WEP_FLAG_NOTRUEAIM       = BIT(15); // weapon doesn't aim directly at targets
-const int WEP_FLAG_SPECIALATTACK   = BIT(16); // special attack (not a true weapon); NOTE: if this flag is set then WEP_FLAG_HIDDEN must be set as well
+const int WEP_TYPE_OTHER           = BIT(0);  ///< not for damaging people
+const int WEP_TYPE_SPLASH          = BIT(1);  ///< splash damage
+const int WEP_TYPE_HITSCAN         = BIT(2);  ///< hitscan
+const int WEP_FLAG_CANCLIMB        = BIT(3);  ///< can be used for movement
+const int WEP_FLAG_NORMAL          = BIT(4);  ///< in "most weapons" set
+const int WEP_FLAG_HIDDEN          = BIT(5);  ///< hides from menu
+const int WEP_FLAG_RELOADABLE      = BIT(6);  ///< can has reload
+const int WEP_FLAG_SUPERWEAPON     = BIT(7);  ///< powerup timer
+const int WEP_FLAG_MUTATORBLOCKED  = BIT(8);  ///< hides from impulse 99 etc. (mutators are allowed to clear this flag)
+const int WEP_TYPE_MELEE_PRI       = BIT(9);  ///< primary attack is melee swing (for animation)
+const int WEP_TYPE_MELEE_SEC       = BIT(10); ///< secondary attack is melee swing (for animation)
+const int WEP_FLAG_DUALWIELD       = BIT(11); ///< weapon can be dual wielded
+const int WEP_FLAG_NODUAL          = BIT(12); ///< weapon doesn't work well with dual wielding (fireball etc just explode on fire), doesn't currently prevent anything
+const int WEP_FLAG_PENETRATEWALLS  = BIT(13); ///< weapon has high calibur bullets that can penetrate thick walls (WEAPONTODO)
+const int WEP_FLAG_BLEED           = BIT(14); ///< weapon pierces and causes bleeding (used for damage effects)
+const int WEP_FLAG_NOTRUEAIM       = BIT(15); ///< weapon doesn't aim directly at targets
+const int WEP_FLAG_SPECIALATTACK   = BIT(16); ///< special attack (not a true weapon); NOTE: if this flag is set then WEP_FLAG_HIDDEN must be set as well
 
 // variables:
 string weaponorder_byid;
+
+#ifdef GAMEQC
+// g_weaponarena type
+enum
+{
+	WEPARENA_OFF,
+	WEPARENA_NONE,
+	WEPARENA_CUSTOM,
+	WEPARENA_ALL,
+	WEPARENA_ALL_AVAILABLE,
+	WEPARENA_STANDARD,
+	WEPARENA_STANDARD_AVAILABLE,
+	WEPARENA_EXTENDED,
+	WEPARENA_EXTENDED_AVAILABLE,
+	WEPARENA_DEVALL,
+	WEPARENA_DEVALL_AVAILABLE
+};
+#endif

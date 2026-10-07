@@ -89,6 +89,11 @@ bool turret_closetotarget(entity this, vector targ, float range);
 
 float turret_count;
 
+// The value of this const should be != 0 and different from normal team numbers.
+// If multiple of 256 gets automatically converted to 0 when sent to the client with WriteByte;
+// this behaviour is intentional since the client doesn't use it.
+const int TURRET_TEAM = 256;
+
 // debugging
 // Uncomment below to enable various debug output.
 //#define TURRET_DEBUG

@@ -68,7 +68,7 @@ string autocvar_sv_minigames_bulldozer_startlevel = "level1";
 entity bd_find_piece(entity minig, string tile, bool check_target)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile && ((check_target) ? e.bd_tiletype == BD_TILE_TARGET : e.bd_tiletype != BD_TILE_TARGET) )
 			return e;
 	return NULL;
@@ -77,7 +77,7 @@ entity bd_find_piece(entity minig, string tile, bool check_target)
 entity bd_find_controller(entity minig, int letter)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "bd_controller" && e.bd_tilelet == letter )
 			return e;
 	return NULL;
@@ -104,7 +104,7 @@ void bd_controller_update(entity controller, int number)
 entity bd_find_dozer(entity minig)
 {
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_DOZER )
 			return e;
 	return NULL;
@@ -119,7 +119,8 @@ bool bd_controller_send(entity this, entity to, int sf)
 
 	WriteByte(MSG_ENTITY, sf);
 	WriteByte(MSG_ENTITY, this.bd_tilelet);
-	WriteString(MSG_ENTITY,this.owner.netname);
+	WriteShort(MSG_ENTITY, this.minigame_id);
+	WriteRegistered(Minigames, MSG_ENTITY, this.descriptor);
 
 	if(sf & BD_SF_UPDATE_SINGLE)
 	{
@@ -146,8 +147,6 @@ bool bd_controller_send(entity this, entity to, int sf)
 	return true;
 }
 #elif defined(CSQC)
-void minigame_read_owner(entity this);
-
 NET_HANDLE(ENT_CLIENT_BD_CONTROLLER, bool isNew)
 {
 	this.classname = "bd_controller";
@@ -155,7 +154,8 @@ NET_HANDLE(ENT_CLIENT_BD_CONTROLLER, bool isNew)
 
 	int sf = ReadByte();
 	this.bd_tilelet = ReadByte();
-	minigame_read_owner(this);
+	this.minigame_id = ReadShort();
+	this.descriptor = ReadRegistered(Minigames);
 
 	if(sf & BD_SF_UPDATE_SINGLE)
 	{
@@ -179,7 +179,7 @@ void bd_check_winner(entity minig)
 {
 	int total = 0, valid = 0;
 	entity e = NULL;
-	while ( ( e = findentity(e,owner,minig) ) )
+	while ( ( e = findfloat(e,minigame_id,minig.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_TARGET )
 		{
 			++total;
@@ -356,7 +356,7 @@ void bd_move(entity minigame, entity player, string dir)
 
 			int moved = 0;
 			entity e = NULL;
-			while ( ( e = findentity(e,owner,minigame) ) )
+			while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 				if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_DOZER )
 				{
 					e.bd_dir = bdir;
@@ -551,7 +551,7 @@ void bd_reset_moves(entity minigame)
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
 	e = NULL;
-	while( (e = findentity(e,owner,minigame)) )
+	while( (e = findfloat(e,minigame_id,minigame.minigame_id)) )
 		if ( e.classname == "minigame_player" )
 #endif
 		{
@@ -564,14 +564,14 @@ void bd_load_level(entity minigame);
 void bd_setup_pieces(entity minigame)
 {
 	entity e = NULL;
-	while( (e = findentity(e, owner, minigame)) )
+	while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 		if(e.classname == "minigame_board_piece")
 		{
 			strfree(e.netname);
 			delete(e);
 		}
 	e = NULL;
-	while( (e = findentity(e, owner, minigame)) )
+	while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 		if(e.classname == "bd_controller")
 		{
 			delete(e);
@@ -581,6 +581,8 @@ void bd_setup_pieces(entity minigame)
 	{
 		entity controller = new_pure(bd_controller);
 		controller.owner = minigame;
+		controller.minigame_id = minigame.minigame_id;
+		controller.descriptor = minigame.descriptor;
 		controller.bd_tilelet = letter;
 	#ifdef SVQC
 		Net_LinkEntity(controller, false, 0, bd_controller_send);
@@ -727,7 +729,7 @@ bool bd_save_level(entity minigame)
 	{
 		int target_count = 0, boulder_count = 0;
 		entity piece = NULL;
-		while((piece = findentity(piece,owner,minigame)))
+		while((piece = findfloat(piece,minigame_id,minigame.minigame_id)))
 			if(piece.classname == "minigame_board_piece")
 			{
 				if(piece.bd_tiletype == BD_TILE_BOULDER)
@@ -754,7 +756,7 @@ bool bd_save_level(entity minigame)
 			fputs(file_get, strcat("nextlevel = \"", minigame.bd_nextlevel, "\"\n"));
 
 		entity e = NULL;
-		while ( ( e = findentity(e,owner,minigame) ) )
+		while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if ( e.classname == "bd_controller" )
 		{
 			for(int j = 0; j < BD_NUM_CNT; ++j)
@@ -765,7 +767,7 @@ bool bd_save_level(entity minigame)
 		}
 		e = NULL;
 
-		while ( ( e = findentity(e,owner,minigame) ) )
+		while ( ( e = findfloat(e,minigame_id,minigame.minigame_id) ) )
 		if ( e.classname == "minigame_board_piece" )
 		{
 			// use a line of text for each object, listing all properties
@@ -861,14 +863,14 @@ int bd_server_event(entity minigame, string event, ...)
 		case "end":
 		{
 			entity e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				strfree(e.netname);
 				delete(e);
 			}
 			e = NULL;
-			while( (e = findentity(e, owner, minigame)) )
+			while( (e = findfloat(e, minigame_id, minigame.minigame_id)) )
 			if(e.classname == "bd_controller")
 			{
 				delete(e);

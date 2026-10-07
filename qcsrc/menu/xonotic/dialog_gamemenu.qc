@@ -19,6 +19,8 @@ void XonoticGameMenuDialog_draw(entity me)
 		{
 			btn.setText(btn, _("Restart level"));
 			btn.onClickCommand = "resetmatch";
+			btn.color = '1 1 1';
+			btn.colorF = '1 1 1';
 		}
 	}
 	else
@@ -27,6 +29,8 @@ void XonoticGameMenuDialog_draw(entity me)
 		{
 			btn.setText(btn, _("Join!"));
 			btn.onClickCommand = "join";
+			btn.color = '0 1 0';
+			btn.colorF = '0 1 0';
 		}
 	}
 	SUPER(XonoticGameMenuDialog).draw(me);
@@ -60,7 +64,7 @@ void XonoticGameMenuDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Quick menu"), '0 0 0', "quickmenu", COMMANDBUTTON_CLOSE));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = me.joinButton = makeXonoticCommandButton(_("Join!"), '0 0 0', "join", COMMANDBUTTON_CLOSE));
+		me.TD(me, 1, 1, e = me.joinButton = makeXonoticCommandButton(_("Join!"), '0 1 0', "join", COMMANDBUTTON_CLOSE));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCommandButton(_("Spectate"), '0 0 0', "spec", COMMANDBUTTON_CLOSE));
 	me.TR(me);

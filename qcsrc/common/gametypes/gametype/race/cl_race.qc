@@ -187,9 +187,9 @@ MUTATOR_HOOKFUNCTION(cl_race, DrawScoreboardItemStats)
 
 MUTATOR_HOOKFUNCTION(cl_race, ShowRankings)
 {
-	if(ISGAMETYPE(RACE))
+	if (ISGAMETYPE(RACE))
 	{
-		M_ARGV(0, string) = _("Rankings");
+		M_ARGV(1, string) = _("Rankings");
 		return true;
 	}
 }

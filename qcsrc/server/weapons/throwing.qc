@@ -117,7 +117,7 @@ bool W_IsWeaponThrowable(entity this, int w)
 {
 	if (MUTATOR_CALLHOOK(ForbidDropCurrentWeapon, this, w))
 		return false;
-	if (!autocvar_g_pickup_items || g_weaponarena)
+	if (!autocvar_g_pickup_items || g_weaponarena_type != WEPARENA_OFF)
 		return false;
 	if (w == WEP_Null.m_id)
 		return false;

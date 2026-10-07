@@ -220,6 +220,7 @@ void turret_construct(entity this, bool isNew)
 		setattachment(this.tur_head, this, "tag_head");
 
 	this.tur_head.classname  = "turret_head";
+	this.tur_head.realowner  = this;
 	this.tur_head.owner      = this;
 	set_movetype(this.tur_head, MOVETYPE_NOCLIP);
 	set_movetype(this, MOVETYPE_NOCLIP);
@@ -234,11 +235,13 @@ void turret_construct(entity this, bool isNew)
 	this.anim_start_time     = 0;
 	this.draw2d = turret_draw2d;
 	this.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
-	this.teamradar_color = '1 0 0';
 	this.alpha = 1;
 
 	if (isNew)
 	{
+		// set default teamradar_color here because TNSF_SETUP (respawn) can override it
+		// if received right after TNSF_STATUS (team change)
+		this.teamradar_color = '1 0.6 0.1';
 		IL_PUSH(g_drawables, this);
 		IL_PUSH(g_drawables_2d, this);
 	}
@@ -408,7 +411,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isNew)
 
 	if (sf & TNSF_STATUS)
 	{
-		float _tmp = ReadByte();
+		int _tmp = ReadByte();
 		if (_tmp != this.team)
 		{
 			this.team = _tmp;

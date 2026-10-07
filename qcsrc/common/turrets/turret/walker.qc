@@ -48,22 +48,24 @@ bool walker_firecheck(entity this)
 	return turret_firecheck(this);
 }
 
+bool walker_melee_do_dmg_cond(entity e)
+{
+	return (turret_validate_target(WarpZone_SearchInRadius_otherent, e, WarpZone_SearchInRadius_otherent.target_validate_flags)
+		&& e != WarpZone_SearchInRadius_otherent && e.owner != WarpZone_SearchInRadius_otherent);
+}
 void walker_melee_do_dmg(entity this)
 {
 	makevectors(this.angles);
 
-	for (entity e = findradius(this.origin + v_forward * 128, 32); e; e = e.chain)
-	{
-		if (turret_validate_target(this, e, this.target_validate_flags)
-		&& e != this && e.owner != this)
-			Damage(e, this, this,
-				autocvar_g_turrets_unit_walker_melee_damage,
-				DEATH_TURRET_WALK_MELEE.m_id,
-				DMG_NOWEP,
-				'0 0 0',
-				v_forward * autocvar_g_turrets_unit_walker_melee_force
-			);
-	}
+	WarpZone_SearchInRadius_otherent = this;
+	for (entity e = WarpZone_SearchInRadius(this.origin + v_forward * 128, 32, MOVE_NOTHING, walker_melee_do_dmg_cond); e; e = e.chain)
+		Damage(e, this, this,
+			autocvar_g_turrets_unit_walker_melee_damage,
+			DEATH_TURRET_WALK_MELEE.m_id,
+			DMG_NOWEP,
+			e.WarpZone_findradius_nearest,
+			WarpZone_TransformVelocity(e, v_forward * autocvar_g_turrets_unit_walker_melee_force)
+		);
 }
 
 void walker_setnoanim(entity this)
@@ -73,7 +75,7 @@ void walker_setnoanim(entity this)
 }
 void walker_rocket_explode(entity this)
 {
-	RadiusDamage(this, this.owner,
+	RadiusDamage(this, this.realowner,
 		autocvar_g_turrets_unit_walker_rocket_damage,
 		0,
 		autocvar_g_turrets_unit_walker_rocket_radius,
@@ -98,7 +100,7 @@ void walker_rocket_damage(entity this, entity inflictor, entity attacker, float 
 	this.velocity += vforce;
 
 	if (GetResource(this, RES_HEALTH) <= 0)
-		W_PrepareExplosionByDamage(this, this.owner, walker_rocket_explode);
+		W_PrepareExplosionByDamage(this, this.realowner, walker_rocket_explode);
 }
 
 #define WALKER_ROCKET_MOVE(s) \
@@ -213,6 +215,7 @@ void walker_fire_rocket(entity this, vector org)
 	sound(this, CH_WEAPON_A, SND_TUR_WALKER_FIRE, VOL_BASE, ATTEN_NORM);
 	setsize(rocket, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
+	rocket.realowner         = this;
 	rocket.owner             = this;
 	rocket.bot_dodge         = true;
 	rocket.bot_dodgerating   = 50;
@@ -376,13 +379,13 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 			{
 				if (it.animflag != ANIM_NO)
 				{
-					traceline(it.origin + '0 0 64', it.origin + '0 0 64' + v_forward * 128, MOVE_NORMAL, it);
+					WarpZone_TraceLine(it.origin + '0 0 64', it.origin + '0 0 64' + v_forward * 128, MOVE_NORMAL, it);
 
 					if (trace_fraction != 1.0)
 						it.tur_head.idletime = -1337;
 					else
 					{
-						traceline(trace_endpos, trace_endpos - '0 0 256', MOVE_NORMAL, it);
+						WarpZone_TraceLine(trace_endpos, trace_endpos - '0 0 256', MOVE_NORMAL, it);
 						if (trace_fraction == 1.0)
 							it.tur_head.idletime = -1337;
 					}
@@ -551,10 +554,11 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 	}
 
 
-	if (it.origin != it.oldorigin)
+	if (it.origin != it.oldorigin || it.velocity != it.oldvelocity)
 		it.SendFlags |= TNSF_MOVE;
 
 	it.oldorigin = it.origin;
+	it.oldvelocity = it.velocity;
 	turrets_setframe(it, it.animflag, false);
 }
 METHOD(WalkerTurret, tr_death, void(WalkerTurret this, entity it))

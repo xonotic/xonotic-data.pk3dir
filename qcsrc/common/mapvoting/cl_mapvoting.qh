@@ -1,0 +1,41 @@
+#pragma once
+
+#include "mapvoting.qh"
+
+bool autocvar_cl_readpicture_force;
+float autocvar_hud_panel_mapvote_highlight_border = 1;
+string autocvar_menu_skin; // gametype icons are controlled by the menu skin
+
+bool PreviewExists(string name);
+void MapVote_CheckPic(string pic, string pk3, int id);
+
+void Cmd_MapVote_MapDownload(int argc);
+
+float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary);
+
+// Globals, beyond those in mapvoting.qh
+string mv_data[MAPVOTE_COUNT];      ///< (shared) map pk3 name/gametype human readable name
+float mv_preview[MAPVOTE_COUNT];    ///< (shared) whether there is a pic
+string mv_pics[MAPVOTE_COUNT];      ///< (shared) pic file location
+string mv_desc[MAPVOTE_COUNT];      ///< (gt)     gametype description
+int mv_flags_start[MAPVOTE_COUNT];  ///< (gt)     mv_flags initially
+float mv_select_lasttime[MAPVOTE_COUNT];
+entity mv_pk3list;
+int mv_ownvote;
+int mv_tie_winner;
+float mv_reduce_alpha;
+float mv_winner_time;
+float mv_winner_alpha;
+string mv_suggester_cache;
+float mv_suggester_cachetime;
+
+int mv_selection;
+int mv_columns;
+int mv_mouse_selection;
+bool mv_selection_keyboard;
+
+bool mv_active;
+bool gametypevote;
+string mv_chosenmap;
+vector gtv_text_size;
+vector gtv_text_size_small;

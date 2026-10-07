@@ -2,6 +2,12 @@
 
 #ifdef SVQC
 
+float nade_current_dark_time;
+bool nade_darkness_think_cond(entity e)
+{
+	return (e != WarpZone_SearchInRadius_otherent && e.takedamage
+		&& !IS_DEAD(e) && GetResource(e, RES_HEALTH) > 0 && nade_current_dark_time > 0 && IS_REAL_CLIENT(e));
+}
 void nade_darkness_think(entity this)
 {
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
@@ -16,13 +22,13 @@ void nade_darkness_think(entity this)
 		{
 			vector expcol_min = nades_PlayerColor(this.realowner, false);
 			vector expcol_max = nades_PlayerColor(this.realowner, true);
-			Send_Effect_Except(EFFECT_NADE_EXPLODE, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, NULL);
+			Send_Effect_Core(EFFECT_NADE_EXPLODE, this.origin + '0 0 1', '0 0 0', 1, expcol_min, expcol_max, -1, -1, -1, NULL);
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			nade_normal_boom(this);
 		}
 		else
-			Send_Effect_Except(EFFECT_SPAWN, this.origin + '0 0 1', '0 0 0', 1, '0.5 0 0.5', '0.5 0 0.5', NULL);
+			Send_Effect_Core(EFFECT_SPAWN, this.origin + '0 0 1', '0 0 0', 1, '0.5 0 0.5', '0.5 0 0.5', -1, -1, -1, NULL);
 
 		delete(this);
 		return;
@@ -42,25 +48,25 @@ void nade_darkness_think(entity this)
 
 	if (time >= this.nade_special_time)
 	{
-		this.nade_special_time = time + 0.7;
+		this.nade_special_time = time + 5/16; // 0.3125
 		Send_Effect(EFFECT_DARKFIELD, this.origin, '0 0 0', 1);
 	}
 
-	float current_dark_time = this.ltime - time - 0.1;
-
-	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_darkness_radius, it != this && it.takedamage
-	&& !IS_DEAD(it) && GetResource(it, RES_HEALTH) > 0 && current_dark_time > 0 && IS_REAL_CLIENT(it),
+	nade_current_dark_time = this.ltime - this.nextthink;
+	WarpZone_SearchInRadius_otherent = this;
+	entity head = WarpZone_SearchInRadius(this.origin, autocvar_g_nades_darkness_radius, MOVE_NOTHING, nade_darkness_think_cond);
+	for (; head; head = head.chain)
 	{
 		switch (autocvar_g_nades_darkness_teamcheck)
 		{
 			case 0:  break; // affect everyone
 			default:
-			case 2:  if (SAME_TEAM(it, this.realowner)) continue; // don't affect teammates
+			case 2:  if (SAME_TEAM(head, this.realowner)) continue; // don't affect teammates
 			         // fall through (check case 1 condition too)
-			case 1:  if (it == this.realowner) continue; // don't affect the player who threw the nade
+			case 1:  if (head == this.realowner) continue; // don't affect the player who threw the nade
 		}
-		STAT(NADE_DARKNESS_TIME, it) = time + 0.1;
-	});
+		STAT(NADE_DARKNESS_TIME, head) = this.nextthink;
+	}
 }
 
 void nade_darkness_boom(entity this)

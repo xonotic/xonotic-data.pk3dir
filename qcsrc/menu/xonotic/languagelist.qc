@@ -48,7 +48,7 @@ void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool 
 			alpha_factor = 0.65;
 		else
 			alpha_factor = 0.3;
-		p = ftos_decimals_percentage(percent / 100, 0); // make it translatable
+		p = ftos_decimals_percentage(percent / 100, 0);
 	}
 
 	string s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);

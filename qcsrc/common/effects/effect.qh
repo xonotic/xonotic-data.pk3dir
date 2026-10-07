@@ -1,15 +1,14 @@
 #pragma once
 
-#define particleeffectnum(e) \
-	_particleeffectnum(e.eent_eff_name)
+#define particleeffectnum(e) _particleeffectnum((e).eent_eff_name)
 
-#if defined(SVQC)
+#ifdef SVQC
 	#define pointparticles(effect, org, vel, howmany) \
 		Send_Effect(effect, org, vel, howmany)
-	#define trailparticles(e, effect, org, vel) \
-		((!e) ? Send_Effect(effect, org, vel, 0) \
+	#define trailparticles(e, effect, org, vel) (!(e) \
+		? Send_Effect(effect, org, vel, 0) \
 		: __trailparticles(e, particleeffectnum(effect), org, vel))
-#elif defined(CSQC)
+#elifdef CSQC
 	#define pointparticles(effect, org, vel, howmany) \
 		__pointparticles(particleeffectnum(effect), org, vel, howmany)
 	#define trailparticles(e, effect, org, vel) \
@@ -18,18 +17,12 @@
 
 .int m_id;
 .string eent_eff_name;
-.int eent_eff_trail;
-
-.vector eent_net_location;
-.vector eent_net_velocity;
-.vector eent_net_color_min;
-.vector eent_net_color_max;
-.int eent_net_count;
+.bool eent_eff_trail;
 
 entity Create_Effect_Entity(string eff_name, bool eff_trail)
 {
-	entity this = new_pure(effect_entity);
-	this.eent_eff_name = eff_name;
-	this.eent_eff_trail = eff_trail;
-	return this;
+	entity eff = new_pure(effect_entity);
+	eff.eent_eff_name = eff_name;
+	eff.eent_eff_trail = eff_trail;
+	return eff;
 }

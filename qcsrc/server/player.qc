@@ -186,7 +186,7 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	v = healtharmor_applydamage(GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(INFINITY, GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
@@ -285,7 +285,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		else
 			Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-		v = healtharmor_applydamage(GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
+		v = healtharmor_applydamage(GetResource(this, RES_HEALTH), GetResource(this, RES_ARMOR), autocvar_g_balance_armor_blockpercent, deathtype, damage);
 		take = v.x;
 		save = v.y;
 	}
@@ -319,10 +319,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.istypefrag = 0;
 	}
 
+	// NB: healtharmor_applydamage() bounds take and save to current health and armour so hooks need not duplicate that.
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
 	take = bound(0, M_ARGV(4, float), GetResource(this, RES_HEALTH));
 	save = bound(0, M_ARGV(5, float), GetResource(this, RES_ARMOR));
-	float excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
@@ -431,7 +431,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 	if ((dh || da) && !forbid_logging_damage)
 	{
-		float realdmg = damage - excess;
+		float realdmg = take + save;
 		if ((this != attacker || deathtype == DEATH_KILL.m_id) && realdmg
 			&& (!(round_handler_IsActive() && !round_handler_IsRoundStarted()) && time >= game_starttime))
 		{
@@ -497,7 +497,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.respawn_time = 0;
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		damage = M_ARGV(4, float);
-		excess = max(0, damage - take - save);
+		float excess = max(0, damage - take - save);
 
 		//Weapon wep = this.(weaponentity).m_weapon;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)

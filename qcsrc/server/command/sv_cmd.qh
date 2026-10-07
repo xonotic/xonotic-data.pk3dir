@@ -3,6 +3,8 @@
 // =================================================
 //  Declarations for server side game commands
 // =================================================
+bool balanceteams_on_reset_map;
+void balanceteams();
 
 bool shuffleteams_on_reset_map;
 void shuffleteams();
