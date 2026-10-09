@@ -181,22 +181,26 @@ float matchacl(string acl, string str); // matches str against ACL acl (with ent
 void write_String_To_File(int fh, string str, bool alsoprint);
 
 string get_model_datafilename(string mod, float skn, string fil); // skin -1 will return wildcard, mod string_null will also put wildcard there
+#ifdef MENUQC
 string get_model_parameters_modelname;
 float get_model_parameters_modelskin;
 string get_model_parameters_name;
-float get_model_parameters_species;
 string get_model_parameters_sex;
 float get_model_parameters_weight;
 float get_model_parameters_age;
 bool get_model_parameters_hidden;
 string get_model_parameters_description;
+string get_model_parameters_desc;
+#elifdef SVQC
+float get_model_parameters_species;
+#elifdef CSQC
 string get_model_parameters_bone_upperbody;
 string get_model_parameters_bone_weapon;
 const int MAX_AIM_BONES = 4;
 string get_model_parameters_bone_aim[MAX_AIM_BONES];
 float get_model_parameters_bone_aimweight[MAX_AIM_BONES];
 float get_model_parameters_fixbone;
-string get_model_parameters_desc;
+#endif
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
 
 ERASEABLE

@@ -77,22 +77,41 @@ void XonoticProfileTab_fill(entity me)
 	me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn); // BOTTOM LEFT
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Model")));
 
+	// MODEL RIGHT, COLOR LEFT
+	pms = makeXonoticPlayerModelSelector();
 	me.TR(me);
-		//me.TDempty(me, 0); // MODEL LEFT, COLOR RIGHT
-		me.TDempty(me, 1); // MODEL RIGHT, COLOR LEFT
-		pms = makeXonoticPlayerModelSelector();
-		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
+		me.TDempty(me, 1);
+		me.TD(me, 1, 0.35, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
 			e.applyButton = profileApplyButton;
-		me.TD(me, 11.5, 1.4, pms);
-		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
+		me.TD(me, 1, 2 - 0.35 * 2, e = makeXonoticTextLabel(0, ""));
+			e.align = 0.5;
+			e.colorL = SKINCOLOR_MODELTITLE;
+			e.alpha = SKINALPHA_MODELTITLE;
+			e.isBold = true;
+			e.fontSize = SKINFONTSIZE_TITLE;
+			pms.titleLabel = e;
+		me.TD(me, 1, 0.35, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
 			e.applyButton = profileApplyButton;
+	me.TR(me);
+		me.TDempty(me, 1);
+#ifdef XONVOTE186
+		me.TD(me, 9.5, 2, pms);
+	me.gotoRC(me, 20.5, 0);
+		me.TDempty(me, 1);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0, ""));
+			e.align = 0.5;
+			e.fontSize = SKINFONTSIZE_NORMAL;
+			pms.controlledTextLabel = e;
+#else
+		me.TD(me, 10.5, 2, pms);
+#endif
 
-	//me.setFirstColumn(me, me.currentColumn + 2); // MODEL LEFT, COLOR RIGHT
-	me.gotoRC(me, me.currentRow, 0); me.setFirstColumn(me, me.currentColumn); // MODEL RIGHT, COLOR LEFT
+	// MODEL RIGHT, COLOR LEFT
+	me.gotoRC(me, 10, 0); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticHeaderLabel(_("Glowing color")));
 		for(i = 0; i < 15; ++i)

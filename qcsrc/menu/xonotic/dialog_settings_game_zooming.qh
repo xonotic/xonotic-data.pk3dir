@@ -1,0 +1,12 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticGameZoomingSettingsTab, XonoticTab)
+	METHOD(XonoticGameZoomingSettingsTab, fill, void(entity));
+	METHOD(XonoticGameZoomingSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGameZoomingSettingsTab, title, string, _("Zooming"));
+	ATTRIB(XonoticGameZoomingSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGameZoomingSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGameZoomingSettingsTab, columns, float, 4.5);
+ENDCLASS(XonoticGameZoomingSettingsTab)
+entity makeXonoticGameZoomingSettingsTab();

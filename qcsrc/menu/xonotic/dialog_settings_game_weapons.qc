@@ -1,13 +1,13 @@
 #include "dialog_settings_game_weapons.qh"
 
-#include "weaponslist.qh"
-#include "commandbutton.qh"
-#include "textlabel.qh"
-#include "slider.qh"
-#include "mixedslider.qh"
-#include "checkbox.qh"
 #include "button.qh"
+#include "commandbutton.qh"
+#include "checkbox.qh"
+#include "mixedslider.qh"
 #include "radiobutton.qh"
+#include "slider.qh"
+#include "textlabel.qh"
+#include "weaponslist.qh"
 
 void XonoticGameWeaponsSettingsTab_showNotify(entity me)
 {
@@ -23,10 +23,8 @@ entity makeXonoticGameWeaponsSettingsTab()
 void XonoticGameWeaponsSettingsTab_fill(entity me)
 {
 	entity e;
-	entity weaponsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
-		"sendcvar cl_weaponpriority"
-		, COMMANDBUTTON_APPLY);
-	weaponsApplyButton.disableOnClick = true;
+	entity weaponsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_weaponpriority", COMMANDBUTTON_APPLY);
+		weaponsApplyButton.disableOnClick = true;
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Weapon Priority List (* = mutator weapon)")));
@@ -43,6 +41,7 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			e.onClick = WeaponsList_MoveDown_Click;
 			e.onClickEntity = me.weaponsList;
 			e.applyButton = weaponsApplyButton;
+
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -65,9 +64,9 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 		me.TD(me, 1, 4/3, e = makeXonoticTextLabel(0, _("Auto switch in CTS:")));
 		me.TD(me, 1, 5/3, e = makeXonoticMixedSlider("cl_autoswitch_cts"));
 			e.setValueSpace(e, e.valueSpace * (6/5));
-			e.addText(e, _("Never"), 0);
+			e.addText(e, _("Never"),    0);
 			e.addText(e, _("Default"), -1);
-			e.addText(e, _("Always"), 1);
+			e.addText(e, _("Always"),   1);
 			e.configureXonoticMixedSliderValues(e);
 			e.sendCvars = true;
 
@@ -79,16 +78,14 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			_("Draw the weapon model")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton_T(1, "cl_gunalign", "4", _("Left align"),
-			_("Position of the weapon model; requires reconnect")));
+		string gunalign_tip = _("Position of the weapon model; requires reconnect");
+		me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton_T(1, "cl_gunalign", "4", _("Left align"), gunalign_tip));
 			setDependentNOT(e, "cl_viewmodel_alpha", 0);
 			setDependentAND(e, "r_drawviewmodel", 1, 1);
-		me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton_T(1, "cl_gunalign", "1", _("Center"),
-			_("Position of the weapon model; requires reconnect")));
+		me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton_T(1, "cl_gunalign", "1", _("Center"), gunalign_tip));
 			setDependentNOT(e, "cl_viewmodel_alpha", 0);
 			setDependentAND(e, "r_drawviewmodel", 1, 1);
-		me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton_T(1, "cl_gunalign", "3", _("Right align"),
-			_("Position of the weapon model; requires reconnect")));
+		me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton_T(1, "cl_gunalign", "3", _("Right align"), gunalign_tip));
 			setDependentNOT(e, "cl_viewmodel_alpha", 0);
 			setDependentAND(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
@@ -101,21 +98,23 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 			setDependentNOT(e, "cl_viewmodel_alpha", 0);
 			setDependentAND(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
-			me.TD(me, 1, 4/3, e = makeXonoticTextLabel(0, _("Weapon model opacity:")));
-				setDependent(e, "r_drawviewmodel", 1, 1);
-			me.TD(me, 1, 5/3, e = makeXonoticSlider(0.05, 1, 0.05, "cl_viewmodel_alpha"));
-				e.setValueSpace(e, e.valueSpace * (6/5));
-				e.formatString = "%";
-				setDependent(e, "r_drawviewmodel", 1, 1);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Opacity:")));
+			setDependent(e, "r_drawviewmodel", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.05, 1, 0.05, "cl_viewmodel_alpha"));
+			e.formatString = "%";
+			setDependent(e, "r_drawviewmodel", 1, 1);
 
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Apply team colors to weapon beam effects:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-			me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "0", _("Never")));
-			me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "1", _("In team games")));
-			me.TD(me, 1, 2.8/3, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "2", _("Always")));
+		me.TD(me, 1, 2.8/2, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "0", _("Never")));
+		me.TD(me, 1, 2.8/2, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "2", _("Always")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticRadioButton(1, "cl_tracers_teamcolor", "1", _("In team games")));
 
 	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, me.columns, weaponsApplyButton);

@@ -67,15 +67,15 @@
 #include <menu/xonotic/dialog_settings.qh>
 #include <menu/xonotic/dialog_settings_audio.qh>
 #include <menu/xonotic/dialog_settings_bindings_reset.qh>
-#include <menu/xonotic/dialog_settings_effects.qh>
 #include <menu/xonotic/dialog_settings_game.qh>
 #include <menu/xonotic/dialog_settings_game_crosshair.qh>
 #include <menu/xonotic/dialog_settings_game_hud.qh>
 #include <menu/xonotic/dialog_settings_game_hudconfirm.qh>
 #include <menu/xonotic/dialog_settings_game_messages.qh>
 #include <menu/xonotic/dialog_settings_game_model.qh>
-#include <menu/xonotic/dialog_settings_game_view.qh>
+#include <menu/xonotic/dialog_settings_game_waypoints.qh>
 #include <menu/xonotic/dialog_settings_game_weapons.qh>
+#include <menu/xonotic/dialog_settings_game_zooming.qh>
 #include <menu/xonotic/dialog_settings_input.qh>
 #include <menu/xonotic/dialog_settings_input_userbind.qh>
 #include <menu/xonotic/dialog_settings_misc.qh>
@@ -83,7 +83,12 @@
 #include <menu/xonotic/dialog_settings_misc_reset.qh>
 #include <menu/xonotic/dialog_settings_user.qh>
 #include <menu/xonotic/dialog_settings_user_languagewarning.qh>
-#include <menu/xonotic/dialog_settings_video.qh>
+#include <menu/xonotic/dialog_settings_videoeffects.qh>
+#include <menu/xonotic/dialog_settings_videoeffects_detail.qh>
+#include <menu/xonotic/dialog_settings_videoeffects_effects.qh>
+#include <menu/xonotic/dialog_settings_videoeffects_perspective.qh>
+#include <menu/xonotic/dialog_settings_videoeffects_rendering.qh>
+#include <menu/xonotic/dialog_settings_videoeffects_video.qh>
 #include <menu/xonotic/dialog_singleplayer.qh>
 #include <menu/xonotic/dialog_singleplayer_winner.qh>
 #include <menu/xonotic/dialog_teamselect.qh>
@@ -126,6 +131,7 @@
 #include <menu/xonotic/textbox.qh>
 #include <menu/xonotic/textlabel.qh>
 #include <menu/xonotic/textslider.qh>
+#include <menu/xonotic/topictab.qh>
 #include <menu/xonotic/util.qh>
 #include <menu/xonotic/weaponslist.qh>
 
