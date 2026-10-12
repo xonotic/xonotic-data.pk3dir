@@ -42,22 +42,20 @@
 				me.realOrigin.x = me.keepspaceLeft;
 			if (!me.overrideCondenseFactor)
 				me.condenseFactor = spaceAvail / spaceUsed;
-			LOG_TRACEF("NOTE: label text %s too wide for label, condensed by factor %f", t, me.condenseFactor);
+			if (me.condenseFactor > 1)
+				LOG_TRACEF("NOTE: label text %s too wide for label, condensed by factor %f", t, me.condenseFactor);
 		}
 
 		if (!me.overrideRealOrigin.y)
 		{
-			float lines;
-			vector dfs;
-			vector fs;
-
 			// set up variables to draw in condensed size, but use hinting for original size
-			fs = me.realFontSize;
+			vector fs = me.realFontSize;
 			fs.x *= me.condenseFactor;
 
-			dfs = draw_fontscale;
+			vector dfs = draw_fontscale;
 			draw_fontscale.x *= me.condenseFactor;
 
+			int lines;
 			if (me.allowCut)  // FIXME allowCut incompatible with align != 0
 				lines = 1;
 			else if (me.allowWrap)  // FIXME allowWrap incompatible with align != 0
@@ -66,8 +64,10 @@
 				lines = 0;
 				while (getWrappedLine_remaining)
 				{
-					if (me.allowColors) getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithColors);
-					else getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithoutColors);
+					if (me.allowColors)
+						getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithColors);
+					else
+						getWrappedLine((1 - me.keepspaceLeft - me.keepspaceRight), fs, draw_TextWidth_WithoutColors);
 					++lines;
 				}
 			}
@@ -82,7 +82,8 @@
 			me.realOrigin.y = 0.5 * (1 - text_height);
 		}
 
-		if (me.isBold) draw_endBoldFont();
+		if (me.isBold)
+			draw_endBoldFont();
 
 		me.recalcPos = false;
 	}

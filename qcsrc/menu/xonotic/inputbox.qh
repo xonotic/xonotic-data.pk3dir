@@ -31,6 +31,7 @@ CLASS(XonoticInputBox, InputBox)
 	METHOD(XonoticInputBox, saveCvars, void(entity));
 	ATTRIB(XonoticInputBox, sendCvars, float, 0);
 
+	ATTRIB(XonoticInputBox, overrideCondenseFactor, bool, true); // always use condenseFactor 1
 	ATTRIB(XonoticInputBox, saveImmediately, bool, false);
 ENDCLASS(XonoticInputBox)
 entity makeXonoticInputBox_T(bool, string, string theTooltip);
