@@ -75,3 +75,13 @@ CLASS(XonoticMutatorCustomPhysicsTab, XonoticMutatorTab)
 	METHOD(XonoticMutatorCustomPhysicsTab, canEnable, bool(entity, bool));
 ENDCLASS(XonoticMutatorCustomPhysicsTab)
 entity makeXonoticMutatorCustomPhysicsTab();
+
+
+// Dynamic balancing mutators
+CLASS(XonoticMutatorDynamicBalancingTab, XonoticMutatorTab)
+	METHOD(XonoticMutatorDynamicBalancingTab, fill, void(entity));
+	ATTRIB(XonoticMutatorDynamicBalancingTab, title, string, _("Dynamic balancing"));
+	ATTRIB(XonoticMutatorDynamicBalancingTab, message, string, "");
+	METHOD(XonoticMutatorDynamicBalancingTab, canEnable, bool(entity, bool));
+ENDCLASS(XonoticMutatorDynamicBalancingTab)
+entity makeXonoticMutatorDynamicBalancingTab();
