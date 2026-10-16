@@ -1,3 +1,4 @@
 #pragma once
 
+void HUD_Mod_Keepaway_DrawItem_Single(vector myPos, vector mySize, string pic, float change_time, bool cond, bool is_carrying, string text);
 void HUD_Mod_Keepaway(vector myPos, vector mySize, bool should_draw);
