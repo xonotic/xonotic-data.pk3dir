@@ -8,7 +8,7 @@
 CLASS(FreezeTag, Gametype)
 	INIT(FreezeTag)
 	{
-		this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win"));
+		this.gametype_init(this, _("Freeze Tag"),"ft","g_freezetag",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_ELIMINATIONS,"","timelimit=20 pointlimit=10 teams=2 leadlimit=6",_("Kill enemies to freeze them, stand next to frozen teammates to revive them; freeze all enemies to win"));
 	}
 	METHOD(FreezeTag, m_parse_mapinfo, bool(string k, string v))
 	{
