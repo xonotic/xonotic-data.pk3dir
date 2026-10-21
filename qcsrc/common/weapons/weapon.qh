@@ -6,8 +6,7 @@
 
 #ifdef SVQC
 	#include <common/effects/qc/_mod.qh>
-#endif
-#ifndef SVQC
+#else
 	#include <common/util.qh> // for icon_path_from_HUDskin
 #endif
 
@@ -182,11 +181,11 @@ ENDCLASS(Weapon)
 
 #ifdef SVQC
 
-void weapon_defaultspawnfunc(entity this, Weapon e);
 #define SPAWNFUNC_WEAPON(name, weapon) \
 	spawnfunc(name) \
 	{ \
-		weapon_defaultspawnfunc(this, weapon); \
+		this.itemdef = weapon; \
+		InitializeEntity(this, StartItem, INITPRIO_DROPTOFLOOR); \
 	}
 
 #else
