@@ -1126,6 +1126,9 @@ void vehicles_spawn(entity this)
 	if (!this.bot_attack)
 		IL_PUSH(g_bot_targets, this);
 	this.bot_attack  = true;
+	if(!this.monster_attack)
+		IL_PUSH(g_monster_targets, this);
+	this.monster_attack = true;
 	this.flags       = FL_NOTARGET;
 	this.avelocity   = '0 0 0';
 	this.velocity    = '0 0 0';
@@ -1217,6 +1220,8 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.takedamage         = DAMAGE_NO;
 	this.bot_attack         = true;
 	IL_PUSH(g_bot_targets, this);
+	this.monster_attack = true;
+	IL_PUSH(g_monster_targets, this);
 	this.iscreature         = true;
 	this.teleportable       = false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents  = true;

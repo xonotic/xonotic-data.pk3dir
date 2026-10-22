@@ -2,7 +2,6 @@
 
 #include <common/mutators/base.qh>
 #define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
-int autocvar_g_invasion_type;
 bool g_invasion;
 IntrusiveList g_invasion_roundends;
 IntrusiveList g_invasion_waves;
@@ -26,16 +25,13 @@ REGISTER_MUTATOR(inv, false)
 	return 0;
 }
 
+const int ST_INV_ROUNDS = 1;
+
 int inv_numspawned;
 int inv_maxspawned;
 int inv_roundcnt;
-int inv_maxrounds;
 int inv_numkilled;
 float inv_lastcheck;
 int inv_maxcurrent;
 
 float inv_monsterskill;
-
-const int INV_TYPE_ROUND = 0; // round-based waves of enemies
-const int INV_TYPE_HUNT = 1; // clear the map of placed enemies
-const int INV_TYPE_STAGE = 2; // reach the end of the level
