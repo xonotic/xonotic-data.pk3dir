@@ -10,7 +10,7 @@ void monoflop_use(entity this, entity actor, entity trigger)
 	if(this.state)
 		return;
 	this.state = 1;
-	SUB_UseTargets(this, actor, trigger);
+	SUB_UseTargets(this, actor);
 }
 void monoflop_fixed_use(entity this, entity actor, entity trigger)
 {
@@ -19,13 +19,13 @@ void monoflop_fixed_use(entity this, entity actor, entity trigger)
 	this.nextthink = time + this.wait;
 	this.state = 1;
 	this.enemy = actor;
-	SUB_UseTargets(this, actor, trigger);
+	SUB_UseTargets(this, actor);
 }
 
 void monoflop_think(entity this)
 {
 	this.state = 0;
-	SUB_UseTargets(this, this.enemy, NULL);
+	SUB_UseTargets(this, this.enemy);
 }
 
 void monoflop_reset(entity this)
