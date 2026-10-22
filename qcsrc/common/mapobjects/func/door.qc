@@ -102,7 +102,8 @@ void door_go_down(entity this)
 {
 	if (this.noise2 != "")
 		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
-	if (this.max_health)
+
+	if (this.event_damage)
 	{
 		this.takedamage = DAMAGE_YES;
 		SetResourceExplicit(this, RES_HEALTH, this.max_health);
@@ -613,6 +614,11 @@ void door_reset(entity this)
 	this.dmg_inflictor = world;
 	this.SendFlags |= SF_TRIGGER_RESET;
 	door_init_keys(this);
+	if (this.event_damage)
+	{
+		this.takedamage = DAMAGE_YES;
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
+	}
 #endif
 }
 
@@ -621,8 +627,6 @@ void door_reset(entity this)
 // common code for func_door and func_door_rotating spawnfuncs
 void door_init_shared(entity this)
 {
-	this.max_health = GetResource(this, RES_HEALTH);
-
 	// unlock sound
 	if(this.noise == "")
 	{
@@ -705,7 +709,8 @@ void door_init_shared(entity this)
 
 	this.state = STATE_BOTTOM;
 
-	if (GetResource(this, RES_HEALTH) || (q3compat && this.targetname == ""))
+	this.max_health = GetResource(this, RES_HEALTH);
+	if (this.max_health || (q3compat && this.targetname == ""))
 	{
 		//this.canteamdamage = true; // TODO
 		this.takedamage = DAMAGE_YES;

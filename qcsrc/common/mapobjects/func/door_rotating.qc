@@ -55,7 +55,8 @@ void door_rotating_go_down(entity this)
 {
 	if (this.noise2 != "")
 		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
-	if (this.max_health)
+
+	if (this.event_damage)
 	{
 		this.takedamage = DAMAGE_YES;
 		SetResourceExplicit(this, RES_HEALTH, this.max_health);
@@ -95,6 +96,11 @@ void door_rotating_reset(entity this)
 	this.state = STATE_BOTTOM;
 	setthink(this, func_null);
 	this.nextthink = 0;
+	if (this.event_damage)
+	{
+		this.takedamage = DAMAGE_YES;
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
+	}
 }
 
 void door_rotating_init_startopen(entity this)
