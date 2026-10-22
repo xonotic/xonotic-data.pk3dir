@@ -11,6 +11,6 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
 	ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"));
 	ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9);
 	ATTRIB(XonoticDamageTextSettings, rows, float, 15.5);
-	ATTRIB(XonoticDamageTextSettings, columns, float, 5);
+	ATTRIB(XonoticDamageTextSettings, columns, float, 4.5);
 ENDCLASS(XonoticDamageTextSettings)
 entity makeXonoticDamageTextSettingsTab();

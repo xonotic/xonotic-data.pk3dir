@@ -1,0 +1,12 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticVideoEffectsRenderingSettingsTab, XonoticTab)
+	METHOD(XonoticVideoEffectsRenderingSettingsTab, fill, void(entity));
+	METHOD(XonoticVideoEffectsRenderingSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticVideoEffectsRenderingSettingsTab, title, string, _("Rendering"));
+	ATTRIB(XonoticVideoEffectsRenderingSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticVideoEffectsRenderingSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticVideoEffectsRenderingSettingsTab, columns, float, 4.5);
+ENDCLASS(XonoticVideoEffectsRenderingSettingsTab)
+entity makeXonoticVideoEffectsRenderingSettingsTab();
