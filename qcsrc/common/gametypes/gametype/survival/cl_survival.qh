@@ -1,3 +1,5 @@
 #pragma once
 
 void HUD_Mod_Survival(vector myPos, vector mySize, bool should_draw);
+bool HUD_Mod_Survival_ShowHunters();
+void HUD_Mod_Survival_ColorPlayers();

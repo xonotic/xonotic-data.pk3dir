@@ -4,11 +4,14 @@
 
 void nb_Initialize();
 
+IntrusiveList g_balls;
+
 REGISTER_MUTATOR(nb, false)
 {
 	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
+		g_balls = IL_NEW();
 		nb_Initialize();
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	}

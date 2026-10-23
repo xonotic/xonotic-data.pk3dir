@@ -1,3 +1,3 @@
 #pragma once
 
-void HUD_Mod_TeamKeepaway(vector myPos, vector mySize, bool should_draw);
+void HUD_Mod_TKA(vector myPos, vector mySize, bool should_draw);
