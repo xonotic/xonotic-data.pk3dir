@@ -493,7 +493,7 @@ void ReadyRestart_force(bool is_fake_round_start)
 	}
 
 	// If we're returning to warmup join/switch all queued players for consistency:
-	// there's no queueing in warmup and imbalances are handled by sv_teamnagger blocking end of warmup.
+	// there's no queueing in warmup and imbalances are handled by g_balance_teams_maxdifference blocking end of warmup.
 	if (warmup_stage)
 	{
 		// First pass: join player(s) queued for specific team(s)
@@ -583,8 +583,8 @@ void ReadyCount()
 
 	// This allows warmup to end with zero players to prevent complaints
 	// of server never changing map with legacy config (sv_autopause 0).
-	bool badteams = (teamplay && total_players && autocvar_sv_teamnagger)
-		? TeamBalance_SizeDifference(NULL) >= autocvar_sv_teamnagger
+	bool badteams = (teamplay && total_players && autocvar_g_balance_teams_maxdifference >= 0)
+		? TeamBalance_SizeDifference(NULL) > autocvar_g_balance_teams_maxdifference
 		: false;
 
 	if (total_players < minplayers || badteams)
