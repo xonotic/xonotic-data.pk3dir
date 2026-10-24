@@ -458,6 +458,8 @@ void cvar_changes_init()
 		BADCVAR("gametype");
 		BADCVAR("g_antilag");
 		BADCVAR("g_balance_teams");
+		BADVALUE("g_balance_teams_maxdifference", "0");
+		BADVALUE("g_balance_teams_maxdifference", "1");
 		BADCVAR("g_balance_teams_queue");
 		BADCVAR("g_balance_teams_remove");
 		BADCVAR("g_balance_teams_remove_wait");
@@ -542,7 +544,6 @@ void cvar_changes_init()
 		BADPREFIX("g_warmup");
 		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
-		BADCVAR("sv_teamnagger");
 
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "standard");
 		BADPRESUFFIXVALUE("g_", "_weaponarena", "standard_available");

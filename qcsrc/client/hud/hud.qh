@@ -123,7 +123,7 @@ float weapontime;
 float weaponprevtime;
 
 float timer;
-int teamnagger;
+int teamnagger; ///< hud_panel_infomessages warns when team size difference exceeds this threshold
 
 int hudShiftState;
 const int S_SHIFT  = 1;
