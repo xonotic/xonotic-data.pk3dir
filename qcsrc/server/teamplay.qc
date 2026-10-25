@@ -957,7 +957,7 @@ int TeamBalance_FindBestTeams(entity balance, entity player, bool use_score)
 		// This picks the team(s) whose weighted mean skill differs the most from the joining player's skill,
 		// unless they're all close enough in which case it picks smaller team(s).
 		// Warmup-only as it must unbalance team sizes in extreme cases, swaps needed should be minimal.
-		if (warmup_stage && autocvar_sv_teamnagger && autocvar_g_balance_teams_skill && IS_REAL_CLIENT(player))
+		if (warmup_stage && autocvar_g_balance_teams_maxdifference >= 0 && autocvar_g_balance_teams_skill && IS_REAL_CLIENT(player))
 		{
 			if (!player_skill_mu)
 			{
