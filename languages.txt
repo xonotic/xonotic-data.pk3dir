@@ -8,6 +8,7 @@ en_GB "English (United Kingdom)" "English (United Kingdom)" 100%
 es    "Spanish" "Español" 73%
 fr    "French" "Français" 100%
 gl    "Galician" "Galego" 99%
+hr    "Croatian" "Hrvatski" 100%
 ga    "Irish" "Irish" 23%
 it    "Italian" "Italiano" 99%
 la    "Latin" "Lingua Latina" 90%
@@ -20,7 +21,6 @@ ro    "Romanian" "Romana" 53%
 fi    "Finnish" "Suomi" 93%
 sv    "Swedish" "Svenska" 96%
 tr    "Turkish" "Türkçe" 41%
-hr "hr" "hr" 100%
 cs    "Czech" "Čeština" 23%
 el    "Greek" "Ελληνική" 37%
 be    "Belarusian" "Беларуская" 37%
