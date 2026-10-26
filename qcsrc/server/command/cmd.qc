@@ -1164,8 +1164,8 @@ bool ClientCommand_antispam(entity this, string command, .float antispam_fld, fl
 	float mod_time = gettime(GETTIME_FRAMESTART) + antispam_count * antispam_time;
 	if (mod_time < store.(antispam_fld))
 	{
-		sprint(this, strcat("^3CMD FLOOD CONTROL: wait ^1", ftos(store.(antispam_fld) - mod_time),
-			"^3 seconds, command was: ", command, "\n"));
+		sprint(this, strcat("^3CMD FLOOD CONTROL: ^7wait ^1", ftos(store.(antispam_fld) - mod_time),
+			"^7 seconds, command was: ", command, "\n"));
 		return true; // too much spam, halt
 	}
 	else

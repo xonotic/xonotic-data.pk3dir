@@ -239,10 +239,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	}
 
 	if (!privatesay && source && !(IS_PLAYER(source) || INGAME(source)) && !game_stopped
-		&& (teamsay || CHAT_NOSPECTATORS()))
-	{
+	&& (teamsay || CHAT_NOSPECTATORS()))
 		teamsay = -1; // spectators
-	}
 
 	if(flood)
 		LOG_INFO("NOTE: ", playername(source.netname, source.team, IS_PLAYER(source)), "^7 is flooding.");
@@ -261,23 +259,19 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	{
 		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1",
-				ftos(source.(flood_field) - mod_time), "^3 seconds\n"));
+			sprint(source, strcat("^3CHAT FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - mod_time),
+				"^7 seconds\n"));
 			ret = 0;
 		}
 		else
 			ret = -1;
 	}
 	else
-	{
 		ret = 1;
-	}
 
 	if (privatesay && source && !(IS_PLAYER(source) || INGAME(source)) && !game_stopped
-		&& (IS_PLAYER(privatesay) || INGAME(privatesay)) && CHAT_NOSPECTATORS())
-	{
+	&& (IS_PLAYER(privatesay) || INGAME(privatesay)) && CHAT_NOSPECTATORS())
 		ret = -1; // just hide the message completely
-	}
 
 	MUTATOR_CALLHOOK(ChatMessage, source, ret, msgin, privatesay, teamsay);
 	ret = M_ARGV(1, int);
@@ -295,7 +289,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		else if(privatesay) // private message, between 2 people only
 		{
 			sprint(source, sourcemsgstr);
-			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
+			if (!autocvar_g_chat_tellprivacy)
+				dedicated_print(msgstr); // send to server console too if "tellprivacy" is disabled
 			if(!MUTATOR_CALLHOOK(ChatMessageTo, privatesay, source))
 			{
 				if(IS_REAL_CLIENT(source) && ignore_playerinlist(privatesay, source))
@@ -349,7 +344,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 		else
 		{
-			if (source) {
+			if (source)
+			{
 				sprint(source, sourcemsgstr);
 				dedicated_print(msgstr); // send to server console too
 				MX_Say(strcat(playername(source.netname, source.team, IS_PLAYER(source)), "^7: ", msgin));
@@ -364,9 +360,8 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		}
 	}
 
-	if (autocvar_sv_eventlog && (event_log_msg != "")) {
+	if (autocvar_sv_eventlog && (event_log_msg != ""))
 		GameLogEcho(event_log_msg);
-	}
 
 	return ret;
 }
