@@ -55,7 +55,6 @@ string autocvar_sv_quickmenu_file;
 bool autocvar_sv_servermodelsonly;
 bool autocvar_sv_showspectators;
 bool autocvar_sv_spectate;
-bool autocvar_sv_teamnagger;
 float autocvar_sv_player_scale;
 
 // WEAPONTODO

@@ -268,7 +268,8 @@ void PlayerStats_GameReport(bool finished)
 		PlayerStats_GameReport_FinalizePlayer(it);
 	});
 
-	if(autocvar_g_playerstats_gamereport_uri == "" || warmup_stage)
+	if (autocvar_g_playerstats_gamereport_uri == "" || warmup_stage
+	|| (autocvar_g_playerstats_gamereport_uri == cvar_defstring("g_playerstats_gamereport_uri") && cvar("sv_public") <= 0))
 	{
 		PlayerStats_GameReport_DelayMapVote = false;
 		db_close(PS_GR_OUT_DB);
@@ -300,8 +301,8 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 
 		if(autocvar_g_playerstats_gamereport_uri != cvar_defstring("g_playerstats_gamereport_uri"))
 			serverflags |= SERVERFLAG_PLAYERSTATS | SERVERFLAG_PLAYERSTATS_CUSTOM;
-		else if(checkextension("DP_CRYPTO") && checkextension("DP_QC_URI_POST"))
-			// XonStat submission requires player and server IDs, and HTTPS POST
+		else if(checkextension("DP_CRYPTO") && checkextension("DP_QC_URI_POST") && cvar("sv_public") > 0)
+			// XonStat requires player and server IDs, HTTPS POST, and shouldn't publish local/listen games
 			serverflags |= SERVERFLAG_PLAYERSTATS;
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ALIVETIME);

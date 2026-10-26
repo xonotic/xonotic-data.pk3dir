@@ -443,7 +443,7 @@ void balanceteams()
 	string balance_uri_with_query_params = sprintf("%s?scorefactor=%d&maxDifference=%d&stability=%d&sigmaRange=%.2f",
 		autocvar_g_playerstats_balance_uri,
 		autocvar_g_playerstats_balance_scorefactor,
-		autocvar_g_playerstats_balance_maxdifference,
+		(autocvar_g_balance_teams_maxdifference >= 0 ? autocvar_g_balance_teams_maxdifference : 9999),
 		autocvar_g_playerstats_balance_stability,
 		autocvar_g_playerstats_balance_sigmarange);
 	url_single_fopen(balance_uri_with_query_params, FILE_WRITE, balanceteams_handler, NULL);
