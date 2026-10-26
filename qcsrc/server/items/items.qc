@@ -963,7 +963,7 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 	float itemarmor = GetResource(item, RES_ARMOR);
 	float itemhealth = GetResource(item, RES_HEALTH);
 
-	if(item.item_group)
+	if (item.item_group)
 	{
 		itemarmor *= min(4, item.item_group_count);
 		itemhealth *= min(4, item.item_group_count);
@@ -1251,7 +1251,6 @@ void StartItem(entity this)
 }
 
 #define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))
-int group_count = 1;
 
 bool setItemGroup_cond(entity e)
 {
@@ -1268,10 +1267,7 @@ void setItemGroup(entity this)
 		if (!this.item_group)
 		{
 			if (!head.item_group)
-			{
-				head.item_group = group_count;
-				++group_count;
-			}
+				head.item_group = ++item_group_last;
 			this.item_group = head.item_group;
 		}
 		else // spawning item is already part of a item_group X
@@ -1290,12 +1286,12 @@ void setItemGroup(entity this)
 
 void setItemGroupCount()
 {
-	for (int k = 1; k <= group_count; ++k)
+	for (int k = 1; k <= item_group_last; ++k)
 	{
 		int count = 0;
-		IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { ++count; });
+		IL_EACH(g_items, it.item_group == k, { ++count; });
 		if (count)
-			IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == k, { it.item_group_count = count; });
+			IL_EACH(g_items, it.item_group == k, { it.item_group_count = count; });
 	}
 }
 
