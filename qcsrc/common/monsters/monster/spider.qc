@@ -7,6 +7,7 @@ float autocvar_g_monster_spider_health;
 string autocvar_g_monster_spider_loot = "health_medium";
 float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_attack_bite_damage;
+float autocvar_g_monster_spider_attack_bite_force = 15;
 float autocvar_g_monster_spider_attack_bite_delay;
 float autocvar_g_monster_spider_attack_web_damagetime;
 float autocvar_g_monster_spider_attack_web_speed;
@@ -19,6 +20,7 @@ float autocvar_g_monster_spider_speed_walk;
 
 .float spider_web_delay;
 
+void M_Spider_Attack_Bite(entity this);
 void M_Spider_Attack_Web(entity this);
 
 REGISTER_MUTATOR(spiderweb, true);
@@ -74,14 +76,26 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 	if (fire & 2)
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5))
 	{
+		setanim(actor, actor.anim_melee, false, true, true);
 		if (isPlayer)
 		{
 			actor.enemy = Monster_FindTarget(actor);
 			actor.attack_range = 60;
 		}
-		Monster_Attack_Melee(actor, actor.enemy, autocvar_g_monster_spider_attack_bite_damage, ((random() > 0.5) ? actor.anim_melee : actor.anim_shoot), actor.attack_range, autocvar_g_monster_spider_attack_bite_delay, DEATH_MONSTER_SPIDER.m_id, true);
+		else
+		{
+			actor.state = MONSTER_STATE_NOMOVE;
+			actor.anim_finished = actor.animstate_endtime;
+		}
+		actor.attack_finished_single[0] = time + autocvar_g_monster_spider_attack_bite_delay;
+		Monster_Delay(actor, 2, 0.6, M_Spider_Attack_Bite);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
 	}
+}
+
+void M_Spider_Attack_Bite(entity this)
+{
+	Monster_Attack_Melee(this, autocvar_g_monster_spider_attack_bite_damage, autocvar_g_monster_spider_attack_bite_force, this.attack_range, DEATH_MONSTER_SPIDER.m_id);
 }
 
 bool M_Spider_Attack_Web_Explode_cond(entity e)
@@ -170,15 +184,21 @@ bool M_Spider_Attack(int attack_type, entity actor, entity targ, .entity weapone
 	switch (attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
+		{
 			wep.wr_think(wep, actor, weaponentity, 2);
 			return true;
-
+		}
 		case MONSTER_ATTACK_RANGED:
-			if (vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_spider_attack_web_range))
+		{
+			vector targ_origin = (targ.absmin + targ.absmax) * 0.5;
+			targ_origin = WarpZone_RefSys_TransformOrigin(targ, actor, targ_origin);
+			if (vdist(targ_origin - actor.origin, <=, autocvar_g_monster_spider_attack_web_range))
 			{
 				wep.wr_think(wep, actor, weaponentity, 1);
 				return true;
 			}
+			return false;
+		}
 	}
 
 	return false;
@@ -198,7 +218,9 @@ METHOD(Spider, mr_think, bool(Spider this, entity actor))
 METHOD(Spider, mr_pain, float(Spider this, entity actor, float damage_take, entity attacker, float deathtype))
 {
 	TC(Spider, this);
-	setanim(actor, ((random() > 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
+	// TODO: flinch chance
+	if(actor.state != MONSTER_STATE_NOMOVE)
+		setanim(actor, ((random() > 0.5) ? actor.anim_pain2 : actor.anim_pain1), true, true, false);
 	actor.pain_finished = actor.animstate_endtime;
 	return damage_take;
 }
@@ -241,7 +263,7 @@ METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 {
 	TC(Spider, this);
-	if (!GetResource(this, RES_HEALTH))
+	if (!GetResource(actor, RES_HEALTH))
 		SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_spider_health);
 	if (!actor.speed)             actor.speed = autocvar_g_monster_spider_speed_walk;
 	if (!actor.speed2)            actor.speed2 = autocvar_g_monster_spider_speed_run;
@@ -250,6 +272,8 @@ METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 
 	actor.monster_loot = autocvar_g_monster_spider_loot;
 	actor.monster_attackfunc = M_Spider_Attack;
+
+	actor.species = SPECIES_ALIEN;
 
 	return true;
 }

@@ -1112,7 +1112,7 @@ void SendWelcomeMessage(entity this, int msg_type)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
-	if(g_weapon_stay && !g_cts)
+	if(g_weapon_stay && !g_cts && !g_invasion)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(autocvar_g_jetpack)
 		modifications = strcat(modifications, ", Jetpack");
@@ -2499,8 +2499,6 @@ bool PlayerThink(entity this)
 		player_anim(this);
 		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
-
-	monsters_setstatus(this);
 
 	return true;
 }
