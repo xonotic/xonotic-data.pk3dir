@@ -783,7 +783,8 @@ LABEL(pickup)
 
 void Item_Reset(entity this)
 {
-	if (this.targetname != "" && !(this.spawnflags & 16)) // q3compat
+	if (this.targetname != "" && !(this.spawnflags & 16)) // q3compat and/or target_give
+	if (this.move_movetype != MOVETYPE_FOLLOW && !this.tag_entity) // misc_follow compat
 	{
 		Item_Show(this, -1);
 		if (this.waypointsprite_attached)
@@ -860,6 +861,15 @@ void Item_CopyFields(entity this, entity to)
 	// TODO: copy respawn times? this may not be desirable in some cases
 	//to.respawntime = this.respawntime;
 	//to.respawntimejitter = this.respawntimejitter;
+
+	// misc_follow compat
+	if (this.move_movetype == MOVETYPE_FOLLOW)
+		to.move_movetype = this.move_movetype;
+	if (this.tag_entity)
+	{
+		gettaginfo(this.tag_entity, this.tag_index); // resolve .tag_index back to its name (awkward)
+		setattachment(to, this.tag_entity, gettaginfo_name);
+	}
 }
 
 // Savage: used for item garbage-collection
@@ -1145,7 +1155,7 @@ void StartItem(entity this)
 
 		if(this.spawnflags & 1)
 			this.noalign = 1;
-		if (this.noalign > 0)
+		if (this.noalign > 0 && this.move_movetype != MOVETYPE_FOLLOW) // misc_follow compat
 			set_movetype(this, MOVETYPE_NONE);
 		else
 		{
@@ -1155,7 +1165,10 @@ void StartItem(entity this)
 				if (wasfreed(this))
 					return;
 			}
-			set_movetype(this, MOVETYPE_TOSS);
+
+			if (this.move_movetype != MOVETYPE_FOLLOW) // misc_follow compat
+				set_movetype(this, MOVETYPE_TOSS);
+
 			waypoint_spawnforitem(this);
 		}
 
