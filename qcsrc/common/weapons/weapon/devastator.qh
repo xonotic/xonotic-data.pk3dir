@@ -88,6 +88,6 @@ REGISTER_WEAPON(DEVASTATOR, NEW(Devastator));
 SPAWNFUNC_WEAPON(weapon_devastator, WEP_DEVASTATOR)
 
 #ifdef SVQC
-.float rl_release;
-.float rl_detonate_later;
+.bool rl_release;
+.bool rl_detonate_later;
 #endif
