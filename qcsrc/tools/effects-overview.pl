@@ -2,20 +2,26 @@
 
 use strict;
 use warnings;
+use FindBin;
 
+my $base = "$FindBin::Bin/../.."; # go from ./qcsrc/tools/ to ./
+my @files = qw/effects detail/;
 my @cols = qw/omg low med normal high ultra ultimate/;
 my %table = ();
 
-for my $col(@cols)
+for my $file(@files)
 {
-	my $fn = "effects-$col.cfg";
-	open my $fh, "<", "$fn"
-		or die "<$fn: $!";
-	while(<$fh>)
+	for my $col(@cols)
 	{
-		chomp;
-		next unless /^(\S+) (.*)$/;
-		$table{$1}{$col} = $2;
+		my $fn = "$base/$file-$col.cfg";
+		open my $fh, "<", "$fn"
+			or die "<$fn: $!";
+		while(<$fh>)
+		{
+			chomp;
+			next unless /^(\S+) (.*)$/;
+			$table{$1}{$col} = $2;
+		}
 	}
 }
 
@@ -58,8 +64,8 @@ my @rows_sorted = sort { toggles_compare $sortkeys{$a}, $sortkeys{$b} or $a cmp 
 
 print <<EOF;
 <html>
-<title>Effects configs</title>
-<h1>Effects configs</h1>
+<title>Effects and detail configs</title>
+<h1>Effects and detail configs</h1>
 <table cellspacing=0>
 <tr><th width="40%">cvar</th>
 EOF
