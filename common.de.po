@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-20 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Yepoleb <huberg18@gmail.com>, 2013\n"
+"Last-Translator: Albert Sobral, 2026\n"
 "Language-Team: German (http://app.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
 "Language: de\n"
@@ -294,7 +294,7 @@ msgstr "^7Drücke ^3ESC^7, um die HUD-Optionen anzuzeigen."
 
 #: qcsrc/client/hud/panel/infomessages.qc:257
 msgid "^3Double-click ^7a panel for panel-specific options."
-msgstr ""
+msgstr "^3Doppelklick ^7a Panel für Panelspezifische Optionen. "
 
 #: qcsrc/client/hud/panel/infomessages.qc:258
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
@@ -604,7 +604,7 @@ msgstr "Einem Spieler zuschauen"
 #: qcsrc/client/hud/panel/racetimer.qc:67
 #, c-format
 msgid "LAP_DIFF^%+dL"
-msgstr ""
+msgstr "LAP_DIFF^%+dL "
 
 #: qcsrc/client/hud/panel/racetimer.qc:68
 #: qcsrc/client/hud/panel/racetimer.qc:105
@@ -643,13 +643,13 @@ msgstr ""
 #: qcsrc/client/hud/panel/racetimer.qc:284
 #, c-format
 msgid "SPEED^ %d%s"
-msgstr ""
+msgstr "SCHNELLIGKEIT^ %d%s "
 
 #: qcsrc/client/hud/panel/racetimer.qc:232
 #: qcsrc/client/hud/panel/racetimer.qc:286
 #, c-format
 msgid "SPEED_DIFF^%+d%s"
-msgstr ""
+msgstr "SSCHNELLIGKEITSUNTERSCHIED^%+d%s"
 
 #: qcsrc/client/hud/panel/racetimer.qc:238 qcsrc/client/main.qc:1235
 msgid "missing a checkpoint"
@@ -768,7 +768,7 @@ msgstr "SCO^ftkills"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "Frames per second"
-msgstr ""
+msgstr "Bilder pro Sekunde"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:149
 msgid "SCO^fps"
@@ -912,7 +912,7 @@ msgstr "SCO^pv"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "Number of players pushed into the void"
-msgstr ""
+msgstr "Anzahl von ins Void gestoßenen Spieler"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:168
 msgid "SCO^pushes"
@@ -1452,7 +1452,7 @@ msgstr "von:"
 #: qcsrc/client/main.qc:1431
 #, c-format
 msgid "%d maximum"
-msgstr ""
+msgstr "%dmaximum"
 
 #: qcsrc/client/main.qc:1433
 #, c-format
@@ -1461,7 +1461,7 @@ msgstr ""
 
 #: qcsrc/client/main.qc:1434
 msgid "Number of players supported by this match:"
-msgstr ""
+msgstr "Anzahl von unterstützten Spielern in diesem Match:"
 
 #: qcsrc/client/main.qc:1439
 msgid "Active modifications:"
@@ -1789,7 +1789,7 @@ msgstr ""
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #: qcsrc/menu/xonotic/guide/pages.qc:183 qcsrc/menu/xonotic/guide/pages.qc:186
 msgid "XPM"
-msgstr ""
+msgstr "XPM "
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qh:9
 msgid "Duel"
@@ -2266,7 +2266,7 @@ msgstr "Team-Mayhem"
 #: qcsrc/common/items/item/ammo.qc:13
 #, c-format
 msgid "%d fuel"
-msgstr ""
+msgstr "%dTreibstoff"
 
 #: qcsrc/common/items/item/ammo.qc:27
 #, c-format
@@ -2509,7 +2509,7 @@ msgstr "Spiel vorbei!"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1112
 msgid "Well done! Click \"Next Level\" to continue"
-msgstr ""
+msgstr "Gut gemacht! Klicke „Nächstes Level“, um fortzufahren"
 
 #: qcsrc/common/minigames/minigame/bd.qc:1183
 #: qcsrc/common/minigames/minigame/c4.qc:380
@@ -2894,7 +2894,7 @@ msgstr "Aktivieren"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:24
 msgid "Bleed below health:"
-msgstr ""
+msgstr "Bluten unter Gesundheit:"
 
 #: qcsrc/common/mutators/mutator/bloodloss/ui_bloodloss.qc:30
 msgid ""
