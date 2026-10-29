@@ -3,5 +3,13 @@
 
 bool autocvar_hud_panel_modicons;
 bool autocvar_hud_panel_modicons_dynamichud = true;
+bool autocvar_hud_panel_modicons_animations = true;
 
-bool mod_active; // is there any active mod icon?
+bool mod_active; ///< is there any active mod icon?
+bool mod_placeholder; ///< create a placeholder for modicons while configuring HUD?
+
+void HUD_Mod_TableWithAR_Draw(vector myPos, vector mySize, int items, float aspect_ratio, void(vector, vector, float, int) drawFunc);
+
+void HUD_Mod_EliminatedPlayers_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, int i);
+
+float HUD_Mod_SmoothlyUpdateCachedValue(float cache_value, float real_value, float epsilon);

@@ -1,0 +1,5 @@
+#pragma once
+
+void HUD_Mod_Ons(vector myPos, vector mySize, bool should_draw);
+void HUD_Mod_Ons_Export(int fh);
+void HUD_Mod_Ons_UpdateLinks();
