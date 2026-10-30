@@ -818,7 +818,7 @@ void PutPlayerInServer(entity this)
 		string s = spot.target;
 		if(g_assault || g_race) // TODO: make targeting work in assault & race without this hack
 			spot.target = string_null;
-		SUB_UseTargets(spot, this, NULL);
+		SUB_UseTargets(spot, this);
 		if(g_assault || g_race)
 			spot.target = s;
 	}

@@ -1031,8 +1031,8 @@ void ClientCommand_voice(entity caller, int request, int argc, string command)
 		{
 			if (argv(1) != "")
 			{
-				entity e = GetVoiceMessage(argv(1));
-				if (!e)
+				entity e = GetPlayerSound(argv(1));
+				if (!e || !e.instanceOfVoiceMessage)
 				{
 					sprint(caller, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 					return;
