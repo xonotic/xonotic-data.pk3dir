@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-20 07:22+0200\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Oftox, 2023\n"
+"Last-Translator: Jaakko Muilu, 2025-2026\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fi/)\n"
 "Language: fi\n"
@@ -1380,7 +1380,7 @@ msgstr "Perustason taistelukenttä"
 
 #: qcsrc/client/main.qc:1348
 msgid "Standard Available Weapons Arena"
-msgstr ""
+msgstr "Norminmukainen aseiden taistelukenttä"
 
 #: qcsrc/client/main.qc:1349
 msgid "Extended Weapons Arena"
@@ -1388,7 +1388,7 @@ msgstr "Laajennettu taistelukenttä"
 
 #: qcsrc/client/main.qc:1350
 msgid "Extended Available Weapons Arena"
-msgstr ""
+msgstr "Laajennettu aseiden taistelukenttä"
 
 #: qcsrc/client/main.qc:1357
 #, c-format
@@ -1442,7 +1442,7 @@ msgstr "Pelimuoto:"
 
 #: qcsrc/client/main.qc:1423
 msgid "by:"
-msgstr ""
+msgstr "tekijä:"
 
 #: qcsrc/client/main.qc:1431
 #, c-format
@@ -1572,6 +1572,9 @@ msgid ""
 "fellow teammates and pay attention to any callouts from them. Team "
 "coordination is key!"
 msgstr ""
+"Koska pelaajilla on vain yksi elämä kierrosta kohti, on tärkeää kasvaa "
+"muiden joukkuetovereiden mukana ja huomioida heidän hälytyksiään. "
+"Tiimiyhteistyö on tärkeää!"
 
 #: qcsrc/common/gametypes/gametype/clanarena/clanarena.qh:11
 msgid "Clan Arena"
@@ -1650,7 +1653,7 @@ msgstr "Lipunryöstöraja"
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qh:29
 msgid "The number of captures required to conclude the match"
-msgstr ""
+msgstr "Ottelun päättämiseen vaadittujen kaappausten määrä"
 
 #: qcsrc/common/gametypes/gametype/cts/cl_cts.qc:41
 #: qcsrc/common/gametypes/gametype/race/cl_race.qc:192
@@ -2087,6 +2090,9 @@ msgid ""
 "the enemy team's core generator. In order to destroy the generator, control "
 "points on the map (similar to those in %s) must first be captured."
 msgstr ""
+"%s on joukkuepohjainen pelimuoto, kuten %s, missä päätavoitteena on tuhota "
+"vihollisjoukkueen ydingeneraattori. Generaattorin tuhoamiseksi kartalla "
+"(kuten %s) täytyy vallata hallintapisteitä."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qc:79
 msgid ""
@@ -2108,6 +2114,8 @@ msgid ""
 "When in overtime, the enemy's generator will start to decay, at a faster "
 "rate the more control points your team has."
 msgstr ""
+"Yliajalla vihollisen generaattori alkaa rapautua sitä nopeammin, mitä "
+"enemmän hallintapisteitä joukkueellasi on."
 
 #: qcsrc/common/gametypes/gametype/onslaught/onslaught.qh:8
 msgid "Capture control points to reach and destroy the enemy generator"
@@ -3574,7 +3582,7 @@ msgid ""
 "Projectiles can't be destroyed. However, you can still explode %s orbs with "
 "the %s primary fire."
 msgstr ""
-"Ammuksia ei voi tuhota. Voit, kuitenkin, räjäyttää %spalloja ensisijaisella "
+"Ammuksia ei voi tuhota. Voit, kuitenkin, räjäyttää %s-palloja ensisijaisella "
 "%s-tulituksella."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qh:6
@@ -3620,6 +3628,10 @@ msgid ""
 "orb they will recover ammo, and if enemies enter the sphere they will lose "
 "ammo."
 msgstr ""
+"%s räjähtää lyhyen viiveen jälkeen ja luo väliaikaisesti pallon "
+"räjähdyspisteen ympärille muutamaksi sekunniksi. Jos joukkueesi jäsen menee "
+"palloon, hän palauttaa ammuksia, ja jos vihollinen menee palloon, hän "
+"menettää ammuksia."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qc:85
 #, c-format
@@ -3627,7 +3639,7 @@ msgid ""
 "Similar to the %s buff, your weapon magazines remain full while you are "
 "inside the orb, so you don't need to reload."
 msgstr ""
-"Samanlainen kuin tehostus%s. Aseesi lipas pysyy täytenä, kun olet pallon "
+"Samanlainen kuin tehostus %s.  Aseesi lipas pysyy täytenä, kun olet pallon "
 "sisällä, joten sinun ei tarvitse ladata."
 
 #: qcsrc/common/mutators/mutator/nades/nade/ammo.qh:24
@@ -3660,6 +3672,9 @@ msgid ""
 "point where it detonated for several seconds. Players and projectiles that "
 "enter the sphere will be slowed down, including yourself."
 msgstr ""
+"%s räjähtää lyhyen viiveen jälkeen ja luo väliaikaisesti pallon "
+"räjähdyspisteen ympärille muutamaksi sekunniksi. Pelaajat ja ammukset, jotka "
+"menevät palloon, hidastuvat, sinä myös."
 
 #: qcsrc/common/mutators/mutator/nades/nade/entrap.qh:24
 msgid "Entrap grenade"
@@ -3673,6 +3688,10 @@ msgid ""
 "members enter the orb they will recover health, and if enemies enter the "
 "sphere they will be harmed."
 msgstr ""
+"%s räjähtää lyhyen viiveen jälkeen ja luo väliaikaisesti pallon "
+"räjähdyspisteen ympärille muutamaksi sekunniksi. Jos joukkueesi jäsen menee "
+"palloon, hän palauttaa terveyttä, ja jos vihollinen menee palloon, häntä "
+"vahingoitetaan."
 
 #: qcsrc/common/mutators/mutator/nades/nade/heal.qh:24
 msgid "Heal grenade"
@@ -3778,6 +3797,9 @@ msgid ""
 "point where it detonated for several seconds. Players inside the orb will be "
 "invisible to those outside it."
 msgstr ""
+"%s räjähtää lyhyen viiveen jälkeen ja luo väliaikaisesti pallon "
+"räjähdyspisteen ympärille muutamaksi sekunniksi. Pallon sisällä olevat "
+"pelaajat ovat näkymättömiä sen ulkopuolella oleville."
 
 #: qcsrc/common/mutators/mutator/nades/nade/veil.qh:24
 msgid "Veil grenade"
@@ -5903,7 +5925,7 @@ msgstr "^BG%s^K1 leikki Sähkösalamoilla%s%s"
 #: qcsrc/common/notifications/all.inc:501
 #, c-format
 msgid "^BG%s^K1 could not remember where they put their Electro orb%s%s"
-msgstr "^BG%s^K1 unohtivat mihin olivat Sähköpallonsa laittaneet%s%s"
+msgstr "^BG%s^K1 unohtivat, mihin olivat Sähköpallonsa laittaneet%s%s"
 
 #: qcsrc/common/notifications/all.inc:502
 #, c-format
