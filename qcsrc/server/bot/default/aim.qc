@@ -107,7 +107,7 @@ bool bot_shouldattack(entity this, entity targ)
 
 	if(teamplay)
 	{
-		if(targ.team==0)
+		if(targ.team==0 && !IS_MONSTER(targ))
 			return false;
 	}
 	else if (autocvar_bot_ignore_bots && IS_BOT_CLIENT(targ))
