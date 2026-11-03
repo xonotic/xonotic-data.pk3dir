@@ -25,3 +25,7 @@ CLASS(LastManStanding, Gametype)
 #endif
 ENDCLASS(LastManStanding)
 REGISTER_GAMETYPE(LMS, NEW(LastManStanding));
+
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_LMS_STATS)
+#endif
