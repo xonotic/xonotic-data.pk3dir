@@ -2,7 +2,9 @@
 
 use strict;
 use warnings;
+use FindBin;
 
+my $base = "$FindBin::Bin/../.."; # go from ./qcsrc/tools/ to ./
 my @cols = qw/omg low med normal high ultra ultimate/;
 my %table = ();
 

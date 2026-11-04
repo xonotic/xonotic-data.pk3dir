@@ -1,0 +1,12 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticGraphicsLightsSettingsTab, XonoticTab)
+	METHOD(XonoticGraphicsLightsSettingsTab, fill, void(entity));
+	METHOD(XonoticGraphicsLightsSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGraphicsLightsSettingsTab, title, string, _("Lights"));
+	ATTRIB(XonoticGraphicsLightsSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGraphicsLightsSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGraphicsLightsSettingsTab, columns, float, 4.5);
+ENDCLASS(XonoticGraphicsLightsSettingsTab)
+entity makeXonoticGraphicsLightsSettingsTab();

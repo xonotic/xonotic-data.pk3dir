@@ -1,0 +1,12 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticGameWaypointsSettingsTab, XonoticTab)
+	METHOD(XonoticGameWaypointsSettingsTab, fill, void(entity));
+	METHOD(XonoticGameWaypointsSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGameWaypointsSettingsTab, title, string, _("Waypoints"));
+	ATTRIB(XonoticGameWaypointsSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGameWaypointsSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGameWaypointsSettingsTab, columns, float, 4.5);
+ENDCLASS(XonoticGameWaypointsSettingsTab)
+entity makeXonoticGameWaypointsSettingsTab();

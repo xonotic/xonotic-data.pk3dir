@@ -1,0 +1,12 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticGraphicsPerspectiveSettingsTab, XonoticTab)
+	METHOD(XonoticGraphicsPerspectiveSettingsTab, fill, void(entity));
+	METHOD(XonoticGraphicsPerspectiveSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGraphicsPerspectiveSettingsTab, title, string, _("Perspective"));
+	ATTRIB(XonoticGraphicsPerspectiveSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGraphicsPerspectiveSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGraphicsPerspectiveSettingsTab, columns, float, 4.5);
+ENDCLASS(XonoticGraphicsPerspectiveSettingsTab)
+entity makeXonoticGraphicsPerspectiveSettingsTab();

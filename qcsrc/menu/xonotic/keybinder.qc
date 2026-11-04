@@ -91,36 +91,32 @@ void KeyBinds_BuildList()
 	{
 		string w_override_list = "";
 		int w_count = 0;
-
-		FOREACH(Weapons, it != WEP_Null, {
+		FOREACH(Weapons, it != WEP_Null,
+		{
 			if (it.impulse != imp || !SHOWABLE_WEAPON(it))
 				continue;
 			it.display(it, XonoticKeyBinder_cb);
 			w_override_list = strcat(w_override_list, ";weapon_", it.netname);
 			++w_count;
 		});
+
 		if (w_count)
 		{
-			if (w_count == 1) // group only has 1 weapon (like Blaster's group), use the group bind, and add the icon
-			{                // no overrides needed
-				KEYBIND_DEF_WITH_ICON(strcat("weapon_group_", itos(imp)), XonoticKeyBinder_cb_name, strcat(" ", XonoticKeyBinder_cb_icon));
-			}
-			else // group has multiple weapons, allow binding them separately or together
-			{    // setting the group bind overrides the individual binds, and vice versa
-				string w_group = strcat(";weapon_group_", itos(imp));
-				KEYBIND_DEF(strcat(w_group, w_override_list), sprintf(_("weapon group %d"), imp));
+			string w_group = strcat(";weapon_group_", itos(imp));
+			KEYBIND_DEF(strcat(w_group, w_override_list), sprintf(_("weapon group %d"), imp));
 
-				int w_counter = 0;
-				FOREACH(Weapons, it != WEP_Null, {
-					if (it.impulse != imp || !SHOWABLE_WEAPON(it))
-						continue;
-					it.display(it, XonoticKeyBinder_cb);
-					++w_counter;
-					KEYBIND_DEF_WITH_ICON(strcat(";weapon_", it.netname, w_group), XonoticKeyBinder_cb_name,
-						strcat((w_counter == 1 ? "T" : w_counter == w_count ? "L" : "+"), XonoticKeyBinder_cb_icon));
-				});
-			}
+			int w_counter = 0;
+			FOREACH(Weapons, it != WEP_Null,
+			{
+				if (it.impulse != imp || !SHOWABLE_WEAPON(it))
+					continue;
+				it.display(it, XonoticKeyBinder_cb);
+				++w_counter;
+				KEYBIND_DEF_WITH_ICON(strcat(";weapon_", it.netname, w_group), XonoticKeyBinder_cb_name,
+					strcat((w_counter == w_count ? "L" : (w_counter == 1 ? "T" : "+")), XonoticKeyBinder_cb_icon));
+			});
 		}
+
 		if (imp == 0)
 			break;
 		if (imp == 9)
@@ -249,6 +245,13 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 	replace_bind("g_waypointsprite_team_danger_d", "waypoint_danger_death");
 	replace_bind("g_waypointsprite_clear_personal", "waypoint_clear_personal");
 	replace_bind("g_waypointsprite_clear", "waypoint_clear");
+
+	// Precache images
+	FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_HIDDEN),
+	{
+		it.display(it, XonoticKeyBinder_cb);
+		draw_PreloadPicture(XonoticKeyBinder_cb_icon);
+	});
 }
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
