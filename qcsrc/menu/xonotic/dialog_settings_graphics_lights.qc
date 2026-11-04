@@ -75,18 +75,21 @@ void XonoticGraphicsLightsSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Static")));
+#if 0
 	me.TR(me);
-		me.TD(me, 1, 3/2, e = makeXonoticCheckBox_T(1, "mod_q3bsp_nolightmaps", _("Use lightmaps"),
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(1, "mod_q3bsp_nolightmaps", _("Use lightmaps"),
 			_("Use high resolution lightmaps, which will look pretty but use up some extra video memory")));
 			e.applyButton = effectsApplyButton;
-		me.TD(me, 1, 3/2, e = makeXonoticCheckBox_T(0, "r_glsl_deluxemapping", _("Deluxe mapping"),
+#endif
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "r_glsl_deluxemapping", _("Deluxe mapping"),
 			_("Use per-pixel lighting effects")));
 			setDependent(e, "mod_q3bsp_nolightmaps", 0, 0);
 			if (cvar_type("vid_gl20") & CVAR_TYPEFLAG_ENGINE)
 				setDependentAND(e, "vid_gl20", 1, 1);
 	me.TR(me);
-		me.TDempty(me, 3/2);
-		me.TD(me, 1, 3/2, e = makeXonoticCheckBox_T(0, "r_shadow_gloss", _("Gloss"),
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "r_shadow_gloss", _("Gloss"),
 			_("Enable the use of glossmaps on textures supporting them")));
 			setDependent(e, "mod_q3bsp_nolightmaps", 0, 0);
 			setDependentAND(e, "r_glsl_deluxemapping", 1, 1);
