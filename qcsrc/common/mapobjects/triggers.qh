@@ -27,11 +27,8 @@ void target_voicescript_clear(entity pl);
 #endif
 
 .int loopdetector; ///< bitfield for recursive functions to avoid crashing
-void SUB_UseTargets(entity this, entity actor, entity trigger);
-void SUB_UseTargets_PreventReuse(entity this, entity actor, entity trigger);
-/// allow excluding certain .target* fields without needing to nullify them
-/// use BIT(1) through BIT(4)
-void SUB_UseTargets_SkipTargets(entity this, entity actor, entity trigger, int skiptargets);
+void SUB_UseTargets_Ex(entity this, entity actor, int skiptargets);
+#define SUB_UseTargets(this, actor) SUB_UseTargets_Ex(this, actor, 0)
 
 #ifdef SVQC
 void generic_setactive(entity this, int act);
@@ -41,8 +38,6 @@ void generic_netlinked_setactive(entity this, int act);
 // WARNING: DON'T USE, ONLY TO KEEP COMPATIBILITY BECAUSE OF SWITCH FROM .state TO .alive!!!!
 void generic_netlinked_legacy_use(entity this, entity actor, entity trigger);
 #endif
-
-.float sub_target_used;
 
 .float volume, atten;
 

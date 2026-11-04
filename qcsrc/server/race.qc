@@ -716,7 +716,7 @@ void checkpoint_passed(entity this, entity player)
 	{
 		oldmsg = this.message;
 		this.message = "";
-		SUB_UseTargets(this, player, player);
+		SUB_UseTargets(this, player);
 		this.message = oldmsg;
 	}
 
@@ -800,7 +800,7 @@ void checkpoint_passed(entity this, entity player)
 		{
 			oldmsg = this.message;
 			this.message = "";
-			SUB_UseTargets(this, player, player); // TODO: should we be using other for the trigger here?
+			SUB_UseTargets(this, player);
 			this.message = oldmsg;
 		}
 
