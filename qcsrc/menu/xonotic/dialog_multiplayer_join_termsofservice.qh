@@ -12,5 +12,3 @@ CLASS(XonoticServerToSTab, XonoticTab)
 	ATTRIB(XonoticServerToSTab, textBox, entity);
 ENDCLASS(XonoticServerToSTab)
 entity makeXonoticServerToSTab();
-
-void AdditionalServerInfo_OnGet(entity fh, entity pass, int status);

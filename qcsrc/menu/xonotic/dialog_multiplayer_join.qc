@@ -23,9 +23,8 @@ void XonoticServerListTab_refresh(entity this, entity slist)
 
 void XonoticServerListTab_fill(entity me)
 {
-	entity e, slist;
-
-	slist  = makeXonoticServerList();
+	entity e;
+	entity slist = makeXonoticServerList();
 
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 0.8, e = makeXonoticCheckBox(0, "menu_slist_categories", ZCTX(_("SRVS^Categories"))));
@@ -88,8 +87,8 @@ void XonoticServerListTab_fill(entity me)
 			e.onClickEntity = slist;
 			slist.infoButton = e;
 	me.TR(me);
-		me.TD(me, 1, me.columns * 0.5, e = makeXonoticLeaveMatchButton('0 0 0', 0));
-		me.TD(me, 1, me.columns * 0.5, e = makeXonoticButton(_("Join!"), '0 1 0'));
+		me.TD(me, 1, me.columns / 2, e = makeXonoticLeaveMatchButton('0 0 0', 0));
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Join!"), '0 1 0'));
 			e.onClick = ServerList_Connect_Click;
 			e.onClickEntity = slist;
 			slist.connectButton = e;
