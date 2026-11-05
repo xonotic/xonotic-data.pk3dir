@@ -27,8 +27,6 @@ CLASS(XonoticServerInfoDialog, XonoticDialog)
 	ATTRIB(XonoticServerInfoTab, currentServerEncrypt, string);
 	ATTRIB(XonoticServerInfoTab, currentServerPure, string);
 	ATTRIB(XonoticServerInfoTab, currentServerStatsStatus, string);
-
 ENDCLASS(XonoticServerInfoDialog)
 
 void Join_Click(entity btn, entity me);
-

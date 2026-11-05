@@ -13,13 +13,7 @@
 
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
-	bool pure_available;
-	float m, pure_violations, freeslots, numh, maxp, numb, sflags;
-	string s, typestr, versionstr, k, v, modname;
-
-	// ====================================
-	//  First clear and unzone the strings
-	// ====================================
+	// First clear and unzone the strings
 	strfree(me.currentServerName);
 	strfree(me.currentServerCName);
 	strfree(me.currentServerType);
@@ -31,67 +25,59 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	strfree(me.currentServerMod);
 	strfree(me.currentServerVersion);
 	// not zoned!
-	//	strfree(me.currentServerEncrypt);
+	//strfree(me.currentServerEncrypt);
 	strfree(me.currentServerPure);
 	strfree(me.currentServerKey);
 	strfree(me.currentServerID);
 
-	// ==========================
-	//  Now, fill in the strings
-	// ==========================
+	// Now, fill in the strings
 	me.currentServerName = strzone(gethostcachestring(SLIST_FIELD_NAME, i));
 	me.infoTab.nameLabel.setText(me.infoTab.nameLabel, me.currentServerName);
 
 	me.currentServerCName = strzone(gethostcachestring(SLIST_FIELD_CNAME, i));
 	me.infoTab.cnameLabel.setText(me.infoTab.cnameLabel, me.currentServerCName);
 
-	pure_available = false;
-	pure_violations = -1;
-	typestr = _("N/A");
-	versionstr = _("N/A");
+	bool pure_available = false;
+	float pure_violations = -1;
+	string typestr = _("N/A");
+	string versionstr = _("N/A");
 
-	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
-	m = tokenizebyseparator(s, ":");
-	if(m >= 2)
+	string s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
+	float m = tokenizebyseparator(s, ":");
+	if (m >= 2)
 	{
 		typestr = argv(0);
 		versionstr = argv(1);
 	}
-	freeslots = -1;
-	sflags = -1;
-	modname = "";
+
+	float freeslots = -1;
+	float sflags = -1;
+	string modname = "";
+	string k, v, downloadurl;
 	bool ToSSpecified = false;
-	for(int j = 2; j < m; ++j)
+	for (int j = 2; j < m; ++j)
 	{
-		if(argv(j) == "")
+		if (argv(j) == "")
 			break;
 		k = substring(argv(j), 0, 1);
 		v = substring(argv(j), 1, -1);
-		if(k == "P")
+		if (k == "P")
 		{
 			pure_available = true;
 			pure_violations = stof(v);
 		}
-		else if(k == "S")
-		{
+		else if (k == "S")
 			freeslots = stof(v);
-		}
-		else if(k == "F")
-		{
+		else if (k == "F")
 			sflags = stof(v);
-		}
-		else if(k == "M")
-		{
+		else if (k == "M")
 			modname = v;
-		}
-		else if(k == "T")
+		else if (k == "T")
 		{
 			ToSSpecified = true;
-			string downloadurl = v;
+			downloadurl = v;
 			if (downloadurl == "INVALID")
-			{
 				me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
-			}
 			else
 			{
 				downloadurl = strreplace("|", ":", downloadurl);
@@ -101,21 +87,20 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	}
 
 	if (!ToSSpecified)
-	{
 		me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
-	}
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
-	if(modname == "")
+	if (modname == "")
 		modname = "Xonotic";
 #endif
 
 	s = gethostcachestring(SLIST_FIELD_MOD, i);
-	if(s != "data")
+	if (s != "data")
 		modname = sprintf("%s (%s)", modname, s);
 
 	Gametype j = MapInfo_Type_FromString(typestr, false, false); // try and get the real name of the gametype
-	if(j) { typestr = MapInfo_Type_ToText(j); } // only set it if we actually found it
+	if (j)
+		typestr = MapInfo_Type_ToText(j); // only set it if we actually found it
 
 	me.currentServerType = strzone(typestr);
 	me.infoTab.typeLabel.setText(me.infoTab.typeLabel, me.currentServerType);
@@ -126,9 +111,9 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerPlayers = strzone(gethostcachestring(SLIST_FIELD_PLAYERS, i));
 	me.infoTab.rawPlayerList.setPlayerList(me.infoTab.rawPlayerList, me.currentServerPlayers);
 
-	numh = gethostcachenumber(SLIST_FIELD_NUMHUMANS, i);
-	maxp = gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i);
-	numb = gethostcachenumber(SLIST_FIELD_NUMBOTS, i);
+	float numh = gethostcachenumber(SLIST_FIELD_NUMHUMANS, i);
+	float maxp = gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i);
+	float numb = gethostcachenumber(SLIST_FIELD_NUMBOTS, i);
 	me.currentServerNumPlayers = strzone(sprintf("%d/%d", numh, maxp));
 	me.infoTab.numPlayersLabel.setText(me.infoTab.numPlayersLabel, me.currentServerNumPlayers);
 
@@ -136,7 +121,8 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerNumBots = strzone(s);
 	me.infoTab.numBotsLabel.setText(me.infoTab.numBotsLabel, me.currentServerNumBots);
 
-	if(freeslots < 0) { freeslots = maxp - numh - numb; }
+	if (freeslots < 0)
+		freeslots = maxp - numh - numb;
 	s = ftos(freeslots);
 	me.currentServerNumFreeSlots = strzone(s);
 	me.infoTab.numFreeSlotsLabel.setText(me.infoTab.numFreeSlotsLabel, me.currentServerNumFreeSlots);
@@ -148,83 +134,92 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerVersion = strzone(versionstr);
 	me.infoTab.versionLabel.setText(me.infoTab.versionLabel, me.currentServerVersion);
 
-	me.currentServerPure = ((!pure_available) ? _("N/A") : (pure_violations == 0) ? _("Official") : sprintf(_("%d modified"), pure_violations));
+	me.currentServerPure = (!pure_available
+		? _("N/A")
+		: (pure_violations == 0 ? _("Official") : sprintf(_("%d modified"), pure_violations)));
 	me.currentServerPure = strzone(me.currentServerPure);
 	me.infoTab.pureLabel.setText(me.infoTab.pureLabel, me.currentServerPure);
 
 	s = crypto_getencryptlevel(me.currentServerCName);
-	if(s == "")
+	if (s == "")
 	{
-		if(cvar("crypto_aeslevel") >= 3)
+		if (cvar("crypto_aeslevel") >= 3)
 			me.currentServerEncrypt = _("N/A (auth library missing, can't connect)");
 		else
 			me.currentServerEncrypt = _("N/A (auth library missing)");
 	}
-	else switch(stof(substring(s, 0, 1)))
-	{
-		case 0:
-			if(cvar("crypto_aeslevel") >= 3)
-				me.currentServerEncrypt = _("Not supported (can't connect)");
-			else
-				me.currentServerEncrypt = _("Not supported (won't encrypt)");
-			break;
-		case 1:
-			if(cvar("crypto_aeslevel") >= 2)
-				me.currentServerEncrypt = _("Supported (will encrypt)");
-			else
-				me.currentServerEncrypt = _("Supported (won't encrypt)");
-			break;
-		case 2:
-			if(cvar("crypto_aeslevel") >= 1)
-				me.currentServerEncrypt = _("Requested (will encrypt)");
-			else
-				me.currentServerEncrypt = _("Requested (won't encrypt)");
-			break;
-		case 3:
-			if(cvar("crypto_aeslevel") <= 0)
-				me.currentServerEncrypt = _("Required (can't connect)");
-			else
-				me.currentServerEncrypt = _("Required (will encrypt)");
-			break;
-	}
+	else
+		switch (stof(substring(s, 0, 1)))
+		{
+			case 0:
+				if (cvar("crypto_aeslevel") >= 3)
+					me.currentServerEncrypt = _("Not supported (can't connect)");
+				else
+					me.currentServerEncrypt = _("Not supported (won't encrypt)");
+				break;
+			case 1:
+				if (cvar("crypto_aeslevel") >= 2)
+					me.currentServerEncrypt = _("Supported (will encrypt)");
+				else
+					me.currentServerEncrypt = _("Supported (won't encrypt)");
+				break;
+			case 2:
+				if (cvar("crypto_aeslevel") >= 1)
+					me.currentServerEncrypt = _("Requested (will encrypt)");
+				else
+					me.currentServerEncrypt = _("Requested (won't encrypt)");
+				break;
+			case 3:
+				if (cvar("crypto_aeslevel") <= 0)
+					me.currentServerEncrypt = _("Required (can't connect)");
+				else
+					me.currentServerEncrypt = _("Required (will encrypt)");
+				break;
+		}
 	me.infoTab.encryptLabel.setText(me.infoTab.encryptLabel, me.currentServerEncrypt);
 	setZonedTooltip(me.infoTab.encryptLabel, _("Use the `crypto_aeslevel` cvar to change your preferences"), string_null);
 
 	s = crypto_getidfp(me.currentServerCName);
-	if (!s) { s = _("N/A"); }
+	if (!s)
+		s = _("N/A");
 	me.currentServerID = strzone(s);
 	me.infoTab.idLabel.setText(me.infoTab.idLabel, me.currentServerID);
 
 	s = crypto_getkeyfp(me.currentServerCName);
-	if (!s) { s = _("N/A"); }
+	if (!s)
+		s = _("N/A");
 	me.currentServerKey = strzone(s);
 	me.infoTab.keyLabel.setText(me.infoTab.keyLabel, me.currentServerKey);
 
-	me.currentServerStatsStatus = ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) ? ((sflags & SERVERFLAG_PLAYERSTATS_CUSTOM) ? _("custom stats server") : _("stats enabled")) : _("stats disabled"));
+	me.currentServerStatsStatus = ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
+		? ((sflags & SERVERFLAG_PLAYERSTATS_CUSTOM) ? _("custom stats server") : _("stats enabled"))
+		: _("stats disabled"));
 	me.currentServerStatsStatus = strzone(me.currentServerStatsStatus);
 	me.infoTab.statsLabel.setText(me.infoTab.statsLabel, me.currentServerStatsStatus);
 }
 
 void XonoticServerInfoDialog_fill(entity me)
 {
-	entity mc, e;
-	mc = makeXonoticTabController(me.rows - 2);
+	entity e;
+	entity mc = makeXonoticTabController(me.rows - 2);
 	me.TR(me);
-		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Status"), me.infoTab = makeXonoticServerInfoTab()));
-		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Terms of Service"), me.ToSTab = makeXonoticServerToSTab()));
+		me.TD(me, 1, 2/2, e = mc.makeTabButton(mc, _("Status"), me.infoTab = makeXonoticServerInfoTab()));
+		me.TD(me, 1, 2/2, e = mc.makeTabButton(mc, _("Terms of Service"), me.ToSTab = makeXonoticServerToSTab()));
 
 	me.TR(me);
 		me.TD(me, me.rows - 2, me.columns, mc);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Close"), '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Close"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
-		//me.TD(me, 1, me.columns/3, e = makeXonoticButton("", '0 0 0')); // TODO: Add bookmark button here
-		//	e.onClick = ServerList_Favorite_Click;
-		//	e.onClickEntity = slist;
-		//	slist.favoriteButton = e;
-		me.TD(me, 1, me.columns/2, e = makeXonoticButton(_("Join!"), '0 1 0'));
+	#if 0
+		me.TD(me, 1, me.columns / 3, e = makeXonoticButton("", '0 0 0')); // TODO: Add bookmark button here
+			e.onClick = ServerList_Favorite_Click;
+			e.onClickEntity = slist;
+			slist.favoriteButton = e;
+	#endif
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Join!"), '0 1 0'));
 			e.onClick = Join_Click;
 			e.onClickEntity = me;
 }
@@ -233,4 +228,3 @@ void Join_Click(entity btn, entity me)
 {
 	localcmd("connect ", me.currentServerCName, "\n");
 }
-
