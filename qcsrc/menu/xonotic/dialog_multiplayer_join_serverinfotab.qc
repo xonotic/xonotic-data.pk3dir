@@ -21,13 +21,13 @@ void XonoticServerInfoTab_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Hostname:")));
-		me.TD(me, 1, 4.6, e = makeXonoticTextLabel(0.5, ""));
+		me.TD(me, 1, me.columns - 0.8 * 2, e = makeXonoticTextLabel(0.5, ""));
 			e.colorL = SKINCOLOR_SERVERINFO_NAME;
 			e.allowCut = true;
 			me.nameLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Address:")));
-		me.TD(me, 1, 4.6, e = makeXonoticTextLabel(0.5, ""));
+		me.TD(me, 1, me.columns - 0.8 * 2, e = makeXonoticTextLabel(0.5, ""));
 			e.colorL = SKINCOLOR_SERVERINFO_IP;
 			e.allowCut = true;
 			me.cnameLabel = e;
@@ -78,22 +78,22 @@ void XonoticServerInfoTab_fill(entity me)
 
 	me.gotoRC(me, me.rows - 5, 0);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Encryption:")));
-		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
+		me.TD(me, 1, me.columns - 0.8, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = true;
 			me.encryptLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("ID:")));
-		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
+		me.TD(me, 1, me.columns - 0.8, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = true;
 			me.keyLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Key:")));
-		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
+		me.TD(me, 1, me.columns - 0.8, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = true;
 			me.idLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Stats:")));
-		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
+		me.TD(me, 1, me.columns - 0.8, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = true;
 			me.statsLabel = e;
 
