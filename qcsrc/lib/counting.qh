@@ -72,6 +72,14 @@
 	_("THR^%d results"), \
 	_("MUL^%d results"))
 
+#define count_games(num) \
+	count_fill(num, \
+	_("ZER^%d games in the past month"), \
+	_("ONE^%d game in the past month"),  \
+	_("TWO^%d games in the past month"), \
+	_("THR^%d games in the past month"), \
+	_("MUL^%d games in the past month"))
+
 
 #define count_years_decs(time, decs) sprintf(CTX(_("DEC^%s years")), ftos_decimals(time, decs))
 #define count_years(time) \
