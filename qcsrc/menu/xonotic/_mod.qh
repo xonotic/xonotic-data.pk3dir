@@ -58,6 +58,7 @@
 #include <menu/xonotic/dialog_multiplayer_create_mapinfo.qh>
 #include <menu/xonotic/dialog_multiplayer_create_mutators.qh>
 #include <menu/xonotic/dialog_multiplayer_join.qh>
+#include <menu/xonotic/dialog_multiplayer_join_activity.qh>
 #include <menu/xonotic/dialog_multiplayer_join_serverinfo.qh>
 #include <menu/xonotic/dialog_multiplayer_join_serverinfotab.qh>
 #include <menu/xonotic/dialog_multiplayer_join_termsofservice.qh>

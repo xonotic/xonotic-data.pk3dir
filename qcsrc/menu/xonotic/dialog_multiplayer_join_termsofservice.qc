@@ -43,7 +43,7 @@ entity makeXonoticServerToSTab()
 	return me;
 }
 
-void XonoticServerToSTab_loadToS(entity me, string downloadurl)
+void XonoticServerToSTab_loadFromURL(entity me, string downloadurl)
 {
 	url_single_fopen(downloadurl, FILE_READ, AdditionalServerInfo_OnGet, me);
 }

@@ -3,7 +3,7 @@
 #include "tab.qh"
 CLASS(XonoticServerToSTab, XonoticTab)
 	METHOD(XonoticServerToSTab, fill, void(entity));
-	METHOD(XonoticServerToSTab, loadToS, void(entity, string));
+	METHOD(XonoticServerToSTab, loadFromURL, void(entity, string));
 	ATTRIB(XonoticServerToSTab, color, vector, SKINCOLOR_DIALOG_SERVERINFO);
 	ATTRIB(XonoticServerToSTab, intendedWidth, float, 0.8);
 	ATTRIB(XonoticServerToSTab, rows, float, 17);
