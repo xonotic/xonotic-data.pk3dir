@@ -7,6 +7,7 @@
 #include "inputbox.qh"
 #include "textlabel.qh"
 #include "button.qh"
+#include "dialog_multiplayer_join_activity.qh"
 #include "dialog_multiplayer_join_serverinfotab.qh"
 #include "dialog_multiplayer_join_termsofservice.qh"
 
@@ -33,6 +34,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	// Now, fill in the strings
 	me.currentServerName = strzone(gethostcachestring(SLIST_FIELD_NAME, i));
 	me.infoTab.nameLabel.setText(me.infoTab.nameLabel, me.currentServerName);
+	me.activityTab.nameLabel.setText(me.activityTab.nameLabel, me.currentServerName);
 
 	me.currentServerCName = strzone(gethostcachestring(SLIST_FIELD_CNAME, i));
 	me.infoTab.cnameLabel.setText(me.infoTab.cnameLabel, me.currentServerCName);
@@ -196,6 +198,8 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		: _("stats disabled"));
 	me.currentServerStatsStatus = strzone(me.currentServerStatsStatus);
 	me.infoTab.statsLabel.setText(me.infoTab.statsLabel, me.currentServerStatsStatus);
+
+	me.activityTab.loadActivity(me.activityTab, "https://stats.xonotic.org/heatmap?server_id=21076"); // TODO URL
 }
 
 void XonoticServerInfoDialog_fill(entity me)
@@ -203,8 +207,9 @@ void XonoticServerInfoDialog_fill(entity me)
 	entity e;
 	entity mc = makeXonoticTabController(me.rows - 2);
 	me.TR(me);
-		me.TD(me, 1, 2/2, e = mc.makeTabButton(mc, _("Status"), me.infoTab = makeXonoticServerInfoTab()));
-		me.TD(me, 1, 2/2, e = mc.makeTabButton(mc, _("Terms of Service"), me.ToSTab = makeXonoticServerToSTab()));
+		me.TD(me, 1, 2/3, e = mc.makeTabButton(mc, _("Status"),           me.infoTab = makeXonoticServerInfoTab()));
+		me.TD(me, 1, 2/3, e = mc.makeTabButton(mc, _("Activity Heatmap"), me.activityTab = makeXonoticServerActivityTab()));
+		me.TD(me, 1, 2/3, e = mc.makeTabButton(mc, _("Terms of Service"), me.ToSTab = makeXonoticServerToSTab()));
 
 	me.TR(me);
 		me.TD(me, me.rows - 2, me.columns, mc);

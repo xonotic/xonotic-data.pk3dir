@@ -1,0 +1,30 @@
+#pragma once
+
+#include "picker.qh"
+CLASS(XonoticActivityHeatmap, XonoticPicker)
+	METHOD(XonoticActivityHeatmap, configureXonoticActivityHeatmap, void(entity));
+	METHOD(XonoticActivityHeatmap, draw, void(entity));
+
+	ATTRIB(XonoticActivityHeatmap, rows, float, 7);
+	ATTRIB(XonoticActivityHeatmap, columns, float, 24);
+
+	METHOD(XonoticActivityHeatmap, cellSelect, void(entity, vector));
+	METHOD(XonoticActivityHeatmap, cellIsValid, bool(entity, vector));
+	METHOD(XonoticActivityHeatmap, cellDraw, void(entity, vector, vector));
+	ATTRIB(XonoticActivityHeatmap, statsLabel, entity);
+ENDCLASS(XonoticActivityHeatmap)
+entity makeXonoticActivityHeatmap();
+
+#include "tab.qh"
+CLASS(XonoticServerActivityTab, XonoticTab)
+	METHOD(XonoticServerActivityTab, fill, void(entity));
+	METHOD(XonoticServerActivityTab, loadActivity, void(entity, string));
+	ATTRIB(XonoticServerActivityTab, color, vector, SKINCOLOR_DIALOG_SERVERINFO);
+	ATTRIB(XonoticServerActivityTab, intendedWidth, float, 0.8);
+	ATTRIB(XonoticServerActivityTab, rows, float, 17);
+	ATTRIB(XonoticServerActivityTab, columns, float, 6.2);
+
+	ATTRIB(XonoticServerActivityTab, nameLabel, entity);
+	ATTRIB(XonoticServerActivityTab, heatmap, entity);
+ENDCLASS(XonoticServerActivityTab)
+entity makeXonoticServerActivityTab();
