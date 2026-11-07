@@ -59,18 +59,8 @@ bool freezetag_CheckWinner()
 	}
 
 	// delay round ending a bit
-	if (autocvar_g_freezetag_round_enddelay
-	&& round_handler_GetEndTime() > 0
-	&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
-	{
-		if (round_handler_GetEndDelayTime() == -1)
-		{
-			round_handler_SetEndDelayTime(min(time + autocvar_g_freezetag_round_enddelay, round_handler_GetEndTime()));
-			return 0;
-		}
-		else if (round_handler_GetEndDelayTime() >= time)
-			return 0;
-	}
+	if (round_handler_DelayRoundEnd(autocvar_g_freezetag_round_enddelay))
+		return false;
 
 	if (winner_team > 0)
 	{

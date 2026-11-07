@@ -114,18 +114,8 @@ bool Surv_CheckWinner()
 	}
 
 	// delay round ending a bit
-	if (autocvar_g_survival_round_enddelay
-	&& round_handler_GetEndTime() > 0
-	&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
-	{
-		if (round_handler_GetEndDelayTime() == -1)
-		{
-			round_handler_SetEndDelayTime(min(time + autocvar_g_survival_round_enddelay, round_handler_GetEndTime()));
-			return false;
-		}
-		else if (round_handler_GetEndDelayTime() >= time)
-			return false;
-	}
+	if (round_handler_DelayRoundEnd(autocvar_g_survival_round_enddelay))
+		return false;
 
 	if (hunter_count > 0) // hunters win
 	{

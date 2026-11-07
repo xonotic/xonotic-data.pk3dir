@@ -17,6 +17,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 void round_handler_Spawn(bool() canRoundStart_func, bool() canRoundEnd_func, void() roundStart_func);
 void round_handler_Reset(float next_think);
 void round_handler_Remove();
+bool round_handler_DelayRoundEnd(float delay_time);
 
 #define round_handler_IsActive() (round_handler != NULL)
 #define round_handler_AwaitingNextRound() (round_handler.wait)
