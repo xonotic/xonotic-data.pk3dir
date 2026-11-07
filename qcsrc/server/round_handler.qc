@@ -141,3 +141,21 @@ void round_handler_Remove()
 	delete(round_handler);
 	round_handler = NULL;
 }
+
+/// Returns true if the round end should be delayed
+bool round_handler_DelayRoundEnd(float delay_time)
+{
+	if (delay_time
+	&& round_handler_GetEndTime() > 0
+	&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	{
+		if (round_handler_GetEndDelayTime() == -1)
+		{
+			round_handler_SetEndDelayTime(min(time + delay_time, round_handler_GetEndTime()));
+			return true;
+		}
+		else if (round_handler_GetEndDelayTime() >= time)
+			return true;
+	}
+	return false;
+}
