@@ -161,7 +161,10 @@ void Surv_RoundStart()
 			it.survival_status = SURV_STATUS_NONE; // this is mostly a safety check; if a client manages to somehow maintain a survival status, clear it before the round starts!
 		it.survival_validkills = 0;
 	});
-	int hunter_count = bound(1, (autocvar_g_survival_hunter_count >= 1 ? autocvar_g_survival_hunter_count : floor(playercount * autocvar_g_survival_hunter_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
+	int hunter_count = (autocvar_g_survival_hunter_count >= 1)
+		? autocvar_g_survival_hunter_count                      // absolute
+		: rint(playercount * autocvar_g_survival_hunter_count); // proportion, rounded
+	hunter_count = bound(1, hunter_count, playercount - 1);
 	int total_hunters = 0;
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
 	{
