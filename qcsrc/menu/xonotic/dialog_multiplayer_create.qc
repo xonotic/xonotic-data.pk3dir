@@ -20,7 +20,6 @@
 
 void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip)
 {
-	int i;
 	entity e = me.sliderFraglimit;
 	entity l = me.labelFraglimit;
 	e.configureXonoticMixedSlider(e, pCvar, pTooltip);
@@ -28,11 +27,11 @@ void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax,
 	l.setText(l, pLabel);
 
 	// clear old values
-	for(i = 0; i < e.nValues; ++i);
+	for (int i = 0; i < e.nValues; ++i)
 		strfree(e.(valueStrings[i]));
 	e.clearValues(e);
 
-	if(pCvar != "")
+	if (pCvar != "")
 	{
 		// set new values
 		e.addText(e, strzone(_("Default")), -1);
