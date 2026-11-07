@@ -91,6 +91,18 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 	round_limit = the_round_timelimit;
 }
 
+/// Sets the current round end time
+void round_handler_SetEndTime(float seconds)
+{
+	entity this = round_handler;
+	if (this.cnt > 0)
+		return; // countdown phase, round hasn't started
+
+	this.round_endtime = (seconds > 0) ? time + seconds : 0;
+	round_starttime = time;
+	round_limit = seconds;
+}
+
 // NOTE: this is only needed because if round_handler spawns at time 1
 // game_starttime isn't initialized yet
 void round_handler_FirstThink(entity this)
