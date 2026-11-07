@@ -63,15 +63,25 @@ void Surv_UpdateScores(bool timed_out)
 		if (it.survival_validkills)
 			GameRules_scoring_add(it, SCORE, it.survival_validkills);
 		it.survival_validkills = 0;
+
+		if (!IS_PLAYER(it) || IS_DEAD(it))
+			continue;
+
 		// player survived the round
-		if (IS_PLAYER(it) && !IS_DEAD(it))
+		switch (it.survival_status)
 		{
-			if (autocvar_g_survival_reward_survival && timed_out && it.survival_status == SURV_STATUS_PREY)
-				GameRules_scoring_add(it, SCORE, 1); // reward survivors who make it to the end of the round time limit
-			if (it.survival_status == SURV_STATUS_PREY)
+			case SURV_STATUS_PREY:
 				GameRules_scoring_add(it, SURV_SURVIVALS, 1);
-			else if (it.survival_status == SURV_STATUS_HUNTER)
+				if (autocvar_g_survival_reward_survival)
+					GameRules_scoring_add(it, SCORE, 1); // reward survivors who survived the round
+				break;
+			case SURV_STATUS_HUNTER:
 				GameRules_scoring_add(it, SURV_HUNTS, 1);
+				if (!timed_out)
+					GameRules_scoring_add(it, SCORE, 1); // reward hunters who survived the round (more than hunters who died)
+				break;
+			default:
+				break;
 		}
 	});
 }

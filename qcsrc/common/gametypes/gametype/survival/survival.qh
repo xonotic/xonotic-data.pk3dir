@@ -12,7 +12,7 @@ CLASS(Survival, Gametype)
 		CONSTRUCT(Gametype,
 			_("Survival"), "surv", "g_survival",
 			GAMETYPE_FLAG_USEPOINTS,
-			"", "timelimit=20 pointlimit=12",
+			"", "timelimit=20 pointlimit=20",
 			_("Identify and eliminate all the hunters before all your allies are gone")
 		);
 	}
