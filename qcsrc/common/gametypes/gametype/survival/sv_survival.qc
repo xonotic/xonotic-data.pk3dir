@@ -2,6 +2,7 @@
 
 float autocvar_g_survival_hunter_count = 0.25;
 float autocvar_g_survival_round_timelimit = 120;
+bool autocvar_g_survival_round_timelimit_fragreset = false;
 float autocvar_g_survival_warmup = 10;
 bool autocvar_g_survival_punish_teamkill = true;
 bool autocvar_g_survival_reward_survival = true;
@@ -89,7 +90,7 @@ void Surv_UpdateScores(bool timed_out)
 bool Surv_CheckWinner()
 {
 	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
-	&& autocvar_g_survival_round_enddelay == -1)
+	&& round_handler_GetEndDelayTime() == -1)
 	{
 		// if the match times out, survivors win too!
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR_WIN);
@@ -397,6 +398,26 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	&& !warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't started yet
 		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(surv, PlayerDied)
+{
+	// Reset the timer with each death if g_survival_round_timelimit_fragreset is enabled
+	if (warmup_stage || !round_handler_IsActive() || !round_handler_IsRoundStarted()
+	|| !autocvar_g_survival_round_timelimit_fragreset)
+		return;
+
+	bool survivors = false, hunters = false;
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+	{
+		if (it.survival_status == SURV_STATUS_PREY)
+			survivors = true;
+		else if (it.survival_status == SURV_STATUS_HUNTER)
+			hunters = true;
+	});
+
+	if (survivors && hunters) // this wasn't the final kill, so reset the timer
+		round_handler_SetEndTime(autocvar_g_survival_round_timelimit);
 }
 
 MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)
