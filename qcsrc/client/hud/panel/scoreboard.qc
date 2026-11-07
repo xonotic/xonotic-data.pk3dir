@@ -1905,7 +1905,7 @@ bool Scoreboard_WouldDraw()
 	&& time - CSQCModel_server2csqc(player_localentnum - 1).death_time >= autocvar_cl_deathscoreboard_delay
 	&& (!HUD_MinigameMenu_IsOpened() || !active_minigame))
 	{
-		if (gametype.m_1v1) // display all info if 1v1 even if dead - only 2 players, lots of room
+		if (GAMETYPE_FLAG(gametype, 1V1)) // display all info if 1v1 even if dead - only 2 players, lots of room
 			deathscoreboard = true;
 		return true;
 	}
@@ -2623,7 +2623,7 @@ void Scoreboard_Draw(bool should_draw)
 		str = "";
 		if (tl > 0)
 			str = strcat(str, "^3", count_minutes(floor(tl)));
-		if (!gametype.m_hidelimits)
+		if (!GAMETYPE_FLAG(gametype, HIDELIMITS))
 		{
 			bool draw_ll = (ll > 0 && (ll < fl || fl <= 0));
 			if (fl > 0)
