@@ -44,7 +44,7 @@ void XonoticGameZoomingSettingsTab_fill(entity me)
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom sensitivity:"))));
 			setDependentNOT(e, "cl_zoomfactor", 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.05, 1, 0.05, "cl_zoomsensitivity",
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1, 0.05, "cl_zoomsensitivity",
 			_("How zoom changes sensitivity, from 0% (lower sensitivity) to 100% (no sensitivity change)")));
 			e.formatString = "%";
 			setDependentNOT(e, "cl_zoomfactor", 1);
