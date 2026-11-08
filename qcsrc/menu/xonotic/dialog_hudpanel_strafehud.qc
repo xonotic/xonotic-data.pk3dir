@@ -143,7 +143,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
 		me.TD(me, 2, (4 - 0.2) / 3, e = makeXonoticColorpickerString("hud_panel_strafehud_bestangle_color", "hud_panel_strafehud_bestangle_color"));
 			setDependentNOT(e, "hud_panel_strafehud_bestangle_alpha", 0);
-			setDependentAND(e, "hud_panel_strafehud_bestangle", 1, 1);
+			setDependentAND(e, "hud_panel_strafehud_bestangle", 1, 2);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, (4 - 0.2) / 3, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_alpha"));
@@ -160,7 +160,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
 		me.TD(me, 1, (4 - 0.2) / 3, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bestangle_alpha"));
 			e.formatString = "%";
-			setDependent(e, "hud_panel_strafehud_bestangle", 1, 1);
+			setDependent(e, "hud_panel_strafehud_bestangle", 1, 2);
 	me.TR(me);
 		me.TD(me, 1, (4 - 0.1) / 2, e = makeXonoticCheckBox(0, "_hud_panel_strafehud_demo", _("Demo mode")));
 
