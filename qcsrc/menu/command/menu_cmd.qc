@@ -119,7 +119,7 @@ void GameCommand(string theCommand)
 		{
 			entity e = NULL;
 			float argsbuf = 0;
-			string s = strzone(argv(1)); // dialog name
+			string s = argv(1); // dialog name
 			for(int i = 0; (e = nextent(e)); )
 				if(e.classname != "vtbl" && e.name == strcat(filter, s))
 				{
