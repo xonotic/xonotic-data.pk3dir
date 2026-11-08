@@ -897,12 +897,18 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	*/
 
 	// list the mods here on which the pure server check actually works
-	if(modname != "xonotic")
-	if(modname != "instagib" || modname != "minstagib")
-	if(modname != "cts")
-	if(modname != "nix")
-	if(modname != "newtoys")
-		pure_available = false;
+	switch (modname)
+	{
+		case "xonotic":
+		case "instagib": case "minstagib":
+		case "cts":
+		case "nix":
+		case "newtoys":
+			break;
+		default:
+			pure_available = false;
+			break;
+	}
 
 	float theAlpha;
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0) // can't connect
