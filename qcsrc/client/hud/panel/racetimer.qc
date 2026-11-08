@@ -234,10 +234,10 @@ void HUD_RaceTimer(bool should_draw)
 
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
-		float race_penaltytime = 20;
+		float race_penaltytime = 2;
 		string race_penaltyreason = _("missing a checkpoint");
 		// strcat ported from another place of this function, please keep in sync
-		s = strcat("^1", sprintf(_("PENALTY: %.1f"), race_penaltytime * 0.1), sprintf(_(" (%s)"), race_penaltyreason));
+		s = strcat("^1", sprintf(_("PENALTY: %.1f"), race_penaltytime), sprintf(_(" (%s)"), race_penaltyreason));
 		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
@@ -310,10 +310,10 @@ void HUD_RaceTimer(bool should_draw)
 			{
 				if (race_nextbesttime)
 				{
-					a = bound(0, 2 - ((race_laptime + TIME_DECODE(race_nextbesttime)) - (time + TIME_DECODE(race_penaltyaccumulator))), 1);
-					float a2 = (race_mybesttime ? bound(0, 2 - ((race_laptime + TIME_DECODE(race_mybesttime)) - (time + TIME_DECODE(race_penaltyaccumulator))), 1) : 0);
+					a = bound(0, 2 - ((race_laptime + TIME_DECODE(race_nextbesttime)) - (time + race_penaltyaccumulator)), 1);
+					float a2 = (race_mybesttime ? bound(0, 2 - ((race_laptime + TIME_DECODE(race_mybesttime)) - (time + race_penaltyaccumulator)), 1) : 0);
 					if (a > 0) // next one?
-						s = MakeRaceString(race_nextcheckpoint, (time + TIME_DECODE(race_penaltyaccumulator)) - race_laptime, TIME_DECODE(race_nextbesttime), ((a2 > 0) ? TIME_DECODE(race_mybesttime) : 0), 0, race_nextbestname);
+						s = MakeRaceString(race_nextcheckpoint, (time + race_penaltyaccumulator) - race_laptime, TIME_DECODE(race_nextbesttime), ((a2 > 0) ? TIME_DECODE(race_mybesttime) : 0), 0, race_nextbestname);
 				}
 			}
 		}
@@ -329,7 +329,7 @@ void HUD_RaceTimer(bool should_draw)
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if (a > 0)
 			{
-				s = strcat("^1", sprintf(_("PENALTY: %.1f"), race_penaltytime * 0.1), sprintf(_(" (%s)"), race_penaltyreason));
+				s = strcat("^1", sprintf(_("PENALTY: %.1f"), race_penaltytime), sprintf(_(" (%s)"), race_penaltyreason));
 				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
 				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
@@ -348,7 +348,7 @@ void HUD_RaceTimer(bool should_draw)
 
 		if (race_laptime && race_checkpoint != 255)
 		{
-			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime), false);
+			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + race_penaltyaccumulator - race_laptime), false);
 			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '0.6 0.6 0' * mySize.y));
 			drawstring(str_pos, s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
@@ -377,14 +377,14 @@ void HUD_RaceTimer(bool should_draw)
 
 		if (race_penaltytime && !race_penaltyaccumulator)
 		{
-			float t = race_penaltytime * 0.1 + race_penaltyeventtime;
-			a = bound(0, (1 + t - time), 1);
+			float t = race_penaltytime + race_penaltyeventtime;
+			a = bound(0, 1 + t - time, 1);
 			if (a > 0)
 			{
 				string col;
 				if (time < t)
 				{
-					t = (t - time) * 0.1;
+					t -= time;
 					col = "^1";
 				}
 				else

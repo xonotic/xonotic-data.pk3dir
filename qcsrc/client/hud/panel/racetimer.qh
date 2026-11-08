@@ -22,11 +22,11 @@ float race_nextbestspeed;
 float race_mybesttime;
 float race_mybestspeed;
 string race_nextbestname;
-float race_penaltyaccumulator; // qualifying: total penalty time in tenths
-float race_penaltyeventtime; // time when the player got the penalty
-float race_penaltytime; // duration of penalty time, in tenths
-string race_penaltyreason; // reason for penalty
-float race_server_record; // server record
+float race_penaltyaccumulator; ///< qualifying: total penalty time
+float race_penaltyeventtime; ///< time when the player got the penalty
+float race_penaltytime; ///< duration of penalty time
+string race_penaltyreason; ///< reason for penalty
+float race_server_record; ///< server record
 float race_speedaward;
 string race_speedaward_holder;
 float race_speedaward_alltimebest;

@@ -1190,11 +1190,13 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 		case RACE_NET_CHECKPOINT_CLEAR:
 			race_laptime = 0;
 			race_checkpointtime = 0;
+			race_penaltyaccumulator = 0;
 			break;
 
 		case RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING:
 			race_laptime = ReadCoord();
 			race_checkpointtime = -99999;
+			race_penaltyaccumulator = 0; // penalties already included in race_laptime
 			// fall through
 		case RACE_NET_CHECKPOINT_NEXT_QUALIFYING:
 			race_nextcheckpoint = ReadByte();
@@ -1249,7 +1251,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 		case RACE_NET_PENALTY_RACE:
 		case RACE_NET_PENALTY_QUALIFYING:
 			race_penaltyeventtime = time;
-			race_penaltytime = ReadShort();
+			race_penaltytime = TIME_DECODE(ReadShort());
 			string reason = ReadString();
 			if (reason == "missing a checkpoint")
 				reason = _("missing a checkpoint");
