@@ -10,14 +10,17 @@
 
 void StrafeHUD_ColorReset(entity btn, entity me)
 {
-	cvar_set("hud_panel_strafehud_bar_accel_color", cvar_defstring("hud_panel_strafehud_bar_accel_color"));
-	cvar_set("hud_panel_strafehud_bar_neutral_color", cvar_defstring("hud_panel_strafehud_bar_neutral_color"));
-	cvar_set("hud_panel_strafehud_bar_overturn_color", cvar_defstring("hud_panel_strafehud_bar_overturn_color"));
-	cvar_set("hud_panel_strafehud_angle_accel_color", cvar_defstring("hud_panel_strafehud_angle_accel_color"));
-	cvar_set("hud_panel_strafehud_angle_neutral_color", cvar_defstring("hud_panel_strafehud_angle_neutral_color"));
+	cvar_set("hud_panel_strafehud_bar_accel_color",      cvar_defstring("hud_panel_strafehud_bar_accel_color"));
+	cvar_set("hud_panel_strafehud_bar_neutral_color",    cvar_defstring("hud_panel_strafehud_bar_neutral_color"));
+	cvar_set("hud_panel_strafehud_bar_overturn_color",   cvar_defstring("hud_panel_strafehud_bar_overturn_color"));
+	cvar_set("hud_panel_strafehud_angle_accel_color",    cvar_defstring("hud_panel_strafehud_angle_accel_color"));
+	cvar_set("hud_panel_strafehud_angle_neutral_color",  cvar_defstring("hud_panel_strafehud_angle_neutral_color"));
 	cvar_set("hud_panel_strafehud_angle_overturn_color", cvar_defstring("hud_panel_strafehud_angle_overturn_color"));
-	cvar_set("hud_panel_strafehud_switch_color", cvar_defstring("hud_panel_strafehud_switch_color"));
-	cvar_set("hud_panel_strafehud_bestangle_color", cvar_defstring("hud_panel_strafehud_bestangle_color"));
+	cvar_set("hud_panel_strafehud_switch_color",         cvar_defstring("hud_panel_strafehud_switch_color"));
+	cvar_set("hud_panel_strafehud_bestangle_color",      cvar_defstring("hud_panel_strafehud_bestangle_color"));
+	cvar_set("hud_panel_strafehud_wturn_color",          cvar_defstring("hud_panel_strafehud_wturn_color"));
+	// There's also *_preaccel_color, *_direction_color, *_slickdetector_color, *_startspeed_color, *_jumpheight_color, *_vangle_color,
+	// ... but this dialog doesn't allow configuring them
 }
 
 void XonoticHUDStrafeHUDDialog_fill(entity me)
