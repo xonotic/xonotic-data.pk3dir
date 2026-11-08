@@ -260,12 +260,12 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 	entity e = me.favoriteButton;
 	if(IsFavorite(me.ipAddressBox.text))
 	{
-		e.setText(e, ZCTX(_("SERVER^Remove favorite")));
+		e.setText(e, CTX(_("SERVER^Remove favorite")));
 		setZonedTooltip(e, _("Remove the currently highlighted server from bookmarks"), string_null);
 	}
 	else
 	{
-		e.setText(e, ZCTX(_("SERVER^Favorite")));
+		e.setText(e, CTX(_("SERVER^Favorite")));
 		setZonedTooltip(e, _("Bookmark the currently highlighted server so that it's faster to find in the future"), string_null);
 	}
 }
@@ -1052,8 +1052,8 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		string t = "";
 		if(me.seenIPv4 && me.seenIPv6)
 			t = strcat(t, (isv6) ? "IPv6, " : "IPv4, ");
-		t = strcat(t, _("encryption:"), " ", (crypto ? sprintf(_("AES level %d"), crypto) : ZCTX(_("ENC^none"))), ", ");
-		t = strcat(t, sprintf(_("mod: %s"), ((modname == "xonotic") ? ZCTX(_("MOD^Default")) : original_modname)));
+		t = strcat(t, _("encryption:"), " ", (crypto ? sprintf(_("AES level %d"), crypto) : CTX(_("ENC^none"))), ", ");
+		t = strcat(t, sprintf(_("mod: %s"), ((modname == "xonotic") ? CTX(_("MOD^Default")) : original_modname)));
 		if(pure_available)
 			t = strcat(t, sprintf(_(" (%s)"), (pure) ? _("official settings") : _("modified settings")));
 		t = strcat(t, ", ");

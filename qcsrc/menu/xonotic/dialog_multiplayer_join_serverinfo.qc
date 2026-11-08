@@ -35,6 +35,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	strfree(me.currentServerPure);
 	strfree(me.currentServerKey);
 	strfree(me.currentServerID);
+	strfree(me.currentServerStatsStatus);
 
 	// ==========================
 	//  Now, fill in the strings
@@ -141,7 +142,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerNumFreeSlots = strzone(s);
 	me.infoTab.numFreeSlotsLabel.setText(me.infoTab.numFreeSlotsLabel, me.currentServerNumFreeSlots);
 
-	me.currentServerMod = ((modname == "Xonotic") ? ZCTX(_("MOD^Default")) : modname);
+	me.currentServerMod = ((modname == "Xonotic") ? CTX(_("MOD^Default")) : modname);
 	me.currentServerMod = strzone(me.currentServerMod);
 	me.infoTab.modLabel.setText(me.infoTab.modLabel, me.currentServerMod);
 

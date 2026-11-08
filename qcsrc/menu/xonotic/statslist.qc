@@ -66,7 +66,7 @@ string XonoticStatsList_convertDate(string input)
 	date = strreplace("%MMMM", monthname, date);
 	date = strreplace("%MM", month_num, date); // month number as-is (zero-padded)
 	date = strreplace("%M", itos(stoi(month_num)), date); // remove leading 0
-	return strzone(date);
+	return date;
 }
 
 void XonoticStatsList_getStats(entity me)

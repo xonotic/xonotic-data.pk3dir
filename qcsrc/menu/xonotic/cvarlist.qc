@@ -111,7 +111,7 @@ string autocvar_menu_reverted_nonsaved_cvars;
 bool XonoticCvarList_updateCvarType(entity me)
 {
 	float t = cvar_type(me.cvarName);
-	me.cvarType = "";
+	strfree(me.cvarType);
 	bool needsForcing;
 	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
 	{
