@@ -290,16 +290,25 @@ void HUD_Physics(bool should_draw)
 					peak_offsetX = min(top_speed, max_speed) / max_speed * panel_size.x * 0.5;
 				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
 				peak_size.y = panel_size.y;
-				if (speed_baralign == 2) // draw two peaks, on both sides
+
+				vector pos_offset;
+				pos_offset.z = 0;
+				pos_offset.y = 0;
+			#define DRAW_PEAK() \
+				drawfill(panel_pos + speed_offset + pos_offset, peak_size, \
+					autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL)
+				if (speed_baralign == 2) // draw two peaks, on each side
 				{
-					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+					pos_offset.x = 0.5 * panel_size.x + peak_offsetX - peak_size.x; // right
+					DRAW_PEAK();
+					pos_offset.x = 0.5 * panel_size.x - peak_offsetX; // left
 				}
+				else if (speed_baralign == 1)
+					pos_offset.x = peak_offsetX; // left
 				else
-					drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+					pos_offset.x = peak_offsetX - peak_size.x; // right
+				DRAW_PEAK();
+			#undef DRAW_PEAK
 			}
 		}
 		else
