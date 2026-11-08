@@ -218,7 +218,7 @@ void XonoticResolutionSlider_loadCvars(entity me)
 }
 void XonoticResolutionSlider_saveCvars(entity me)
 {
-	if (me.value >= 0 || me.value < me.nValues)
+	if (me.value >= 0 && me.value < me.nValues)
 	{
 		tokenize_console(me.getIdentifier(me));
 		cvar_set("_menu_vid_width", argv(0));

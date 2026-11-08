@@ -24,7 +24,7 @@ void XonoticScoreboardFadeTimeSlider_loadCvars(entity me)
 }
 void XonoticScoreboardFadeTimeSlider_saveCvars(entity me)
 {
-	if(me.value >= 0 || me.value < me.nValues)
+	if (me.value >= 0 && me.value < me.nValues)
 	{
 		tokenize_console(me.getIdentifier(me));
 		cvar_set("hud_panel_scoreboard_fadeinspeed", argv(0));
