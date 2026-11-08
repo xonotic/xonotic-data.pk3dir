@@ -24,11 +24,11 @@ string KeyBinds_Icons[MAX_KEYBINDS]; // Allow all keybinds to have an icon, alth
 // Special keybinds can't be edited or selected
 // If a special keybind description matches the previous one
 // then it's considered as an alternative keybind of the previous one
-#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
+#define KEYBIND_IS_SPECIAL(func) (substring(func, 0, 1) == "*")
 // Overriding keybinds unset other binds when they're set
 // ... for the purposes of the menu, or for other reasons
 // The other binds that need to be unset are concatenated to func with a ";" separator
-#define KEYBIND_IS_OVERRIDER(func) (substring(func, 0 ,1) == ";")
+#define KEYBIND_IS_OVERRIDER(func) (substring(func, 0, 1) == ";")
 
 string XonoticKeyBinder_cb_name, XonoticKeyBinder_cb_icon;
 void XonoticKeyBinder_cb(string _name, string _icon)
@@ -318,8 +318,6 @@ void KeyBinder_Bind_UnbindAllForFunction(int n)
 }
 void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 {
-	int n, j, k, nvalid;
-
 	me.keyGrabButton.forcePressed = false;
 	me.clearButton.disabled = 0;
 
@@ -334,6 +332,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 	}
 
 	string func = KeyBinds_Functions[me.selectedItem];
+	int n, j;
 	if (func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 	else if (KEYBIND_IS_OVERRIDER(func))
@@ -341,6 +340,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 		n = tokenizebyseparator(func, ";");
 		if (n <= 1)
 			return;
+		string overrides = func;
 		func = argv(1);
 
 		// unset all binds for the functions this key overrides
@@ -348,12 +348,12 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 		{
 			n = tokenize(findkeysforcommand(argv(j), 0)); // uses '...' strings
 			KeyBinder_Bind_UnbindAllForFunction(n);
-			n = tokenizebyseparator(func, ";"); // reset argv back to the overridden functions
+			n = tokenizebyseparator(overrides, ";"); // reset argv back to the overridden functions
 		}
 	}
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
-	nvalid = 0;
+	int k, nvalid = 0;
 	for (j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
