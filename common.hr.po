@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 07:22+0200\n"
+"POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Jerko Cilas, 2026\n"
 "Language-Team: Croatian (http://app.transifex.com/team-xonotic/xonotic/"
@@ -2576,7 +2576,7 @@ msgid "@!#%'n Tuba Throwing"
 msgstr "Bacanje proklete tube"
 
 #: qcsrc/common/mapinfo.qh:94
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:106
 msgid "Frag limit:"
 msgstr "Ograničenje fragova:"
 
@@ -7284,12 +7284,12 @@ msgid " (near %s)"
 msgstr " (blizu %s)"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
-#: qcsrc/common/weapons/all.qc:845
+#: qcsrc/common/weapons/all.qc:855
 msgid "primary"
 msgstr "primarna"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
-#: qcsrc/common/weapons/all.qc:846
+#: qcsrc/common/weapons/all.qc:856
 msgid "secondary"
 msgstr "sekundarna"
 
@@ -8428,64 +8428,70 @@ msgstr "Za ovo oružje nije dodijeljena izravna tipka."
 msgid "You have bound this weapon to: %s."
 msgstr "Tipka dodijeljena ovom oružju: %s."
 
-#: qcsrc/common/weapons/all.qc:842 qcsrc/common/weapons/all.qc:843
-#: qcsrc/common/weapons/all.qc:874
+#: qcsrc/common/weapons/all.qc:849 qcsrc/common/weapons/all.qc:850
+#: qcsrc/common/weapons/all.qc:851 qcsrc/common/weapons/all.qc:852
 #, c-format
 msgid "(DPS: %.2f)"
 msgstr "(šteta u sekundi: %.2f)"
 
-#: qcsrc/common/weapons/all.qc:847
-#, c-format
-msgid "It does %s damage"
-msgstr "Nanosi %s štete"
-
-#: qcsrc/common/weapons/all.qc:848
-#, c-format
-msgid "It shoots %s shots doing %s damage each"
-msgstr "Ispaljuje %s projektila koji nanose po %s štete"
-
-#: qcsrc/common/weapons/all.qc:849
-#, c-format
-msgid "The %s does %s damage"
-msgstr "%s nanosi %s štete"
-
-#: qcsrc/common/weapons/all.qc:850
-#, c-format
-msgid "The %s does %s damage per second"
-msgstr "%s nanosi %s štete u sekundi"
-
-#: qcsrc/common/weapons/all.qc:851
-#, c-format
-msgid "The %s shoots %s shots doing %s damage each"
-msgstr "%s ispaljuje %s projektila koji nanose po %s štete"
-
-#: qcsrc/common/weapons/all.qc:852
-#, c-format
-msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr "%s ispaljuje do %s projektila koji nanose po %s štete"
-
-#: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:885
-#: qcsrc/common/weapons/all.qc:906 qcsrc/common/weapons/all.qc:920
-#: qcsrc/common/weapons/all.qc:930 qcsrc/common/weapons/all.qc:947
-#: qcsrc/common/weapons/all.qc:963 qcsrc/common/weapons/all.qc:977
-#: qcsrc/common/weapons/all.qc:1001 qcsrc/common/weapons/all.qc:1013
-msgid "Default damage stats:"
-msgstr "Zadane vrijednosti štete:"
-
-#: qcsrc/common/weapons/all.qc:877
-#, c-format
-msgid "A direct hit does %s damage"
-msgstr "Izravan pogodak nanosi %s štete"
-
-#: qcsrc/common/weapons/all.qc:999
+#: qcsrc/common/weapons/all.qc:853
 #, c-format
 msgid "(total DPS: %.2f)"
 msgstr "(ukupna šteta u sekundi: %.2f)"
 
-#: qcsrc/common/weapons/all.qc:1004
+#: qcsrc/common/weapons/all.qc:857
+#, c-format
+msgid "It does %s damage"
+msgstr "Nanosi %s štete"
+
+#: qcsrc/common/weapons/all.qc:858
+#, c-format
+msgid "It shoots %s shots doing %s damage each"
+msgstr "Ispaljuje %s projektila koji nanose po %s štete"
+
+#: qcsrc/common/weapons/all.qc:859
+#, c-format
+msgid "A direct hit does %s damage"
+msgstr "Izravan pogodak nanosi %s štete"
+
+#: qcsrc/common/weapons/all.qc:860
+#, c-format
+msgid "The %s does %s damage"
+msgstr "%s nanosi %s štete"
+
+#: qcsrc/common/weapons/all.qc:861
+#, c-format
+msgid "The %s does %s damage per second"
+msgstr "%s nanosi %s štete u sekundi"
+
+#: qcsrc/common/weapons/all.qc:862
+#, c-format
+msgid "The %s shoots %s shots doing %s damage each"
+msgstr "%s ispaljuje %s projektila koji nanose po %s štete"
+
+#: qcsrc/common/weapons/all.qc:863
+#, c-format
+msgid "The %s shoots up to %s shots doing %s damage each"
+msgstr "%s ispaljuje do %s projektila koji nanose po %s štete"
+
+#: qcsrc/common/weapons/all.qc:864
+#, c-format
+msgid "The %s does %s damage then shoots %s shots doing %s damage each"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:865
 #, c-format
 msgid "The combo adds an extra %s damage"
 msgstr "Kombinacija nanosi dodatnih %s štete"
+
+#: qcsrc/common/weapons/all.qc:890 qcsrc/common/weapons/all.qc:899
+#: qcsrc/common/weapons/all.qc:919 qcsrc/common/weapons/all.qc:932
+#: qcsrc/common/weapons/all.qc:941 qcsrc/common/weapons/all.qc:957
+#: qcsrc/common/weapons/all.qc:976 qcsrc/common/weapons/all.qc:992
+#: qcsrc/common/weapons/all.qc:1005 qcsrc/common/weapons/all.qc:1026
+#: qcsrc/common/weapons/all.qc:1037
+msgid "Default damage stats:"
+msgstr "Zadane vrijednosti štete:"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1437
 #, c-format
@@ -8646,7 +8652,7 @@ msgstr ""
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/common/weapons/weapon/devastator.qc:593
+#: qcsrc/common/weapons/weapon/devastator.qc:532
 #, c-format
 msgid ""
 "The %s launches a remote controlled rocket, dealing significant damage when "
@@ -8657,7 +8663,7 @@ msgstr ""
 "veliku štetu. Ako držiš tipku primarne paljbe, raketa prati tvoj nišan, pa "
 "je možeš usmjeravati prema protivnicima."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:595
+#: qcsrc/common/weapons/weapon/devastator.qc:534
 msgid ""
 "The secondary fire can be used to immediately detonate rockets, allowing "
 "dealing damage to enemies even if the rocket barely missed colliding with "
@@ -8666,7 +8672,7 @@ msgstr ""
 "Sekundarnom paljbom možeš odmah detonirati rakete i nanijeti štetu "
 "protivnicima čak i ako ih raketa za dlaku promaši."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:596
+#: qcsrc/common/weapons/weapon/devastator.qc:535
 #, c-format
 msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
@@ -8676,7 +8682,7 @@ msgstr ""
 "brzo nestati. Zato igrači često naizmjence upotrebljavaju drugo oružje, "
 "poput oružja %s."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:597
+#: qcsrc/common/weapons/weapon/devastator.qc:536
 #, c-format
 msgid ""
 "Due to its high damage output, the %s is one of the most commonly used "
@@ -8689,7 +8695,7 @@ msgstr ""
 "udaljenostima. U bliskoj borbi velik radijus eksplozije često znači da će "
 "raketa ozlijediti i tebe i protivnika."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:600
+#: qcsrc/common/weapons/weapon/devastator.qc:539
 #, c-format
 msgid ""
 "Due to the ability to remotely detonate rockets, a common usage is \"rocket "
@@ -9125,7 +9131,7 @@ msgstr ""
 msgid "Rifle"
 msgstr "Puška"
 
-#: qcsrc/common/weapons/weapon/seeker.qc:634
+#: qcsrc/common/weapons/weapon/seeker.qc:726
 #, c-format
 msgid ""
 "The %s is a unique weapon, firing a \"tag\" which then launches a few homing "
@@ -9136,7 +9142,7 @@ msgstr ""
 "njom kreće nekoliko navođenih raketa. Navođenje nije savršeno, pa rakete "
 "ponekad mogu udariti u prepreku ili ugao."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:636
+#: qcsrc/common/weapons/weapon/seeker.qc:728
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
@@ -9144,12 +9150,12 @@ msgstr ""
 "Sekundarna paljba ispaljuje brz niz raspršenih eksplozivnih projektila "
 "kratkog dometa."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:637
+#: qcsrc/common/weapons/weapon/seeker.qc:729
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
 msgstr "Troši streljivo vrste %s čak i kad oznaka promaši."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:638
+#: qcsrc/common/weapons/weapon/seeker.qc:730
 #, c-format
 msgid ""
 "The %s primary fire deals quite a lot of damage when a tag lands, although "
@@ -9161,8 +9167,8 @@ msgstr ""
 "bliskoj borbi, a eksplozije ponekad mogu ozlijediti i tebe."
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
-msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
+msgid "Seeker"
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
@@ -9716,7 +9722,7 @@ msgstr "%d d., %02d:%02d:%02d"
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
-#: qcsrc/menu/item/listbox.qc:414
+#: qcsrc/menu/item/listbox.qc:410
 #, c-format
 msgid "Item %d"
 msgstr "Stavka %d"
@@ -10805,7 +10811,7 @@ msgstr "Izgledi HUD-a"
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:34
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:24
 #: qcsrc/menu/xonotic/dialog_media_screenshot.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:167
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:166
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:35
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
 msgid "Filter:"
@@ -10987,7 +10993,7 @@ msgid "Timing a demo will disconnect you from the current match."
 msgstr "Testiranje performansi snimke prekinut će vezu s trenutačnim mečem."
 
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:33
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:169
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:168
 msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
@@ -11135,8 +11141,8 @@ msgstr ""
 "Igraj na internetu ili s prijateljima preko LAN-a ili promijeni postavke "
 "igrača"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:37
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:112
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
 #: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:748
 #: qcsrc/menu/xonotic/util.qc:760 qcsrc/menu/xonotic/util.qc:765
@@ -11145,60 +11151,60 @@ msgstr ""
 msgid "Default"
 msgstr "Zadano"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:39
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "Unlimited"
 msgstr "Neograničeno"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Gametype"
 msgstr "Način igre"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:92
 msgid "Show all"
 msgstr "Prikaži sve"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
 msgid "Show all available gametypes"
 msgstr "Prikaži sve dostupne načine igre"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:95
 msgid "Time limit:"
 msgstr "Vremensko ograničenje:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:97
 msgid "Time limit in minutes that when hit, will end the match"
 msgstr "Vrijeme u minutama nakon kojeg meč završava"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:99
 msgid "TIMLIM^Default"
 msgstr "Zadano"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:104
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
 msgid "TIMLIM^Infinite"
 msgstr "Beskonačno"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
 msgid "Teams:"
 msgstr "Timovi:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
 msgid "2 teams"
 msgstr "2 tima"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "3 teams"
 msgstr "3 tima"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "4 teams"
 msgstr "4 tima"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:118
 msgid "Player slots:"
 msgstr "Mjesta za igrače:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:120
 msgid ""
 "The maximum number of players or bots that can be connected to your server "
 "at once"
@@ -11206,120 +11212,120 @@ msgstr ""
 "Najveći broj igrača ili botova koji istodobno mogu biti povezani s tvojim "
 "poslužiteljem"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:122
 msgid "Number of bots:"
 msgstr "Broj botova:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Number of bots on your server"
 msgstr "Broj botova na tvojem poslužitelju"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
 msgid "Bot skill:"
 msgstr "Vještina botova:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "Specify how experienced the bots will be"
 msgstr "Odredi koliko će botovi biti iskusni"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Botlike"
 msgstr "Poput bota"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Beginner"
 msgstr "Početnik"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "You will win"
 msgstr "Sigurno pobjeđuješ"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "You can win"
 msgstr "Možeš pobijediti"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "You might win"
 msgstr "Možda pobijediš"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "Advanced"
 msgstr "Napredan"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "Expert"
 msgstr "Stručnjak"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
 msgid "Pro"
 msgstr "Profesionalac"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
 msgid "Assassin"
 msgstr "Ubojica"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
 msgid "Unhuman"
 msgstr "Nadljudski"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
 msgid "Godlike"
 msgstr "Božanski"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:149
 msgid "Bots against humans"
 msgstr "Botovi protiv ljudi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr "Svi ljudi igraju u istom timu protiv jednako brojnog tima botova"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:158
 msgid "Maplist"
 msgstr "Popis mapa"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:177
 msgid "Add shown"
 msgstr "Dodaj prikazane"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:179
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
 msgid "Add the maps shown in the list to your selection"
 msgstr "Dodaj prikazane mape u svoj odabir"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:181
 msgid "Remove shown"
 msgstr "Ukloni prikazane"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:183
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
 msgid "Remove the maps shown in the list from your selection"
 msgstr "Ukloni prikazane mape iz svojeg odabira"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:187
 msgid "Add all"
 msgstr "Dodaj sve"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Add every available map to your selection"
 msgstr "Dodaj sve dostupne mape u svoj odabir"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
 msgid "Remove all"
 msgstr "Ukloni sve"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:193
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
 msgid "Remove all the maps from your selection"
 msgstr "Ukloni sve mape iz svojeg odabira"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:200
 msgid "Mutators..."
 msgstr "Modifikatori..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:202
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Mutators and weapon arenas"
 msgstr "Modifikatori i arene s određenim oružjem"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:212
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:211
 msgid "Start multiplayer!"
 msgstr "Pokreni igru za više igrača!"
 

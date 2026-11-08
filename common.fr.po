@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 07:22+0200\n"
+"POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Hugo Locurcio, 2013-2014\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
@@ -2678,7 +2678,7 @@ msgid "@!#%'n Tuba Throwing"
 msgstr "Lancer du @!#% Tuba"
 
 #: qcsrc/common/mapinfo.qh:94
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:106
 msgid "Frag limit:"
 msgstr "Limite de frags :"
 
@@ -7541,12 +7541,12 @@ msgid " (near %s)"
 msgstr " (près de %s)"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
-#: qcsrc/common/weapons/all.qc:845
+#: qcsrc/common/weapons/all.qc:855
 msgid "primary"
 msgstr "primaire"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
-#: qcsrc/common/weapons/all.qc:846
+#: qcsrc/common/weapons/all.qc:856
 msgid "secondary"
 msgstr "secondaire"
 
@@ -8708,64 +8708,70 @@ msgstr "Cette arme n'est pas directement associée à un raccourci clavier."
 msgid "You have bound this weapon to: %s."
 msgstr "Vous avez associé cette arme à la touche : %s."
 
-#: qcsrc/common/weapons/all.qc:842 qcsrc/common/weapons/all.qc:843
-#: qcsrc/common/weapons/all.qc:874
+#: qcsrc/common/weapons/all.qc:849 qcsrc/common/weapons/all.qc:850
+#: qcsrc/common/weapons/all.qc:851 qcsrc/common/weapons/all.qc:852
 #, c-format
 msgid "(DPS: %.2f)"
 msgstr "(DPS : %.2f)"
 
-#: qcsrc/common/weapons/all.qc:847
-#, c-format
-msgid "It does %s damage"
-msgstr "Cette arme inflige %s points de dégâts"
-
-#: qcsrc/common/weapons/all.qc:848
-#, c-format
-msgid "It shoots %s shots doing %s damage each"
-msgstr "Cette arme tire %s coups infligeant chacun %s points de dégâts"
-
-#: qcsrc/common/weapons/all.qc:849
-#, c-format
-msgid "The %s does %s damage"
-msgstr "Le tir %s inflige %s points de dégâts"
-
-#: qcsrc/common/weapons/all.qc:850
-#, c-format
-msgid "The %s does %s damage per second"
-msgstr "Le tir %s inflige %s points de dégâts par seconde"
-
-#: qcsrc/common/weapons/all.qc:851
-#, c-format
-msgid "The %s shoots %s shots doing %s damage each"
-msgstr "Le tir %s tire %s coups infligeant chacun %s points de dégâts"
-
-#: qcsrc/common/weapons/all.qc:852
-#, c-format
-msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr "Le tir %s tire jusqu'à %s coups infligeant chacun %s points de dégâts"
-
-#: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:885
-#: qcsrc/common/weapons/all.qc:906 qcsrc/common/weapons/all.qc:920
-#: qcsrc/common/weapons/all.qc:930 qcsrc/common/weapons/all.qc:947
-#: qcsrc/common/weapons/all.qc:963 qcsrc/common/weapons/all.qc:977
-#: qcsrc/common/weapons/all.qc:1001 qcsrc/common/weapons/all.qc:1013
-msgid "Default damage stats:"
-msgstr "Stats des dégâts par défaut :"
-
-#: qcsrc/common/weapons/all.qc:877
-#, c-format
-msgid "A direct hit does %s damage"
-msgstr "Un tir direct inflige %s points de dégâts"
-
-#: qcsrc/common/weapons/all.qc:999
+#: qcsrc/common/weapons/all.qc:853
 #, c-format
 msgid "(total DPS: %.2f)"
 msgstr "(DPS total : %.2f)"
 
-#: qcsrc/common/weapons/all.qc:1004
+#: qcsrc/common/weapons/all.qc:857
+#, c-format
+msgid "It does %s damage"
+msgstr "Cette arme inflige %s points de dégâts"
+
+#: qcsrc/common/weapons/all.qc:858
+#, c-format
+msgid "It shoots %s shots doing %s damage each"
+msgstr "Cette arme tire %s coups infligeant chacun %s points de dégâts"
+
+#: qcsrc/common/weapons/all.qc:859
+#, c-format
+msgid "A direct hit does %s damage"
+msgstr "Un tir direct inflige %s points de dégâts"
+
+#: qcsrc/common/weapons/all.qc:860
+#, c-format
+msgid "The %s does %s damage"
+msgstr "Le tir %s inflige %s points de dégâts"
+
+#: qcsrc/common/weapons/all.qc:861
+#, c-format
+msgid "The %s does %s damage per second"
+msgstr "Le tir %s inflige %s points de dégâts par seconde"
+
+#: qcsrc/common/weapons/all.qc:862
+#, c-format
+msgid "The %s shoots %s shots doing %s damage each"
+msgstr "Le tir %s tire %s coups infligeant chacun %s points de dégâts"
+
+#: qcsrc/common/weapons/all.qc:863
+#, c-format
+msgid "The %s shoots up to %s shots doing %s damage each"
+msgstr "Le tir %s tire jusqu'à %s coups infligeant chacun %s points de dégâts"
+
+#: qcsrc/common/weapons/all.qc:864
+#, c-format
+msgid "The %s does %s damage then shoots %s shots doing %s damage each"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:865
 #, c-format
 msgid "The combo adds an extra %s damage"
 msgstr "Le combo ajoute %s points de dégâts supplémentaires"
+
+#: qcsrc/common/weapons/all.qc:890 qcsrc/common/weapons/all.qc:899
+#: qcsrc/common/weapons/all.qc:919 qcsrc/common/weapons/all.qc:932
+#: qcsrc/common/weapons/all.qc:941 qcsrc/common/weapons/all.qc:957
+#: qcsrc/common/weapons/all.qc:976 qcsrc/common/weapons/all.qc:992
+#: qcsrc/common/weapons/all.qc:1005 qcsrc/common/weapons/all.qc:1026
+#: qcsrc/common/weapons/all.qc:1037
+msgid "Default damage stats:"
+msgstr "Stats des dégâts par défaut :"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1437
 #, c-format
@@ -8937,7 +8943,7 @@ msgstr ""
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/common/weapons/weapon/devastator.qc:593
+#: qcsrc/common/weapons/weapon/devastator.qc:532
 #, c-format
 msgid ""
 "The %s launches a remote controlled rocket, dealing significant damage when "
@@ -8948,7 +8954,7 @@ msgstr ""
 "lorsqu'elle explose à l'impact. Si vous maintenez le tir primaire enfoncé, "
 "vous pouvez guider la roquette vers vos ennemis."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:595
+#: qcsrc/common/weapons/weapon/devastator.qc:534
 msgid ""
 "The secondary fire can be used to immediately detonate rockets, allowing "
 "dealing damage to enemies even if the rocket barely missed colliding with "
@@ -8958,7 +8964,7 @@ msgstr ""
 "roquettes, ce qui permet d'infliger des dégâts aux ennemis même si la "
 "roquette les a manqués de peu."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:596
+#: qcsrc/common/weapons/weapon/devastator.qc:535
 #, c-format
 msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
@@ -8968,7 +8974,7 @@ msgstr ""
 "celles-ci peuvent ainsi rapidement être épuisées. Les joueurs alternent donc "
 "souvent avec une autre arme comme le %s."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:597
+#: qcsrc/common/weapons/weapon/devastator.qc:536
 #, c-format
 msgid ""
 "Due to its high damage output, the %s is one of the most commonly used "
@@ -8982,7 +8988,7 @@ msgstr ""
 "Dans les combats rapprochés, ses larges dégâts de zone infligeront souvent "
 "des dégâts à la fois à vos ennemis et à vous-même."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:600
+#: qcsrc/common/weapons/weapon/devastator.qc:539
 #, c-format
 msgid ""
 "Due to the ability to remotely detonate rockets, a common usage is \"rocket "
@@ -9447,7 +9453,7 @@ msgstr ""
 msgid "Rifle"
 msgstr "Fusil de précision"
 
-#: qcsrc/common/weapons/weapon/seeker.qc:634
+#: qcsrc/common/weapons/weapon/seeker.qc:726
 #, c-format
 msgid ""
 "The %s is a unique weapon, firing a \"tag\" which then launches a few homing "
@@ -9458,7 +9464,7 @@ msgstr ""
 "missiles à tête chercheuse si celle-ci heurte un joueur. Le guidage n'est "
 "pas parfait, les missiles peuvent donc parfois toucher un objet ou un coin."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:636
+#: qcsrc/common/weapons/weapon/seeker.qc:728
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
@@ -9466,14 +9472,14 @@ msgstr ""
 "Le tir secondaire lance une rafale rapide d'explosifs dispersés qui ne "
 "parcourent qu'une courte distance."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:637
+#: qcsrc/common/weapons/weapon/seeker.qc:729
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
 msgstr ""
 "Cette arme consomme des munitions de type %s, même lorsque la balise "
 "n'atteint pas sa cible."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:638
+#: qcsrc/common/weapons/weapon/seeker.qc:730
 #, c-format
 msgid ""
 "The %s primary fire deals quite a lot of damage when a tag lands, although "
@@ -9486,8 +9492,8 @@ msgstr ""
 "parfois vous infliger des dégâts à vous-même."
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
-msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
+msgid "Seeker"
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
@@ -10048,7 +10054,7 @@ msgstr "%d jours, %02d:%02d:%02d"
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
-#: qcsrc/menu/item/listbox.qc:414
+#: qcsrc/menu/item/listbox.qc:410
 #, c-format
 msgid "Item %d"
 msgstr "Objet %d"
@@ -11140,7 +11146,7 @@ msgstr "Thèmes de l'ATH"
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:34
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:24
 #: qcsrc/menu/xonotic/dialog_media_screenshot.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:167
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:166
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:35
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
 msgid "Filter:"
@@ -11323,7 +11329,7 @@ msgid "Timing a demo will disconnect you from the current match."
 msgstr "Chronométrer une démo vous déconnectera de la partie actuelle."
 
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:33
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:169
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:168
 msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
@@ -11471,8 +11477,8 @@ msgstr ""
 "Jouer en ligne, contre vos amis en réseau local, ou modifier vos paramètres "
 "de joueur."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:37
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:112
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
 #: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:748
 #: qcsrc/menu/xonotic/util.qc:760 qcsrc/menu/xonotic/util.qc:765
@@ -11481,60 +11487,60 @@ msgstr ""
 msgid "Default"
 msgstr "Par défaut"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:39
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "Unlimited"
 msgstr "Illimité"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Gametype"
 msgstr "Type de partie"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:92
 msgid "Show all"
 msgstr "Tout afficher"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
 msgid "Show all available gametypes"
 msgstr "Afficher tous les types de partie disponibles"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:95
 msgid "Time limit:"
 msgstr "Limite de temps :"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:97
 msgid "Time limit in minutes that when hit, will end the match"
 msgstr "Limite de temps, la partie se termine lorsque celle-ci est atteinte"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:99
 msgid "TIMLIM^Default"
 msgstr "Par défaut"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:104
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
 msgid "TIMLIM^Infinite"
 msgstr "illimité"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
 msgid "Teams:"
 msgstr "Équipes :"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
 msgid "2 teams"
 msgstr "2 équipes"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "3 teams"
 msgstr "3 équipes"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "4 teams"
 msgstr "4 équipes"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:118
 msgid "Player slots:"
 msgstr "Nombre de joueurs :"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:120
 msgid ""
 "The maximum number of players or bots that can be connected to your server "
 "at once"
@@ -11542,122 +11548,122 @@ msgstr ""
 "Le nombre maximal de joueurs ou de bots pouvant être connectés simultanément "
 "à votre serveur"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:122
 msgid "Number of bots:"
 msgstr "Nombre de bots :"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Number of bots on your server"
 msgstr "Nombre de bots sur votre serveur"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
 msgid "Bot skill:"
 msgstr "Niveau des bots :"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "Specify how experienced the bots will be"
 msgstr "Spécifier le niveau d'expérience des bots"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Botlike"
 msgstr "Mauvais"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Beginner"
 msgstr "Débutant"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "You will win"
 msgstr "Vous allez gagner"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "You can win"
 msgstr "Vous pouvez gagner"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "You might win"
 msgstr "Vous risquez de gagner"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "Advanced"
 msgstr "Avancé"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "Expert"
 msgstr "Expert"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
 msgid "Pro"
 msgstr "Pro"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
 msgid "Assassin"
 msgstr "Assassin"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
 msgid "Unhuman"
 msgstr "Inhumain"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
 msgid "Godlike"
 msgstr "Divin"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:149
 msgid "Bots against humans"
 msgstr "Bots contre humains"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr ""
 "Forcer les humains à jouer dans la même équipe contre une équipe de bots de "
 "taille similaire."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:158
 msgid "Maplist"
 msgstr "Liste des cartes"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:177
 msgid "Add shown"
 msgstr "Ajouter les filtrées"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:179
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
 msgid "Add the maps shown in the list to your selection"
 msgstr "Ajouter les cartes affichées dans la liste à votre sélection"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:181
 msgid "Remove shown"
 msgstr "Supprimer les filtrées"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:183
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
 msgid "Remove the maps shown in the list from your selection"
 msgstr "Supprimer les cartes affichées dans la liste de votre sélection"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:187
 msgid "Add all"
 msgstr "Tout ajouter"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Add every available map to your selection"
 msgstr "Ajouter toutes les cartes disponibles à votre sélection"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
 msgid "Remove all"
 msgstr "Tout supprimer"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:193
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
 msgid "Remove all the maps from your selection"
 msgstr "Supprimer toutes les cartes de votre sélection"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:200
 msgid "Mutators..."
 msgstr "Mutateurs…"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:202
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Mutators and weapon arenas"
 msgstr "Mutateurs et arènes avec une seule arme"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:212
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:211
 msgid "Start multiplayer!"
 msgstr "Démarrer le multijoueur !"
 

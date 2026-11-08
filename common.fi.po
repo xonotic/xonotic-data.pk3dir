@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 07:22+0200\n"
+"POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: Jaakko Muilu, 2025-2026\n"
 "Language-Team: Finnish (http://app.transifex.com/team-xonotic/xonotic/"
@@ -1787,6 +1787,9 @@ msgid ""
 "health, so it is a good opportunity to search the map for them to pick up an "
 "easy frag and continue your streak."
 msgstr ""
+"Kun lahtaat vastustajasi, he syntyvät uudelleen parilla aseella ja "
+"rajoitetulla terveydellä, joten se on hyvä tilaisuus etsiä heitä kartalta "
+"helppoa lahtaamista varten ja lahtausputken jatkamiseksi."
 
 #: qcsrc/common/gametypes/gametype/duel/duel.qc:17
 #, c-format
@@ -1889,6 +1892,9 @@ msgid ""
 "when you frag the ball carrier. The first player to reach the score limit "
 "will win the match."
 msgstr ""
+"Pisteesi kasvavat, kun lahtaat jonkun pitäessasi palloa ja kun lahtaat "
+"pallon viejän. Ensimmäinen pelaaja, joka saavuttaa pisterajan, voittaa "
+"ottelun."
 
 #: qcsrc/common/gametypes/gametype/keepaway/keepaway.qc:13
 msgid ""
@@ -2470,7 +2476,7 @@ msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n tuubanheitto!"
 
 #: qcsrc/common/mapinfo.qh:94
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:106
 msgid "Frag limit:"
 msgstr "Lahtausraja:"
 
@@ -7154,12 +7160,12 @@ msgid " (near %s)"
 msgstr " (lähellä %s)"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
-#: qcsrc/common/weapons/all.qc:845
+#: qcsrc/common/weapons/all.qc:855
 msgid "primary"
 msgstr "ensisijainen"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
-#: qcsrc/common/weapons/all.qc:846
+#: qcsrc/common/weapons/all.qc:856
 msgid "secondary"
 msgstr "toissijainen"
 
@@ -8283,64 +8289,70 @@ msgstr "Tätä asetta ei ole sidottu suoraan."
 msgid "You have bound this weapon to: %s."
 msgstr "Olet sitonut tämän aseen tähän: %s."
 
-#: qcsrc/common/weapons/all.qc:842 qcsrc/common/weapons/all.qc:843
-#: qcsrc/common/weapons/all.qc:874
+#: qcsrc/common/weapons/all.qc:849 qcsrc/common/weapons/all.qc:850
+#: qcsrc/common/weapons/all.qc:851 qcsrc/common/weapons/all.qc:852
 #, c-format
 msgid "(DPS: %.2f)"
 msgstr "(Vahinkoa sekunnissa %.2f)"
 
-#: qcsrc/common/weapons/all.qc:847
-#, c-format
-msgid "It does %s damage"
-msgstr "Se tekee %s vahinkoa"
-
-#: qcsrc/common/weapons/all.qc:848
-#, c-format
-msgid "It shoots %s shots doing %s damage each"
-msgstr "Se ampuu %s tehden kullakin%s vahinkoa"
-
-#: qcsrc/common/weapons/all.qc:849
-#, c-format
-msgid "The %s does %s damage"
-msgstr "%s tekee %s vahinkoa"
-
-#: qcsrc/common/weapons/all.qc:850
-#, c-format
-msgid "The %s does %s damage per second"
-msgstr "%s tekee %s vahinkoa sekunnissa"
-
-#: qcsrc/common/weapons/all.qc:851
-#, c-format
-msgid "The %s shoots %s shots doing %s damage each"
-msgstr "%s ampuu %s laukausta tehden kullakin %s vahinkoa"
-
-#: qcsrc/common/weapons/all.qc:852
-#, c-format
-msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr "%s ampuu enintään %s laukausta tehden kullakin %s vahinkoa"
-
-#: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:885
-#: qcsrc/common/weapons/all.qc:906 qcsrc/common/weapons/all.qc:920
-#: qcsrc/common/weapons/all.qc:930 qcsrc/common/weapons/all.qc:947
-#: qcsrc/common/weapons/all.qc:963 qcsrc/common/weapons/all.qc:977
-#: qcsrc/common/weapons/all.qc:1001 qcsrc/common/weapons/all.qc:1013
-msgid "Default damage stats:"
-msgstr "Oletusvahingon tilastot:"
-
-#: qcsrc/common/weapons/all.qc:877
-#, c-format
-msgid "A direct hit does %s damage"
-msgstr "Suora osuma tekee %s vahinkoa"
-
-#: qcsrc/common/weapons/all.qc:999
+#: qcsrc/common/weapons/all.qc:853
 #, c-format
 msgid "(total DPS: %.2f)"
 msgstr "(Vahinkoa sekunnissa yhteensä %.2f)"
 
-#: qcsrc/common/weapons/all.qc:1004
+#: qcsrc/common/weapons/all.qc:857
+#, c-format
+msgid "It does %s damage"
+msgstr "Se tekee %s vahinkoa"
+
+#: qcsrc/common/weapons/all.qc:858
+#, c-format
+msgid "It shoots %s shots doing %s damage each"
+msgstr "Se ampuu %s tehden kullakin%s vahinkoa"
+
+#: qcsrc/common/weapons/all.qc:859
+#, c-format
+msgid "A direct hit does %s damage"
+msgstr "Suora osuma tekee %s vahinkoa"
+
+#: qcsrc/common/weapons/all.qc:860
+#, c-format
+msgid "The %s does %s damage"
+msgstr "%s tekee %s vahinkoa"
+
+#: qcsrc/common/weapons/all.qc:861
+#, c-format
+msgid "The %s does %s damage per second"
+msgstr "%s tekee %s vahinkoa sekunnissa"
+
+#: qcsrc/common/weapons/all.qc:862
+#, c-format
+msgid "The %s shoots %s shots doing %s damage each"
+msgstr "%s ampuu %s laukausta tehden kullakin %s vahinkoa"
+
+#: qcsrc/common/weapons/all.qc:863
+#, c-format
+msgid "The %s shoots up to %s shots doing %s damage each"
+msgstr "%s ampuu enintään %s laukausta tehden kullakin %s vahinkoa"
+
+#: qcsrc/common/weapons/all.qc:864
+#, c-format
+msgid "The %s does %s damage then shoots %s shots doing %s damage each"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:865
 #, c-format
 msgid "The combo adds an extra %s damage"
 msgstr "Kombo lisää %s lisävahinkoa"
+
+#: qcsrc/common/weapons/all.qc:890 qcsrc/common/weapons/all.qc:899
+#: qcsrc/common/weapons/all.qc:919 qcsrc/common/weapons/all.qc:932
+#: qcsrc/common/weapons/all.qc:941 qcsrc/common/weapons/all.qc:957
+#: qcsrc/common/weapons/all.qc:976 qcsrc/common/weapons/all.qc:992
+#: qcsrc/common/weapons/all.qc:1005 qcsrc/common/weapons/all.qc:1026
+#: qcsrc/common/weapons/all.qc:1037
+msgid "Default damage stats:"
+msgstr "Oletusvahingon tilastot:"
 
 #: qcsrc/common/weapons/weapon/arc.qc:1437
 #, c-format
@@ -8480,7 +8492,7 @@ msgstr ""
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/common/weapons/weapon/devastator.qc:593
+#: qcsrc/common/weapons/weapon/devastator.qc:532
 #, c-format
 msgid ""
 "The %s launches a remote controlled rocket, dealing significant damage when "
@@ -8488,7 +8500,7 @@ msgid ""
 "by the user's aim, allowing steering it towards enemies."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/devastator.qc:595
+#: qcsrc/common/weapons/weapon/devastator.qc:534
 msgid ""
 "The secondary fire can be used to immediately detonate rockets, allowing "
 "dealing damage to enemies even if the rocket barely missed colliding with "
@@ -8498,14 +8510,14 @@ msgstr ""
 "vihollista voidaan vahingoittaa, vaikka raketti olisi mennyt heistä juuri ja "
 "juuri ohi."
 
-#: qcsrc/common/weapons/weapon/devastator.qc:596
+#: qcsrc/common/weapons/weapon/devastator.qc:535
 #, c-format
 msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/devastator.qc:597
+#: qcsrc/common/weapons/weapon/devastator.qc:536
 #, c-format
 msgid ""
 "Due to its high damage output, the %s is one of the most commonly used "
@@ -8514,7 +8526,7 @@ msgid ""
 "rockets damaging both you and your enemy."
 msgstr ""
 
-#: qcsrc/common/weapons/weapon/devastator.qc:600
+#: qcsrc/common/weapons/weapon/devastator.qc:539
 #, c-format
 msgid ""
 "Due to the ability to remotely detonate rockets, a common usage is \"rocket "
@@ -8916,7 +8928,7 @@ msgstr ""
 msgid "Rifle"
 msgstr "Kivääri"
 
-#: qcsrc/common/weapons/weapon/seeker.qc:634
+#: qcsrc/common/weapons/weapon/seeker.qc:726
 #, c-format
 msgid ""
 "The %s is a unique weapon, firing a \"tag\" which then launches a few homing "
@@ -8927,7 +8939,7 @@ msgstr ""
 "hakeutuvan ohjuksen, jos se törmää pelaajaan. Hakeutuminen ei ole "
 "täydellistä, joten ohjukset voivat joskus osua esteeseen tai kulmaan."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:636
+#: qcsrc/common/weapons/weapon/seeker.qc:728
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
@@ -8935,12 +8947,12 @@ msgstr ""
 "Toissijainen tulitus laukoo nopean sarjan hajalleen meneviä räjähteitä, "
 "jotka kulkevat vain lyhyen matkaa."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:637
+#: qcsrc/common/weapons/weapon/seeker.qc:729
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
 msgstr "Se kuluttaa %s-ammusta, vaikka tagi ei osuisikaan."
 
-#: qcsrc/common/weapons/weapon/seeker.qc:638
+#: qcsrc/common/weapons/weapon/seeker.qc:730
 #, c-format
 msgid ""
 "The %s primary fire deals quite a lot of damage when a tag lands, although "
@@ -8949,8 +8961,8 @@ msgid ""
 msgstr ""
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
-msgid "T.A.G. Seeker"
-msgstr "T.A.G. Hakeutuva"
+msgid "Seeker"
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
@@ -9499,7 +9511,7 @@ msgstr "%d päivää, %02d:%02d:%02d"
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
-#: qcsrc/menu/item/listbox.qc:414
+#: qcsrc/menu/item/listbox.qc:410
 #, c-format
 msgid "Item %d"
 msgstr "Esine %d"
@@ -10584,7 +10596,7 @@ msgstr "HUD-päällysteet"
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:34
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:24
 #: qcsrc/menu/xonotic/dialog_media_screenshot.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:167
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:166
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:35
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
 msgid "Filter:"
@@ -10766,7 +10778,7 @@ msgid "Timing a demo will disconnect you from the current match."
 msgstr "Demon ajastus katkaisee yhteyden tämänhetkiseen otteluun."
 
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:33
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:169
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:168
 msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
@@ -10914,8 +10926,8 @@ msgstr ""
 "Pelaa verkossa, ystäviäsi vastaan LAN-lähiverkossa, tai muuta pelaaja-"
 "asetuksia"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:37
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:112
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
 #: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:748
 #: qcsrc/menu/xonotic/util.qc:760 qcsrc/menu/xonotic/util.qc:765
@@ -10924,60 +10936,60 @@ msgstr ""
 msgid "Default"
 msgstr "Perusasetus"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:39
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "Unlimited"
 msgstr "Rajoittamaton"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Gametype"
 msgstr "Pelimuoto"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:92
 msgid "Show all"
 msgstr "Näytä kaikki"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
 msgid "Show all available gametypes"
 msgstr "Näytä kaikki saatavilla olevat pelimuodot"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:95
 msgid "Time limit:"
 msgstr "Aikaraja"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:97
 msgid "Time limit in minutes that when hit, will end the match"
 msgstr "Aikaraja minuuteissa, jonka täytyttyä päättää ottelun"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:99
 msgid "TIMLIM^Default"
 msgstr "TIMLIM^Vakio"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:104
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
 msgid "TIMLIM^Infinite"
 msgstr "TIMLIM^Rajaton"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
 msgid "Teams:"
 msgstr "Joukkueet:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
 msgid "2 teams"
 msgstr "2 joukkuetta"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "3 teams"
 msgstr "3 joukkuetta"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "4 teams"
 msgstr "4 joukkuetta"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:118
 msgid "Player slots:"
 msgstr "Pelaajalokerot:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:120
 msgid ""
 "The maximum number of players or bots that can be connected to your server "
 "at once"
@@ -10985,120 +10997,120 @@ msgstr ""
 "Pelaajien tai bottien enimmäismäärä, jotka voivat yhdistää palvelimeesi "
 "kerralla"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:122
 msgid "Number of bots:"
 msgstr "Bottien lukumäärä:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Number of bots on your server"
 msgstr "Bottien lukumäärä palvelimellasi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
 msgid "Bot skill:"
 msgstr "Bottien taitotaso:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "Specify how experienced the bots will be"
 msgstr "Määritä, kuinka kokeneita haluat bottien olevan"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Botlike"
 msgstr "Konemainen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Beginner"
 msgstr "Aloittelija"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "You will win"
 msgstr "Tulet voittamaan"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "You can win"
 msgstr "Voit voittaa"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "You might win"
 msgstr "Voinet voittaa"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "Advanced"
 msgstr "Kehittynyt"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "Expert"
 msgstr "Kokenut"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
 msgid "Pro"
 msgstr "Ammattilainen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
 msgid "Assassin"
 msgstr "Murhaaja"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
 msgid "Unhuman"
 msgstr "Epäinhimillinen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
 msgid "Godlike"
 msgstr "Jumalainen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:149
 msgid "Bots against humans"
 msgstr "Botit vastaan ihmiset"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:158
 msgid "Maplist"
 msgstr "Karttaluettelo"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:177
 msgid "Add shown"
 msgstr "Lisää näkyvät"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:179
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
 msgid "Add the maps shown in the list to your selection"
 msgstr "Lisää kartat jotka näkyvät "
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:181
 msgid "Remove shown"
 msgstr "Poista näkyvistä"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:183
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
 msgid "Remove the maps shown in the list from your selection"
 msgstr "Poista karttoja jotka näkyvät "
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:187
 msgid "Add all"
 msgstr "Lisää kaikki"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Add every available map to your selection"
 msgstr "Lisää kaikki tarjollaolevat kartat valintaasi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
 msgid "Remove all"
 msgstr "Poista kaikki"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:193
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
 msgid "Remove all the maps from your selection"
 msgstr "Poista kaikki kartat valinnastasi"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:200
 msgid "Mutators..."
 msgstr "Muovaajat..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:202
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Mutators and weapon arenas"
 msgstr "Muovaajat ja ase-areenat"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:212
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:211
 msgid "Start multiplayer!"
 msgstr "Aloita moninpeli!"
 
@@ -13694,6 +13706,9 @@ msgid ""
 "900 qu/s (\"units per second\"). CTS/DeFRaG servers usually run with "
 "different CPMA-like physics that remove this cap."
 msgstr ""
+"Perusasetuksilla nopeus, jonka saavutat pupuhyppelyllä, rajautuu 900 yk/s "
+"(\"yksikköä sekunnissa\"). CTS/DeFRaG -palvelimet toimivat eri CPMA-"
+"fysiikoilla, jotka poistavat tämän rajan."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:92
 msgid ""
@@ -13895,6 +13910,10 @@ msgid ""
 "jumping\" (\"CJ\") offer only limited benefits in vanilla gameplay, but are "
 "crucial on CTS/DeFRaG servers that use slightly different physics."
 msgstr ""
+"Edistyneet tekniikat, kuten \"sivuhyppely\" (\"streiffaus\") tai "
+"\"kiertohyppy\" (\"KH\"), tarjoavat vain rajallisia etuja peruspelissä, "
+"mutta ovat elintärkeitä CTS/DeFRaG-palvelimilla, joilla on hieman erilaisia "
+"fysiikoita."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:167
 #, c-format

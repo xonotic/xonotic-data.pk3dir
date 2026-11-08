@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 07:22+0200\n"
+"POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
 "Last-Translator: 韬 刘 <jiegushijia@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/team-xonotic/"
@@ -2468,7 +2468,7 @@ msgid "@!#%'n Tuba Throwing"
 msgstr "乱音大号聚会"
 
 #: qcsrc/common/mapinfo.qh:94
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:106
 msgid "Frag limit:"
 msgstr "目标击杀数："
 
@@ -6973,12 +6973,12 @@ msgid " (near %s)"
 msgstr "（在%s旁）"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
-#: qcsrc/common/weapons/all.qc:845
+#: qcsrc/common/weapons/all.qc:855
 msgid "primary"
 msgstr "主火力"
 
 #: qcsrc/common/notifications/all.qh:439 qcsrc/common/notifications/all.qh:440
-#: qcsrc/common/weapons/all.qc:846
+#: qcsrc/common/weapons/all.qc:856
 msgid "secondary"
 msgstr "副火力"
 
@@ -8079,64 +8079,70 @@ msgstr "此武器没有设定键位"
 msgid "You have bound this weapon to: %s."
 msgstr "你把此武器的键位设定为：%s。"
 
-#: qcsrc/common/weapons/all.qc:842 qcsrc/common/weapons/all.qc:843
-#: qcsrc/common/weapons/all.qc:874
+#: qcsrc/common/weapons/all.qc:849 qcsrc/common/weapons/all.qc:850
+#: qcsrc/common/weapons/all.qc:851 qcsrc/common/weapons/all.qc:852
 #, c-format
 msgid "(DPS: %.2f)"
 msgstr "（秒伤：%.2f）"
 
-#: qcsrc/common/weapons/all.qc:847
-#, c-format
-msgid "It does %s damage"
-msgstr "此武器造成 %s 点伤害"
-
-#: qcsrc/common/weapons/all.qc:848
-#, c-format
-msgid "It shoots %s shots doing %s damage each"
-msgstr "此武器发射 %s 发子弹，每发造成 %s 点伤害"
-
-#: qcsrc/common/weapons/all.qc:849
-#, c-format
-msgid "The %s does %s damage"
-msgstr "%s造成 %s 点伤害"
-
-#: qcsrc/common/weapons/all.qc:850
-#, c-format
-msgid "The %s does %s damage per second"
-msgstr "%s每秒造成 %s 点伤害"
-
-#: qcsrc/common/weapons/all.qc:851
-#, c-format
-msgid "The %s shoots %s shots doing %s damage each"
-msgstr "%s发射 %s 发子弹，每发造成 %s 点伤害"
-
-#: qcsrc/common/weapons/all.qc:852
-#, c-format
-msgid "The %s shoots up to %s shots doing %s damage each"
-msgstr "%s最多发射 %s 发子弹，每发造成 %s 点伤害"
-
-#: qcsrc/common/weapons/all.qc:875 qcsrc/common/weapons/all.qc:885
-#: qcsrc/common/weapons/all.qc:906 qcsrc/common/weapons/all.qc:920
-#: qcsrc/common/weapons/all.qc:930 qcsrc/common/weapons/all.qc:947
-#: qcsrc/common/weapons/all.qc:963 qcsrc/common/weapons/all.qc:977
-#: qcsrc/common/weapons/all.qc:1001 qcsrc/common/weapons/all.qc:1013
-msgid "Default damage stats:"
-msgstr "默认伤害情况："
-
-#: qcsrc/common/weapons/all.qc:877
-#, c-format
-msgid "A direct hit does %s damage"
-msgstr "直接打击造成 %s 点伤害"
-
-#: qcsrc/common/weapons/all.qc:999
+#: qcsrc/common/weapons/all.qc:853
 #, c-format
 msgid "(total DPS: %.2f)"
 msgstr "（总秒伤：%.2f）"
 
-#: qcsrc/common/weapons/all.qc:1004
+#: qcsrc/common/weapons/all.qc:857
+#, c-format
+msgid "It does %s damage"
+msgstr "此武器造成 %s 点伤害"
+
+#: qcsrc/common/weapons/all.qc:858
+#, c-format
+msgid "It shoots %s shots doing %s damage each"
+msgstr "此武器发射 %s 发子弹，每发造成 %s 点伤害"
+
+#: qcsrc/common/weapons/all.qc:859
+#, c-format
+msgid "A direct hit does %s damage"
+msgstr "直接打击造成 %s 点伤害"
+
+#: qcsrc/common/weapons/all.qc:860
+#, c-format
+msgid "The %s does %s damage"
+msgstr "%s造成 %s 点伤害"
+
+#: qcsrc/common/weapons/all.qc:861
+#, c-format
+msgid "The %s does %s damage per second"
+msgstr "%s每秒造成 %s 点伤害"
+
+#: qcsrc/common/weapons/all.qc:862
+#, c-format
+msgid "The %s shoots %s shots doing %s damage each"
+msgstr "%s发射 %s 发子弹，每发造成 %s 点伤害"
+
+#: qcsrc/common/weapons/all.qc:863
+#, c-format
+msgid "The %s shoots up to %s shots doing %s damage each"
+msgstr "%s最多发射 %s 发子弹，每发造成 %s 点伤害"
+
+#: qcsrc/common/weapons/all.qc:864
+#, c-format
+msgid "The %s does %s damage then shoots %s shots doing %s damage each"
+msgstr ""
+
+#: qcsrc/common/weapons/all.qc:865
 #, c-format
 msgid "The combo adds an extra %s damage"
 msgstr "连击造成额外 %s 点伤害"
+
+#: qcsrc/common/weapons/all.qc:890 qcsrc/common/weapons/all.qc:899
+#: qcsrc/common/weapons/all.qc:919 qcsrc/common/weapons/all.qc:932
+#: qcsrc/common/weapons/all.qc:941 qcsrc/common/weapons/all.qc:957
+#: qcsrc/common/weapons/all.qc:976 qcsrc/common/weapons/all.qc:992
+#: qcsrc/common/weapons/all.qc:1005 qcsrc/common/weapons/all.qc:1026
+#: qcsrc/common/weapons/all.qc:1037
+msgid "Default damage stats:"
+msgstr "默认伤害情况："
 
 #: qcsrc/common/weapons/weapon/arc.qc:1437
 #, c-format
@@ -8274,7 +8280,7 @@ msgstr ""
 msgid "Crylink"
 msgstr "紫电"
 
-#: qcsrc/common/weapons/weapon/devastator.qc:593
+#: qcsrc/common/weapons/weapon/devastator.qc:532
 #, c-format
 msgid ""
 "The %s launches a remote controlled rocket, dealing significant damage when "
@@ -8284,21 +8290,21 @@ msgstr ""
 "%s发射遥控火箭弹，命中爆炸时造成大量伤害。按住主火力时，火箭弹会随瞄准方向飞"
 "行，可引导它飞向敌人。"
 
-#: qcsrc/common/weapons/weapon/devastator.qc:595
+#: qcsrc/common/weapons/weapon/devastator.qc:534
 msgid ""
 "The secondary fire can be used to immediately detonate rockets, allowing "
 "dealing damage to enemies even if the rocket barely missed colliding with "
 "them."
 msgstr "副火力可立即引爆飞行中的火箭弹，即使火箭弹擦身而过也能对敌人造成伤害。"
 
-#: qcsrc/common/weapons/weapon/devastator.qc:596
+#: qcsrc/common/weapons/weapon/devastator.qc:535
 #, c-format
 msgid ""
 "It consumes a bunch of %s ammo for each rocket, which can end up being "
 "depleted quickly, so often players alternate with another weapon like %s."
 msgstr "此武器使用大量%s弹药，容易耗尽，因此玩家通常搭配%s等其他武器交替使用。"
 
-#: qcsrc/common/weapons/weapon/devastator.qc:597
+#: qcsrc/common/weapons/weapon/devastator.qc:536
 #, c-format
 msgid ""
 "Due to its high damage output, the %s is one of the most commonly used "
@@ -8309,7 +8315,7 @@ msgstr ""
 "由于伤害极高，%s是最常用的武器之一。几乎适用于所有场景，中距离战斗效果最佳。"
 "近距离战斗中，较大的溅射范围常常导致火箭弹同时伤到自己和敌人。"
 
-#: qcsrc/common/weapons/weapon/devastator.qc:600
+#: qcsrc/common/weapons/weapon/devastator.qc:539
 #, c-format
 msgid ""
 "Due to the ability to remotely detonate rockets, a common usage is \"rocket "
@@ -8689,7 +8695,7 @@ msgstr "与%s相似，%s可在任何距离使用，但远距离尤为出色。"
 msgid "Rifle"
 msgstr "步枪"
 
-#: qcsrc/common/weapons/weapon/seeker.qc:634
+#: qcsrc/common/weapons/weapon/seeker.qc:726
 #, c-format
 msgid ""
 "The %s is a unique weapon, firing a \"tag\" which then launches a few homing "
@@ -8699,18 +8705,18 @@ msgstr ""
 "%s是独特的武器，发射“标记”，命中玩家后发射数枚追踪导弹。追踪并不完美，导弹有"
 "时会撞到物体或角落。"
 
-#: qcsrc/common/weapons/weapon/seeker.qc:636
+#: qcsrc/common/weapons/weapon/seeker.qc:728
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr "副火力发射一轮快速散射的爆炸物，飞行距离较短。"
 
-#: qcsrc/common/weapons/weapon/seeker.qc:637
+#: qcsrc/common/weapons/weapon/seeker.qc:729
 #, c-format
 msgid "It consumes %s ammo, even when the tag doesn't land."
 msgstr "消耗%s弹药，不论标记是否命中。"
 
-#: qcsrc/common/weapons/weapon/seeker.qc:638
+#: qcsrc/common/weapons/weapon/seeker.qc:730
 #, c-format
 msgid ""
 "The %s primary fire deals quite a lot of damage when a tag lands, although "
@@ -8721,8 +8727,8 @@ msgstr ""
 "用，有时爆炸物也会伤到自己。"
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
-msgid "T.A.G. Seeker"
-msgstr "T.A.G. 追击者"
+msgid "Seeker"
+msgstr ""
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
@@ -9259,7 +9265,7 @@ msgstr "%d 天，%02d:%02d:%02d"
 msgid "%02d:%02d:%02d"
 msgstr "%02d:%02d:%02d"
 
-#: qcsrc/menu/item/listbox.qc:414
+#: qcsrc/menu/item/listbox.qc:410
 #, c-format
 msgid "Item %d"
 msgstr "物品 %d"
@@ -10341,7 +10347,7 @@ msgstr "HUD 皮肤"
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:34
 #: qcsrc/menu/xonotic/dialog_media_musicplayer.qc:24
 #: qcsrc/menu/xonotic/dialog_media_screenshot.qc:30
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:167
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:166
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:35
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.qc:32
 msgid "Filter:"
@@ -10517,7 +10523,7 @@ msgid "Timing a demo will disconnect you from the current match."
 msgstr "全速回放将使你离开当前竞赛"
 
 #: qcsrc/menu/xonotic/dialog_media_guide.qc:33
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:169
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:168
 msgid ""
 "Click here or CTRL+F to provide a keyword to narrow down the list; CTRL+DEL "
 "to clear; ENTER when done."
@@ -10661,8 +10667,8 @@ msgstr "多人游戏"
 msgid "Play online, against your friends in LAN, or change player settings"
 msgstr "在线游玩、与局域网好友对战、更改玩家设置"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:38
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:37
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:112
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:69
 #: qcsrc/menu/xonotic/skinlist.qc:87 qcsrc/menu/xonotic/util.qc:748
 #: qcsrc/menu/xonotic/util.qc:760 qcsrc/menu/xonotic/util.qc:765
@@ -10671,179 +10677,179 @@ msgstr "在线游玩、与局域网好友对战、更改玩家设置"
 msgid "Default"
 msgstr "默认"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:40
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:39
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:62
 msgid "Unlimited"
 msgstr "无限制"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
 msgid "Gametype"
 msgstr "游戏模式"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:92
 msgid "Show all"
 msgstr "显示所有"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
 msgid "Show all available gametypes"
 msgstr "显示所有可用的游戏模式"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:95
 msgid "Time limit:"
 msgstr "时间限制："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:97
 msgid "Time limit in minutes that when hit, will end the match"
 msgstr "以分钟计的时间限制，到时结束比赛"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:100
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:99
 msgid "TIMLIM^Default"
 msgstr "默认"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:104
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
 msgid "TIMLIM^Infinite"
 msgstr "不限"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
 msgid "Teams:"
 msgstr "团队数："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
 msgid "2 teams"
 msgstr "2 支"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:114
 msgid "3 teams"
 msgstr "3 支"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:116
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "4 teams"
 msgstr "4 支"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:118
 msgid "Player slots:"
 msgstr "最大玩家数量："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:120
 msgid ""
 "The maximum number of players or bots that can be connected to your server "
 "at once"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:122
 msgid "Number of bots:"
 msgstr "电脑玩家数量："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Number of bots on your server"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
 msgid "Bot skill:"
 msgstr "电脑玩家水平："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "Specify how experienced the bots will be"
 msgstr "指定电脑玩家的作战实力"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Botlike"
 msgstr "机器"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Beginner"
 msgstr "新手"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "You will win"
 msgstr "你会赢"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "You can win"
 msgstr "你能赢"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:138
 msgid "You might win"
 msgstr "你可能赢"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:139
 msgid "Advanced"
 msgstr "高级"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:140
 msgid "Expert"
 msgstr "专家"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:141
 msgid "Pro"
 msgstr "强化"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:142
 msgid "Assassin"
 msgstr "刺客"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:143
 msgid "Unhuman"
 msgstr "非人"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:145
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:144
 msgid "Godlike"
 msgstr "超神"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:149
 msgid "Bots against humans"
 msgstr "人机对战"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:150
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr "人类玩家在同一队伍中，对抗同等数量的电脑玩家"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:158
 msgid "Maplist"
 msgstr "地图列表"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:177
 msgid "Add shown"
 msgstr "添加列出项"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:179
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:178
 msgid "Add the maps shown in the list to your selection"
 msgstr "将列表中展示的地图添加到你的选择中"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:181
 msgid "Remove shown"
 msgstr "移除列出项"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:183
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
 msgid "Remove the maps shown in the list from your selection"
 msgstr "将列表中展示的地图从你的选择中移除"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:187
 msgid "Add all"
 msgstr "添加全部"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:189
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Add every available map to your selection"
 msgstr "将所有地图添加到选项中"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
 msgid "Remove all"
 msgstr "移除全部"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:193
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
 msgid "Remove all the maps from your selection"
 msgstr "从选项中移除你所选择的地图"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:200
 msgid "Mutators..."
 msgstr "修改..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:202
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:201
 msgid "Mutators and weapon arenas"
 msgstr "修改与武器竞技"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:212
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:211
 msgid "Start multiplayer!"
 msgstr "开始多人游戏！"
 
