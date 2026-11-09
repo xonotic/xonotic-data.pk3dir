@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Stuart Young <cefiar@gmail.com>, 2016\n"
+"Last-Translator: k9er, 2024-2026\n"
 "Language-Team: English (Australia) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/en_AU/)\n"
 "Language: en_AU\n"
@@ -8539,7 +8539,7 @@ msgstr "The %s shoots up to %s shots doing %s damage each"
 #: qcsrc/common/weapons/all.qc:864
 #, c-format
 msgid "The %s does %s damage then shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "The %s does %s damage then shoots %s shots doing %s damage each"
 
 #: qcsrc/common/weapons/all.qc:865
 #, c-format
@@ -9247,7 +9247,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
 msgid "Seeker"
-msgstr ""
+msgstr "Seeker"
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
