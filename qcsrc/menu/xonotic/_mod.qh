@@ -122,6 +122,7 @@
 #include <menu/xonotic/skinlist.qh>
 #include <menu/xonotic/slider.qh>
 #include <menu/xonotic/slider_decibels.qh>
+#include <menu/xonotic/slider_display.qh>
 #include <menu/xonotic/slider_picmip.qh>
 #include <menu/xonotic/slider_resolution.qh>
 #include <menu/xonotic/slider_sbfadetime.qh>
