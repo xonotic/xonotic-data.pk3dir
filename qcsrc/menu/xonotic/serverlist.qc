@@ -922,22 +922,29 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	// this colour selection code should match csqc Scoreboard_GetField()
 	if (ping < PING_LOW)
 		theColor = SKINCOLOR_SERVERLIST_LOWPING;
-	else if(ping < PING_MED)
+	else if (ping < PING_MED)
 		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * ((ping - PING_LOW) / (PING_MED - PING_LOW));
-	else if(ping < PING_HIGH)
+	else if (ping < PING_HIGH)
 		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((ping - PING_MED) / (PING_HIGH - PING_MED));
 	else
 	{
-		theColor = eX;
+		theColor = SKINCOLOR_SERVERLIST_HIGHPING;
 		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((ping - PING_HIGH) / (PING_HIGH * 2 - PING_HIGH));
 	}
 
-	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
+	if (gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
 	{
 		theColor = theColor * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINCOLOR_SERVERLIST_FAVORITE * SKINALPHA_SERVERLIST_FAVORITE;
 		if (gethostcachenumber(SLIST_FIELD_FREESLOTS, i) > 0) // can connect
 			theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
 	}
+
+	if (isSelected)
+		theAlpha = 1;
+	else if (isFocused)
+		theAlpha = theAlpha * 0.5 + 0.5;
+	else
+		theAlpha = max(0.1, theAlpha); // previous changes could've made it even negative
 
 	s = gethostcachestring(SLIST_FIELD_CNAME, i);
 
