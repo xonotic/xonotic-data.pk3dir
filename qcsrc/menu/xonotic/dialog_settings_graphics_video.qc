@@ -4,6 +4,7 @@
 #include "commandbutton.qh"
 #include "mixedslider.qh"
 #include "slider.qh"
+#include "slider_display.qh"
 #include "slider_resolution.qh"
 #include "textlabel.qh"
 
@@ -26,6 +27,7 @@ void XonoticGraphicsVideoSettingsTab_fill(entity me)
 		"vid_height $_menu_vid_height; "
 		"vid_pixelheight $_menu_vid_pixelheight; "
 		"vid_desktopfullscreen $_menu_vid_desktopfullscreen; "
+		"vid_display $_menu_vid_display; "
 		"menu_cmd update_conwidths_before_vid_restart; "
 		"vid_restart; "
 		"menu_cmd sync",
@@ -43,6 +45,12 @@ void XonoticGraphicsVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticResolutionSlider());
 			e.applyButton = videoApplyButton;
+	me.TR(me);
+		entity s = makeXonoticDisplaySlider();
+			s.applyButton = videoApplyButton;
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Display:")));
+			s.controlledTextLabel = e;
+		me.TD(me, 1, 2, s);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Font/UI size:")));
 		me.TD(me, 1, 2, e = makeXonoticMixedSlider("menu_vid_scale"));
