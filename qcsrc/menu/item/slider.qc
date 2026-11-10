@@ -99,60 +99,67 @@ string formatStringSpecial(string formatStr, float value, int decs)
 	}
 	float Slider_keyDown(entity me, float key, float ascii, float shift)
 	{
-		if (me.disabled) return 0;
-		const float inRange = almost_in_bounds(me.valueMin, me.value, me.valueMax);
+		if (me.disabled)
+			return 0;
 		float ret_value = 0;
-		if (key == K_HOME || key == K_KP_HOME
-			|| ((shift & S_CTRL) && (key == K_PGDN || key == K_KP_PGDN)))
+		bool inRange = almost_in_bounds(me.valueMin, me.value, me.valueMax);
+		bool PgDn = (key == K_PGDN || key == K_KP_PGDN);
+		bool PgUp = (key == K_PGUP || key == K_KP_PGUP);
+		if (key == K_HOME || key == K_KP_HOME || ((shift & S_CTRL) && PgDn))
 		{
 			me.setValue(me, me.valueMin, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
-		else if (key == K_PGDN || key == K_KP_PGDN || ascii == '-'
-			|| key == K_LEFTARROW || key == K_KP_LEFTARROW || key == K_MWHEELDOWN)
+		else if (PgDn || ascii == '-' || key == K_LEFTARROW || key == K_KP_LEFTARROW || key == K_MWHEELDOWN)
 		{
-			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valuePageStep, me.valueMax), autocvar_menu_animations > 0);
-			else me.setValue(me, me.valueMax, autocvar_menu_animations > 0);
+			if (inRange)
+				me.setValue(me, median(me.valueMin, me.value - (PgDn ? me.valuePageStep : me.valueKeyStep), me.valueMax), autocvar_menu_animations > 0);
+			else
+				me.setValue(me, me.valueMax, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
-		else if (key == K_END || key == K_KP_END
-			|| ((shift & S_CTRL) && (key == K_PGUP || key == K_KP_PGUP)))
+		else if (key == K_END || key == K_KP_END || ((shift & S_CTRL) && PgUp))
 		{
 			me.setValue(me, me.valueMax, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
-		else if (key == K_PGUP || key == K_KP_PGUP || ascii == '+'
-			|| key == K_RIGHTARROW || key == K_KP_RIGHTARROW || key == K_MWHEELUP)
+		else if (PgUp || ascii == '+' || key == K_RIGHTARROW || key == K_KP_RIGHTARROW || key == K_MWHEELUP)
 		{
-			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valuePageStep, me.valueMax), autocvar_menu_animations > 0);
-			else me.setValue(me, me.valueMin, autocvar_menu_animations > 0);
+			if (inRange)
+				me.setValue(me, median(me.valueMin, me.value + (PgUp ? me.valuePageStep : me.valueKeyStep), me.valueMax), autocvar_menu_animations > 0);
+			else
+				me.setValue(me, me.valueMin, autocvar_menu_animations > 0);
 			ret_value = 1;
 		}
-		if(ret_value == 1)
-			if(me.applyButton)
-				me.applyButton.disabled = false;
+		if (ret_value == 1 && me.applyButton)
+			me.applyButton.disabled = false;
 		// TODO more keys (NOTE also add them to Slider_keyUp)
 		return ret_value;
 	}
 	float Slider_keyUp(entity me, float key, float ascii, float shift)
 	{
-		if (me.disabled) return 0;
-		switch (key)
-		{
-			case K_LEFTARROW:
-			case K_KP_LEFTARROW:
-			case K_RIGHTARROW:
-			case K_KP_RIGHTARROW:
-			case K_PGUP:
-			case K_KP_PGUP:
-			case K_PGDN:
-			case K_KP_PGDN:
-			case K_HOME:
-			case K_KP_HOME:
-			case K_END:
-			case K_KP_END:
-				m_play_click_sound(MENU_SOUND_SLIDE);
-		}
+		if (me.disabled)
+			return 0;
+		else if (ascii == '+' || ascii == '-')
+			m_play_click_sound(MENU_SOUND_SLIDE);
+		else
+			switch (key)
+			{
+				case K_LEFTARROW:
+				case K_KP_LEFTARROW:
+				case K_RIGHTARROW:
+				case K_KP_RIGHTARROW:
+				case K_PGUP:
+				case K_KP_PGUP:
+				case K_PGDN:
+				case K_KP_PGDN:
+				case K_HOME:
+				case K_KP_HOME:
+				case K_END:
+				case K_KP_END:
+					m_play_click_sound(MENU_SOUND_SLIDE);
+					break;
+			}
 		return 0;
 	}
 	float Slider_mouseDrag(entity me, vector pos)
