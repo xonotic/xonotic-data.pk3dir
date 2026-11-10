@@ -83,12 +83,14 @@
 					draw_ButtonPicture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
 				else if (me.focused)
 					draw_ButtonPicture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
+#ifdef BUTTON_PULSE
 				else if (me.pulse)
 				{
 					float alpha = min(1, 1 + sin(1.2*M_PI * time));
 					draw_ButtonPicture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1 - alpha);
 					draw_ButtonPicture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, alpha);
 				}
+#endif
 				else
 					draw_ButtonPicture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color,  1);
 			}
@@ -110,12 +112,14 @@
 					draw_Picture(bOrigin, strcat(me.src, "_c", me.srcSuffix), bSize, me.colorC, 1);
 				else if (me.focused)
 					draw_Picture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1);
+#ifdef BUTTON_PULSE
 				else if (me.pulse)
 				{
 					float alpha = min(1, 1 + sin(1.2*M_PI * time));
-					draw_ButtonPicture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1 - alpha);
-					draw_ButtonPicture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, alpha);
+					draw_Picture(bOrigin, strcat(me.src, "_f", me.srcSuffix), bSize, me.colorF, 1 - alpha);
+					draw_Picture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color, alpha);
 				}
+#endif
 				else
 					draw_Picture(bOrigin, strcat(me.src, "_n", me.srcSuffix), bSize, me.color,  1);
 			}

@@ -29,7 +29,10 @@ CLASS(Button, Label)
 	ATTRIB(Button, disabled, float, 0);
 	ATTRIB(Button, disabledAlpha, float, 0.3);
 	ATTRIB(Button, forcePressed, bool, false);
+//#define BUTTON_PULSE // not used anywhere
+#ifdef BUTTON_PULSE
 	ATTRIB(Button, pulse, bool, false);
+#endif
 	ATTRIB(Button, color, vector, '1 1 1');
 	ATTRIB(Button, colorC, vector, '1 1 1');
 	ATTRIB(Button, colorF, vector, '1 1 1');
