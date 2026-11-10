@@ -97,24 +97,27 @@ METHOD(XonoticTopicTab, topicChangeNotify, void(entity, entity me))
 		c = s.currentPanel;
 	}
 
-	entity removing = me.currentItem;
 	DataSource data = me.topicList.source;
-	entity adding = data.getEntry(data, me.topicList.selectedItem, func_null);
-	if (removing == adding)
+	entity tab_removing = me.currentItem;
+	entity tab_adding = data.getEntry(data, me.topicList.selectedItem, func_null);
+	if (tab_removing == tab_adding)
 		return;
-	if (removing)
+	if (tab_removing)
 	{
 		me.currentItem = NULL;
-		c.removeItem(c, removing);
+		c.removeItem(c, tab_removing);
 	}
-	if (adding)
+	if (tab_adding)
 	{
-		me.currentItem = adding;
-		adding.resizeNotify(adding, '0 0 0', c.size, '0 0 0', c.size);
-		c.addItem(c, adding, '0 0 0', '1 1 0', 1);
+		me.currentItem = tab_adding;
+		tab_adding.resizeNotify(tab_adding, '0 0 0', c.size, '0 0 0', c.size);
+		c.addItem(c, tab_adding, '0 0 0', '1 1 0', 1);
 		if (s)
 			s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
 	}
+
+	if (me.currentItem)
+		me.currentItem.showNotify(me.currentItem);
 }
 void XonoticTopicTab_fill(entity me)
 {
