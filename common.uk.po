@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Kostiantyn Tsebro, 2026\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -8522,7 +8522,7 @@ msgstr "%sстріляє до %s разів, завдаючи %s шкоди за
 #: qcsrc/common/weapons/all.qc:864
 #, c-format
 msgid "The %s does %s damage then shoots %s shots doing %s damage each"
-msgstr ""
+msgstr "%s завдає %s шкоди, потім стріляє %s разів по %s шкоди"
 
 #: qcsrc/common/weapons/all.qc:865
 #, c-format
@@ -9197,17 +9197,17 @@ msgid ""
 "missiles if it collides with a player. The homing isn't perfect, so "
 "sometimes the missiles can hit an object or a corner."
 msgstr ""
-"%s - унікальна зброя, що стріляє \"міткою\", яка запускає декілька "
-"самонавідних ракет при влучанні в гравця. Самонаведення не ідеальне, тому "
-"іноді ракети можуть влучити в перешкоду чи в поворот."
+"%s - унікальна зброя, що стріляє \"міткою\", яка при влучанні запускає "
+"декілька самонавідних ракет. Самонаведення не ідеальне, тому іноді ракети "
+"можуть влучити в перешкоду чи в поворот."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:728
 msgid ""
 "The secondary fire launches a rapid barrage of scattered explosives that "
 "travel only a short distance."
 msgstr ""
-"Вторинний вогонь стріляє швидким потоком розкиданих вибухових снарядів, які "
-"летять лише на коротку відстань."
+"Вторинний вогонь стрімко стріляє потоком розкиданих вибухівок, які летять "
+"тільки на коротку відстань."
 
 #: qcsrc/common/weapons/weapon/seeker.qc:729
 #, c-format
@@ -9227,7 +9227,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
 msgid "Seeker"
-msgstr ""
+msgstr "Переслідувач"
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
