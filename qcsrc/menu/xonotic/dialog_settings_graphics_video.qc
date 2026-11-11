@@ -33,6 +33,7 @@ void XonoticGraphicsVideoSettingsTab_fill(entity me)
 		"menu_cmd sync",
 		COMMANDBUTTON_APPLY);
 		videoApplyButton.disableOnClick = true;
+		videoApplyButton.disabled = true;
 
 	me.gotoRC(me, 0, (me.columns - 3) * 0.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Video")));

@@ -21,7 +21,8 @@ void XonoticMiscSettingsTab_fill(entity me)
 	//entity sk;
 
 	entity miscApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_restart", COMMANDBUTTON_APPLY);
-	miscApplyButton.disableOnClick = true;
+		miscApplyButton.disableOnClick = true;
+		miscApplyButton.disabled = true;
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Network")));
