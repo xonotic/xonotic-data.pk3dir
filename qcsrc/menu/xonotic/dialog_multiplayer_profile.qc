@@ -40,7 +40,8 @@ void XonoticProfileTab_fill(entity me)
 		"playermodel $_cl_playermodel; "
 		"playerskin $_cl_playerskin"
 		, COMMANDBUTTON_APPLY);
-	profileApplyButton.disableOnClick = true;
+		profileApplyButton.disableOnClick = true;
+		profileApplyButton.disabled = true;
 
 	// ==============
 	//  NAME SECTION

@@ -34,6 +34,7 @@ void XonoticGraphicsLightingSettingsTab_fill(entity me)
 	entity e;
 	entity effectsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY);
 		effectsApplyButton.disableOnClick = true;
+		effectsApplyButton.disabled = true;
 
 	GraphicsSettings_addPresetButtons(me, effectsApplyButton);
 

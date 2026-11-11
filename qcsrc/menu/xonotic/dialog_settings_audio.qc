@@ -22,7 +22,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		"snd_restart; "
 		"snd_attenuation_method_${menu_snd_attenuation_method}"
 		, COMMANDBUTTON_APPLY);
-	audioApplyButton.disableOnClick = true;
+		audioApplyButton.disableOnClick = true;
+		audioApplyButton.disabled = true;
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Volume")));

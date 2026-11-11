@@ -70,6 +70,7 @@ void XonoticGraphicsRenderingSettingsTab_fill(entity me)
 	{
 		videoApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart; menu_cmd sync", COMMANDBUTTON_APPLY);
 			videoApplyButton.disableOnClick = true;
+			videoApplyButton.disabled = true;
 
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Antialiasing:")));
 			setDependent(e, "r_viewfbo", 0, 0);

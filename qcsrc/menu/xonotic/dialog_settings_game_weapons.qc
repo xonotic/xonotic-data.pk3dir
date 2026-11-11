@@ -25,6 +25,7 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 	entity e;
 	entity weaponsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_weaponpriority", COMMANDBUTTON_APPLY);
 		weaponsApplyButton.disableOnClick = true;
+		weaponsApplyButton.disabled = true;
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Weapon Priority List (* = mutator weapon)")));
