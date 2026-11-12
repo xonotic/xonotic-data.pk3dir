@@ -1043,8 +1043,8 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			{
 				if(parse_error == 0)
 				{
-					if (vote_called_command == "")
-						VoteCommand_call(CMD_REQUEST_USAGE, caller, argc, vote_command);
+					if (vote_command == "")
+						VoteCommand_call(CMD_REQUEST_USAGE, caller, argc, "");
 					else
 						print_to(caller, "^1This command is not acceptable or not available.");
 				}
@@ -1121,8 +1121,8 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 						{
 							if(parse_error == 0)
 							{
-								if (vote_called_command == "")
-									VoteCommand_master(CMD_REQUEST_USAGE, caller, argc, vote_command);
+								if (vote_command == "")
+									VoteCommand_master(CMD_REQUEST_USAGE, caller, argc, "");
 								else
 									print_to(caller, "^1This command is not acceptable or not available.");
 							}
