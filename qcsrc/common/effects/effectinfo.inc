@@ -9917,4 +9917,66 @@ SUB(dom_capture) {
 	MY(velocityjitter) = '200.0 200.0 50.0';
 }
 
+// seeker tag starting trail
+DEF(tr_tag_start);
+// fire
+SUB(tr_tag_start) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 72;
+	MY(alpha_max) = 96;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xff9172";
+	MY(color_max) = "0x810013";
+	MY(lightcolor) = '3.0 1.0 1.5';
+	MY(lightradius) = 50;
+	MY(sizeincrease) = -12;
+	MY(size_min) = 3;
+	MY(size_max) = 4;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = -0.300000;
+}
+// bubbles
+SUB(tr_tag_start) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 5;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 24;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocitymultiplier) = -0.200000;
+}
+// sparks
+SUB(tr_tag_start) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 384;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFFD9E9";
+	MY(color_max) = "0xFFD9E9";
+	MY(notunderwater) = true;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.500000;
+	MY(size_max) = 0.500000;
+	MY(stretchfactor) = 0.200000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(trailspacing) = 12;
+	MY(type) = "spark";
+	MY(velocityjitter) = '80.0 80.0 80.0';
+	MY(velocitymultiplier) = -0.200000;
+}
+
 // always add new effects to the bottom of the list. And keep this comment in the bottom line of this file!
