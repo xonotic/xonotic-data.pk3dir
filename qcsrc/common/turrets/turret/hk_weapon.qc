@@ -68,7 +68,7 @@ void turret_hk_missile_think(entity this)
 		// in this case, the lighter check is to validate it first, and check distance if it is valid
 		IL_EACH(g_damagedbycontents, hk_is_valid_target(this.realowner, this, it),
 		{
-			if (vdist(it.origin, >, 5000))
+			if (vdist(it.origin - this.origin, >, 5000))
 				continue;
 
 			if (!this.enemy)
