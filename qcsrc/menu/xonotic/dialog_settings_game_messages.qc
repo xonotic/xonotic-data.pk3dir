@@ -72,7 +72,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 			e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 3.1, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_PICKUP_ENEMY", strzone(sprintf(_("Display name of flag stealer in %s"), MapInfo_Type_ToText(MAPINFO_TYPE_CTF))), "-"));
-			makeMulti(e, "notification_CHOICE_CTF_PICKUP_ENEMY_TEAM notification_CHOICE_CTF_PICKUP_ENEMY_NEUTRAL");
+			makeMulti(e, "notification_CHOICE_CTF_PICKUP_ENEMY_TEAM notification_CHOICE_CTF_PICKUP_ENEMY_NEUTRAL notification_CHOICE_CTF_PICKUP_ENEMY_OTHER notification_CHOICE_CTF_PICKUP_ENEMY_OTHER_NEUTRAL");
 			e.sendCvars = true;
 
 	me.gotoRC(me, 0, 3.1); me.setFirstColumn(me, me.currentColumn);
