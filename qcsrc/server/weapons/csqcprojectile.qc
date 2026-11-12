@@ -32,7 +32,7 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 	ft = fr = 0;
 	if(this.fade_time != 0 || this.fade_rate != 0)
 	{
-		ft = (this.fade_time - time) / sys_frametime;
+		ft = max(0, (this.fade_time - time) / sys_frametime);
 		fr = (1 / this.fade_rate) / sys_frametime;
 		if(ft <= 255 && fr <= 255 && fr >= 1)
 			sf |= 0x20;
