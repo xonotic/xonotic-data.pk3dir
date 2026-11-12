@@ -444,7 +444,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		SUB_UseTargets(this.owner, this, NULL);
+		SUB_UseTargets(this.owner, this);
 
 		this.owner.waslinked = this.owner.islinked;
 		if(this.owner.model != "models/onslaught/controlpoint_pad.md3")
@@ -532,7 +532,7 @@ void ons_ControlPoint_Icon_Think(entity this)
 		if(!this.owner.islinked)
 			this.owner.team = 0;
 
-		SUB_UseTargets(this.owner, this, NULL);
+		SUB_UseTargets(this.owner, this);
 
 		this.owner.team = t;
 
@@ -604,7 +604,7 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		SUB_UseTargets(this.owner, this, NULL);
+		SUB_UseTargets(this.owner, this);
 
 		this.SendFlags |= CPSF_SETUP;
 	}
@@ -774,7 +774,7 @@ void ons_ControlPoint_Reset(entity this)
 
 	onslaught_updatelinks();
 
-	SUB_UseTargets(this, this, NULL); // to reset the structures, playerspawns etc.
+	SUB_UseTargets(this, this); // to reset the structures, playerspawns etc.
 
 	CSQCMODEL_AUTOUPDATE(this);
 }

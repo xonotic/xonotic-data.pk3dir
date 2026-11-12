@@ -24,7 +24,7 @@ void trigger_secret_touch(entity this, entity toucher)
 	++secrets_found;
 
 	// message and noise handled by SUB_UseTargets
-	SUB_UseTargets(this, toucher, toucher);
+	SUB_UseTargets(this, toucher);
 
 	// we can't just delete(this) here, because this is a touch function
 	// called while C code is looping through area links...

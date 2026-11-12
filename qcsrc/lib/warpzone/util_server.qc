@@ -5,7 +5,7 @@
 	#include <lib/csqcmodel/sv_model.qh>
 #endif
 
-void WarpZoneLib_ExactTrigger_Init(entity this, bool unsetmodel)
+void WarpZoneLib_ExactTrigger_Init(entity this, bool unsetmodel, bool dolink)
 {
 	vector mi, ma;
 	if (this.movedir == '0 0 0'
@@ -36,7 +36,7 @@ void WarpZoneLib_ExactTrigger_Init(entity this, bool unsetmodel)
 		}
  	}
 	setorigin(this, this.origin);
-	this.solid = SOLID_TRIGGER; // before setsize to ensure area grid linking
+	this.solid = dolink ? SOLID_TRIGGER : SOLID_NOT; // before setsize to ensure area grid linking
 	if (this.scale)
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
 	else

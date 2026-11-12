@@ -439,6 +439,20 @@ void SetBrushEntityModel(entity this, bool with_lod)
 	ApplyMinMaxScaleAngles(this);
 }
 
+// TODO: when CSQC movers are enabled move model2 ents to CSQC (they're purely visual)
+void SetBrushEntityModel2(entity this)
+{
+	// Q3: if the "model2" key is set, use a seperate model
+	// for drawing, but clip against the brushes
+	if (this.model2)
+	{
+		precache_model(this.model2);
+		entity m2 = spawn();
+		_setmodel(m2, this.model2);
+		setattachment(m2, this, "");
+	}
+}
+
 bool LOD_customize(entity this, entity client)
 {
 	if(autocvar_loddebug)

@@ -26,7 +26,7 @@ void target_give_use(entity this, entity actor, entity trigger)
 		}
 
 		if (it.target != "" && it.target != "###item###") // q3compat
-			SUB_UseTargets(it, actor, trigger);
+			SUB_UseTargets(it, actor);
 	});
 }
 

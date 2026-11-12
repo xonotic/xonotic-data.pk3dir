@@ -1,5 +1,5 @@
 #pragma once
 
 #ifdef SVQC
-void WarpZoneLib_ExactTrigger_Init(entity this, bool unsetmodel);
+void WarpZoneLib_ExactTrigger_Init(entity this, bool unsetmodel, bool dolink);
 #endif
