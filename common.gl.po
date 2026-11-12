@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: LegendGuard, 2020\n"
+"Last-Translator: nin hum <ninhum@gmx.com>, 2024-2026\n"
 "Language-Team: Galician (http://app.transifex.com/team-xonotic/xonotic/"
 "language/gl/)\n"
 "Language: gl\n"
@@ -6059,7 +6059,7 @@ msgstr "^K2Non tes permitido unirte a un equipo máis forte!"
 
 #: qcsrc/common/notifications/all.inc:477
 msgid "^F2Teams have been balanced."
-msgstr ""
+msgstr "^F2Os equipos foron equilibrados."
 
 #: qcsrc/common/notifications/all.inc:478
 msgid "^F4The teams are now locked."
@@ -8624,6 +8624,8 @@ msgstr "O %s dispara ata %s disparos que causan %s de dano cada un"
 #, c-format
 msgid "The %s does %s damage then shoots %s shots doing %s damage each"
 msgstr ""
+"O %s causa %s de dano  e despois dispara %s proxectís que causan %s de dano "
+"cada un"
 
 #: qcsrc/common/weapons/all.qc:865
 #, c-format
@@ -9340,7 +9342,7 @@ msgstr ""
 
 #: qcsrc/common/weapons/weapon/seeker.qh:50
 msgid "Seeker"
-msgstr ""
+msgstr "Buscador"
 
 #: qcsrc/common/weapons/weapon/shotgun.qc:420
 #, c-format
