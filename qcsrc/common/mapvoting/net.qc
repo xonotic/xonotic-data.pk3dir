@@ -122,8 +122,7 @@ void GameTypeVote_ReadOption(int i)
 	mv_flags[i] = ReadByte();
 	mv_suggester[i] = "";
 
-	string basetype = "";
-
+	string basetype;
 	if (mv_flags[i] & GTV_CUSTOM)
 	{
 		string name = ReadString();
@@ -131,13 +130,14 @@ void GameTypeVote_ReadOption(int i)
 			name = mv_entries[i];
 		mv_data[i] = strzone(name);
 		mv_desc[i] = strzone(ReadString());
-		basetype = strzone(ReadString());
+		basetype = ReadString();
 	}
 	else
 	{
 		Gametype type = MapInfo_Type_FromString(mv_entries[i], false, false);
 		mv_data[i] = strzone(MapInfo_Type_ToText(type));
 		mv_desc[i] = MapInfo_Type_Description(type);
+		basetype = "";
 	}
 
 	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, mv_entries[i]);
