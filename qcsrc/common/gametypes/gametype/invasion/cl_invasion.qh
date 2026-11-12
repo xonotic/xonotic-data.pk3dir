@@ -1,1 +1,4 @@
 #pragma once
+
+void HUD_Mod_Invasion_Draw(vector myPos, vector mySize);
+void HUD_Mod_Invasion(vector myPos, vector mySize, bool should_draw);
