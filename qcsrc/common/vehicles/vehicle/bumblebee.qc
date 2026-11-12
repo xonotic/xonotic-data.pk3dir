@@ -502,7 +502,7 @@ bool bumblebee_pilot_frame(entity this, float dt)
 	else
 	{
 		vehic.angles.z *= 0.95;
-		if (vehic.angles.z >= -1 && vehic.angles.z <= -1)
+		if (fabs(vehic.angles.z) <= 1) // snap small roll
 			vehic.angles.z = 0;
 	}
 
