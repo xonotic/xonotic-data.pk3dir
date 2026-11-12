@@ -10,9 +10,10 @@ void nade_heal_touch(entity this, entity toucher)
 	|| IS_DEAD(toucher) || STAT(FROZEN, toucher))
 		return;
 
+	bool benefit = SAME_TEAM(toucher, this.realowner);
 	float health_factor = autocvar_g_nades_heal_rate * frametime * 0.5;
 	if (toucher != this.realowner)
-		health_factor *= (SAME_TEAM(toucher, this.realowner))
+		health_factor *= (benefit)
 			? autocvar_g_nades_heal_friend
 			: autocvar_g_nades_heal_foe;
 
@@ -36,12 +37,12 @@ void nade_heal_touch(entity this, entity toucher)
 			'0 0 0'
 		);
 
-	float armor_factor = autocvar_g_nades_heal_armor_rate * frametime * 0.5;
-	if (toucher != this.realowner)
-		armor_factor *= autocvar_g_nades_heal_friend;
-
-	if (SAME_TEAM(toucher, this))
+	if (benefit)
 	{
+		float armor_factor = autocvar_g_nades_heal_armor_rate * frametime * 0.5;
+		if (toucher != this.realowner)
+			armor_factor *= autocvar_g_nades_heal_friend;
+
 		float maxarmor = autocvar_g_pickup_armormega_max;
 		if (GetResource(toucher, RES_ARMOR) < maxarmor)
 			GiveResourceWithLimit(toucher, RES_ARMOR, armor_factor, maxarmor);
