@@ -568,7 +568,7 @@ string gettooltip()
 					if (menuTooltipItem.cvar3_setDependent)
 					{
 						cvar3_s = gettooltip_dependency_string_numeric(menuTooltipItem, cvar3_setDependent, cvar3Min_setDependent, cvar3Max_setDependent, 0);
-						s = strcat(s, sprintf((menuTooltipItem.op_setDependent & BIT(0) ? _("Requires %s, %s, and %s") : _("Requires %s, %s, or %s")), cvar1_s, cvar2_s, cvar3_s));
+						s = strcat(s, sprintf((menuTooltipItem.op_setDependent & BIT(0) ? _("Requires %s, %s, or %s") : _("Requires %s, %s, and %s")), cvar1_s, cvar2_s, cvar3_s));
 					}
 					else
 						s = strcat(s, sprintf((menuTooltipItem.op_setDependent & BIT(0) ? _("Requires %s or %s")       : _("Requires %s and %s")),     cvar1_s, cvar2_s));
