@@ -32,33 +32,35 @@ void XonoticGametypeList_setSelected(entity me, float i)
 void XonoticGametypeList_loadCvars(entity me)
 {
 	Gametype t = MapInfo_CurrentGametype();
-	int cnt = GameType_GetCount();
-	float i;
-	for(i = 0; i < cnt; ++i)
-		if(t == GameType_GetID(i))
+	int i, cnt = GameType_GetCount();
+	for (i = 0; i < cnt; ++i)
+		if (t == GameType_GetID(i))
 			break;
-	if(i >= cnt)
+	if (i >= cnt)
 	{
-		for(i = 0; i < cnt; ++i)
-			if(t == MAPINFO_TYPE_DEATHMATCH)
+		for (i = 0; i < cnt; ++i)
+			if (t == MAPINFO_TYPE_DEATHMATCH)
 				break;
-		if(i >= cnt)
+		if (i >= cnt)
 			i = 0;
 	}
+
+	Gametype prev = GameType_GetID(me.selectedItem);
 	me.setSelected(me, i);
-	// do we need this: me.parent.gameTypeChangeNotify(me.parent); // to make sure
+
+	if (me.parent
+	&& t != prev && t == MapInfo_CurrentGametype()) // saveCvars doesn't call gameTypeChangeNotify in this case
+		me.parent.gameTypeChangeNotify(me.parent);
 }
 void XonoticGametypeList_saveCvars(entity me)
 {
 	Gametype t = GameType_GetID(me.selectedItem);
-	if (t == MapInfo_CurrentGametype()) {
+	if (t == MapInfo_CurrentGametype())
 		return;
-	}
+
 	MapInfo_SwitchGameType(t);
-	entity owner = me.parent;
-	if (owner) { // not set immediately
-		owner.gameTypeChangeNotify(owner);
-	}
+	if (me.parent) // not set immediately
+		me.parent.gameTypeChangeNotify(me.parent);
 }
 void XonoticGametypeList_draw(entity me)
 {
