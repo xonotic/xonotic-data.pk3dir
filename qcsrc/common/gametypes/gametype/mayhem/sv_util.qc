@@ -237,11 +237,12 @@ void mayhem_util_PlayerDamage_SplitHealthArmor(float upscaler, float frag_weight
 	if (IS_PLAYER(frag_attacker))
 	{
 		// non-friendly fire
-		if (!SAME_TEAM(frag_target, frag_attacker))
+		if (DIFF_TEAM(frag_target, frag_attacker))
 			frag_attacker.total_damage_dealt += realdmg;
 
 		// friendly fire aka self damage
-		if (SAME_TEAM(frag_target, frag_attacker) || (frag_target == frag_attacker && !disable_selfdamage2score))
+		if ((frag_target != frag_attacker && SAME_TEAM(frag_target, frag_attacker))
+		||  (frag_target == frag_attacker && !disable_selfdamage2score))
 			frag_attacker.total_damage_dealt -= realdmg;
 
 		scorer = frag_attacker;
