@@ -701,11 +701,11 @@ bool GameTypeVote_Start()
 	int which_available = -1;
 	int i;
 	for (i = 0; i < n; ++i)
-		if (GameTypeVote_AddVotable(argv(i))
-		&& (mv_flags[i] & GTV_AVAILABLE))
+		if (GameTypeVote_AddVotable(argv(i)))       // this will reject unknown/duplicate gametype names
+		if (mv_flags[mv_count - 1] & GTV_AVAILABLE) // ... so the most recent index is mv_count-1, not i
 		{
 			++really_available;
-			which_available = i;
+			which_available = mv_count - 1;
 		}
 
 	mv_count_real = mv_count;
