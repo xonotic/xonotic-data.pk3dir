@@ -298,10 +298,10 @@ int Maplist_Init(void)
 			if(_j != _cnt)
 				bufstr_set(maplist_buffer, _cnt, bufstr_get(maplist_buffer, _j));
 			bufstr_set(maplist_buffer, _j, it);
-			++_cnt;
 		}
 		else
-			bufstr_set(maplist_buffer, i, it);
+			bufstr_set(maplist_buffer, _cnt, it);
+		++_cnt;
 	});
 
 	Map_Count = buf_getsize(maplist_buffer);
