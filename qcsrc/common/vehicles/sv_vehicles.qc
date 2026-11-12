@@ -287,7 +287,7 @@ void vehicles_gib_touch(entity this, entity toucher)
 void vehicles_gib_think(entity this)
 {
 	this.alpha -= 0.1;
-	if (this.cnt >= time)
+	if (time >= this.cnt)
 		delete(this);
 	else
 		this.nextthink = time + 0.1;
