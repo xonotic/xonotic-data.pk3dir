@@ -85,12 +85,12 @@ void XonoticServerInfoTab_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("ID:")));
 		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = true;
-			me.keyLabel = e;
+			me.idLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Key:")));
 		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
 			e.allowCut = true;
-			me.idLabel = e;
+			me.keyLabel = e;
 	me.TR(me);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Stats:")));
 		me.TD(me, 1, 5.4, e = makeXonoticTextLabel(0, ""));
