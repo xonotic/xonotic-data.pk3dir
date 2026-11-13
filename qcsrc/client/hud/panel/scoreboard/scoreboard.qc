@@ -36,7 +36,6 @@ ACCUMULATE void Scoreboard_Draw_Export(int fh)
 	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_self");
 	HUD_Write_Cvar("hud_panel_scoreboard_table_highlight_alpha_eliminated");
 	HUD_Write_Cvar("hud_panel_scoreboard_bg_teams_color_team");
-	HUD_Write_Cvar("hud_panel_scoreboard_spectators_position");
 }
 
 string autocvar_hud_fontsize;
