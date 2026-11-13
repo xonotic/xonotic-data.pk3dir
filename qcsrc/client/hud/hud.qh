@@ -323,16 +323,13 @@ MACRO_END
 	else \
 	{ \
 		if (panel_bg_color_str == "") \
-			panel_bg_color = autocvar_hud_panel_bg_color; \
+			panel_bg_color_str = cvar_string("hud_panel_bg_color"); \
+		if (panel_bg_color_str == "shirt") \
+			panel_bg_color = colormapPaletteColor(floor(entcs_GetClientColors(current_player) / 16), 0); \
+		else if (panel_bg_color_str == "pants") \
+			panel_bg_color = colormapPaletteColor(entcs_GetClientColors(current_player) % 16, 1); \
 		else \
-		{ \
-			if (panel_bg_color_str == "shirt") \
-				panel_bg_color = colormapPaletteColor(floor(entcs_GetClientColors(current_player) / 16), 0); \
-			else if (panel_bg_color_str == "pants") \
-				panel_bg_color = colormapPaletteColor(entcs_GetClientColors(current_player) % 16, 1); \
-			else \
-				panel_bg_color = stov(panel_bg_color_str); \
-		} \
+			panel_bg_color = stov(panel_bg_color_str); \
 	} \
 MACRO_END
 
