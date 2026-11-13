@@ -77,19 +77,24 @@ void XonoticPlayList_removeSelectedFromPlayList(entity me)
 		}
 		s = strcat(s, " ", argv(i));
 	}
+
 	// we must stop the current playing track if it has been removed
 	// otherwise pause/play button will resume from another track
-	if(s == "")
+	if (s == "")
 	{
 		cvar_set("music_playlist_list0", "");
-		if(cpt)
+		if (cpt)
 			me.stopSound(me);
 	}
 	else
 	{
 		cvar_set("music_playlist_list0", substring(s, 1, strlen(s))); // remove initial space
-		if(cpt)
+		if (cpt)
+		{
+			// Play the new track from the start
+			cvar_set("music_playlist_current0", "-1");
 			me.startSound(me, 0);
+		}
 	}
 }
 
