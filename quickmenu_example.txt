@@ -13,7 +13,7 @@
 	// nested submenu
 	"Sound settings"
 		"Hit indication sound" "toggle cl_hitsound"
-		"Chat message sound" "toggle cl_chatsound"
+		"Chat message sound" "toggle con_chatsound"
 		// KEEP_OPEN menu option to increase/decrease volumes and stay
 		// the same menu
 		// Holding CTRL while selecting the number inverts the default
