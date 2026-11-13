@@ -428,12 +428,12 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float theTime, string ic
 		}
 
 		newSize.y *= 0.5;
-		drawpic_aspect_skin(picpos, icon, newSize, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin_expanding(picpos, icon, newSize, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 		// make number smaller than icon, it looks better
 		// reduce only y to draw numbers with different number of digits with the same y size
 		numpos.y += newSize.y * ((1 - 0.7) / 2);
 		newSize.y *= 0.7;
-		drawstring_aspect(numpos, text, newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawstring_aspect_expanding(numpos, text, newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 		return;
 	}
 
