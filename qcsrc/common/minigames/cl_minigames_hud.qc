@@ -437,6 +437,19 @@ void HUD_MinigameMenu_Open()
 /// Handles mouse input on to minigame menu panel
 void HUD_MinigameMenu_MouseInput()
 {
+	static vector mousepos_prev;
+	bool mouse_moved;
+	if (mousepos_prev != mousepos)
+	{
+		mouse_moved = true;
+		mousepos_prev = mousepos;
+	}
+	else
+		mouse_moved = false;
+
+	if (!mouse_moved && !mouseClicked)
+		return;
+
 	panel = HUD_PANEL(MINIGAMEMENU);
 
 	HUD_Panel_LoadCvars();
@@ -694,7 +707,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 	{
 		if (!key_pressed)
 			return true;
-		HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+		HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
 		return true;
 	}
 	else if (nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE)
@@ -720,6 +733,6 @@ void HUD_Minigame_Mouse()
 	if (!HUD_MinigameMenu_IsOpened() || autocvar__hud_configure || mv_active)
 		return;
 
-	if (HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)))
+	if (HUD_mouse_over(HUD_PANEL(MINIGAMEMENU)))
 		HUD_MinigameMenu_MouseInput();
 }
