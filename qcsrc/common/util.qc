@@ -650,27 +650,32 @@ string mapPriorityList(string order, string(string) mapfunc)
 	return substring(neworder, 0, strlen(neworder) - 1);
 }
 
-string swapInPriorityList(string order, float i, float j)
+#ifdef MENUQC
+/// Moves `from` towards `to`, rotating the items in between. Acts as a swap if `from` and `to` are neighbors
+string rotateInPriorityList(string order, int from, int to)
 {
-	float n = tokenize_console(order);
+	int n = tokenize_console(order);
 
-	if(i >= 0 && i < n && j >= 0 && j < n && i != j)
+	if (from >= 0 && from < n && to >= 0 && to < n && from != to)
 	{
 		string s = "";
-		for(float w = 0; w < n; ++w)
+		for (int src, w = 0; w < n; ++w)
 		{
-			if(w == i)
-				s = strcat(s, argv(j), " ");
-			else if(w == j)
-				s = strcat(s, argv(i), " ");
+			if (w == to)
+				src = from;
+			else if (from < to && w >= from && w < to)
+				src = w + 1; // shift up
+			else if (from > to && w > to && w <= from)
+				src = w - 1; // shift down
 			else
-				s = strcat(s, argv(w), " ");
+				src = w;
+			s = cons(s, argv(src));
 		}
-		return substring(s, 0, strlen(s) - 1);
+		return s;
 	}
-
 	return order;
 }
+#endif
 
 #ifdef GAMEQC
 void get_mi_min_max(float mode)
