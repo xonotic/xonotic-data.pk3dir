@@ -247,6 +247,8 @@ float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overt
 	//   this angle has to be multiplied by two since the HUD extends in both directions which
 	//   halves the amount it extends in a single direction
 	float range_minangle = max(absolute_wishangle, absolute_overturnangle - absolute_wishangle) * 2;
+	if (range_minangle <= 0)
+		range_minangle = 90; // prevents DivZero errors
 
 	float range_normal = autocvar_hud_panel_strafehud_range;
 	float range_side   = autocvar_hud_panel_strafehud_range_sidestrafe;

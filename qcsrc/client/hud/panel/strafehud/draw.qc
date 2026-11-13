@@ -309,8 +309,10 @@ void StrafeHUD_DrawTextIndicator(
 	string text, float height, vector color, float fadetime, float lasttime,
 	vector pos, float offset_top, float offset_bottom)
 {
+	if (height <= 0 || lasttime <= 0 || fadetime <= 0)
+		return;
 	float time_frac = (time - lasttime) / fadetime;
-	if (height <= 0 || lasttime <= 0 || fadetime <= 0 || time_frac > 1)
+	if (time_frac > 1)
 		return;
 
 	float alpha = cos(time_frac * M_PI_2); // fade non-linear like the physics panel does
