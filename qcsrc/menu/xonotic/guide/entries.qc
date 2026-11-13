@@ -141,6 +141,7 @@ void XonoticEntryList_refilter(entity me)
 		oldName = "";
 
 	int newSelectedItem = 0;
+	bool oldNameFound = false;
 	me.nItems = me.source.reload(me.source, me.stringFilter);
 	for (int i = 0, n = me.nItems; i < n; ++i)
 		if (me.source.getEntry(me.source, i, XonoticEntryList_cb))
@@ -148,8 +149,14 @@ void XonoticEntryList_refilter(entity me)
 			if (XonoticEntryList_cb_icon != "")
 				draw_PreloadPicture(XonoticEntryList_cb_icon);
 			if (XonoticEntryList_cb_name == oldName)
+			{
+				oldNameFound = true;
 				newSelectedItem = i;
+			}
 		}
+
+	if (!oldNameFound)
+		me.selectedItem = -1;
 	me.setSelected(me, newSelectedItem);
 }
 
