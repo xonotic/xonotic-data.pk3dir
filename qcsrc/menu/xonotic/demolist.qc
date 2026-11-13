@@ -144,20 +144,23 @@ void DemoList_Filter_Change(entity box, entity me)
 	me.getDemos(me);
 }
 
+void DemoList_RunDemo(entity me, string cmd)
+{
+	if (me.selectedItem < 0 || me.selectedItem >= me.nItems)
+		return;
+	string s = strdecolorize(me.demoName(me, me.selectedItem));
+
+	localcmd("togglemenu 0; ", cmd, " \"demos/", s, ".dem\"\n");
+}
+
 void XonoticDemoList_startDemo(entity me)
 {
-	string s = me.demoName(me, me.selectedItem);
-	s = strdecolorize(s);
-
-	localcmd("togglemenu 0; playdemo \"demos/", s, ".dem\"\n");
+	DemoList_RunDemo(me, "playdemo");
 }
 
 void XonoticDemoList_timeDemo(entity me)
 {
-	string s = me.demoName(me, me.selectedItem);
-	s = strdecolorize(s);
-
-	localcmd("togglemenu 0; timedemo \"demos/", s, ".dem\"\n");
+	DemoList_RunDemo(me, "timedemo");
 }
 
 void DemoConfirm_ListClick_Check_Gamestatus(entity me)
