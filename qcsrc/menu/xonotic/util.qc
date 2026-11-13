@@ -754,7 +754,7 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Color:")));
 			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg")), "0");
 		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString(strzone(strcat("hud_panel_", panelname, "_bg_color")), "hud_panel_bg_color"));
-			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg_color")), "");
+			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg")), "0");
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 3.6, e = makeXonoticCheckBoxString("", "1 1 1", strzone(strcat("hud_panel_", panelname, "_bg_color")), _("Default")));
@@ -778,14 +778,14 @@ void dialog_hudpanel_main_settings(entity me, string panelname)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Team color:")));
-			setDependentNOT(e, strzone(strcat("hud_panel_", panelname, "_bg_alpha")), 0);
+			setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg_alpha")), "0");
 			me.TD(me, 1, 2.6, e = makeXonoticTextSlider(strzone(strcat("hud_panel_", panelname, "_bg_color_team"))));
 				e.addValue(e, _("Default"), "");
 				e.addValue(e, _("Disable"), "0");
 				for(i = 1; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals_percentage(i / 10, 0)), strzone(ftos_mindecimals(i / 10)));
 				e.configureXonoticTextSliderValues(e);
-				setDependentNOT(e, strzone(strcat("hud_panel_", panelname, "_bg_alpha")), 0);
+				setDependentStringNotEqual(e, strzone(strcat("hud_panel_", panelname, "_bg_alpha")), "0");
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 3.6, e = makeXonoticCheckBox(0, "hud_configure_teamcolorforced", _("Test team color in configure mode")));

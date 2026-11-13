@@ -17,23 +17,24 @@ entity makeXonoticPlayerList()
 
 void XonoticPlayerList_setPlayerList(entity me, string plist)
 {
-	int i;
-	int buf = buf_create();
+	if (me.playerList >= 0) // free the old list
+		buf_del(me.playerList);
+	int i, buf = buf_create();
 
 	me.nItems = tokenizebyseparator(plist, "\n");
-	for(i = 0; i < me.nItems; ++i)
-	{
+	for (i = 0; i < me.nItems; ++i)
 		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME, argv(i)); // -666 100 "^4Xon ^2Player"
-	}
 
-	for(i = 0; i < me.nItems; ++i)
+	string name;
+	int n;
+	for (i = 0; i < me.nItems; ++i)
 	{
-		string name = bufstr_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
-		int n = tokenize_console(name);
+		name = bufstr_get(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME);
+		n = tokenize_console(name);
 
 		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_SCORE, argv(0)); // -666
 		bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_PING,  argv(1)); // 100
-		if(n == PLAYERPARM_COUNT)
+		if (n == PLAYERPARM_COUNT)
 		{
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_TEAM,  argv(2)); // 0 for spec, else 1, 2, 3, 4
 			bufstr_set(buf, i * PLAYERPARM_COUNT + PLAYERPARM_NAME,  argv(3)); // ^4Xon ^2Player

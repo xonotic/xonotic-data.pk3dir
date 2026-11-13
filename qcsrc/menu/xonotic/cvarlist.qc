@@ -111,7 +111,7 @@ string autocvar_menu_reverted_nonsaved_cvars;
 bool XonoticCvarList_updateCvarType(entity me)
 {
 	float t = cvar_type(me.cvarName);
-	me.cvarType = "";
+	strfree(me.cvarType);
 	bool needsForcing;
 	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
 	{
@@ -258,17 +258,16 @@ float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 		CvarList_Revert_Click(NULL, me);
 		return 1;
 	}
-	else if(!me.cvarValueBox.disabled && scan == K_ENTER)
+	else if (!me.cvarValueBox.disabled && scan == K_ENTER)
 	{
 		me.cvarValueBox.parent.setFocus(me.cvarValueBox.parent, me.cvarValueBox);
 		return 1;
 	}
-	else if(SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
+	else if (SUPER(XonoticCvarList).keyDown(me, scan, ascii, shift))
 		return 1;
-	else if(!me.controlledTextbox || me.cvarValueBox.disabled)
+	else if (!me.controlledTextbox)
 		return 0;
-	else
-		return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
+	return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
 }
 
 float XonoticCvarList_mouseRelease(entity me, vector pos)

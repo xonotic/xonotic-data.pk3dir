@@ -108,7 +108,7 @@
 		{
 			if (me.selectionDoesntMatter)
 			{
-				me.scrollPosTarget = min(me.scrollPosTarget + 0.5, me.nItems * me.itemHeight - 1);
+				me.scrollPosTarget = min(me.scrollPosTarget + 0.5, max(0, me.nItems * me.itemHeight - 1));
 				return 1;
 			}
 

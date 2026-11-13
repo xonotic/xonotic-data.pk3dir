@@ -24,11 +24,11 @@ string KeyBinds_Icons[MAX_KEYBINDS]; // Allow all keybinds to have an icon, alth
 // Special keybinds can't be edited or selected
 // If a special keybind description matches the previous one
 // then it's considered as an alternative keybind of the previous one
-#define KEYBIND_IS_SPECIAL(func) (substring(func, 0 ,1) == "*")
+#define KEYBIND_IS_SPECIAL(func) (substring(func, 0, 1) == "*")
 // Overriding keybinds unset other binds when they're set
 // ... for the purposes of the menu, or for other reasons
 // The other binds that need to be unset are concatenated to func with a ";" separator
-#define KEYBIND_IS_OVERRIDER(func) (substring(func, 0 ,1) == ";")
+#define KEYBIND_IS_OVERRIDER(func) (substring(func, 0, 1) == ";")
 
 string XonoticKeyBinder_cb_name, XonoticKeyBinder_cb_icon;
 void XonoticKeyBinder_cb(string _name, string _icon)
@@ -91,36 +91,32 @@ void KeyBinds_BuildList()
 	{
 		string w_override_list = "";
 		int w_count = 0;
-
-		FOREACH(Weapons, it != WEP_Null, {
+		FOREACH(Weapons, it != WEP_Null,
+		{
 			if (it.impulse != imp || !SHOWABLE_WEAPON(it))
 				continue;
 			it.display(it, XonoticKeyBinder_cb);
 			w_override_list = strcat(w_override_list, ";weapon_", it.netname);
 			++w_count;
 		});
+
 		if (w_count)
 		{
-			if (w_count == 1) // group only has 1 weapon (like Blaster's group), use the group bind, and add the icon
-			{                // no overrides needed
-				KEYBIND_DEF_WITH_ICON(strcat("weapon_group_", itos(imp)), XonoticKeyBinder_cb_name, strcat(" ", XonoticKeyBinder_cb_icon));
-			}
-			else // group has multiple weapons, allow binding them separately or together
-			{    // setting the group bind overrides the individual binds, and vice versa
-				string w_group = strcat(";weapon_group_", itos(imp));
-				KEYBIND_DEF(strcat(w_group, w_override_list), sprintf(_("weapon group %d"), imp));
+			string w_group = strcat(";weapon_group_", itos(imp));
+			KEYBIND_DEF(strcat(w_group, w_override_list), sprintf(_("weapon group %d"), imp));
 
-				int w_counter = 0;
-				FOREACH(Weapons, it != WEP_Null, {
-					if (it.impulse != imp || !SHOWABLE_WEAPON(it))
-						continue;
-					it.display(it, XonoticKeyBinder_cb);
-					++w_counter;
-					KEYBIND_DEF_WITH_ICON(strcat(";weapon_", it.netname, w_group), XonoticKeyBinder_cb_name,
-						strcat((w_counter == 1 ? "T" : w_counter == w_count ? "L" : "+"), XonoticKeyBinder_cb_icon));
-				});
-			}
+			int w_counter = 0;
+			FOREACH(Weapons, it != WEP_Null,
+			{
+				if (it.impulse != imp || !SHOWABLE_WEAPON(it))
+					continue;
+				it.display(it, XonoticKeyBinder_cb);
+				++w_counter;
+				KEYBIND_DEF_WITH_ICON(strcat(";weapon_", it.netname, w_group), XonoticKeyBinder_cb_name,
+					strcat((w_counter == w_count ? "L" : (w_counter == 1 ? "T" : "+")), XonoticKeyBinder_cb_icon));
+			});
 		}
+
 		if (imp == 0)
 			break;
 		if (imp == 9)
@@ -249,6 +245,13 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 	replace_bind("g_waypointsprite_team_danger_d", "waypoint_danger_death");
 	replace_bind("g_waypointsprite_clear_personal", "waypoint_clear_personal");
 	replace_bind("g_waypointsprite_clear", "waypoint_clear");
+
+	// Precache images
+	FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_HIDDEN),
+	{
+		it.display(it, XonoticKeyBinder_cb);
+		draw_PreloadPicture(XonoticKeyBinder_cb_icon);
+	});
 }
 void XonoticKeyBinder_loadKeyBinds(entity me)
 {
@@ -315,8 +318,6 @@ void KeyBinder_Bind_UnbindAllForFunction(int n)
 }
 void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 {
-	int n, j, k, nvalid;
-
 	me.keyGrabButton.forcePressed = false;
 	me.clearButton.disabled = 0;
 
@@ -331,6 +332,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 	}
 
 	string func = KeyBinds_Functions[me.selectedItem];
+	int n, j;
 	if (func == "" || KEYBIND_IS_SPECIAL(func))
 		return;
 	else if (KEYBIND_IS_OVERRIDER(func))
@@ -338,6 +340,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 		n = tokenizebyseparator(func, ";");
 		if (n <= 1)
 			return;
+		string overrides = func;
 		func = argv(1);
 
 		// unset all binds for the functions this key overrides
@@ -345,12 +348,12 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 		{
 			n = tokenize(findkeysforcommand(argv(j), 0)); // uses '...' strings
 			KeyBinder_Bind_UnbindAllForFunction(n);
-			n = tokenizebyseparator(func, ";"); // reset argv back to the overridden functions
+			n = tokenizebyseparator(overrides, ";"); // reset argv back to the overridden functions
 		}
 	}
 
 	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
-	nvalid = 0;
+	int k, nvalid = 0;
 	for (j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
@@ -463,26 +466,31 @@ void XonoticKeyBinder_setSelected(entity me, int i)
 	// skip over unselectables if selected via keyboard, otherwise ignore mouse input
 	if (!me.pressed)
 	{
+		// second while loop retreats, if we went past the start/end respectively
 		if (i < me.previouslySelected)
 		{
-			while ((i > 0) && KEYBIND_IS_UNSELECTABLE(i))
+			while (i > 0 && KEYBIND_IS_UNSELECTABLE(i))
 				--i;
+			while (i < me.nItems - 1 && KEYBIND_IS_UNSELECTABLE(i))
+				++i;
 		}
 		else
 		{
-			while ((i < me.nItems - 1) && KEYBIND_IS_UNSELECTABLE(i))
+			while (i < me.nItems - 1 && KEYBIND_IS_UNSELECTABLE(i))
 				++i;
+			while (i > 0 && KEYBIND_IS_UNSELECTABLE(i))
+				--i;
 		}
 	}
 	if (KEYBIND_IS_UNSELECTABLE(i))
 		i = me.previouslySelected;
 	else
 		me.previouslySelected = i;
+#undef KEYBIND_IS_UNSELECTABLE
 
 	if (me.userbindEditButton)
 		me.userbindEditButton.disabled = !KEYBIND_IS_USERBIND(KeyBinds_Descriptions[i]);
 	SUPER(XonoticKeyBinder).setSelected(me, i);
-#undef KEYBIND_IS_UNSELECTABLE
 }
 float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 {

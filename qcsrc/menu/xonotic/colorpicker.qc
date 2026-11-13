@@ -74,17 +74,13 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 		me.controlledTextbox.cursorPos = new_pos;
 	}
 
-	if(substring(me.controlledTextbox.text, i-1, 1) == "^")
-	{
-		if(!isCaretEscaped(me.controlledTextbox.text, i-1))
-			me.controlledTextbox.enterText(me.controlledTextbox, "^"); // escape previous caret
-	}
+	if (i > 0 && substring(me.controlledTextbox.text, i - 1, 1) == "^"
+	&& !isCaretEscaped(me.controlledTextbox.text, i - 1))
+		me.controlledTextbox.enterText(me.controlledTextbox, "^"); // escape previous caret
 
 	vector margin = me.imagemargin;
-	if(coords.x >= margin.x)
-	if(coords.y >= margin.y)
-	if(coords.x <= 1 - margin.x)
-	if(coords.y <= 1 - margin.y)
+	if (coords.x >= margin.x && coords.x <= 1 - margin.x
+	&&  coords.y >= margin.y && coords.y <= 1 - margin.y)
 		me.controlledTextbox.enterText(me.controlledTextbox, rgb_to_hexcolor(hslimage_color(coords, margin)));
 
 	return 1;

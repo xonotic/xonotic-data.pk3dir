@@ -37,7 +37,7 @@ void _dumptree_close(entity pass, entity me)
 	}
 }
 
-float updateConwidths(float width, float height, float pixelheight);
+bool updateConwidths(float width, float height, float pixelheight);
 
 void GameCommand(string theCommand)
 {
@@ -115,33 +115,31 @@ void GameCommand(string theCommand)
 			m_play_click_sound(MENU_SOUND_OPEN);
 			m_goto(strcat(filter, argv(1)), true); // switch to a menu item
 		}
-		else if(argc > 2 && (!isdemo() || argv(1) == "Welcome"))
+		else if ((argc > 2 || close_mode) && (!isdemo() || argv(1) == "Welcome"))
 		{
 			entity e = NULL;
 			float argsbuf = 0;
-			string s = strzone(argv(1)); // dialog name
-			for(int i = 0; (e = nextent(e)); )
-				if(e.classname != "vtbl" && e.name == strcat(filter, s))
+			string s = argv(1); // dialog name
+			for (int i = 0; (e = nextent(e)); )
+				if (e.classname != "vtbl" && e.name == strcat(filter, s))
 				{
 					argsbuf = buf_create();
-					if(argsbuf >= 0)
-					if(e.readInputArgs)
+					if (argsbuf >= 0
+					&& argc > 2 && e.readInputArgs)
 					{
-						for(i = 2; i < argc; ++i)
+						for (i = 2; i < argc; ++i)
 							bufstr_add(argsbuf, argv(i), 1);
 						e.readInputArgs(e, argsbuf);
 						if (!close_mode)
 							m_goto(strcat(filter, s), true);
 					}
-					if(argsbuf >= 0)
+					if (argsbuf >= 0)
 						buf_del(argsbuf);
 
 					// NOTE input args are read even in close mode
-					if (close_mode)
-					{
-						if (e.instanceOfContainer && e.closable && e.focused)
-							Dialog_Close(e, e);
-					}
+					if (close_mode && e.closable
+					&& e.instanceOfContainer && e.focused)
+						Dialog_Close(e, e);
 				}
 		}
 		return;

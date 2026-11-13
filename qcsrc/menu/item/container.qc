@@ -187,7 +187,12 @@
 			//   If the focus wasn't removed then clicking outside of the current window would do nothing instead of
 			//   closing the current window and returning to the main menu.
 			if (v.x < 0 || v.x > 1 || v.y < 0 || v.y > 1)
+			{
 				this.setFocus(this, NULL);
+				// don't forward the mousePress
+				this.leaveSubitem(this);
+				return false;
+			}
 			bool r = f.mousePress(f, v);
 			this.leaveSubitem(this);
 			return r;

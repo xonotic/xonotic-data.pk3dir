@@ -177,8 +177,6 @@ void XonoticMapList_drawListBoxItem(entity me, int i, vector absSize, bool isSel
 
 void XonoticMapList_refilter(entity me)
 {
-	float i, j, n;
-	string s;
 	Gametype gt = MapInfo_CurrentGametype();
 	int f = MapInfo_CurrentFeatures();
 	MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -186,31 +184,30 @@ void XonoticMapList_refilter(entity me)
 		MapInfo_FilterString(me.stringFilter);
 	me.nItems = MapInfo_count;
 
-	for(i = 0; i < MapInfo_count; ++i)
-	{
-		if(draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i))) == "")
+	int i;
+	for (i = 0; i < MapInfo_count; ++i)
+		if (draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i))) == "")
 			draw_PreloadPicture(strcat("/levelshots/", MapInfo_BSPName_ByID(i)));
-	}
-	s = "0";
-	for(i = 1; i < MapInfo_count; i *= 2)
+
+	string s = "0"; // make a bitmask string of `MapInfo_count` zeros
+	for (i = 1; i < MapInfo_count; i *= 2)
 		s = strcat(s, s);
-	n = tokenize_console(cvar_string("g_maplist"));
-	for(i = 0; i < n; ++i)
+	s = substring(s, 0, MapInfo_count);
+
+	int j, n = tokenize_console(cvar_string("g_maplist"));
+	for (i = 0; i < n; ++i)
 	{
 		j = MapInfo_FindName(argv(i));
-		if(j >= 0)
-		{
-			// double check that the two mapnames are "identical", not just share the same prefix
-			if (strlen(MapInfo_BSPName_ByID(j)) == strlen(argv(i)))
-				s = strcat(
-					substring(s, 0, j),
-					"1",
-					substring(s, j+1, MapInfo_count - (j+1))
-				);
-		}
+		if (j >= 0)
+		if (strlen(MapInfo_BSPName_ByID(j)) == strlen(argv(i))) // double check that the 2 mapnames are "identical", not just share the same prefix
+			s = strcat(
+				substring(s, 0, j),
+				"1",
+				substring(s, j+1, MapInfo_count - (j+1))
+			);
 	}
 	strcpy(me.g_maplistCache, s);
-	if(gt != me.lastGametype || f != me.lastFeatures)
+	if (gt != me.lastGametype || f != me.lastFeatures)
 	{
 		me.lastGametype = gt;
 		me.lastFeatures = f;

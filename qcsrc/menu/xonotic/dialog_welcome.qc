@@ -16,13 +16,17 @@ void welcomeDialog_resetStrings(entity me)
 
 float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shift)
 {
-	switch(key)
+	switch (key)
 	{
 		case K_KP_ENTER:
 		case K_ENTER:
 		case K_SPACE:
-			XonoticCommandButton_Click(me.joinButton_ent, me);
-			return true;
+			if (me.focusedChild != me.spectateButton_ent) // alternative could be me.focusedChild == me.joinButton_ent
+			{
+				XonoticCommandButton_Click(me.joinButton_ent, me);
+				return true;
+			}
+			// else fallthrough
 		default:
 			return SUPER(XonoticWelcomeDialog).keyDown(me, key, ascii, shift);
 	}

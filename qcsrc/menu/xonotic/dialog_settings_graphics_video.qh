@@ -1,0 +1,12 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticGraphicsVideoSettingsTab, XonoticTab)
+	METHOD(XonoticGraphicsVideoSettingsTab, fill, void(entity));
+	METHOD(XonoticGraphicsVideoSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGraphicsVideoSettingsTab, title, string, _("Video"));
+	ATTRIB(XonoticGraphicsVideoSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGraphicsVideoSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGraphicsVideoSettingsTab, columns, float, 4.5);
+ENDCLASS(XonoticGraphicsVideoSettingsTab)
+entity makeXonoticGraphicsVideoSettingsTab();

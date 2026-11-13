@@ -16,6 +16,7 @@ void XonoticStatsList_configureXonoticStatsList(entity me)
 	me.configureXonoticListBox(me);
 	me.getStats(me);
 
+	// Precache images
 	for (int i = 0; i < GameType_GetTotalCount(); ++i)
 		if (SKINBOOL_STATSLIST_ICON_BLUR)
 			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
@@ -65,7 +66,7 @@ string XonoticStatsList_convertDate(string input)
 	date = strreplace("%MMMM", monthname, date);
 	date = strreplace("%MM", month_num, date); // month number as-is (zero-padded)
 	date = strreplace("%M", itos(stoi(month_num)), date); // remove leading 0
-	return strzone(date);
+	return date;
 }
 
 void XonoticStatsList_getStats(entity me)
