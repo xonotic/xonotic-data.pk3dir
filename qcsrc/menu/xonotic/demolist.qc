@@ -163,21 +163,22 @@ void XonoticDemoList_timeDemo(entity me)
 	DemoList_RunDemo(me, "timedemo");
 }
 
+bool DemoConfirm_NotInMatch()
+{
+	return (!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) || isdemo());
+}
+
 void DemoConfirm_ListClick_Check_Gamestatus(entity me)
 {
-	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) // we're not in a match, lets watch the demo
-	{
+	if (DemoConfirm_NotInMatch()) // we're not in a match, lets watch the demo
 		me.startDemo(me);
-	}
 	else // already in a match, player has to confirm
-	{
 		DialogOpenButton_Click_withCoords(
 			me,
 			main.demostartconfirmDialog,
-			boxToGlobal(eY * (me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size),
-			boxToGlobalSize(eY * me.itemHeight + eX * (1 - me.controlWidth), me.size)
+			boxToGlobal(vec2(0, me.selectedItem * me.itemHeight - me.scrollPos), me.origin, me.size),
+			boxToGlobalSize(vec2(1 - me.controlWidth, me.itemHeight), me.size)
 		);
-	}
 }
 
 void XonoticDemoList_doubleClickListBoxItem(entity me, float i, vector where)

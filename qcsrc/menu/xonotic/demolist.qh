@@ -29,5 +29,6 @@ ENDCLASS(XonoticDemoList)
 
 entity demolist;  // for reference elsewhere
 entity makeXonoticDemoList();
+bool DemoConfirm_NotInMatch();
 void DemoList_Refresh_Click(entity btn, entity me);
 void DemoList_Filter_Change(entity box, entity me);
