@@ -29,6 +29,7 @@ void HUD_HealthArmor(bool should_draw)
 	static float old_p_healthtime, old_p_armortime;
 
 	int health, armor, fuel, air_time, p_health, p_armor;
+	float air_finished;
 	if (!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_healtharmor || spectatee_status == -1)
@@ -40,7 +41,8 @@ void HUD_HealthArmor(bool should_draw)
 		health = STAT(HEALTH);
 		armor = STAT(ARMOR);
 		fuel = STAT(FUEL);
-		air_time = bound(0, STAT(AIR_FINISHED) - time, 10);
+		air_finished = STAT(AIR_FINISHED);
+		air_time = bound(0, air_finished - time, 10);
 		if (health <= 0)
 		{
 			health = 0;
@@ -128,6 +130,7 @@ void HUD_HealthArmor(bool should_draw)
 		p_armor = armor = 75;
 		fuel = 20;
 		air_time = 6;
+		air_finished = time + air_time;
 	}
 
 	HUD_Panel_LoadCvars();
@@ -149,18 +152,18 @@ void HUD_HealthArmor(bool should_draw)
 	}
 
 	float air_alpha;
-	if (!STAT(AIR_FINISHED))
+	if (!air_finished)
 		air_alpha = 0;
-	else if (time > STAT(AIR_FINISHED))
+	else if (time > air_finished)
 	{
-		air_alpha = blink_synced(0.5, 0.5, 7, STAT(AIR_FINISHED), -1);
+		air_alpha = blink_synced(0.5, 0.5, 7, air_finished, -1);
 		air_time = 10;
 	}
 	else
 	{
 		float fade_time = 10 / 2;
 		float start_alpha = autocvar_hud_panel_healtharmor_oxygenbar_startalpha;
-		float f = (STAT(AIR_FINISHED) - time - fade_time) / fade_time;
+		float f = (air_finished - time - fade_time) / fade_time;
 		air_alpha = bound(0, start_alpha + (1 - start_alpha) * (1 - f), 1);
 	}
 
