@@ -77,13 +77,13 @@ vector Checkpoints_Draw(int end, vector pos, vector fontsize, vector rs_fontsize
 		pos = Checkpoints_drawstring(s, pos, panel_size, panel_fg_alpha, fontsize);
 		if (autocvar_hud_panel_checkpoints_flip) // now check if the next line can be shown (fit)
 		{
-			if (pos.y < panel_pos.y)
-				break;
+			if (pos.y < panel_pos.y + rs_fontsize.y)
+				break; // next line can't be shown
 		}
 		else
 		{
 			if (pos.y > panel_pos.y + panel_size.y - rs_fontsize.y)
-				break;
+				break; // next line can't be shown
 		}
 	}
 	return pos;
