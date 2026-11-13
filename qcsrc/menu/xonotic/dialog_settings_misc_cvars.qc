@@ -11,6 +11,13 @@ void XonoticCvarsDialog_showNotify(entity me)
 	SUPER(XonoticCvarsDialog).showNotify(me);
 	loadAllCvars(me);
 }
+
+void XonoticCvarsDialog_close(entity me)
+{
+	loadAllCvars(me.parent); // may have used the cvarlist to change settings present in Settings > Misc
+	SUPER(XonoticCvarsDialog).close(me);
+}
+
 void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIST_CONTROLS to color ALL controls
 {
 
