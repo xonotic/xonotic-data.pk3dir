@@ -1057,30 +1057,34 @@ void HUD_Panel_Mouse()
 }
 void HUD_Configure_DrawGrid()
 {
-	if (autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
+	if (!autocvar_hud_configure_grid)
+		return;
+
+	// Needed for snapping, even if the grid is invisible
+	hud_configure_gridSize.x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
+	hud_configure_gridSize.y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
+	hud_configure_realGridSize.x = hud_configure_gridSize.x * vid_conwidth;
+	hud_configure_realGridSize.y = hud_configure_gridSize.y * vid_conheight;
+
+	if (autocvar_hud_configure_grid_alpha <= 0)
+		return;
+
+	// vertical center line, wider than vertical grid lines so that it's more visible
+	// NOTE: depending on grid size the vertical center line may not overlap any vertical grid line
+	int i, n = tokenize(autocvar_hud_configure_vertical_lines);
+	for (i = 0; i < n; ++i)
 	{
-		hud_configure_gridSize.x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
-		hud_configure_gridSize.y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
-		hud_configure_realGridSize.x = hud_configure_gridSize.x * vid_conwidth;
-		hud_configure_realGridSize.y = hud_configure_gridSize.y * vid_conheight;
-		vector s;
-		// vertical center line, wider than vertical grid lines so that it's more visible
-		// NOTE: depending on grid size the vertical center line may not overlap any vertical grid line
-		int i, n = tokenize(autocvar_hud_configure_vertical_lines);
-		for (i = 0; i < n; ++i)
-		{
-			float xpos_rel = stof(argv(i));
-			drawfill(eX * (xpos_rel * vid_conwidth - 1), vec2(3, vid_conheight), '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
-		}
-		// x-axis
-		s = vec2(1, vid_conheight);
-		for (i = 1; i < 1 / hud_configure_gridSize.x; ++i)
-			drawfill(eX * i * hud_configure_realGridSize.x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
-		// y-axis
-		s = vec2(vid_conwidth, 1);
-		for (i = 1; i < 1 / hud_configure_gridSize.y; ++i)
-			drawfill(eY * i * hud_configure_realGridSize.y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		float xpos_rel = stof(argv(i));
+		drawfill(eX * (xpos_rel * vid_conwidth - 1), vec2(3, vid_conheight), '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
+	// x-axis
+	vector s = vec2(1, vid_conheight);
+	for (i = 1; i < 1 / hud_configure_gridSize.x; ++i)
+		drawfill(eX * i * hud_configure_realGridSize.x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+	// y-axis
+	s = vec2(vid_conwidth, 1);
+	for (i = 1; i < 1 / hud_configure_gridSize.y; ++i)
+		drawfill(eY * i * hud_configure_realGridSize.y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 }
 
 float _menu_alpha_prev;
