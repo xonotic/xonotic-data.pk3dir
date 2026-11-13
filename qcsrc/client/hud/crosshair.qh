@@ -1,8 +1,9 @@
 #pragma once
 
-bool autocvar_cl_reticle = 1;
+bool autocvar_cl_reticle = true;
+bool autocvar_cl_reticle_normal = true;
 float autocvar_cl_reticle_normal_alpha = 1;
-bool autocvar_cl_reticle_weapon = 1;
+bool autocvar_cl_reticle_weapon = true;
 float autocvar_cl_reticle_weapon_alpha = 1;
 bool autocvar_cl_reticle_stretch;
 bool autocvar_cl_reticle_chase;
