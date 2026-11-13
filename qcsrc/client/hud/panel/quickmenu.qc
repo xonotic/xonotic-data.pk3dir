@@ -659,7 +659,7 @@ void HUD_QuickMenu(bool should_draw)
 			for (; QuickMenu_Page_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Page_Entries)
 				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Command%d"), QuickMenu_Page_Entries), "-");
 			++QuickMenu_Page_Entries;
-			QuickMenu_Page_ClearEntry(QuickMenu_Page_Entries);
+			QuickMenu_Page_ClearEntry(QUICKMENU_MAXLINES - 1);
 			QuickMenu_IsLastPage = false;
 		}
 	}
