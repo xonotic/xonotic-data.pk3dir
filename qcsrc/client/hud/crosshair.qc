@@ -678,7 +678,7 @@ void DrawReticle(entity this)
 		else
 			reticle_type = 0;
 	}
-	else if (button_zoom || zoomscript_caught)
+	else if (autocvar_cl_reticle_normal && (button_zoom || zoomscript_caught))
 		reticle_type = 1; // normal zoom
 	else
 		reticle_type = 0;
