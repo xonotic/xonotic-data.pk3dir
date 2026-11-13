@@ -154,7 +154,7 @@ void HUD_InfoMessages(bool should_draw)
 		{
 			//we need to ceil, otherwise the countdown would be off by .5 when using round()
 			float countdown = ceil(STAT(GAMESTARTTIME) - time);
-			s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
+			s = sprintf(_("^1Game starts in ^3%s"), count_seconds(countdown));
 			InfoMessage(s);
 		}
 
