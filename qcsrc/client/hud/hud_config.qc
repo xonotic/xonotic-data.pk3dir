@@ -706,7 +706,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 				cvar_set(strcat("hud_panel_", highlightedPanel.panel_name), ftos(!cvar(strcat("hud_panel_", highlightedPanel.panel_name))));
 		}
 		else
-			cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
+			cvar_set("hud_dock", (autocvar_hud_dock == "" || autocvar_hud_dock == "0") ? "dock" : "");
 	}
 	else if (nPrimary == 'c' && hudShiftState & S_CTRL) // copy highlighted panel size
 	{
