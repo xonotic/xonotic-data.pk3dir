@@ -647,7 +647,7 @@ void HUD_StrafeHUD(bool should_draw)
 		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_switch_arrow_size, 10), 1);
 
-		if (num_dashes > 0)
+		if (num_dashes > 0 || has_top_arrow || has_bottom_arrow)
 			max_line_height = max(max_line_height, indicator_size.y);
 		if (has_top_arrow)
 			max_top_arrow_size = max(max_top_arrow_size, arrow_size);
@@ -690,7 +690,7 @@ void HUD_StrafeHUD(bool should_draw)
 		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_bestangle_arrow_size, 10), 1);
 
-		if (num_dashes > 0)
+		if (num_dashes > 0 || has_top_arrow || has_bottom_arrow)
 			max_line_height = max(max_line_height, indicator_size.y);
 		if (has_top_arrow)
 			max_top_arrow_size = max(max_top_arrow_size, arrow_size);
@@ -726,7 +726,7 @@ void HUD_StrafeHUD(bool should_draw)
 		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_wturn_arrow_size, 10), 1);
 
-		if (num_dashes > 0)
+		if (num_dashes > 0 || has_top_arrow || has_bottom_arrow)
 			max_line_height = max(max_line_height, indicator_size.y);
 		if (has_top_arrow)
 			max_top_arrow_size = max(max_top_arrow_size, arrow_size);
@@ -759,7 +759,7 @@ void HUD_StrafeHUD(bool should_draw)
 		// there's only one size cvar for the arrows, they will always have a 45° angle to ensure proper rendering without antialiasing
 		float arrow_size = max(panel_size.y * min(autocvar_hud_panel_strafehud_angle_arrow_size, 10), 1);
 
-		if (num_dashes > 0)
+		if (num_dashes > 0 || has_top_arrow || has_bottom_arrow)
 			max_line_height = max(max_line_height, indicator_size.y);
 		if (has_top_arrow)
 			max_top_arrow_size = max(max_top_arrow_size, arrow_size);
