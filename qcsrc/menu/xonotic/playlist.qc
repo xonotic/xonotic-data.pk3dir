@@ -1,5 +1,10 @@
 #include "playlist.qh"
 
+void PlayList_tokenize(entity me)
+{
+	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+}
+
 entity makeXonoticPlayList()
 {
 	entity me = NEW(XonoticPlayList);
@@ -9,7 +14,7 @@ entity makeXonoticPlayList()
 
 void XonoticPlayList_configureXonoticPlayList(entity me)
 {
-	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	PlayList_tokenize(me);
 	me.configureXonoticListBox(me);
 }
 
@@ -33,7 +38,7 @@ void XonoticPlayList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 
 void XonoticPlayList_addToPlayList(entity me, string track)
 {
-	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	PlayList_tokenize(me);
 	if(me.nItems == 0)
 	{
 		cvar_set("music_playlist_list0", track);
@@ -52,7 +57,7 @@ void XonoticPlayList_removeSelectedFromPlayList(entity me)
 {
 	float i, cpt = false;
 	string s = "";
-	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	PlayList_tokenize(me);
 	if(me.nItems == 0)
 		return;
 	for(i = 0; i < me.nItems; ++i)
@@ -102,21 +107,27 @@ void PlayList_Remove_All(entity btn, entity me)
 
 float XonoticPlayList_mouseDrag(entity me, vector pos)
 {
-	float f, i;
-	i = me.selectedItem;
-	f = SUPER(XonoticPlayList).mouseDrag(me, pos);
+	int i = me.selectedItem;
+	float f = SUPER(XonoticPlayList).mouseDrag(me, pos);
 
-	if(me.pressed != 1) // don't change priority if the person is just scrolling
+	if (me.pressed != 1 // don't change priority if the person is just scrolling
+	&& me.selectedItem != i)
 	{
-		if(me.selectedItem != i)
-		{
-			cvar_set("music_playlist_list0", swapInPriorityList(cvar_string("music_playlist_list0"), me.selectedItem, i));
-			float c = cvar("music_playlist_current0");
-			if(c == i)
-				cvar_set("music_playlist_current0", ftos(me.selectedItem));
-			else if(c == me.selectedItem)
-				cvar_set("music_playlist_current0", ftos(i));
-		}
+		int to = me.selectedItem;
+		cvar_set("music_playlist_list0", rotateInPriorityList(cvar_string("music_playlist_list0"), i, to));
+
+		int c = cvar("music_playlist_current0");
+		if (c == i)
+			c = to;
+		else if (i < to && c > i && c <= to)
+			--c;
+		else if (i > to && c >= to && c < i)
+			++c;
+		cvar_set("music_playlist_current0", itos(c));
+
+		// We tokenized in XonoticPlayList_draw, but rotateInPriorityList re-tokenized
+		// Need the list to be tokenized for XonoticPlayList_drawListBoxItem
+		PlayList_tokenize(me);
 	}
 
 	return f;
@@ -124,7 +135,7 @@ float XonoticPlayList_mouseDrag(entity me, vector pos)
 
 void XonoticPlayList_draw(entity me)
 {
-	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	PlayList_tokenize(me);
 	if(cvar("music_playlist_index") == 0 || cvar("music_playlist_index") == 999)
 		me.playingTrack = cvar("music_playlist_current0");
 	else
@@ -178,7 +189,7 @@ void StopSound_Click(entity btn, entity me)
 void XonoticPlayList_startSound(entity me, float offset)
 {
 	float f;
-	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	PlayList_tokenize(me);
 	if(offset)
 	{
 		if(cvar("music_playlist_index") == -1)
