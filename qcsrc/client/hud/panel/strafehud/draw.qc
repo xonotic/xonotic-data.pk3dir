@@ -287,20 +287,22 @@ void StrafeHUD_DrawStrafeArrow(vector origin, float size, vector color, float al
 
 	origin = HUD_Shift(origin);
 	float width  = HUD_ScaleX(size * 2 + connection_width);
+	float half_con_width = HUD_ScaleX(connection_width * 0.5);
 	float height = HUD_ScaleY(size);
+	float y_diff = (flipped ? height : 0);
 	if (flipped)
-		origin.y -= size;
+		origin.y -= height;
 	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
 	if (connection_width > 0)
 	{
-		R_PolygonVertex(origin + (connection_width / 2 * eX) + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
-		R_PolygonVertex(origin - (connection_width / 2 * eX) + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
+		R_PolygonVertex(origin + vec2( half_con_width, y_diff), '0 0 0', color, alpha);
+		R_PolygonVertex(origin + vec2(-half_con_width, y_diff), '0 0 0', color, alpha);
 	}
 	else
-		R_PolygonVertex(origin + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
+		R_PolygonVertex(origin + vec2(0, y_diff), '0 0 0', color, alpha);
 
-	R_PolygonVertex(origin + (flipped ? '0 0 0' : height * eY) - (width / 2) * eX, '0 0 0', color, alpha);
-	R_PolygonVertex(origin + (flipped ? '0 0 0' : height * eY) + (width / 2) * eX, '0 0 0', color, alpha);
+	R_PolygonVertex(origin + vec2(-width * 0.5, y_diff), '0 0 0', color, alpha);
+	R_PolygonVertex(origin + vec2( width * 0.5, y_diff), '0 0 0', color, alpha);
 	R_EndPolygon();
 }
 
