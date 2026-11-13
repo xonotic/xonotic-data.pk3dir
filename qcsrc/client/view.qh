@@ -21,7 +21,7 @@ bool autocvar_cl_lockview;
 bool autocvar_cl_orthoview;
 bool autocvar_cl_orthoview_nofog;
 bool autocvar_cl_spawnzoom = 1;
-float autocvar_cl_spawnzoom_speed = 1;
+float autocvar_cl_spawnzoom_speed = 2.5;
 float autocvar_cl_spawnzoom_factor = 2;
 bool autocvar_cl_stripcolorcodes;
 bool autocvar_cl_velocityzoom_enabled;
