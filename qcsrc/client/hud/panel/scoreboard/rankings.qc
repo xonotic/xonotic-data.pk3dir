@@ -98,7 +98,8 @@ vector Scoreboard_Rankings_Draw(vector pos, string ranktitle, entity pl, vector 
 	int column = 0, j = 0;
 	string zoned_name_self = strzone(strdecolorize(entcs_GetName(player_localnum)));
 	int start_item = rankings_start_column * rankings_rows;
-	for (i = start_item; i < start_item + rankings_cnt; ++i)
+	int end_item = min(start_item + rankings_cnt, RANKINGS_CNT);
+	for (i = start_item; i < end_item; ++i)
 	{
 		int t = grecordtime[i];
 		if (t == 0)
