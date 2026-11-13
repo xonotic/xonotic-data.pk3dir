@@ -8,6 +8,7 @@
 #include "slider.qh"
 #include "slider_sbfadetime.qh"
 #include "textlabel.qh"
+#include "textslider.qh"
 
 void HUDSetup_Check_Gamestatus(entity me, entity btn)
 {
@@ -39,8 +40,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Opacity:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_scoreboard_bg_alpha"));
-			e.formatString = "%";
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("hud_panel_scoreboard_bg_alpha"));
+			e.addValue(e, _("Default"), "");
+			for (int i = 1; i <= 20; ++i)
+				e.addValue(e, strzone(ftos_decimals_percentage(i / 20, 0)), strzone(ftos_mindecimals(i / 20)));
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fading speed:")));
 		me.TD(me, 1, 2, e = makeXonoticScoreboardFadeTimeSlider());
