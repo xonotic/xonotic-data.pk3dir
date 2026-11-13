@@ -161,7 +161,8 @@ void Draw_ShowNames(entity this)
 
 	o.z = 0;
 	float resize = 1;
-	if (autocvar_hud_shownames_resize && vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
+	if (autocvar_hud_shownames_resize && autocvar_hud_shownames_maxdistance
+	&& vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
 	{
 		// limit resize so its never smaller than 0.5... gets unreadable
 		float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
