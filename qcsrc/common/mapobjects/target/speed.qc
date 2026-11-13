@@ -195,7 +195,7 @@ NET_HANDLE(ENT_CLIENT_TARGET_SPEED, bool isnew)
 {
 	this.spawnflags = ReadShort();
 	this.active = ReadByte();
-	this.targetname = strzone(ReadString());
+	strcpy(this.targetname, ReadString());
 	this.speed = ReadCoord();
 
 	this.use = target_speed_use;
