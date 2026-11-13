@@ -306,17 +306,16 @@ void HUD_Weapons(bool should_draw)
 	else
 		weapon_count = REGISTRY_COUNT(Weapons) - 1; // unused value
 
-
-	Weapons_Fade(center);
+	center = Weapons_Fade(center);
 	Weapons_Draw(panel_switchweapon, weapons_stat, center, weapon_size, aspect, when, fadetime, rows, columns, vertical_order);
 }
 
 
-// animation for fading in/out the panel respectively when not in use
-void Weapons_Fade(vector center)
+/// Animation for fading in/out the panel respectively when not in use
+vector Weapons_Fade(vector center)
 {
 	if (autocvar__hud_configure)
-		return;
+		return center;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length  = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
@@ -343,8 +342,8 @@ void Weapons_Fade(vector center)
 		||  autocvar_hud_panel_weapons_timeout_effect == 3)
 		{
 			f *= f; // for a cooler movement
-			center.x = panel_pos.x + panel_size.x / 2;
-			center.y = panel_pos.y + panel_size.y / 2;
+			center.x = panel_pos.x + panel_size.x * 0.5;
+			center.y = panel_pos.y + panel_size.y * 0.5;
 			float screen_ar = vid_conwidth / vid_conheight;
 			if (center.x / center.y < screen_ar) // bottom left
 			{
@@ -387,8 +386,8 @@ void Weapons_Fade(vector center)
 		{
 			f *= f; // for a cooler movement
 			f = 1 - f;
-			center.x = panel_pos.x + panel_size.x / 2;
-			center.y = panel_pos.y + panel_size.y / 2;
+			center.x = panel_pos.x + panel_size.x * 0.5;
+			center.y = panel_pos.y + panel_size.y * 0.5;
 			float screen_ar = vid_conwidth / vid_conheight;
 			if (center.x / center.y < screen_ar) // bottom left
 			{
@@ -406,6 +405,7 @@ void Weapons_Fade(vector center)
 			}
 		}
 	}
+	return center;
 }
 
 void Weapons_Draw(
