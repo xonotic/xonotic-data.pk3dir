@@ -162,27 +162,37 @@ METHOD(XonoticRegisteredMutatorsList, resizeNotify, void(entity me, vector relOr
 METHOD(XonoticRegisteredMutatorsList, setSelected, void(entity me, int i))
 {
 	i = bound(0, i, me.nItems - 1);
-	me.source.getEntry(me.source, i, XonoticRegisteredMutatorsList_getNameDescription_cb);
+#define LIST_GET(idx) me.source.getEntry(me.source, idx, XonoticRegisteredMutatorsList_getNameDescription_cb)
+	LIST_GET(i);
 
 	// handling of "unselectable" items
+#define LIST_UNSELECTABLE() (XonoticRegisteredMutatorsList_cb_description == "")
+
 	// skip over unselectables if selected via keyboard, otherwise ignore mouse input
 	if (!me.pressed)
 	{
+		// second while loop retreats, if we went past the start/end respectively
 		if (i < me.previouslySelected)
 		{
-			while ((i > 0) && XonoticRegisteredMutatorsList_cb_description == "")
-				me.source.getEntry(me.source, --i, XonoticRegisteredMutatorsList_getNameDescription_cb);
+			while (i > 0 && LIST_UNSELECTABLE())
+				LIST_GET(--i);
+			while (i < me.nItems - 1 && LIST_UNSELECTABLE())
+				LIST_GET(++i);
 		}
 		else
 		{
-			while ((i < me.nItems - 1) && XonoticRegisteredMutatorsList_cb_description == "")
-				me.source.getEntry(me.source, ++i, XonoticRegisteredMutatorsList_getNameDescription_cb);
+			while (i < me.nItems - 1 && LIST_UNSELECTABLE())
+				LIST_GET(++i);
+			while (i > 0 && LIST_UNSELECTABLE())
+				LIST_GET(--i);
 		}
 	}
-	if (XonoticRegisteredMutatorsList_cb_description == "")
+	if (LIST_UNSELECTABLE())
 		i = me.previouslySelected;
 	else
 		me.previouslySelected = i;
+#undef LIST_UNSELECTABLE
+#undef LIST_GET
 
 	SUPER(XonoticRegisteredMutatorsList).setSelected(me, i);
 	if (me.onChange)

@@ -466,26 +466,31 @@ void XonoticKeyBinder_setSelected(entity me, int i)
 	// skip over unselectables if selected via keyboard, otherwise ignore mouse input
 	if (!me.pressed)
 	{
+		// second while loop retreats, if we went past the start/end respectively
 		if (i < me.previouslySelected)
 		{
-			while ((i > 0) && KEYBIND_IS_UNSELECTABLE(i))
+			while (i > 0 && KEYBIND_IS_UNSELECTABLE(i))
 				--i;
+			while (i < me.nItems - 1 && KEYBIND_IS_UNSELECTABLE(i))
+				++i;
 		}
 		else
 		{
-			while ((i < me.nItems - 1) && KEYBIND_IS_UNSELECTABLE(i))
+			while (i < me.nItems - 1 && KEYBIND_IS_UNSELECTABLE(i))
 				++i;
+			while (i > 0 && KEYBIND_IS_UNSELECTABLE(i))
+				--i;
 		}
 	}
 	if (KEYBIND_IS_UNSELECTABLE(i))
 		i = me.previouslySelected;
 	else
 		me.previouslySelected = i;
+#undef KEYBIND_IS_UNSELECTABLE
 
 	if (me.userbindEditButton)
 		me.userbindEditButton.disabled = !KEYBIND_IS_USERBIND(KeyBinds_Descriptions[i]);
 	SUPER(XonoticKeyBinder).setSelected(me, i);
-#undef KEYBIND_IS_UNSELECTABLE
 }
 float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 {
