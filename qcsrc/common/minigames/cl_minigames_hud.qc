@@ -144,6 +144,18 @@ void HUD_MinigameMenu_Click(entity menuitem)
 		menuitem.use(menuitem, NULL, NULL);
 }
 
+/// Minigame menu options: free the strings an entry owns, then delete it
+void HUD_MinigameMenu_DeleteEntry(entity e)
+{
+	strfree(e.model);
+	if (e.flags & 1) // player entry under Invite
+	{
+		strfree(e.message);
+		strfree(e.netname);
+	}
+	delete(e);
+}
+
 /// Minigame menu options: Remove the given entry
 /// Requires the given entry is actually in the list
 void HUD_MinigameMenu_EraseEntry(entity e)
@@ -165,7 +177,7 @@ void HUD_MinigameMenu_EraseEntry(entity e)
 	if (HUD_MinigameMenu_activeitem == e)
 		HUD_MinigameMenu_activeitem = NULL;
 
-	delete(e);
+	HUD_MinigameMenu_DeleteEntry(e);
 }
 
 .vector colormod;
@@ -214,7 +226,7 @@ bool HUD_MinigameMenu_Click_ExpandCollapse(entity this)
 			if (e.flags & 2)
 				HUD_MinigameMenu_Click(e);
 			this.list_next = e.list_next;
-			delete(e);
+			HUD_MinigameMenu_DeleteEntry(e);
 		}
 		if (this.list_next)
 			this.list_next.list_prev = this;
@@ -314,7 +326,7 @@ void HUD_MinigameMenu_ClickInvite(entity this, entity actor, entity trigger)
 			e = HUD_MinigameMenu_SpawnSubEntry(
 				strzone(entcs_GetName(i)), HUD_MinigameMenu_ClickInvite_Entry,
 				this);
-			e.flags |= 1;
+			e.flags |= 1; // player entry under Invite
 			e.netname = strzone(itos(i + 1));
 			e.origin.x *= 2;
 			HUD_MinigameMenu_InsertEntry(e, prev);
@@ -369,7 +381,7 @@ void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger)
 	for (entity p, e = HUD_MinigameMenu_entries; e != NULL; e = p)
 	{
 		p = e.list_next;
-		delete(e);
+		HUD_MinigameMenu_DeleteEntry(e);
 	}
 	HUD_MinigameMenu_entries = NULL;
 	HUD_MinigameMenu_last_entry = NULL;
@@ -547,7 +559,7 @@ void HUD_MinigameMenu(bool should_draw)
 			offset.y = (imgsz.y - e.size.y) * 0.5;
 		}
 
-		if (e.flags & 1)
+		if (e.flags & 1) // player entry under Invite
 			HUD_MinigameMenu_DrawColoredEntry(panel_pos + offset, e.message, e.size);
 		else
 			HUD_MinigameMenu_DrawEntry(panel_pos + offset, e.message, e.size, color);
