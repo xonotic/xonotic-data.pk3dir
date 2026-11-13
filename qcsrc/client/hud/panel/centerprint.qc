@@ -13,6 +13,7 @@ void HUD_CenterPrint_Export(int fh)
 	HUD_Write_Cvar("hud_panel_centerprint_flip");
 	HUD_Write_Cvar("hud_panel_centerprint_fontscale");
 	HUD_Write_Cvar("hud_panel_centerprint_fontscale_bold");
+	HUD_Write_Cvar("hud_panel_centerprint_fontscale_title");
 	HUD_Write_Cvar("hud_panel_centerprint_time");
 	HUD_Write_Cvar("hud_panel_centerprint_fade_in");
 	HUD_Write_Cvar("hud_panel_centerprint_fade_out");
@@ -21,7 +22,6 @@ void HUD_CenterPrint_Export(int fh)
 	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passone_minalpha");
 	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo");
 	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_passtwo_minalpha");
-	HUD_Write_Cvar("hud_panel_centerprint_fade_subsequent_minfontsize");
 	HUD_Write_Cvar("hud_panel_centerprint_fade_minfontsize");
 }
 
@@ -416,11 +416,14 @@ void HUD_CenterPrint(bool should_draw)
 			for (k = 0; k < n; ++k)
 			{
 				getWrappedLine_remaining = argv(k);
+
+				bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
+				vector fontsize = cp_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
+				if (is_bold)
+					getWrappedLine_remaining = substring(getWrappedLine_remaining, 5, -1);
+
 				while (getWrappedLine_remaining)
 				{
-					bool is_bold = (substring(getWrappedLine_remaining, 0, 5) == BOLD_OPERATOR);
-					vector fontsize = cp_fontsize * (is_bold ? autocvar_hud_panel_centerprint_fontscale_bold : autocvar_hud_panel_centerprint_fontscale);
-
 					ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 					if (ts != "")
 						pos.y -= fontsize.y;
@@ -446,14 +449,16 @@ void HUD_CenterPrint(bool should_draw)
 				ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 				if (ts != "")
 				{
-					if (align)
-						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize) * sz) * align;
-					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
+					if (a > 0.5/255.0) // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
+					{
 						if (is_bold)
 							draw_beginBoldFont();
+						if (align)
+							pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize) * sz) * align;
 						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz * hud_scale.x) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
 						if (is_bold)
 							draw_endBoldFont();
+					}
 					pos.y += fontsize.y;
 				}
 				else
@@ -469,9 +474,9 @@ void HUD_CenterPrint(bool should_draw)
 		{
 			pos.y -= msg_size + CENTERPRINT_SPACING * cp_fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos.y += (1 - sqrt(a));
+				pos.y += 1 - sqrt(a);
 
-			if (pos.y < panel_pos.y) // check if the next message can be shown
+			if (pos.y < panel_pos.y + cp_fontsize.y) // check if the next message can't be shown
 			{
 				drawfontscale = hud_scale;
 				return;
@@ -481,9 +486,9 @@ void HUD_CenterPrint(bool should_draw)
 		{
 			pos.y += CENTERPRINT_SPACING * cp_fontsize.y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos.y -= (1 - sqrt(a));
+				pos.y -= 1 - sqrt(a);
 
-			if (pos.y > panel_pos.y + panel_size.y - cp_fontsize.y) // check if the next message can be shown
+			if (pos.y > panel_pos.y + panel_size.y - cp_fontsize.y) // check if the next message can't be shown
 			{
 				drawfontscale = hud_scale;
 				return;
