@@ -145,7 +145,7 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 		&& time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_SEC(WEP_RIFLE, burstcost))
 		{
 			weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(WEP_RIFLE, refire));
-			W_Rifle_BulletHail(thiswep, actor, weaponentity, WEP_CVAR_SEC(WEP_RIFLE, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_RIFLE, animtime), WEP_CVAR_PRI(WEP_RIFLE, refire));
+			W_Rifle_BulletHail(thiswep, actor, weaponentity, WEP_CVAR_SEC(WEP_RIFLE, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_RIFLE, animtime), WEP_CVAR_SEC(WEP_RIFLE, refire));
 			actor.(weaponentity).rifle_accumulator += WEP_CVAR_SEC(WEP_RIFLE, burstcost);
 		}
 	}
