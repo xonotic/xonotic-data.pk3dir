@@ -110,8 +110,9 @@ METHOD(XonoticTopicTab, topicChangeNotify, void(entity, entity me))
 	if (tab_adding)
 	{
 		me.currentItem = tab_adding;
-		tab_adding.resizeNotify(tab_adding, '0 0 0', c.size, '0 0 0', c.size);
+		tab_adding.resizeNotify(tab_adding, '0 0 0', '1 1 0', c.origin, c.size);
 		c.addItem(c, tab_adding, '0 0 0', '1 1 0', 1);
+		tab_adding.showNotify(tab_adding);
 		if (s)
 			s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
 	}
