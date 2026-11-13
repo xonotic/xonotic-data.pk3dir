@@ -14,11 +14,99 @@ void HUD_ModIcons_Export(int fh)
 	// allow saving cvars that aesthetically change the panel into hud skin files
 
 	FOREACH(Gametypes, it.m_modicons_export, it.m_modicons_export(fh));
+	HUD_Write_Cvar("hud_panel_modicons_animations");
 }
 
 void HUD_ModIcons_SetFunc()
 {
 	HUD_ModIcons_GameType = gametype.m_modicons;
+}
+
+void HUD_Mod_TableWithAR_Draw(vector myPos, vector mySize, int items, float aspect_ratio, void(vector, vector, float, int) drawFunc)
+{
+	if (!drawFunc)
+		return;
+
+	int rows = HUD_GetRowCount(items, mySize, aspect_ratio);
+	int cols = ceil(items / rows);
+
+	vector itemSize = vec2(mySize.x / cols, mySize.y / rows);
+	vector itemPos  = myPos;
+	int row = 0;
+	for (int i = 0; i < items; ++i)
+	{
+		drawFunc(itemPos, itemSize, aspect_ratio, i); // e.g. HUD_Mod_EliminatedPlayers_DrawItem
+
+		if (row == rows - 1)
+		{
+			row = 0;
+			itemPos.y  = myPos.y;
+			itemPos.x += itemSize.x;
+		}
+		else
+		{
+			++row;
+			itemPos.y += itemSize.y;
+		}
+	}
+}
+
+/// General eliminated player draw func. Used by CA & FT modicons HUD
+void HUD_Mod_EliminatedPlayers_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, int i)
+{
+	float f;
+	if (itemSize.x / itemSize.y > aspect_ratio)
+	{
+		f = itemSize.y * aspect_ratio;
+		itemPos.x += (itemSize.x - f) * 0.5;
+		itemSize.x = f;
+	}
+	else
+	{
+		f = itemSize.x / aspect_ratio;
+		itemPos.y += (itemSize.y - f) * 0.5;
+		itemSize.y = f;
+	}
+
+	int stat = alive_on_team[i];
+	int tm = Team_IndexToTeam(i + 1);
+	float alpha;
+	if (autocvar_hud_panel_modicons_animations)
+		alpha = (stat == 1 && tm == entcs_GetTeam(player_currententnum - 1))
+			? blink(0.85, 0.15, 5) // blink if there's 1 player left on our team
+			: (stat ? 1 : 0.5); // half alpha if the team is eliminated
+	else
+		alpha = 1;
+	vector color = Team_ColorRGB(tm) * alpha;
+
+	if (aspect_ratio != 1) // draw icon
+	{
+		string pic = strcat("player_", Static_Team_ColorName_Lower(tm));
+		itemSize.x *= 0.5;
+		drawpic_aspect_skin(itemPos, pic, itemSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		itemPos.x += itemSize.x;
+	}
+
+	// draw text
+	if (autocvar_hud_panel_modicons_animations)
+	{
+		f = bound(0, (time - alive_on_team_change_time[i]) * 2, 1);
+		if (f < 1)
+			drawstring_aspect_expanding(itemPos, itos(stat), itemSize, color, panel_fg_alpha, DRAWFLAG_NORMAL, f);
+	}
+	else
+		f = 1;
+	drawstring_aspect(itemPos, itos(stat), itemSize, color, panel_fg_alpha * f, DRAWFLAG_NORMAL);
+}
+
+/// Smoothly moves cache_value towards real_value, initially fast then slowing down. Returns new cache_value
+float HUD_Mod_SmoothlyUpdateCachedValue(float cache_value, float real_value, float epsilon)
+{
+	if (!autocvar_hud_panel_modicons_animations)
+		return real_value;
+	return (fabs(cache_value - real_value) < epsilon)
+		? real_value
+		: real_value + (cache_value - real_value) * ((33/32) ** (-256 * frametime)); // -256*frametime should be close to 1, ideal for floating point inaccuracies
 }
 
 float mod_alpha;

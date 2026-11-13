@@ -2,7 +2,6 @@
 
 #include <common/deathtypes/all.qh>
 #include <common/gametypes/_mod.qh>
-#include <common/teams.qh>
 #include <server/bot/api.qh>
 #include <server/bot/default/cvars.qh>
 #include <server/campaign.qh>
@@ -31,12 +30,9 @@ const int TEAM_NOT_ALLOWED = -1;
 .int m_team_balance_state; ///< Holds the state of the team balance data entity.
 .entity m_team_balance_team[NUM_TEAMS]; ///< ???
 
-.float m_team_score; ///< The score of the team.
 .int m_num_players; ///< Number of players (both humans and bots) in a team.
 .int m_num_players_net; ///< .m_num_players but excluding bots that would leave if a human joined their team.
 .int m_num_bots; ///< Number of bots in a team.
-.int m_num_players_alive; ///< Number of alive players in a team.
-.int m_num_owned_items; ///< Number of items owned by a team.
 
 string autocvar_g_forced_team_red;
 string autocvar_g_forced_team_blue;
@@ -78,113 +74,47 @@ void Team_InitTeams()
 	if (g_team_entities[0])
 		return;
 	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
-	{
 		g_team_entities[i] = new_pure(team_entity);
-	}
 }
 
 entity Team_GetTeamFromIndex(int index)
 {
 	if (!Team_IsValidIndex(index))
-	{
 		LOG_FATALF("Index is invalid: %f", index);
-	}
 	return g_team_entities[index - 1];
 }
 
 entity Team_GetTeam(int team_num)
 {
 	if (!Team_IsValidTeam(team_num))
-	{
 		LOG_FATALF("Value is invalid: %f", team_num);
-	}
 	return g_team_entities[Team_TeamToIndex(team_num) - 1];
-}
-
-float Team_GetTeamScore(entity team_ent)
-{
-	return team_ent.m_team_score;
-}
-
-void Team_SetTeamScore(entity team_ent, float score)
-{
-	team_ent.m_team_score = score;
-}
-
-int Team_GetNumberOfAlivePlayers(entity team_ent)
-{
-	return team_ent.m_num_players_alive;
-}
-
-void Team_SetNumberOfAlivePlayers(entity team_ent, int number)
-{
-	team_ent.m_num_players_alive = number;
 }
 
 int Team_GetWinnerAliveTeam()
 {
 	int winner = 0;
 	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
-	{
 		if (g_team_entities[i].m_num_players_alive > 0)
 		{
 			if (winner)
 				return 0;
 			winner = Team_IndexToTeam(i + 1);
 		}
-	}
 	return (winner ? winner : -1);
-}
-
-int Team_GetNumberOfAliveTeams()
-{
-	int result = 0;
-	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
-	{
-		if (g_team_entities[i].m_num_players_alive > 0)
-		{
-			++result;
-		}
-	}
-	return result;
 }
 
 int Team_GetWinnerTeam_WithOwnedItems(int min_control_points)
 {
 	int winner = 0;
 	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
-	{
 		if (g_team_entities[i].m_num_owned_items >= min_control_points)
 		{
 			if (winner)
 				return 0;
 			winner = Team_IndexToTeam(i + 1);
 		}
-	}
 	return (winner ? winner : -1);
-}
-
-int Team_GetNumberOfOwnedItems(entity team_ent)
-{
-	return team_ent.m_num_owned_items;
-}
-
-void Team_SetNumberOfOwnedItems(entity team_ent, int number)
-{
-	team_ent.m_num_owned_items = number;
-}
-
-int Team_GetNumberOfTeamsWithOwnedItems()
-{
-	int result = 0;
-	for (int i = 0; i < AVAILABLE_TEAMS; ++i)
-	{
-		if (g_team_entities[i].m_num_owned_items > 0)
-		{
-			++result;
-		}
-	}
-	return result;
 }
 
 void setcolor(entity this, int clr)
@@ -216,9 +146,7 @@ entity Entity_GetTeam(entity this)
 {
 	int index = Entity_GetTeamIndex(this);
 	if (!Team_IsValidIndex(index))
-	{
 		return NULL;
-	}
 	return Team_GetTeamFromIndex(index);
 }
 
@@ -227,13 +155,9 @@ void SetPlayerColors(entity player, float _color)
 	float pants = _color & 0x0F;
 	float shirt = _color & 0xF0;
 	if (teamplay)
-	{
 		setcolor(player, 16 * pants + pants);
-	}
 	else
-	{
 		setcolor(player, shirt + pants);
-	}
 }
 
 bool Player_SetTeamIndex(entity player, int index)
@@ -255,9 +179,7 @@ bool Player_SetTeamIndex(entity player, int index)
 		player.team = -1;
 	}
 	else
-	{
 		SetPlayerColors(player, new_team - 1);
-	}
 	MUTATOR_CALLHOOK(Player_ChangedTeam, player, old_index, index);
 	return true;
 }
