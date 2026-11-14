@@ -201,13 +201,13 @@ string formatStringSpecial(string formatStr, float value, int decs)
 	}
 	METHOD(Slider, mousePress, bool(Slider this, vector pos))
 	{
-		float controlCenter;
-		if (this.disabled) return false;
-		if (pos.x < 0) return false;
-		if (pos.y < 0) return false;
-		if (pos.x >= 1 - this.valueSpace) return false;
-		if (pos.y >= 1) return false;
-		controlCenter = (this.value - this.valueMin) / (this.valueMax - this.valueMin) * (1 - this.valueSpace - this.controlWidth) + 0.5 * this.controlWidth;
+		if (this.disabled
+		|| pos.x < 0 || pos.x >= 1 - this.valueSpace
+		|| pos.y < 0 || pos.y >= 1
+		|| this.valueMax < this.valueMin + this.valueStep) // less than 2 values
+			return false;
+
+		float controlCenter = (this.value - this.valueMin) / (this.valueMax - this.valueMin) * (1 - this.valueSpace - this.controlWidth) + 0.5 * this.controlWidth;
 		if (fabs(pos.x - controlCenter) <= 0.5 * this.controlWidth)
 		{
 			this.pressed = 1;
@@ -217,9 +217,9 @@ string formatStringSpecial(string formatStr, float value, int decs)
 		}
 		else
 		{
-			float clickValue, pageValue, inRange;
-			clickValue = median(0, (pos.x - this.pressOffset - 0.5 * this.controlWidth) / (1 - this.valueSpace - this.controlWidth), 1) * (this.valueMax - this.valueMin) + this.valueMin;
-			inRange = (almost_in_bounds(this.valueMin, this.value, this.valueMax));
+			float pageValue;
+			float clickValue = median(0, (pos.x - this.pressOffset - 0.5 * this.controlWidth) / (1 - this.valueSpace - this.controlWidth), 1) * (this.valueMax - this.valueMin) + this.valueMin;
+			float inRange = almost_in_bounds(this.valueMin, this.value, this.valueMax);
 			if (pos.x < controlCenter)
 			{
 				pageValue = this.value - this.valuePageStep;
@@ -266,7 +266,7 @@ string formatStringSpecial(string formatStr, float value, int decs)
 		save = draw_alpha;
 		if (me.disabled) draw_alpha *= me.disabledAlpha;
 		draw_ButtonPicture('0 0 0', strcat(me.src, "_s"), eX * (1 - me.valueSpace) + eY, me.color2, 1);
-		if (me.valueMax > me.valueMin) // valid?
+		if (me.valueMax >= me.valueMin + me.valueStep) // 2+ values
 		if (almost_in_bounds(me.valueMin, me.sliderValue, me.valueMax))
 		{
 			controlLeft = (me.sliderValue - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.valueSpace - me.controlWidth);
@@ -283,12 +283,11 @@ string formatStringSpecial(string formatStr, float value, int decs)
 				me.sliderAnim = NULL;
 			}
 
-		if (me.valueMax > me.valueMin) // valid?
+		if (me.valueMax >= me.valueMin) // 1+ values
 			me.setText(me, me.valueToText(me, me.value));
 		draw_alpha = save;
 		if (me.valueSpace > 0)
-		{
 			SUPER(Slider).draw(me);
-		}
+
 		me.text = string_null;  // TEMPSTRING!
 	}
