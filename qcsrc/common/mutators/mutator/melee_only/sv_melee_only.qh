@@ -3,4 +3,4 @@
 #include <common/mutators/mutator/overkill/sv_overkill.qh>
 
 string autocvar_g_melee_only;
-REGISTER_MUTATOR(melee_only, expr_evaluate(autocvar_g_melee_only) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !MapInfo_LoadedGametype.m_weaponarena);
+REGISTER_MUTATOR(melee_only, expr_evaluate(autocvar_g_melee_only) && !MUTATOR_IS_ENABLED(mutator_instagib) && !MUTATOR_IS_ENABLED(ok) && !GAMETYPE_FLAG(MapInfo_LoadedGametype, WEAPONARENA));
