@@ -529,12 +529,6 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 		GameRules_scoring_add_float2int(scorer, SCORE, scorer_damage, float2int_decimal_fld, autocvar_g_ca_damage2score);
 }
 
-MUTATOR_HOOKFUNCTION(ca, CalculateRespawnTime)
-{
-	// no respawn calculations needed, player is forced to spectate anyway
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(ca, PlayerRegen)
 {
 	// no regeneration in CA

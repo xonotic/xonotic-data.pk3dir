@@ -1351,10 +1351,11 @@ MUTATOR_HOOKABLE(HavocBot_Aim, params);
 #undef params
 
 /// Return true to skip respawn time calculations
+/// It's not executed in gametypes with eliminations (no respawns)
 #define params(i, o) \
 	i(entity, 0) /* player */ \
-	i(float,  1) /* spawn delay */ \
-	o(float,  1) /* spawn delay */ \
+	i(float,  1) /* respawn delay */ \
+	o(float,  1) /* respawn delay */ \
 	/**/
 MUTATOR_HOOKABLE(CalculateRespawnTime, params);
 #undef params

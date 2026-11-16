@@ -9,7 +9,7 @@ float autocvar_g_dynamic_respawntime_modifier_teamkill;
 
 .float respawntime_factor;
 
-REGISTER_MUTATOR(dynamic_respawntime, autocvar_g_dynamic_respawntime && !GAMETYPE_FLAG(MapInfo_LoadedGametype, ELIMINATIONS));
+REGISTER_MUTATOR(dynamic_respawntime, autocvar_g_dynamic_respawntime && !GAMETYPE_FLAG(MapInfo_LoadedGametype, ELIMINATIONS) && !GAMETYPE_FLAG(MapInfo_LoadedGametype, SPECIALRESPAWNRULES));
 
 void dynamic_respawntime_adjust(entity player, float modifier)
 {

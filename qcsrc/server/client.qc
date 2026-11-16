@@ -1397,6 +1397,9 @@ void UpdateChatBubble(entity this)
 
 void calculate_player_respawn_time(entity this)
 {
+	if (GAMETYPE_FLAG(MapInfo_LoadedGametype, ELIMINATIONS))
+		return;
+
 	float gametype_setting_tmp;
 	float sdelay_max = GAMETYPE_DEFAULTED_SETTING(respawn_delay_max);
 	float sdelay_small = GAMETYPE_DEFAULTED_SETTING(respawn_delay_small);
