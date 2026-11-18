@@ -5,6 +5,7 @@
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/centerprint.qh>
 #include <client/hud/panel/chat.qh>
+#include <client/hud/panel/scoreboard/accuracy_items.qh>
 #include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/hud/panel/quickmenu.qh>
 #include <client/items/items.qh>
@@ -879,6 +880,7 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 		}
 		f = (f == 0x800000) ? 1 : f * 2;
 	}
+	Scoreboard_AccuracyStats_UpdateCache();
 	return true;
 }
 

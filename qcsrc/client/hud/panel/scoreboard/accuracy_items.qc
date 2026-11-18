@@ -55,12 +55,33 @@ bool is_item_filtered(entity it)
 	return false;
 }
 
-bool have_item_stats;
+int have_item_stats = -1; // -1 = not yet cached
+void Scoreboard_ItemStats_UpdateCache()
+{
+	if (!g_inventory)
+	{
+		have_item_stats = 0; // no inventory means no .inv_items
+		return;
+	}
+	int q;
+	IL_EACH(default_order_items, !is_item_filtered(it),
+	{
+		q = g_inventory.inv_items[it.m_id];
+		//q = 1; // debug: display all items
+		if (q)
+		{
+			have_item_stats = 1;
+			return;
+		}
+	});
+	have_item_stats = 0;
+}
+
 bool Scoreboard_ItemStats_WouldDraw(float ypos)
 {
 	if (MUTATOR_CALLHOOK(DrawScoreboardItemStats))
 		return false;
-	if (!autocvar_hud_panel_scoreboard_itemstats || !g_inventory || warmup_stage || ypos > 0.91 * vid_conheight)
+	if (!autocvar_hud_panel_scoreboard_itemstats || warmup_stage || ypos > 0.91 * vid_conheight)
 		return false;
 
 	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_itemstats_showdelay
@@ -68,27 +89,25 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 	&& !intermission)
 		return false;
 
-	if (!have_item_stats)
-	{
-		int q;
-		IL_EACH(default_order_items, !is_item_filtered(it),
-		{
-			q = g_inventory.inv_items[it.m_id];
-			//q = 1; // debug: display all items
-			if (q)
-			{
-				have_item_stats = true;
-				break;
-			}
-		});
-		if (!have_item_stats)
-			return false;
-	}
-
-	return true;
+	if (have_item_stats == -1)
+		Scoreboard_ItemStats_UpdateCache();
+	return boolean(have_item_stats);
 }
 
-bool have_weapon_stats;
+int have_acc_stats = -1; // -1 = not yet cached
+void Scoreboard_AccuracyStats_UpdateCache()
+{
+	FOREACH(Weapons, it != WEP_Null,
+	{
+		if (weapon_accuracy[i - WEP_FIRST] >= 0)
+		{
+			have_acc_stats = 1;
+			return;
+		}
+	});
+	have_acc_stats = 0;
+}
+
 bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 {
 	if (MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
@@ -101,21 +120,9 @@ bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 	&& !intermission)
 		return false;
 
-	if (!have_weapon_stats)
-	{
-		FOREACH(Weapons, it != WEP_Null,
-		{
-			if (weapon_accuracy[i - WEP_FIRST] >= 0)
-			{
-				have_weapon_stats = true;
-				break;
-			}
-		});
-		if (!have_weapon_stats)
-			return false;
-	}
-
-	return true;
+	if (have_acc_stats == -1)
+		Scoreboard_AccuracyStats_UpdateCache();
+	return boolean(have_acc_stats);
 }
 
 vector Scoreboard_ItemStats_Draw(vector pos, vector rgb, vector bg_size, int item_rows, int item_columns, float item_height, float item_height_just_item, bool merged)

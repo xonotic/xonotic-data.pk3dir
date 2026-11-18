@@ -3,4 +3,7 @@
 float scoreboard_acc_fade_alpha;
 float scoreboard_itemstats_fade_alpha;
 
+void Scoreboard_ItemStats_UpdateCache();
+void Scoreboard_AccuracyStats_UpdateCache();
+
 vector Scoreboard_AccuracyAndItemStats_Draw(vector pos, vector rgb, vector bg_size);
