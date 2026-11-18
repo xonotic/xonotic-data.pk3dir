@@ -450,12 +450,6 @@ MUTATOR_HOOKFUNCTION(surv, AddPlayerScore)
 		M_ARGV(1, float) = 0; // don't report that the player has killed or been killed, that would out them as a hunter!
 }
 
-MUTATOR_HOOKFUNCTION(surv, CalculateRespawnTime)
-{
-	// no respawn calculations needed, player is forced to spectate anyway
-	return true;
-}
-
 MUTATOR_HOOKFUNCTION(surv, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
