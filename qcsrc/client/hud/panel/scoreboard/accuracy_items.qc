@@ -81,7 +81,8 @@ bool Scoreboard_ItemStats_WouldDraw(float ypos)
 {
 	if (MUTATOR_CALLHOOK(DrawScoreboardItemStats))
 		return false;
-	if (!autocvar_hud_panel_scoreboard_itemstats || warmup_stage || ypos > 0.91 * vid_conheight)
+	if (!autocvar_hud_panel_scoreboard_itemstats || (autocvar_hud_panel_scoreboard_itemstats == 1 && warmup_stage)
+	|| ypos > 0.91 * vid_conheight)
 		return false;
 
 	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_itemstats_showdelay
@@ -112,7 +113,8 @@ bool Scoreboard_AccuracyStats_WouldDraw(float ypos)
 {
 	if (MUTATOR_CALLHOOK(DrawScoreboardAccuracy))
 		return false;
-	if (!autocvar_hud_panel_scoreboard_accuracy || warmup_stage || ypos > 0.91 * vid_conheight)
+	if (!autocvar_hud_panel_scoreboard_accuracy || (autocvar_hud_panel_scoreboard_accuracy == 1 && warmup_stage)
+	|| ypos > 0.91 * vid_conheight)
 		return false;
 
 	if (time < scoreboard_time + autocvar_hud_panel_scoreboard_accuracy_showdelay
