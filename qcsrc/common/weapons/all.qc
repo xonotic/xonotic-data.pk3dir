@@ -980,7 +980,7 @@ string W_Guide_DPS_primaryMultishot(string name, string pri, string sec, string 
 string W_Guide_DPS_Seeker(string name, string pri, string sec, string other, string shots)
 {
 	DEFINE_WEPBAL_();
-	if (stof(WEPBAL("type")) == 1)
+	if (stof(WEPBAL("mode")) == 1)
 		return W_Guide_DPS(name, pri, other);
 
 	string pri_dmg_s   =      WEPBAL(pri, "_damage");
