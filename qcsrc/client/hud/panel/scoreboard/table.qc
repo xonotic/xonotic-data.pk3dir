@@ -39,10 +39,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, bool dr
 				drawfontscale.x *= sbt_field_title_condense_factor[i];
 			drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
 			if (sbt_field_title_condense_factor[i])
-			{
-				drawfontscale.x *= sbt_field_title_condense_factor[i];
 				drawfontscale = prev_drawfontscale;
-			}
 		}
 		pos.x += column_dim.x;
 	}
@@ -78,10 +75,7 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, bool dr
 					text_offset.x = sbt_field_size[i] - titlewidth;
 				drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
 				if (sbt_field_title_condense_factor[i])
-				{
-					drawfontscale.x *= sbt_field_title_condense_factor[i];
 					drawfontscale = prev_drawfontscale;
-				}
 			}
 			pos.x -= hud_fontsize.x;
 		}
