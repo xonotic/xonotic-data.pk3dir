@@ -1,31 +1,37 @@
 #pragma once
 
 #include <common/mapinfo.qh>
+#ifdef CSQC
+	#include "cl_invasion.qh"
+#endif
 
 CLASS(Invasion, Gametype)
 	INIT(Invasion)
 	{
-		this.gametype_init(this, _("Invasion"),"inv","g_invasion",GAMETYPE_FLAG_USEPOINTS,"","pointlimit=50 type=0",_("Survive against waves of monsters"));
-	}
-	METHOD(Invasion, m_parse_mapinfo, bool(string k, string v))
-	{
-		switch (k)
-		{
-			case "type":
-				cvar_set("g_invasion_type", v);
-				return true;
-		}
-		return false;
+		this.gametype_init(this, _("Invasion"),"inv","g_invasion",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","pointlimit=10",_("Survive against waves of monsters"));
 	}
 	METHOD(Invasion, m_generate_mapinfo, void(Gametype this, string v))
 	{
 		if(v == "invasion_spawnpoint")
 			MapInfo_Map_supportedGametypes |= this.gametype_flags;
 	}
+	METHOD(Invasion, m_isForcedSupported, bool(Gametype this))
+	{
+		if(cvar("g_invasion_on_dm_maps"))
+		{
+			// if this is set, all DM maps support INV too
+			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.gametype_flags))
+				return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
+		}
+		return false;
+	}
 	METHOD(Invasion, m_configuremenu, void(Gametype this, entity menu, void(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip) returns))
 	{
 		TC(Gametype, this);
-		returns(menu, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null);
+		returns(menu, _("Round limit:"),    1,  100, 1, "g_invasion_point_limit",                 string_null,                    string_null);
 	}
+#ifdef CSQC
+	ATTRIB(Invasion, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_Invasion);
+#endif
 ENDCLASS(Invasion)
 REGISTER_GAMETYPE(INVASION, NEW(Invasion));
