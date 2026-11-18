@@ -236,7 +236,9 @@ vector Scoreboard_AccuracyStats_Draw(vector pos, vector rgb, vector bg_size, Wep
 			if (panel.current_panel_bg != "0")
 				str_pos.x += panel_bg_border;
 		}
-		str_pos.y += panel_bg_border + panel_bg_padding + 0.5 * hud_fontsize.y;
+		if (panel.current_panel_bg != "0")
+			str_pos.y += panel_bg_border;
+		str_pos.y += panel_bg_padding + 0.5 * hud_fontsize.y;
 		drawstring(str_pos, str, accuracy_fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	}
