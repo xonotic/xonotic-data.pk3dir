@@ -37,7 +37,7 @@ void _dumptree_close(entity pass, entity me)
 	}
 }
 
-float updateConwidths(float width, float height, float pixelheight);
+bool updateConwidths(float width, float height, float pixelheight);
 
 void GameCommand(string theCommand)
 {

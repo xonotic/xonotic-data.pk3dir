@@ -5,4 +5,6 @@ CLASS(XonoticBigButton, XonoticButton)
 	ATTRIB(XonoticBigButton, image, string, SKINGFX_BUTTON_BIG);
 	ATTRIB(XonoticBigButton, grayImage, string, SKINGFX_BUTTON_BIG_GRAY);
 ENDCLASS(XonoticBigButton)
+
+entity makeXonoticBigButton_T(string theText, vector theColor, string theTooltip);
 entity makeXonoticBigButton(string theText, vector theColor);

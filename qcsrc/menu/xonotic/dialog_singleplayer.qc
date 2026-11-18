@@ -154,7 +154,7 @@ void XonoticSingleplayerDialog_fill(entity me)
 		me.TD(me, 1, me.columns - 2, lblTitle = makeXonoticHeaderLabel("???"));
 		me.TD(me, 1, 1, btnNext = makeXonoticButton(">>", '0 0 0'));
 	me.TR(me);
-		me.TD(me, me.rows - 6, me.columns, me.campaignBox = makeXonoticCampaignList());
+		me.TD(me, me.rows - 6.5, me.columns, me.campaignBox = makeXonoticCampaignList());
 			btnPrev.onClick = MultiCampaign_Prev;
 			btnPrev.onClickEntity = me.campaignBox;
 			btnNext.onClick = MultiCampaign_Next;
@@ -163,12 +163,12 @@ void XonoticSingleplayerDialog_fill(entity me)
 			me.campaignBox.buttonPrev = btnPrev;
 			me.campaignBox.labelTitle = lblTitle;
 
-	me.gotoRC(me, me.rows - 2, 0);
+	me.gotoRC(me, me.rows - 2.5, 0);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Campaign Difficulty:")));
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "-2", ZCTX(_("CSKL^Easy"))));
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "0", ZCTX(_("CSKL^Medium"))));
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "2", ZCTX(_("CSKL^Hard"))));
-	me.TR(me);
+	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, me.columns * 1/13);
 		me.TD(me, 1, me.columns * 5/13, e = makeXonoticLeaveMatchButton('0 0 0', 0));
 		me.TDempty(me, me.columns * 1/13);

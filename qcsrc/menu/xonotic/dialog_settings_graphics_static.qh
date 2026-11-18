@@ -1,0 +1,12 @@
+#pragma once
+
+#include "tab.qh"
+CLASS(XonoticGraphicsStaticSettingsTab, XonoticTab)
+	METHOD(XonoticGraphicsStaticSettingsTab, fill, void(entity));
+	METHOD(XonoticGraphicsStaticSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGraphicsStaticSettingsTab, title, string, _("Static"));
+	ATTRIB(XonoticGraphicsStaticSettingsTab, intendedWidth, float, 0.9);
+	ATTRIB(XonoticGraphicsStaticSettingsTab, rows, float, 15.5);
+	ATTRIB(XonoticGraphicsStaticSettingsTab, columns, float, 4.5);
+ENDCLASS(XonoticGraphicsStaticSettingsTab)
+entity makeXonoticGraphicsStaticSettingsTab();

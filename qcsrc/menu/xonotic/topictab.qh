@@ -1,0 +1,53 @@
+#pragma once
+
+#include "datasource.qh"
+#include "listbox.qh"
+#include "scrollpanel.qh"
+#include "tab.qh"
+
+#define TOPIC_REGISTER(registry_id, id, impl) \
+	LAZY_NEW(id, impl) \
+	REGISTER(registry_id, MENU, id, m_id, NEW(Lazy, LAZY(id)))
+
+CLASS(XonoticTopicTabSource, DataSource)
+	METHOD(XonoticTopicTabSource, getEntry, entity(entity this, int i, void(string name, string icon) returns));
+	METHOD(XonoticTopicTabSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns));
+	METHOD(XonoticTopicTabSource, reload, int(entity this, string filter));
+ENDCLASS(XonoticTopicTabSource)
+
+CLASS(XonoticTopicTabList, XonoticListBox)
+	ATTRIB(XonoticTopicTabList, alphaBG, float, 0);
+	ATTRIB(XonoticTopicTabList, itemAbsSize, vector, '0 0 0');
+	ATTRIB(XonoticTopicTabList, origin, vector, '0 0 0');
+	ATTRIB(XonoticTopicTabList, realFontSize, vector, '0 0 0');
+	ATTRIB(XonoticTopicTabList, realUpperMargin, float, 0);
+	ATTRIB(XonoticTopicTabList, rowsPerItem, float, 2);
+	ATTRIB(XonoticTopicTabList, stringFilterBox, entity);
+	ATTRIB(XonoticTopicTabList, stringFilter, string);
+	ATTRIB(XonoticTopicTabList, typeToSearchString, string);
+	ATTRIB(XonoticTopicTabList, typeToSearchTime, float, 0);
+	ATTRIB(XonoticTopicTabList, source, XonoticTopicTabSource);
+	ATTRIB(XonoticTopicTabList, onChange, void(entity, entity));
+	ATTRIB(XonoticTopicTabList, onChangeEntity, entity);
+	METHOD(XonoticTopicTabList, drawListBoxItem, void(entity this, int i, vector absSize, bool isSelected, bool isFocused));
+	METHOD(XonoticTopicTabList, focusedItemChangeNotify, void(entity this));
+	METHOD(XonoticTopicTabList, refilter, void(entity this));
+	METHOD(XonoticTopicTabList, resizeNotify, void(entity this, vector relOrigin, vector relSize, vector absOrigin, vector absSize));
+	METHOD(XonoticTopicTabList, setSelected, void(entity this, int i));
+	INIT(XonoticTopicTabList)
+	{
+		this.configureXonoticListBox(this);
+		this.refilter(this);
+	}
+ENDCLASS(XonoticTopicTabList)
+
+CLASS(XonoticTopicTab, XonoticTab)
+	ATTRIB(XonoticTopicTab, topicList, entity, NEW(XonoticTopicTabList));
+	// XonoticScrollPanel disabled because it's broken, see https://gitlab.com/xonotic/xonotic-data.pk3dir/merge_requests/548
+	// It will probably require a different implementation since XonoticScrollPanel should be an instance of Container, not ListBox
+	//ATTRIB(XonoticTopicTab, currentPanel, entity, NEW(XonoticScrollPanel));
+	ATTRIB(XonoticTopicTab, currentPanel, entity, NEW(XonoticTab));
+	ATTRIB(XonoticTopicTab, currentItem, entity);
+	METHOD(XonoticTopicTab, topicChangeNotify, void(entity, entity this));
+	METHOD(XonoticTopicTab, fill, void(entity this));
+ENDCLASS(XonoticTopicTab)

@@ -1,0 +1,12 @@
+#pragma once
+
+#include "mixedslider.qh"
+CLASS(XonoticDisplaySlider, XonoticMixedSlider)
+	METHOD(XonoticDisplaySlider, configureXonoticDisplaySlider, void(entity));
+	METHOD(XonoticDisplaySlider, rebuildValues, void(entity));
+	METHOD(XonoticDisplaySlider, loadCvars, void(entity));
+
+	ATTRIB(XonoticDisplaySlider, vid_info_displaycount, int);
+	ATTRIB(XonoticDisplaySlider, controlledTextLabel, entity);
+ENDCLASS(XonoticDisplaySlider)
+entity makeXonoticDisplaySlider();

@@ -44,6 +44,8 @@
 	}
 	void MixedSlider_clearValues(entity me)
 	{
+		for (int i = 0; i < me.nValues; ++i)
+			strfree(me.(valueStrings[i]));
 		me.nValues = 0;
 	}
 	void MixedSlider_addRange(entity me, float theValueMin, float theValueMax, float theValueStep)

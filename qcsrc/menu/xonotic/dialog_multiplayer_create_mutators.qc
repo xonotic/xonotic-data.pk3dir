@@ -202,26 +202,27 @@ METHOD(XonoticMutatorsDialog, topicChangeNotify, void(entity, entity me))
 	entity s = NULL;
 	entity c = me.currentPanel;
 
-	entity removing = me.currentItem;
 	DataSource data = me.topicList.source;
-	entity adding = data.getEntry(data, me.topicList.selectedItem, XonoticRegisteredMutatorsList_getNameDescription_cb);
-	if (removing == adding)
+	entity tab_removing = me.currentItem;
+	entity tab_adding = data.getEntry(data, me.topicList.selectedItem, XonoticRegisteredMutatorsList_getNameDescription_cb);
+	if (tab_removing == tab_adding)
 		return;
-	if (removing)
+	if (tab_removing)
 	{
 		me.currentItem = NULL;
-		c.removeItem(c, removing);
+		c.removeItem(c, tab_removing);
 	}
-	if (adding)
+	if (tab_adding)
 	{
-		me.currentItem = adding;
-		adding.resizeNotify(adding, '0 0 0', c.size, '0 0 0', c.size);
-		c.addItem(c, adding, '0 0 0', '1 1 0', 1);
+		me.currentItem = tab_adding;
+		tab_adding.resizeNotify(tab_adding, '0 0 0', c.size, '0 0 0', c.size);
+		c.addItem(c, tab_adding, '0 0 0', '1 1 0', 1);
 		if (s)
 			s.resizeNotify(s, '0 0 0', s.size, '0 0 0', s.size);
 	}
 
-	me.currentItem.showNotify(me.currentItem);
+	if (me.currentItem)
+		me.currentItem.showNotify(me.currentItem);
 	me.labelTitle.setText(me.labelTitle, XonoticRegisteredMutatorsList_cb_name);
 	me.descriptionLabel.setText(me.descriptionLabel, strcat("\n", XonoticRegisteredMutatorsList_cb_description, "\n"));
 }
