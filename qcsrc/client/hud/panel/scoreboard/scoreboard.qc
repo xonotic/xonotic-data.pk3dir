@@ -61,7 +61,7 @@ int autocvar_hud_panel_scoreboard_spectators_position = 1;
 
 bool autocvar_hud_panel_scoreboard_dynamichud = false;
 
-float autocvar_hud_panel_scoreboard_minwidth = 0.4;
+float autocvar_hud_panel_scoreboard_minwidth = 0.6;
 
 SHUTDOWN(scoreboard)
 {
