@@ -9,10 +9,10 @@ float autocvar_hud_panel_quickmenu_time;
 bool autocvar_hud_panel_quickmenu_server_is_default;
 string autocvar__hud_panel_quickmenu_file_from_server;
 
-bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary);
+bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary);
 bool QuickMenu_IsOpened();
 void QuickMenu_Mouse();
-float QuickMenu_Page_Load(string target_submenu, float new_page);
+bool QuickMenu_Page_Load(string target_submenu, bool new_page);
 void QuickMenu_Default(string submenu);
 void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me);
 void QuickMenu_Close();

@@ -138,7 +138,7 @@ float StrafeHUD_DetermineWaterLevel(entity e)
 float StrafeHUD_DetermineFrameTime()
 {
 	static float dt_update = 0;
-	static int dt_time = 0;
+	static float dt_time = 0;
 	static float dt_sum = 0;
 	static float dt = 0;
 	if (csqcplayer_status == CSQCPLAYERSTATUS_PREDICTED && input_timelength > 0)
