@@ -48,7 +48,6 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, bool dr
 	{
 		pos.x = panel_pos.x + panel_size.x - hud_fontsize.x * 0.5;
 		vector prev_drawfontscale;
-		float titlewidth;
 		for (i = sbt_num_fields - 1; i > 0; --i)
 		{
 			if (sbt_field[i] == SP_SEPARATOR)
@@ -65,14 +64,13 @@ vector Scoreboard_DrawHeader(vector pos, vector rgb, bool other_players, bool dr
 			if (draw_text)
 			{
 				prev_drawfontscale = drawfontscale;
-				titlewidth = stringwidth(sbt_field_title[i], false, hud_fontsize);
 				if (sbt_field_title_condense_factor[i])
 				{
 					drawfontscale.x *= sbt_field_title_condense_factor[i];
-					text_offset.x = sbt_field_size[i] - titlewidth * sbt_field_title_condense_factor[i];
+					text_offset.x = sbt_field_size[i] - sbt_field_title_width[i] * sbt_field_title_condense_factor[i];
 				}
 				else
-					text_offset.x = sbt_field_size[i] - titlewidth;
+					text_offset.x = sbt_field_size[i] - sbt_field_title_width[i];
 				drawstring(pos + text_offset, sbt_field_title[i], hud_fontsize, rgb * 1.5, sbt_fg_alpha, DRAWFLAG_NORMAL);
 				if (sbt_field_title_condense_factor[i])
 					drawfontscale = prev_drawfontscale;
