@@ -641,14 +641,14 @@ string Scoreboard_FixColumnWidth(int i, string str, bool init)
 		for (j = 0; j < sbt_num_fields; ++j)
 			if (j != i && sbt_field[i] != SP_SEPARATOR)
 				used_space += sbt_field_size[j] + hud_fontsize.x;
-		sbt_field_size[i] = max(sbt_field_title_width[i], panel_size.x - used_space);
+
+		float namesize = sbt_field_title_width[i];
+		sbt_field_size[i] = max(namesize, panel_size.x - used_space);
+		max_namesize = max(namesize, vid_conwidth - used_space);
 
 		ADD_ICON_PADDING(used_space);
-		float namesize = max(sbt_field_title_width[i], panel_size.x - used_space);
-		str = textShortenToWidth(str, namesize, hud_fontsize, stringwidth_colors);
+		str = textShortenToWidth(str, sbt_field_size[i], hud_fontsize, stringwidth_colors);
 		sbt_fixcolumnwidth_len = stringwidth(str, true, hud_fontsize);
-
-		max_namesize = max(sbt_field_title_width[i], vid_conwidth - used_space);
 	}
 	else
 	{
