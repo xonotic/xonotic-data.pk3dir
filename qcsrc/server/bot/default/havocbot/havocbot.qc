@@ -401,17 +401,16 @@ entity havocbot_select_an_item_of_group(entity this, int gr)
 // returns a number > 0 for danger
 int havocbot_checkdanger(entity this, vector dst_ahead)
 {
-	vector dst_down = dst_ahead - '0 0 3000';
 	traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
 
-	float s = CONTENT_SOLID;
 	if (trace_fraction == 1 && !this.jumppadcount
 		&& !waypoint_is_hardwiredlink(this.goalcurrent_prev, this.goalcurrent)
 		&& !(this.goalcurrent_prev && (this.goalcurrent_prev.wpflags & WAYPOINTFLAG_JUMP)))
 	if ((IS_ONGROUND(this)) || (this.aistatus & (AI_STATUS_RUNNING | AI_STATUS_ROAMING)) || PHYS_INPUT_BUTTON_JUMP(this))
 	{
 		// Look downwards
-		traceline(dst_ahead , dst_down, true, NULL);
+		vector dst_down = dst_ahead - '0 0 3000';
+		traceline(dst_ahead, dst_down, true, NULL);
 		//te_lightning2(NULL, this.origin + this.view_ofs, dst_ahead); // Draw "ahead" look
 		//te_lightning2(NULL, dst_ahead, trace_endpos); // Draw "downwards" look
 		if (trace_endpos.z < this.origin.z + this.mins.z)
@@ -422,26 +421,26 @@ int havocbot_checkdanger(entity this, vector dst_ahead)
 				return 2;
 			else
 			{
-				s = pointcontents(trace_endpos + '0 0 1');
-				if (s != CONTENT_SOLID)
+				int content = pointcontents(trace_endpos + '0 0 1');
+				if (content != CONTENT_SOLID)
 				{
-					if (s == CONTENT_LAVA || s == CONTENT_SLIME)
+					if (content == CONTENT_LAVA || content == CONTENT_SLIME)
 						return 3;
+					else if (content == CONTENT_WATER)
+						return 4;
 					else if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
 					{
 						// the traceline check isn't enough but is good as optimization,
 						// when not true (most of the time) this tracebox call is avoided
 						tracebox(dst_ahead, this.mins, this.maxs, dst_down, true, this);
 						if (tracebox_hits_trigger_hurt(dst_ahead, this.mins, this.maxs, trace_endpos))
-						{
-							return 4;
-						}
+							return 5;
 					}
 				}
 			}
 		}
 	}
-	return false;
+	return 0;
 }
 
 void havocbot_movetogoal(entity this)
@@ -934,6 +933,7 @@ void havocbot_movetogoal(entity this)
 	flatdir = (diff.z == 0) ? dir : normalize(vec2(diff));
 
 	bool danger_detected = false;
+	bool water_detected = false;
 	vector brake = '0 0 0';
 
 	//if (this.bot_dodgevector_time < time)
@@ -969,7 +969,6 @@ void havocbot_movetogoal(entity this)
 		}
 		else
 		{
-			float s = 0;
 			vector offset;
 			if(this.aistatus & AI_STATUS_OUT_WATER)
 				this.aistatus &= ~AI_STATUS_OUT_WATER;
@@ -1062,9 +1061,9 @@ void havocbot_movetogoal(entity this)
 				tracebox(this.origin, this.mins, this.maxs, actual_destorg, false, this);
 				if (trace_fraction < 1 && trace_plane_normal.z < 0.7)
 				{
-					s = trace_fraction;
+					float prev_trace_fraction = trace_fraction;
 					tracebox(this.origin + stepheightvec, this.mins, this.maxs, actual_destorg + stepheightvec, false, this);
-					if (trace_fraction < s + 0.01 && trace_plane_normal.z < 0.7)
+					if (trace_fraction < prev_trace_fraction + 0.01 && trace_plane_normal.z < 0.7)
 					{
 						// found an obstacle
 						if (turning && fabs(deviation.y) > 5)
@@ -1075,12 +1074,12 @@ void havocbot_movetogoal(entity this)
 							this.bot_tracewalk_time = time + 0.25;
 							goto jumpobstacle_check;
 						}
-						s = trace_fraction;
+						prev_trace_fraction = trace_fraction;
 						// don't artificially reduce max jump height in real-time
 						// (jumpstepheightvec is reduced a bit to make the jumps easy in tracewalk)
 						vector jump_height = (IS_ONGROUND(this)) ? stepheightvec + jumpheight_vec : jumpstepheightvec;
 						tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
-						if (trace_fraction > s)
+						if (trace_fraction > prev_trace_fraction)
 						{
 							PHYS_INPUT_BUTTON_JUMP(this) = true;
 							this.bot_jump_time = time;
@@ -1089,7 +1088,7 @@ void havocbot_movetogoal(entity this)
 						{
 							jump_height = stepheightvec + jumpheight_vec * 0.5;
 							tracebox(this.origin + jump_height, this.mins, this.maxs, actual_destorg + jump_height, false, this);
-							if (trace_fraction > s)
+							if (trace_fraction > prev_trace_fraction)
 							{
 								PHYS_INPUT_BUTTON_JUMP(this) = true;
 								this.bot_jump_time = time;
@@ -1151,11 +1150,13 @@ void havocbot_movetogoal(entity this)
 				else
 					danger_detected = true;
 			}
+			else if (r == 5)
+				water_detected = true;
 
 			dir = flatdir;
 			makevectors(this.v_angle.y * '0 1 0');
 
-			if (danger_detected || (s == CONTENT_WATER))
+			if (danger_detected || water_detected)
 			{
 				this.aistatus |= AI_STATUS_DANGER_AHEAD;
 				if(IS_PLAYER(this.goalcurrent))
@@ -1198,8 +1199,12 @@ void havocbot_movetogoal(entity this)
 		//this.bot_dodgevector_jumpbutton = PHYS_INPUT_BUTTON_JUMP(this);
 
 		// don't dodge to danger
-		if (dodge && havocbot_checkdanger(this, this.origin + this.view_ofs + dodge * 32))
-			dodge = '0 0 0';
+		if (dodge)
+		{
+			int r = havocbot_checkdanger(this, this.origin + this.view_ofs + dodge * 32);
+			if ((r > 0 && r < 4) || (r == 4 && destorg.z <= this.origin.z + jumpstepheightvec.z))
+				dodge = '0 0 0';
+		}
 	}
 
 	float ladder_zdir = 0;
