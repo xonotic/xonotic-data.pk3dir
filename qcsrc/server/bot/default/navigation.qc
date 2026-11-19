@@ -1485,7 +1485,9 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	if(e == NULL)
 		return false;
 
-	if(nearest_wp && nearest_wp.enemy && !(nearest_wp.enemy.wpflags & WPFLAGMASK_NORELINK))
+	// always preserve hardwired links because otherwise bots don't ignore dangers
+	if (nearest_wp && nearest_wp.enemy && !(nearest_wp.enemy.wpflags & WPFLAGMASK_NORELINK)
+	&& !waypoint_is_hardwiredlink(nearest_wp.enemy, nearest_wp))
 	{
 		// often path can be optimized by not adding the nearest waypoint
 		if (this.goalentity.navigation_dynamicgoal || waypointeditor_enabled)
