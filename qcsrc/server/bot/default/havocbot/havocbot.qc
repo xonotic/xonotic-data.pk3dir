@@ -271,10 +271,13 @@ void havocbot_bunnyhop(entity this, vector dir)
 
 void havocbot_keyboard_movement(entity this, vector destorg)
 {
-	if(time <= this.havocbot_keyboardtime)
-		return;
+	if (this.havocbot_ducktime > time)
+		PHYS_INPUT_BUTTON_CROUCH(this) = true;
 
 	float sk = skill + this.bot_moveskill;
+	if (sk >= 10 || time <= this.havocbot_keyboardtime)
+		return;
+
 	this.havocbot_keyboardtime =
 		max(
 			this.havocbot_keyboardtime
@@ -331,8 +334,6 @@ void havocbot_keyboard_movement(entity this, vector destorg)
 		this.havocbot_keyboardtime = min(this.havocbot_keyboardtime, time + 0.2);
 
 	this.havocbot_keyboard = keyboard * autocvar_sv_maxspeed;
-	if (this.havocbot_ducktime > time)
-		PHYS_INPUT_BUTTON_CROUCH(this) = true;
 
 	keyboard = this.havocbot_keyboard;
 	float blend = bound(0, vlen(destorg - this.origin) / autocvar_bot_ai_keyboard_distance, 1); // When getting close move with 360 degree
@@ -670,8 +671,7 @@ void havocbot_movetogoal(entity this)
 				{
 					CS(this).movement_x = dir * v_forward * maxspeed;
 					CS(this).movement_y = dir * v_right * maxspeed;
-					if (skill < 10)
-						havocbot_keyboard_movement(this, this.origin + dir * 100);
+					havocbot_keyboard_movement(this, this.origin + dir * 100);
 				}
 			}
 
@@ -1198,10 +1198,8 @@ void havocbot_movetogoal(entity this)
 		//this.bot_dodgevector_jumpbutton = PHYS_INPUT_BUTTON_JUMP(this);
 
 		// don't dodge to danger
-		if (havocbot_checkdanger(this, this.origin + this.view_ofs + dodge * 32))
-		{
+		if (dodge && havocbot_checkdanger(this, this.origin + this.view_ofs + dodge * 32))
 			dodge = '0 0 0';
-		}
 	}
 
 	float ladder_zdir = 0;
@@ -1308,8 +1306,7 @@ void havocbot_movetogoal(entity this)
 
 
 	// Emulate keyboard interface
-	if (skill < 10)
-		havocbot_keyboard_movement(this, destorg);
+	havocbot_keyboard_movement(this, destorg);
 
 	// Bunnyhop!
 	if (!bunnyhop_forbidden && !evadedanger && !do_break && skill + this.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
