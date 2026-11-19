@@ -91,10 +91,12 @@ float ammo_pickupevalfunc(entity player, entity item);
 float healtharmor_pickupevalfunc(entity player, entity item);
 // These keep track of groups of small health and armor pickups so they are more desirable to the bots
 int item_group_last;
+bool item_group_initialized;
 .int item_group;
-.int item_group_count;
-void setItemGroup(entity this);
-void setItemGroupCount();
+.float item_group_value;
+void ItemGroup_Set(entity this);
+void ItemGroup_SetValues();
+void ItemGroup_Init();
 
 float GiveWeapon(entity e, float wpn, float op, float val);
 bool GiveBuff(entity e, Buff thebuff, int op, int val);

@@ -47,7 +47,6 @@ entity bot_spawn()
 	entity bot = spawnclient();
 	if (bot)
 	{
-		setItemGroupCount();
 		++currentbots;
 		bot_setnameandstuff(bot);
 		ClientConnect(bot);
@@ -709,6 +708,8 @@ void bot_serverframe()
 	// A working workaround for this bug was implemented in commit fbd145044, see entcs_attach
 	if (time < 2.5)
 	{
+		if (!item_group_initialized)
+			ItemGroup_Init();
 		currentbots = -1;
 		return;
 	}

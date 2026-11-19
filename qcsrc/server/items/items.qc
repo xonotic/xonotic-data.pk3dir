@@ -975,8 +975,8 @@ float healtharmor_pickupevalfunc(entity player, entity item)
 
 	if (item.item_group)
 	{
-		itemarmor *= min(4, item.item_group_count);
-		itemhealth *= min(4, item.item_group_count);
+		itemarmor += (item.item_group_value - itemarmor) * 0.75;
+		itemhealth += (item.item_group_value - itemhealth) * 0.75;
 	}
 
 	if (itemarmor && (GetResource(player, RES_ARMOR) < item.max_armorvalue))
@@ -1259,23 +1259,24 @@ void StartItem(entity this)
 	// CSQC handles model precaching: it may not use this model (eg simple items) and may not have connected yet
 	//precache_model(this.mdl);
 	precache_sound(this.item_pickupsound);
-
-	setItemGroup(this);
 }
 
-#define IS_SMALL(def) ((def.instanceOfHealth && def == ITEM_HealthSmall) || (def.instanceOfArmor && def == ITEM_ArmorSmall))
+#define IS_SMALL_OR_MEDIUM(def) \
+	((def.instanceOfHealth && (def == ITEM_HealthSmall || def == ITEM_HealthMedium)) \
+	|| (def.instanceOfArmor && (def == ITEM_ArmorSmall || def == ITEM_ArmorMedium)))
 
-bool setItemGroup_cond(entity e)
+bool ItemGroup_Set_cond(entity e)
 {
-	return (IS_SMALL(e.itemdef) && e != WarpZone_SearchInRadius_otherent);
+	return (IS_SMALL_OR_MEDIUM(e.itemdef) && e != WarpZone_SearchInRadius_otherent);
 }
-void setItemGroup(entity this)
+
+void ItemGroup_Set(entity this)
 {
-	if (!IS_SMALL(this.itemdef) || ITEM_IS_LOOT(this))
+	if (!IS_SMALL_OR_MEDIUM(this.itemdef) || ITEM_IS_LOOT(this))
 		return;
 
 	WarpZone_SearchInRadius_otherent = this;
-	for (entity head = WarpZone_SearchInRadius(this.origin, 120, MOVE_NOTHING, setItemGroup_cond); head; head = head.chain)
+	for (entity head = WarpZone_SearchInRadius(this.origin, 120, MOVE_NOTHING, ItemGroup_Set_cond); head; head = head.chain)
 	{
 		if (!this.item_group)
 		{
@@ -1291,22 +1292,31 @@ void setItemGroup(entity this)
 			{
 				int grY = head.item_group;
 				// move all items of item_group Y to item_group X
-				IL_EACH(g_items, IS_SMALL(it.itemdef) && it.item_group == grY, it.item_group = this.item_group);
+				IL_EACH(g_items, IS_SMALL_OR_MEDIUM(it.itemdef) && it.item_group == grY, it.item_group = this.item_group);
 			}
 		}
 	}
 }
 
-void setItemGroupCount()
+void ItemGroup_SetValues()
 {
 	for (int k = 1; k <= item_group_last; ++k)
 	{
-		int count = 0;
-		IL_EACH(g_items, it.item_group == k, { ++count; });
-		if (count)
-			IL_EACH(g_items, it.item_group == k, { it.item_group_count = count; });
+		float value = 0;
+		IL_EACH(g_items, it.item_group == k, value += it.itemdef.instanceOfHealth ? it.health : it.armorvalue);
+		if (value)
+			IL_EACH(g_items, it.item_group == k, it.item_group_value = value);
 	}
 }
+
+void ItemGroup_Init()
+{
+	IL_EACH(g_items, true, ItemGroup_Set(it));
+	ItemGroup_SetValues();
+	item_group_initialized = true;
+}
+
+#undef IS_SMALL_OR_MEDIUM
 
 float GiveWeapon(entity e, float wpn, float op, float val)
 {
