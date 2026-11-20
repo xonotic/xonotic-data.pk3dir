@@ -122,7 +122,7 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb, float a)
 {
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord));
-	drawpic_builtin(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon.m_radaricon)), '8 8 0', rgb, a, 0);
+	drawpic_builtin(coord - '4 4 0', icon.m_icon, '8 8 0', rgb, a, 0);
 
 	if(pingdata)
 	{
