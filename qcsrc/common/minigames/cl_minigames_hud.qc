@@ -674,7 +674,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		else
 			device = "key";
 
-		if (device && active_minigame.minigame_event(active_minigame, strcat(device, "_", action), nPrimary))
+		if (device != "" && active_minigame.minigame_event(active_minigame, strcat(device, "_", action), nPrimary))
 			return true;
 	}
 
