@@ -61,7 +61,7 @@ void cl_notice_run()
     LL_EACH(cl_notices, it.alpha > time, { flag = true; break; });
 	if (!flag)
 	{
-		LL_DELETE(cl_notices);
+		LL_DELETE(cl_notices, strfree(it.netname));
 		return;
 	}
 
