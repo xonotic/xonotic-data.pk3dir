@@ -147,6 +147,62 @@ void antilag_restore_all(entity ignore)
 	});
 }
 
+// Is the move PM_UpdateButtons is copying a genuinely new client move, or the engine
+// re-applying the old host_client->cmd? Called before the copy, so store still holds the
+// previous apply.
+//  - async (clmovement, outside StartFrame..EndFrame, from SV_ExecuteClientMoves): always a
+//    new move, except the second half of a > 50ms move split (same time, same cmd)
+//  - in-frame (sync path, SV_Physics_ClientEntity_PreThink): SV_ApplyClientMove re-applies
+//    the same cmd every frame. The engine only writes a new ping when it reads a move
+//    (sv_user.c SV_ExecuteClientMoves), so any change in ping/aim/movement/attack means a
+//    new move. If nothing changed:
+//    - the newest new move came in async: this is the clmovement input timeout
+//      (sv_phys.c SV_Physics_ClientEntity_PreThink) re-applying it
+//    - pure sync mode (vehicles, cl_movement 0, sv_clmovement_minping): a new packet
+//      identical in all of these (still player, steady lag) can't be told apart from a
+//      re-apply, so it's only treated as one for up to sv_clmovement_inputtimeout, which
+//      bounds the age that can be wrongly added
+bool antilag_input_isnew(entity this, entity store)
+{
+	bool same = (this.ping == store.ping
+		&& this.v_angle == store.v_angle
+		&& this.movement == store.movement
+		&& boolean(this.button0) == store.antilag_input_atk_raw);
+	if (!antilag_inframe)
+		return !(same && store.antilag_input_recv == time);
+	if (!same)
+		return true;
+	if (store.antilag_input_async)
+		return false;
+	return (time - store.antilag_input_recv >= autocvar_sv_clmovement_inputtimeout);
+}
+
+// bookkeeping for g_antilag_inputtime, written regardless of the cvar and read only when it is set
+void antilag_input_update(entity this, entity store, bool isnew)
+{
+	store.antilag_input_atk_raw = boolean(this.button0);
+	if (!isnew)
+		return; // recv/ping keep describing the move whose aim is still in the edict fields
+	store.antilag_input_recv = time; // QC time == sv.time == this move's receivetime for a new move
+	store.antilag_input_ping = this.ping;
+	store.antilag_input_async = !antilag_inframe;
+}
+
+float antilag_latency(entity e)
+{
+	if (autocvar_g_antilag_inputtime && IS_REAL_CLIENT(e))
+	{
+		entity s = CS(e);
+		// antilag_input_recv/ping belong to the newest genuinely new move (see
+		// antilag_input_isnew), i.e. the move whose aim is in v_angle. The age term grows on
+		// frames where the engine got no new move, including the sync path (vehicles,
+		// cl_movement 0) and input-timeout re-applies of the old cmd.
+		if (s.antilag_input_recv)
+			return min(0.4, max(0, time - s.antilag_input_recv) + s.antilag_input_ping * 0.001);
+	}
+	return ANTILAG_LATENCY_PING(e);
+}
+
 float antilag_getlag(entity e)
 {
 	float lag = ((IS_REAL_CLIENT(e)) ? ANTILAG_LATENCY(e) : 0);

@@ -14,6 +14,7 @@
 #include <lib/warpzone/common.qh>
 #include <lib/warpzone/server.qh>
 #include <server/anticheat.qh>
+#include <server/antilag.qh>
 #include <server/bot/api.qh>
 #include <server/command/common.qh>
 #include <server/compat/quake3.qh>
@@ -300,6 +301,8 @@ void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
+	antilag_inframe = true; // see antilag_input_isnew
+
 	FOREACH_CLIENT(IS_FAKE_CLIENT(it),
 	{
 		// DP calls these for real clients only

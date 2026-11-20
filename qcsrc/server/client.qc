@@ -858,6 +858,7 @@ void PutPlayerInServer(entity this)
 		this.alivetime_start = max(time, game_starttime);
 
 	antilag_clear(this, CS(this));
+	CS(this).antilag_input_recv = 0; // fall back to plain ping until the next new move is applied
 
 	if (warmup_stage)
 		ReadyCount();
@@ -3110,6 +3111,9 @@ void PM_UpdateButtons(entity this, entity store)
 		store.impulse = this.impulse;
 	this.impulse = 0;
 
+	// antilag bookkeeping (g_antilag_inputtime): decide before store is overwritten
+	bool antilag_isnew = antilag_input_isnew(this, store);
+
 	bool typing = this.buttonchat || this.button12;
 
 	store.button0 = (typing) ? 0 : this.button0;
@@ -3144,6 +3148,9 @@ void PM_UpdateButtons(entity this, entity store)
 
 	store.v_angle = this.v_angle;
 	store.movement = this.movement;
+
+	// only writes antilag_* fields, read only with g_antilag_inputtime
+	antilag_input_update(this, store, antilag_isnew);
 }
 
 NET_HANDLE(fpsreport, bool)

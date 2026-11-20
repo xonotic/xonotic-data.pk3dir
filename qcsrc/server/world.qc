@@ -2475,6 +2475,9 @@ void Physics_Frame()
 void systems_update();
 void EndFrame()
 {
+	// moves applied from now until StartFrame come from SV_ExecuteClientMoves (async)
+	antilag_inframe = false;
+
 	anticheat_endframe();
 
 	Physics_Frame();
