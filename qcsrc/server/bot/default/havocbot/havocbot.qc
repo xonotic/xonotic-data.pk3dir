@@ -1502,7 +1502,7 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	float w;
 
 	// ;)
-	if(g_weaponarena_weapons == WEPSET(TUBA))
+	if (g_weaponarena_weapons == WEPSET(TUBA))
 	{
 		this.(weaponentity).m_switchweapon = WEP_TUBA;
 		return;
@@ -1544,37 +1544,38 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		return;
 
 	// Should it do a weapon combo?
-
-	float af = ((this.weaponentity.m_weapon == WEP_Null) ? 0 : ATTACK_FINISHED(this, weaponentity));
-	float ct = autocvar_bot_ai_weapon_combo_threshold;
-
-	// Bots with no skill will be 4 times slower than "godlike" bots when doing weapon combos
-	// Ideally this 4 should be calculated as longest_weapon_refire / bot_ai_weapon_combo_threshold
-	float combo_time = time + ct * (4 - 0.3 * (skill + this.bot_weaponskill));
-
 	bool combo = false;
 
-	if(autocvar_bot_ai_weapon_combo)
-	if(this.(weaponentity).m_weapon.m_id == this.(weaponentity).lastfiredweapon)
-	if(af > combo_time)
+	if (autocvar_bot_ai_weapon_combo
+	&& this.(weaponentity).m_weapon != WEP_Null
+	&& this.(weaponentity).m_weapon.m_id == this.(weaponentity).lastfiredweapon)
 	{
-		combo = true;
-		this.lastcombotime = time;
+		// Bots with no skill will be 4 times slower than "godlike" bots when doing weapon combos
+		// Ideally this 4 should be calculated as longest_weapon_refire / bot_ai_weapon_combo_threshold
+		float combo_time = time + autocvar_bot_ai_weapon_combo_threshold * (4 - 0.3 * (skill + this.bot_weaponskill));
+		if (ATTACK_FINISHED(this, weaponentity) > combo_time)
+		{
+			combo = true;
+			this.lastcombotime = time;
+		}
 	}
 
 	// Custom weapon list based on distance to the enemy
-	if(bot_custom_weapon)
+	if (bot_custom_weapon)
 	{
 		float distance = bound(10, vlen(this.origin - this.enemy.origin) - 200, 10000);
 		distance *= (2 ** this.bot_rangepreference);
 
 		// Choose weapons for far distance
-		if ( distance > bot_distance_far ) {
-			for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_far[i] != -1 ; ++i){
+		if (distance > bot_distance_far)
+		{
+			for (i = 0; i < REGISTRY_COUNT(Weapons) && bot_weapons_far[i] != -1 ; ++i)
+			{
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
+				if (client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false))
 				{
-					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
+					if ((this.(weaponentity).m_weapon.m_id == w && combo)
+					|| havocbot_chooseweapon_checkreload(this, weaponentity, w))
 						continue;
 					this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 					return;
@@ -1583,12 +1584,15 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		}
 
 		// Choose weapons for mid distance
-		if ( distance > bot_distance_close) {
-			for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_mid[i] != -1 ; ++i){
+		if (distance > bot_distance_close)
+		{
+			for (i = 0; i < REGISTRY_COUNT(Weapons) && bot_weapons_mid[i] != -1 ; ++i)
+			{
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
+				if (client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false))
 				{
-					if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
+					if ((this.(weaponentity).m_weapon.m_id == w && combo)
+					|| havocbot_chooseweapon_checkreload(this, weaponentity, w))
 						continue;
 					this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 					return;
@@ -1597,11 +1601,13 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 		}
 
 		// Choose weapons for close distance
-		for(i=0; i < REGISTRY_COUNT(Weapons) && bot_weapons_close[i] != -1 ; ++i){
+		for (i = 0; i < REGISTRY_COUNT(Weapons) && bot_weapons_close[i] != -1 ; ++i)
+		{
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false) )
+			if (client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false))
 			{
-				if ((this.(weaponentity).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
+				if ((this.(weaponentity).m_weapon.m_id == w && combo)
+				|| havocbot_chooseweapon_checkreload(this, weaponentity, w))
 					continue;
 				this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
 				return;
