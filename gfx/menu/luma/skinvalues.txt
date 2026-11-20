@@ -132,6 +132,10 @@ HEIGHT_ZOOMEDTITLE            -1
 // gametypelist
 BOOL_GAMETYPELIST_ICON_BLUR   0
 
+// heatmap
+ALPHA_HEATMAP_CURRENT         1
+COLOR_HEATMAP_CURRENT         '1 0.1 0.1'
+
 // statslist
 BOOL_STATSLIST_ICON_BLUR      0
 
