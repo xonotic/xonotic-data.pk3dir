@@ -409,6 +409,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	if(inWorldspawn)
 	{
 		LOG_WARN(fn, " ended still in worldspawn, BUG");
+		fclose(fh);
 		return 0;
 	}
 	diameter = vlen(mapMaxs - mapMins);
