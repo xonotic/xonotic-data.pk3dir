@@ -319,12 +319,15 @@ vector solve_quadratic(float a, float b, float c)
 			v.x = v.y = -c / b;
 			v.z = 1;
 		}
-		else if (c == 0)
-			v.z = 1; // actually, every number solves the equation!
 		else
-			v.z = 0;
-		v.x = 0;
-		v.y = 0;
+		{
+			v.x = 0;
+			v.y = 0;
+			if (c == 0)
+				v.z = 1; // actually, every number solves the equation!
+			else
+				v.z = 0;
+		}
 	}
 	else
 	{
