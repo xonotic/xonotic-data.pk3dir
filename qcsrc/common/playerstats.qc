@@ -656,8 +656,10 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 				 * also we're not interested in the skill that we're confident players can operate above, rather where we expect them to operate.
 				 */
 				GameRules_scoring_add(p, SKILL, p.m_skill_mu + 1);
+				json_del(buf);
 				return;
 			}
+			json_del(buf);
 			break;
 		}
 		case URL_READY_CLOSED:
