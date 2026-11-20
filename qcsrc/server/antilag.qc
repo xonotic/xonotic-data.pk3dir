@@ -15,7 +15,119 @@ const int ANTILAG_MAX_ORIGINS = 64;
 .vector antilag_saved_origin;
 .float antilag_takenback;
 
+// Hitbox size history for g_antilag_bbox: the newest size is kept in fields, older ones in a
+// per-entity buffer that only exists while the size changed recently, written only on change.
+// At most one entry per origin sample, so this many always cover the whole origin history
+// (slowmo gives more samples per game-second than the tick rate suggests).
+const int ANTILAG_SIZE_SLOTS = ANTILAG_MAX_ORIGINS;
+const float ANTILAG_SIZE_IDLE = 10; // free the buffer when the size didn't change for this long
+.int antilag_size_buf_h; // buffer handle + 1; the _h suffix keeps it out of savegames
+.int antilag_size_head;
+.int antilag_size_count;
+.float antilag_size_changed; // time of the newest size, 0 = no baseline yet
+.vector antilag_size_mins, antilag_size_maxs, antilag_size_vofs; // newest size
+.vector antilag_saved_mins, antilag_saved_maxs, antilag_saved_vofs;
+.int antilag_size_rewound; // size we applied: 0 = none, -1 = newest size, n = buffer slot n - 1
+vector antilag_read_mins, antilag_read_maxs, antilag_read_vofs;
+
 .float antilag_debug;
+
+void antilag_size_reset(entity store)
+{
+	if (store.antilag_size_buf_h)
+		buf_del(store.antilag_size_buf_h - 1);
+	store.antilag_size_buf_h = 0;
+	store.antilag_size_count = 0;
+	store.antilag_size_changed = 0;
+}
+
+ACCUMULATE void ONREMOVE(entity this)
+{
+	if (this.antilag_size_buf_h)
+		antilag_size_reset(this);
+}
+
+void antilag_size_write(entity store, int slot, float t, vector mi, vector ma, vector vo)
+{
+	// %.9g round-trips a float exactly, vtos and ftos don't
+	bufstr_set(store.antilag_size_buf_h - 1, slot, sprintf("%.9g|%.9v|%.9v|%.9v", t, mi, ma, vo));
+}
+
+bool antilag_size_read(entity store, int slot)
+{
+	string s = bufstr_get(store.antilag_size_buf_h - 1, slot);
+	int a = strstrofs(s, "|", 0);
+	int b = strstrofs(s, "|", a + 1);
+	int c = strstrofs(s, "|", b + 1);
+	if (a < 0 || b < 0 || c < 0)
+		return false;
+	antilag_read_mins = stov(substring(s, a + 1, b - a - 1));
+	antilag_read_maxs = stov(substring(s, b + 1, c - b - 1));
+	antilag_read_vofs = stov(substring(s, c + 1, -1));
+	return true;
+}
+
+// log a size change at time t (no-op if unchanged, the same t overwrites in place)
+void antilag_record_size(entity e, entity store, float t)
+{
+	// spectators are never taken back and antilag_clear on spawn discards their history
+	if (!autocvar_g_antilag_bbox || (IS_CLIENT(e) && !IS_PLAYER(e)))
+	{
+		if (store.antilag_size_changed)
+			antilag_size_reset(store);
+		return;
+	}
+	if (!store.antilag_size_changed) // monsters/nades never get antilag_clear
+	{
+		store.antilag_size_mins = e.mins;
+		store.antilag_size_maxs = e.maxs;
+		store.antilag_size_vofs = e.view_ofs;
+		store.antilag_size_changed = -2342;
+		return;
+	}
+	if (e.mins == store.antilag_size_mins && e.maxs == store.antilag_size_maxs
+	&& e.view_ofs == store.antilag_size_vofs)
+	{
+		if (store.antilag_size_buf_h && t - store.antilag_size_changed > ANTILAG_SIZE_IDLE)
+		{
+			buf_del(store.antilag_size_buf_h - 1);
+			store.antilag_size_buf_h = 0;
+			store.antilag_size_count = 0;
+		}
+		return;
+	}
+
+	bool fresh = !store.antilag_size_buf_h;
+	if (fresh)
+	{
+		int h = buf_create();
+		if (h >= 0)
+		{
+			store.antilag_size_buf_h = h + 1;
+			antilag_size_write(store, 0, -2342, store.antilag_size_mins, store.antilag_size_maxs,
+				store.antilag_size_vofs);
+			store.antilag_size_head = 0;
+			store.antilag_size_count = 1;
+		}
+	}
+	if (store.antilag_size_buf_h)
+	{
+		int j = store.antilag_size_head;
+		if (fresh || store.antilag_size_changed != t)
+		{
+			if (++j >= ANTILAG_SIZE_SLOTS)
+				j = 0;
+			store.antilag_size_head = j;
+			if (store.antilag_size_count < ANTILAG_SIZE_SLOTS)
+				++store.antilag_size_count;
+		}
+		antilag_size_write(store, j, t, e.mins, e.maxs, e.view_ofs);
+	}
+	store.antilag_size_mins = e.mins;
+	store.antilag_size_maxs = e.maxs;
+	store.antilag_size_vofs = e.view_ofs;
+	store.antilag_size_changed = t;
+}
 
 void antilag_record(entity e, entity store, float t)
 {
@@ -30,6 +142,8 @@ void antilag_record(entity e, entity store, float t)
 		store.antilag_index = 0;
 	store.antilag_times[store.antilag_index] = t;
 	store.antilag_origins[store.antilag_index] = e.origin;
+	if (autocvar_g_antilag_bbox || store.antilag_size_changed)
+		antilag_record_size(e, store, t);
 
 	if (store.antilag_debug)
 		te_spark(antilag_takebackorigin(e, store, t - store.antilag_debug), '0 0 0', 32);
@@ -56,9 +170,128 @@ float antilag_find(entity e, entity store, float t)
 	return -1;
 }
 
-vector antilag_takebackorigin(entity e, entity store, float t)
+int antilag_size_slot(entity store, int age)
 {
-	int i0 = antilag_find(e, store, t);
+	int s = store.antilag_size_head - age;
+	return (s < 0) ? s + ANTILAG_SIZE_SLOTS : s;
+}
+
+// buffer slot of the newest entry with time <= T, or of the oldest entry if there is none.
+// The caller knows the newest entry (age 0) is after T. Usually the answer is age 1, so
+// check that first, then bisect the rest. stof stops at the first |
+int antilag_size_find(entity store, float T)
+{
+	int h = store.antilag_size_buf_h - 1;
+	int hi = store.antilag_size_count - 1;
+	int lo = (hi > 0) ? 1 : 0;
+	if (lo < hi)
+	{
+		if (stof(bufstr_get(h, antilag_size_slot(store, lo))) <= T)
+			hi = lo;
+		else
+			++lo;
+	}
+	while (lo < hi)
+	{
+		int mid = floor((lo + hi) / 2);
+		if (stof(bufstr_get(h, antilag_size_slot(store, mid))) <= T)
+			hi = mid;
+		else
+			lo = mid + 1;
+	}
+	return antilag_size_slot(store, lo);
+}
+
+// only undoes our own change: if something resized the entity during the window
+// (e.g. vehicles_exit in Damage), that is kept. The caller's setorigin relinks.
+void antilag_restore_size(entity e, entity store)
+{
+	int applied = store.antilag_size_rewound;
+	store.antilag_size_rewound = 0;
+	if (applied < 0)
+	{
+		antilag_read_mins = store.antilag_size_mins;
+		antilag_read_maxs = store.antilag_size_maxs;
+		antilag_read_vofs = store.antilag_size_vofs;
+	}
+	else if (!antilag_size_read(store, applied - 1))
+	{
+		antilag_read_mins = e.mins;
+		antilag_read_maxs = e.maxs;
+		antilag_read_vofs = e.view_ofs;
+	}
+	if (e.mins == antilag_read_mins && e.maxs == antilag_read_maxs)
+	{
+		e.mins = store.antilag_saved_mins;
+		e.maxs = store.antilag_saved_maxs;
+		e.size = e.maxs - e.mins;
+	}
+	if (e.view_ofs == antilag_read_vofs)
+		e.view_ofs = store.antilag_saved_vofs;
+}
+
+// i0 is antilag_find(e, store, t). The caller's setorigin relinks with the new size.
+void antilag_takeback_size(entity e, entity store, float t, int i0)
+{
+	float changed = store.antilag_size_changed;
+	if (!changed || i0 < 0)
+		return; // no history or in the present: keep the current size
+	// the sample used below is at or after t, so it can't be older than the newest size
+	if (t >= changed && e.mins == store.antilag_size_mins && e.maxs == store.antilag_size_maxs
+	&& e.view_ofs == store.antilag_size_vofs)
+		return;
+
+	// use the sample the client displays at t: CSQC snaps discrete state (duck, corpse)
+	// to the newest snapshot while the origin still interpolates toward it
+	int i = i0 + 1;
+	if (i >= ANTILAG_MAX_ORIGINS)
+		i = 0;
+	// antilag_find puts t == times[i] into (times[i0], times[i]], but at exactly that
+	// time the client already interpolates from sample i toward i + 1 and shows the
+	// discrete state of i + 1 (cl.time often lands exactly on snapshot times);
+	// 0.1ms tolerance for float rounding of t
+	if (t >= store.antilag_times[i] - 0.0001)
+	{
+		if (i == store.antilag_index)
+			return; // newest sample: the next one is the present
+		if (++i >= ANTILAG_MAX_ORIGINS)
+			i = 0;
+	}
+
+	int applied = -1;
+	float T = store.antilag_times[i];
+	if (T >= changed)
+	{
+		antilag_read_mins = store.antilag_size_mins;
+		antilag_read_maxs = store.antilag_size_maxs;
+		antilag_read_vofs = store.antilag_size_vofs;
+	}
+	else
+	{
+		if (!store.antilag_size_buf_h)
+			return;
+		int j = antilag_size_find(store, T);
+		if (!antilag_size_read(store, j))
+			return;
+		applied = j + 1;
+	}
+	if (antilag_read_mins == e.mins && antilag_read_maxs == e.maxs
+	&& antilag_read_vofs == e.view_ofs)
+		return;
+
+	store.antilag_saved_mins = e.mins;
+	store.antilag_saved_maxs = e.maxs;
+	store.antilag_saved_vofs = e.view_ofs;
+	// no setsize: it would only relink, and the caller's setorigin does that anyway
+	e.mins = antilag_read_mins;
+	e.maxs = antilag_read_maxs;
+	e.size = e.maxs - e.mins;
+	e.view_ofs = antilag_read_vofs; // Headshot() box uses view_ofs_z together with maxs_z
+	store.antilag_size_rewound = applied;
+}
+
+vector antilag_takebackorigin_at(entity e, entity store, float t, int i0)
+{
 	if (i0 < 0)
 	{
 		// IN THE PRESENT
@@ -72,6 +305,11 @@ vector antilag_takebackorigin(entity e, entity store, float t)
 		i1 = 0;
 
 	return lerpv(store.antilag_times[i0], store.antilag_origins[i0], store.antilag_times[i1], store.antilag_origins[i1], t);
+}
+
+vector antilag_takebackorigin(entity e, entity store, float t)
+{
+	return antilag_takebackorigin_at(e, store, t, antilag_find(e, store, t));
 }
 
 vector antilag_takebackavgvelocity(entity e, entity store, float t0, float t1)
@@ -92,7 +330,13 @@ void antilag_takeback(entity e, entity store, float t)
 	if (!store.antilag_takenback)
 		store.antilag_saved_origin = e.origin;
 
-	vector org = antilag_takebackorigin(e, store, t);
+	int i0 = antilag_find(e, store, t);
+	if (store.antilag_size_rewound) // nested takeback: start from the present size again
+		antilag_restore_size(e, store);
+	if (autocvar_g_antilag_bbox)
+		antilag_takeback_size(e, store, t, i0); // before setorigin so its relink uses both
+
+	vector org = antilag_takebackorigin_at(e, store, t, i0);
 	setorigin(e, org);
 	store.antilag_takenback = true;
 }
@@ -106,18 +350,25 @@ void antilag_restore(entity e, entity store)
 
 	if (!store.antilag_takenback) return;
 
+	// flag-driven, not cvar-driven, so this is safe if the cvar changes mid-window
+	if (store.antilag_size_rewound)
+		antilag_restore_size(e, store);
 	setorigin(e, store.antilag_saved_origin);
 	store.antilag_takenback = false;
 }
 
 void antilag_clear(entity e, entity store)
 {
+	// the caller just set the size authoritatively (e.g. setsize in PutPlayerInServer),
+	// never restore an old saved size over it
+	store.antilag_size_rewound = 0;
 	antilag_restore(e, store);
 	for (int i = 0; i < ANTILAG_MAX_ORIGINS; ++i) {
 		store.antilag_times[i] = -2342;
 		store.antilag_origins[i] = e.origin;
 	}
 	store.antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
+	antilag_size_reset(store); // the next record adopts the current size
 }
 
 // TODO: use a single intrusive list across all antilagged entities

@@ -2509,6 +2509,8 @@ void EndFrame()
 			float h = ceil((it.mins.z + it.maxs.z) * PL_CORPSE_SCALE * 10) / 10;
 			it.maxs.z = max(h, it.mins.z + 1);
 			setsize(it, it.mins, it.maxs);
+			// the snapshot sent this frame already has the corpse size
+			antilag_record_size(it, CS(it), altime);
 		}
 	});
 	IL_EACH(g_monsters, true,
