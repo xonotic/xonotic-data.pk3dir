@@ -77,7 +77,10 @@ MACRO_END
 
 #define  LOG_DEBUG(...) _LOG_DEBUG(strcat(__VA_ARGS__))
 #define  LOG_DEBUGF(...) _LOG_DEBUG(sprintf(__VA_ARGS__))
-#define _LOG_DEBUG(s) if (autocvar_developer > 1) _LOG(dprint, "^2DEBUG", dprint, s)
+#define _LOG_DEBUG(s) MACRO_BEGIN \
+	if (autocvar_developer > 1) \
+		_LOG(dprint, "^2DEBUG", dprint, s); \
+MACRO_END
 
 // same as LOG_INFO but without any debug information that bloats console output and compiled program files
 #define  LOG_HELP(...) _LOG_HELP(strcat(__VA_ARGS__))
