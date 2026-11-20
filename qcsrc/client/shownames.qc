@@ -141,7 +141,13 @@ void Draw_ShowNames(entity this)
 
 	if (a < ALPHA_MIN_VISIBLE) return;
 
-	float dist = -1; // dist will be calculated only when really needed to avoid wasting a vlen call
+	float dist_factor = -1; // dist will be calculated only when really needed to avoid wasting a vlen call
+#define CALCULATE_DIST_FACTOR() MACRO_BEGIN \
+	float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance; \
+	float dist = vlen(this.origin - view_origin); \
+	dist_factor = (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f; \
+MACRO_END
+
 	if (autocvar_hud_shownames_maxdistance)
 	{
 		float max_dist = min(autocvar_hud_shownames_maxdistance, max_shot_distance);
@@ -149,10 +155,8 @@ void Draw_ShowNames(entity this)
 			return;
 		if (vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
 		{
-			float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
-			if (dist == -1)
-				dist = vlen(this.origin - view_origin);
-			a *= (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+			CALCULATE_DIST_FACTOR();
+			a *= dist_factor;
 		}
 	}
 	else if (vdist(this.origin - view_origin, >=, max_shot_distance))
@@ -164,11 +168,12 @@ void Draw_ShowNames(entity this)
 	if (autocvar_hud_shownames_resize && vdist(this.origin - view_origin, >=, autocvar_hud_shownames_mindistance))
 	{
 		// limit resize so its never smaller than 0.5... gets unreadable
-		float f = autocvar_hud_shownames_maxdistance - autocvar_hud_shownames_mindistance;
-		if (dist == -1)
-			dist = vlen(this.origin - view_origin);
-		resize = 0.5 + 0.5 * (f - max(0, dist - autocvar_hud_shownames_mindistance)) / f;
+		if (dist_factor == -1)
+			CALCULATE_DIST_FACTOR();
+		resize = 0.5 + 0.5 * dist_factor;
 	}
+#undef CALCULATE_DIST_FACTOR
+
 	vector mySize = (vec2(autocvar_hud_shownames_aspect, 1)) * autocvar_hud_shownames_fontsize;
 	vector myPos = o - vec2(0.5 * mySize.x, mySize.y);
 	mySize.x *= resize;
