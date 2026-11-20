@@ -21,8 +21,22 @@ float autocvar_sv_clmovement_inputtimeout; // engine cvar
 // and after sv_clmovement_inputtimeout expires
 bool antilag_inframe;
 bool antilag_input_isnew(entity this, entity store);
-void antilag_input_update(entity this, entity store, bool isnew);
+void antilag_input_update(entity this, entity store, bool isnew, bool prev_atk);
 float antilag_latency(entity e);
+int autocvar_g_antilag_taplatch;
+// g_antilag_taplatch (bug #2b), on CS(client): the first fire press (button0 0 -> 1) among
+// the moves applied since the last EndFrame, with its aim and time, for a press the frame's
+// last move already released
+.bool antilag_tap_pending;
+// secondary fire or hook held in a move of this frame (blocks the aim swap)
+.bool antilag_tap_other;
+.vector antilag_tap_va;
+.float antilag_tap_recv, antilag_tap_ping;
+.bool antilag_tap_active, antilag_tap_va_swapped, antilag_tap_saved_atk;
+.vector antilag_tap_saved_va, antilag_tap_va_set;
+.float antilag_tap_saved_recv, antilag_tap_saved_ping;
+void antilag_tap_begin(entity this);
+void antilag_tap_end(entity this);
 
 void antilag_record(entity e, entity store, float t);
 vector antilag_takebackorigin(entity e, entity store, float t);

@@ -859,6 +859,8 @@ void PutPlayerInServer(entity this)
 
 	antilag_clear(this, CS(this));
 	CS(this).antilag_input_recv = 0; // fall back to plain ping until the next new move is applied
+	CS(this).antilag_tap_pending = false;
+	CS(this).antilag_tap_other = false;
 
 	if (warmup_stage)
 		ReadyCount();
@@ -2474,6 +2476,14 @@ bool PlayerThink(entity this)
 
 	if (frametime)
 	{
+		// g_antilag_taplatch: a fire press (and its aim) in an earlier move of this frame would
+		// be lost because the last move already released it (bug #2b). A still-held press
+		// fires normally with the last move's aim, origin and time, which are consistent.
+		bool antilag_tap = (autocvar_g_antilag_taplatch && autocvar_g_antilag_inputtime
+			&& IS_REAL_CLIENT(this) && !this.vehicle
+			&& CS(this).antilag_tap_pending && !CS(this).button0);
+		if (antilag_tap)
+			antilag_tap_begin(this);
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
 			.entity weaponentity = weaponentities[slot];
@@ -2481,6 +2491,8 @@ bool PlayerThink(entity this)
 				W_Vortex_Charge(this, weaponentity, frametime);
 			W_WeaponFrame(this, weaponentity);
 		}
+		if (antilag_tap)
+			antilag_tap_end(this);
 
 		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
@@ -3113,6 +3125,8 @@ void PM_UpdateButtons(entity this, entity store)
 
 	// antilag bookkeeping (g_antilag_inputtime): decide before store is overwritten
 	bool antilag_isnew = antilag_input_isnew(this, store);
+	// raw: vehicle physplugs clear store.button0 after the copy
+	bool antilag_prev_atk = store.antilag_input_atk_raw;
 
 	bool typing = this.buttonchat || this.button12;
 
@@ -3149,8 +3163,8 @@ void PM_UpdateButtons(entity this, entity store)
 	store.v_angle = this.v_angle;
 	store.movement = this.movement;
 
-	// only writes antilag_* fields, read only with g_antilag_inputtime
-	antilag_input_update(this, store, antilag_isnew);
+	// only writes antilag_* fields, read only with g_antilag_inputtime / g_antilag_taplatch
+	antilag_input_update(this, store, antilag_isnew, antilag_prev_atk);
 }
 
 NET_HANDLE(fpsreport, bool)
