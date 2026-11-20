@@ -142,14 +142,16 @@ string Process_Notif_Line(
 			input = strreplace("\n", "\n\{3}", input);
 
 			// pass 3: strip trailing ETX char
-			if (substring(input, strlen(input) - 1, 1) == "\{3}")
-				input = substring(input, 0, (strlen(input) - 1));
+			int len = strlen(input);
+			if (substring(input, len - 1, 1) == "\{3}")
+				input = substring(input, 0, len - 1);
 		}
 	}
 #endif
 
 	// done to both MSG_INFO and MSG_CENTER
-	if (substring(input, strlen(input) - 1, 1) == "\n")
+	int len = strlen(input);
+	if (substring(input, len - 1, 1) == "\n")
 	{
 		LOG_INFOF(
 			(
@@ -161,7 +163,7 @@ string Process_Notif_Line(
 			stringtype
 		);
 		notif_error = true;
-		input = substring(input, 1, strlen(input) - 1);
+		input = substring(input, 0, len - 1); // strip trailing \n
 	}
 	return input;
 }
