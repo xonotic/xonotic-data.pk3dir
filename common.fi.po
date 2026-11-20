@@ -3056,7 +3056,7 @@ msgstr ""
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qc:51
 #, c-format
 msgid "This is particularly useful against speedy players, especially in %s."
-msgstr ""
+msgstr "Tämä on erityisen hyödyllistä nopeita pelaajia vastaan, etenkin: %s."
 
 #: qcsrc/common/mutators/mutator/buffs/buff/disability.qh:15
 msgid "Disability"
@@ -3282,6 +3282,8 @@ msgid ""
 "Enable buff pickups (random bonuses like %s and %s) on the maps that support "
 "them."
 msgstr ""
+"Kytke päälle kerättävät tehonlisäykset (satunnaisia bonuksia, kuten %s ja "
+"%s.) niitä tukevissa kartoissa."
 
 #: qcsrc/common/mutators/mutator/buffs/ui_buffs.qh:6 qcsrc/common/util.qc:311
 #: qcsrc/menu/xonotic/guide/guide.qh:15
@@ -3581,6 +3583,10 @@ msgid ""
 "10 seconds to find some or face death if they fail to do so. The secondary "
 "fire does not inflict any damage but is good for doing trickjumps."
 msgstr ""
+"Pelaajille annetaan vain yksi ase, %s, joka tappaa vastustajan "
+"kertalaakista. Jos pelaajalta loppuvat ammukset, hänellä on 10 sekuntia "
+"aikaa löytää niitä, tai muuten kuolema perii. Toissijainen tulitus ei "
+"aiheuta lainkaan vahinkoa, mutta se on hyödyllinen temppuhyppyjä varten."
 
 #: qcsrc/common/mutators/mutator/invincibleproj/ui_invincibleproj.qc:19
 #, c-format
@@ -3825,6 +3831,9 @@ msgid ""
 "configuration options for this mutator, so they may act a little differently "
 "depending on the server you play on."
 msgstr ""
+"Valittavana on monentyyppisiä naatteja sekä monia asetusvalintoja tälle "
+"muovaajalle, joten ne voivat toimia hiukan eri lailla riippuen siitä, millä "
+"palvelimella pelaa."
 
 #: qcsrc/common/mutators/mutator/nades/nades.qc:53
 #, c-format
@@ -4004,6 +4013,8 @@ msgid ""
 "Since it's given as an offhand, you can fire it at the same time as the "
 "ordinary %s while laser jumping to achieve even more height."
 msgstr ""
+"Koska se annetaan toiseen käteen, sillä voi ampua yhtä aikaa %s-aseen kanssa "
+"laserhyppyn aikana saadaksesi lisää korkeutta."
 
 #: qcsrc/common/mutators/mutator/offhand_blaster/offhand_blaster.qc:14
 #, c-format
@@ -8339,6 +8350,7 @@ msgstr "%s ampuu enintään %s laukausta tehden kullakin %s vahinkoa"
 #, c-format
 msgid "The %s does %s damage then shoots %s shots doing %s damage each"
 msgstr ""
+"%s tekee %s vahinkoa, sitten ampuu %s-ammusta tehden kullakin %s vahinkoa "
 
 #: qcsrc/common/weapons/all.qc:865
 #, c-format
@@ -8476,6 +8488,8 @@ msgid ""
 "Close to medium range is the ideal time to use the %s, although the "
 "secondary fire can be useful for long range combat sometimes."
 msgstr ""
+"%s on ihanteellinen käytettäväksi läheltä ja keskimatkalta, vaikkakin "
+"toissijainen tulitus voi joskus olla hyödyllinen pitkän matkan taisteluissa."
 
 #: qcsrc/common/weapons/weapon/crylink.qc:626
 #, c-format
@@ -8868,6 +8882,8 @@ msgid ""
 "The portals will close either after the player who shot them dies or after "
 "some time period."
 msgstr ""
+"Portaalit sulkeutuvat joko sen jälkeen, kun niitä ampunut pelaaja kuolee, "
+"tai tietyn ajan kuluttua."
 
 #: qcsrc/common/weapons/weapon/porto.qc:425
 #, c-format
@@ -9920,7 +9936,7 @@ msgstr "Näytä vain nykyinen ammustyyppi"
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:21
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:43
 msgid "Noncurrent opacity:"
-msgstr ""
+msgstr "Ajanmukaistamaton läpinäkyvyys:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:50
@@ -13870,12 +13886,18 @@ msgid ""
 "upwards boost and enable you to reach places that are otherwise accessible "
 "only with laser jumps, which cost health and make noise."
 msgstr ""
+"Rampit ovat tärkeä osa Xonoticin karttasuunnittelua. Kaltevat pinnat, joihin "
+"osuu oikealla nopeudella ja oikeassa kulmassa, antavat huomattavan vauhdin "
+"ylöspäin ja antavat päästä paikkoihin, joihin muutoin pääsee vain "
+"laserhypyillä, mikä vie terveyttä ja aiheuttaa melua."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:154
 msgid ""
 "When doing ramp jumps, it is vital to hit the ramp at a flat angle to "
 "receive the upwards boost and not lose too much speed."
 msgstr ""
+"Rampihyppyjä tehdessä on erittäin tärkeää osua ramppiin loivassa kulmassa, "
+"jotta saa vauhtua ylöspäin eikä menetä liikaa nopeutta."
 
 #: qcsrc/menu/xonotic/guide/pages.qc:155
 #, c-format
