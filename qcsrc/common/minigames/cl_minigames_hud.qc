@@ -30,8 +30,8 @@ void HUD_MinigameMenu_Export(int fh)
 /// Whether the mouse is over the given panel
 bool HUD_mouse_over(entity somepanel)
 {
-	vector pos = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_pos")));
-	vector sz  = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_size")));
+	vector pos = somepanel.current_panel_pos;
+	vector sz  = somepanel.current_panel_size;
 	return mousepos.x >= pos.x * vid_conwidth  && mousepos.x <= (pos.x + sz.x) * vid_conwidth
 	    && mousepos.y >= pos.y * vid_conheight && mousepos.y <= (pos.y + sz.y) * vid_conheight;
 }
