@@ -60,7 +60,7 @@ void counter_use(entity this, entity actor, entity trigger)
 	}
 
 	if(doactivate)
-		SUB_UseTargets(this, actor, trigger);
+		SUB_UseTargets(this, actor);
 }
 
 void counter_reset(entity this)

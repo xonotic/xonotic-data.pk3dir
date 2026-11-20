@@ -160,9 +160,7 @@ spawnfunc(target_speed)
 	this.reset = target_speed_reset;
 
 	// support a 0 speed setting AND a default
-	string s = GetField_fullspawndata(this, "speed", false);
-	if (!s || s == "")
-		this.speed = 100;
+	G_SpawnFloat("speed", 100, this, speed);
 
 	target_speed_link(this);
 }

@@ -55,7 +55,8 @@ void door_rotating_go_down(entity this)
 {
 	if (this.noise2 != "")
 		_sound (this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
-	if (this.max_health)
+
+	if (this.event_damage)
 	{
 		this.takedamage = DAMAGE_YES;
 		SetResourceExplicit(this, RES_HEALTH, this.max_health);
@@ -65,7 +66,7 @@ void door_rotating_go_down(entity this)
 	SUB_CalcAngleMove (this, this.pos1, TSPEED_LINEAR, this.speed, door_rotating_hit_bottom);
 }
 
-void door_rotating_go_up(entity this, entity oth)
+void door_rotating_go_up(entity this, entity actor)
 {
 	if (this.state == STATE_UP)
 		return;		// already going up
@@ -82,7 +83,7 @@ void door_rotating_go_up(entity this, entity oth)
 
 	string oldmessage = this.message;
 	this.message = "";
-	SUB_UseTargets(this, NULL, oth); // TODO: is oth needed here?
+	SUB_UseTargets(this, actor);
 	this.message = oldmessage;
 }
 #endif
@@ -95,6 +96,11 @@ void door_rotating_reset(entity this)
 	this.state = STATE_BOTTOM;
 	setthink(this, func_null);
 	this.nextthink = 0;
+	if (this.event_damage)
+	{
+		this.takedamage = DAMAGE_YES;
+		SetResourceExplicit(this, RES_HEALTH, this.max_health);
+	}
 }
 
 void door_rotating_init_startopen(entity this)

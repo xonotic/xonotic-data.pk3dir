@@ -7,7 +7,7 @@ void multivibrator_send(entity this)
 	float newstate = (time < cyclestart + this.wait);
 
 	if(this.state != newstate)
-		SUB_UseTargets(this, this, NULL);
+		SUB_UseTargets(this, this);
 	this.state = newstate;
 
 	if(this.state)
@@ -31,7 +31,7 @@ void multivibrator_toggle(entity this, entity actor, entity trigger)
 	{
 		if(this.state)
 		{
-			SUB_UseTargets(this, actor, trigger);
+			SUB_UseTargets(this, actor);
 			this.state = 0;
 		}
 		this.nextthink = 0;
