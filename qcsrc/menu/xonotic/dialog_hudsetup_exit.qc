@@ -17,6 +17,12 @@ void HUDSkinList_Reset_Click(entity me, entity btn)
 	DialogOpenButton_Click(me, main.skinResetDialog);
 }
 
+void HUDSkinList_ResetConfirm_Click(entity me, entity btn)
+{
+	SetHUDSkin_Click(btn, hudskinlist);
+	Dialog_Close(btn, me);
+}
+
 void XonoticSkinResetDialog_fill(entity me)
 {
 	entity e;
@@ -28,8 +34,8 @@ void XonoticSkinResetDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Yes"), '1 0 0'));
-			e.onClick = SetHUDSkin_Click;
-			e.onClickEntity = hudskinlist;
+			e.onClick = HUDSkinList_ResetConfirm_Click;
+			e.onClickEntity = me;
 		me.TD(me, 1, 1, e = makeXonoticButton(_("No"), '0 1 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;

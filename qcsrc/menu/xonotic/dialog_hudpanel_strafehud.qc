@@ -10,14 +10,17 @@
 
 void StrafeHUD_ColorReset(entity btn, entity me)
 {
-	cvar_set("hud_panel_strafehud_bar_accel_color", cvar_defstring("hud_panel_strafehud_bar_accel_color"));
-	cvar_set("hud_panel_strafehud_bar_neutral_color", cvar_defstring("hud_panel_strafehud_bar_neutral_color"));
-	cvar_set("hud_panel_strafehud_bar_overturn_color", cvar_defstring("hud_panel_strafehud_bar_overturn_color"));
-	cvar_set("hud_panel_strafehud_angle_accel_color", cvar_defstring("hud_panel_strafehud_angle_accel_color"));
-	cvar_set("hud_panel_strafehud_angle_neutral_color", cvar_defstring("hud_panel_strafehud_angle_neutral_color"));
+	cvar_set("hud_panel_strafehud_bar_accel_color",      cvar_defstring("hud_panel_strafehud_bar_accel_color"));
+	cvar_set("hud_panel_strafehud_bar_neutral_color",    cvar_defstring("hud_panel_strafehud_bar_neutral_color"));
+	cvar_set("hud_panel_strafehud_bar_overturn_color",   cvar_defstring("hud_panel_strafehud_bar_overturn_color"));
+	cvar_set("hud_panel_strafehud_angle_accel_color",    cvar_defstring("hud_panel_strafehud_angle_accel_color"));
+	cvar_set("hud_panel_strafehud_angle_neutral_color",  cvar_defstring("hud_panel_strafehud_angle_neutral_color"));
 	cvar_set("hud_panel_strafehud_angle_overturn_color", cvar_defstring("hud_panel_strafehud_angle_overturn_color"));
-	cvar_set("hud_panel_strafehud_switch_color", cvar_defstring("hud_panel_strafehud_switch_color"));
-	cvar_set("hud_panel_strafehud_bestangle_color", cvar_defstring("hud_panel_strafehud_bestangle_color"));
+	cvar_set("hud_panel_strafehud_switch_color",         cvar_defstring("hud_panel_strafehud_switch_color"));
+	cvar_set("hud_panel_strafehud_bestangle_color",      cvar_defstring("hud_panel_strafehud_bestangle_color"));
+	cvar_set("hud_panel_strafehud_wturn_color",          cvar_defstring("hud_panel_strafehud_wturn_color"));
+	// There's also *_preaccel_color, *_direction_color, *_slickdetector_color, *_startspeed_color, *_jumpheight_color, *_vangle_color,
+	// ... but this dialog doesn't allow configuring them
 }
 
 void XonoticHUDStrafeHUDDialog_fill(entity me)
@@ -143,7 +146,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
 		me.TD(me, 2, (4 - 0.2) / 3, e = makeXonoticColorpickerString("hud_panel_strafehud_bestangle_color", "hud_panel_strafehud_bestangle_color"));
 			setDependentNOT(e, "hud_panel_strafehud_bestangle_alpha", 0);
-			setDependentAND(e, "hud_panel_strafehud_bestangle", 1, 1);
+			setDependentAND(e, "hud_panel_strafehud_bestangle", 1, 2);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, (4 - 0.2) / 3, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_switch_alpha"));
@@ -160,7 +163,7 @@ void XonoticHUDStrafeHUDDialog_fill(entity me)
 
 		me.TD(me, 1, (4 - 0.2) / 3, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_strafehud_bestangle_alpha"));
 			e.formatString = "%";
-			setDependent(e, "hud_panel_strafehud_bestangle", 1, 1);
+			setDependent(e, "hud_panel_strafehud_bestangle", 1, 2);
 	me.TR(me);
 		me.TD(me, 1, (4 - 0.1) / 2, e = makeXonoticCheckBox(0, "_hud_panel_strafehud_demo", _("Demo mode")));
 

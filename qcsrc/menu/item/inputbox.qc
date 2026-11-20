@@ -3,11 +3,17 @@
 .float cb_offset;
 .string cb_src;
 
+void _InputBox_boundCursorPos(entity me)
+{
+	me.cursorPos = bound(0, me.cursorPos, strlen(me.text));
+}
+
 	void InputBox_configureInputBox(entity me, string theText, float theCursorPos, float theFontSize, string gfx)
 	{
 		SUPER(InputBox).configureLabel(me, theText, theFontSize, 0.0);
 		me.src = gfx;
 		me.cursorPos = theCursorPos;
+		_InputBox_boundCursorPos(me);
 	}
 	void InputBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 	{
@@ -57,6 +63,7 @@
 			me.dragScrollPos = pos;
 			p = me.scrollPos + pos.x - me.keepspaceLeft;
 			me.cursorPos = draw_TextLengthUpToWidth(me.text, p, 0, me.realFontSize);
+			_InputBox_boundCursorPos(me);
 			me.lastChangeTime = time;
 		}
 		else if (me.enableClearButton)
@@ -146,10 +153,12 @@
 			case K_KP_LEFTARROW:
 			case K_LEFTARROW:
 				--me.cursorPos;
+				_InputBox_boundCursorPos(me);
 				return 1;
 			case K_KP_RIGHTARROW:
 			case K_RIGHTARROW:
 				++me.cursorPos;
+				_InputBox_boundCursorPos(me);
 				return 1;
 			case K_KP_HOME:
 			case K_HOME:
@@ -207,7 +216,6 @@
 				draw_ButtonPicture('0 0 0', strcat(me.src, "_n"), '1 1 0', me.color, 1);
 		}
 
-		me.cursorPos = bound(0, me.cursorPos, strlen(me.text));
 		cursorPosInWidths = draw_TextWidth(substring(me.text, 0, me.cursorPos), 0, me.realFontSize);
 		totalSizeInWidths = draw_TextWidth(strcat(me.text, CURSOR), 0, me.realFontSize);
 

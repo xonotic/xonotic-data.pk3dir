@@ -69,11 +69,18 @@ float allowBotVsHuman(entity e)
 	return e.parent.sliderTeams.value < 2; // either default (2) or 2 teams
 }
 
+float allowBotNumber(entity e)
+{
+	if (cvar("g_campaign"))
+		return false;
+	return !(allowBotVsHuman(e) && cvar("bot_vs_human"));
+}
+
 float allowBotSkill(entity e)
 {
 	// returns true if there will be bots
 	return ((allowBotVsHuman(e) && (cvar("bot_vs_human")))
-		|| (!cvar("g_campaign") && !cvar("bot_vs_human") && cvar("bot_number") > 0));
+		|| (allowBotNumber(e) && cvar("bot_number") > 0));
 }
 
 void XonoticServerCreateTab_fill(entity me)
@@ -120,12 +127,10 @@ void XonoticServerCreateTab_fill(entity me)
 			_("The maximum number of players or bots that can be connected to your server at once")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Number of bots:")));
-			setDependent(e, "g_campaign", 0, 0);
-			setDependentAND(e, "bot_vs_human", 0, 0);
+			setDependentWeird(e, allowBotNumber);
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 9, 1, "bot_number",
 			_("Number of bots on your server")));
-			setDependent(e, "g_campaign", 0, 0);
-			setDependentAND(e, "bot_vs_human", 0, 0);
+			setDependentWeird(e, allowBotNumber);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
 			setDependentWeird(e, allowBotSkill);

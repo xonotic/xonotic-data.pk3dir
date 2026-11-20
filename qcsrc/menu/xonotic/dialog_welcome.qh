@@ -12,7 +12,6 @@ CLASS(XonoticWelcomeDialog, XonoticRootDialog)
 
 	METHOD(XonoticWelcomeDialog, draw, void(entity));
 	METHOD(XonoticWelcomeDialog, mouseRelease, bool(entity, vector));
-	METHOD(XonoticWelcomeDialog, keyDown, float(entity, float, float, float));
 	METHOD(XonoticWelcomeDialog, destroy, void(entity));
 	METHOD(XonoticWelcomeDialog, readInputArgs, void(entity, int));
 	ATTRIB(XonoticWelcomeDialog, serverinfo_name, string, string_null);

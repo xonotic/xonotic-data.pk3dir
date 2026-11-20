@@ -14,20 +14,6 @@ void welcomeDialog_resetStrings(entity me)
 	strcpy(me.serverinfo_MOTD, "");
 }
 
-float XonoticWelcomeDialog_keyDown(entity me, float key, float ascii, float shift)
-{
-	switch(key)
-	{
-		case K_KP_ENTER:
-		case K_ENTER:
-		case K_SPACE:
-			XonoticCommandButton_Click(me.joinButton_ent, me);
-			return true;
-		default:
-			return SUPER(XonoticWelcomeDialog).keyDown(me, key, ascii, shift);
-	}
-}
-
 // the same implentation in mousePress apparently works, but for some reason if you try to open
 // the dialog again it doesn't show up and requires opening it a seconds time to show up
 bool XonoticWelcomeDialog_mouseRelease(entity me, vector pos)

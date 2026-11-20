@@ -14,8 +14,19 @@ void XonoticWeaponsList_cb(string _name, string _icon)
 entity makeXonoticWeaponsList()
 {
 	entity me = NEW(XonoticWeaponsList);
-	me.configureXonoticListBox(me);
+	me.configureXonoticWeaponsList(me);
 	return me;
+}
+void XonoticWeaponsList_configureXonoticWeaponsList(entity me)
+{
+	me.configureXonoticListBox(me);
+
+	// Precache images
+	FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_HIDDEN),
+	{
+		it.display(it, XonoticWeaponsList_cb);
+		draw_PreloadPicture(XonoticWeaponsList_cb_icon);
+	});
 }
 
 void XonoticWeaponsList_draw(entity me)
@@ -33,7 +44,7 @@ void WeaponsList_MoveUp_Click(entity box, entity me)
 {
 	if(me.selectedItem > 0)
 	{
-		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem - 1, me.selectedItem));
+		cvar_set("cl_weaponpriority", rotateInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem - 1, me.selectedItem));
 		me.setSelected(me, me.selectedItem - 1);
 	}
 }
@@ -41,7 +52,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me)
 {
 	if(me.selectedItem < me.nItems - 1)
 	{
-		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, me.selectedItem + 1));
+		cvar_set("cl_weaponpriority", rotateInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, me.selectedItem + 1));
 		me.setSelected(me, me.selectedItem + 1);
 	}
 }
@@ -70,14 +81,16 @@ float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 	int i = me.selectedItem;
 	float f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
 
-	if(me.pressed != 1) // don't change priority if the person is just scrolling
+	if (me.pressed != 1 // don't change priority if the person is just scrolling
+	&& me.selectedItem != i)
 	{
-		if(me.selectedItem != i)
-		{
-			if(me.applyButton)
-				me.applyButton.disabled = false;
-			cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
-		}
+		if (me.applyButton)
+			me.applyButton.disabled = false;
+		cvar_set("cl_weaponpriority", rotateInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
+
+		// We tokenized in XonoticWeaponsList_draw, but rotateInPriorityList re-tokenized
+		// Need the list to be tokenized for XonoticWeaponsList_drawListBoxItem
+		me.nItems = tokenize_console(W_NumberWeaponOrder(cvar_string("cl_weaponpriority")));
 	}
 
 	return f;
