@@ -547,8 +547,9 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 				notif_error = true;
 			}
 		}
-		notif.nent_cpid = cpid;
 	#endif // CSQC
+
+		notif.nent_cpid = cpid;
 
 		// ======================
 		//  Process Notif String
