@@ -51,8 +51,8 @@ void race_UpdateDB(string rr, float new_score, float old_score)
 	localcmd("\ncl_hook_race_pb \"",
 		TIME_ENCODED_TOSTRING(new_score, false), "\" \"",
 		TIME_ENCODED_TOSTRING(old_score, false), "\" \"",
-		(old_score ? TIME_ENCODED_TOSTRING(old_score - new_score, false) : "0"), "\" \"",
-		sprintf("%d", race_myrank), "\"\n");
+		(old_score ? TIME_ENCODED_TOSTRING(old_score - new_score, false) : "0"),
+		sprintf("\" \"%d\"\n", race_myrank));
 }
 
 // Also used in CTS
