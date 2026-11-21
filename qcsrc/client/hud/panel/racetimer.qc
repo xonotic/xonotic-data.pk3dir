@@ -149,7 +149,7 @@ void StoreCheckpointSplits(float race_checkpoint, string forcetime, string s)
 		ClearCheckpointSplits(true);
 
 	// 0 or 255 go to 255 as finish, strcpy does the free if needed
-	strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], (forcetime != "") ? sprintf("%s %s", forcetime, s) : s);
+	strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], (forcetime != "") ? strcat(forcetime, " ", s) : s);
 	// cache
 	racetimer_lastcheckpoint = race_checkpoint;
 	strcpy(racetimer_checkpoint_comparison, s);
@@ -206,16 +206,23 @@ void HUD_RaceTimer(bool should_draw)
 
 	float a;
 	string s;
-	vector str_pos;
+	vector str_pos, str_size;
+
+	// Layout, vertically: time (60%), race string (20%), penalty (20%)
 
 	if (autocvar__hud_configure)
 	{
+		// Draw time
 		s = "0:13:37";
 		draw_beginBoldFont();
-		str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '1 1 0' * 0.6 * mySize.y));
-		drawstring(str_pos, s, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		str_size = '0.6 0.6 0' * mySize.y;
+		str_pos = pos;
+		str_pos.x += 0.5 * (mySize.x - stringwidth(s, false, str_size)); // center
+		drawstring(str_pos, s, str_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		str_pos.y += str_size.y;
 		draw_endBoldFont();
 
+		// Draw race string
 		float speed_conversion_factor = GetSpeedUnitFactor(autocvar_hud_speed_unit);
 		string units_text = autocvar_cl_race_cptimes_showspeed_unit ? GetSpeedUnit(autocvar_hud_speed_unit) : "";
 		string col = "^1";
@@ -231,15 +238,18 @@ void HUD_RaceTimer(bool should_draw)
 			// strcat ported from another place of this function, please keep in sync
 			s = strcat(s, "^7", speed_str, speed_color, sprintf(_(" (%s)"), sprintf(CTX(_("SPEED_DIFF^%+d%s")), speed_diff * speed_conversion_factor, units_text)));
 		}
+		str_size = '0.2 0.2 0' * mySize.y;
+		str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(s, true, str_size)); // center
+		drawcolorcodedstring(str_pos, s, str_size, panel_fg_alpha, DRAWFLAG_NORMAL);
+		str_pos.y += str_size.y;
 
-		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
-		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
+		// Draw penalty
 		float race_penaltytime = 2;
 		string race_penaltyreason = _("missing a checkpoint");
 		// strcat ported from another place of this function, please keep in sync
 		s = strcat("^1", sprintf(_("PENALTY: %.1f"), race_penaltytime), sprintf(_(" (%s)"), race_penaltyreason));
-		str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
-		drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
+		str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(s, true, str_size)); // center
+		drawcolorcodedstring(str_pos, s, str_size, panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 	else if (race_checkpointtime)
 	{
@@ -318,41 +328,47 @@ void HUD_RaceTimer(bool should_draw)
 			}
 		}
 
+		// Draw race string
+		str_size = '0.2 0.2 0' * mySize.y;
+		str_pos.z = 0;
 		if (s != "" && a > 0)
 		{
-			str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
-			drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(s, true, str_size)); // center
+			str_pos.y = pos.y + 0.6 * mySize.y;
+			drawcolorcodedstring(str_pos, s, str_size, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
+		// Draw penalty
 		if (race_penaltytime)
 		{
 			a = bound(0, 2 - (time - race_penaltyeventtime), 1);
 			if (a > 0)
 			{
 				s = strcat("^1", sprintf(_("PENALTY: %.1f"), race_penaltytime), sprintf(_(" (%s)"), race_penaltyreason));
-				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.8 * mySize.y);
-				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(s, true, str_size)); // center
+				str_pos.y = pos.y + 0.8 * mySize.y;
+				drawcolorcodedstring(str_pos, s, str_size, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
 		}
 
+		// Draw time
+		str_size = '0.6 0.6 0' * mySize.y;
+		str_pos.y = pos.y;
 		draw_beginBoldFont();
-
 		if (forcetime != "")
 		{
-			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
-			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(forcetime, false, '1 1 0' * 0.6 * mySize.y));
-			drawstring_expanding(str_pos, forcetime, '1 1 0' * 0.6 * mySize.y, '1 1 1', panel_fg_alpha, 0, a);
+			a = bound(0, (time - race_checkpointtime) * 2, 1);
+			str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(forcetime, false, str_size)); // center
+			drawstring_expanding(str_pos, forcetime, str_size, '1 1 1', panel_fg_alpha, 0, a);
 		}
 		else
 			a = 1;
-
 		if (race_laptime && race_checkpoint != 255)
 		{
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + race_penaltyaccumulator - race_laptime), false);
-			str_pos = pos + eX * 0.5 * (mySize.x - stringwidth(s, false, '0.6 0.6 0' * mySize.y));
-			drawstring(str_pos, s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(s, false, str_size)); // center
+			drawstring(str_pos, s, str_size, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
-
 		draw_endBoldFont();
 	}
 	else
@@ -360,20 +376,12 @@ void HUD_RaceTimer(bool should_draw)
 		if (racetimer_have_stored_splits && (race_time == 0 || time < STAT(GAMESTARTTIME)))
 			ClearCheckpointSplits(false);
 
-		if (race_mycheckpointtime)
-		{
-			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
-			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -(race_mycheckpointenemy == ""), 0, race_mycheckpointlapsdelta, race_mycheckpointenemy);
-			str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
-			drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		}
-		if (race_othercheckpointtime && race_othercheckpointenemy != "")
-		{
-			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
-			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -(race_othercheckpointenemy == ""), 0, race_othercheckpointlapsdelta, race_othercheckpointenemy);
-			str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
-			drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		}
+		// Vertical layout is usually time (60%) then 20% for the other 2 lines, but here there's no time and there may be 3 lines.
+		// We'll just draw the up-to-3 lines from the bottom upwards leaving no gaps, as 20% each, so there's a 40% gap at the top.
+		// Order: race string, other race string, penalty
+		str_pos.z = 0;
+		str_pos.y = pos.y + 0.8 * mySize.y;
+		str_size = '0.2 0.2 0' * mySize.y;
 
 		if (race_penaltytime && !race_penaltyaccumulator)
 		{
@@ -393,9 +401,25 @@ void HUD_RaceTimer(bool should_draw)
 					col = "^2";
 				}
 				s = strcat(col, sprintf(_("PENALTY: %.1f"), t), sprintf(_(" (%s)"), race_penaltyreason));
-				str_pos = pos + vec2(0.5 * (mySize.x - stringwidth(s, true, '1 1 0' * 0.2 * mySize.y)), 0.6 * mySize.y);
-				drawcolorcodedstring(str_pos, s, '1 1 0' * 0.2 * mySize.y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(s, true, str_size)); // center
+				drawcolorcodedstring(str_pos, s, str_size, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				str_pos.y -= str_size.y; // move up
 			}
+		}
+		if (race_othercheckpointtime && race_othercheckpointenemy != "")
+		{
+			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
+			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -(race_othercheckpointenemy == ""), 0, race_othercheckpointlapsdelta, race_othercheckpointenemy);
+			str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(s, true, str_size)); // center
+			drawcolorcodedstring(str_pos, s, str_size, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			str_pos.y -= str_size.y; // move up
+		}
+		if (race_mycheckpointtime)
+		{
+			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
+			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -(race_mycheckpointenemy == ""), 0, race_mycheckpointlapsdelta, race_mycheckpointenemy);
+			str_pos.x = pos.x + 0.5 * (mySize.x - stringwidth(s, true, str_size)); // center
+			drawcolorcodedstring(str_pos, s, str_size, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 	}
 }
