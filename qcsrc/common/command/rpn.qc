@@ -297,7 +297,7 @@ void GenericCommand_rpn(int request, int argc, string command)
 							db_put(rpn_db, "stack.pointer", s);
 							rpn_push(db_get(rpn_db, strcat("stack.", s)));
 							j = stof(db_get(rpn_db, "stack.pos"));
-							if(j >= i)
+							if(j >= i-1)
 								db_put(rpn_db, "stack.pos", ftos(i-2));
 						} else {
 							rpn_error = 1;
