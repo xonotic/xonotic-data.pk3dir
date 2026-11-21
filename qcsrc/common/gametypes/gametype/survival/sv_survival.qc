@@ -374,7 +374,6 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
-	float frag_deathtype = M_ARGV(3, float);
 
 	surv_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
@@ -395,8 +394,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	if (autocvar_g_survival_punish_teamkill
 	&& frag_attacker != frag_target
 	&& IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target)
+	&& !IS_DEAD(frag_attacker)
 	&& frag_attacker.survival_status == frag_target.survival_status
-	&& !ITEM_DAMAGE_NEEDKILL(frag_deathtype)
 	&& !warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't started yet
 		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 	return true;
