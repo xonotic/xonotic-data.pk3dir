@@ -177,9 +177,10 @@ void HUD_Mod_Race(vector myPos, vector mySize, bool should_draw)
 
 	// Race awards
 	float a = bound(0, race_status_time - time, 1);
-	float rank = (race_status > 0)
+	int rank = (race_status > 0)
 		? race_CheckName(race_status_name)
 		: 0;
+	string rankName = (rank) ? count_ordinal(rank) : "";
 
 	string pic;
 	switch (race_status)
@@ -209,9 +210,12 @@ void HUD_Mod_Race(vector myPos, vector mySize, bool should_draw)
 		medalPos.x += (squareSize - medalSize.x) * 0.5;
 		drawpic_aspect_skin(medalPos, pic, medalSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 
-		vector rankSize = vec3(squareSize, squareSize * 0.2, 0);
-		vector rankPos = medalPos;
-		drawstring_aspect(rankPos, count_ordinal(rank), rankSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		if (rankName != "")
+		{
+			vector rankSize = vec3(squareSize, squareSize * 0.2, 0);
+			vector rankPos = medalPos;
+			drawstring_aspect(rankPos, rankName, rankSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		}
 
 		vector nameSize = vec3(nameWidth, squareSize * 0.2, 0); // use the full nameWidth, so long names are less likely to draw small
 		vector namePos = medalPos;

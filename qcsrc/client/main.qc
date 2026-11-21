@@ -1248,52 +1248,61 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			RANKINGS_DISPLAY_CNT = ReadByte();
 			break;
 		case RACE_NET_SERVER_RANKINGS:
-			float prevpos, del;
+		{
+			bool del = ReadByte();
 			int pos = ReadShort();
-			prevpos = ReadShort();
-			del = ReadShort();
+			int prevpos = ReadShort();
+
+			if (pos > RANKINGS_DISPLAY_CNT)
+			{
+				// pos won't be displayed, so break here
+				// the code below shifts the entries below index RANKINGS_DISPLAY_CNT
+				if (strdecolorize(ReadString()) == strdecolorize(entcs_GetName(player_localnum)))
+					race_myrank = pos;
+				ReadInt24_t();
+				break;
+			}
 
 			// move other rankings out of the way
 			int i;
-			if (prevpos) {
-				int m = min(prevpos, RANKINGS_DISPLAY_CNT);
-				for (i=m-1; i>pos-1; --i) {
-					grecordtime[i] = grecordtime[i-1];
-					strcpy(grecordholder[i], grecordholder[i-1]);
+			if (prevpos)
+				for (i = min(prevpos, RANKINGS_DISPLAY_CNT) - 1; i > pos - 1; --i)
+				{
+					grecordtime[i] = grecordtime[i - 1];
+					strcpy(grecordholder[i], grecordholder[i - 1]);
 				}
-			} else if (del) { // a record has been deleted by the admin
-				for (i=pos-1; i<= RANKINGS_DISPLAY_CNT-1; ++i) {
-					if (i == RANKINGS_DISPLAY_CNT-1) { // clear out last record
+			else if (del) // a record has been deleted by the admin
+				for (i = pos - 1; i <= RANKINGS_DISPLAY_CNT - 1; ++i)
+				{
+					if (i == RANKINGS_DISPLAY_CNT - 1) // clear out last record
+					{
 						grecordtime[i] = 0;
 						strfree(grecordholder[i]);
 					}
-					else {
-						grecordtime[i] = grecordtime[i+1];
-						strcpy(grecordholder[i], grecordholder[i+1]);
+					else
+					{
+						grecordtime[i] = grecordtime[i + 1];
+						strcpy(grecordholder[i], grecordholder[i + 1]);
 					}
 				}
-			} else { // player has no ranked record yet
-				for (i=RANKINGS_DISPLAY_CNT-1;i>pos-1;--i) {
-					grecordtime[i] = grecordtime[i-1];
-					strcpy(grecordholder[i], grecordholder[i-1]);
+			else // player has no ranked record yet
+				for (i = RANKINGS_DISPLAY_CNT - 1; i > pos - 1; --i)
+				{
+					grecordtime[i] = grecordtime[i - 1];
+					strcpy(grecordholder[i], grecordholder[i - 1]);
 				}
-			}
-
-			if (grecordtime[RANKINGS_DISPLAY_CNT]) {
-				// kick off the player who fell from the last displayed position
-				grecordtime[RANKINGS_DISPLAY_CNT] = 0;
-				strfree(grecordholder[RANKINGS_DISPLAY_CNT]);
-			}
 
 			// store new ranking
-			strcpy(grecordholder[pos-1], ReadString());
-			grecordtime[pos-1] = ReadInt24_t();
-			if(strdecolorize(grecordholder[pos-1]) == strdecolorize(entcs_GetName(player_localnum)))
+			strcpy(grecordholder[pos - 1], ReadString());
+			grecordtime[pos - 1] = ReadInt24_t();
+			if (strdecolorize(grecordholder[pos - 1]) == strdecolorize(entcs_GetName(player_localnum)))
 				race_myrank = pos;
 			break;
+		}
 		case RACE_NET_SERVER_STATUS:
 			race_status = ReadShort();
 			strcpy(race_status_name, ReadString());
+			break;
 	}
 	return true;
 }
