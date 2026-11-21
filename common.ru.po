@@ -22,6 +22,7 @@
 # afkpuz, 2025
 # Blueberryy <igory.ygr200@gmail.com>, 2021
 # Lord Canistra <lordcanistra@gmail.com>, 2011
+# Mark Zhou, 2026
 # Mirio <opivy@hotmail.de>, 2017
 # Nick S <morosophos@teichisma.info>, 2018-2019
 # Please do not mention me anywhere., 2025
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Andrei Stepanov, 2014-2026\n"
+"Last-Translator: Mark Zhou, 2026\n"
 "Language-Team: Russian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/ru/)\n"
 "Language: ru\n"
@@ -4875,7 +4876,7 @@ msgstr "Розовая база"
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:33
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:34
 msgid "Dropped flag"
-msgstr "Флаг брошен"
+msgstr "Брошенный флаг"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:35
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:36
@@ -4887,7 +4888,7 @@ msgstr "Вражеский флагоносец"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:40
 msgid "Return flag here"
-msgstr "Вернуть флаг отсюда"
+msgstr "Верните флаг сюда"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:42
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:43
@@ -5933,7 +5934,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:445
 #, c-format
 msgid "^BG%s^F3 is now^BG spectating"
-msgstr "^BG%s^F3 теперь^BG зритель"
+msgstr "^BG%s^F3 теперь^BG наблюдает"
 
 #: qcsrc/common/notifications/all.inc:446
 #, c-format
@@ -5943,7 +5944,7 @@ msgstr "^BG%s^F3 покинул очередь присоединения"
 #: qcsrc/common/notifications/all.inc:448
 #, c-format
 msgid "^BG%s^BG has abandoned the race"
-msgstr "^BG%s^BG отказался от гонки"
+msgstr "^BG%s^BG бросил гонку"
 
 #: qcsrc/common/notifications/all.inc:449
 #, c-format
@@ -6012,7 +6013,7 @@ msgid ""
 "kicked, because spectating isn't allowed at this time!"
 msgstr ""
 "^F2Вы должны присоединиться к игре в течение %s, в противном случае вы "
-"будете отключены от сервера, так как быть зрителем временно запрещено!"
+"будете отключены от сервера, так как наблюдение в этот момент запрещено!"
 
 #: qcsrc/common/notifications/all.inc:463
 #: qcsrc/common/notifications/all.inc:815
@@ -6549,7 +6550,7 @@ msgstr "^BGВы подняли флаг!"
 #: qcsrc/common/notifications/all.inc:600
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr "^BGВы подобрали флаг вашей %sкоманды^BG , верните его!"
+msgstr "^BGВы подобрали флаг вашей %sкоманды^BG, верните его!"
 
 #: qcsrc/common/notifications/all.inc:601
 #, c-format

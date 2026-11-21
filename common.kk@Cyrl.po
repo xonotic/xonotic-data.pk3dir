@@ -7,6 +7,7 @@
 # Mark Zhou, 2026
 # Mark Zhou, 2026
 # Mark Zhou, 2026
+# Mark Zhou, 2026
 # Артем Быстров, 2015-2016
 # Артем Быстров, 2016
 # Артём, 2015
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-08 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Артем Быстров, 2015-2016\n"
+"Last-Translator: Mark Zhou, 2026\n"
 "Language-Team: Kazakh (Cyrillic) (http://app.transifex.com/team-xonotic/"
 "xonotic/language/kk@Cyrl/)\n"
 "Language: kk@Cyrl\n"
@@ -1100,11 +1101,11 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2258
 msgid "Map stats:"
-msgstr ""
+msgstr "Арена статистикасы:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2287
 msgid "Monsters killed:"
-msgstr ""
+msgstr "Өлтірген монстрлар:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2294
 msgid "Secrets found:"
@@ -1117,12 +1118,12 @@ msgstr ""
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2472
 #, c-format
 msgid "+%s %s"
-msgstr ""
+msgstr "+%s %s"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2473
 msgid "SCO^points"
@@ -1130,7 +1131,7 @@ msgstr ""
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2588
 msgid "Next map:"
-msgstr ""
+msgstr "Келесі арена:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2595
 #: qcsrc/menu/xonotic/dialog_teamselect.qh:7
@@ -1160,7 +1161,7 @@ msgstr "^5%d^7/^5%d ^7ойыншылар"
 #: qcsrc/client/hud/panel/scoreboard.qc:2657 qcsrc/client/main.qc:1421
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfotab.qc:42
 msgid "Map:"
-msgstr "Карта:"
+msgstr "Арена:"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:2824
 #, c-format
@@ -5446,7 +5447,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:472
 #: qcsrc/common/notifications/all.inc:829
 msgid "^K2You may only join ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Сіз тек ^TC^TT^K2 командасына қосыла аласыз!"
 
 #: qcsrc/common/notifications/all.inc:473
 #: qcsrc/common/notifications/all.inc:830
@@ -5458,7 +5459,7 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:474
 #: qcsrc/common/notifications/all.inc:831
 msgid "^K2You're already on that team!"
-msgstr ""
+msgstr "^K2Сіз қазірдің өзінде сол командадасыз!"
 
 #: qcsrc/common/notifications/all.inc:475
 #: qcsrc/common/notifications/all.inc:833
@@ -5878,22 +5879,22 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:590
 #, c-format
 msgid "^BG%s^BG passed the ^TC^TT^BG flag to %s"
-msgstr ""
+msgstr "^BG%s^BG ^TC^TT^BG жалауды %s-ға берді"
 
 #: qcsrc/common/notifications/all.inc:591
 #, c-format
 msgid "^BG%s^BG passed the flag to %s"
-msgstr ""
+msgstr "^BG%s^BG жалауын %s-ға берді"
 
 #: qcsrc/common/notifications/all.inc:592
 #, c-format
 msgid "^BGYou received the ^TC^TT^BG flag from %s"
-msgstr ""
+msgstr "^BGСіз ^TC^TT^BG жалауды %s-дан алдыңыз"
 
 #: qcsrc/common/notifications/all.inc:593
 #, c-format
 msgid "^BGYou received the flag from %s"
-msgstr ""
+msgstr "^BGСіз жалауды %s-дан алдыңыз"
 
 #: qcsrc/common/notifications/all.inc:594
 #, c-format
@@ -5908,12 +5909,12 @@ msgstr ""
 #: qcsrc/common/notifications/all.inc:596
 #, c-format
 msgid "^BGYou passed the ^TC^TT^BG flag to %s"
-msgstr ""
+msgstr "^BGСіз ^TC^TT^BG жалауды %s-ға бердіңіз"
 
 #: qcsrc/common/notifications/all.inc:597
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr ""
+msgstr "^BGСіз жалауды %s-ға бердіңіз"
 
 #: qcsrc/common/notifications/all.inc:598
 msgid "^BGYou got the ^TC^TT^BG flag!"
@@ -6398,11 +6399,11 @@ msgstr ""
 
 #: qcsrc/common/notifications/all.inc:740
 msgid "^K2You're now playing on ^TC^TT^K2 team!"
-msgstr ""
+msgstr "^K2Сіз енді ^TC^TT^K2 командасында ойнап жатырсыз!"
 
 #: qcsrc/common/notifications/all.inc:741
 msgid "^BGYou're now playing on ^TC^TT^BG team!"
-msgstr ""
+msgstr "^BGСіз енді ^TC^TT^BG командасында ойнап жатырсыз!"
 
 #: qcsrc/common/notifications/all.inc:743
 #, c-format
@@ -7027,7 +7028,7 @@ msgstr "GENERATOR^Қызғылт"
 #: qcsrc/common/teams.qh:229 qcsrc/common/teams.qh:231
 #, c-format
 msgid "%s team"
-msgstr ""
+msgstr "%s команда"
 
 #: qcsrc/common/turrets/cl_turrets.qc:118
 #, c-format
@@ -9032,11 +9033,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/credits.qc:7
 msgid "Core Team"
-msgstr ""
+msgstr "Негізгі команда"
 
 #: qcsrc/menu/xonotic/credits.qc:16
 msgid "Extended Team"
-msgstr ""
+msgstr "Кеңейтілген команда"
 
 #: qcsrc/menu/xonotic/credits.qc:35
 msgid "Website"
@@ -9739,7 +9740,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:17
 msgid "Enable in team games"
-msgstr ""
+msgstr "Командалық ойындарда қосу"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:24
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:95
@@ -10094,7 +10095,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:134
 #: qcsrc/menu/xonotic/util.qc:780
 msgid "Team color:"
-msgstr ""
+msgstr "Команда түсі:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:108
 #: qcsrc/menu/xonotic/util.qc:791
@@ -11652,7 +11653,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:56
 msgid "Show team sizes:"
-msgstr ""
+msgstr "Команда өлшемдерін көрсету:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:57
 msgid ""
@@ -11938,7 +11939,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:60
 msgid "Except in team games"
-msgstr ""
+msgstr "Командалық ойындардан басқа"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:61
 msgid "Only in Duel"
@@ -11946,11 +11947,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:62
 msgid "Only in team games"
-msgstr ""
+msgstr "Тек командалық ойындарда ғана"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:63
 msgid "In team games and Duel"
-msgstr ""
+msgstr "Командалық ойындарда ж/е дуэльде"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:67
 msgid "Body fading:"
@@ -12191,7 +12192,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:117
 msgid "In team games"
-msgstr ""
+msgstr "Командалық ойындарда"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qh:7
 #: qcsrc/menu/xonotic/guide/guide.qh:10 qcsrc/menu/xonotic/keybinder.qc:77
@@ -12817,7 +12818,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:34
 msgid "Auto-select team (recommended)"
-msgstr ""
+msgstr "Команданы автоматты түрде таңдау (ұсынылған)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.qc:38
 msgid "red"
