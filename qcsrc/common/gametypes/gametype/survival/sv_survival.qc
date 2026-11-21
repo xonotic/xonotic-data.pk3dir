@@ -237,6 +237,18 @@ bool surv_isEliminated(entity e)
 	return false;
 }
 
+/// Returns true if no other alive players share this player's .survival_status
+bool surv_IsLastOfTeam(entity this)
+{
+	int status = this.survival_status;
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !surv_isEliminated(it),
+	{
+		if (it.survival_status == status)
+			return false;
+	});
+	return true;
+}
+
 void surv_Initialize() // run at the start of a match, initiates gametype
 {
 	GameRules_scoring(0, SFL_SORT_PRIO_PRIMARY, 0,
@@ -260,7 +272,7 @@ void surv_Initialize() // run at the start of a match, initiates gametype
 
 MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 {
-	// in survival, announcing a frag would tell everyone who the hunter is
+	// In survival, announcing a frag would tell everyone who the Hunter is
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	if (IS_PLAYER(frag_attacker) && frag_attacker != frag_target)
@@ -273,8 +285,12 @@ MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 			GiveFrags(frag_attacker, frag_target, (autocvar_g_survival_punish_teamkill ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 	}
 
-	if (frag_attacker.survival_status == SURV_STATUS_HUNTER)
-		M_ARGV(5, bool) = true; // anonymous attacker
+	if (frag_attacker.survival_status != frag_target.survival_status)
+		// Attacker anonymous, unless they killed the last member of the opposite team
+		M_ARGV(5, bool) = !surv_IsLastOfTeam(frag_target);
+	else
+		// Can't make things anonymous if teamkills are punished
+		M_ARGV(5, bool) = !autocvar_g_survival_punish_teamkill;
 }
 
 MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
