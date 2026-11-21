@@ -223,7 +223,7 @@ void TakeResourceWithLimit(entity receiver, Resource res_type, float amount, flo
 	float current_amount = GetResource(receiver, res_type);
 	if (current_amount - amount < -limit)
 	{
-		amount = -limit + current_amount;
+		amount = limit + current_amount;
 	}
 	TakeResource(receiver, res_type, amount);
 }
