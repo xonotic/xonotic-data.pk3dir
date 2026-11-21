@@ -1093,11 +1093,10 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 
 	Fog_Set(ReadString(), ReadByte());
 
-	armorblockpercent = ReadByte() / 255.0;
-	damagepush_speedfactor = ReadByte() / 255.0;
-
 	serverflags = ReadByte();
 
+	armorblockpercent = ReadByte() / 255.0;
+	damagepush_speedfactor = ReadFloat();
 	g_trueaim_minrange = ReadCoord();
 
 	return = true;
