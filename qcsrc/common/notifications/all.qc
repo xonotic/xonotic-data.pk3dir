@@ -1264,16 +1264,19 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		#ifdef CSQC
 			if (notif.nent_icon != "")
 			{
+				string icon_str;
 				if (notif.nent_iconargs != "")
 				{
 					string s = Local_Notification_sprintf(
 						notif.nent_icon, notif.nent_iconargs,
 						s1, s2, s3, s4, f1, f2, f3, f4);
 					// remove the trailing newline
-					notif.nent_icon = strzone(substring(s, 0, -2));
+					icon_str = substring(s, 0, -2);
 				}
+				else
+					icon_str = notif.nent_icon;
 				Local_Notification_HUD_Notify_Push(
-					notif.nent_icon,
+					icon_str,
 					notif.nent_hudargs,
 					s1, s2, s3, s4,
 					f1, f2, f3, f4);
