@@ -70,7 +70,6 @@ float autocvar_g_ctf_flagcarrier_selfdamagefactor;
 float autocvar_g_ctf_flagcarrier_selfforcefactor;
 float autocvar_g_ctf_flagcarrier_damagefactor;
 float autocvar_g_ctf_flagcarrier_forcefactor;
-//float autocvar_g_ctf_flagcarrier_waypointforenemy_spotting;
 bool autocvar_g_ctf_fullbrightflags;
 bool autocvar_g_ctf_ignore_frags;
 bool autocvar_g_ctf_score_ignore_fields;
@@ -452,6 +451,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
+	// TODO: implement a g_ctf_score_penalty_suicidedrop
 	GameRules_scoring_add_team(player, SCORE, -((flag.score_drop) ? flag.score_drop : autocvar_g_ctf_score_penalty_drop));
 	GameRules_scoring_add(player, CTF_DROPS, 1);
 
