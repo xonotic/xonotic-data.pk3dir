@@ -188,7 +188,8 @@ int W_MineLayer_Count(entity e, .entity weaponentity)
 
 bool W_MineLayer_Think_cond(entity e)
 {
-	return (IS_PLAYER(e) && !IS_DEAD(e) && !STAT(FROZEN, e) && !IS_INDEPENDENT_PLAYER(e)
+	// NB: frozen players do trigger mines to prevent cheesing
+	return (IS_PLAYER(e) && !IS_DEAD(e) && !IS_INDEPENDENT_PLAYER(e)
 		&& DIFF_TEAM(e, WarpZone_SearchInRadius_otherent)); // don't trigger for team mates
 }
 void W_MineLayer_Think(entity this)
