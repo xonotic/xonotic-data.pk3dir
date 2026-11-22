@@ -151,9 +151,8 @@ void Item_Show(entity e, int mode)
 	}
 	else
 	{
-		bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.m_wepset & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
-			|| e.team // weapon stay isn't supported for teamed weapons
-			;
+		// no weapon stay for teamed weapons or superweapons
+		bool nostay = e.team || (def.instanceOfWeaponPickup && (def.m_weapon.m_wepset & WEPSET_SUPERWEAPONS));
 		if(def.instanceOfWeaponPickup && !nostay && g_weapon_stay)
 		{
 			// make the item translucent and not touchable
