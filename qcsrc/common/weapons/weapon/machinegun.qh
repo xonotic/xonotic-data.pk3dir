@@ -16,7 +16,7 @@ CLASS(MachineGun, Weapon)
 #endif
 /* ammotype  */ ATTRIB(MachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(MachineGun, impulse, int, 3);
-/* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_BLEED);
+/* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_BLEED | WEP_FLAG_CONTINUOUSFIRE);
 /* color     */ ATTRIB(MachineGun, m_color, vector, '0.678 0.886 0.267');
 #ifdef GAMEQC
 /* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");

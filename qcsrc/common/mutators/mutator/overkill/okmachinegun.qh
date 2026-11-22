@@ -15,7 +15,7 @@ CLASS(OverkillMachineGun, Weapon)
 #endif
 /* ammotype  */ ATTRIB(OverkillMachineGun, ammo_type, Resource, RES_BULLETS);
 /* impulse   */ ATTRIB(OverkillMachineGun, impulse, int, 3);
-/* flags     */ ATTRIB(OverkillMachineGun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(OverkillMachineGun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_PENETRATEWALLS | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_CONTINUOUSFIRE);
 /* color     */ ATTRIB(OverkillMachineGun, m_color, vector, '0.678 0.886 0.267');
 #ifdef GAMEQC
 /* modelname */ ATTRIB(OverkillMachineGun, mdl, string, "ok_mg");

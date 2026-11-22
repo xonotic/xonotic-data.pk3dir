@@ -24,7 +24,7 @@ CLASS(Hagar, Weapon)
 #endif
 /* ammotype  */ ATTRIB(Hagar, ammo_type, Resource, RES_ROCKETS);
 /* impulse   */ ATTRIB(Hagar, impulse, int, 8);
-/* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_CONTINUOUSFIRE);
 /* color     */ ATTRIB(Hagar, m_color, vector, '0.886 0.545 0.345');
 #ifdef GAMEQC
 /* modelname */ ATTRIB(Hagar, mdl, string, "hagar");

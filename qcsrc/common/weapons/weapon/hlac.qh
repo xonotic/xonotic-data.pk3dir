@@ -15,7 +15,7 @@ CLASS(HLAC, Weapon)
 #endif
 /* ammotype  */ ATTRIB(HLAC, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(HLAC, impulse, int, 6);
-/* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_CONTINUOUSFIRE);
 /* color     */ ATTRIB(HLAC, m_color, vector, '0.506 0.945 0.239');
 #ifdef GAMEQC
 /* modelname */ ATTRIB(HLAC, mdl, string, "hlac");

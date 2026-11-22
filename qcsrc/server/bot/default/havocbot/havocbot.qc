@@ -120,14 +120,19 @@ void havocbot_ai(entity this)
 
 	havocbot_chooseenemy(this);
 
-	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];
-		if(this.(weaponentity).m_weapon != WEP_Null || slot == 0)
-		if(this.(weaponentity).bot_chooseweapontime < time)
+		if (this.(weaponentity).m_weapon != WEP_Null || slot == 0)
 		{
-			this.(weaponentity).bot_chooseweapontime = time + autocvar_bot_ai_chooseweaponinterval;
-			havocbot_chooseweapon(this, weaponentity);
+			// we are currently holding a weapon that's not fully loaded, reload it
+			if (!this.enemy && skill >= 2 && this.(weaponentity).clip_load < this.(weaponentity).clip_size)
+				CS(this).impulse = IMP_weapon_reload.impulse; // not sure if this is done right
+			else if (this.(weaponentity).bot_chooseweapontime < time)
+			{
+				this.(weaponentity).bot_chooseweapontime = time + autocvar_bot_ai_chooseweaponinterval;
+				havocbot_chooseweapon(this, weaponentity);
+			}
 		}
 	}
 	havocbot_aim(this);
@@ -178,37 +183,6 @@ void havocbot_ai(entity this)
 		dir -= this.origin + this.view_ofs;
 		dir.z = 0;
 		bot_aimdir(this, dir, 0);
-	}
-
-	// if the bot is not attacking, consider reloading weapons
-	if (!(this.aistatus & AI_STATUS_ATTACKING))
-	{
-		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
-		{
-			.entity weaponentity = weaponentities[slot];
-
-			if(this.(weaponentity).m_weapon == WEP_Null && slot != 0)
-				continue;
-
-			// we are currently holding a weapon that's not fully loaded, reload it
-			if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
-			if(this.(weaponentity).clip_load < this.(weaponentity).clip_size)
-				CS(this).impulse = IMP_weapon_reload.impulse; // not sure if this is done right
-
-			// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
-			// the code above executes next frame, starting the reloading then
-			if(skill >= 5) // bots can only look for unloaded weapons past this skill
-			if(this.(weaponentity).clip_load >= 0) // only if we're not reloading a weapon already
-			{
-				FOREACH(Weapons, it != WEP_Null, {
-					if((STAT(WEAPONS, this) & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
-					{
-						this.(weaponentity).m_switchweapon = it;
-						break;
-					}
-				});
-			}
-		}
 	}
 }
 
@@ -1474,12 +1448,13 @@ void havocbot_chooseenemy(entity this)
 		this.havocbot_stickenemy_time = 0;
 }
 
+const int SKILLTHRESHOLD_RELOAD_WHEN_IDLE = 5;
 bool havocbot_chooseweapon_checkreload(entity this, .entity weaponentity, int new_weapon)
 {
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
 	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
-	if(skill < 5)
+	if (skill < SKILLTHRESHOLD_RELOAD_WHEN_IDLE)
 		return false;
 
 	// if this weapon is scheduled for reloading, don't switch to it during combat
@@ -1509,20 +1484,38 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	}
 
 	// TODO: clean this up by moving it to weapon code
-	if (this.enemy == NULL)
+	if (!this.enemy)
 	{
-		// Choose the first available weapon from medium range weaponlist
-		// TODO: don't do this but don't make bots hold out a blaster out either
-		for (i = 0; i < REGISTRY_COUNT(Weapons) && bot_weapons_mid[i] != -1 ; ++i){
-			w = bot_weapons_mid[i];
-			if (bot_custom_weapon)
+		// if we're not reloading a weapon already
+		if (this.(weaponentity).clip_load >= 0)
+		{
+			if (skill >= SKILLTHRESHOLD_RELOAD_WHEN_IDLE)
+				// switch to any weapon in our inventory that's not fully loaded to reload it next
+				FOREACH(Weapons, it != WEP_Null, {
+					if ((STAT(WEAPONS, this) & (it.m_wepset))
+					&& (it.spawnflags & WEP_FLAG_RELOADABLE)
+					&& (this.(weaponentity).weapon_load[it.m_id] < it.reloading_ammo))
+					{
+						this.(weaponentity).m_switchweapon = it;
+						return;
+					}
+				});
+
+			// Choose the first available weapon from medium range weaponlist
+			// TODO: don't do this but don't make bots hold out a blaster out either
+			for (i = 0; i < REGISTRY_COUNT(Weapons) && bot_weapons_mid[i] != -1 ; ++i)
 			{
-				if (client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false))
+				w = bot_weapons_mid[i];
+				if (bot_custom_weapon)
 				{
-					if ((this.(weaponentity).m_weapon == WEP_Null) || havocbot_chooseweapon_checkreload(this, weaponentity, w))
-						continue;
-					this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
-					return;
+					if (client_hasweapon(this, REGISTRY_GET(Weapons, w), weaponentity, true, false))
+					{
+						if ((this.(weaponentity).m_weapon == WEP_Null)
+						|| havocbot_chooseweapon_checkreload(this, weaponentity, w))
+							continue;
+						this.(weaponentity).m_switchweapon = REGISTRY_GET(Weapons, w);
+						return;
+					}
 				}
 			}
 		}
@@ -1540,7 +1533,11 @@ void havocbot_chooseweapon(entity this, .entity weaponentity)
 	}
 
 	// Do not change weapon during the next second after a combo
-	if(time - this.lastcombotime < 1)
+	// Keep continuous fire weapons a bit longer
+	// Less skilled keep the current weapon for a longer time and do combos less often
+	if ((time - this.lastcombotime < 1)
+	|| (this.(weaponentity).m_weapon.spawnflags & WEP_FLAG_CONTINUOUSFIRE && time - this.lastcombotime < 1.4)
+	|| (skill <= 7 && time - this.lastcombotime < map_bound_ranges(skill + this.bot_weaponskill, 0, 7, 7.5, 1.4)))
 		return;
 
 	// Should it do a weapon combo?

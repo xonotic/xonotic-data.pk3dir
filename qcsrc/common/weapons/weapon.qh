@@ -261,6 +261,7 @@ const int WEP_FLAG_PENETRATEWALLS  = BIT(13); ///< weapon has high calibur bulle
 const int WEP_FLAG_BLEED           = BIT(14); ///< weapon pierces and causes bleeding (used for damage effects)
 const int WEP_FLAG_NOTRUEAIM       = BIT(15); ///< weapon doesn't aim directly at targets
 const int WEP_FLAG_SPECIALATTACK   = BIT(16); ///< special attack (not a true weapon); NOTE: if this flag is set then WEP_FLAG_HIDDEN must be set as well
+const int WEP_FLAG_CONTINUOUSFIRE  = BIT(17); ///< weapon fires continuously (used by bots to better combine weapons)
 
 // variables:
 string weaponorder_byid;

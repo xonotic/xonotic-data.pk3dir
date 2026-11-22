@@ -21,7 +21,7 @@ CLASS(Arc, Weapon)
 #endif
 /* ammotype  */ ATTRIB(Arc, ammo_type, Resource, RES_CELLS);
 /* impulse   */ ATTRIB(Arc, impulse, int, 3);
-/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_TYPE_HITSCAN | WEP_FLAG_CONTINUOUSFIRE);
 /* color     */ ATTRIB(Arc, m_color, vector, '0.463 0.612 0.886');
 #ifdef GAMEQC
 /* modelname */ ATTRIB(Arc, mdl, string, "arc");
