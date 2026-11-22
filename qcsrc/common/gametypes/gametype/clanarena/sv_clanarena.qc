@@ -111,7 +111,7 @@ bool CA_CheckWinner()
 {
 	int winner_team = 0;
 
-	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() <= time)
 	{
 		// attempt to prevent stalemate by survivor count AND/OR total team health?
 		bool prevent_stalemate_by_survivors = (autocvar_g_ca_prevent_stalemate & BIT(0));

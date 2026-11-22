@@ -35,7 +35,7 @@ bool freezetag_CheckTeams()
 
 bool freezetag_CheckWinner()
 {
-	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
+	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() <= time
 	&& round_handler_GetEndDelayTime() == -1)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);

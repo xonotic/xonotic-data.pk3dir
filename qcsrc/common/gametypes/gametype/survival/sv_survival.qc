@@ -110,7 +110,7 @@ void Surv_UpdateScores(bool timed_out)
 
 bool Surv_CheckWinner()
 {
-	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0
+	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() <= time
 	&& round_handler_GetEndDelayTime() == -1)
 	{
 		// if the match times out, survivors win too!

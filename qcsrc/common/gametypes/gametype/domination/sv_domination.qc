@@ -317,7 +317,7 @@ void Domination_count_controlpoints()
 
 bool Domination_CheckWinner()
 {
-	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
+	if (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() <= time)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);

@@ -158,12 +158,14 @@ void round_handler_Remove()
 bool round_handler_DelayRoundEnd(float delay_time)
 {
 	if (delay_time
-	&& round_handler_GetEndTime() > 0
-	&& round_handler_GetEndTime() - time > 0) // don't delay past timelimit
+	&& (round_handler_GetEndTime() <= 0 || round_handler_GetEndTime() > time)) // don't delay past timelimit, if it exists
 	{
 		if (round_handler_GetEndDelayTime() == -1)
 		{
-			round_handler_SetEndDelayTime(min(time + delay_time, round_handler_GetEndTime()));
+			float delay_end = time + delay_time;
+			if (round_handler_GetEndTime() > 0)
+				delay_end = min(delay_end, round_handler_GetEndTime());
+			round_handler_SetEndDelayTime(delay_end);
 			return true;
 		}
 		else if (round_handler_GetEndDelayTime() >= time)

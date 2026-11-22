@@ -1214,7 +1214,7 @@ void Onslaught_count_generators()
 bool Onslaught_CheckWinner()
 {
 	if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60)
-	|| (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
+	|| (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() <= time))
 	{
 		ons_stalemate = true;
 
