@@ -243,9 +243,14 @@ void lms_UpdateLeaders()
 }
 
 // mutator hooks
+int last_forfeiter_lives = 0;
+float last_forfeiter_health;
+float last_forfeiter_armorvalue;
+
 MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 {
 	lms_lowest_lives = 999;
+	last_forfeiter_lives = 0;
 }
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
@@ -320,9 +325,6 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	}
 }
 
-int last_forfeiter_lives;
-float last_forfeiter_health;
-float last_forfeiter_armorvalue;
 MUTATOR_HOOKFUNCTION(lms, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
