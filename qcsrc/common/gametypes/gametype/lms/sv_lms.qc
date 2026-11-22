@@ -555,8 +555,9 @@ MUTATOR_HOOKFUNCTION(lms, Damage_Calculate)
 		if (vampire_factor > 0)
 		{
 			vampire_factor = min(vampire_factor, autocvar_g_lms_dynamic_vampire_factor_max);
+			float attacker_health = GetResource(frag_attacker, RES_HEALTH);
 			SetResourceExplicit(frag_attacker, RES_HEALTH,
-				min(GetResource(frag_attacker, RES_HEALTH) + frag_damage * vampire_factor, start_health));
+				max(attacker_health, min(attacker_health + frag_damage * vampire_factor, start_health)));
 		}
 	}
 }
