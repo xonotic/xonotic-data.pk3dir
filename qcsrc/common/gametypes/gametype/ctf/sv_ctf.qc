@@ -1303,7 +1303,7 @@ void ctf_RespawnFlag(entity flag)
 	{
 		WaypointSprite_Kill(flag.owner.wps_enemyflagcarrier);
 		WaypointSprite_Kill(flag.owner.wps_flagreturn);
-		WaypointSprite_Kill(flag.wps_flagcarrier);
+		WaypointSprite_Kill(flag.owner.wps_flagcarrier);
 
 		flag.owner.flagcarried = NULL;
 		GameRules_scoring_vip(flag.owner, false);
