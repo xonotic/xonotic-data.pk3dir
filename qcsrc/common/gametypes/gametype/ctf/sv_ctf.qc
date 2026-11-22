@@ -491,6 +491,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
+/// Called when a flag is successfully passed to a teammate
 void ctf_Handle_Retrieve(entity flag, entity player)
 {
 	entity sender = flag.pass_sender;
@@ -1286,11 +1287,11 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 			break;
 
 		case FLAG_PASSING:
-			if (IS_PLAYER(toucher) && !IS_DEAD(toucher) && toucher != flag.pass_sender)
+			if (IS_PLAYER(toucher) && !IS_DEAD(toucher) && flag.pass_sender && toucher != flag.pass_sender)
 			{
 				if (DIFF_TEAM(toucher, flag.pass_sender))
 				{
-					if (ctf_Immediate_Return_Allowed(flag, toucher))
+					if (ctf_Immediate_Return_Allowed(flag, toucher) && (!flag.team || CTF_SAMETEAM(toucher, flag)))
 						ctf_Handle_Return(flag, toucher);
 					else if (is_not_monster && !toucher.flagcarried)
 						ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED);
@@ -2339,21 +2340,26 @@ MUTATOR_HOOKFUNCTION(ctf, GiveFragsForKill)
 
 void ctf_RemovePlayer(entity player)
 {
-	bool resend = false;
 	if (player.flagcarried)
 	{
 		ctf_Handle_Throw(player, NULL, DROP_NORMAL);
-		resend = true;
+		flagStatuses.SendFlags |= SF_CTF_FLAGS;
 	}
 
 	IL_EACH(g_flags, true,
 	{
-		if (it.pass_sender == player) { it.pass_sender = NULL; resend = true; }
-		if (it.pass_target == player) { it.pass_target = NULL; }
-		if (it.ctf_dropper == player) { it.ctf_dropper = NULL; }
+		if (it.pass_sender == player)
+		{
+			if (it.ctf_status == FLAG_PASSING)
+				ctf_Handle_Drop(it, player, DROP_PASS);
+			else
+				it.pass_sender = NULL;
+		}
+		if (it.pass_target == player)
+			it.pass_target = NULL;
+		if (it.ctf_dropper == player)
+			it.ctf_dropper = NULL;
 	});
-	if (resend)
-		flagStatuses.SendFlags |= SF_CTF_FLAGS;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, MakePlayerObserver)
