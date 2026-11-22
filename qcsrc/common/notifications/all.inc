@@ -467,6 +467,7 @@ string multiteam_info_sprintf(string input, string teamname)
 
 	MSG_INFO_NOTIF(SURVIVAL_HUNTER_WIN,                     N_CONSOLE,  0, 0, "", "",           "",                     _("^K1Hunters^BG win the round"), "")
 	MSG_INFO_NOTIF(SURVIVAL_SURVIVOR_WIN,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^F1Survivors^BG win the round"), "")
+	MSG_INFO_NOTIF(SURVIVAL_CHAT_HIDDEN,                    N_CHATCON,  0, 0, "", "",           "",                     _("^F4NOTE: ^BGChat is hidden from living players during the round"), "")
 
 	MULTITEAM_INFO(TEAMCHANGE_ALREADYBEST,                  N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You're already on ^TC^TT^K2 team which seems fine."), "", NAME)
 	MULTITEAM_INFO(TEAMCHANGE_FORCEDTEAM,                   N_CONSOLE,  0, 0, "", "",           "",                     _("^K2You may only join ^TC^TT^K2 team!"), "", NAME)

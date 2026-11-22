@@ -1,7 +1,9 @@
 #include "sv_survival.qh"
 
 #include <common/gametypes/elimination.qh>
+#include <server/chat.qh>
 
+int autocvar_g_survival_hide_chat = 0;
 float autocvar_g_survival_hunter_count = 0.25;
 float autocvar_g_survival_round_timelimit = 120;
 bool autocvar_g_survival_round_timelimit_fragreset = false;
@@ -57,6 +59,11 @@ void SurvStatuses_Init()
 	Net_LinkEntity(survStatuses = new_pure(survStatuses), false, 0, SurvStatuses_SendEntity);
 }
 
+bool surv_IsAlivePlayer(entity e)
+{
+	return IS_PLAYER(e) && !IS_DEAD(e);
+}
+
 /// Give players their hard-earned kills now that the round is over
 void Surv_UpdateScores(bool timed_out)
 {
@@ -67,7 +74,7 @@ void Surv_UpdateScores(bool timed_out)
 			GameRules_scoring_add(it, SCORE, it.survival_validkills);
 		it.survival_validkills = 0;
 
-		if (!IS_PLAYER(it) || IS_DEAD(it))
+		if (!surv_IsAlivePlayer(it))
 			continue;
 
 		// player survived the round
@@ -110,7 +117,7 @@ bool Surv_CheckWinner()
 	}
 
 	int survivor_count = 0, hunter_count = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+	FOREACH_CLIENT(surv_IsAlivePlayer(it),
 	{
 		if (it.survival_status == SURV_STATUS_PREY)
 			++survivor_count;
@@ -165,7 +172,7 @@ void Surv_RoundStart()
 	int playercount = 0;
 	FOREACH_CLIENT(true,
 	{
-		if (IS_PLAYER(it) && !IS_DEAD(it))
+		if (surv_IsAlivePlayer(it))
 		{
 			++playercount;
 			it.survival_status = SURV_STATUS_PREY;
@@ -179,7 +186,7 @@ void Surv_RoundStart()
 		: rint(playercount * autocvar_g_survival_hunter_count); // proportion, rounded
 	hunter_count = bound(1, hunter_count, playercount - 1);
 	int total_hunters = 0;
-	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
+	FOREACH_CLIENT_RANDOM(surv_IsAlivePlayer(it),
 	{
 		if (total_hunters >= hunter_count)
 			break;
@@ -189,7 +196,7 @@ void Surv_RoundStart()
 	surv_state = SURV_STATE_PLAYING;
 	survStatuses.SendFlags |= SF_SURV_SET;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+	FOREACH_CLIENT(surv_IsAlivePlayer(it),
 	{
 		if (it.survival_status == SURV_STATUS_PREY)
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR);
@@ -203,7 +210,7 @@ bool Surv_CheckPlayers()
 	static int prev_missing_players;
 	allowed_to_spawn = true;
 	int playercount = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), ++playercount);
+	FOREACH_CLIENT(surv_IsAlivePlayer(it), ++playercount);
 	// NOTE missing_teams_mask stat is used for missing players in ffa games
 	if (playercount >= 2)
 	{
@@ -409,8 +416,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	// killed an ally! punishment is death
 	if (autocvar_g_survival_punish_teamkill
 	&& frag_attacker != frag_target
-	&& IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target)
-	&& !IS_DEAD(frag_attacker)
+	&& surv_IsAlivePlayer(frag_attacker)
+	&& IS_PLAYER(frag_target)
 	&& frag_attacker.survival_status == frag_target.survival_status
 	&& !warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't started yet
 		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
@@ -425,7 +432,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 		return;
 
 	bool survivors = false, hunters = false;
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
+	FOREACH_CLIENT(surv_IsAlivePlayer(it),
 	{
 		if (it.survival_status == SURV_STATUS_PREY)
 			survivors = true;
@@ -441,7 +448,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (IS_PLAYER(player) && !IS_DEAD(player))
+	if (surv_IsAlivePlayer(player))
 		surv_LastPlayerForTeam_Notify(player);
 	return true;
 }
@@ -453,7 +460,7 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 	if (is_forced && INGAME(player))
 		INGAME_STATUS_CLEAR(player);
 
-	if (IS_PLAYER(player) && !IS_DEAD(player))
+	if (surv_IsAlivePlayer(player))
 		surv_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 		INGAME_STATUS_CLEAR(player);
@@ -529,4 +536,47 @@ MUTATOR_HOOKFUNCTION(surv, Bot_ForbidAttack)
 
 	if (targ.survival_status == bot.survival_status)
 		return true;
+}
+
+bool surv_ChatRestricted()
+{
+	// chat is only restricted while a round is actually being played
+	return (autocvar_g_survival_hide_chat
+		&& !warmup_stage && !game_stopped && surv_state == SURV_STATE_PLAYING);
+}
+
+MUTATOR_HOOKFUNCTION(surv, ChatMessage)
+{
+	if (!surv_ChatRestricted())
+		return false;
+
+	entity sender = M_ARGV(0, entity);
+	int ret = M_ARGV(1, int);
+	string message = M_ARGV(2, string);
+	entity privatesay = M_ARGV(3, entity);
+
+	// ret <= 0 means it was already rejected or the sender is muted
+	if (ret <= 0 || message == "")
+		return false;
+
+	// can privately message specs
+	if (privatesay != NULL && !(surv_IsAlivePlayer(privatesay) && INGAME(privatesay)))
+		return false;
+
+	if (autocvar_g_survival_hide_chat >= 2)
+		Send_Notification(NOTIF_ONE_ONLY, sender, MSG_INFO, INFO_SURVIVAL_CHAT_HIDDEN);
+
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(surv, ChatMessageTo)
+{
+	if (!surv_ChatRestricted())
+		return false;
+
+	entity dest = M_ARGV(0, entity);
+	entity sender = M_ARGV(1, entity);
+
+	// if both players are alive, hide the message from the dest
+	return (surv_IsAlivePlayer(dest) && INGAME(dest) && surv_IsAlivePlayer(sender) && INGAME(sender));
 }
