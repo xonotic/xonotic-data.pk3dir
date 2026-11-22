@@ -724,7 +724,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	// allow normal revival during automatic revival
 	// (if we wouldn't allow it then freezetag_frozen_timeout should be checked too in the previous loop)
 	//if (STAT(FROZEN, player)) // redundant check
-	if (!n && player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
+	if (!n && autocvar_g_freezetag_revive_auto && autocvar_g_freezetag_frozen_maxtime > 0
+	&& player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 
 	float base_progress = 0;
@@ -744,7 +745,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 				{
 					// reduce auto-revival time based on manual revival progress
 					base_progress = STAT(REVIVE_PROGRESS, player);
-					player.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime * (1 - STAT(REVIVE_PROGRESS, player));
+					if (autocvar_g_freezetag_revive_auto && autocvar_g_freezetag_frozen_maxtime > 0)
+						player.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime * (1 - STAT(REVIVE_PROGRESS, player));
 				}
 				// don't clear revive progress, it would allow stacking points
 				// by entering and exiting the revival zone many times
