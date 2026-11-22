@@ -607,6 +607,9 @@ MUTATOR_HOOKFUNCTION(ft, Damage_Calculate)
 			Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, frag_target.netname);
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
+
+			EliminatedPlayers_RecountAlivePlayers();
+			eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
 		}
 
 		frag_damage = 0;

@@ -868,6 +868,9 @@ MUTATOR_HOOKFUNCTION(nades, Damage_Calculate)
 		freezetag_Unfreeze(frag_target, false);
 		SetResource(frag_target, RES_HEALTH, autocvar_g_freezetag_revive_nade_health);
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
+		EliminatedPlayers_RecountAlivePlayers();
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ALIVE | SF_ELIMPLAYERS_ELIMS;
+
 		M_ARGV(4, float) = 0;
 		M_ARGV(6, vector) = '0 0 0';
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
