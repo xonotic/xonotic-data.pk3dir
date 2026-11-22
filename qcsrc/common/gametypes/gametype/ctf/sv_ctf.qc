@@ -507,11 +507,14 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 		setattachment(flag, player.vehicle, "");
 		setorigin(flag, VEHICLE_FLAG_OFFSET);
 		flag.scale = VEHICLE_FLAG_SCALE;
+		flag.nodrawtoclient = player;
 	}
 	else
 	{
 		setattachment(flag, player, "");
 		setorigin(flag, FLAG_CARRY_OFFSET);
+		flag.scale = FLAG_SCALE;
+		flag.nodrawtoclient = NULL;
 	}
 	set_movetype(flag, MOVETYPE_NONE);
 	flag.takedamage = DAMAGE_NO;
@@ -568,6 +571,8 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 	// reset the flag
 	setattachment(flag, NULL, "");
+	flag.scale = FLAG_SCALE;
+	flag.nodrawtoclient = NULL;
 	tracebox(player.origin + vec3(0, 0, player.mins.z - flag.m_mins.z), // same bbox floor height as player
 	         flag.m_mins, flag.m_maxs, player.origin + FLAG_DROP_OFFSET, MOVE_NOMONSTERS, flag);
 	flag.solid = SOLID_TRIGGER; // before setorigin to ensure area grid linking
@@ -813,11 +818,14 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 		setattachment(flag, player.vehicle, "");
 		setorigin(flag, VEHICLE_FLAG_OFFSET);
 		flag.scale = VEHICLE_FLAG_SCALE;
+		flag.nodrawtoclient = player;
 	}
 	else
 	{
 		setattachment(flag, player, "");
 		setorigin(flag, FLAG_CARRY_OFFSET);
+		flag.scale = FLAG_SCALE;
+		flag.nodrawtoclient = NULL;
 	}
 
 	// flag setup
@@ -1313,7 +1321,10 @@ void ctf_RespawnFlag(entity flag)
 	}
 
 	if (flag.owner && flag.owner.vehicle)
+	{
 		flag.scale = FLAG_SCALE;
+		flag.nodrawtoclient = NULL;
+	}
 
 	if (flag.ctf_status == FLAG_DROPPED)
 		WaypointSprite_Kill(flag.wps_flagdropped);
@@ -1462,6 +1473,7 @@ void ctf_FlagSetup(int teamnum, entity flag) // called when spawning a flag enti
 	if (flag.toucheffect == "")  flag.toucheffect = EFFECT_FLAG_TOUCH(teamnum).eent_eff_name;
 	if (flag.passeffect == "")   flag.passeffect = EFFECT_PASS(teamnum).eent_eff_name;
 	if (flag.capeffect == "")    flag.capeffect = EFFECT_CAP(teamnum).eent_eff_name;
+	flag.nodrawtoclient = NULL;
 
 	// sounds
 #define X(s, b) \
@@ -2528,11 +2540,11 @@ MUTATOR_HOOKFUNCTION(ctf, VehicleEnter)
 			ctf_Handle_Throw(player, NULL, DROP_NORMAL);
 		else
 		{
-			player.flagcarried.nodrawtoclient = player; // hide the flag from the driver
 			setattachment(player.flagcarried, veh, "");
 			setorigin(player.flagcarried, VEHICLE_FLAG_OFFSET);
 			player.flagcarried.scale = VEHICLE_FLAG_SCALE;
 			//player.flagcarried.angles = '0 0 0';
+			player.flagcarried.nodrawtoclient = player; // hide the flag from the driver
 		}
 		return true;
 	}
