@@ -182,7 +182,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity, int f
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
 	++actor.(weaponentity).misc_bulletcounter;
-	if (actor.(weaponentity).misc_bulletcounter == 0)
+	if (actor.(weaponentity).misc_bulletcounter >= 0)
 	{
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_ARC, bolt_refire2) * W_WeaponRateFactor(actor);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_ARC, bolt_refire), w_ready);
