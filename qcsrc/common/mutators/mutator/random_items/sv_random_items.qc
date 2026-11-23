@@ -365,8 +365,7 @@ MUTATOR_HOOKFUNCTION(random_items, PlayerDies)
 	}
 	entity victim = M_ARGV(2, entity);
 	vector loot_position = victim.origin + '0 0 32';
-	int num_loot_items = floor(autocvar_g_random_loot_min + random() *
-		autocvar_g_random_loot_max);
+	int num_loot_items = floor(autocvar_g_random_loot_min + random() * (autocvar_g_random_loot_max - autocvar_g_random_loot_min + 1));
 	for (int item_index = 0; item_index < num_loot_items; ++item_index)
 	{
 		RandomItems_SpawnLootItem(loot_position);
