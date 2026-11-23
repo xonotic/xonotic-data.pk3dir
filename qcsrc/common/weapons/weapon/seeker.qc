@@ -328,7 +328,7 @@ void W_Seeker_Tracker_Think(entity this)
 			entity oldenemy = own.enemy;
 			own.enemy = this.enemy;
 			--this.cnt;
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, own.enemy, own.cnt);
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, own.enemy, this.cnt);
 			own.enemy = oldenemy;
 		}
 	}
