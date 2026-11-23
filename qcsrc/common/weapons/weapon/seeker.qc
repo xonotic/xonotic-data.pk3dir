@@ -382,6 +382,9 @@ void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float d
 {
 	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+
 	TakeResource(this, RES_HEALTH, damage);
 	if (GetResource(this, RES_HEALTH) <= 0)
 		W_Seeker_Tag_Explode(this);
