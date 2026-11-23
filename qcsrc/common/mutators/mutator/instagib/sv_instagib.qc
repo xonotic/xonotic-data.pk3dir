@@ -192,7 +192,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 				frag_force = '0 0 0';
 
 			float armor = GetResource(frag_target, RES_ARMOR);
-			if (armor)
+			if (armor && frag_damage > 0)
 			{
 				--armor;
 				SetResource(frag_target, RES_ARMOR, armor);
