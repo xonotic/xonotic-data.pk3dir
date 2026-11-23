@@ -11999,6 +11999,8 @@ msgid ""
 "Multiplier for amount of particles. Less means less particles, which in turn "
 "gives for better performance"
 msgstr ""
+"El multiplicador de la cantidá de partícules. Menos significa menos "
+"partícules lo que va ufrir un mayor rindimientu"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_dynamic.qc:116
 msgid "Particles further away than this will not be drawn"

@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-22 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Hugo Locurcio, 2013-2014\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>, 2013-2026\n"
 "Language-Team: French (http://app.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -12086,7 +12086,7 @@ msgstr "Outils du bac à sable"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:16
 msgid "Graphics"
-msgstr ""
+msgstr "Graphismes"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:17
 msgid "Game"
@@ -12110,7 +12110,7 @@ msgstr "Modifier les paramètres du jeu"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:29
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:32
 msgid "Master:"
@@ -12162,7 +12162,7 @@ msgstr "Couper le son en cas d'inactivité"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "Sound Settings"
-msgstr ""
+msgstr "Paramètres audio"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "Frequency:"
@@ -13092,7 +13092,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:42
 msgid "Realtime"
-msgstr ""
+msgstr "Temps réel"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:44
 msgid "Corona brightness:"
@@ -13194,7 +13194,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qh:7
 msgid "Lighting"
-msgstr ""
+msgstr "Éclairage"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_perspective.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_graphics_perspective.qh:7
@@ -13248,7 +13248,7 @@ msgstr "Passer à travers les murs en mode spectateur"
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qh:7
 msgid "Rendering"
-msgstr ""
+msgstr "Rendu"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:29
 msgid "Brightness:"
@@ -13532,7 +13532,7 @@ msgstr "Résolution :"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_video.qc:52
 msgid "Display:"
-msgstr ""
+msgstr "Écran :"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_video.qc:56
 msgid "Font/UI size:"
@@ -15055,7 +15055,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/mutatortab.qc:477
 msgid "Dynamic respawn time"
-msgstr ""
+msgstr "Temps de réapparition dynamique"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:480 qcsrc/menu/xonotic/mutatortab.qc:494
 #: qcsrc/menu/xonotic/mutatortab.qc:500

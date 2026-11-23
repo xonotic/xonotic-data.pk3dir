@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-22 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: Ihor <ihor@noleron.com>, 2021\n"
+"Last-Translator: Kostiantyn Tsebro, 2026\n"
 "Language-Team: Ukrainian (http://app.transifex.com/team-xonotic/xonotic/"
 "language/uk/)\n"
 "Language: uk\n"
@@ -955,7 +955,7 @@ msgstr "зіграно"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "SCO^score"
-msgstr "рахунок"
+msgstr "очки"
 
 #: qcsrc/client/hud/panel/scoreboard.qc:174
 msgid "Total score"
@@ -1029,7 +1029,7 @@ msgstr "Загальний час забігів (Перегонки/ПЕ)"
 msgid ""
 "You can modify the scoreboard using the ^2scoreboard_columns_set command."
 msgstr ""
-"Ви можете відредагувати таблицю рахунку, використовуючи ^2команду "
+"Ви можете відредагувати таблицю очок, використовуючи ^2команду "
 "scoreboard_columns_set."
 
 #: qcsrc/client/hud/panel/scoreboard.qc:721
@@ -1528,8 +1528,8 @@ msgid ""
 "Objects have waypoints which show their health and position, and they're "
 "destroyed by shooting them with any weapon."
 msgstr ""
-"Об'єкти мають маркери, які показують їхній стан та розташування, а також "
-"вони можуть бути зруйнованою будь-якою зброєю."
+"Об'єкти мають мітки, які показують їхній стан та розташування, а також вони "
+"можуть бути зруйнованою будь-якою зброєю."
 
 #: qcsrc/common/gametypes/gametype/assault/assault.qh:8
 msgid "Assault"
@@ -1651,7 +1651,7 @@ msgstr ""
 "повернений на свою базу, або в іншому випадку чекатиме, поки автоматично не "
 "повернеться. Якщо всі прапори будуть утримані, після певного часу почнеться "
 "\"патова ситуація\", в якому всі носії прапора будуть виявлені на радарі та "
-"з маркерами."
+"з мітками."
 
 #: qcsrc/common/gametypes/gametype/ctf/ctf.qc:13
 #, c-format
@@ -1752,8 +1752,8 @@ msgid ""
 "Scoring is quite simple, fragging an opponent adds one to your score, and "
 "fragging yourself subtracts one."
 msgstr ""
-"Підрахунок очок доволі простий: фраг супротивника додає одиницю до вашого "
-"рахунку, а самофраг віднімає одиницю."
+"Очки нараховуються так: фраг супротивника додає одиницю до ваших очок, а "
+"самофраг - віднімає."
 
 #: qcsrc/common/gametypes/gametype/deathmatch/deathmatch.qc:14
 #, c-format
@@ -2025,8 +2025,8 @@ msgid ""
 "points for collecting a key, fragging an enemy key carrier, and fragging "
 "other enemies."
 msgstr ""
-"Рахунок в режимі %s є складним, залучаючи збір всіх ключів, рахунки для "
-"збору ключа, вбивство ворожого носія ключа, та фраги інших супротивників."
+"У режимі %s нарахування очок складніше: воно поєднує збір усіх ключів, очки "
+"за підбір ключа, знищення ворожого носія ключа та фраги інших супротивників."
 
 #: qcsrc/common/gametypes/gametype/keyhunt/keyhunt.qc:13
 #, c-format
@@ -2081,7 +2081,7 @@ msgid ""
 "percentage of health when they attack leaders, like in the %s mutator."
 msgstr ""
 "Гравці, які лідирують щонайменше на 2 життя, починають світитися та над "
-"їхніми головами періодично на кілька секунд з'являється маркер, видиме для "
+"їхніми головами періодично на кілька секунд з'являється мітка, видима для "
 "всіх інших, що заважає їм постійно ховатися. Гравці, які не лідирують, під "
 "час атак на лідерів крадуть невеликий відсоток їхнього здоров'я, як у "
 "мутаторі %s. "
@@ -2149,7 +2149,7 @@ msgstr "М'ясорубка"
 #: qcsrc/common/gametypes/gametype/mayhem/mayhem.qh:31
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:48
 msgid "How much score is needed before the match will end"
-msgstr "Скільки рахунку потрібно перед кінцем матчу"
+msgstr "Скільки очок потрібно перед кінцем матчу"
 
 #: qcsrc/common/gametypes/gametype/nexball/nexball.qc:10
 #, c-format
@@ -2420,10 +2420,10 @@ msgid ""
 "differences being that %s is a round-based gametype, and of course the "
 "scoring system differences."
 msgstr ""
-"%s - це командний режим постійної дії на основі режиму %s з такою же "
-"системою підрахунку. Цей режим дуже схожий на режим %s, з відмінністю в "
-"тому, що %s є режимом з раундами, та безумовно відрізняється система "
-"підрахунку."
+"%s - це динамічний командний режим на основі режиму %s з такою самою "
+"системою нарахування очок. Він багато в чому схожий на режим %s, але має "
+"такі головні відмінності: %s є раундовим режимом і використовує іншу систему "
+"очок."
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qc:13
 msgid ""
@@ -3732,7 +3732,7 @@ msgid ""
 "fire does not inflict any damage but is good for doing trickjumps."
 msgstr ""
 "Гравцям буде видано лише одну зброю, %s, яка миттєво вбиває ворога за один "
-"постріл. Якщо у гравця закінчилися набої, він матиме 10 секунд, що знайти "
+"постріл. Якщо у гравця закінчилися набої, він матиме 10 секунд, щоб знайти "
 "нові набої, інакше настане смерть. Вторинний вогонь не завдає жодної шкоди, "
 "але зручний для виконання трикджампів."
 
@@ -4016,8 +4016,8 @@ msgid ""
 "Gives players a bonus grenade when they reach a certain score or have "
 "Strength"
 msgstr ""
-"Дає гравцям бонусну гранату за досягнення певного рахунку або при наявності "
-"Сили"
+"Надає гравцям бонусну гранату за досягнення певної кількості очок або за "
+"наявності Сили"
 
 #: qcsrc/common/mutators/mutator/nades/ui_nades.qc:26
 msgid "Max bonus nades:"
@@ -4721,7 +4721,7 @@ msgstr "Стрибки по Стінам"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:3
 msgid "Waypoint"
-msgstr "Маркер"
+msgstr "Мітка"
 
 #: qcsrc/common/mutators/mutator/waypoints/all.inc:4
 msgid "Help me!"
@@ -11755,7 +11755,7 @@ msgstr "Встановити фізику:"
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:78
 #: qcsrc/menu/xonotic/dialog_settings_graphics_static.qh:7
 msgid "Static"
-msgstr "Нерухоме"
+msgstr "Статичне"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:70
 msgid "Movable"
@@ -11803,7 +11803,7 @@ msgstr "Інструменти Пісочниці"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:16
 msgid "Graphics"
-msgstr ""
+msgstr "Графіка"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:17
 msgid "Game"
@@ -11827,7 +11827,7 @@ msgstr "Змінити налаштування гри"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:29
 msgid "Volume"
-msgstr ""
+msgstr "Гучність"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:32
 msgid "Master:"
@@ -11879,7 +11879,7 @@ msgstr "Глушити звук, коли гра неактивна"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "Sound Settings"
-msgstr ""
+msgstr "Поведінка Звука"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "Frequency:"
@@ -12422,15 +12422,15 @@ msgstr "Налаштувати, як гравці та предмети у гр�
 #: qcsrc/menu/xonotic/dialog_settings_game_waypoints.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_game_waypoints.qh:7
 msgid "Waypoints"
-msgstr "Маршрутні точки"
+msgstr "Мітки"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_waypoints.qc:26
 msgid "Display waypoint markers for objectives on the map"
-msgstr "Відображувати маркери цілей на мапі"
+msgstr "Відображувати мітки цілей на мапі"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_waypoints.qc:27
 msgid "Show various gametype specific waypoints"
-msgstr "Показувати специфічні маркери режимів"
+msgstr "Показувати специфічні мітки режимів"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_waypoints.qc:37
 #: qcsrc/menu/xonotic/dialog_settings_game_waypoints.qc:80
@@ -12553,11 +12553,11 @@ msgstr "Вирівнювати праворуч"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:94
 msgid "Swaying"
-msgstr ""
+msgstr "Хитання"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:98
 msgid "Bobbing"
-msgstr ""
+msgstr "Гойдання"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:111
 msgid "Apply team colors to weapon beam effects:"
@@ -12793,7 +12793,7 @@ msgstr "Частинки не відображатимуться, якщо зн�
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:42
 msgid "Realtime"
-msgstr ""
+msgstr "Динамічне Освітлення"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:44
 msgid "Corona brightness:"
@@ -12892,7 +12892,7 @@ msgstr "Вмикає використання мап блиску на текс�
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qh:7
 msgid "Lighting"
-msgstr ""
+msgstr "Освітлення"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_perspective.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_graphics_perspective.qh:7
@@ -12946,7 +12946,7 @@ msgstr "Дозволити рух крізь стіни для глядачів"
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qh:7
 msgid "Rendering"
-msgstr ""
+msgstr "Візуалізація"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:29
 msgid "Brightness:"
@@ -13014,7 +13014,7 @@ msgstr "Інтенсивність:"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:65
 msgid "Global rendering brightness"
-msgstr "Глобальна яскравість рендеринга"
+msgstr "Глобальна візуальна яскравість"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:75
 msgid "Antialiasing:"
@@ -13061,8 +13061,8 @@ msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts"
 msgstr ""
-"Усунення перемальовування шляхом рендерингу сцени лише з даними про глибину "
-"перед початком основного відтворення"
+"Усунення перемальовування за допомогою рендерингу сцени лише з буфером "
+"глибини"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:107
 msgid "Depth first:"
@@ -13228,7 +13228,7 @@ msgstr "Роздільність:"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_video.qc:52
 msgid "Display:"
-msgstr ""
+msgstr "Дисплей:"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_video.qc:56
 msgid "Font/UI size:"
@@ -14412,7 +14412,7 @@ msgstr "перемикати наближення"
 
 #: qcsrc/menu/xonotic/keybinder.qc:132
 msgid "show scores"
-msgstr "показати рахунок"
+msgstr "показати очки"
 
 #: qcsrc/menu/xonotic/keybinder.qc:133
 msgid "screenshot"
@@ -14704,35 +14704,35 @@ msgstr "Різноманітні цікаві зміни фізики та ру�
 
 #: qcsrc/menu/xonotic/mutatortab.qc:477
 msgid "Dynamic respawn time"
-msgstr ""
+msgstr "Динамічний час появи"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:480 qcsrc/menu/xonotic/mutatortab.qc:494
 #: qcsrc/menu/xonotic/mutatortab.qc:500
 #, c-format
 msgid "%s:"
-msgstr ""
+msgstr "%s:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:480 qcsrc/menu/xonotic/mutatortab.qc:500
 #, c-format
 msgid "Maximum multiplier"
-msgstr ""
+msgstr "Максимальний множник"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:486
 msgid "Dynamic handicap"
-msgstr ""
+msgstr "Динамічний гандикап"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:494
 #, c-format
 msgid "Minimum multiplier"
-msgstr ""
+msgstr "Мінімальний множник"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:496
 msgid "Values less than 1 buff players with low scores"
-msgstr ""
+msgstr "Значення менші за 1 посилюють гравців із низьким рахунком"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:507
 msgid "Options to dynamically balance players mid-match."
-msgstr ""
+msgstr "Динамічне балансування гравців під час матчу."
 
 #: qcsrc/menu/xonotic/mutatortab.qh:33
 msgid "Weapon arena"
@@ -14752,7 +14752,7 @@ msgstr "Власна фізика"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:83
 msgid "Dynamic balancing"
-msgstr ""
+msgstr "Динамічний баланс"
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
@@ -14884,7 +14884,7 @@ msgstr "%s дБ"
 
 #: qcsrc/menu/xonotic/slider_display.qc:12
 msgid "Display number"
-msgstr ""
+msgstr "Показувати число"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:12
 msgid ""
