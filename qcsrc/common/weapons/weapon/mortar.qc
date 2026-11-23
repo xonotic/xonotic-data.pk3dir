@@ -110,7 +110,7 @@ void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 	{
 		spamsound(this, CH_SHOTS, SND_MORTAR_STICK, VOL_BASE, ATTN_NORM);
 
-		// let it stick whereever it is
+		// let it stick wherever it is
 		this.movedir = this.velocity; // save to this temporary field, will be restored on explosion
 		this.velocity = '0 0 0';
 		set_movetype(this, MOVETYPE_NONE); // also disables gravity
@@ -120,7 +120,9 @@ void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 		// do not respond to any more touches
 		this.solid = SOLID_NOT;
 
-		this.nextthink = min(this.nextthink, time + WEP_CVAR_PRI(WEP_MORTAR, lifetime_stick));
+		// Setting .nextthink seems logical, but Think1 will override it, so instead use the .cnt which it reads
+		// Hence why we use .cnt here (primary thinks every frame) but .nextthink in W_Mortar_Grenade_Touch2 (secondary doesn't)
+		this.cnt = min(this.cnt, time + WEP_CVAR_PRI(WEP_MORTAR, lifetime_stick));
 	}
 }
 
