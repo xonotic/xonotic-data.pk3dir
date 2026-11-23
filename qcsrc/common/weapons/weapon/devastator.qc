@@ -139,8 +139,7 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 
 void W_Devastator_RemoteExplode(entity this, .entity weaponentity)
 {
-	if (IS_DEAD(this.realowner)
-	|| !this.realowner.(weaponentity).lastrocket)
+	if (IS_DEAD(this.realowner) || (this.rocket_flags & ROCKET_FLAG_ORPHAN))
 		return;
 
 	bool do_explode;
@@ -186,9 +185,9 @@ void W_Devastator_Think(entity this)
 				WEP_CVAR(WEP_DEVASTATOR, guideratedelay),
 				WEP_CVAR(WEP_DEVASTATOR, guidegoal),
 				WEP_CVAR(WEP_DEVASTATOR, guidedelay),
-				EFFECT_ROCKET_GUIDE, SND_DEVASTATOR_MODE, VOL_BASE); // TODO: add a better sound here
+				EFFECT_ROCKET_GUIDE, SND_DEVASTATOR_MODE, VOL_BASE);
 
-		if (this.rl_detonate_later)
+		if (this.rocket_flags & ROCKET_FLAG_DETONATE)
 			W_Devastator_RemoteExplode(this, weaponentity);
 	}
 
@@ -262,7 +261,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(WEP_DEVASTATOR, lifetime);
-	missile.rl_detonate_later = boolean(fire & 2); // allow instant detonation
+	missile.rocket_flags = (fire & 2) ? ROCKET_FLAG_DETONATE : 0; // allow instant detonation
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
@@ -420,9 +419,9 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 		bool rockfound = false;
 		IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
 		{
-			if (!it.rl_detonate_later)
+			if (!(it.rocket_flags & (ROCKET_FLAG_DETONATE | ROCKET_FLAG_ORPHAN)))
 			{
-				it.rl_detonate_later = true;
+				it.rocket_flags |= ROCKET_FLAG_DETONATE;
 				rockfound = true;
 			}
 		});
@@ -486,6 +485,9 @@ METHOD(Devastator, wr_resetplayer, void(entity thiswep, entity actor))
 		actor.(weaponentity).lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
 		actor.(weaponentity).rl_release = true;
 	}
+	// Don't allow remote detonating rockets after dying then respawning
+	IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
+		it.rocket_flags |= ROCKET_FLAG_ORPHAN);
 }
 
 METHOD(Devastator, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
