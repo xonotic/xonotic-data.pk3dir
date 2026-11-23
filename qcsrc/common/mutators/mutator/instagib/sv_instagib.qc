@@ -383,6 +383,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
 
+	if (STAT(FROZEN, toucher))
+		return MUT_ITEMTOUCH_CONTINUE; // no special handling while frozen
+
 	if (GetResource(item, RES_CELLS))
 	{
 		float hp = GetResource(toucher, RES_HEALTH);
