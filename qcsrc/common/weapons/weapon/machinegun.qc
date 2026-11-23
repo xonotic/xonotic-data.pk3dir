@@ -20,9 +20,12 @@ void MachineGun_Update_Spread(entity actor, .entity weaponentity)
 			spreadSpectrumDistance);
 	}
 	else // legacy behavior for Nexuiz weapon balance
+	{
 		spread_accum = bound(WEP_CVAR(WEP_MACHINEGUN, spread_min),
 			(WEP_CVAR(WEP_MACHINEGUN, spread_add) * actor.(weaponentity).misc_bulletcounter),
 			WEP_CVAR(WEP_MACHINEGUN, spread_max));
+		spread_accum -= WEP_CVAR(WEP_MACHINEGUN, spread_min); // spread_min is added when firing. hence why the above branch has 0 as the lower bound
+	}
 
 	actor.(weaponentity).machinegun_spread_accumulation = spread_accum;
 	actor.(weaponentity).spreadUpdateTime = time;
