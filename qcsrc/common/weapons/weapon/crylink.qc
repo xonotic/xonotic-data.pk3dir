@@ -176,10 +176,10 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 	if (e)
 	{
 		float n = 0;
-		if (vlen2(e.origin - this.origin) < vlen2(e.velocity) * frametime)
+		if (vlen2(e.origin - this.origin) < vlen2(e.velocity) * frametime * frametime)
 			++n;
 		for (entity p = e; (p = p.queuenext) != e; )
-			if (vlen2(p.origin - this.origin) < vlen2(p.velocity) * frametime)
+			if (vlen2(p.origin - this.origin) < vlen2(p.velocity) * frametime * frametime)
 				++n;
 		if (n >= 2)
 		{
@@ -188,7 +188,7 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 			if (WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, joinexplode))
 			{
 				n /= WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, shots);
-				RadiusDamage(e, e.realowner,
+				RadiusDamage(this, e.realowner,
 					n * WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, joinexplode_damage),
 					n * WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, joinexplode_edgedamage),
 					n * WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, joinexplode_radius),
