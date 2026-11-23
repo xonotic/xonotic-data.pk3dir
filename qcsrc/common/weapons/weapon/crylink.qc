@@ -234,9 +234,7 @@ void W_Crylink_Touch(entity this, entity toucher)
 
 	float a = bound(0, 1 - (time - this.fade_time) * this.fade_rate, 1);
 	float finalhit = (this.cnt <= 0 || toucher.takedamage != DAMAGE_NO);
-	float f = (finalhit ? 1 : WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, bouncedamagefactor));
-	if (a)
-		f *= a;
+	float f = a * (finalhit ? 1 : WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, bouncedamagefactor));
 
 	float totaldamage = RadiusDamage(this, this.realowner,
 		f * WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, damage),
