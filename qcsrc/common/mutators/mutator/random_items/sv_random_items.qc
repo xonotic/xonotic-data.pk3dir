@@ -227,6 +227,11 @@ string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 	return RandomSelection_chosen_string;
 }
 
+void RandomItems_dtor(entity this)
+{
+	strfree(this.classname);
+}
+
 /// \brief Replaces a map item.
 /// \param[in] item Item to replace.
 /// \return Spawned item on success, NULL otherwise.
@@ -270,6 +275,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	entity new_item = spawn();
 	Item_CopyFields(item, new_item);
 	new_item.classname = strzone(new_classname);
+	new_item.dtor = RandomItems_dtor;
 	new_item.lifetime = -1; // permanent (not loot)
 	if (MUTATOR_IS_ENABLED(ok))
 		new_item.ok_item = true;
