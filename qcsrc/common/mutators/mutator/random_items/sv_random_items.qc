@@ -323,23 +323,13 @@ MUTATOR_HOOKFUNCTION(random_items, BuildMutatorsPrettyString)
 MUTATOR_HOOKFUNCTION(random_items, FilterItem, CBC_ORDER_LAST)
 {
 	//PrintToChatAll("FilterItem");
-	if (!autocvar_g_random_items)
-	{
+	if (MUTATOR_RETURNVALUE // an earlier FilterItem already replaced the item
+	|| !autocvar_g_random_items || random_items_is_spawning == true)
 		return false;
-	}
-	if (random_items_is_spawning == true)
-	{
-		return false;
-	}
+
 	entity item = M_ARGV(0, entity);
-	if (ITEM_IS_LOOT(item))
-	{
+	if (ITEM_IS_LOOT(item) || RandomItems_ReplaceMapItem(item) == NULL)
 		return false;
-	}
-	if (RandomItems_ReplaceMapItem(item) == NULL)
-	{
-		return false;
-	}
 	return true;
 }
 
