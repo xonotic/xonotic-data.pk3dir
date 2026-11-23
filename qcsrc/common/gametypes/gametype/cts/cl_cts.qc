@@ -43,7 +43,7 @@ MUTATOR_HOOKFUNCTION(cl_cts, ShowRankings)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(cl_cts, ShowRaceTimer)
+MUTATOR_HOOKFUNCTION(cl_cts, DrawRaceTimerAndCheckpoints)
 {
-	return ISGAMETYPE(CTS); // show the race timer panel
+	return ISGAMETYPE(CTS); // show the racetimer & checkpoints panels
 }

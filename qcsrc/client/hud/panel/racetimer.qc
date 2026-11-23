@@ -166,7 +166,7 @@ void HUD_RaceTimer(bool should_draw)
 	{
 		if (!autocvar_hud_panel_racetimer || spectatee_status == -1)
 			return;
-		if (!MUTATOR_CALLHOOK(ShowRaceTimer))
+		if (!MUTATOR_CALLHOOK(DrawRaceTimerAndCheckpoints))
 			return;
 	}
 

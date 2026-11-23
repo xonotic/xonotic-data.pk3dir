@@ -266,9 +266,9 @@ MUTATOR_HOOKFUNCTION(cl_race, DrawScoreboardAccuracy)
 	return ISGAMETYPE(RACE); // accuracy is not a factor in this gametype
 }
 
-MUTATOR_HOOKFUNCTION(cl_race, ShowRaceTimer)
+MUTATOR_HOOKFUNCTION(cl_race, DrawRaceTimerAndCheckpoints)
 {
-	return ISGAMETYPE(RACE); // show the race timer panel
+	return ISGAMETYPE(RACE); // show the racetimer & checkpoints panels
 }
 
 MUTATOR_HOOKFUNCTION(cl_race, TeamRadar_Draw)

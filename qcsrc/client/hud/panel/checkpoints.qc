@@ -93,8 +93,13 @@ void HUD_Checkpoints(bool should_draw)
 {
 	if (!should_draw)
 		return;
-	if (!autocvar__hud_configure && !autocvar_hud_panel_checkpoints)
-		return;
+	if (!autocvar__hud_configure)
+	{
+		if (!autocvar_hud_panel_checkpoints)
+			return;
+		if (!MUTATOR_CALLHOOK(DrawRaceTimerAndCheckpoints))
+			return;
+	}
 
 	HUD_Panel_LoadCvars();
 
