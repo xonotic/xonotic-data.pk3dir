@@ -542,11 +542,8 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 			actor.(weaponentity).crylink_waitrelease = 0;
 			if (!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !thiswep.wr_checkammo2(thiswep, actor, weaponentity)
 			&& !(actor.items & IT_UNLIMITED_AMMO))
-			{
 				// ran out of ammo!
-				actor.cnt = thiswep.m_id;
-				actor.(weaponentity).m_switchweapon = w_getbestweapon(actor, weaponentity);
-			}
+				W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		}
 	}
 }

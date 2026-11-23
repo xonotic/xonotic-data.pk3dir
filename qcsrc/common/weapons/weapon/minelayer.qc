@@ -85,9 +85,8 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 		if (!thiswep.wr_checkammo1(thiswep, own, weaponentity)
 		&& !(own.items & IT_UNLIMITED_AMMO))
 		{
-			own.cnt = thiswep.m_id;
 			ATTACK_FINISHED(own, weaponentity) = time;
-			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
+			W_SwitchWeapon_Force(own, w_getbestweapon(own, weaponentity), weaponentity);
 		}
 	}
 	delete(this);
@@ -127,9 +126,8 @@ void W_MineLayer_DoRemoteExplode(entity this)
 		if (!thiswep.wr_checkammo1(thiswep, own, weaponentity)
 		&& !(own.items & IT_UNLIMITED_AMMO))
 		{
-			own.cnt = thiswep.m_id;
 			ATTACK_FINISHED(own, weaponentity) = time;
-			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
+			W_SwitchWeapon_Force(own, w_getbestweapon(own, weaponentity), weaponentity);
 		}
 	}
 	delete(this);

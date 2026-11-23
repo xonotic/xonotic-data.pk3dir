@@ -50,9 +50,8 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	&& GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_DEVASTATOR, ammo)
 	&& !(this.realowner.items & IT_UNLIMITED_AMMO))
 	{
-		this.realowner.cnt = thiswep.m_id;
 		ATTACK_FINISHED(this.realowner, weaponentity) = time;
-		this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
+		W_SwitchWeapon_Force(this.realowner, w_getbestweapon(this.realowner, weaponentity), weaponentity);
 	}
 	delete(this);
 }
@@ -132,9 +131,8 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	&& GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_DEVASTATOR, ammo)
 	&& !(this.realowner.items & IT_UNLIMITED_AMMO))
 	{
-		this.realowner.cnt = thiswep.m_id;
 		ATTACK_FINISHED(this.realowner, weaponentity) = time;
-		this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
+		W_SwitchWeapon_Force(this.realowner, w_getbestweapon(this.realowner, weaponentity), weaponentity);
 	}
 	delete(this);
 }
