@@ -626,8 +626,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 	{
 		int buffid = heldbuff.m_id;
 		Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid);
-		if (!IS_INDEPENDENT_PLAYER(player))
-			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
+		// ITEM_BUFF_LOST is already notified in .m_remove
 
 		buff_RemoveAll(player, STATUSEFFECT_REMOVE_NORMAL);
 		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);
