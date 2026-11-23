@@ -24,7 +24,7 @@ void W_OverkillRocketPropelledChainsaw_Explode(entity this, entity directhitenti
 	{
 		// if chainsaw hit something, it removed fired damage (so that direct hit is 100%)
 		// now that we also damaged something by explosion we'd go over 100% so let's add the fired damage back
-		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), WEP_CVAR(WEP_OVERKILL_RPC, damage), 0, 0); // add to fired
+		accuracy_add(this.realowner, DEATH_WEAPONOF(this.projectiledeathtype), WEP_CVAR_PRI(WEP_OVERKILL_RPC, damage), 0, 0); // add to fired
 	}
 
 	delete(this);
