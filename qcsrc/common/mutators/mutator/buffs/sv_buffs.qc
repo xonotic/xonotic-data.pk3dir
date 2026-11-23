@@ -122,8 +122,8 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 		return false;
 
 	entity heldbuff = buff_FirstFromFlags(view); // TODO: cache this information so it isn't performing a loop every frame
-	if (heldbuff) 
-		return CS_CVAR(view).cvar_cl_buffs_autoreplace == false || heldbuff != this.owner.buffdef;
+	if (heldbuff && heldbuff == this.owner.buffdef && CS_CVAR(view).cvar_cl_buffs_autoreplace)
+		return false;
 
 	return WaypointSprite_visible_for_player(this, player, view);
 }
