@@ -109,11 +109,13 @@ float autocvar_w_prop_interval = 5;
 
 void W_PROP_reload(int chan, entity to)
 {
-	W_PROP_reloader.nextthink = time + autocvar_w_prop_interval;
+	if (chan != MSG_ONE)
+		W_PROP_reloader.nextthink = time + autocvar_w_prop_interval;
 	msg_entity = to;
 	FOREACH(Weapons, true,
 	{
-		it.wr_update(it);
+		if (chan != MSG_ONE)
+			it.wr_update(it);
 		void(Weapon, int) f = it.wr_net;
 		if (f)
 			f(it, chan);
