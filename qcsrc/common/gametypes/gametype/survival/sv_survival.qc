@@ -4,6 +4,7 @@
 #include <server/chat.qh>
 
 int autocvar_g_survival_hide_chat = 0;
+bool autocvar_g_survival_permanent_corpses;
 float autocvar_g_survival_hunter_count = 0.25;
 float autocvar_g_survival_round_timelimit = 120;
 bool autocvar_g_survival_round_timelimit_fragreset = false;
@@ -426,6 +427,21 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 {
+	// It's now a corpse
+	if (autocvar_g_survival_permanent_corpses)
+	{
+		// Make it undestroyable
+		entity player = M_ARGV(0, entity);
+		if (player.damagedbycontents)
+			IL_REMOVE(g_damagedbycontents, player);
+		player.damagedbycontents = false;
+		player.takedamage = DAMAGE_NO;
+		player.event_damage = func_null;
+		player.event_heal = func_null;
+		// Make it immovable (except inertia) so it stays near the crime scene
+		player.damageforcescale = 0;
+	}
+
 	// Reset the timer with each death if g_survival_round_timelimit_fragreset is enabled
 	if (warmup_stage || !round_handler_IsActive() || !round_handler_IsRoundStarted()
 	|| !autocvar_g_survival_round_timelimit_fragreset)
@@ -442,6 +458,32 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 
 	if (survivors && hunters) // this wasn't the final kill, so reset the timer
 		round_handler_SetEndTime(autocvar_g_survival_round_timelimit);
+}
+
+MUTATOR_HOOKFUNCTION(surv, PreventGib)
+{
+	// Keep all corpses
+	return (autocvar_g_survival_permanent_corpses
+		&& !warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted());
+}
+
+MUTATOR_HOOKFUNCTION(surv, CopyBody)
+{
+	if (!autocvar_g_survival_permanent_corpses
+	|| warmup_stage || !round_handler_IsActive() || !round_handler_IsRoundStarted())
+		return false;
+
+	entity player = M_ARGV(0, entity);
+	if (!IS_DEAD(player))
+		return false;
+
+	// Make cloned corpses stay for the rest of the round
+	entity clone = M_ARGV(1, entity);
+	clone.CopyBody_nextthink = 0; // don't run the fade out think
+	clone.velocity = '0 0 0'; // may cause corpses to float
+	set_movetype(clone, MOVETYPE_NONE);
+	clone.solid = SOLID_NOT;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)

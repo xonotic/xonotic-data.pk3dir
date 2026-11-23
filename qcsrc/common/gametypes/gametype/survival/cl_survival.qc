@@ -113,7 +113,9 @@ MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 		return false;
 
 	entity player = M_ARGV(0, entity);
-	entity e = playerslots[player.entnum - 1];
+	// On corpses the entity num is networked via .sv_entnum
+	int slot = ((player.isplayermodel & ISPLAYER_CLIENT) ? player.entnum : player.sv_entnum);
+	entity e = (slot > 0 && slot <= maxclients) ? playerslots[slot - 1] : NULL;
 	if (e && e.colormap)
 		player.colormap = e.colormap;
 	else

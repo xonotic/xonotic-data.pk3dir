@@ -109,6 +109,13 @@ MUTATOR_HOOKABLE(PlayerDies, params);
 MUTATOR_HOOKABLE(PlayerDied, params);
 #undef params
 
+/// Return true to prevent a player body from gibbing
+#define params(i, o) \
+	i(entity, 0) /* player */ \
+	/**/
+MUTATOR_HOOKABLE(PreventGib, params);
+#undef params
+
 /// Called when showing an obituary for the player. return true to show nothing (workarounds may be needed)
 #define params(i, o) \
 	i(entity, 0) /* inflictor */ \
