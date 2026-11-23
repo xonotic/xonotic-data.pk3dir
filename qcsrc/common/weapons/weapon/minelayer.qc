@@ -40,6 +40,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	newmine.projectiledeathtype = this.projectiledeathtype;
 
 	newmine.mine_time = this.mine_time;
+	newmine.minelayer_detonate = this.minelayer_detonate;
 
 	settouch(newmine, func_null);
 	setthink(newmine, W_MineLayer_Think);
