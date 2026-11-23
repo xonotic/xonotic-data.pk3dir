@@ -176,7 +176,7 @@ void W_Devastator_Think(entity this)
 	{
 		if (this == this.realowner.(weaponentity).lastrocket
 		&& !this.realowner.(weaponentity).rl_release
-		&& !PHYS_INPUT_BUTTON_ATCK2(this)
+		&& !PHYS_INPUT_BUTTON_ATCK2(this.realowner)
 		&& WEP_CVAR(WEP_DEVASTATOR, guiderate)
 		&& time > this.pushltime
 		&& !IS_DEAD(this.realowner))
