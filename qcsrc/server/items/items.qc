@@ -331,6 +331,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
+		e.wait = e.scheduledrespawntime; // read by physical_items mutator
 		e.item_respawncounter = 0;
 	}
 	else

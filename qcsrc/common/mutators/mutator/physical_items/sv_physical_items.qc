@@ -93,7 +93,8 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.owner == NULL && autocvar_g_physical_items <= 1)
+	bool dropped = ITEM_IS_LOOT(item);
+	if (!dropped && autocvar_g_physical_items <= 1)
 		return;
 	if (item.spawnflags & 1) // floating item
 		return;
@@ -112,11 +113,11 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	set_movetype(wep, MOVETYPE_PHYSICS);
 	wep.takedamage = DAMAGE_AIM;
 	wep.effects |= EF_NOMODELFLAGS; // disable the spinning
-	wep.colormap = item.owner.colormap;
-	wep.glowmod = item.owner.glowmod;
+	wep.colormap = item.colormap;
+	wep.glowmod = item.glowmod;
 	wep.damageforcescale = autocvar_g_physical_items_damageforcescale;
 	wep.dphitcontentsmask = item.dphitcontentsmask;
-	wep.cnt = (item.owner != NULL);
+	wep.cnt = dropped;
 
 	setthink(wep, physical_item_think);
 	wep.nextthink = time;
