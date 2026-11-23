@@ -145,6 +145,7 @@ void W_Electro_Orb_ExplodeOverTime(entity this)
 	newproj.nextthink = time + ELECTRO_COMBO_OVERTIME_DELAY;
 	newproj.teleport_time = time;
 	newproj.dmg_last = 1;
+	newproj.ltime = time + WEP_CVAR(WEP_ELECTRO, combo_duration);
 	set_movetype(newproj, MOVETYPE_NONE);
 
 	Net_LinkEntity(newproj, true, 0, electro_orb_send);
