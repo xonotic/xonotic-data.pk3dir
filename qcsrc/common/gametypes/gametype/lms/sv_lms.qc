@@ -424,6 +424,18 @@ MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 
 	player.lms_spectate = true;
 
+	if (!warmup_stage && time >= game_starttime)
+	{
+		// Shift up (subtract 1 from) the ranks of all players below this one
+		float player_rank = GameRules_scoring_add(player, LMS_RANK, 0);
+		if (player_rank)
+			FOREACH_CLIENT(it != player,
+			{
+				if (GameRules_scoring_add(it, LMS_RANK, 0) > player_rank)
+					GameRules_scoring_add(it, LMS_RANK, -1);
+			});
+	}
+
 	lms_RemovePlayer(player);
 	INGAME_STATUS_CLEAR(player);
 }
