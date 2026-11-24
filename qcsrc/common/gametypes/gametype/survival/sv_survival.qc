@@ -19,45 +19,50 @@ enum
 	SURV_STATE_PLAYING, SURV_STATE_REVEAL, SURV_STATE_RESET
 };
 
-bool SurvStatuses_SendEntity(entity this, entity to, int sf)
+/// Sends a bitset describing all players with role `role`
+void SurvRoles_SendEntity_RoleBitset(int role)
 {
-	// In CSQC, SF_SURV_RESET makes everyone's .survival_status NONE, SF_SURV_SET makes it PREY
+	for (int b, B, i = 1; i <= maxclients; )
+	{
+		B = 0;
+		for (b = BIT(0); b < BIT(8) && i <= maxclients; b <<= 1, ++i)
+			if (INGAME(edict_num(i)) && edict_num(i).survival_role == role)
+				B |= b; // they have the role
+		WriteByte(MSG_ENTITY, B);
+	}
+}
+
+bool SurvRoles_SendEntity(entity this, entity to, int sf)
+{
 	if (sf == 0xFFFFFF) // set by the engine, need to fix this
 		switch (surv_state)
 		{
 			default:
-			case SURV_STATE_PLAYING:  sf = SF_SURV_SET;     break;
+			case SURV_STATE_PLAYING:  sf = SF_SURV_START;   break;
 			case SURV_STATE_REVEAL:   sf = SF_SURV_REVEAL;  break;
 			case SURV_STATE_RESET:    sf = SF_SURV_RESET;   break;
 		}
 
-	if (!(sf & (SF_SURV_RESET | SF_SURV_REVEAL)))
-	if (to.survival_status == SURV_STATUS_HUNTER || !INGAME(to)) // send Hunters and specs/observers the Hunter list
-		sf = SF_SURV_HUNTERS;
+	if ((sf & SF_SURV_REVEAL) // to reveal we must send everyone the Hunters
+	|| (!(sf & SF_SURV_RESET) && (to.survival_role == SURV_ROLE_HUNTER || !INGAME(to)))) // send Hunters and specs/observers the Hunters
+		sf |= SF_SURV_HUNTERS;
 
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_SURV_STATUSES);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SURV_ROLES);
 	WriteByte(MSG_ENTITY, sf);
-	if (sf & (SF_SURV_HUNTERS | SF_SURV_REVEAL)) // send Hunter statuses, in a bitset
-		for (int b, B, i = 1; i <= maxclients; )
-		{
-			B = 0;
-			for (b = BIT(0); b < BIT(8) && i <= maxclients; b <<= 1, ++i)
-				if (INGAME(edict_num(i)) && edict_num(i).survival_status == SURV_STATUS_HUNTER)
-					B |= b; // they are a Hunter
-			WriteByte(MSG_ENTITY, B);
-		}
+	if (sf & SF_SURV_HUNTERS) // send Hunters, in a bitset
+		SurvRoles_SendEntity_RoleBitset(SURV_ROLE_HUNTER);
 	return true;
 }
 
-entity survStatuses;
-void SurvStatuses_Init()
+entity survRoles;
+void SurvRoles_Init()
 {
-	if (survStatuses)
+	if (survRoles)
 	{
-		backtrace("Can't spawn survStatuses again!");
+		backtrace("Can't spawn survRoles again!");
 		return;
 	}
-	Net_LinkEntity(survStatuses = new_pure(survStatuses), false, 0, SurvStatuses_SendEntity);
+	Net_LinkEntity(survRoles = new_pure(survRoles), false, 0, SurvRoles_SendEntity);
 }
 
 bool surv_IsAlivePlayer(entity e)
@@ -79,14 +84,14 @@ void Surv_UpdateScores(bool timed_out)
 			continue;
 
 		// player survived the round
-		switch (it.survival_status)
+		switch (it.survival_role)
 		{
-			case SURV_STATUS_PREY:
+			case SURV_ROLE_SURVIVOR:
 				GameRules_scoring_add(it, SURV_SURVIVALS, 1);
 				if (autocvar_g_survival_reward_survival)
 					GameRules_scoring_add(it, SCORE, 1); // reward survivors who survived the round
 				break;
-			case SURV_STATUS_HUNTER:
+			case SURV_ROLE_HUNTER:
 				GameRules_scoring_add(it, SURV_HUNTS, 1);
 				if (!timed_out)
 					GameRules_scoring_add(it, SCORE, 1); // reward hunters who survived the round (more than hunters who died)
@@ -113,16 +118,16 @@ bool Surv_CheckWinner()
 		game_stopped = true;
 		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 		surv_state = SURV_STATE_REVEAL;
-		survStatuses.SendFlags |= SF_SURV_REVEAL;
+		survRoles.SendFlags |= SF_SURV_REVEAL;
 		return true;
 	}
 
 	int survivor_count = 0, hunter_count = 0;
 	FOREACH_CLIENT(surv_IsAlivePlayer(it),
 	{
-		if (it.survival_status == SURV_STATUS_PREY)
+		if (it.survival_role == SURV_ROLE_SURVIVOR)
 			++survivor_count;
-		else if (it.survival_status == SURV_STATUS_HUNTER)
+		else if (it.survival_role == SURV_ROLE_HUNTER)
 			++hunter_count;
 	});
 	if (survivor_count > 0 && hunter_count > 0)
@@ -160,7 +165,7 @@ bool Surv_CheckWinner()
 	game_stopped = true;
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 	surv_state = SURV_STATE_REVEAL;
-	survStatuses.SendFlags |= SF_SURV_REVEAL;
+	survRoles.SendFlags |= SF_SURV_REVEAL;
 
 	FOREACH_CLIENT(IS_PLAYER(it), nades_RemovePlayer(it));
 
@@ -176,10 +181,10 @@ void Surv_RoundStart()
 		if (surv_IsAlivePlayer(it))
 		{
 			++playercount;
-			it.survival_status = SURV_STATUS_PREY;
+			it.survival_role = SURV_ROLE_SURVIVOR;
 		}
 		else
-			it.survival_status = SURV_STATUS_NONE; // this is mostly a safety check; if a client manages to somehow maintain a survival status, clear it before the round starts!
+			it.survival_role = SURV_ROLE_NONE; // this is mostly a safety check; if a client manages to somehow maintain a survival role, clear it before the round starts!
 		it.survival_validkills = 0;
 	});
 	int hunter_count = (autocvar_g_survival_hunter_count >= 1)
@@ -192,16 +197,16 @@ void Surv_RoundStart()
 		if (total_hunters >= hunter_count)
 			break;
 		++total_hunters;
-		it.survival_status = SURV_STATUS_HUNTER;
+		it.survival_role = SURV_ROLE_HUNTER;
 	});
 	surv_state = SURV_STATE_PLAYING;
-	survStatuses.SendFlags |= SF_SURV_SET;
+	survRoles.SendFlags |= SF_SURV_START;
 
 	FOREACH_CLIENT(surv_IsAlivePlayer(it),
 	{
-		if (it.survival_status == SURV_STATUS_PREY)
+		if (it.survival_role == SURV_ROLE_SURVIVOR)
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR);
-		else if (it.survival_status == SURV_STATUS_HUNTER)
+		else if (it.survival_role == SURV_ROLE_HUNTER)
 			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_HUNTER);
 	});
 }
@@ -245,13 +250,13 @@ bool surv_isEliminated(entity e)
 	return false;
 }
 
-/// Returns true if no other alive players share this player's .survival_status
+/// Returns true if no other alive players share this player's .survival_role
 bool surv_IsLastOfTeam(entity this)
 {
-	int status = this.survival_status;
+	int role = this.survival_role;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !surv_isEliminated(it),
 	{
-		if (it.survival_status == status)
+		if (it.survival_role == role)
 			return false;
 	});
 	return true;
@@ -270,7 +275,7 @@ void surv_Initialize() // run at the start of a match, initiates gametype
 	round_handler_Spawn(Surv_CheckPlayers, Surv_CheckWinner, Surv_RoundStart);
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 	EliminatedPlayers_Init(surv_isEliminated);
-	SurvStatuses_Init();
+	SurvRoles_Init();
 }
 
 
@@ -289,11 +294,11 @@ MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 		entity wep_ent = M_ARGV(4, entity);
 		// "team" kill, a point is awarded to the player by default so we must take it away plus an extra one
 		// unless the player is going to be punished for suicide, in which case just remove one
-		if (frag_attacker.survival_status == frag_target.survival_status)
+		if (frag_attacker.survival_role == frag_target.survival_role)
 			GiveFrags(frag_attacker, frag_target, (autocvar_g_survival_punish_teamkill ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 	}
 
-	if (frag_attacker.survival_status != frag_target.survival_status)
+	if (frag_attacker.survival_role != frag_target.survival_role)
 		// Attacker anonymous, unless they killed the last member of the opposite team
 		M_ARGV(5, bool) = !surv_IsLastOfTeam(frag_target);
 	else
@@ -305,7 +310,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.survival_status = SURV_STATUS_NONE;
+	player.survival_role = SURV_ROLE_NONE;
 	player.survival_validkills = 0;
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (!warmup_stage)
@@ -342,7 +347,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 	FOREACH_CLIENT(true,
 	{
 		CS(it).killcount = 0;
-		it.survival_status = SURV_STATUS_NONE;
+		it.survival_role = SURV_ROLE_NONE;
 		if (INGAME(it) || IS_BOT_CLIENT(it))
 		{
 			TRANSMUTE(Player, it);
@@ -352,7 +357,7 @@ MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 	});
 	bot_relinkplayerlist();
 	surv_state = SURV_STATE_RESET;
-	survStatuses.SendFlags |= SF_SURV_RESET;
+	survRoles.SendFlags |= SF_SURV_RESET;
 	return true;
 }
 
@@ -377,7 +382,7 @@ void surv_NotifyLastPlayerOnTeam(entity this)
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this,
 	{
-		if (!IS_DEAD(it) && this.survival_status == it.survival_status)
+		if (!IS_DEAD(it) && this.survival_role == it.survival_role)
 		{
 			if (!last_pl)
 				last_pl = it;
@@ -414,7 +419,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	&& frag_attacker != frag_target
 	&& surv_IsAlivePlayer(frag_attacker)
 	&& IS_PLAYER(frag_target)
-	&& frag_attacker.survival_status == frag_target.survival_status
+	&& frag_attacker.survival_role == frag_target.survival_role
 	&& !warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't started yet
 		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 	return true;
@@ -445,9 +450,9 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 	bool survivors = false, hunters = false;
 	FOREACH_CLIENT(surv_IsAlivePlayer(it),
 	{
-		if (it.survival_status == SURV_STATUS_PREY)
+		if (it.survival_role == SURV_ROLE_SURVIVOR)
 			survivors = true;
-		else if (it.survival_status == SURV_STATUS_HUNTER)
+		else if (it.survival_role == SURV_ROLE_HUNTER)
 			hunters = true;
 	});
 
@@ -508,7 +513,7 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 	if (!INGAME(player))
 	{
 		player.survival_validkills = 0;
-		player.survival_status = SURV_STATUS_NONE;
+		player.survival_role = SURV_ROLE_NONE;
 		return false;  // allow team reset
 	}
 	return true;  // prevent team reset
@@ -571,7 +576,7 @@ MUTATOR_HOOKFUNCTION(surv, Bot_ForbidAttack)
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (targ.survival_status == bot.survival_status)
+	if (targ.survival_role == bot.survival_role)
 		return true;
 }
 
