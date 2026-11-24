@@ -1026,7 +1026,12 @@ void ctf_CheckStalemate()
 
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
 	if (!ctf_stalemate)
+	{
+		// the stalemate is over, remove the stalemate carrier wps
+		IL_EACH(g_flags, it.owner && CTF_DIFFTEAM(it.owner, it) && it.owner.wps_enemyflagcarrier,
+			WaypointSprite_Kill(it.owner.wps_enemyflagcarrier));
 		return;
+	}
 
 	for (entity tmp_entity = ctf_staleflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_staleflagnext)
 		if (tmp_entity.owner && !tmp_entity.owner.wps_enemyflagcarrier)
