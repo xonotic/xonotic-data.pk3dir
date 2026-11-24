@@ -30,34 +30,27 @@ void XonoticToSDialog_loadXonoticToS(entity me)
 
 void XonoticToS_OnGet(entity fh, entity me, int status)
 {
-	switch (status) {
+	switch (status)
+	{
 		case URL_READY_CLOSED:
-		{
 			break;
-		}
+
 		case URL_READY_ERROR:
-		{
 			me.textBox.setText(me.textBox, "Error reading ToS");
 			break;
-		}
+
 		case URL_READY_CANREAD:
 		{
 			string temp = "";
 			for (string s; (s = url_fgets(fh)); )
-			{
-				if (temp != "")
-					temp = strcat(temp, "\n", s);
-				else
-					temp = s;
-			}
+				temp = cons_mid(temp, "\n", s);
 			url_fclose(fh);
 			me.textBox.setText(me.textBox, temp);
 			break;
 		}
+
 		default:
-		{
 			break;
-		}
 	}
 }
 

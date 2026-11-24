@@ -26,4 +26,3 @@ CLASS(XonoticServerInfoTab, XonoticTab)
 	ATTRIB(XonoticServerInfoTab, statsLabel, entity);
 ENDCLASS(XonoticServerInfoTab)
 entity makeXonoticServerInfoTab();
-
