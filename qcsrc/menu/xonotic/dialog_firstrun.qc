@@ -49,7 +49,6 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 0.5, me.playerNameLabel = makeXonoticTextLabel(0, _("Name:")));
-			me.playerNameLabelAlpha = me.playerNameLabel.alpha;
 		me.TD(me, 1, 3.25, label = makeXonoticTextLabel(0, string_null));
 			label.allowCut = true;
 			label.allowColors = true;

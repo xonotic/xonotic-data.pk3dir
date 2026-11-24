@@ -7,6 +7,6 @@ CLASS(XonoticDemoBrowserTab, XonoticTab)
 	ATTRIB(XonoticDemoBrowserTab, rows, float, 17);
 	ATTRIB(XonoticDemoBrowserTab, columns, float, 6.5);
 	ATTRIB(XonoticDemoBrowserTab, name, string, "DemoBrowser");
-	ATTRIB(XonoticDemoBrowserTab, democlicktype, float, 0);
+	ATTRIB(XonoticDemoBrowserTab, democlicktype, int, 0);
 ENDCLASS(XonoticDemoBrowserTab)
 entity makeXonoticDemoBrowserTab();

@@ -260,12 +260,12 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 	entity e = me.favoriteButton;
 	if(IsFavorite(me.ipAddressBox.text))
 	{
-		e.setText(e, ZCTX(_("SERVER^Remove favorite")));
+		e.setText(e, CTX(_("SERVER^Remove favorite")));
 		setZonedTooltip(e, _("Remove the currently highlighted server from bookmarks"), string_null);
 	}
 	else
 	{
-		e.setText(e, ZCTX(_("SERVER^Favorite")));
+		e.setText(e, CTX(_("SERVER^Favorite")));
 		setZonedTooltip(e, _("Bookmark the currently highlighted server so that it's faster to find in the future"), string_null);
 	}
 }
@@ -897,12 +897,18 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	*/
 
 	// list the mods here on which the pure server check actually works
-	if(modname != "xonotic")
-	if(modname != "instagib" || modname != "minstagib")
-	if(modname != "cts")
-	if(modname != "nix")
-	if(modname != "newtoys")
-		pure_available = false;
+	switch (modname)
+	{
+		case "xonotic":
+		case "instagib": case "minstagib":
+		case "cts":
+		case "nix":
+		case "newtoys":
+			break;
+		default:
+			pure_available = false;
+			break;
+	}
 
 	float theAlpha;
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0) // can't connect
@@ -922,22 +928,29 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	// this colour selection code should match csqc Scoreboard_GetField()
 	if (ping < PING_LOW)
 		theColor = SKINCOLOR_SERVERLIST_LOWPING;
-	else if(ping < PING_MED)
+	else if (ping < PING_MED)
 		theColor = SKINCOLOR_SERVERLIST_LOWPING + (SKINCOLOR_SERVERLIST_MEDPING - SKINCOLOR_SERVERLIST_LOWPING) * ((ping - PING_LOW) / (PING_MED - PING_LOW));
-	else if(ping < PING_HIGH)
+	else if (ping < PING_HIGH)
 		theColor = SKINCOLOR_SERVERLIST_MEDPING + (SKINCOLOR_SERVERLIST_HIGHPING - SKINCOLOR_SERVERLIST_MEDPING) * ((ping - PING_MED) / (PING_HIGH - PING_MED));
 	else
 	{
-		theColor = eX;
+		theColor = SKINCOLOR_SERVERLIST_HIGHPING;
 		theAlpha *= 1 + (SKINALPHA_SERVERLIST_HIGHPING - 1) * ((ping - PING_HIGH) / (PING_HIGH * 2 - PING_HIGH));
 	}
 
-	if(gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
+	if (gethostcachenumber(SLIST_FIELD_ISFAVORITE, i))
 	{
 		theColor = theColor * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINCOLOR_SERVERLIST_FAVORITE * SKINALPHA_SERVERLIST_FAVORITE;
 		if (gethostcachenumber(SLIST_FIELD_FREESLOTS, i) > 0) // can connect
 			theAlpha = theAlpha * (1 - SKINALPHA_SERVERLIST_FAVORITE) + SKINALPHA_SERVERLIST_FAVORITE;
 	}
+
+	if (isSelected)
+		theAlpha = 1;
+	else if (isFocused)
+		theAlpha = theAlpha * 0.5 + 0.5;
+	else
+		theAlpha = max(0.1, theAlpha); // previous changes could've made it even negative
 
 	s = gethostcachestring(SLIST_FIELD_CNAME, i);
 
@@ -1052,8 +1065,8 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		string t = "";
 		if(me.seenIPv4 && me.seenIPv6)
 			t = strcat(t, (isv6) ? "IPv6, " : "IPv4, ");
-		t = strcat(t, _("encryption:"), " ", (crypto ? sprintf(_("AES level %d"), crypto) : ZCTX(_("ENC^none"))), ", ");
-		t = strcat(t, sprintf(_("mod: %s"), ((modname == "xonotic") ? ZCTX(_("MOD^Default")) : original_modname)));
+		t = strcat(t, _("encryption:"), " ", (crypto ? sprintf(_("AES level %d"), crypto) : CTX(_("ENC^none"))), ", ");
+		t = strcat(t, sprintf(_("mod: %s"), ((modname == "xonotic") ? CTX(_("MOD^Default")) : original_modname)));
 		if(pure_available)
 			t = strcat(t, sprintf(_(" (%s)"), (pure) ? _("official settings") : _("modified settings")));
 		t = strcat(t, ", ");

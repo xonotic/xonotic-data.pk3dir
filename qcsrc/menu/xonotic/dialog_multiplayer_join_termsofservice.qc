@@ -33,7 +33,7 @@ void AdditionalServerInfo_OnGet(entity fh, entity me, int status)
 		}
 		case URL_READY_ERROR:
 		{
-			me.textBox.setText(me.textBox, "Error reading ToS");
+			me.textBox.setText(me.textBox, _("Error reading terms of service"));
 			break;
 		}
 		case URL_READY_CANREAD:

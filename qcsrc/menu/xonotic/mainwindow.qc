@@ -85,20 +85,10 @@ void MainWindow_configureMainWindow(entity me)
 {
 	entity n, i;
 
-	// terms of service dialog
-	me.ToSDialog = i = NEW(XonoticToSDialog);
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	// dialog run upon startup
-	me.firstRunDialog = i = NEW(XonoticFirstRunDialog);
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
+	// server welcome dialog
 	i = NEW(XonoticWelcomeDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
 
 	// hud_configure dialogs
 	i = NEW(XonoticHUDExitDialog);
@@ -281,6 +271,16 @@ void MainWindow_configureMainWindow(entity me)
 	i = NEW(XonoticMonsterToolsDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z * SKINALPHA_DIALOG_SANDBOXTOOLS);
+
+	// terms of service dialog
+	me.ToSDialog = i = NEW(XonoticToSDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	// dialog run upon startup
+	me.firstRunDialog = i = NEW(XonoticFirstRunDialog);
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 	MUTATOR_CALLHOOK(ConfigureDialogs, me);
 
