@@ -11879,7 +11879,7 @@ msgstr "Глушити звук, коли гра неактивна"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "Sound Settings"
-msgstr "Поведінка Звука"
+msgstr "Параметри Звуку"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "Frequency:"
@@ -14884,7 +14884,7 @@ msgstr "%s дБ"
 
 #: qcsrc/menu/xonotic/slider_display.qc:12
 msgid "Display number"
-msgstr "Показувати число"
+msgstr "Номер дисплея"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:12
 msgid ""

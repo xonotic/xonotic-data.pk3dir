@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-22 07:22+0100\n"
 "PO-Revision-Date: 2013-09-12 16:53+0000\n"
-"Last-Translator: k9er, 2024\n"
+"Last-Translator: k9er, 2024-2026\n"
 "Language-Team: English (United Kingdom) (http://app.transifex.com/team-"
 "xonotic/xonotic/language/en_GB/)\n"
 "Language: en_GB\n"
@@ -11814,7 +11814,7 @@ msgstr "Sandbox Tools"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:16
 msgid "Graphics"
-msgstr ""
+msgstr "Graphics"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:17
 msgid "Game"
@@ -11838,7 +11838,7 @@ msgstr "Change the game settings"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:29
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:32
 msgid "Master:"
@@ -11890,7 +11890,7 @@ msgstr "Mute sounds when not active"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "Sound Settings"
-msgstr ""
+msgstr "Sound Settings"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "Frequency:"
@@ -12566,11 +12566,11 @@ msgstr "Right align"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:94
 msgid "Swaying"
-msgstr ""
+msgstr "Swaying"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:98
 msgid "Bobbing"
-msgstr ""
+msgstr "Bobbing"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:111
 msgid "Apply team colors to weapon beam effects:"
@@ -12806,7 +12806,7 @@ msgstr "Particles further away than this will not be drawn"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:42
 msgid "Realtime"
-msgstr ""
+msgstr "Real-time"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:44
 msgid "Corona brightness:"
@@ -12905,7 +12905,7 @@ msgstr "Enable the use of glossmaps on textures supporting them"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qh:7
 msgid "Lighting"
-msgstr ""
+msgstr "Lighting"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_perspective.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_graphics_perspective.qh:7
@@ -12959,7 +12959,7 @@ msgstr "Allow passing through walls while spectating"
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qh:7
 msgid "Rendering"
-msgstr ""
+msgstr "Rendering"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:29
 msgid "Brightness:"
@@ -13242,7 +13242,7 @@ msgstr "Resolution:"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_video.qc:52
 msgid "Display:"
-msgstr ""
+msgstr "Display:"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_video.qc:56
 msgid "Font/UI size:"
@@ -14714,35 +14714,35 @@ msgstr "Various fun changes to physics and movement."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:477
 msgid "Dynamic respawn time"
-msgstr ""
+msgstr "Dynamic respawn time"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:480 qcsrc/menu/xonotic/mutatortab.qc:494
 #: qcsrc/menu/xonotic/mutatortab.qc:500
 #, c-format
 msgid "%s:"
-msgstr ""
+msgstr "%s:"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:480 qcsrc/menu/xonotic/mutatortab.qc:500
 #, c-format
 msgid "Maximum multiplier"
-msgstr ""
+msgstr "Maximum multiplier"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:486
 msgid "Dynamic handicap"
-msgstr ""
+msgstr "Dynamic handicap"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:494
 #, c-format
 msgid "Minimum multiplier"
-msgstr ""
+msgstr "Minimum multiplier"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:496
 msgid "Values less than 1 buff players with low scores"
-msgstr ""
+msgstr "Values less than 1 buff players with low scores"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:507
 msgid "Options to dynamically balance players mid-match."
-msgstr ""
+msgstr "Options to dynamically balance players mid-match."
 
 #: qcsrc/menu/xonotic/mutatortab.qh:33
 msgid "Weapon arena"
@@ -14762,7 +14762,7 @@ msgstr "Custom physics"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:83
 msgid "Dynamic balancing"
-msgstr ""
+msgstr "Dynamic balancing"
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
@@ -14895,7 +14895,7 @@ msgstr "%s dB"
 
 #: qcsrc/menu/xonotic/slider_display.qc:12
 msgid "Display number"
-msgstr ""
+msgstr "Display number"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:12
 msgid ""
