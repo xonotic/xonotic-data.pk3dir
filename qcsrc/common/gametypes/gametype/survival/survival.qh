@@ -43,9 +43,15 @@ const int SF_SURV_START    = BIT(1);
 const int SF_SURV_HUNTERS  = BIT(2);
 const int SF_SURV_REVEAL   = BIT(3);
 
-.int survival_role; ///< Survival role of the player: SURV_ROLE_HUNTER, SURV_ROLE_SURVIVOR, or SURV_ROLE_NONE
+REGISTER_NET_TEMP(CLIENT_SURV_INVESTIGATION)
+
+.int survival_role; ///< Survival role of the player: SURV_ROLE_HUNTER, SURV_ROLE_SURVIVOR, SURV_ROLE_DETECTIVE, or SURV_ROLE_NONE
 enum
 {
-	SURV_ROLE_NONE, SURV_ROLE_SURVIVOR, SURV_ROLE_HUNTER
+	SURV_ROLE_NONE, SURV_ROLE_HUNTER, SURV_ROLE_SURVIVOR, SURV_ROLE_DETECTIVE
 };
+
+// Team checking. Must have SURVIVOR and DETECTIVE as the last entries of the enum
+#define SURV_SAMETEAM(a, b) ((a).survival_role == (b).survival_role || ((a).survival_role >= SURV_ROLE_SURVIVOR && (b).survival_role >= SURV_ROLE_SURVIVOR))
+#define SURV_DIFFTEAM(a, b) ((a).survival_role != (b).survival_role && ((a).survival_role <  SURV_ROLE_SURVIVOR || (b).survival_role <  SURV_ROLE_SURVIVOR))
 #endif

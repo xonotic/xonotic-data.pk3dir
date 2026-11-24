@@ -5,6 +5,8 @@
 
 int autocvar_g_survival_hide_chat = 0;
 bool autocvar_g_survival_permanent_corpses;
+bool autocvar_g_survival_detective_reveal_fragger = true;
+float autocvar_g_survival_detective_count = 0.095;
 float autocvar_g_survival_hunter_count = 0.25;
 float autocvar_g_survival_round_timelimit = 120;
 bool autocvar_g_survival_round_timelimit_fragreset = false;
@@ -49,6 +51,8 @@ bool SurvRoles_SendEntity(entity this, entity to, int sf)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SURV_ROLES);
 	WriteByte(MSG_ENTITY, sf);
+	if (sf & SF_SURV_START)   // send Detectives, in a bitset
+		SurvRoles_SendEntity_RoleBitset(SURV_ROLE_DETECTIVE);
 	if (sf & SF_SURV_HUNTERS) // send Hunters, in a bitset
 		SurvRoles_SendEntity_RoleBitset(SURV_ROLE_HUNTER);
 	return true;
@@ -87,6 +91,7 @@ void Surv_UpdateScores(bool timed_out)
 		switch (it.survival_role)
 		{
 			case SURV_ROLE_SURVIVOR:
+			case SURV_ROLE_DETECTIVE:
 				GameRules_scoring_add(it, SURV_SURVIVALS, 1);
 				if (autocvar_g_survival_reward_survival)
 					GameRules_scoring_add(it, SCORE, 1); // reward survivors who survived the round
@@ -124,12 +129,18 @@ bool Surv_CheckWinner()
 
 	int survivor_count = 0, hunter_count = 0;
 	FOREACH_CLIENT(surv_IsAlivePlayer(it),
-	{
-		if (it.survival_role == SURV_ROLE_SURVIVOR)
-			++survivor_count;
-		else if (it.survival_role == SURV_ROLE_HUNTER)
-			++hunter_count;
-	});
+		switch (it.survival_role)
+		{
+			case SURV_ROLE_SURVIVOR:
+			case SURV_ROLE_DETECTIVE:
+				++survivor_count;
+				break;
+			case SURV_ROLE_HUNTER:
+				++hunter_count;
+				break;
+			default:
+				break;
+		});
 	if (survivor_count > 0 && hunter_count > 0)
 	{
 		// Dr. Jaska:
@@ -175,6 +186,7 @@ bool Surv_CheckWinner()
 void Surv_RoundStart()
 {
 	allowed_to_spawn = boolean(warmup_stage);
+	// First set everyone to Survivor
 	int playercount = 0;
 	FOREACH_CLIENT(true,
 	{
@@ -187,27 +199,58 @@ void Surv_RoundStart()
 			it.survival_role = SURV_ROLE_NONE; // this is mostly a safety check; if a client manages to somehow maintain a survival role, clear it before the round starts!
 		it.survival_validkills = 0;
 	});
+
+	// Choose role counts
+	// Must be at least 2 Survivors (if there's >2 players) or else they know everyone else is a Hunter
 	int hunter_count = (autocvar_g_survival_hunter_count >= 1)
 		? autocvar_g_survival_hunter_count                      // absolute
 		: rint(playercount * autocvar_g_survival_hunter_count); // proportion, rounded
 	hunter_count = bound(1, hunter_count, playercount - 1);
-	int total_hunters = 0;
-	FOREACH_CLIENT_RANDOM(surv_IsAlivePlayer(it),
+	int detective_count;
+	if (autocvar_g_survival_permanent_corpses)
 	{
-		if (total_hunters >= hunter_count)
+		detective_count = (autocvar_g_survival_detective_count >= 1 || autocvar_g_survival_detective_count <= 0)
+			? autocvar_g_survival_detective_count                      // absolute
+			: rint(playercount * autocvar_g_survival_detective_count); // proportion, rounded
+		if (hunter_count + detective_count >= playercount - 1)
+			detective_count = max(0, playercount - hunter_count - 2);
+	}
+	else
+		detective_count = 0; // corpses need to be permanent for Detectives to use them
+	// Might not be able to spawn `detective_count` Detectives, if `hunter_count` is high; Hunters take priority over Detectives
+	int total_hunters    = 0;
+	int total_detectives = 0;
+	FOREACH_CLIENT_RANDOM(it.survival_role != SURV_ROLE_NONE,
+	{
+		if (total_hunters < hunter_count)
+		{
+			++total_hunters;
+			it.survival_role = SURV_ROLE_HUNTER;
+		}
+		else if (total_detectives < detective_count)
+		{
+			++total_detectives;
+			it.survival_role = SURV_ROLE_DETECTIVE;
+		}
+		else
 			break;
-		++total_hunters;
-		it.survival_role = SURV_ROLE_HUNTER;
 	});
+
 	surv_state = SURV_STATE_PLAYING;
 	survRoles.SendFlags |= SF_SURV_START;
 
-	FOREACH_CLIENT(surv_IsAlivePlayer(it),
+	Notification notif;
+	FOREACH_CLIENT(it.survival_role != SURV_ROLE_NONE,
 	{
-		if (it.survival_role == SURV_ROLE_SURVIVOR)
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_SURVIVOR);
-		else if (it.survival_role == SURV_ROLE_HUNTER)
-			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_HUNTER);
+		switch (it.survival_role)
+		{
+			case SURV_ROLE_SURVIVOR:   notif = CENTER_SURVIVAL_SURVIVOR;   break;
+			case SURV_ROLE_DETECTIVE:  notif = CENTER_SURVIVAL_DETECTIVE;  break;
+			case SURV_ROLE_HUNTER:     notif = CENTER_SURVIVAL_HUNTER;     break;
+			default:                   notif = NULL;                       break;
+		}
+		if (notif)
+			Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, notif);
 	});
 }
 
@@ -250,13 +293,12 @@ bool surv_isEliminated(entity e)
 	return false;
 }
 
-/// Returns true if no other alive players share this player's .survival_role
+/// Returns true if this is the last player on their 'team'
 bool surv_IsLastOfTeam(entity this)
 {
-	int role = this.survival_role;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this && !surv_isEliminated(it),
 	{
-		if (it.survival_role == role)
+		if (SURV_SAMETEAM(it, this))
 			return false;
 	});
 	return true;
@@ -294,16 +336,16 @@ MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 		entity wep_ent = M_ARGV(4, entity);
 		// "team" kill, a point is awarded to the player by default so we must take it away plus an extra one
 		// unless the player is going to be punished for suicide, in which case just remove one
-		if (frag_attacker.survival_role == frag_target.survival_role)
+		if (SURV_SAMETEAM(frag_attacker, frag_target))
 			GiveFrags(frag_attacker, frag_target, (autocvar_g_survival_punish_teamkill ? -1 : -2), frag_deathtype, wep_ent.weaponentity_fld);
 	}
 
-	if (frag_attacker.survival_role != frag_target.survival_role)
-		// Attacker anonymous, unless they killed the last member of the opposite team
-		M_ARGV(5, bool) = !surv_IsLastOfTeam(frag_target);
-	else
+	if (SURV_SAMETEAM(frag_attacker, frag_target))
 		// Can't make things anonymous if teamkills are punished
 		M_ARGV(5, bool) = !autocvar_g_survival_punish_teamkill;
+	else
+		// Attacker anonymous, unless they killed the last member of the opposite team
+		M_ARGV(5, bool) = !surv_IsLastOfTeam(frag_target);
 }
 
 MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
@@ -342,12 +384,14 @@ MUTATOR_HOOKFUNCTION(surv, PutClientInServer)
 	}
 }
 
+.float surv_antispam; ///< Last time a player investigated a corpse
 MUTATOR_HOOKFUNCTION(surv, reset_map_players)
 {
 	FOREACH_CLIENT(true,
 	{
 		CS(it).killcount = 0;
 		it.survival_role = SURV_ROLE_NONE;
+		it.surv_antispam = 0;
 		if (INGAME(it) || IS_BOT_CLIENT(it))
 		{
 			TRANSMUTE(Player, it);
@@ -382,7 +426,7 @@ void surv_NotifyLastPlayerOnTeam(entity this)
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this,
 	{
-		if (!IS_DEAD(it) && this.survival_role == it.survival_role)
+		if (!IS_DEAD(it) && SURV_SAMETEAM(it, this))
 		{
 			if (!last_pl)
 				last_pl = it;
@@ -419,10 +463,49 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	&& frag_attacker != frag_target
 	&& surv_IsAlivePlayer(frag_attacker)
 	&& IS_PLAYER(frag_target)
-	&& frag_attacker.survival_role == frag_target.survival_role
+	&& SURV_SAMETEAM(frag_attacker, frag_target)
 	&& !warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted()) // don't autokill if the round hasn't started yet
 		Damage(frag_attacker, frag_attacker, frag_attacker, 100000, DEATH_MIRRORDAMAGE.m_id, DMG_NOWEP, frag_attacker.origin, '0 0 0');
 	return true;
+}
+
+.string fraggedby; ///< .netname of the player who fragged me
+void surv_PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
+{
+	// Allow detectives to find out info about corpses once they become cloned
+	// Only after cloning, so the info isn't send immediately after a frag
+	if (!surv_IsAlivePlayer(attacker) || attacker.survival_role != SURV_ROLE_DETECTIVE || time < attacker.surv_antispam)
+		return;
+	attacker.surv_antispam = time + 0.5;
+
+	// FIXME: these strings will be translated using the server's language rather than the client.
+	// If they were individual notifications, there'd be 12, with repeated text
+	string str;
+	switch (this.survival_role)
+	{
+		case SURV_ROLE_HUNTER:     str = _("^BG%s^BG was a ^xF11hunter^BG!");          break;
+		case SURV_ROLE_SURVIVOR:   str = _("^BG%s^BG was a ^x1F1survivor^BG!");        break;
+		case SURV_ROLE_DETECTIVE:  str = _("^BG%s^BG was also a ^x18Fdetective^BG!");  break;
+		default:
+			return;
+	}
+	str = sprintf(str, this.netname);
+	if (autocvar_g_survival_detective_reveal_fragger && this.fraggedby != "")
+		str = sprintf(_("%s %s"), str, sprintf(_("They were eliminated by %s"), this.fraggedby));
+	str = CCR(str);
+
+	Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_SURVIVAL_INVESTIGATE, str);
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == attacker, // also send the notif to specs watching
+		Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_INVESTIGATE, str));
+
+	// Color the corpse in CSQC
+	if (this.survival_role == SURV_ROLE_DETECTIVE) // corpse is already colored
+		return;
+	msg_entity = attacker;
+	WriteHeader(MSG_ONE, CLIENT_SURV_INVESTIGATION);
+	WriteByte(MSG_ONE, this.sv_entnum);
+	WriteByte(MSG_ONE, this.survival_role);
+	// Don't need to send this to specs since they know everyone's role
 }
 
 MUTATOR_HOOKFUNCTION(surv, PlayerDied)
@@ -430,8 +513,10 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 	// It's now a corpse
 	if (autocvar_g_survival_permanent_corpses)
 	{
-		// Make it undestroyable
 		entity player = M_ARGV(0, entity);
+		entity attacker = M_ARGV(1, entity);
+		player.fraggedby = attacker.netname;
+		// Make it undestroyable
 		if (player.damagedbycontents)
 			IL_REMOVE(g_damagedbycontents, player);
 		player.damagedbycontents = false;
@@ -449,12 +534,18 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 
 	bool survivors = false, hunters = false;
 	FOREACH_CLIENT(surv_IsAlivePlayer(it),
-	{
-		if (it.survival_role == SURV_ROLE_SURVIVOR)
-			survivors = true;
-		else if (it.survival_role == SURV_ROLE_HUNTER)
-			hunters = true;
-	});
+		switch (it.survival_role)
+		{
+			case SURV_ROLE_SURVIVOR:
+			case SURV_ROLE_DETECTIVE:
+				survivors = true;
+				break;
+			case SURV_ROLE_HUNTER:
+				hunters = true;
+				break;
+			default:
+				break;
+		});
 
 	if (survivors && hunters) // this wasn't the final kill, so reset the timer
 		round_handler_SetEndTime(autocvar_g_survival_round_timelimit);
@@ -479,10 +570,15 @@ MUTATOR_HOOKFUNCTION(surv, CopyBody)
 
 	// Make cloned corpses stay for the rest of the round
 	entity clone = M_ARGV(1, entity);
+	clone.netname = player.netname;
+	clone.survival_role = player.survival_role;
+	clone.fraggedby = player.fraggedby;
+	clone.event_damage = surv_PlayerCorpseDamage;
 	clone.CopyBody_nextthink = 0; // don't run the fade out think
-	clone.velocity = '0 0 0'; // may cause corpses to float
 	set_movetype(clone, MOVETYPE_NONE);
-	clone.solid = SOLID_NOT;
+	clone.takedamage = DAMAGE_AIM;
+	clone.solid = SOLID_CORPSE;
+	setorigin(clone, clone.origin); // make it shootable
 	return false;
 }
 
@@ -576,7 +672,7 @@ MUTATOR_HOOKFUNCTION(surv, Bot_ForbidAttack)
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
-	if (targ.survival_role == bot.survival_role)
+	if (SURV_SAMETEAM(targ, bot))
 		return true;
 }
 
