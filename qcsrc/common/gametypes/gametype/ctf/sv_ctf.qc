@@ -263,7 +263,7 @@ void ctf_FlagcarrierWaypoints(entity player)
 void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnrate)
 {
 	float current_distance = vlen(vec2(to.x - from.x, to.y - from.y)); // for the sake of this check, exclude Z axis
-	float initial_height = min(autocvar_g_ctf_pass_arc_max, flag.pass_distance * tanh(autocvar_g_ctf_pass_arc));
+	float initial_height = min(autocvar_g_ctf_pass_arc_max, flag.pass_distance * tanh(DEG2RAD * autocvar_g_ctf_pass_arc));
 	float current_height = initial_height * min(1, current_distance / flag.pass_distance);
 	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
 
