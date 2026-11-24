@@ -92,8 +92,7 @@ bool W_Fireball_LaserPlay_cond(entity e)
 {
 	return (e.takedamage == DAMAGE_AIM
 		&& e != WarpZone_SearchInRadius_otherent.realowner && !IS_INDEPENDENT_PLAYER(e)
-		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent))
-		&& !STAT(FROZEN, e) && !StatusEffects_active(STATUSEFFECT_Frozen, e));
+		&& (!IS_PLAYER(e) || !WarpZone_SearchInRadius_otherent.realowner || DIFF_TEAM(e, WarpZone_SearchInRadius_otherent)));
 }
 
 void W_Fireball_Think(entity this)

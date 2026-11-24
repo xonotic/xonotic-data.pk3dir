@@ -188,7 +188,7 @@ int W_MineLayer_Count(entity e, .entity weaponentity)
 
 bool W_MineLayer_Think_cond(entity e)
 {
-	return (IS_PLAYER(e) && !IS_DEAD(e) && !STAT(FROZEN, e) && !IS_INDEPENDENT_PLAYER(e)
+	return (IS_PLAYER(e) && !IS_DEAD(e) && !IS_INDEPENDENT_PLAYER(e)
 		&& DIFF_TEAM(e, WarpZone_SearchInRadius_otherent)); // don't trigger for team mates
 }
 void W_MineLayer_Think(entity this)
@@ -212,7 +212,7 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// a player's mines shall explode if they disconnect or die
-	if (!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner) || STAT(FROZEN, this.realowner))
+	if (!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner))
 	{
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		W_MineLayer_Explode(this, NULL);
