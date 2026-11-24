@@ -773,11 +773,9 @@ void ctf_Handle_Return(entity flag, entity player)
 		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
 	}
 
-	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
-
 	if (flag.ctf_dropper)
 	{
-		GameRules_scoring_add(flag.ctf_dropper, SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the player who dropped the flag
+		GameRules_scoring_add_team(flag.ctf_dropper, SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the player who dropped the flag
 		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield player from picking up flag
 		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay; // set next take time
 	}
