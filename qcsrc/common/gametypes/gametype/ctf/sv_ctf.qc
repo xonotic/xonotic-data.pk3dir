@@ -1219,7 +1219,9 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if (ITEM_TOUCH_NEEDKILL())
 	{
-		if (!autocvar_g_ctf_flag_return_damage_delay)
+		if (autocvar_g_ctf_flag_return_damage_delay)
+			flag.ctf_flagdamaged_byworld = true;
+		else
 		{
 			SetResourceExplicit(flag, RES_HEALTH, 0);
 			ctf_CheckFlagReturn(flag, RETURN_NEEDKILL);
