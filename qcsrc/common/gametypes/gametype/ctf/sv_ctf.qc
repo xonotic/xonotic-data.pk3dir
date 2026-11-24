@@ -299,29 +299,26 @@ void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnra
 
 bool ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
 {
-	if (autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
-	{
-		// directional tracing only
-		float spreadlimit;
-		makevectors(passer_angle);
+	if (!autocvar_g_ctf_pass_directional_max && !autocvar_g_ctf_pass_directional_min)
+		return true;
 
-		// find the closest point on the enemy to the center of the attack
-		vector dist = head_center - passer_center;
-		float h; // hypotenuse, which is the distance between attacker to head
-		float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
-		h = vlen(dist);
-		a = dist * v_forward;
+	// Directional tracing only
+	makevectors(passer_angle);
 
-		vector nearest_on_line = passer_center + a * v_forward;
-		float distance_from_line = vlen(nearest_to_passer - nearest_on_line);
+	// Find the closest point on the enemy to the center of the attack
+	vector dist = head_center - passer_center;
+	float a = dist * v_forward; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 
-		spreadlimit = (autocvar_g_ctf_pass_radius ? min(1, a / autocvar_g_ctf_pass_radius) : 1);
-		spreadlimit = autocvar_g_ctf_pass_directional_min * (1 - spreadlimit) + autocvar_g_ctf_pass_directional_max * spreadlimit;
+	if (a < 0) // can't pass if angled >90° away from head_center
+		return false;
 
-		return (spreadlimit && distance_from_line <= spreadlimit
-			&& vdist(dist * (1 / h) - v_forward, <=, 90 * DEG2RAD));
-	}
-	return true;
+	vector nearest_on_line = passer_center + a * v_forward;
+	float distance_from_line = vlen(nearest_to_passer - nearest_on_line);
+
+	float spreadlimit = (autocvar_g_ctf_pass_radius ? min(1, a / autocvar_g_ctf_pass_radius) : 1);
+	spreadlimit = autocvar_g_ctf_pass_directional_min * (1 - spreadlimit) + autocvar_g_ctf_pass_directional_max * spreadlimit;
+
+	return (spreadlimit && distance_from_line <= spreadlimit);
 }
 
 
