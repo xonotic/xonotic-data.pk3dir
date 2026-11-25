@@ -8,6 +8,7 @@
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/itemstime/_mod.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
@@ -231,12 +232,6 @@ void Item_Think(entity this)
 			ItemUpdate(this);
 	}
 }
-
-bool Item_ItemsTime_SpectatorOnly(GameItem it);
-bool Item_ItemsTime_Allow(GameItem it);
-float Item_ItemsTime_UpdateTime(entity e, float t);
-void Item_ItemsTime_SetTime(entity e, float t);
-void Item_ItemsTime_SetTimesForAllPlayers();
 
 void Item_Respawn(entity this)
 {
