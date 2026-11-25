@@ -122,6 +122,7 @@ void powerups_DropItem(entity this, StatusEffect effect, bool freezeTimer)
 	}
 
 	e.origin = this.origin;
+	makevectors(this.v_angle);
 	e.velocity = W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false);
 	if (!Item_Initialise(e))
 		return;
