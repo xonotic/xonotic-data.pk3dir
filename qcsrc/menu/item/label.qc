@@ -6,7 +6,7 @@
 	}
 	void Label_setText(entity me, string txt)
 	{
-		me.text = txt;
+		strcpy(me.text, txt);
 		if (txt != me.currentText)
 		{
 			strcpy(me.currentText, txt);
