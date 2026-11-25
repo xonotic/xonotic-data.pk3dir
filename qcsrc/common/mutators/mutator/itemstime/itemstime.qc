@@ -118,7 +118,10 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
 			continue;
 
 		if (it.scheduledrespawntime <= time)
-			isavailable = true;
+		{
+			if (it.ItemStatus & ITS_AVAILABLE)
+				isavailable = true;
+		}
 		else if (t == 0 || it.scheduledrespawntime < t)
 			t = it.scheduledrespawntime;
 	});
