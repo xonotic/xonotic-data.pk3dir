@@ -9,6 +9,7 @@
 
 int tkaballs, tkaballs_carry, tkaballs_dropped;
 int tkaballs_taken[NUM_TEAMS]; // taken doesn't include carrying -- taken by others
+int tkaball_owner = -1; ///< playerslots index of the owner of the ball, if there's only one and someone has it, otherwise -1
 
 float tkaballs_carry_change_time; ///< Time when tkaballs_carry last changed
 float tkaballs_taken_change_time[NUM_TEAMS]; ///< Time when tkaballs_taken[...] last changed
@@ -24,6 +25,7 @@ NET_HANDLE(ENT_CLIENT_TKA_BALLSTATUSES, bool isNew)
 	for (i = 0; i < team_count; ++i)
 		tkaballs_taken_prev[i] = tkaballs_taken[i];
 
+	tkaball_owner = -1;
 	if (sf & SF_TKA_BALLS) // receive ball statuses
 	{
 		tkaballs = ReadShort();
@@ -43,6 +45,8 @@ NET_HANDLE(ENT_CLIENT_TKA_BALLSTATUSES, bool isNew)
 					playerslots[ball_owner] = new_pure(playerslot);
 				++playerslots[ball_owner].tka_status;
 				++tkaballs_taken[Team_TeamToIndex(entcs_GetTeam(ball_owner)) - 1];
+				if (tkaballs == 1) // only a single ball so we'll draw the owner's name
+					tkaball_owner = ball_owner;
 			}
 		}
 		tkaballs_carry = (playerslots[player_currententnum - 1] ? playerslots[player_currententnum - 1].tka_status : 0);
@@ -86,9 +90,9 @@ void HUD_Mod_TKA_DrawItem_Multiple(vector itemPos, vector itemSize, float aspect
 	int d = team_count + 1;
 	switch (i)
 	{
-		case 0:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "keepawayball_carrying", tkaballs_carry_change_time,        tkaballs_carry,        true,  itos(tkaballs_carry));         break;
-		case d:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "notify_balldropped",    0,                                 tkaballs_dropped,      false, itos(tkaballs_dropped));       break;
-		default: HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, TKA_TAKEN_PIC(i),        tkaballs_taken_change_time[i - 1], tkaballs_taken[i - 1], false, itos(tkaballs_taken[i - 1]));  break;
+		case 0:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "keepawayball_carrying", tkaballs_carry_change_time,        tkaballs_carry,        true,  true, itos(tkaballs_carry));         break;
+		case d:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "notify_balldropped",    0,                                 tkaballs_dropped,      false, true, itos(tkaballs_dropped));       break;
+		default: HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, TKA_TAKEN_PIC(i),        tkaballs_taken_change_time[i - 1], tkaballs_taken[i - 1], false, true, itos(tkaballs_taken[i - 1]));  break;
 	}
 }
 
@@ -123,10 +127,11 @@ void HUD_Mod_TKA(vector myPos, vector mySize, bool should_draw)
 	if (mod_placeholder || tkaballs == 1)
 	{
 		// TODO: unique team-based carrying icons
-		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "keepawayball_carrying", tkaballs_carry_change_time, tkaballs_carry, true, "");
-		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "notify_balldropped", 0, tkaballs_dropped, false, "");
+		string s = (tkaball_owner == -1) ? "" : entcs_GetName(tkaball_owner);
+		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "keepawayball_carrying", tkaballs_carry_change_time, tkaballs_carry, true, false, s);
+		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "notify_balldropped", 0, tkaballs_dropped, false, false, s);
 		for (i = 0; i < team_count; ++i)
-			HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, TKA_TAKEN_PIC(i + 1), tkaballs_taken_change_time[i], tkaballs_taken[i], false, "");
+			HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, TKA_TAKEN_PIC(i + 1), tkaballs_taken_change_time[i], tkaballs_taken[i], false, false, s);
 	}
 	else // >1 balls
 		HUD_Mod_TableWithAR_Draw(myPos, mySize, team_count + 2, 2, HUD_Mod_TKA_DrawItem_Multiple); // aspect ratio 2 (icon & text)

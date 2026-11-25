@@ -7,6 +7,7 @@
 .int ka_status; ///< How many balls the player is carrying
 
 int kaballs, kaballs_carry, kaballs_taken, kaballs_dropped;
+int kaball_owner = -1; ///< playerslots index of the owner of the ball, if there's only one and someone has it, otherwise -1
 
 float kaballs_carry_change_time; ///< Time when kaballs_carry last changed
 float kaballs_taken_change_time; ///< Time when kaballs_taken last changed
@@ -20,6 +21,7 @@ NET_HANDLE(ENT_CLIENT_KA_BALLSTATUSES, bool isNew)
 	int kaballs_carry_prev = kaballs_carry;
 	int kaballs_taken_prev = kaballs_taken;
 
+	kaball_owner = -1;
 	if (sf & SF_KA_BALLS) // receive ball statuses
 	{
 		kaballs = ReadShort();
@@ -36,6 +38,8 @@ NET_HANDLE(ENT_CLIENT_KA_BALLSTATUSES, bool isNew)
 				if (!playerslots[ball_owner])
 					playerslots[ball_owner] = new_pure(playerslot);
 				++playerslots[ball_owner].ka_status;
+				if (kaballs == 1) // only a single ball so we'll draw the owner's name
+					kaball_owner = ball_owner;
 			}
 		}
 		kaballs_carry = (playerslots[player_currententnum - 1] ? playerslots[player_currententnum - 1].ka_status : 0);
@@ -52,14 +56,19 @@ NET_HANDLE(ENT_CLIENT_KA_BALLSTATUSES, bool isNew)
 	return true;
 }
 
-void HUD_Mod_Keepaway_DrawItem_Single(vector itemPos, vector itemSize, string pic, float change_time, bool cond, bool is_carrying, string text)
+void HUD_Mod_Keepaway_DrawItem_Single(vector itemPos, vector itemSize, string pic, float change_time, bool cond, bool is_carrying, bool multiple, string text)
 {
-	if (mod_placeholder && !is_carrying)
-		return;
-
 	float f, alpha = (autocvar_hud_panel_modicons_animations && is_carrying && cond)
 		? blink(0.85, 0.15, 5) // blink only if it's the carrying icon, and kaballs_carry == 0
 		: 1;
+
+	vector nameSize = '0 0 0';
+	if (!multiple && autocvar_hud_panel_modicons_playername_height > 0) // reserve vertical space at the bottom for the name text (even if none)
+	{
+		nameSize.x = itemSize.x;
+		nameSize.y = itemSize.y * autocvar_hud_panel_modicons_playername_height;
+		itemSize.y -= nameSize.y;
+	}
 
 	if (!mod_placeholder && autocvar_hud_panel_modicons_animations)
 	{
@@ -69,11 +78,26 @@ void HUD_Mod_Keepaway_DrawItem_Single(vector itemPos, vector itemSize, string pi
 	}
 	else
 		f = 1;
-	if (cond)
+	if (cond) // if !multiple, this is the currently active icon
 	{
 		drawpic_aspect_skin(itemPos, pic, itemSize, '1 1 1', panel_fg_alpha * alpha * f, DRAWFLAG_NORMAL);
-		if (text != "")
-			drawstring_aspect(itemPos + eX * itemSize.x, text, itemSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		if (text == "")
+		{
+			if (mod_placeholder)
+				text = sprintf(_("Player %d"), 1);
+			else
+				return;
+		}
+		if (multiple) // draw the number to the right
+		{
+			itemPos.x += itemSize.x;
+			drawstring_aspect(itemPos, text, itemSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		}
+		else if (nameSize.y) // draw the name below
+		{
+			itemPos.y += itemSize.y;
+			drawcolorcodedstring_aspect(itemPos, text, nameSize, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		}
 	}
 }
 
@@ -97,9 +121,9 @@ void HUD_Mod_Keepaway_DrawItem_Multiple(vector itemPos, vector itemSize, float a
 	switch (i)
 	{
 		default:
-		case 0:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "keepawayball_carrying", kaballs_carry_change_time, kaballs_carry,   true,  itos(kaballs_carry));    break;
-		case 1:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "notify_ballpickedup",   kaballs_taken_change_time, kaballs_taken,   false, itos(kaballs_taken));    break;
-		case 2:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "notify_balldropped",    0,                         kaballs_dropped, false, itos(kaballs_dropped));  break;
+		case 0:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "keepawayball_carrying", kaballs_carry_change_time, kaballs_carry,   true,  true, itos(kaballs_carry));    break;
+		case 1:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "notify_ballpickedup",   kaballs_taken_change_time, kaballs_taken,   false, true, itos(kaballs_taken));    break;
+		case 2:  HUD_Mod_Keepaway_DrawItem_Single(itemPos, itemSize, "notify_balldropped",    0,                         kaballs_dropped, false, true, itos(kaballs_dropped));  break;
 	}
 }
 
@@ -126,9 +150,12 @@ void HUD_Mod_Keepaway(vector myPos, vector mySize, bool should_draw)
 	// Draw icons
 	if (mod_placeholder || kaballs == 1)
 	{
-		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "keepawayball_carrying", kaballs_carry_change_time, kaballs_carry,   true,  "");
-		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "notify_ballpickedup",   kaballs_taken_change_time, kaballs_taken,   false, "");
-		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "notify_balldropped",    0,                         kaballs_dropped, false, "");
+		string s = (kaball_owner == -1) ? "" : entcs_GetName(kaball_owner);
+		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "keepawayball_carrying", kaballs_carry_change_time, kaballs_carry,   true,  false, s);
+		if (mod_placeholder)
+			return;
+		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "notify_ballpickedup",   kaballs_taken_change_time, kaballs_taken,   false, false, s);
+		HUD_Mod_Keepaway_DrawItem_Single(myPos, mySize, "notify_balldropped",    0,                         kaballs_dropped, false, false, s);
 	}
 	else // >1 balls: layout showing the number of carrying, taken, and dropped
 		HUD_Mod_TableWithAR_Draw(myPos, mySize, 3, 2, HUD_Mod_Keepaway_DrawItem_Multiple); // 3 items to draw, aspect ratio 2 (icon & text)

@@ -15,6 +15,7 @@ void HUD_ModIcons_Export(int fh)
 
 	FOREACH(Gametypes, it.m_modicons_export, it.m_modicons_export(fh));
 	HUD_Write_Cvar("hud_panel_modicons_animations");
+	HUD_Write_Cvar("hud_panel_modicons_playername_height");
 }
 
 void HUD_ModIcons_SetFunc()

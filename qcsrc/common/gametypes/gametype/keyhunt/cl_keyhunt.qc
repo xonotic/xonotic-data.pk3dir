@@ -124,6 +124,14 @@ string HUD_Mod_KH_GetPic(int team_i, bool carrying)
 
 void HUD_Mod_KH_DrawItem(vector itemPos, vector itemSize, float alpha, int i, int owner, int team_i, int our_team)
 {
+	vector nameSize = '0 0 0';
+	if (autocvar_hud_panel_modicons_playername_height > 0) // reserve vertical space at the bottom for the name text (even if none)
+	{
+		nameSize.x = itemSize.x;
+		nameSize.y = itemSize.y * autocvar_hud_panel_modicons_playername_height;
+		itemSize.y -= nameSize.y;
+	}
+
 	float f;
 	if (!mod_placeholder && autocvar_hud_panel_modicons_animations && i >= 0)
 	{
@@ -140,6 +148,19 @@ void HUD_Mod_KH_DrawItem(vector itemPos, vector itemSize, float alpha, int i, in
 	if (!carrying)
 		f = 1;
 	drawpic_aspect_skin(itemPos, HUD_Mod_KH_GetPic(team_i, carrying), itemSize, '1 1 1', panel_fg_alpha * alpha * f, DRAWFLAG_NORMAL);
+
+	// Draw the owner's name below
+	if (!nameSize.y)
+		return;
+	string name;
+	if (owner >= 0)
+		name = entcs_GetName(owner);
+	else if (mod_placeholder && team_i != -1)
+		name = sprintf(_("Player %d"), i + 1);
+	else
+		return;
+	itemPos.y += itemSize.y;
+	drawcolorcodedstring_aspect(itemPos, name, nameSize, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_Mod_KH(vector myPos, vector mySize, bool should_draw)

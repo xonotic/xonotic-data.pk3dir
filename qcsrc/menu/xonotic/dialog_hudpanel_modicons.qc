@@ -1,6 +1,7 @@
 #include "dialog_hudpanel_modicons.qh"
 
 #include "checkbox.qh"
+#include "mixedslider.qh"
 #include "textlabel.qh"
 #include <common/mapinfo.qh>
 #include <common/gametypes/gametype/clanarena/clanarena.qh>
@@ -34,4 +35,13 @@ void XonoticHUDModIconsDialog_fill(entity me)
 		// this technically isn't a modicons cvar since it also impacts the scoreboard & player colors, but it best fits here
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_modicons_animations", _("Enable animations")));
+	me.TR(me);
+		me.TD(me, 1, 1.8, e = makeXonoticTextLabel(0, _("Player name height:")));
+		me.TD(me, 1, 2.2, e = makeXonoticMixedSlider_T("hud_panel_modicons_playername_height",
+			_("Height of player names in the space given to player names and icons")));
+			e.formatString = "%";
+			e.setValueSpace(e, e.valueSpace * 1.25);
+			e.addText(e, _("Disable"), 0);
+			e.addRange(e, 0.1, 0.5, 0.05);
+			e.configureXonoticMixedSliderValues(e);
 }

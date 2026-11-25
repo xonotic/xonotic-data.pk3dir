@@ -13,6 +13,7 @@ enum
 // Teams can potentially have multiple flags (g_ctf_flag_stay 1 or if map has multiple) and hence multiple statuses
 // We choose the highest (most important) status to display
 int flag_status[NUM_TEAMS + 1]; ///< Each team's flag status we'll display, index 0 is neutral
+int flag_soleowner[NUM_TEAMS + 1]; ///< playerslots index of the owner each team's flag, as long as there's only one of that team's flag taken, otherwise -1
 bool ctf_oneflag; ///< One-flag CTF mode enabled/disabled
 bool ctf_stalemate; ///< Currently in stalemate
 bool ctf_icons_shown; ///< Whether the modicons HUD will show any icons
@@ -47,6 +48,8 @@ NET_HANDLE(ENT_CLIENT_CTF_FLAGSTATUSES, bool isNew)
 			flag_status[i] = ((sf & SF_CTF_SHIELDED) && i != our_team_i)
 				? FLAG_STATUS_SHIELDED
 				: FLAG_STATUS_BASE; // can't be shielded from our own flag
+		if (sf & SF_CTF_FLAGS)
+			flag_soleowner[i] = -1;
 	}
 
 	if (sf & SF_CTF_FLAGS) // receive flag statuses
@@ -71,6 +74,10 @@ NET_HANDLE(ENT_CLIENT_CTF_FLAGSTATUSES, bool isNew)
 				new_status = (flag_owner == currententnum)
 					? FLAG_STATUS_CARRY // carrying / passing as sender
 					: FLAG_STATUS_TAKEN;
+				if (flag_soleowner[team_i] == -1)
+					flag_soleowner[team_i] = flag_owner;
+				else // there's multiple flags belonging to team_i, we can't show both names so mark this 
+					flag_soleowner[team_i] = -2;
 			}
 			else
 				new_status = FLAG_STATUS_DROPPED;
@@ -79,6 +86,7 @@ NET_HANDLE(ENT_CLIENT_CTF_FLAGSTATUSES, bool isNew)
 		}
 
 		for (i = i_begin; i <= i_end; ++i)
+		{
 			if (flag_status[i] != flag_status_prev[i])
 			{
 				if (flag_status[i] == FLAG_STATUS_CARRY || flag_status_prev[i] == FLAG_STATUS_CARRY)
@@ -86,6 +94,9 @@ NET_HANDLE(ENT_CLIENT_CTF_FLAGSTATUSES, bool isNew)
 				else if (flag_status[i] == FLAG_STATUS_TAKEN || flag_status_prev[i] == FLAG_STATUS_TAKEN)
 					flag_taken_change_time[i] = time;
 			}
+			if (flag_soleowner[i] < -1)
+				flag_soleowner[i] = -1;
+		}
 	}
 	else if (sf & SF_CTF_SPEC_CHANGED) // spec status changed but flags didn't, need to update status caches
 	{
@@ -143,16 +154,24 @@ void HUD_Mod_CTF_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, i
 					break;
 		++team_i; // skip neutral
 	}
-
 	int status = (mod_placeholder)
 		? (-i) % (FLAG_STATUS_CARRY - FLAG_STATUS_SHIELDED + 1) + FLAG_STATUS_CARRY // CARRY -> SHIELDED, repeat
 		: flag_status[team_i];
 
-	float alpha = (autocvar_hud_panel_modicons_animations && status == FLAG_STATUS_CARRY)
+	float alpha = (status == FLAG_STATUS_CARRY)
 		? blink(0.85, 0.15, 5) // blink only if we're carrying
 		: 1;
+
+	vector nameSize = '0 0 0';
+	if (autocvar_hud_panel_modicons_playername_height > 0) // reserve vertical space at the bottom for the name text (even if none)
+	{
+		nameSize.x = itemSize.x;
+		nameSize.y = itemSize.y * autocvar_hud_panel_modicons_playername_height;
+		itemSize.y -= nameSize.y;
+	}
+
 	float f = 1;
-	if (!mod_placeholder && autocvar_hud_panel_modicons_animations)
+	if (!mod_placeholder)
 	{
 		float expanding_f;
 	#define DRAW_EXPANDING(the_arr, the_status) \
@@ -172,6 +191,19 @@ void HUD_Mod_CTF_DrawItem(vector itemPos, vector itemSize, float aspect_ratio, i
 	if (status != FLAG_STATUS_SHIELDED && (ctf_stalemate || (mod_placeholder && ctf_oneflag)))
 		drawpic_aspect_skin(itemPos, "flag_stalemate", itemSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawpic_aspect_skin(itemPos, HUD_Mod_CTF_GetPic(team_i, status), itemSize, '1 1 1', panel_fg_alpha * alpha * f, DRAWFLAG_NORMAL);
+
+	// Draw the owner's name below
+	if (!nameSize.y)
+		return;
+	string name;
+	if (flag_soleowner[team_i] >= 0)
+		name = entcs_GetName(flag_soleowner[team_i]);
+	else if (mod_placeholder && status >= FLAG_STATUS_TAKEN)
+		name = sprintf(_("Player %d"), i + 1);
+	else
+		return;
+	itemPos.y += itemSize.y;
+	drawcolorcodedstring_aspect(itemPos, name, nameSize, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_Mod_CTF(vector myPos, vector mySize, bool should_draw)
