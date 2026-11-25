@@ -35,6 +35,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	strfree(me.currentServerPure);
 	strfree(me.currentServerKey);
 	strfree(me.currentServerID);
+	strfree(me.currentServerStatsStatus);
 
 	// ==========================
 	//  Now, fill in the strings
@@ -60,50 +61,39 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	freeslots = -1;
 	sflags = -1;
 	modname = "";
-	bool ToSSpecified = false;
-	for(int j = 2; j < m; ++j)
+	string ToS_URL = "";
+	for (int j = 2; j < m; ++j)
 	{
-		if(argv(j) == "")
+		if (argv(j) == "")
 			break;
 		k = substring(argv(j), 0, 1);
 		v = substring(argv(j), 1, -1);
-		if(k == "P")
+		switch (k)
 		{
-			pure_available = true;
-			pure_violations = stof(v);
-		}
-		else if(k == "S")
-		{
-			freeslots = stof(v);
-		}
-		else if(k == "F")
-		{
-			sflags = stof(v);
-		}
-		else if(k == "M")
-		{
-			modname = v;
-		}
-		else if(k == "T")
-		{
-			ToSSpecified = true;
-			string downloadurl = v;
-			if (downloadurl == "INVALID")
-			{
-				me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
-			}
-			else
-			{
-				downloadurl = strreplace("|", ":", downloadurl);
-				me.ToSTab.loadToS(me.ToSTab, downloadurl);
-			}
+			case "P": // pure
+				pure_available = true;
+				pure_violations = stof(v);
+				break;
+			case "S": // slots
+				freeslots = stof(v);
+				break;
+			case "F": // flags
+				sflags = stof(v);
+				break;
+			case "M": // modname
+				modname = v;
+				break;
+			case "T": // ToS
+				ToS_URL = v;
+				break;
 		}
 	}
 
-	if (!ToSSpecified)
-	{
+	// Handled outside the above loop since .setText adjust argv
+	if (ToS_URL == "" || ToS_URL == "INVALID")
 		me.ToSTab.textBox.setText(me.ToSTab.textBox, _("No Terms of Service specified"));
-	}
+	else
+		me.ToSTab.loadToS(me.ToSTab, strreplace("|", ":", ToS_URL));
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
 	if(modname == "")
@@ -141,7 +131,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerNumFreeSlots = strzone(s);
 	me.infoTab.numFreeSlotsLabel.setText(me.infoTab.numFreeSlotsLabel, me.currentServerNumFreeSlots);
 
-	me.currentServerMod = ((modname == "Xonotic") ? ZCTX(_("MOD^Default")) : modname);
+	me.currentServerMod = ((modname == "Xonotic") ? CTX(_("MOD^Default")) : modname);
 	me.currentServerMod = strzone(me.currentServerMod);
 	me.infoTab.modLabel.setText(me.infoTab.modLabel, me.currentServerMod);
 

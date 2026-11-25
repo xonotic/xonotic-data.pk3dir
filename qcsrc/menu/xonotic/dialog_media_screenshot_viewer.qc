@@ -6,7 +6,7 @@
 
 const float SCREENSHOTVIEWER_ZOOM_FACTOR = 1.5;
 
-float music_playlist_index_backup;
+int music_playlist_index_backup = -1; ///< -1 = user hasn't paused a playlist
 void XonoticScreenshotViewerDialog_loadScreenshot(entity me, string scrImage)
 {
 	// disable music as it can lag depending on image loading time
@@ -109,13 +109,15 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 void XonoticScreenshotViewerDialog_close(entity me)
 {
 	// resume music
-	if(!cvar("menu_screenshotviewer_enablemusic"))
-	if(cvar("music_playlist_index") == 999)
+	if (!cvar("menu_screenshotviewer_enablemusic"))
+	if (cvar("music_playlist_index") == 999)
 	{
-		cvar_set("music_playlist_index", ftos(music_playlist_index_backup));
+		if (music_playlist_index_backup != -1)
+			cvar_set("music_playlist_index", itos(music_playlist_index_backup));
 	}
 	else
 		localcmd("\ncd resume\n");
+	music_playlist_index_backup = -1;
 
 	me.scrList.stopSlideShow(me.scrList);
 	me.slideShowButton.forcePressed = false;

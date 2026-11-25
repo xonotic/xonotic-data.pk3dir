@@ -99,6 +99,7 @@ void XonoticWeaponarenaCheckBox_configureXonoticWeaponarenaCheckBox(entity me, s
 
 void XonoticWeaponarenaCheckBox_loadCvars(entity me)
 {
+	me.checked = false;
 	int n = tokenize_console(cvar_string("menu_weaponarena"));
 	for (int i = 0; i < n; ++i)
 		if (argv(i) == me.message)
@@ -132,10 +133,9 @@ void XonoticWeaponarenaCheckBox_saveCvars(entity me)
 			mwa = "off";
 	}
 	cvar_set("menu_weaponarena", mwa);
-	if (Weaponarena_nonCustomValue(cvar_string("g_weaponarena")))
+	if (me.disabled)
 		return;
-	else
-		cvar_set("g_weaponarena", mwa);
+	cvar_set("g_weaponarena", mwa);
 
 	entity e;
 	for (int i = 0; i < me.parent.toggleableItemsCount; ++i) // reload cvars for the RadioButtons

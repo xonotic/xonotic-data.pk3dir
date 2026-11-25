@@ -25,8 +25,7 @@ void XonoticCheckBoxString_loadCvars(entity me)
 	if (!me.controlledCvar)
 		return;
 
-	if(cvar_string(me.controlledCvar) == me.yesString)
-		me.checked = true;
+	me.checked = (cvar_string(me.controlledCvar) == me.yesString);
 }
 void XonoticCheckBoxString_saveCvars(entity me)
 {

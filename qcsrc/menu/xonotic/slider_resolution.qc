@@ -114,8 +114,8 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 	if (pixelheight != 1)
 	{
 		float aspect = w / (h * pixelheight);
-		float bestdenom = rint(aspect);
-		float bestnum = 1;
+		float bestnum = rint(aspect);
+		float bestdenom = 1;
 		for (float num, denom = 2; denom < 10; ++denom)
 		{
 			num = rint(aspect * denom);
@@ -218,7 +218,7 @@ void XonoticResolutionSlider_loadCvars(entity me)
 }
 void XonoticResolutionSlider_saveCvars(entity me)
 {
-	if (me.value >= 0 || me.value < me.nValues)
+	if (me.value >= 0 && me.value < me.nValues)
 	{
 		tokenize_console(me.getIdentifier(me));
 		cvar_set("_menu_vid_width", argv(0));

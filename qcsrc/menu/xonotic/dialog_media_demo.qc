@@ -6,23 +6,23 @@
 #include "checkbox.qh"
 #include "button.qh"
 
-const float DMO_PLAY = 1;
-const float DMO_TIME = 2;
+const int DMO_PLAY = 1;
+const int DMO_TIME = 2;
 void DemoConfirm_Check_Gamestatus(entity btn, entity me)
 {
-	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) || isdemo()) // we're not in a match, lets watch the demo
+	if (DemoConfirm_NotInMatch()) // we're not in a match, lets watch the demo
 	{
-		if(btn.democlicktype == DMO_PLAY)
-			{ demolist.startDemo(demolist); }
-		else if(btn.democlicktype == DMO_TIME)
-			{ demolist.timeDemo(demolist); }
+		if (btn.democlicktype == DMO_PLAY)
+			demolist.startDemo(demolist);
+		else if (btn.democlicktype == DMO_TIME)
+			demolist.timeDemo(demolist);
 	}
 	else // already in a match, player has to confirm
 	{
-		if(btn.democlicktype == DMO_PLAY)
-			{ DialogOpenButton_Click(btn, main.demostartconfirmDialog); }
-		else if(btn.democlicktype == DMO_TIME)
-			{ DialogOpenButton_Click(btn, main.demotimeconfirmDialog); }
+		if (btn.democlicktype == DMO_PLAY)
+			DialogOpenButton_Click(btn, main.demostartconfirmDialog);
+		else if (btn.democlicktype == DMO_TIME)
+			DialogOpenButton_Click(btn, main.demotimeconfirmDialog);
 	}
 }
 
