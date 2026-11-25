@@ -320,7 +320,15 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			if (autocvar_g_powerups)
 				instagib_replace_item_with_random_powerup(item);
 			return true;
-		case ITEM_Invisibility: case ITEM_ExtraLife: case ITEM_Speed:
+		case ITEM_Invisibility:
+			if (!item.count) // .count is used as the duration when powerups are initialized
+				item.count = autocvar_g_instagib_invisibility_time;
+			return false;
+		case ITEM_Speed:
+			if (!item.count) // ...
+				item.count = autocvar_g_instagib_speed_time;
+			return false;
+		case ITEM_ExtraLife:
 			return false;
 		case ITEM_Cells:
 			if (autocvar_g_instagib_ammo_convert_cells)
