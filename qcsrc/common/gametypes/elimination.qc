@@ -45,6 +45,8 @@ void EliminatedPlayers_Init(bool(entity) isEliminated_func)
 #ifdef SVQC
 bool EliminatedPlayers_SendEntity(entity this, entity to, int sf)
 {
+	if (!teamplay)
+		sf &= ~SF_ELIMPLAYERS_ALIVE;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
 	WriteByte(MSG_ENTITY, sf);
 	int i;
