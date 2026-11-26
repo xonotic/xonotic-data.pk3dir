@@ -5,9 +5,10 @@
 
 int autocvar_g_survival_hide_chat = 0;
 bool autocvar_g_survival_permanent_corpses;
-bool autocvar_g_survival_detective_reveal_fragger = true;
-float autocvar_g_survival_detective_count = 0.095;
 float autocvar_g_survival_hunter_count = 0.25;
+float autocvar_g_survival_detective_count = 0.095;
+bool autocvar_g_survival_detective_reveal_fragger = true;
+bool autocvar_g_survival_reveal_deaths;
 float autocvar_g_survival_round_timelimit = 120;
 bool autocvar_g_survival_round_timelimit_fragreset = false;
 float autocvar_g_survival_warmup = 10;
@@ -124,6 +125,7 @@ bool Surv_CheckWinner()
 		round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 		surv_state = SURV_STATE_REVEAL;
 		survRoles.SendFlags |= SF_SURV_REVEAL;
+		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
 		return true;
 	}
 
@@ -177,6 +179,7 @@ bool Surv_CheckWinner()
 	round_handler_Init(5, autocvar_g_survival_warmup, autocvar_g_survival_round_timelimit);
 	surv_state = SURV_STATE_REVEAL;
 	survRoles.SendFlags |= SF_SURV_REVEAL;
+	eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
 
 	FOREACH_CLIENT(IS_PLAYER(it), nades_RemovePlayer(it));
 
@@ -327,6 +330,9 @@ void surv_Initialize() // run at the start of a match, initiates gametype
 
 MUTATOR_HOOKFUNCTION(surv, ClientObituary)
 {
+	if (!autocvar_g_survival_reveal_deaths && autocvar_g_survival_permanent_corpses)
+		return true; // no death messages at all!
+
 	// In survival, announcing a frag would tell everyone who the Hunter is
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
@@ -356,7 +362,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerSpawn)
 	player.survival_validkills = 0;
 	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
+		EliminatedPlayers_InformAbout(NULL, player); // tell everyone this player just spawned
 }
 
 MUTATOR_HOOKFUNCTION(surv, ForbidSpawn)
@@ -420,7 +426,8 @@ MUTATOR_HOOKFUNCTION(surv, MatchEnd_BeforeScores)
 // NOTE: if there's 2+ Hunters, this'll tell Survivors/Detectives they're both still alive, instead of leaving it ambiguous whether any had been killed yet
 void surv_NotifyLastPlayerOnTeam(entity this)
 {
-	if (warmup_stage || !round_handler_IsActive() || !round_handler_IsRoundStarted())
+	if (warmup_stage || !round_handler_IsActive() || !round_handler_IsRoundStarted()
+	|| (!autocvar_g_survival_reveal_deaths && autocvar_g_survival_permanent_corpses)) // notif would defeat the point of the cvar
 		return;
 
 	entity last_pl = NULL;
@@ -451,12 +458,8 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 		frag_target.respawn_time = time + 2;
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
-	if (!warmup_stage)
-	{
-		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
-		if (IS_BOT_CLIENT(frag_target))
-			bot_clearqueue(frag_target);
-	}
+	if (!warmup_stage && IS_BOT_CLIENT(frag_target))
+		bot_clearqueue(frag_target);
 
 	// killed an ally! punishment is death
 	if (autocvar_g_survival_punish_teamkill
@@ -472,9 +475,22 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 .string fraggedby; ///< .netname of the player who fragged me
 void surv_PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
+	if (!surv_IsAlivePlayer(attacker) || time < attacker.surv_antispam)
+		return;
+	if (!autocvar_g_survival_reveal_deaths && IS_REAL_CLIENT(attacker))
+	{
+		EliminatedPlayers_InformAbout(attacker, this.enemy);
+		if (attacker.survival_role != SURV_ROLE_DETECTIVE) // Detectives will be told more below
+		{
+			Send_Notification(NOTIF_ONE_ONLY, attacker, MSG_CENTER, CENTER_SURVIVAL_FIND_CORPSE, this.netname);
+			FOREACH_CLIENT(IS_SPEC(it) && it.enemy == attacker, // also send the notif to specs watching
+				Send_Notification(NOTIF_ONE_ONLY, it, MSG_CENTER, CENTER_SURVIVAL_FIND_CORPSE, this.netname));
+		}
+	}
+
 	// Allow detectives to find out info about corpses once they become cloned
 	// Only after cloning, so the info isn't send immediately after a frag
-	if (!surv_IsAlivePlayer(attacker) || attacker.survival_role != SURV_ROLE_DETECTIVE || time < attacker.surv_antispam)
+	if (attacker.survival_role != SURV_ROLE_DETECTIVE)
 		return;
 	attacker.surv_antispam = time + 0.5;
 
@@ -510,21 +526,29 @@ void surv_PlayerCorpseDamage(entity this, entity inflictor, entity attacker, flo
 
 MUTATOR_HOOKFUNCTION(surv, PlayerDied)
 {
-	// It's now a corpse
-	if (autocvar_g_survival_permanent_corpses)
+	if (!warmup_stage)
 	{
 		entity player = M_ARGV(0, entity);
 		entity attacker = M_ARGV(1, entity);
-		player.fraggedby = attacker.netname;
-		// Make it undestroyable
-		if (player.damagedbycontents)
-			IL_REMOVE(g_damagedbycontents, player);
-		player.damagedbycontents = false;
-		player.takedamage = DAMAGE_NO;
-		player.event_damage = func_null;
-		player.event_heal = func_null;
-		// Make it immovable (except inertia) so it stays near the crime scene
-		player.damageforcescale = 0;
+		if (!autocvar_g_survival_reveal_deaths && autocvar_g_survival_permanent_corpses) // tell specs and both players this player died
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (!INGAME(it) || it == attacker || it == player), EliminatedPlayers_InformAbout(it, player));
+		else // tell everyone this player died
+			eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
+
+		// It's now a corpse
+		if (autocvar_g_survival_permanent_corpses)
+		{
+			player.fraggedby = attacker.netname;
+			// Make it undestroyable
+			if (player.damagedbycontents)
+				IL_REMOVE(g_damagedbycontents, player);
+			player.damagedbycontents = false;
+			player.takedamage = DAMAGE_NO;
+			player.event_damage = func_null;
+			player.event_heal = func_null;
+			// Make it immovable (except inertia) so it stays near the crime scene
+			player.damageforcescale = 0;
+		}
 	}
 
 	// Reset the timer with each death if g_survival_round_timelimit_fragreset is enabled
@@ -598,14 +622,15 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 	if (is_forced && INGAME(player))
 		INGAME_STATUS_CLEAR(player);
 
-	if (surv_IsAlivePlayer(player))
+	bool was_alive = surv_IsAlivePlayer(player);
+	if (was_alive)
 		surv_NotifyLastPlayerOnTeam(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 		INGAME_STATUS_CLEAR(player);
 	if (INGAME(player))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
-	if (!warmup_stage)
-		eliminatedPlayers.SendFlags |= SF_ELIMPLAYERS_ELIMS;
+	if (!warmup_stage && was_alive)
+		EliminatedPlayers_InformAbout(NULL, player); // tell everyone this player is spec now
 	if (!INGAME(player))
 	{
 		player.survival_validkills = 0;

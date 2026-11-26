@@ -102,3 +102,29 @@ void EliminatedPlayers_ResetPlayer(entity e)
 	e.eliminated = false;
 }
 #endif
+
+#ifdef SVQC
+void EliminatedPlayers_InformAbout(entity to, entity about)
+{
+	int chan;
+	if (to != NULL)
+	{
+		msg_entity = to;
+		chan = MSG_ONE;
+	}
+	else
+		chan = MSG_ALL;
+	WriteHeader(chan, CLIENT_ELIMINATEDPLAYERS_ABOUT);
+	WriteByte(chan, etof(about));
+	WriteByte(chan, boolean(eliminatedPlayers.isEliminated(about)));
+}
+#elifdef CSQC
+NET_HANDLE(CLIENT_ELIMINATEDPLAYERS_ABOUT, bool isNew)
+{
+	int num = ReadByte() - 1;
+	if (!playerslots[num])
+		playerslots[num] = new_pure(playerslot);
+	playerslots[num].eliminated = ReadByte();
+	return true;
+}
+#endif

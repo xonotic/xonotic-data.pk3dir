@@ -821,6 +821,7 @@ string multiteam_info_sprintf(string input, string teamname)
 	MSG_CENTER_NOTIF(SUPERWEAPON_PICKUP,                N_ENABLE,    0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2You now have a superweapon"), "")
 
 	MSG_CENTER_NOTIF(SURVIVAL_DETECTIVE,                N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^x18Fdetective^BG! Help the survivor(s) identify and eliminate the hunter(s)!")), "")
+	MSG_CENTER_NOTIF(SURVIVAL_FIND_CORPSE,              N_ENABLE,    1, 0, "s1",             CPID_SURVIVAL,          "2 0",  _("^BG%s^BG has been eliminated"), "")
 	MSG_CENTER_NOTIF(SURVIVAL_HUNTER,                   N_ENABLE,    0, 0, "",               CPID_SURVIVAL,          "5 0",  BOLD(_("^BGYou are a ^xF11hunter^BG! Eliminate the survivor(s) without raising suspicion!")), "")
 	MSG_CENTER_NOTIF(SURVIVAL_HUNTER_WIN,               N_ENABLE,    0, 0, "",               CPID_ROUND,             "0 0",  _("^xF11Hunters^BG win the round"), "")
 	MSG_CENTER_NOTIF(SURVIVAL_INVESTIGATE,              N_ENABLE,    1, 0, "s1",             CPID_SURVIVAL,          "5 0",  "%s", "")
