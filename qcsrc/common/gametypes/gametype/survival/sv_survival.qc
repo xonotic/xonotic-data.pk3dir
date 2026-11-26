@@ -368,8 +368,12 @@ MUTATOR_HOOKFUNCTION(surv, MatchEnd_BeforeScores)
 	return true;
 }
 
-entity surv_LastPlayerForTeam(entity this)
+// NOTE: if there's 2+ Hunters, this'll tell Survivors/Detectives they're both still alive, instead of leaving it ambiguous whether any had been killed yet
+void surv_NotifyLastPlayerOnTeam(entity this)
 {
+	if (warmup_stage || !round_handler_IsActive() || !round_handler_IsRoundStarted())
+		return;
+
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this,
 	{
@@ -378,20 +382,11 @@ entity surv_LastPlayerForTeam(entity this)
 			if (!last_pl)
 				last_pl = it;
 			else
-				return NULL;
+				return;
 		}
 	});
-	return last_pl;
-}
-
-void surv_LastPlayerForTeam_Notify(entity this)
-{
-	if (!warmup_stage && round_handler_IsActive() && round_handler_IsRoundStarted())
-	{
-		entity pl = surv_LastPlayerForTeam(this);
-		if (pl)
-			Send_Notification(NOTIF_ONE_ONLY, pl, MSG_CENTER, CENTER_ALONE);
-	}
+	if (last_pl)
+		Send_Notification(NOTIF_ONE_ONLY, last_pl, MSG_CENTER, CENTER_ALONE);
 }
 
 MUTATOR_HOOKFUNCTION(surv, PlayerDies)
@@ -399,7 +394,7 @@ MUTATOR_HOOKFUNCTION(surv, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	surv_LastPlayerForTeam_Notify(frag_target);
+	surv_NotifyLastPlayerOnTeam(frag_target);
 	if (!allowed_to_spawn)
 	{
 		frag_target.respawn_flags = RESPAWN_SILENT;
@@ -491,7 +486,7 @@ MUTATOR_HOOKFUNCTION(surv, ClientDisconnect)
 	entity player = M_ARGV(0, entity);
 
 	if (surv_IsAlivePlayer(player))
-		surv_LastPlayerForTeam_Notify(player);
+		surv_NotifyLastPlayerOnTeam(player);
 	return true;
 }
 
@@ -503,7 +498,7 @@ MUTATOR_HOOKFUNCTION(surv, MakePlayerObserver)
 		INGAME_STATUS_CLEAR(player);
 
 	if (surv_IsAlivePlayer(player))
-		surv_LastPlayerForTeam_Notify(player);
+		surv_NotifyLastPlayerOnTeam(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
 		INGAME_STATUS_CLEAR(player);
 	if (INGAME(player))
