@@ -6,6 +6,7 @@
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
 #include <common/ent_cs.qh>
+#include <common/gametypes/elimination.qh>
 #include <common/teams.qh>
 
 bool autocvar_hud_panel_scoreboard_others_showscore = true;

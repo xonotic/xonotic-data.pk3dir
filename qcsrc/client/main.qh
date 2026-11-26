@@ -93,7 +93,6 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .bool gotscores;
 .entity owner;
 .bool ready;
-.bool eliminated;
 
 IntrusiveList g_drawables;
 IntrusiveList g_drawables_2d;

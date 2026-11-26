@@ -20,6 +20,7 @@
 #include <common/effects/effect.qh>
 #include <common/effects/qc/_mod.qh>
 #include <common/ent_cs.qh>
+#include <common/gametypes/elimination.qh>
 #include <common/gametypes/gametype/nexball/cl_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
@@ -577,9 +578,9 @@ void Ent_RemovePlayerScore(entity this)
 	this.owner.gotscores = 0;
 	FOREACH(Scores, true, this.owner.(scores(it)) = 0); // clear all scores
 	this.owner.ready = 0;
-	this.owner.eliminated = 0;
 	this.owner.ignored = false;
 	this.owner.colormap = 0;
+	EliminatedPlayers_ResetPlayer(this.owner);
 	MUTATOR_CALLHOOK(ResetPlayerGametypeFields, this.owner);
 }
 
@@ -818,34 +819,6 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	vote_waiting = (nags & BIT(2));
 	vote_waiting_for_me = (nags & BIT(3));
 	warmup_stage = (nags & BIT(4));
-}
-
-NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isNew)
-{
-	int i, sf = ReadByte();
-	// receive elimination statuses, in a bitset
-	if (sf & SF_ELIMPLAYERS_ELIMS)
-	{
-		int B, b;
-		for (i = 0; i < maxclients; )
-			for (B = ReadByte(), b = BIT(0); b < BIT(8) && i < maxclients; b <<= 1, ++i)
-				if (playerslots[i])
-					playerslots[i].eliminated = boolean(B & b);
-	}
-	// receive number of alive players on each team
-	// required since .team is late to update in CSQC
-	if (sf & SF_ELIMPLAYERS_ALIVE)
-		for (i = 0; i < NUM_TEAMS; ++i)
-		{
-			alive_on_team[i] = ReadByte();
-			// update change-time caches, used by modicons
-			if (alive_on_team[i] != alive_on_team_prev[i])
-			{
-				alive_on_team_change_time[i] = time;
-				alive_on_team_prev[i] = alive_on_team[i];
-			}
-		}
-	return true;
 }
 
 NET_HANDLE(ENT_CLIENT_RANDOMSEED, bool isnew)

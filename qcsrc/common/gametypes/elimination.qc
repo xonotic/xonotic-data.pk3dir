@@ -1,5 +1,6 @@
 #include "elimination.qh"
 
+#ifdef SVQC
 #include <common/net_linked.qh>
 #include <server/scores_rules.qh>
 #include <server/teamplay.qh>
@@ -28,6 +29,20 @@ void EliminatedPlayers_RecountAlivePlayers()
 	}
 }
 
+bool EliminatedPlayers_SendEntity(entity this, entity to, int sf);
+void EliminatedPlayers_Init(bool(entity) isEliminated_func)
+{
+	if (eliminatedPlayers)
+	{
+		backtrace("Can't spawn eliminatedPlayers again!");
+		return;
+	}
+	Net_LinkEntity(eliminatedPlayers = new_pure(eliminatedPlayers), false, 0, EliminatedPlayers_SendEntity);
+	eliminatedPlayers.isEliminated = isEliminated_func;
+}
+#endif // SVQC
+
+#ifdef SVQC
 bool EliminatedPlayers_SendEntity(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
@@ -51,14 +66,37 @@ bool EliminatedPlayers_SendEntity(entity this, entity to, int sf)
 			WriteByte(MSG_ENTITY, Team_GetTeamFromIndex(i).m_num_players_alive);
 	return true;
 }
-
-void EliminatedPlayers_Init(bool(entity) isEliminated_func)
+#elifdef CSQC
+NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isNew)
 {
-	if (eliminatedPlayers)
+	int i, sf = ReadByte();
+	// receive elimination statuses, in a bitset
+	if (sf & SF_ELIMPLAYERS_ELIMS)
 	{
-		backtrace("Can't spawn eliminatedPlayers again!");
-		return;
+		int B, b;
+		for (i = 0; i < maxclients; )
+			for (B = ReadByte(), b = BIT(0); b < BIT(8) && i < maxclients; b <<= 1, ++i)
+				if (playerslots[i])
+					playerslots[i].eliminated = boolean(B & b);
 	}
-	Net_LinkEntity(eliminatedPlayers = new_pure(eliminatedPlayers), false, 0, EliminatedPlayers_SendEntity);
-	eliminatedPlayers.isEliminated = isEliminated_func;
+	// receive number of alive players on each team
+	// required since .team is late to update in CSQC
+	if (sf & SF_ELIMPLAYERS_ALIVE)
+		for (i = 0; i < NUM_TEAMS; ++i)
+		{
+			alive_on_team[i] = ReadByte();
+			// update change-time caches, used by modicons
+			if (alive_on_team[i] != alive_on_team_prev[i])
+			{
+				alive_on_team_change_time[i] = time;
+				alive_on_team_prev[i] = alive_on_team[i];
+			}
+		}
+	return true;
 }
+
+void EliminatedPlayers_ResetPlayer(entity e)
+{
+	e.eliminated = false;
+}
+#endif

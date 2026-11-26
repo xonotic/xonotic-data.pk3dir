@@ -1,7 +1,7 @@
 #pragma once
 
+#include <common/gametypes/elimination.qh>
 #include <common/mutators/base.qh>
-#include <server/elimination.qh>
 #include <server/round_handler.qh>
 #include <server/world.qh>
 #include <server/command/sv_cmd.qh>

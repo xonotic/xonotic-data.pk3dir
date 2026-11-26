@@ -2,6 +2,7 @@
 
 #include <common/gametypes/_mod.qh>
 #include <common/weapons/all.qh>
+#include <common/gametypes/elimination.qh>
 #include <common/mutators/mutator/overkill/okmachinegun.qh>
 #include <common/mutators/mutator/overkill/okshotgun.qh>
 #include <server/command/common.qh>
