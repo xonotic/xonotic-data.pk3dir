@@ -1324,7 +1324,10 @@ void havocbot_chooseenemy(entity this)
 			// enemy died or something, find a new target
 			this.enemy = NULL;
 			this.havocbot_chooseenemy_finished = time;
+			this.havocbot_stickenemy_time = 0;
 		}
+		else if (time < this.lastteleporttime + 0.5)
+			this.havocbot_stickenemy_time = 0;
 		else if (this.havocbot_stickenemy_time && time < this.havocbot_stickenemy_time)
 		{
 			// tracking last chosen enemy
@@ -1333,7 +1336,7 @@ void havocbot_chooseenemy(entity this)
 			if (trace_ent == this.enemy || trace_fraction == 1)
 			if (vdist(targ_pos - this.origin, <, 1000))
 			{
-				// remain tracking them for a shot while (case they went after a small corner or pilar
+				// remain tracking them for a short while (case they went after a small corner or pilar)
 				this.havocbot_chooseenemy_finished = time + 0.5;
 				return;
 			}
