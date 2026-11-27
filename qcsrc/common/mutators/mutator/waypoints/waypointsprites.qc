@@ -527,51 +527,30 @@ void Draw_WaypointSprite(entity this)
 
 	float ang;
 	vector o = project_3d_to_2d(this.origin);
-	if (o.z < 0
-	||  o.x < (vid_conwidth * waypointsprite_edgeoffset_left)
-	||  o.y < (vid_conheight * waypointsprite_edgeoffset_top)
-	||  o.x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
-	||  o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
+	vector d = vec2(o.x - 0.5 * vid_conwidth, o.y - 0.5 * vid_conheight); // offset of the projected point from the screen center
+	bool behind = (o.z < 0);
+	if (behind)
+		d = -d; // projection is mirrored
+
+	// Calculate how far the arrow is from the screen center to the edge (as a fraction): edge_current
+	float hx = max(1, (0.5 - ((d.x > 0) ? waypointsprite_edgeoffset_right  : waypointsprite_edgeoffset_left)) * vid_conwidth);
+	float hy = max(1, (0.5 - ((d.y > 0) ? waypointsprite_edgeoffset_bottom : waypointsprite_edgeoffset_top))  * vid_conheight);
+	float edge_current = max(fabs(d.x) / hx, fabs(d.y) / hy);
+
+	if (behind || edge_current >= 1) // arrow is at the edge, scale it to be just in view
 	{
-		// Arrow is at the edge, scale it to be just in view
-		vector d = vec3(o.x - 0.5 * vid_conwidth, o.y - 0.5 * vid_conheight, o.z);
+		if (edge_current < 0.000001) // exactly behind us (if it were in front of us, it'd be at the screen center)
+		{
+			d = '0 1 0'; // doesn't really matter where we put the arrow
+			edge_current = 1 / hy;
+		}
 		ang = atan2(-d.x, -d.y);
-		if (o.z < 0)
-			ang += M_PI;
-
-		float f1 = d.x / vid_conwidth;
-		float f2 = d.y / vid_conheight;
-		if (f1 == 0)
-			f1 = 0.000001;
-		if (f2 == 0)
-			f2 = 0.000001;
-
-		if (fabs(f1) > fabs(f2))
-		{
-			if (d.z * f1 > 0) // RIGHT edge
-				d *= (0.5 - waypointsprite_edgeoffset_right) / f1;
-			else // LEFT edge
-				d *= -(0.5 - waypointsprite_edgeoffset_left) / f1;
-		}
-		else
-		{
-			if (d.z * f2 > 0) // BOTTOM edge
-				d *= (0.5 - waypointsprite_edgeoffset_bottom) / f2;
-			else // TOP edge
-				d *= -(0.5 - waypointsprite_edgeoffset_top) / f2;
-		}
-
-		o = vec3(d.x + 0.5 * vid_conwidth, d.y + 0.5 * vid_conheight, d.z);
+		o = d * (1 / edge_current) + vec2(0.5 * vid_conwidth, 0.5 * vid_conheight);
 	}
 	else if (autocvar_g_waypointsprite_edgesmooth < 1) // arrow isn't at the edge, smoothly transition it towards the edge
 	{
 		// Instead of snapping from 'pointing down' to 'pointing outward', rotate the arrow so it transitions smoothly
 		// Arrow still points directly at the projected point the whole way
-		vector d = vec3(o.x - 0.5 * vid_conwidth, o.y - 0.5 * vid_conheight, o.z);
-		float hx = (0.5 - ((d.x > 0) ? waypointsprite_edgeoffset_right  : waypointsprite_edgeoffset_left)) * vid_conwidth;
-		float hy = (0.5 - ((d.y > 0) ? waypointsprite_edgeoffset_bottom : waypointsprite_edgeoffset_top))  * vid_conheight;
-		// Calculate how far the arrow is from the screen center to the edge (as a fraction)
-		float edge_current = min(max(fabs(d.x) / hx, fabs(d.y) / hy), 1);
 		float edge_start = max(0, autocvar_g_waypointsprite_edgesmooth);
 		if (edge_current > edge_start)
 		{
