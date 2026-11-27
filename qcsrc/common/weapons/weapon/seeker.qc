@@ -328,7 +328,7 @@ void W_Seeker_Tracker_Think(entity this)
 			entity oldenemy = own.enemy;
 			own.enemy = this.enemy;
 			--this.cnt;
-			W_Seeker_Fire_Missile(thiswep, own, weaponentity, own.enemy, own.cnt);
+			W_Seeker_Fire_Missile(thiswep, own, weaponentity, own.enemy, this.cnt);
 			own.enemy = oldenemy;
 		}
 	}
@@ -382,6 +382,9 @@ void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float d
 {
 	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+
 	TakeResource(this, RES_HEALTH, damage);
 	if (GetResource(this, RES_HEALTH) <= 0)
 		W_Seeker_Tag_Explode(this);

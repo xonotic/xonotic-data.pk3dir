@@ -50,9 +50,8 @@ void W_Devastator_Explode(entity this, entity directhitentity)
 	&& GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_DEVASTATOR, ammo)
 	&& !(this.realowner.items & IT_UNLIMITED_AMMO))
 	{
-		this.realowner.cnt = thiswep.m_id;
 		ATTACK_FINISHED(this.realowner, weaponentity) = time;
-		this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
+		W_SwitchWeapon_Force(this.realowner, w_getbestweapon(this.realowner, weaponentity), weaponentity);
 	}
 	delete(this);
 }
@@ -132,17 +131,15 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 	&& GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(WEP_DEVASTATOR, ammo)
 	&& !(this.realowner.items & IT_UNLIMITED_AMMO))
 	{
-		this.realowner.cnt = thiswep.m_id;
 		ATTACK_FINISHED(this.realowner, weaponentity) = time;
-		this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
+		W_SwitchWeapon_Force(this.realowner, w_getbestweapon(this.realowner, weaponentity), weaponentity);
 	}
 	delete(this);
 }
 
 void W_Devastator_RemoteExplode(entity this, .entity weaponentity)
 {
-	if (IS_DEAD(this.realowner)
-	|| !this.realowner.(weaponentity).lastrocket)
+	if (IS_DEAD(this.realowner) || (this.rocket_flags & ROCKET_FLAG_ORPHAN))
 		return;
 
 	bool do_explode;
@@ -179,7 +176,7 @@ void W_Devastator_Think(entity this)
 	{
 		if (this == this.realowner.(weaponentity).lastrocket
 		&& !this.realowner.(weaponentity).rl_release
-		&& !PHYS_INPUT_BUTTON_ATCK2(this)
+		&& !PHYS_INPUT_BUTTON_ATCK2(this.realowner)
 		&& WEP_CVAR(WEP_DEVASTATOR, guiderate)
 		&& time > this.pushltime
 		&& !IS_DEAD(this.realowner))
@@ -188,9 +185,9 @@ void W_Devastator_Think(entity this)
 				WEP_CVAR(WEP_DEVASTATOR, guideratedelay),
 				WEP_CVAR(WEP_DEVASTATOR, guidegoal),
 				WEP_CVAR(WEP_DEVASTATOR, guidedelay),
-				EFFECT_ROCKET_GUIDE, SND_DEVASTATOR_MODE, VOL_BASE); // TODO: add a better sound here
+				EFFECT_ROCKET_GUIDE, SND_DEVASTATOR_MODE, VOL_BASE);
 
-		if (this.rl_detonate_later)
+		if (this.rocket_flags & ROCKET_FLAG_DETONATE)
 			W_Devastator_RemoteExplode(this, weaponentity);
 	}
 
@@ -264,7 +261,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(WEP_DEVASTATOR, lifetime);
-	missile.rl_detonate_later = boolean(fire & 2); // allow instant detonation
+	missile.rocket_flags = (fire & 2) ? ROCKET_FLAG_DETONATE : 0; // allow instant detonation
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
@@ -422,9 +419,9 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 		bool rockfound = false;
 		IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
 		{
-			if (!it.rl_detonate_later)
+			if (!(it.rocket_flags & (ROCKET_FLAG_DETONATE | ROCKET_FLAG_ORPHAN)))
 			{
-				it.rl_detonate_later = true;
+				it.rocket_flags |= ROCKET_FLAG_DETONATE;
 				rockfound = true;
 			}
 		});
@@ -488,6 +485,9 @@ METHOD(Devastator, wr_resetplayer, void(entity thiswep, entity actor))
 		actor.(weaponentity).lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
 		actor.(weaponentity).rl_release = true;
 	}
+	// Don't allow remote detonating rockets after dying then respawning
+	IL_EACH(g_projectiles, it.realowner == actor && it.classname == "rocket",
+		it.rocket_flags |= ROCKET_FLAG_ORPHAN);
 }
 
 METHOD(Devastator, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))

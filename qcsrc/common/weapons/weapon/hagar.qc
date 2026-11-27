@@ -258,6 +258,21 @@ void W_Hagar_Attack2_Load_Release(Weapon thiswep, entity actor, .entity weaponen
 	actor.(weaponentity).hagar_load = 0;
 }
 
+void W_Hagar_Attack2_LoadAbort(Weapon thiswep, entity actor, .entity weaponentity)
+{
+	// Function assumes actor.(weaponentity).hagar_load > 0
+	actor.(weaponentity).state = WS_READY;
+	W_DecreaseAmmo(thiswep, actor, -WEP_CVAR_SEC(WEP_HAGAR, ammo) * actor.(weaponentity).hagar_load, weaponentity); // give back ammo
+	actor.(weaponentity).hagar_load = 0;
+	sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
+
+	// pause until we can load rockets again, once we re-press the alt fire button
+	actor.(weaponentity).hagar_loadstep = time + WEP_CVAR_SEC(WEP_HAGAR, load_speed) * W_WeaponRateFactor(actor);
+
+	// require letting go of the alt fire button before we can load again
+	actor.(weaponentity).hagar_loadblock = true;
+}
+
 void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	// loadable hagar secondary attack, must always run each frame
@@ -284,19 +299,8 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 		if (PHYS_INPUT_BUTTON_ATCK(actor) && WEP_CVAR_SEC(WEP_HAGAR, load_abort))
 		{
 			if (actor.(weaponentity).hagar_load)
-			{
 				// if we pressed primary fire while loading, unload all rockets and abort
-				actor.(weaponentity).state = WS_READY;
-				W_DecreaseAmmo(thiswep, actor, -WEP_CVAR_SEC(WEP_HAGAR, ammo) * actor.(weaponentity).hagar_load, weaponentity); // give back ammo
-				actor.(weaponentity).hagar_load = 0;
-				sound(actor, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
-
-				// pause until we can load rockets again, once we re-press the alt fire button
-				actor.(weaponentity).hagar_loadstep = time + WEP_CVAR_SEC(WEP_HAGAR, load_speed) * W_WeaponRateFactor(actor);
-
-				// require letting go of the alt fire button before we can load again
-				actor.(weaponentity).hagar_loadblock = true;
-			}
+				W_Hagar_Attack2_LoadAbort(thiswep, actor, weaponentity);
 		}
 		else
 		{
@@ -340,10 +344,15 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 			actor.(weaponentity).hagar_warning = true;
 		}
 
-		// release if player let go of button or if they've held it in too long
-		if (!PHYS_INPUT_BUTTON_ATCK2(actor)
+		bool switching = (actor.(weaponentity).m_switchweapon != thiswep);
+		if (switching && WEP_CVAR_SEC(WEP_HAGAR, load_abort))
+			// switching away with load_abort
+			W_Hagar_Attack2_LoadAbort(thiswep, actor, weaponentity);
+		else if (!PHYS_INPUT_BUTTON_ATCK2(actor)
+		|| switching
 		|| (stopped && actor.(weaponentity).hagar_loadstep < time && WEP_CVAR_SEC(WEP_HAGAR, load_hold) >= 0))
 		{
+			// release if player let go of button, switched weapons (without load_abort), or if they've held it in too long
 			actor.(weaponentity).state = WS_READY;
 			W_Hagar_Attack2_Load_Release(thiswep, actor, weaponentity);
 		}

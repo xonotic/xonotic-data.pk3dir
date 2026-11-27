@@ -249,7 +249,15 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 		return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
-		IL_EACH(g_mines, it.owner == actor && it.weaponentity_fld == weaponentity, return false);
+		IL_EACH(g_mines, it.owner == actor && it.weaponentity_fld == weaponentity,
+		{
+			if (!secondary && thiswep == actor.(weaponentity).m_switchweapon && time - actor.prevwarntime > 1)
+			{
+				Send_WeaponComplain(actor, thiswep.m_id, 0);
+				actor.prevwarntime = time;
+			}
+			return false;
+		});
 
 	if (thiswep == WEP_SHOTGUN
 	&& !secondary && WEP_CVAR(WEP_SHOTGUN, secondary) == 1)

@@ -312,7 +312,10 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 		}
 	}
 
-	if ((fire & 2) || ((fire & 1) && !GetResource(actor, RES_CELLS) && autocvar_g_rm))
+	// Rough copy of weapon_prepareattack_check, without using weapon_prepareattack due to comments below
+	bool can_laser = (actor.(weaponentity).m_switchweapon == actor.(weaponentity).m_weapon
+		&& (actor.vehicle || actor.(weaponentity).state == WS_READY));
+	if (can_laser && (fire & 2) || ((fire & 1) && !GetResource(actor, RES_CELLS) && autocvar_g_rm))
 	{
 		if ((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
 		{

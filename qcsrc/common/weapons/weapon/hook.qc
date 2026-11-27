@@ -41,8 +41,7 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	SetResourceExplicit(this, RES_HEALTH, GetResource(this, RES_HEALTH));
-
+	TakeResource(this, RES_HEALTH, damage);
 	if (GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }

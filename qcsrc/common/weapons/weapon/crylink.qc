@@ -176,10 +176,10 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 	if (e)
 	{
 		float n = 0;
-		if (vlen2(e.origin - this.origin) < vlen2(e.velocity) * frametime)
+		if (vlen2(e.origin - this.origin) < vlen2(e.velocity) * frametime * frametime)
 			++n;
 		for (entity p = e; (p = p.queuenext) != e; )
-			if (vlen2(p.origin - this.origin) < vlen2(p.velocity) * frametime)
+			if (vlen2(p.origin - this.origin) < vlen2(p.velocity) * frametime * frametime)
 				++n;
 		if (n >= 2)
 		{
@@ -188,7 +188,7 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 			if (WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, joinexplode))
 			{
 				n /= WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, shots);
-				RadiusDamage(e, e.realowner,
+				RadiusDamage(this, e.realowner,
 					n * WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, joinexplode_damage),
 					n * WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, joinexplode_edgedamage),
 					n * WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, joinexplode_radius),
@@ -234,9 +234,7 @@ void W_Crylink_Touch(entity this, entity toucher)
 
 	float a = bound(0, 1 - (time - this.fade_time) * this.fade_rate, 1);
 	float finalhit = (this.cnt <= 0 || toucher.takedamage != DAMAGE_NO);
-	float f = (finalhit ? 1 : WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, bouncedamagefactor));
-	if (a)
-		f *= a;
+	float f = a * (finalhit ? 1 : WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, bouncedamagefactor));
 
 	float totaldamage = RadiusDamage(this, this.realowner,
 		f * WEP_CVAR_BOTH(WEP_CRYLINK, is_primary, damage),
@@ -542,11 +540,8 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 			actor.(weaponentity).crylink_waitrelease = 0;
 			if (!thiswep.wr_checkammo1(thiswep, actor, weaponentity) && !thiswep.wr_checkammo2(thiswep, actor, weaponentity)
 			&& !(actor.items & IT_UNLIMITED_AMMO))
-			{
 				// ran out of ammo!
-				actor.cnt = thiswep.m_id;
-				actor.(weaponentity).m_switchweapon = w_getbestweapon(actor, weaponentity);
-			}
+				W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		}
 	}
 }

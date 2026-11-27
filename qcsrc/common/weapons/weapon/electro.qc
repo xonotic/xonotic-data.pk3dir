@@ -145,6 +145,7 @@ void W_Electro_Orb_ExplodeOverTime(entity this)
 	newproj.nextthink = time + ELECTRO_COMBO_OVERTIME_DELAY;
 	newproj.teleport_time = time;
 	newproj.dmg_last = 1;
+	newproj.ltime = time + WEP_CVAR(WEP_ELECTRO, combo_duration);
 	set_movetype(newproj, MOVETYPE_NONE);
 
 	Net_LinkEntity(newproj, true, 0, electro_orb_send);
@@ -402,8 +403,9 @@ void W_Electro_Orb_Stick(entity this, entity to)
 	SetResourceExplicit(newproj, RES_HEALTH, GetResource(this, RES_HEALTH));
 	newproj.event_damage = this.event_damage;
 	newproj.spawnshieldtime = this.spawnshieldtime;
-	newproj.damagedbycontents = true;
-	IL_PUSH(g_damagedbycontents, newproj);
+	newproj.damagedbycontents = this.damagedbycontents;
+	if (newproj.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, newproj);
 
 	set_movetype(newproj, MOVETYPE_NONE); // lock the orb in place
 	newproj.projectiledeathtype = this.projectiledeathtype;
@@ -543,7 +545,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
-	proj.damagedbycontents = (WEP_CVAR_SEC(WEP_ELECTRO, damagedbycontents));
+	proj.damagedbycontents = WEP_CVAR_SEC(WEP_ELECTRO, damagedbycontents);
 	if (proj.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, proj);
 

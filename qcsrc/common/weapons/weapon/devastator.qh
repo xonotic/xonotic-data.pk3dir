@@ -89,5 +89,7 @@ SPAWNFUNC_WEAPON(weapon_devastator, WEP_DEVASTATOR)
 
 #ifdef SVQC
 .bool rl_release;
-.bool rl_detonate_later;
+.int rocket_flags;
+const int ROCKET_FLAG_DETONATE = BIT(0); ///< Time to detonate!
+const int ROCKET_FLAG_ORPHAN   = BIT(1); ///< Don't remote detonate this rocket, since it was fired before the player died & respawned
 #endif

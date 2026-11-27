@@ -182,7 +182,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity, int f
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
 	++actor.(weaponentity).misc_bulletcounter;
-	if (actor.(weaponentity).misc_bulletcounter == 0)
+	if (actor.(weaponentity).misc_bulletcounter >= 0)
 	{
 		ATTACK_FINISHED(actor, weaponentity) = time + WEP_CVAR(WEP_ARC, bolt_refire2) * W_WeaponRateFactor(actor);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(WEP_ARC, bolt_refire), w_ready);
@@ -336,9 +336,9 @@ void W_Arc_Beam_Think(entity this)
 
 		// calculate how many segments are needed
 		float max_allowed_segments = ARC_MAX_SEGMENTS;
-		if (WEP_CVAR(WEP_ARC, beam_distancepersegment))
+		if (WEP_CVAR(WEP_ARC, beam_distancepersegment) > 0)
 		{
-			max_allowed_segments = 1 + vlen(w_shotdir) / WEP_CVAR(WEP_ARC, beam_distancepersegment);
+			max_allowed_segments = 1 + WEP_CVAR(WEP_ARC, beam_range) / WEP_CVAR(WEP_ARC, beam_distancepersegment);
 			max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 		}
 
@@ -951,9 +951,9 @@ void Draw_ArcBeam(entity this)
 
 				// calculate how many segments are needed
 				float max_allowed_segments = ARC_MAX_SEGMENTS;
-				if (WEP_CVAR(WEP_ARC, beam_distancepersegment))
+				if (WEP_CVAR(WEP_ARC, beam_distancepersegment) > 0)
 				{
-					max_allowed_segments = 1 + (vlen(wantdir / WEP_CVAR(WEP_ARC, beam_distancepersegment)));
+					max_allowed_segments = 1 + WEP_CVAR(WEP_ARC, beam_range) / WEP_CVAR(WEP_ARC, beam_distancepersegment);
 					max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 				}
 				if (WEP_CVAR(WEP_ARC, beam_degreespersegment))
@@ -986,9 +986,9 @@ void Draw_ArcBeam(entity this)
 
 			// calculate how many segments are needed
 			float max_allowed_segments = ARC_MAX_SEGMENTS;
-			if (WEP_CVAR(WEP_ARC, beam_distancepersegment))
+			if (WEP_CVAR(WEP_ARC, beam_distancepersegment) > 0)
 			{
-				max_allowed_segments = 1 + (vlen(wantdir / WEP_CVAR(WEP_ARC, beam_distancepersegment)));
+				max_allowed_segments = 1 + WEP_CVAR(WEP_ARC, beam_range) / WEP_CVAR(WEP_ARC, beam_distancepersegment);
 				max_allowed_segments = bound(1, max_allowed_segments, ARC_MAX_SEGMENTS);
 			}
 

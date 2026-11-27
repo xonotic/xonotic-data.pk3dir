@@ -1955,7 +1955,8 @@ void SetSpectatee(entity this, entity spectatee)
 		{
 			.entity weaponentity = weaponentities[slot];
 			if(old_spectatee.(weaponentity).arc_beam)
-				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE;
+				// also LOCALMASK since the beam was sent truncated while spectating due to drawlocal in arc.qc
+				old_spectatee.(weaponentity).arc_beam.SendFlags |= ARC_SF_UPDATE | ARC_SF_LOCALMASK;
 		}
 	}
 	if(spectatee)

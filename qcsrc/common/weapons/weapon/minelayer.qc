@@ -40,6 +40,7 @@ void W_MineLayer_Stick(entity this, entity to)
 	newmine.projectiledeathtype = this.projectiledeathtype;
 
 	newmine.mine_time = this.mine_time;
+	newmine.minelayer_detonate = this.minelayer_detonate;
 
 	settouch(newmine, func_null);
 	setthink(newmine, W_MineLayer_Think);
@@ -85,9 +86,8 @@ void W_MineLayer_Explode(entity this, entity directhitentity)
 		if (!thiswep.wr_checkammo1(thiswep, own, weaponentity)
 		&& !(own.items & IT_UNLIMITED_AMMO))
 		{
-			own.cnt = thiswep.m_id;
 			ATTACK_FINISHED(own, weaponentity) = time;
-			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
+			W_SwitchWeapon_Force(own, w_getbestweapon(own, weaponentity), weaponentity);
 		}
 	}
 	delete(this);
@@ -127,9 +127,8 @@ void W_MineLayer_DoRemoteExplode(entity this)
 		if (!thiswep.wr_checkammo1(thiswep, own, weaponentity)
 		&& !(own.items & IT_UNLIMITED_AMMO))
 		{
-			own.cnt = thiswep.m_id;
 			ATTACK_FINISHED(own, weaponentity) = time;
-			own.(weaponentity).m_switchweapon = w_getbestweapon(own, weaponentity);
+			W_SwitchWeapon_Force(own, w_getbestweapon(own, weaponentity), weaponentity);
 		}
 	}
 	delete(this);
@@ -188,7 +187,7 @@ int W_MineLayer_Count(entity e, .entity weaponentity)
 
 bool W_MineLayer_Think_cond(entity e)
 {
-	return (IS_PLAYER(e) && !IS_DEAD(e) && !STAT(FROZEN, e) && !IS_INDEPENDENT_PLAYER(e)
+	return (IS_PLAYER(e) && !IS_DEAD(e) && !IS_INDEPENDENT_PLAYER(e)
 		&& DIFF_TEAM(e, WarpZone_SearchInRadius_otherent)); // don't trigger for team mates
 }
 void W_MineLayer_Think(entity this)
@@ -212,7 +211,7 @@ void W_MineLayer_Think(entity this)
 	}
 
 	// a player's mines shall explode if they disconnect or die
-	if (!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner) || STAT(FROZEN, this.realowner))
+	if (!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner))
 	{
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		W_MineLayer_Explode(this, NULL);

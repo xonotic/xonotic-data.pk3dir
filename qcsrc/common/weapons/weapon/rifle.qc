@@ -62,13 +62,13 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	float af = ATTACK_FINISHED(actor, weaponentity);
 	actor.(weaponentity).m_switchweapon = actor.(weaponentity).m_weapon;
 	ATTACK_FINISHED(actor, weaponentity) = time;
-	float r = weapon_prepareattack(thiswep, actor, weaponentity, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
+	float r = weapon_prepareattack(thiswep, actor, weaponentity, actor.(weaponentity).rifle_bullethail_frame == WFRAME_FIRE2, actor.(weaponentity).rifle_bullethail_refire);
 	if (actor.(weaponentity).m_switchweapon == actor.(weaponentity).m_weapon)
 		actor.(weaponentity).m_switchweapon = sw;
 	if (r)
 	{
-		actor.rifle_bullethail_attackfunc(thiswep, actor, weaponentity);
-		weapon_thinkf(actor, weaponentity, actor.rifle_bullethail_frame, actor.rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
+		actor.(weaponentity).rifle_bullethail_attackfunc(thiswep, actor, weaponentity);
+		weapon_thinkf(actor, weaponentity, actor.(weaponentity).rifle_bullethail_frame, actor.(weaponentity).rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
 	}
 	else
 		ATTACK_FINISHED(actor, weaponentity) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
@@ -81,10 +81,10 @@ void W_Rifle_BulletHail(Weapon thiswep, entity actor, .entity weaponentity, floa
 	if (mode)
 	{
 		// continue hail
-		actor.rifle_bullethail_attackfunc = AttackFunc;
-		actor.rifle_bullethail_frame = fr;
-		actor.rifle_bullethail_animtime = animtime;
-		actor.rifle_bullethail_refire = refire;
+		actor.(weaponentity).rifle_bullethail_attackfunc = AttackFunc;
+		actor.(weaponentity).rifle_bullethail_frame = fr;
+		actor.(weaponentity).rifle_bullethail_animtime = animtime;
+		actor.(weaponentity).rifle_bullethail_refire = refire;
 		weapon_thinkf(actor, weaponentity, fr, animtime, W_Rifle_BulletHail_Continue);
 	}
 	else // just one shot
@@ -145,7 +145,7 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 		&& time >= actor.(weaponentity).rifle_accumulator + WEP_CVAR_SEC(WEP_RIFLE, burstcost))
 		{
 			weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(WEP_RIFLE, refire));
-			W_Rifle_BulletHail(thiswep, actor, weaponentity, WEP_CVAR_SEC(WEP_RIFLE, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_RIFLE, animtime), WEP_CVAR_PRI(WEP_RIFLE, refire));
+			W_Rifle_BulletHail(thiswep, actor, weaponentity, WEP_CVAR_SEC(WEP_RIFLE, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(WEP_RIFLE, animtime), WEP_CVAR_SEC(WEP_RIFLE, refire));
 			actor.(weaponentity).rifle_accumulator += WEP_CVAR_SEC(WEP_RIFLE, burstcost);
 		}
 	}
