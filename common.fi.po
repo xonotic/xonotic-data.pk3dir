@@ -2300,6 +2300,9 @@ msgid ""
 "chaotic nature, team communication is less important in this gametype than "
 "in other team-based gametypes."
 msgstr ""
+"Koska sillä ei ole kierroksia, kaaos on tauotonta. Kaoottisuuden seurauksena "
+"joukkueen kommunikointi on vähemmän tärkeää tässä pelimuodossa kuin muissa "
+"joukkuepohjaisissa pelimuodoissa. "
 
 #: qcsrc/common/gametypes/gametype/tmayhem/tmayhem.qh:10
 msgid ""
@@ -3461,6 +3464,9 @@ msgid ""
 "at their enemies at the same time, opening up more gameplay possibilities "
 "than the regular %s."
 msgstr ""
+"Koska se annetaan toiseen käteen, pelaajat voivat liikkua sillä ympäriinsä "
+"ja ampua vihollisia yhtä aikaa, mikä avaa enemmän peluumahdollisuuksia kuin "
+"tavanomainen %s."
 
 #: qcsrc/common/mutators/mutator/hook/hook.qc:14
 #, c-format
@@ -3489,6 +3495,9 @@ msgid ""
 "after 10 seconds if you run out of ammo. Ammo (%s) can be picked up on the "
 "map often, or collected from dropped %s guns."
 msgstr ""
+"Tarkka sihti ja ammusten säästäminen ovat tärkeitä, sillä teet itsemurhan 10 "
+"sekunnin jälkeen, mikäli ammukset loppuvat. Ammuksia (%s) voi poimia usein "
+"kartalta tai kerätä pudotetuista %s-aseista."
 
 #: qcsrc/common/mutators/mutator/instagib/instagib.qc:19
 #, c-format
@@ -3726,6 +3735,10 @@ msgid ""
 "players can't move or shoot, leaving them vulnerable to damage, but if left "
 "too long they'll unfreeze and run away!"
 msgstr ""
+"%s räjähtää lyhyen viiveen jälkeen, mikä jäädyttää räjähdysalueelle menneet "
+"viholliset muutamaksi sekunniksi räjähdyksestä. Jäätyneet pelaajat eivät voi "
+"liikkua tai ampua, jolloin he ovat alttiita vahingolle, mutta jos heidät "
+"jätetään liian pitkäksi aikaa, he sulavat ja karkaavat!"
 
 #: qcsrc/common/mutators/mutator/nades/nade/ice.qh:22
 msgid "Ice grenade"
@@ -3748,6 +3761,9 @@ msgid ""
 "a fountain. The napalm fire balls burn for a while, and damage players who "
 "get too close."
 msgstr ""
+"%s räjähtää lyhyen viiveen jälkeen, jolloin palavia napalmiklönttejä leviää "
+"suihkulähteenä. Napalmitulipallot palavat hetken ja vahingoittavat lähelle "
+"tulleita pelaajia."
 
 #: qcsrc/common/mutators/mutator/nades/nade/napalm.qh:32
 msgid "Napalm grenade"
@@ -4139,6 +4155,9 @@ msgid ""
 "chainsaw which explodes on impact, dealing a lot of splash damage to any "
 "players close by."
 msgstr ""
+"Kuten nimi vihjaa, %s on superase, joka ampuu rakettikäyttöisen "
+"moottorisahan, joka räjähtää osumasta ja aiheuttaa paljon roiskevahinkoa "
+"kaikille läheisille pelaajille."
 
 #: qcsrc/common/mutators/mutator/overkill/okrpc.qc:258
 #, c-format
@@ -5927,7 +5946,7 @@ msgstr "^BG%s%s^K1 erehtyi liian lähelle ^BG%s^K1'n rakettia%s%s"
 #: qcsrc/common/notifications/all.inc:496
 #, c-format
 msgid "^BG%s^K1 blew themselves up with their Devastator%s%s"
-msgstr ""
+msgstr "^BG%s^K1 räjäyttivät itsensä ilmaan Devastatorillaan%s%s"
 
 #: qcsrc/common/notifications/all.inc:497
 #, c-format
@@ -7114,10 +7133,11 @@ msgid ""
 "^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising "
 "suspicion!"
 msgstr ""
+"^BGSinä olet ^K1hunter^BG! Eliminoi selviytyjä(t) herättämättä epäilystäkään!"
 
 #: qcsrc/common/notifications/all.inc:824
 msgid "^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!"
-msgstr ""
+msgstr "^BGSinä olet ^F1survivor^BG! Tunnista ja eliminoi metsästäjä(t)!"
 
 #: qcsrc/common/notifications/all.inc:827
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
