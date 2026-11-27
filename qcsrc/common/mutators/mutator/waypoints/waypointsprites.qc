@@ -344,29 +344,20 @@ vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, 
 	float w = max(sw, minwidth);
 	float h = sz.y;
 
-	// how do corners work?
-	float aspect = vid_conwidth / vid_conheight;
+	// k9er: make the icon's center move on a round path around the arrow.
+	// `dist` is the fraction of h or w we push the icon away from the arrow.
+	// On axes (icon directly left/up/etc.) we want dist == 1, on diagonals we want dist == M_SQRT2,
+	// ... and in between we want to smoothly move between.
+	// Can smoothly move between with sin(2*ang)==2*sa*ca so it's 0 at axes and +-1 at diagonals,
+	// ... squared so it's always positive, and use that to lerp between 1 and M_SQRT2
 	float sa = sin(ang);
-	float ca = cos(ang) * aspect;
-	float algnx, algny;
-	if (fabs(sa) > fabs(ca))
-	{
-		algnx = (sa < 0);
-		float f = fabs(sa);
-		algny = 0.5 - 0.5 * (f ? (ca / f) : 0);
-	}
-	else
-	{
-		float f = fabs(ca);
-		algnx = 0.5 - 0.5 * (f ? (sa / f) : 0);
-		algny = (ca < 0);
-	}
+	float ca = cos(ang);
+	float dist = 1 + (M_SQRT2 - 1) * (2 * sa * ca) ** 2;
+	o.y += (ca * dist - 1) * 0.5 * h;
+	o.x += (sa * dist - 1) * 0.5 * w;
+	// Also subtract 0.5 * h and 0.5 * w since o needs to be the top left corner of the pic/text
 
-	// align
-	o.x -= w * algnx;
-	o.y -= h * algny;
-
-	// we want to be onscreen
+	// We want to be onscreen
 	o.y = bound(0, o.y, vid_conheight - h);
 	o.x = bound(0, o.x, vid_conwidth  - w);
 
