@@ -577,18 +577,18 @@ void Draw_WaypointSprite(entity this)
 	a *= waypointsprite_alpha;
 	t = waypointsprite_scale;
 	{
-		a *= 1 - (1 - waypointsprite_distancefadealpha) * (bound(0, dist / waypointsprite_distancefadedistance, 1));
-		t *= 1 - (1 - waypointsprite_distancefadescale) * (bound(0, dist / waypointsprite_distancefadedistance, 1));
+		a *= 1 - (1 - waypointsprite_distancefadealpha) * smoothstep(bound(0, dist / waypointsprite_distancefadedistance, 1));
+		t *= 1 - (1 - waypointsprite_distancefadescale) * smoothstep(bound(0, dist / waypointsprite_distancefadedistance, 1));
 	}
 	if (edgedistance_min < waypointsprite_edgefadedistance)
 	{
-		a *= 1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min / waypointsprite_edgefadedistance, 1));
-		t *= 1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min / waypointsprite_edgefadedistance, 1));
+		a *= 1 - (1 - waypointsprite_edgefadealpha) * (1 - smoothstep(bound(0, edgedistance_min / waypointsprite_edgefadedistance, 1)));
+		t *= 1 - (1 - waypointsprite_edgefadescale) * (1 - smoothstep(bound(0, edgedistance_min / waypointsprite_edgefadedistance, 1)));
 	}
 	if (crosshairdistance < waypointsprite_crosshairfadedistance)
 	{
-		a *= 1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance / waypointsprite_crosshairfadedistance, 1));
-		t *= 1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance / waypointsprite_crosshairfadedistance, 1));
+		a *= 1 - (1 - waypointsprite_crosshairfadealpha) * (1 - smoothstep(bound(0, crosshairdistance / waypointsprite_crosshairfadedistance, 1)));
+		t *= 1 - (1 - waypointsprite_crosshairfadescale) * (1 - smoothstep(bound(0, crosshairdistance / waypointsprite_crosshairfadedistance, 1)));
 	}
 
 	if (this.build_finished)
