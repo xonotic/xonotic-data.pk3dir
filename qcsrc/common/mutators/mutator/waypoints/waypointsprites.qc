@@ -43,23 +43,23 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sf)
 		}
 	}
 
-	if (sf & 64)
+	if (sf & BIT(6))
 		WriteVector(MSG_ENTITY, this.origin);
 
-	if (sf & 1)
+	if (sf & BIT(0))
 	{
 		WriteByte(MSG_ENTITY, this.team);
 		WriteByte(MSG_ENTITY, this.rule);
 	}
 
-	if (sf & 2)
+	if (sf & BIT(1))
 		WriteString(MSG_ENTITY, this.model1);
-	if (sf & 4)
+	if (sf & BIT(2))
 		WriteString(MSG_ENTITY, this.model2);
-	if (sf & 8)
+	if (sf & BIT(3))
 		WriteString(MSG_ENTITY, this.model3);
 
-	if (sf & 16)
+	if (sf & BIT(4))
 	{
 		WriteCoord(MSG_ENTITY, this.fade_time);
 		WriteCoord(MSG_ENTITY, this.teleport_time);
@@ -67,7 +67,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sf)
 		WriteByte(MSG_ENTITY, hide_flags);
 	}
 
-	if (sf & 32)
+	if (sf & BIT(5))
 	{
 		WriteByte(MSG_ENTITY, this.cnt); // icon on radar
 		WriteByte(MSG_ENTITY, this.colormod.x * 255.0);
@@ -136,27 +136,27 @@ NET_HANDLE(waypointsprites, bool isNew)
 		this.build_finished = 0;
 	}
 
-	if (sf & 64)
+	if (sf & BIT(6))
 	{
 		// unfortunately, this needs to be exact (for the 3D display)
 		this.origin = ReadVector();
 		setorigin(this, this.origin);
 	}
 
-	if (sf & 1)
+	if (sf & BIT(0))
 	{
 		this.team = ReadByte();
 		this.rule = ReadByte();
 	}
 
-	if (sf & 2)
+	if (sf & BIT(1))
 		strcpy(this.netname, ReadString());
-	if (sf & 4)
+	if (sf & BIT(2))
 		strcpy(this.netname2, ReadString());
-	if (sf & 8)
+	if (sf & BIT(3))
 		strcpy(this.netname3, ReadString());
 
-	if (sf & 16)
+	if (sf & BIT(4))
 	{
 		this.lifetime = ReadCoord();
 		this.fadetime = ReadCoord();
@@ -164,18 +164,18 @@ NET_HANDLE(waypointsprites, bool isNew)
 		this.hideflags = ReadByte();
 	}
 
-	if (sf & 32)
+	if (sf & BIT(5))
 	{
 		int f = ReadByte();
 		this.teamradar_icon = f & BITS(7);
-		if (f & BIT(7))
+		if (this.teamradar_icon)
 		{
 			this.(teamradar_times[this.teamradar_time_index]) = time;
 			this.teamradar_time_index = (this.teamradar_time_index + 1) % MAX_TEAMRADAR_TIMES;
 		}
-		this.teamradar_color_x = ReadByte() / 255.0;
-		this.teamradar_color_y = ReadByte() / 255.0;
-		this.teamradar_color_z = ReadByte() / 255.0;
+		this.teamradar_color.x = ReadByte() / 255.0;
+		this.teamradar_color.y = ReadByte() / 255.0;
+		this.teamradar_color.z = ReadByte() / 255.0;
 		this.helpme = ReadByte() * 0.1;
 		if (this.helpme > 0)
 			this.helpme += servertime;
@@ -249,13 +249,17 @@ string spritelookupicon(entity this, string s)
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {
-	hotspot = -1 * hotspot;
+	hotspot = -hotspot;
 
 	// hotspot-relative coordinates of the corners
 	vector v1 = hotspot;
-	vector v2 = hotspot + '1 0 0' * sz.x;
-	vector v3 = hotspot + '1 0 0' * sz.x + '0 1 0' * sz.y;
-	vector v4 = hotspot                  + '0 1 0' * sz.y;
+	vector v2 = hotspot;
+	v2.x += sz.x;
+	vector v3 = hotspot;
+	v3.x += sz.x;
+	v3.y += sz.y;
+	vector v4 = hotspot;
+	v4.y += sz.y;
 
 	// rotate them, and make them absolute
 	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
@@ -285,17 +289,13 @@ void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, f
 
 void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float theheight, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f)
 {
-	hotspot = -1 * hotspot;
+	hotspot = -hotspot;
 
 	// hotspot-relative coordinates of the healthbar corners
-	vector o = hotspot;
-	vector ri = '1 0 0';
-	vector up = '0 1 0';
-
 	rot = -rot; // rotate by the opposite angle, as our coordinate system is reversed
-	o = Rotate(o, rot) + org;
-	ri = Rotate(ri, rot);
-	up = Rotate(up, rot);
+	vector o = Rotate(hotspot, rot) + org;
+	vector ri = Rotate('1 0 0', rot);
+	vector up = Rotate('0 1 0', rot);
 
 	float owidth = width + 2 * border; // outer width
 	o += up * -(margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
@@ -315,10 +315,10 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 	float margin = 4.0 * t;
 
 	float borderDiag = border * M_SQRT2;
-	vector arrowX  = eX * size;
-	vector arrowY  = eY * (size+borderDiag);
-	vector borderX = eX * (size+borderDiag);
-	vector borderY = eY * (size+borderDiag+border);
+	vector arrowX  = vec2(size, 0);
+	vector arrowY  = vec2(0, size + borderDiag);
+	vector borderX = vec2(size + borderDiag, 0);
+	vector borderY = vec2(0, size + borderDiag + border);
 
 	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
 	R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
@@ -329,19 +329,19 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 	R_EndPolygon();
 
 	R_BeginPolygon("", DRAWFLAG_ADDITIVE, true);
-	R_PolygonVertex(o + Rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + Rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + Rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + Rotate(vec2(0, borderDiag), ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + Rotate(arrowY - arrowX, ang),     '0 0 0', rgb, a);
+	R_PolygonVertex(o + Rotate(arrowY + arrowX, ang),     '0 0 0', rgb, a);
 	R_EndPolygon();
 
-	return o + Rotate(eY * (borderDiag + size + margin), ang);
+	return o + Rotate(vec2(0, borderDiag + size + margin), ang);
 }
 
 /// Returns location of sprite healthbar
 vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str)
 {
-	float sw = is_text ? stringwidth(str, false, sz) : sz.x;
-	float w = sw > minwidth ? sw : minwidth;
+	float sw = (is_text) ? stringwidth(str, false, sz) : sz.x;
+	float w = max(sw, minwidth);
 	float h = sz.y;
 
 	// how do corners work?
@@ -367,14 +367,8 @@ vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, 
 	o.y -= h * algny;
 
 	// we want to be onscreen
-	if (o.x < 0)
-		o.x = 0;
-	if (o.y < 0)
-		o.y = 0;
-	if (o.x > vid_conwidth - w)
-		o.x = vid_conwidth - w;
-	if (o.y > vid_conheight - h)
-		o.y = vid_conheight - h;
+	o.y = bound(0, o.y, vid_conheight - h);
+	o.x = bound(0, o.x, vid_conwidth  - w);
 
 	o.x += 0.5 * (w - sw);
 	if (is_text)
@@ -535,7 +529,7 @@ void Draw_WaypointSprite(entity this)
 		rgb *= a;
 		a = 1;
 	}
-	if (a <= 0.003)
+	else if (a <= 0.003)
 		return;
 
 	rgb = fixrgbexcess(rgb);
@@ -549,7 +543,7 @@ void Draw_WaypointSprite(entity this)
 	||  o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	{
 		// scale it to be just in view
-		vector d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
+		vector d = vec3(o.x - 0.5 * vid_conwidth, o.y - 0.5 * vid_conheight, o.z);
 		ang = atan2(-d.x, -d.y);
 		if (o.z < 0)
 			ang += M_PI;
@@ -561,7 +555,7 @@ void Draw_WaypointSprite(entity this)
 		if (f2 == 0)
 			f2 = 0.000001;
 
-		if (max(f1, -f1) > max(f2, -f2))
+		if (fabs(f1) > fabs(f2))
 		{
 			if (d.z * f1 > 0) // RIGHT edge
 				d *= (0.5 - waypointsprite_edgeoffset_right) / f1;
@@ -576,14 +570,14 @@ void Draw_WaypointSprite(entity this)
 				d *= -(0.5 - waypointsprite_edgeoffset_top) / f2;
 		}
 
-		o = d + '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+		o = vec3(d.x + 0.5 * vid_conwidth, d.y + 0.5 * vid_conheight, d.z);
 	}
 	else
 #if 1
 		ang = M_PI;
 #else
 	{
-		vector d = o - '0.5 0 0' * vid_conwidth - '0 0.5 0' * vid_conheight;
+		vector d = vec3(o.x - 0.5 * vid_conwidth, o.y - 0.5 * vid_conheight, o.z);
 		ang = atan2(-d.x, -d.y);
 	}
 #endif
@@ -596,7 +590,7 @@ void Draw_WaypointSprite(entity this)
 		vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom) - o.y
 	);
 
-	float crosshairdistance = sqrt((o.x - vid_conwidth / 2) ** 2 + (o.y - vid_conheight / 2) ** 2);
+	float crosshairdistance = sqrt((o.x - vid_conwidth * 0.5) ** 2 + (o.y - vid_conheight * 0.5) ** 2);
 
 	a *= waypointsprite_alpha;
 	t = waypointsprite_scale;
@@ -638,7 +632,7 @@ void Draw_WaypointSprite(entity this)
 	{
 		string spr_icon = spritelookupicon(this, spriteimage);
 		pic = spr_icon;
-		bool icon_found = !(!spr_icon || spr_icon == "");
+		bool icon_found = (spr_icon != "");
 		if (icon_found) // it's valid, but let's make sure it exists!
 		{
 			pic = strcat(hud_skin_path, "/", spr_icon);
@@ -682,7 +676,7 @@ void Draw_WaypointSprite(entity this)
 	draw_beginBoldFont();
 	if (GetResource(this, RES_HEALTH) >= 0)
 	{
-		float marg, align = 0;
+		float marg, align;
 		if (this.build_finished)
 			align = 0.5;
 		else
@@ -785,17 +779,17 @@ void WaypointSprite_UpdateSprites(entity e, entity _m1, entity _m2, entity _m3)
 	if (m1 != e.model1)
 	{
 		e.model1 = m1;
-		e.SendFlags |= 2;
+		e.SendFlags |= BIT(1);
 	}
 	if (m2 != e.model2)
 	{
 		e.model2 = m2;
-		e.SendFlags |= 4;
+		e.SendFlags |= BIT(2);
 	}
 	if (m3 != e.model3)
 	{
 		e.model3 = m3;
-		e.SendFlags |= 8;
+		e.SendFlags |= BIT(3);
 	}
 }
 
@@ -813,22 +807,22 @@ void WaypointSprite_UpdateHealth(entity e, float f)
 
 void WaypointSprite_UpdateMaxHealth(entity e, float f)
 {
-	if (f != e.max_health || e.pain_finished)
-	{
-		e.max_health = f;
-		e.pain_finished = 0;
-		e.SendFlags |= 0x80;
-	}
+	if (f == e.max_health && !e.pain_finished)
+		return;
+
+	e.max_health = f;
+	e.pain_finished = 0;
+	e.SendFlags |= 0x80;
 }
 
 void WaypointSprite_UpdateBuildFinished(entity e, float f)
 {
-	if (f != e.pain_finished || e.max_health)
-	{
-		e.max_health = 0;
-		e.pain_finished = f;
-		e.SendFlags |= 0x80;
-	}
+	if (f == e.pain_finished && !e.max_health)
+		return;
+
+	e.max_health = 0;
+	e.pain_finished = f;
+	e.SendFlags |= 0x80;
 }
 
 void WaypointSprite_UpdateOrigin(entity e, vector o)
@@ -836,7 +830,7 @@ void WaypointSprite_UpdateOrigin(entity e, vector o)
 	if (o != e.origin)
 	{
 		setorigin(e, o);
-		e.SendFlags |= 64;
+		e.SendFlags |= BIT(6);
 	}
 }
 
@@ -845,7 +839,7 @@ void WaypointSprite_UpdateRule(entity e, float t, float r)
 	// no check, as this is never called without doing an actual change (usually only once)
 	e.rule = r;
 	e.team = t;
-	e.SendFlags |= 1;
+	e.SendFlags |= BIT(0);
 }
 
 void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col)
@@ -857,7 +851,7 @@ void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col)
 	{
 		e.cnt = new_cnt;
 		e.colormod = col;
-		e.SendFlags |= 32;
+		e.SendFlags |= BIT(5);
 	}
 }
 
@@ -868,14 +862,14 @@ void WaypointSprite_Ping(entity e)
 	e.waypointsprite_pingtime = time + 0.3;
 	// ALWAYS sends (this causes a radar circle), thus no check
 	e.cnt |= BIT(7);
-	e.SendFlags |= 32;
+	e.SendFlags |= BIT(5);
 }
 
 void WaypointSprite_HelpMePing(entity e)
 {
 	WaypointSprite_Ping(e);
 	e.waypointsprite_helpmetime = time + waypointsprite_deployed_lifetime;
-	e.SendFlags |= 32;
+	e.SendFlags |= BIT(5);
 }
 
 void WaypointSprite_FadeOutIn(entity e, float t)
@@ -898,7 +892,7 @@ void WaypointSprite_FadeOutIn(entity e, float t)
 		e.fade_time *= t / current_fadetime;
 	}
 
-	e.SendFlags |= 16;
+	e.SendFlags |= BIT(4);
 }
 
 void WaypointSprite_Init()
@@ -1028,8 +1022,7 @@ entity WaypointSprite_Spawn(
 {
 	entity wp = new(sprite_waypoint);
 	wp.fade_time = _lifetime; // if negative tells client not to fade it out
-	if (_lifetime < 0)
-		_lifetime = -_lifetime;
+	_lifetime = fabs(_lifetime);
 	wp.teleport_time = time + _lifetime;
 	wp.exteriormodeltoclient = ref;
 	if (ref)
