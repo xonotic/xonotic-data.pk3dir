@@ -6,7 +6,7 @@ REGISTRY(Waypoints, BITS(7))
 REGISTER_REGISTRY(Waypoints)
 REGISTRY_CHECK(Waypoints)
 
-/** If you register a new waypoint, make sure to add it to all.inc */
+/// If you register a new waypoint, make sure to add it to all.inc
 #define REGISTER_WAYPOINT_(id, init) REGISTER(Waypoints, WP, id, m_id, init)
 
 CLASS(Waypoint, Object)
@@ -16,7 +16,8 @@ CLASS(Waypoint, Object)
 	ATTRIB(Waypoint, m_icon, string);
 	ATTRIB(Waypoint, m_color, vector, '1 1 1');
 	ATTRIB(Waypoint, m_blink, int, 1);
-	CONSTRUCTOR(Waypoint, string _netname, string _name, string _icon, vector _color, int _blink) {
+	CONSTRUCTOR(Waypoint, string _netname, string _name, string _icon, vector _color, int _blink)
+	{
 		CONSTRUCT(Waypoint);
 		this.netname = _netname;
 		this.m_name = _name;
@@ -33,7 +34,12 @@ REGISTER_REGISTRY(RadarIcons)
 REGISTRY_CHECK(RadarIcons)
 
 .int m_radaricon;
-#define REGISTER_RADARICON(id, num) REGISTER(RadarIcons, RADARICON, id, m_id, new_pure(RadarIcon)) { this.m_radaricon = num; this.netname = #id; }
+#define REGISTER_RADARICON(id, num) \
+	REGISTER(RadarIcons, RADARICON, id, m_id, new_pure(RadarIcon)) \
+	{ \
+		this.m_radaricon = num; \
+		this.netname = #id; \
+	}
 
 REGISTER_WAYPOINT(Null, "", "", '0 0 0', 1);
 REGISTRY_DEFINE_GET(Waypoints, WP_Null)

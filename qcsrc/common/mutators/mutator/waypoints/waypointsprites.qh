@@ -2,11 +2,10 @@
 
 #include "all.qh"
 
-/** Additional networked waypoint state, used for items, weapons, buffs */
-.int wp_extra;
+.int wp_extra; ///< Additional networked waypoint state, used for items, weapons, buffs
 
-const int SPRITERULE_DEFAULT = 0;
-const int SPRITERULE_TEAMPLAY = 1;
+const int SPRITERULE_DEFAULT   = 0;
+const int SPRITERULE_TEAMPLAY  = 1;
 const int SPRITERULE_SPECTATOR = 2;
 
 #ifdef CSQC
@@ -101,10 +100,8 @@ void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, f
 
 void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f);
 
-// returns location of sprite text
 vector drawspritearrow(vector o, float ang, vector rgb, float a, float t);
 
-// returns location of sprite healthbar
 vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str);
 
 float spritelookupblinkvalue(entity this, string s);
@@ -116,16 +113,12 @@ vector fixrgbexcess(vector rgb);
 
 // they are drawn using a .draw function
 
-void Ent_RemoveWaypointSprite(entity this);
-
-void Ent_WaypointSprite(entity this, bool isnew);
-
 void WaypointSprite_Load_Frames(string ext);
 
 void WaypointSprite_Load();
 .float alpha;
 void Draw_WaypointSprite(entity this);
-#endif
+#endif // CSQC
 
 #ifdef SVQC
 .entity sprite;
@@ -143,15 +136,10 @@ float autocvar_sv_waypointsprite_limitedrange;
 .bool(entity, entity, entity) waypointsprite_visible_for_player;
 
 void WaypointSprite_UpdateSprites(entity e, entity m1, entity m2, entity m3);
-
 void WaypointSprite_UpdateHealth(entity e, float f);
-
 void WaypointSprite_UpdateMaxHealth(entity e, float f);
-
 void WaypointSprite_UpdateBuildFinished(entity e, float f);
-
 void WaypointSprite_UpdateOrigin(entity e, vector o);
-
 void WaypointSprite_UpdateRule(entity e, float t, float r);
 
 void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col);
@@ -181,8 +169,6 @@ entity WaypointSprite_getviewentity(entity e);
 float WaypointSprite_isteammate(entity e, entity e2);
 
 bool WaypointSprite_Customize(entity this, entity client);
-
-bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
 void WaypointSprite_Reset(entity this);
 
@@ -239,10 +225,8 @@ entity WaypointSprite_AttachCarrier(
 void WaypointSprite_DetachCarrier(entity carrier);
 
 void WaypointSprite_ClearPersonal(entity this);
-
 void WaypointSprite_ClearOwned(entity this);
 
 void WaypointSprite_PlayerDead(entity this);
-
 void WaypointSprite_PlayerGone(entity this);
-#endif
+#endif // SVQC
