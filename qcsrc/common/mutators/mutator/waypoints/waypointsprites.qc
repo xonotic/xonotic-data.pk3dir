@@ -533,7 +533,7 @@ void Draw_WaypointSprite(entity this)
 	||  o.x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))
 	||  o.y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
 	{
-		// scale it to be just in view
+		// Arrow is at the edge, scale it to be just in view
 		vector d = vec3(o.x - 0.5 * vid_conwidth, o.y - 0.5 * vid_conheight, o.z);
 		ang = atan2(-d.x, -d.y);
 		if (o.z < 0)
@@ -563,15 +563,27 @@ void Draw_WaypointSprite(entity this)
 
 		o = vec3(d.x + 0.5 * vid_conwidth, d.y + 0.5 * vid_conheight, d.z);
 	}
-	else
-#if 1
-		ang = M_PI;
-#else
+	else if (autocvar_g_waypointsprite_edgesmooth < 1) // arrow isn't at the edge, smoothly transition it towards the edge
 	{
+		// Instead of snapping from 'pointing down' to 'pointing outward', rotate the arrow so it transitions smoothly
+		// Arrow still points directly at the projected point the whole way
 		vector d = vec3(o.x - 0.5 * vid_conwidth, o.y - 0.5 * vid_conheight, o.z);
-		ang = atan2(-d.x, -d.y);
+		float hx = (0.5 - ((d.x > 0) ? waypointsprite_edgeoffset_right  : waypointsprite_edgeoffset_left)) * vid_conwidth;
+		float hy = (0.5 - ((d.y > 0) ? waypointsprite_edgeoffset_bottom : waypointsprite_edgeoffset_top))  * vid_conheight;
+		// Calculate how far the arrow is from the screen center to the edge (as a fraction)
+		float edge_current = min(max(fabs(d.x) / hx, fabs(d.y) / hy), 1);
+		float edge_start = max(0, autocvar_g_waypointsprite_edgesmooth);
+		if (edge_current > edge_start)
+		{
+			// Transition from straight down to the outward angle
+			float edge_frac = smoothstep((edge_current - edge_start) / (1 - edge_start));
+			ang = M_PI + atan2(d.x, d.y) * edge_frac;
+		}
+		else
+			ang = M_PI; // straight down
 	}
-#endif
+	else // arrow isn't at the edge, make it point straight down
+		ang = M_PI;
 	o.z = 0;
 
 	float edgedistance_min = min(
