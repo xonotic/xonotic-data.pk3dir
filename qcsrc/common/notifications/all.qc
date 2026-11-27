@@ -142,14 +142,16 @@ string Process_Notif_Line(
 			input = strreplace("\n", "\n\{3}", input);
 
 			// pass 3: strip trailing ETX char
-			if (substring(input, strlen(input) - 1, 1) == "\{3}")
-				input = substring(input, 0, (strlen(input) - 1));
+			int len = strlen(input);
+			if (substring(input, len - 1, 1) == "\{3}")
+				input = substring(input, 0, len - 1);
 		}
 	}
 #endif
 
 	// done to both MSG_INFO and MSG_CENTER
-	if (substring(input, strlen(input) - 1, 1) == "\n")
+	int len = strlen(input);
+	if (substring(input, len - 1, 1) == "\n")
 	{
 		LOG_INFOF(
 			(
@@ -161,7 +163,7 @@ string Process_Notif_Line(
 			stringtype
 		);
 		notif_error = true;
-		input = substring(input, 1, strlen(input) - 1);
+		input = substring(input, 0, len - 1); // strip trailing \n
 	}
 	return input;
 }
@@ -545,8 +547,9 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 				notif_error = true;
 			}
 		}
-		notif.nent_cpid = cpid;
 	#endif // CSQC
+
+		notif.nent_cpid = cpid;
 
 		// ======================
 		//  Process Notif String
@@ -1262,16 +1265,19 @@ void Local_Notification(MSG net_type, Notification net_name, ...count)
 		#ifdef CSQC
 			if (notif.nent_icon != "")
 			{
+				string icon_str;
 				if (notif.nent_iconargs != "")
 				{
 					string s = Local_Notification_sprintf(
 						notif.nent_icon, notif.nent_iconargs,
 						s1, s2, s3, s4, f1, f2, f3, f4);
 					// remove the trailing newline
-					notif.nent_icon = strzone(substring(s, 0, -2));
+					icon_str = substring(s, 0, -2);
 				}
+				else
+					icon_str = notif.nent_icon;
 				Local_Notification_HUD_Notify_Push(
-					notif.nent_icon,
+					icon_str,
 					notif.nent_hudargs,
 					s1, s2, s3, s4,
 					f1, f2, f3, f4);

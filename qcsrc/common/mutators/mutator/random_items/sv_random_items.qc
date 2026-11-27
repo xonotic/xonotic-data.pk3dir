@@ -227,6 +227,11 @@ string RandomItems_GetRandomItemClassNameWithProperty(string prefix,
 	return RandomSelection_chosen_string;
 }
 
+void RandomItems_dtor(entity this)
+{
+	strfree(this.classname);
+}
+
 /// \brief Replaces a map item.
 /// \param[in] item Item to replace.
 /// \return Spawned item on success, NULL otherwise.
@@ -270,6 +275,7 @@ entity RandomItems_ReplaceMapItem(entity item)
 	entity new_item = spawn();
 	Item_CopyFields(item, new_item);
 	new_item.classname = strzone(new_classname);
+	new_item.dtor = RandomItems_dtor;
 	new_item.lifetime = -1; // permanent (not loot)
 	if (MUTATOR_IS_ENABLED(ok))
 		new_item.ok_item = true;
@@ -323,23 +329,13 @@ MUTATOR_HOOKFUNCTION(random_items, BuildMutatorsPrettyString)
 MUTATOR_HOOKFUNCTION(random_items, FilterItem, CBC_ORDER_LAST)
 {
 	//PrintToChatAll("FilterItem");
-	if (!autocvar_g_random_items)
-	{
+	if (MUTATOR_RETURNVALUE // an earlier FilterItem already replaced the item
+	|| !autocvar_g_random_items || random_items_is_spawning == true)
 		return false;
-	}
-	if (random_items_is_spawning == true)
-	{
-		return false;
-	}
+
 	entity item = M_ARGV(0, entity);
-	if (ITEM_IS_LOOT(item))
-	{
+	if (ITEM_IS_LOOT(item) || RandomItems_ReplaceMapItem(item) == NULL)
 		return false;
-	}
-	if (RandomItems_ReplaceMapItem(item) == NULL)
-	{
-		return false;
-	}
 	return true;
 }
 
@@ -375,8 +371,7 @@ MUTATOR_HOOKFUNCTION(random_items, PlayerDies)
 	}
 	entity victim = M_ARGV(2, entity);
 	vector loot_position = victim.origin + '0 0 32';
-	int num_loot_items = floor(autocvar_g_random_loot_min + random() *
-		autocvar_g_random_loot_max);
+	int num_loot_items = floor(autocvar_g_random_loot_min + random() * (autocvar_g_random_loot_max - autocvar_g_random_loot_min + 1));
 	for (int item_index = 0; item_index < num_loot_items; ++item_index)
 	{
 		RandomItems_SpawnLootItem(loot_position);

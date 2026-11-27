@@ -49,9 +49,10 @@
 #endif
 
 #define strcpy(this, s) MACRO_BEGIN \
+	string s_cpy = s; \
 	if (this) \
 		strunzone(this); \
-	this = strzone(s); \
+	this = strzone(s_cpy); \
 MACRO_END
 
 #define strfree(this) MACRO_BEGIN \

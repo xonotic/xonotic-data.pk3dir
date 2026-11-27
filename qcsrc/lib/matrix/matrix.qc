@@ -68,6 +68,7 @@ void MX_Messages_(entity fh, entity pass, int status)
 			for (int i = 0, n = stof(json_get(buf, "chunk.length")); i < n; ++i)
 				MX_Handle(buf, sprintf("chunk.%d", i));
 			MX_Messages(json_get(buf, "end"));
+			json_del(buf);
 			break;
 		}
 	}
@@ -117,6 +118,7 @@ void MX_Sync_(entity fh, entity pass, int status)
 			for (int i = 0, n = stof(json_get(buf, sprintf("%s.length", arr))); i < n; ++i)
 				MX_Handle(buf, sprintf("%s.%d", arr, i));
 			MX_Sync(json_get(buf, "next_batch"));
+			json_del(buf);
 			break;
 		}
 	}

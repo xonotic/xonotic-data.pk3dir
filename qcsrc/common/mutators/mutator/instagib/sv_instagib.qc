@@ -192,7 +192,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, Damage_Calculate)
 				frag_force = '0 0 0';
 
 			float armor = GetResource(frag_target, RES_ARMOR);
-			if (armor)
+			if (armor && frag_damage > 0)
 			{
 				--armor;
 				SetResource(frag_target, RES_ARMOR, armor);
@@ -320,7 +320,15 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 			if (autocvar_g_powerups)
 				instagib_replace_item_with_random_powerup(item);
 			return true;
-		case ITEM_Invisibility: case ITEM_ExtraLife: case ITEM_Speed:
+		case ITEM_Invisibility:
+			if (!item.count) // .count is used as the duration when powerups are initialized
+				item.count = autocvar_g_instagib_invisibility_time;
+			return false;
+		case ITEM_Speed:
+			if (!item.count) // ...
+				item.count = autocvar_g_instagib_speed_time;
+			return false;
+		case ITEM_ExtraLife:
 			return false;
 		case ITEM_Cells:
 			if (autocvar_g_instagib_ammo_convert_cells)
@@ -382,6 +390,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
+
+	if (STAT(FROZEN, toucher))
+		return MUT_ITEMTOUCH_CONTINUE; // no special handling while frozen
 
 	if (GetResource(item, RES_CELLS))
 	{

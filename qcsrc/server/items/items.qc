@@ -8,6 +8,7 @@
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/monsters/_mod.qh>
+#include <common/mutators/mutator/itemstime/_mod.qh>
 #include <common/mutators/mutator/powerups/_mod.qh>
 #include <common/mutators/mutator/status_effects/_mod.qh>
 #include <common/net_linked.qh>
@@ -232,12 +233,6 @@ void Item_Think(entity this)
 	}
 }
 
-bool Item_ItemsTime_SpectatorOnly(GameItem it);
-bool Item_ItemsTime_Allow(GameItem it);
-float Item_ItemsTime_UpdateTime(entity e, float t);
-void Item_ItemsTime_SetTime(entity e, float t);
-void Item_ItemsTime_SetTimesForAllPlayers();
-
 void Item_Respawn(entity this)
 {
 	Item_Show(this, 1);
@@ -331,6 +326,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
+		e.wait = e.scheduledrespawntime; // read by physical_items mutator
 		e.item_respawncounter = 0;
 	}
 	else
@@ -1383,7 +1379,7 @@ void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_
 		if(snd_decr != NULL)
 			sound(e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
-	else if(v0 >= v0 + t)
+	else if(v1 >= v0 + t)
 	{
 		if(snd_incr != NULL)
 			sound(e, ((snd_incr == SND_POWERUP) ? CH_TRIGGER_SINGLE : CH_TRIGGER), snd_incr, VOL_BASE, ATTEN_NORM);

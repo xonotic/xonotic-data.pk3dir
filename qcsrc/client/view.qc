@@ -629,8 +629,6 @@ vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, ve
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
-// this function must match W_SetupShot!
-
 bool minigame_wasactive;
 
 float camera_mode;
@@ -1682,7 +1680,10 @@ void CSQC_UpdateView(entity this, float w, float h, bool notmenu)
 		cvar_set("_hud_showbinds_reload", "0");
 	}
 
-	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
+	static int ext_MINFPS_QUALITY = -1; // cache
+	if (ext_MINFPS_QUALITY == -1)
+		ext_MINFPS_QUALITY = checkextension("DP_CSQC_MINFPS_QUALITY");
+	if (ext_MINFPS_QUALITY)
 		view_quality = getproperty(VF_MINFPS_QUALITY);
 	else
 		view_quality = 1;

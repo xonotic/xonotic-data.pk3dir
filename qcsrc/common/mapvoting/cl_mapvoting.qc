@@ -38,7 +38,7 @@ string MapVote_FormatItem(int id, string text, int _count, float maxwidth, vecto
 	TC(int, id);
 	string post = "";
 	if (mv_detail && (_count == 1 || (_count >= 0 && (mv_flags[id] & GTV_AVAILABLE))))
-		post = sprintf(_(" (%s)"), sprintf(count_votes(_count)));
+		post = sprintf(_(" (%s)"), count_votes(_count));
 
 	string pre = strcat(itos(id + 1), ". ");
 	maxwidth -= stringwidth_nocolors(pre, fontsize) + stringwidth_nocolors(post, fontsize);
@@ -524,7 +524,7 @@ void MapVote_Draw(bool should_draw)
 			if (mv_votes[i] > most_votes)
 				most_votes = mv_votes[i];
 
-	void(vector, float, float, string, string, float, int, int) DrawItem;
+	void(vector, float, float, string, string, int, int, int) DrawItem;
 	if (gametypevote)
 		DrawItem = GameTypeVote_DrawGameTypeItem;
 	else

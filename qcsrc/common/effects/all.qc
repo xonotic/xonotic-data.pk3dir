@@ -81,38 +81,35 @@ void Send_Effect_Core(entity eff, vector eff_loc, vector eff_vel, int eff_cnt, v
 	if (eff_vel != '0 0 0')
 		sf |= SF_EFF_VELOCITY;
 
+	eff_col_min.x = rint(bound(0, 16 * eff_col_min.x, BITS(8)));
+	eff_col_min.y = rint(bound(0, 16 * eff_col_min.y, BITS(8)));
+	eff_col_min.z = rint(bound(0, 16 * eff_col_min.z, BITS(8)));
+	eff_col_max.x = rint(bound(0, 16 * eff_col_max.x, BITS(8)));
+	eff_col_max.y = rint(bound(0, 16 * eff_col_max.y, BITS(8)));
+	eff_col_max.z = rint(bound(0, 16 * eff_col_max.z, BITS(8)));
+	bool same_col = (eff_col_min == eff_col_max);
+
 	// if only one of min or max is set, that color is used for both
 	if (eff_col_min != '0 0 0')
-	{
 		sf |= SF_EFF_COLOR_MIN;
-		eff_col_min.x = rint(bound(0, 16 * eff_col_min.x, BITS(8)));
-		eff_col_min.y = rint(bound(0, 16 * eff_col_min.y, BITS(8)));
-		eff_col_min.z = rint(bound(0, 16 * eff_col_min.z, BITS(8)));
-	}
-	if (eff_col_max != '0 0 0'
-	&& eff_col_min != eff_col_max) // optimization: only send one color if the min and max match
-	{
+	if (eff_col_max != '0 0 0' && !same_col) // optimization: only send one color if the min and max match
 		sf |= SF_EFF_COLOR_MAX;
-		eff_col_max.x = rint(bound(0, 16 * eff_col_max.x, BITS(8)));
-		eff_col_max.y = rint(bound(0, 16 * eff_col_max.y, BITS(8)));
-		eff_col_max.z = rint(bound(0, 16 * eff_col_max.z, BITS(8)));
-	}
 
 	if (eff_alpha_min >= 0)
 	{
 		sf |= SF_EFF_ALPHA_MIN;
 		eff_alpha_min = rint(bound(0, eff_alpha_min, 1) * BITS(8));
 	}
-	if (eff_alpha_max >= 0
-	&& eff_alpha_min != eff_alpha_max) // optimization: only send one alpha if the min and max match
+	if (eff_alpha_max >= 0)
 	{
-		sf |= SF_EFF_ALPHA_MAX;
 		eff_alpha_max = rint(bound(0, eff_alpha_max, 1) * BITS(8));
+		if (eff_alpha_max != eff_alpha_min) // optimization: only send one alpha if the min and max match
+			sf |= SF_EFF_ALPHA_MAX;
 	}
 	if (eff_alpha_fade >= 0)
 	{
 		sf |= SF_EFF_FADE;
-		eff_alpha_fade = rint(bound(0, eff_alpha_fade, 1) * BITS(8));
+		eff_alpha_fade = rint(bound(0, eff_alpha_fade, 1) * BITS(8)); // may round to 0
 	}
 
 	// now network to every client

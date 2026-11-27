@@ -19,6 +19,8 @@ void SpawnCasing(vector vel, vector ang, int casingtype, entity casingowner, .en
 	vector org = casingowner.(weaponentity).spawnorigin;
 	org = casingowner.origin + casingowner.view_ofs + org.x * v_forward - org.y * v_right + org.z * v_up;
 
+	bool silent = !sound_allowed(MSG_ENTITY, casingowner);
+
 	FOREACH_CLIENT(true, {
 		if (!(CS_CVAR(it).cvar_cl_casings))
 			continue;
@@ -35,10 +37,10 @@ void SpawnCasing(vector vel, vector ang, int casingtype, entity casingowner, .en
 		else if (1 & ~checkpvs(it.origin + it.view_ofs, casingowner)) // 1 or 3 means visible
 			continue;
 
-		msg_entity = it; // sound_allowed checks this
-		if (!sound_allowed(MSG_ONE, it))
+		if (silent)
 			casingtype |= 0x80; // silent
 
+		msg_entity = it;
 		WriteHeader(MSG_ONE, casings);
 		WriteByte(MSG_ONE, casingtype);
 		WriteVector(MSG_ONE, org);

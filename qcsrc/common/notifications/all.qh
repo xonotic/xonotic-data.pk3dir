@@ -395,9 +395,17 @@ void Local_Notification_Queue_Process();
 string hash_replace(string full_msg, int ent_msg_num, string ent_msg, string attacker_name)
 {
 	int s_ofs = 0;
-	while (--ent_msg_num >= 0)
-		s_ofs += strstrofs(full_msg, "%s", s_ofs);
-	string col = find_last_color_code(substring(full_msg, 0, s_ofs));
+	for (int i = 0; i < ent_msg_num; ++i)
+	{
+		s_ofs = strstrofs(full_msg, "%s", s_ofs);
+		if (s_ofs < 0)
+			break;
+		if (i + 1 < ent_msg_num)
+			s_ofs += 2; // skip the %s
+	}
+	string col = (s_ofs >= 0)
+		? find_last_color_code(substring(full_msg, 0, s_ofs))
+		: "";
 
 	int hash_ofs = strstrofs(ent_msg, "#", 0);
 	if (hash_ofs < 0)

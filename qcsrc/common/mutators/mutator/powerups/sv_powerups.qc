@@ -120,8 +120,11 @@ void powerups_DropItem(entity this, StatusEffect effect, bool freezeTimer)
 		case STATUSEFFECT_Speed:        e.itemdef = ITEM_Speed;        e.speed_finished = finished;        maxtime = autocvar_g_balance_powerup_speed_time;      break;
 		default: delete(e); return;
 	}
+	if (maxtime < timeleft) // can occur, eg. g_powerups_stack 1
+		maxtime = timeleft;
 
 	e.origin = this.origin;
+	makevectors(this.v_angle);
 	e.velocity = W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false);
 	if (!Item_Initialise(e))
 		return;

@@ -21,6 +21,10 @@ METHOD(MagnetBuff, m_tick, void(StatusEffect this, entity actor))
 		for (; head; head = next)
 		{
 			next = head.chain; // save next entity in case head is deleted (or head.chain changed) by gettouch(head)
+			// Item_Touch reads trace globals for loot
+			trace_dpstartcontents = 0;
+			trace_dphitcontents = 0;
+			trace_dphitq3surfaceflags = 0;
 			gettouch(head)(head, actor);
 		}
 	}

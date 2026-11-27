@@ -857,7 +857,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
 			vote_parsed_command = strcat("gotomap ", vote_command);
-			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+			vote_parsed_display = strcat("^1", vote_parsed_command);
 
 			break;
 		}
@@ -869,7 +869,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if (!vote_command)  return -1;
 			vote_parsed_command = strcat("nextmap ", vote_command);
-			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+			vote_parsed_display = strcat("^1", vote_parsed_command);
 
 			break;
 		}
@@ -885,7 +885,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				return -1;
 			}
 			vote_parsed_command = strcat("fraglimit ", ftos(fraglimit_vote));
-			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+			vote_parsed_display = strcat("^1", vote_parsed_command);
 
 			break;
 		}
@@ -899,7 +899,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 				return -1;
 			}
 			vote_parsed_command = strcat("timelimit ", ftos(timelimit_vote));
-			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
+			vote_parsed_display = strcat("^1", vote_parsed_command);
 
 			break;
 		}
@@ -909,7 +909,7 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			// add a delay so that vote result can be seen and announcer can be heard
 			// if the vote is accepted
 			vote_parsed_command = strcat("defer 1 ", vote_command);
-			vote_parsed_display = strzone(strcat("^1", vote_command));
+			vote_parsed_display = strcat("^1", vote_command);
 
 			break;
 		}
@@ -922,14 +922,14 @@ int VoteCommand_parse(entity caller, string vote_command, string vote_list, floa
 			}
 
 			vote_parsed_command = vote_command;
-			vote_parsed_display = strzone(strcat("^1", vote_command));
+			vote_parsed_display = strcat("^1", vote_command);
 			break;
 		}
 
 		default:
 		{
 			vote_parsed_command = vote_command;
-			vote_parsed_display = strzone(strcat("^1", vote_command));
+			vote_parsed_display = strcat("^1", vote_command);
 
 			break;
 		}
@@ -1043,8 +1043,8 @@ void VoteCommand_call(int request, entity caller, int argc, string vote_command)
 			{
 				if(parse_error == 0)
 				{
-					if (vote_called_command == "")
-						VoteCommand_call(CMD_REQUEST_USAGE, caller, argc, vote_command);
+					if (vote_command == "")
+						VoteCommand_call(CMD_REQUEST_USAGE, caller, argc, "");
 					else
 						print_to(caller, "^1This command is not acceptable or not available.");
 				}
@@ -1121,8 +1121,8 @@ void VoteCommand_master(int request, entity caller, int argc, string vote_comman
 						{
 							if(parse_error == 0)
 							{
-								if (vote_called_command == "")
-									VoteCommand_master(CMD_REQUEST_USAGE, caller, argc, vote_command);
+								if (vote_command == "")
+									VoteCommand_master(CMD_REQUEST_USAGE, caller, argc, "");
 								else
 									print_to(caller, "^1This command is not acceptable or not available.");
 							}

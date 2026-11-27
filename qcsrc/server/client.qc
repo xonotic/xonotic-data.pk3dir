@@ -923,9 +923,9 @@ void ClientInit_misc(entity this)
 	WriteString(channel, world.fog);
 	WriteByte(channel, autocvar_sv_foginterval && world.fog != ""); // only forced if necessary
 
-	WriteByte(channel, this.count * 255.0); // g_balance_armor_blockpercent
-	WriteByte(channel, this.cnt * 255.0); // g_balance_damagepush_speedfactor
 	WriteByte(channel, serverflags);
+	WriteByte(channel, this.count * 255.0); // g_balance_armor_blockpercent
+	WriteFloat(channel, this.cnt); // g_balance_damagepush_speedfactor
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 }
 

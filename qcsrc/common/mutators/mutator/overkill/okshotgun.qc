@@ -61,7 +61,7 @@ METHOD(OverkillShotgun, wr_think, void(entity thiswep, entity actor, .entity wea
 	}
 	if ((fire & 2) && WEP_CVAR_SEC(WEP_OVERKILL_SHOTGUN, refire_type) == 0) // Secondary attack
 	{
-		if (!weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(WEP_BLASTER, refire)))
+		if (!weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_PRI(WEP_BLASTER, refire)))
 			return;
 		makevectors(actor.v_angle);
 		W_Blaster_Attack(actor, weaponentity);

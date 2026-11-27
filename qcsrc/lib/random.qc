@@ -127,6 +127,10 @@ float gsl_ran_ugaussian()
 			v.z = prandom();
 		}
 		while (v * v > 1);
+		// Go from [0..1[ to [-1..1[
+		v.x = (2 * v.x - 1);
+		v.y = (2 * v.y - 1);
+		v.z = (2 * v.z - 1);
 		return v;
 	}
 

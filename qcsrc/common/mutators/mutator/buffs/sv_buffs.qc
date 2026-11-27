@@ -122,8 +122,8 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 		return false;
 
 	entity heldbuff = buff_FirstFromFlags(view); // TODO: cache this information so it isn't performing a loop every frame
-	if (heldbuff) 
-		return CS_CVAR(view).cvar_cl_buffs_autoreplace == false || heldbuff != this.owner.buffdef;
+	if (heldbuff && heldbuff == this.owner.buffdef && CS_CVAR(view).cvar_cl_buffs_autoreplace)
+		return false;
 
 	return WaypointSprite_visible_for_player(this, player, view);
 }
@@ -552,9 +552,9 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
 
-	if (frag_deathtype == DEATH_BUFF_INFERNO.m_id
-	||  frag_deathtype == DEATH_BUFF_VENGEANCE.m_id)
-		return; // no recurrence
+	// Skip any buff effects which could call Damage_Calculate again, or else we'll get infinite recursion
+	bool would_recur = (frag_deathtype == DEATH_BUFF_INFERNO.m_id
+		|| frag_deathtype == DEATH_BUFF_VENGEANCE.m_id);
 
 	if (StatusEffects_active(BUFF_RESISTANCE, frag_target))
 		frag_damage = buff_Resistance_CalculateDamage(frag_damage);
@@ -568,7 +568,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 	if (StatusEffects_active(BUFF_JUMP, frag_target))
 		frag_damage = buff_Jump_ChangeDamage(frag_damage, frag_deathtype);
 
-	if (StatusEffects_active(BUFF_VENGEANCE, frag_target)
+	if (!would_recur && StatusEffects_active(BUFF_VENGEANCE, frag_target)
 	&& frag_attacker && frag_attacker != frag_target
 	&& !ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
@@ -603,7 +603,7 @@ MUTATOR_HOOKFUNCTION(buffs, Damage_Calculate)
 		if (StatusEffects_active(BUFF_LUCK, frag_attacker))
 			frag_damage = buff_Luck_CalculateDamage(frag_damage);
 
-		if (StatusEffects_active(BUFF_INFERNO, frag_attacker))
+		if (!would_recur && StatusEffects_active(BUFF_INFERNO, frag_attacker))
 		{
 			float btime = buff_Inferno_CalculateTime(frag_damage);
 			Fire_AddDamage(frag_target, frag_attacker, buff_Inferno_CalculateDamage(frag_damage), btime, DEATH_BUFF_INFERNO.m_id);
@@ -626,8 +626,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 	{
 		int buffid = heldbuff.m_id;
 		Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid);
-		if (!IS_INDEPENDENT_PLAYER(player))
-			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
+		// ITEM_BUFF_LOST is already notified in .m_remove
 
 		buff_RemoveAll(player, STATUSEFFECT_REMOVE_NORMAL);
 		player.buff_shield = time + max(0, autocvar_g_buffs_pickup_delay);

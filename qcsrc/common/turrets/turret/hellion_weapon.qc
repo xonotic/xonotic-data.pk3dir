@@ -45,17 +45,19 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
 
 void turret_hellion_missile_think(entity this)
 {
+	if (this.max_health < time)
+	{
+		turret_projectile_explode(this);
+		return;
+	}
+
 	this.nextthink = time + 0.05;
 
 	vector newdir, olddir = normalize(this.velocity);
 
-	if (this.max_health < time)
-		turret_projectile_explode(this);
-
 	// Enemy dead? just keep on the current heading then.
 	if (this.enemy == NULL || IS_DEAD(this.enemy))
 	{
-
 		// Make sure we dont return to tracking a respawned player
 		this.enemy = NULL;
 
@@ -63,7 +65,10 @@ void turret_hellion_missile_think(entity this)
 		this.angles = vectoangles(this.velocity);
 
 		if (vdist(this.origin - this.realowner.origin, >, (this.realowner.shot_radius * 5)))
+		{
 			turret_projectile_explode(this);
+			return;
+		}
 
 		// Accelerate
 		this.velocity = olddir * min(vlen(this.velocity) * autocvar_g_turrets_unit_hellion_shot_speed_gain, autocvar_g_turrets_unit_hellion_shot_speed_max);
@@ -74,7 +79,10 @@ void turret_hellion_missile_think(entity this)
 
 	// Enemy in range?
 	if (vdist(this.origin - this.enemy.origin, <, this.realowner.shot_radius * 0.2))
+	{
 		turret_projectile_explode(this);
+		return;
+	}
 
 	// Predict enemy position
 	float itime = sqrt(vlen2(this.enemy.origin - this.origin) / vlen2(this.velocity));

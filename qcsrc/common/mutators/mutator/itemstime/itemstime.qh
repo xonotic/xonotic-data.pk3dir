@@ -2,4 +2,10 @@
 
 #ifdef SVQC
 int autocvar_sv_itemstime;
-#endif
+
+bool Item_ItemsTime_SpectatorOnly(entity it);
+bool Item_ItemsTime_Allow(entity it);
+void Item_ItemsTime_SetTime(entity e, float t);
+void Item_ItemsTime_SetTimesForAllPlayers();
+float Item_ItemsTime_UpdateTime(entity e, float t);
+#endif // SVQC

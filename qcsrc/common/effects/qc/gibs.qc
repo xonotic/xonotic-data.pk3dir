@@ -29,7 +29,7 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	e.cnt = amount;
 	e.state = type; // should stay smaller than 15
 	if(!sound_allowed(MSG_BROADCAST, gibowner) || !sound_allowed(MSG_BROADCAST, attacker))
-		e.state |= 0x40; // "silence" bit
+		e.state |= 0x80; // "silence" bit
 	e.state |= 8 * gibowner.species; // gib type, ranges from 0 to 15
 
 	// if this is a copied dead body, send the num of its player instead
@@ -214,6 +214,8 @@ NET_HANDLE(net_gibsplash, bool isNew)
 	string gentle_prefix = "morphed_";
 
 	int type = ReadByte(); // gibbage type
+	bool issilent = (type & 0x80); // this is net networked silent bit,
+	type &= 0x7F;                  // but for the rest of this function 0x80 will be the gentle bit
 	int amount = ReadByte() / 16.0; // gibbage amount
 	vector org;
 	org.x = ReadShort() * 4 + 2;
@@ -254,7 +256,6 @@ NET_HANDLE(net_gibsplash, bool isNew)
 	setorigin(this, org); // for the sounds
 
 	int specnum = (type & 0x78) / 8; // blood/gibmodel type: using four bits (0..7, bit indexes 3,4,5)
-	bool issilent = (type & 0x40);
 	type &= 0x87; // remove the species bits: bit 7 = gentle, bit 0,1,2 = kind of gib
 	string specstr = species_prefix(specnum);
 

@@ -13,10 +13,12 @@ METHOD(AmmoBuff, m_apply, void(StatusEffect this, entity actor, float eff_time, 
 			.entity weaponentity = weaponentities[slot];
 			if (!actor.(weaponentity))
 				continue;
-			if (actor.(weaponentity).clip_load)
-				actor.(weaponentity).buff_ammo_prev_clipload = actor.(weaponentity).clip_load;
 			if (actor.(weaponentity).clip_size)
+			{
+				// Add 1 so that an empty clip (1) can be told apart from an empty cache (0)
+				actor.(weaponentity).buff_ammo_prev_clipload = actor.(weaponentity).clip_load + 1;
 				actor.(weaponentity).clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_switchweapon.m_id]) = actor.(weaponentity).clip_size;
+			}
 		}
 	}
 	SUPER(AmmoBuff).m_apply(this, actor, eff_time, eff_flags);
@@ -34,7 +36,9 @@ METHOD(AmmoBuff, m_remove, void(StatusEffect this, entity actor, int removal_typ
 				continue;
 			if (actor.(weaponentity).buff_ammo_prev_clipload)
 			{
-				actor.(weaponentity).clip_load = actor.(weaponentity).buff_ammo_prev_clipload;
+				// Restore both the clip and the stored per-weapon load, or the full magazine survives a weapon switch
+				float prev_load = min(actor.(weaponentity).buff_ammo_prev_clipload - 1, actor.(weaponentity).clip_size);
+				actor.(weaponentity).clip_load = actor.(weaponentity).(weapon_load[actor.(weaponentity).m_switchweapon.m_id]) = prev_load;
 				actor.(weaponentity).buff_ammo_prev_clipload = 0;
 			}
 		}

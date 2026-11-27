@@ -357,7 +357,9 @@ REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
 {
+#ifdef CSQC
 	string inaccessible = "";
+#endif
 	int imp = WEP_IMPULSE_BEGIN;
 	FOREACH(Weapons, true,
 	{
@@ -378,18 +380,17 @@ STATIC_INIT(register_weapons_done)
 		if (imp <= WEP_IMPULSE_END)
 			localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp)); // keep xonotic-client.cfg up to date
 		else
-#endif
 			inaccessible = strcat(inaccessible, "\n", it.netname);
+#endif
 		++imp;
 	});
+#ifdef CSQC
 	if (inaccessible != "" && autocvar_developer > 0)
-		LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible: %s", inaccessible);
-	#ifdef CSQC
+		LOG_TRACEF("Impulse limit exceeded, weapon(s) will not be directly accessible:%s", inaccessible);
 	FOREACH(Weapons, true, it.wr_init(it));
-	#endif
-	#ifdef MENUQC
+#elifdef MENUQC
 	FOREACH(Weapons, (it.spawnflags & WEP_FLAG_HIDDEN) && (it.spawnflags & WEP_FLAG_SPECIALATTACK), it.m_hidden = true);
-	#endif
+#endif
 	weaponorder_byid = "";
 	for (int i = REGISTRY_MAX(Weapons) - 1; i >= 1; --i)
 		if (REGISTRY_GET(Weapons, i))
