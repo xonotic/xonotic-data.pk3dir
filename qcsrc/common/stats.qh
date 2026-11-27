@@ -86,6 +86,9 @@ int missing_teams_mask;
 int overtimes; // overtimes added (if set to the special value OVERTIME_SUDDENDEATH = sudden death)
 int timeout_status; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
 
+int monsters_total;
+int monsters_killed;
+
 // TODO: world.qh can't be included here due to circular includes!
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
@@ -125,8 +128,8 @@ REGISTER_STAT(RESPAWN_TIME, FLOAT)
 REGISTER_STAT(ROUNDSTARTTIME, FLOAT, round_starttime)
 REGISTER_STAT(OVERTIMES, INT, overtimes)
 REGISTER_STAT(TIMEOUT_STATUS, INT, timeout_status)
-REGISTER_STAT(MONSTERS_TOTAL, INT)
-REGISTER_STAT(MONSTERS_KILLED, INT)
+REGISTER_STAT(MONSTERS_TOTAL, INT, monsters_total)
+REGISTER_STAT(MONSTERS_KILLED, INT, monsters_killed)
 REGISTER_STAT(NADE_BONUS, FLOAT)
 REGISTER_STAT(NADE_BONUS_TYPE, INT)
 REGISTER_STAT(NADE_BONUS_SCORE, FLOAT)
