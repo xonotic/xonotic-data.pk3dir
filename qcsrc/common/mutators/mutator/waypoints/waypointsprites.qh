@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef GAMEQC
 #include "all.qh"
 
 .int wp_extra; ///< Additional networked waypoint state, used for items, weapons, buffs
@@ -231,3 +232,5 @@ void WaypointSprite_ClearOwned(entity this);
 void WaypointSprite_PlayerDead(entity this);
 void WaypointSprite_PlayerGone(entity this);
 #endif // SVQC
+
+#endif // GAMEQC

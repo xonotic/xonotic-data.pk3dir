@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef GAMEQC
 #include "waypointsprites.qh"
 
 REGISTRY(Waypoints, BITS(7))
@@ -67,3 +68,4 @@ REGISTER_RADARICON(Weapon,          1);
 REGISTER_RADARICON(Buff,            1);
 
 #include "all.inc"
+#endif // GAMEQC
