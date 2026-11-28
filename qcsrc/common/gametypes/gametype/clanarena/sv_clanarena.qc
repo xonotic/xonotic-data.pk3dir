@@ -12,6 +12,9 @@ float autocvar_g_ca_start_ammo_rockets = 160;
 float autocvar_g_ca_start_ammo_cells = 180;
 float autocvar_g_ca_start_ammo_fuel = 0;
 
+int autocvar_g_ca_selfdamage = 0;
+int autocvar_g_ca_teamdamage = 0;
+
 .int prev_team;
 
 void CA_count_alive_players()
@@ -455,10 +458,20 @@ MUTATOR_HOOKFUNCTION(ca, Damage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	float frag_mirrordamage = M_ARGV(5, float);
 
-	if (IS_PLAYER(frag_target))
-	if (!IS_DEAD(frag_target))
-	if (frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
-		frag_damage = 0;
+	if (IS_PLAYER(frag_target) && !IS_DEAD(frag_target))
+	{
+		if (frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id)
+		{
+			if (autocvar_g_ca_selfdamage == 0)
+				frag_damage = 0;
+		}
+		else
+		{
+			if (SAME_TEAM(frag_target, frag_attacker) && autocvar_g_ca_teamdamage == 0)
+				frag_damage = 0;
+		}
+
+	}
 
 	frag_mirrordamage = 0;
 
