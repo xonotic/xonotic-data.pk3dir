@@ -4,7 +4,6 @@
 
 bool autocvar_cl_readpicture_force;
 float autocvar_hud_panel_mapvote_highlight_border = 1;
-string autocvar_menu_skin; // gametype icons are controlled by the menu skin
 
 bool PreviewExists(string name);
 void MapVote_CheckPic(string pic, string pk3, int id);

@@ -9,7 +9,12 @@
 CLASS(Survival, Gametype)
 	INIT(Survival)
 	{
-		this.gametype_init(this, _("Survival"), "surv", "g_survival", GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_ELIMINATIONS, "", "timelimit=20 pointlimit=12", _("Identify and eliminate all the hunters before all your allies are gone"));
+		CONSTRUCT(Gametype,
+			_("Survival"), "surv", "g_survival",
+			GAMETYPE_FLAG_USEPOINTS | GAMETYPE_FLAG_ELIMINATIONS,
+			"", "timelimit=20 pointlimit=20",
+			_("Identify and eliminate all the hunters before all your allies are gone")
+		);
 	}
 	METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
@@ -17,11 +22,11 @@ CLASS(Survival, Gametype)
 	}
 	METHOD(Survival, m_isForcedSupported, bool(Gametype this))
 	{
-		if(!cvar("g_survival_not_lms_maps"))
+		if (!cvar("g_survival_not_lms_maps"))
 		{
 			// if this is unset, all LMS maps support Survival too
-			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_LMS.gametype_flags))
-			return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
+			if (!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_LMS.gametype_flags))
+				return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
 		}
 		return false;
 	}
@@ -32,12 +37,21 @@ ENDCLASS(Survival)
 REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));
 
 #ifdef GAMEQC
-// shared state signalling the player's survival status
-.int survival_status;
-const int SURV_STATUS_PREY = 1;
-const int SURV_STATUS_HUNTER = 2;
+REGISTER_NET_LINKED(ENT_CLIENT_SURV_ROLES)
+const int SF_SURV_RESET    = BIT(0);
+const int SF_SURV_START    = BIT(1);
+const int SF_SURV_HUNTERS  = BIT(2);
+const int SF_SURV_REVEAL   = BIT(3);
 
-// hardcoded player colors for survival
-const int SURV_COLOR_PREY = 51; // green
-const int SURV_COLOR_HUNTER = 68; // red
+REGISTER_NET_TEMP(CLIENT_SURV_INVESTIGATION)
+
+.int survival_role; ///< Survival role of the player: SURV_ROLE_HUNTER, SURV_ROLE_SURVIVOR, SURV_ROLE_DETECTIVE, or SURV_ROLE_NONE
+enum
+{
+	SURV_ROLE_NONE, SURV_ROLE_HUNTER, SURV_ROLE_SURVIVOR, SURV_ROLE_DETECTIVE
+};
+
+// Team checking. Must have SURVIVOR and DETECTIVE as the last entries of the enum
+#define SURV_SAMETEAM(a, b) ((a).survival_role == (b).survival_role || ((a).survival_role >= SURV_ROLE_SURVIVOR && (b).survival_role >= SURV_ROLE_SURVIVOR))
+#define SURV_DIFFTEAM(a, b) ((a).survival_role != (b).survival_role && ((a).survival_role <  SURV_ROLE_SURVIVOR || (b).survival_role <  SURV_ROLE_SURVIVOR))
 #endif

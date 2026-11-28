@@ -214,7 +214,8 @@ void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float da
 	this.dmg_take += take;//max(take - 10, 0);
 	this.dmg_inflictor = inflictor;
 
-	if (GetResource(this, RES_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0)
+	if (GetResource(this, RES_HEALTH) <= -autocvar_sv_gibhealth && this.alpha >= 0
+	&& !MUTATOR_CALLHOOK(PreventGib, this))
 	{
 		// don't use any animations as a gib
 		this.frame = 0;

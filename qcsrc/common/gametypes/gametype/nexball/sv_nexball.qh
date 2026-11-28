@@ -4,11 +4,14 @@
 
 void nb_Initialize();
 
+IntrusiveList g_balls;
+
 REGISTER_MUTATOR(nb, false)
 {
 	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
+		g_balls = IL_NEW();
 		nb_Initialize();
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	}
@@ -20,8 +23,7 @@ REGISTER_MUTATOR(nb, false)
 	return 0;
 }
 
-//EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
-const float BALL_EFFECTMASK = 1229;
+const float BALL_EFFECTMASK = 1229; ///< EF_BRIGHTFIELD | EF_BRIGHTLIGHT | EF_DIMLIGHT | EF_BLUE | EF_RED | EF_FLAME
 const vector BALL_MINS = '-16 -16 -16'; // The model is 24*24*24
 const vector BALL_MAXS = '16 16 16';
 const vector BALL_ATTACHORG = '3 0 16';

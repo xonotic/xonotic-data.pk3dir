@@ -19,7 +19,7 @@ void HUD_RaceTimer_Export(int fh)
 }
 
 // return the string of the onscreen race timer
-string MakeRaceString(int cp, float mytime, float theirtime, float othertime, float lapdelta, string theirname)
+string MakeRaceString(int cp, float mytime, float theirtime, float othertime, int lapdelta, string theirname)
 {
 	TC(int, cp);
 	string lapstr = "", timestr = "", col = "^7", othercol = "^7", othertimestr = "";
@@ -142,16 +142,16 @@ void ClearCheckpointSplits(bool quiet)
 		racetimer_have_stored_splits_player = 0;
 }
 
-void StoreCheckpointSplits(float race_checkpoint, string forcetime, string s)
+void StoreCheckpointSplits(int race_cp, string forcetime, string s)
 {
 	// store checkpoint splits string for later printing
 	if (racetimer_have_stored_splits && racetimer_have_stored_splits_player != current_player + 1) // we changed player
 		ClearCheckpointSplits(true);
 
 	// 0 or 255 go to 255 as finish, strcpy does the free if needed
-	strcpy(race_checkpoint_splits[race_checkpoint ? race_checkpoint : 255], (forcetime != "") ? sprintf("%s %s", forcetime, s) : s);
+	strcpy(race_checkpoint_splits[race_cp ? race_cp : 255], (forcetime != "") ? sprintf("%s %s", forcetime, s) : s);
 	// cache
-	racetimer_lastcheckpoint = race_checkpoint;
+	racetimer_lastcheckpoint = race_cp;
 	strcpy(racetimer_checkpoint_comparison, s);
 	strcpy(racetimer_checkpoint_time, forcetime);
 	racetimer_have_stored_splits = true;

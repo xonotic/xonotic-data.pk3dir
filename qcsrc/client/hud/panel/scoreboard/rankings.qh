@@ -1,0 +1,8 @@
+#pragma once
+
+int rankings_start_column;
+int rankings_rows = 0;
+int rankings_columns = 0;
+int rankings_cnt = 0;
+
+vector Scoreboard_RankingsAndAwards_Draw(vector pos, vector bg_size, bool deathscoreboard);

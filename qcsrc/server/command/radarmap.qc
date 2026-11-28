@@ -204,7 +204,7 @@ void RadarMap_Next()
 	else if (radarmapper.count & 2)
 	{
 		localcmd(strcat("defer 1 \"sv_cmd radarmap --flags ", ftos(radarmapper.count), strcat(" --res ", ftos(radarmapper.size.x), " ", ftos(radarmapper.size.y), " --sharpen ", ftos(radarmapper.ltime), " --qual ", ftos(radarmapper.size.z)), "\"\n"));
-		GotoNextMap(0);
+		GotoNextMap(false);
 	}
 	delete(radarmapper);
 	radarmapper = NULL;

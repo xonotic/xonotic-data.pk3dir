@@ -123,7 +123,7 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 
 	makeServerSingleplayer();
 
-	MapInfo_LoadMap(s, 1);
+	MapInfo_LoadMap(s, true);
 
 	// configure bots
 	pmin = pstep * ceil(pmin / pstep);

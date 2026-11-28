@@ -1,0 +1,20 @@
+#pragma once
+
+.entity ballcarried;
+.entity previous_owner; // also used on kh keys
+
+void kaball_BallStatuses_SendBalls(IntrusiveList ball_list, int ball_count);
+void kaball_RespawnBall(entity this, void(entity) think_func, int fx, float respawntime, int tracking);
+void kaball_BallThink_Carried(entity this);
+void kaball_TouchEvent(entity this, entity toucher,
+	void(entity) modify_ball_func, void(entity) RespawnBall_func, void(entity) BallThink_Carried_func, void(string, entity) EventLog_func, void() BallStatuses_SendBalls_func,
+	int maxballs);
+void kaball_DropEvent(entity player,
+	void(entity) modify_ball_func, void(entity) RespawnBall_func, void(string, entity) EventLog_func,
+	float respawntime, int tracking);
+void kaball_DropPlayersBalls(entity player, void(entity) DropEvent_func, void() BallStatuses_SendBalls_func);
+void kaball_RemoveBalls(IntrusiveList ball_list);
+void kaball_SpawnBalls(Model model, bool set_solid, float dfs, int trail_color, int ball_count,
+	void(entity) modify_ball_func, void(entity, entity) TouchEvent_func, void(entity) RespawnBall_func, void() BallStatuses_SendBalls_func);
+void kaball_Handler_CheckBall(entity this, IntrusiveList ball_list,
+	void() RemoveBalls_func, void() SpawnBalls_func);

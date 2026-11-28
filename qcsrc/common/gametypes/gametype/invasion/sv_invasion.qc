@@ -134,7 +134,7 @@ Monster invasion_PickMonster(int supermonster_count)
 			continue;
 		if(autocvar_g_invasion_zombies_only && !(it.spawnflags & MONSTER_TYPE_UNDEAD))
 			continue;
-        RandomSelection_AddEnt(it, 1, 1);
+		RandomSelection_AddEnt(it, 1, 1);
 	});
 
 	return RandomSelection_chosen_ent;

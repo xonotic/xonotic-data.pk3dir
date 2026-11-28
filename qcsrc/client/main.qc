@@ -5,8 +5,9 @@
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/centerprint.qh>
 #include <client/hud/panel/chat.qh>
+#include <client/hud/panel/scoreboard/accuracy_items.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/hud/panel/quickmenu.qh>
-#include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
 #include <client/mutators/_mod.qh>
 #include <client/shownames.qh>
@@ -19,6 +20,7 @@
 #include <common/effects/effect.qh>
 #include <common/effects/qc/_mod.qh>
 #include <common/ent_cs.qh>
+#include <common/gametypes/elimination.qh>
 #include <common/gametypes/gametype/nexball/cl_nexball.qh>
 #include <common/items/_mod.qh>
 #include <common/mapinfo.qh>
@@ -216,6 +218,8 @@ void Shutdown()
 	localcmd("\n-button12\n");
 
 	strfree(gametype_custom_name);
+	strfree(gametype_custom_netname);
+	strfree(gametype_custom_basetype);
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
@@ -565,22 +569,19 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-.int survival_status;
 void Ent_RemovePlayerScore(entity this)
 {
-	if(this.owner) {
-		SetTeam(this.owner, -1);
-		this.owner.gotscores = 0;
-		FOREACH(Scores, true, {
-			this.owner.(scores(it)) = 0; // clear all scores
-		});
-		this.owner.ready = 0;
-		this.owner.eliminated = 0;
-		this.owner.ignored = false;
-		this.owner.colormap = 0;
-		// TODO add a hook to reset this Survival field
-		this.owner.survival_status = 0;
-	}
+	if (!this.owner)
+		return;
+
+	SetTeam(this.owner, -1);
+	this.owner.gotscores = 0;
+	FOREACH(Scores, true, this.owner.(scores(it)) = 0); // clear all scores
+	this.owner.ready = 0;
+	this.owner.ignored = false;
+	this.owner.colormap = 0;
+	EliminatedPlayers_ResetPlayer(this.owner);
+	MUTATOR_CALLHOOK(ResetPlayerGametypeFields, this.owner);
 }
 
 NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
@@ -760,6 +761,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
 			prev_health = -1;
 	}
+
+	if (newspectatee_status != spectatee_status) // update the prev value if spectatee_status is changing
+		spectatee_status_prev = spectatee_status;
 	spectatee_status = newspectatee_status;
 
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
@@ -817,27 +821,6 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	warmup_stage = (nags & BIT(4));
 }
 
-NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
-{
-	make_pure(this);
-	for (int j = 0; j < maxclients; ++j) {
-		if (playerslots[j]) {
-			playerslots[j].eliminated = true;
-		}
-	}
-	for (int i = 1; i <= maxclients; i += 8) {
-		int f = ReadByte();
-		for (int b = 0; b < 8; ++b) {
-			if (f & BIT(b)) continue;
-			int j = i - 1 + b;
-			if (playerslots[j]) {
-				playerslots[j].eliminated = false;
-			}
-		}
-	}
-	return true;
-}
-
 NET_HANDLE(ENT_CLIENT_RANDOMSEED, bool isnew)
 {
 	make_pure(this);
@@ -870,6 +853,7 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 		}
 		f = (f == 0x800000) ? 1 : f * 2;
 	}
+	Scoreboard_AccuracyStats_UpdateCache();
 	return true;
 }
 
@@ -1058,10 +1042,21 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
 	gametype = ReadRegistered(Gametypes);
-	strcpy(gametype_custom_name, ReadString());
+	strcpy(gametype_custom_netname, ReadString()); // may be ""
+	if (gametype_custom_netname != "")
+	{
+		strcpy(gametype_custom_name, ReadString());
+		strcpy(gametype_custom_basetype, ReadString());
+	}
+	else
+	{
+		strcpy(gametype_custom_name, "");
+		strcpy(gametype_custom_basetype, "");
+	}
 	teamplay = _MapInfo_GetTeamPlayBool(gametype);
 	HUD_ModIcons_SetFunc();
-	FOREACH(Scores, true, {
+	FOREACH(Scores, true,
+	{
 		strcpy(scores_label(it), ReadString());
 		scores_flags(it) = ReadByte();
 	});
@@ -1253,52 +1248,61 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			RANKINGS_DISPLAY_CNT = ReadByte();
 			break;
 		case RACE_NET_SERVER_RANKINGS:
-			float prevpos, del;
+		{
+			bool del = ReadByte();
 			int pos = ReadShort();
-			prevpos = ReadShort();
-			del = ReadShort();
+			int prevpos = ReadShort();
+
+			if (pos > RANKINGS_DISPLAY_CNT)
+			{
+				// pos won't be displayed, so break here
+				// the code below shifts the entries below index RANKINGS_DISPLAY_CNT
+				if (strdecolorize(ReadString()) == strdecolorize(entcs_GetName(player_localnum)))
+					race_myrank = pos;
+				ReadInt24_t();
+				break;
+			}
 
 			// move other rankings out of the way
 			int i;
-			if (prevpos) {
-				int m = min(prevpos, RANKINGS_DISPLAY_CNT);
-				for (i=m-1; i>pos-1; --i) {
-					grecordtime[i] = grecordtime[i-1];
-					strcpy(grecordholder[i], grecordholder[i-1]);
+			if (prevpos)
+				for (i = min(prevpos, RANKINGS_DISPLAY_CNT) - 1; i > pos - 1; --i)
+				{
+					grecordtime[i] = grecordtime[i - 1];
+					strcpy(grecordholder[i], grecordholder[i - 1]);
 				}
-			} else if (del) { // a record has been deleted by the admin
-				for (i=pos-1; i<= RANKINGS_DISPLAY_CNT-1; ++i) {
-					if (i == RANKINGS_DISPLAY_CNT-1) { // clear out last record
+			else if (del) // a record has been deleted by the admin
+				for (i = pos - 1; i <= RANKINGS_DISPLAY_CNT - 1; ++i)
+				{
+					if (i == RANKINGS_DISPLAY_CNT - 1) // clear out last record
+					{
 						grecordtime[i] = 0;
 						strfree(grecordholder[i]);
 					}
-					else {
-						grecordtime[i] = grecordtime[i+1];
-						strcpy(grecordholder[i], grecordholder[i+1]);
+					else
+					{
+						grecordtime[i] = grecordtime[i + 1];
+						strcpy(grecordholder[i], grecordholder[i + 1]);
 					}
 				}
-			} else { // player has no ranked record yet
-				for (i=RANKINGS_DISPLAY_CNT-1;i>pos-1;--i) {
-					grecordtime[i] = grecordtime[i-1];
-					strcpy(grecordholder[i], grecordholder[i-1]);
+			else // player has no ranked record yet
+				for (i = RANKINGS_DISPLAY_CNT - 1; i > pos - 1; --i)
+				{
+					grecordtime[i] = grecordtime[i - 1];
+					strcpy(grecordholder[i], grecordholder[i - 1]);
 				}
-			}
-
-			if (grecordtime[RANKINGS_DISPLAY_CNT]) {
-				// kick off the player who fell from the last displayed position
-				grecordtime[RANKINGS_DISPLAY_CNT] = 0;
-				strfree(grecordholder[RANKINGS_DISPLAY_CNT]);
-			}
 
 			// store new ranking
-			strcpy(grecordholder[pos-1], ReadString());
-			grecordtime[pos-1] = ReadInt24_t();
-			if(strdecolorize(grecordholder[pos-1]) == strdecolorize(entcs_GetName(player_localnum)))
+			strcpy(grecordholder[pos - 1], ReadString());
+			grecordtime[pos - 1] = ReadInt24_t();
+			if (strdecolorize(grecordholder[pos - 1]) == strdecolorize(entcs_GetName(player_localnum)))
 				race_myrank = pos;
 			break;
+		}
 		case RACE_NET_SERVER_STATUS:
 			race_status = ReadShort();
 			strcpy(race_status_name, ReadString());
+			break;
 	}
 	return true;
 }

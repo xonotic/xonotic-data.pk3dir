@@ -446,7 +446,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	if (!spot)
 	{
 		if(autocvar_spawn_debug)
-			GotoNextMap(0);
+			GotoNextMap(false);
 		else
 		{
 			if(some_spawn_has_been_used)

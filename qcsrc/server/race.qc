@@ -2,7 +2,7 @@
 
 #include <common/deathtypes/all.qh>
 #include <common/gametypes/_mod.qh>
-#include <common/gametypes/rules.qh>
+#include <common/gametypes/sv_rules.qh>
 #include <common/mapobjects/subs.qh>
 #include <common/mapobjects/triggers.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
@@ -290,13 +290,13 @@ void race_send_rankings_cnt(float msg)
 	WriteByte(msg, m);
 }
 
-void race_SendRanking(float pos, float prevpos, float del, float msg)
+void race_SendRanking(int pos, int prevpos, bool del, int msg)
 {
 	WriteHeader(msg, TE_CSQC_RACE);
 	WriteByte(msg, RACE_NET_SERVER_RANKINGS);
+	WriteByte(msg, del);
 	WriteShort(msg, pos);
 	WriteShort(msg, prevpos);
-	WriteShort(msg, del);
 	WriteString(msg, race_readName(GetMapname(), pos));
 	WriteInt24_t(msg, race_readTime(GetMapname(), pos));
 }

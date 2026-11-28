@@ -1,0 +1,130 @@
+#include "elimination.qh"
+
+#ifdef SVQC
+#include <common/net_linked.qh>
+#include <server/scores_rules.qh>
+#include <server/teamplay.qh>
+#include <server/utils.qh>
+
+/// Recounts .m_num_players_alive for each team
+void EliminatedPlayers_RecountAlivePlayers()
+{
+	entity e, tm;
+	int i;
+	for (i = 1; i <= AVAILABLE_TEAMS; ++i)
+		Team_GetTeamFromIndex(i).m_num_players_alive = 0;
+	total_alive_players = 0;
+	for (i = 1; i <= maxclients; ++i)
+	{
+		e = edict_num(i);
+		if (!eliminatedPlayers.isEliminated(e))
+		{
+			tm = Entity_GetTeam(e);
+			if (tm)
+			{
+				++tm.m_num_players_alive;
+				++total_alive_players;
+			}
+		}
+	}
+}
+
+bool EliminatedPlayers_SendEntity(entity this, entity to, int sf);
+void EliminatedPlayers_Init(bool(entity) isEliminated_func)
+{
+	if (eliminatedPlayers)
+	{
+		backtrace("Can't spawn eliminatedPlayers again!");
+		return;
+	}
+	Net_LinkEntity(eliminatedPlayers = new_pure(eliminatedPlayers), false, 0, EliminatedPlayers_SendEntity);
+	eliminatedPlayers.isEliminated = isEliminated_func;
+}
+#endif // SVQC
+
+#ifdef SVQC
+bool EliminatedPlayers_SendEntity(entity this, entity to, int sf)
+{
+	if (!teamplay)
+		sf &= ~SF_ELIMPLAYERS_ALIVE;
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteByte(MSG_ENTITY, sf);
+	int i;
+	if (sf & SF_ELIMPLAYERS_ELIMS) // send elimination statuses, in a bitset
+	{
+		int b, B;
+		for (i = 1; i <= maxclients; )
+		{
+			B = 0;
+			for (b = BIT(0); b < BIT(8) && i <= maxclients; b <<= 1, ++i)
+				if (eliminatedPlayers.isEliminated(edict_num(i)))
+					B |= b;
+			WriteByte(MSG_ENTITY, B);
+		}
+	}
+	// assume EliminatedPlayers_RecountAlivePlayers has already been run
+	if (sf & SF_ELIMPLAYERS_ALIVE) // send number of alive players on each team
+		for (i = 1; i <= NUM_TEAMS; ++i)
+			WriteByte(MSG_ENTITY, Team_GetTeamFromIndex(i).m_num_players_alive);
+	return true;
+}
+#elifdef CSQC
+NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isNew)
+{
+	int i, sf = ReadByte();
+	// receive elimination statuses, in a bitset
+	if (sf & SF_ELIMPLAYERS_ELIMS)
+	{
+		int B, b;
+		for (i = 0; i < maxclients; )
+			for (B = ReadByte(), b = BIT(0); b < BIT(8) && i < maxclients; b <<= 1, ++i)
+				if (playerslots[i])
+					playerslots[i].eliminated = boolean(B & b);
+	}
+	// receive number of alive players on each team
+	// required since .team is late to update in CSQC
+	if (sf & SF_ELIMPLAYERS_ALIVE)
+		for (i = 0; i < NUM_TEAMS; ++i)
+		{
+			alive_on_team[i] = ReadByte();
+			// update change-time caches, used by modicons
+			if (alive_on_team[i] != alive_on_team_prev[i])
+			{
+				alive_on_team_change_time[i] = time;
+				alive_on_team_prev[i] = alive_on_team[i];
+			}
+		}
+	return true;
+}
+
+void EliminatedPlayers_ResetPlayer(entity e)
+{
+	e.eliminated = false;
+}
+#endif
+
+#ifdef SVQC
+void EliminatedPlayers_InformAbout(entity to, entity about)
+{
+	int chan;
+	if (to != NULL)
+	{
+		msg_entity = to;
+		chan = MSG_ONE;
+	}
+	else
+		chan = MSG_ALL;
+	WriteHeader(chan, CLIENT_ELIMINATEDPLAYERS_ABOUT);
+	WriteByte(chan, etof(about));
+	WriteByte(chan, boolean(eliminatedPlayers.isEliminated(about)));
+}
+#elifdef CSQC
+NET_HANDLE(CLIENT_ELIMINATEDPLAYERS_ABOUT, bool isNew)
+{
+	int num = ReadByte() - 1;
+	if (!playerslots[num])
+		playerslots[num] = new_pure(playerslot);
+	playerslots[num].eliminated = ReadByte();
+	return true;
+}
+#endif

@@ -10,7 +10,12 @@
 CLASS(TeamKeepaway, Gametype)
 	INIT(TeamKeepaway)
 	{
-		this.gametype_init(this, _("Team Keepaway"),"tka","g_tka",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=15 pointlimit=50 teams=2 leadlimit=0",_("Keep the ball in your team's possession to get points for kills"));
+		CONSTRUCT(Gametype,
+			_("Team Keepaway"), "tka", "g_tka",
+			GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,
+			"", "timelimit=15 pointlimit=50 teams=2 leadlimit=0",
+			_("Keep the ball in your team's possession to get points for kills")
+		);
 	}
 	METHOD(TeamKeepaway, m_parse_mapinfo, bool(string k, string v))
 	{
@@ -29,23 +34,23 @@ CLASS(TeamKeepaway, Gametype)
 	}
 	METHOD(TeamKeepaway, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
 	{
-		if(spawnpoints >= 8 && diameter > 4096)
+		if (spawnpoints >= 8 && diameter > 4096)
 			return true;
 		return false;
 	}
 	METHOD(TeamKeepaway, m_isForcedSupported, bool(Gametype this))
 	{
-		if(cvar("g_tka_on_ka_maps"))
+		if (cvar("g_tka_on_ka_maps"))
 		{
 			// if this is set, all KA maps support TKA too
-			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_KEEPAWAY.gametype_flags))
-			return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
+			if (!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_KEEPAWAY.gametype_flags))
+				return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
 		}
-		if(cvar("g_tka_on_tdm_maps"))
+		if (cvar("g_tka_on_tdm_maps"))
 		{
 			// if this is set, all TDM maps support TKA too
-			if(!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags))
-			return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
+			if (!(MapInfo_Map_supportedGametypes & this.gametype_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH.gametype_flags))
+				return true; // TODO: references another gametype (alternatively, we could check which gametypes are always enabled and append this if any are supported)
 		}
 		return false;
 	}
@@ -59,14 +64,13 @@ CLASS(TeamKeepaway, Gametype)
 		returns(menu, _("Point limit:"),     5,  100,  5, "g_tka_point_limit",         "g_tka_teams_override",         _("The number of points required to conclude the match"));
 	}
 #ifdef CSQC
-	ATTRIB(TeamKeepaway, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_TeamKeepaway);
+	ATTRIB(TeamKeepaway, m_modicons, void(vector myPos, vector mySize, bool should_draw), HUD_Mod_TKA);
 #endif
 ENDCLASS(TeamKeepaway)
 REGISTER_GAMETYPE(TEAM_KEEPAWAY, NEW(TeamKeepaway));
 
-const int TKA_BALL_TAKEN_RED            = BIT(0);
-const int TKA_BALL_TAKEN_BLUE           = BIT(1);
-const int TKA_BALL_TAKEN_YELLOW         = BIT(2);
-const int TKA_BALL_TAKEN_PINK           = BIT(3);
-const int TKA_BALL_CARRYING             = BIT(4);
-const int TKA_BALL_DROPPED              = BIT(5);
+#ifdef GAMEQC
+REGISTER_NET_LINKED(ENT_CLIENT_TKA_BALLSTATUSES)
+const int SF_TKA_RESET = BIT(0);
+const int SF_TKA_BALLS = BIT(1);
+#endif

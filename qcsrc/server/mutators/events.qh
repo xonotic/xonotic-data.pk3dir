@@ -109,6 +109,13 @@ MUTATOR_HOOKABLE(PlayerDies, params);
 MUTATOR_HOOKABLE(PlayerDied, params);
 #undef params
 
+/// Return true to prevent a player body from gibbing
+#define params(i, o) \
+	i(entity, 0) /* player */ \
+	/**/
+MUTATOR_HOOKABLE(PreventGib, params);
+#undef params
+
 /// Called when showing an obituary for the player. return true to show nothing (workarounds may be needed)
 #define params(i, o) \
 	i(entity, 0) /* inflictor */ \
@@ -230,6 +237,13 @@ MUTATOR_HOOKABLE(TeamBalance_GetPlayerForTeamSwitch, params);
 	i(entity, 1) /* client */ \
 	/**/
 MUTATOR_HOOKABLE(SpectateCopy, params);
+#undef params
+
+/// Called after client's spectatee is updated, including when they become an observer
+#define params(i, o) \
+    i(entity, 0) /* client */ \
+    /**/
+MUTATOR_HOOKABLE(SpectateUpdated, params);
 #undef params
 
 /// Called when formatting a chat message to replace fancy functions
