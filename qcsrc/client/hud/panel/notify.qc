@@ -1,7 +1,7 @@
 #include "notify.qh"
 
 #include <client/draw.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/view.qh>
 
 // Notifications (#4)
@@ -65,15 +65,14 @@ void HUD_Notify(bool should_draw)
 
 	if (scoreboard_fade_alpha)
 	{
-		float minalpha = 1;
+		float minalpha;
 		if (notify_count == 0)
 			minalpha = 0; // hide if empty
-		else if (boxesoverlap(panel_pos, panel_pos + panel_size,
-			eX * scoreboard_left + eY * scoreboard_top, eX * scoreboard_right + eY * scoreboard_bottom))
-		{
-			minalpha = 0.5; // transparent if it may overlap the scoreboard
-		}
-		float f = max(minalpha, (1 - scoreboard_fade_alpha));
+		else if (boxesoverlap(panel_pos, panel_pos + panel_size, scoreboard_pos, scoreboard_bottom))
+			minalpha = 0.5; // transparent if overlaps the scoreboard
+		else
+			minalpha = 1;
+		float f = max(minalpha, 1 - scoreboard_fade_alpha);
 		if (f <= 0)
 			return;
 		panel_bg_alpha *= f;

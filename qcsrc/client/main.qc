@@ -5,8 +5,9 @@
 #include <client/hud/_mod.qh>
 #include <client/hud/panel/centerprint.qh>
 #include <client/hud/panel/chat.qh>
+#include <client/hud/panel/scoreboard/accuracy_items.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/hud/panel/quickmenu.qh>
-#include <client/hud/panel/scoreboard.qh>
 #include <client/items/items.qh>
 #include <client/mutators/_mod.qh>
 #include <client/shownames.qh>
@@ -216,6 +217,8 @@ void Shutdown()
 	localcmd("\n-button12\n");
 
 	strfree(gametype_custom_name);
+	strfree(gametype_custom_netname);
+	strfree(gametype_custom_basetype);
 
 	deactivate_minigame();
 	HUD_MinigameMenu_Close(NULL, NULL, NULL);
@@ -565,22 +568,19 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-.int survival_status;
 void Ent_RemovePlayerScore(entity this)
 {
-	if(this.owner) {
-		SetTeam(this.owner, -1);
-		this.owner.gotscores = 0;
-		FOREACH(Scores, true, {
-			this.owner.(scores(it)) = 0; // clear all scores
-		});
-		this.owner.ready = 0;
-		this.owner.eliminated = 0;
-		this.owner.ignored = false;
-		this.owner.colormap = 0;
-		// TODO add a hook to reset this Survival field
-		this.owner.survival_status = 0;
-	}
+	if (!this.owner)
+		return;
+
+	SetTeam(this.owner, -1);
+	this.owner.gotscores = 0;
+	FOREACH(Scores, true, this.owner.(scores(it)) = 0); // clear all scores
+	this.owner.ready = 0;
+	this.owner.eliminated = 0;
+	this.owner.ignored = false;
+	this.owner.colormap = 0;
+	MUTATOR_CALLHOOK(ResetPlayerGametypeFields, this.owner);
 }
 
 NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
@@ -760,6 +760,9 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		else if(spectatee_status && !newspectatee_status) //before observing/spectating, now playing
 			prev_health = -1;
 	}
+
+	if (newspectatee_status != spectatee_status) // update the prev value if spectatee_status is changing
+		spectatee_status_prev = spectatee_status;
 	spectatee_status = newspectatee_status;
 
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
@@ -817,24 +820,31 @@ NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 	warmup_stage = (nags & BIT(4));
 }
 
-NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
+NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isNew)
 {
-	make_pure(this);
-	for (int j = 0; j < maxclients; ++j) {
-		if (playerslots[j]) {
-			playerslots[j].eliminated = true;
-		}
+	int i, sf = ReadByte();
+	// receive elimination statuses, in a bitset
+	if (sf & SF_ELIMPLAYERS_ELIMS)
+	{
+		int B, b;
+		for (i = 0; i < maxclients; )
+			for (B = ReadByte(), b = BIT(0); b < BIT(8) && i < maxclients; b <<= 1, ++i)
+				if (playerslots[i])
+					playerslots[i].eliminated = boolean(B & b);
 	}
-	for (int i = 1; i <= maxclients; i += 8) {
-		int f = ReadByte();
-		for (int b = 0; b < 8; ++b) {
-			if (f & BIT(b)) continue;
-			int j = i - 1 + b;
-			if (playerslots[j]) {
-				playerslots[j].eliminated = false;
+	// receive number of alive players on each team
+	// required since .team is late to update in CSQC
+	if (sf & SF_ELIMPLAYERS_ALIVE)
+		for (i = 0; i < NUM_TEAMS; ++i)
+		{
+			alive_on_team[i] = ReadByte();
+			// update change-time caches, used by modicons
+			if (alive_on_team[i] != alive_on_team_prev[i])
+			{
+				alive_on_team_change_time[i] = time;
+				alive_on_team_prev[i] = alive_on_team[i];
 			}
 		}
-	}
 	return true;
 }
 
@@ -870,6 +880,7 @@ NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 		}
 		f = (f == 0x800000) ? 1 : f * 2;
 	}
+	Scoreboard_AccuracyStats_UpdateCache();
 	return true;
 }
 
@@ -1058,10 +1069,21 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
 	make_pure(this);
 	gametype = ReadRegistered(Gametypes);
-	strcpy(gametype_custom_name, ReadString());
+	strcpy(gametype_custom_netname, ReadString()); // may be ""
+	if (gametype_custom_netname != "")
+	{
+		strcpy(gametype_custom_name, ReadString());
+		strcpy(gametype_custom_basetype, ReadString());
+	}
+	else
+	{
+		strcpy(gametype_custom_name, "");
+		strcpy(gametype_custom_basetype, "");
+	}
 	teamplay = _MapInfo_GetTeamPlayBool(gametype);
 	HUD_ModIcons_SetFunc();
-	FOREACH(Scores, true, {
+	FOREACH(Scores, true,
+	{
 		strcpy(scores_label(it), ReadString());
 		scores_flags(it) = ReadByte();
 	});
@@ -1170,11 +1192,13 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 		case RACE_NET_CHECKPOINT_CLEAR:
 			race_laptime = 0;
 			race_checkpointtime = 0;
+			race_penaltyaccumulator = 0;
 			break;
 
 		case RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING:
 			race_laptime = ReadCoord();
 			race_checkpointtime = -99999;
+			race_penaltyaccumulator = 0; // penalties already included in race_laptime
 			// fall through
 		case RACE_NET_CHECKPOINT_NEXT_QUALIFYING:
 			race_nextcheckpoint = ReadByte();
@@ -1229,7 +1253,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 		case RACE_NET_PENALTY_RACE:
 		case RACE_NET_PENALTY_QUALIFYING:
 			race_penaltyeventtime = time;
-			race_penaltytime = ReadShort();
+			race_penaltytime = TIME_DECODE(ReadShort());
 			string reason = ReadString();
 			if (reason == "missing a checkpoint")
 				reason = _("missing a checkpoint");

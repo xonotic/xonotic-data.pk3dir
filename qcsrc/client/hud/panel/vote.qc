@@ -36,11 +36,12 @@ void HUD_Vote(bool should_draw)
 		uid2name_dialog = 1;
 	}
 
+	int votes_yes, votes_no, votes_needed;
 	if (!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_vote)
 			return;
-		/*
+	#if 0
 		if (cvar("hud_panel_vote_test"))
 		{
 			if (vote_called_vote)
@@ -50,13 +51,16 @@ void HUD_Vote(bool should_draw)
 		}
 		else
 			vote_active = false;
-		*/
+	#endif
+		votes_yes = vote_yescount;
+		votes_no = vote_nocount;
+		votes_needed = vote_needed;
 	}
 	else
 	{
-		vote_yescount = 3;
-		vote_nocount = 2;
-		vote_needed = 4;
+		votes_yes = 3;
+		votes_no = 2;
+		votes_needed = 4;
 	}
 
 	if (vote_active != vote_prev)
@@ -149,9 +153,9 @@ void HUD_Vote(bool should_draw)
 
 	// print the yes/no counts
 	float height = (yes_on_top ? 1.3/8 : 1.5/8);
-	s = sprintf("^2%s ^7(%d)", getcommandkey_forcename(_("Yes"), "vyes"), vote_yescount);
+	s = sprintf("^2%s ^7(%d)", getcommandkey_forcename(_("Yes"), "vyes"), votes_yes);
 	drawcolorcodedstring_aspect(pos + eY * (4/8) * mySize.y, s, vec2(0.5 * mySize.x, height * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
-	s = sprintf("^1%s ^7(%d)", getcommandkey_forcename(_("No"), "vno"), vote_nocount);
+	s = sprintf("^1%s ^7(%d)", getcommandkey_forcename(_("No"), "vno"), votes_no);
 	drawcolorcodedstring_aspect(pos + vec2(0.5 * mySize.x, (4/8) * mySize.y), s, vec2(0.5 * mySize.x, height * mySize.y), panel_fg_alpha, DRAWFLAG_NORMAL);
 	// overlap with the bars by up to 0.1/8 if yes_on_top or otherwise 0.3/8
 	// this overlap looks fine only since the bar images have padding
@@ -198,14 +202,14 @@ void HUD_Vote(bool should_draw)
 	}
 
 	// draw the progress bars
-	if (vote_yescount && vote_needed) // yes
+	if (votes_yes && votes_needed) // yes
 	{
-		drawsetcliparea(pos_yes.x, pos_yes.y, mySize.x * (vote_yescount / vote_needed), mySize.y);
+		drawsetcliparea(pos_yes.x, pos_yes.y, mySize.x * (votes_yes / votes_needed), mySize.y);
 		drawpic_skin(pos_yes, "voteprogress_prog", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	if (vote_nocount && vote_needed) // no
+	if (votes_no && votes_needed) // no
 	{
-		drawsetcliparea(pos_no.x + mySize.x * 2 - mySize.x * (vote_nocount / vote_needed), pos_no.y, mySize.x, mySize.y);
+		drawsetcliparea(pos_no.x + mySize.x * 2 - mySize.x * (votes_no / votes_needed), pos_no.y, mySize.x, mySize.y);
 		drawpic_skin(pos_no, "voteprogress_prog", tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 

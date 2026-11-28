@@ -86,6 +86,42 @@ int kh_key_dropped, kh_key_carried;
 
 int kh_Key_AllOwnedByWhichTeam();
 
+bool kh_KeyStatuses_SendEntity(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_KH_KEYSTATUSES);
+	WriteByte(MSG_ENTITY, sf);
+	if (sf & SF_KH_KEYS)
+	{
+		entity key;
+		int keys = 0;
+		FOR_EACH_KH_KEY(key)
+			++keys;
+		WriteByte(MSG_ENTITY, keys); // NOTE: should always be == team_count in CSQC, but that updates late (FIXME)
+		FOR_EACH_KH_KEY(key)
+		{
+			if (key.owner) // for each owned key, network the ownership then the team index
+			{
+				WriteByte(MSG_ENTITY, etof(key.owner)); // won't be 0
+				WriteByte(MSG_ENTITY, key.count); // key's actual team. 0 is red, etc.
+			}
+			else // ... otherwise just network 0 to indicate it has no owner
+				WriteByte(MSG_ENTITY, 0);
+		}
+	}
+	return true;
+}
+
+entity keyStatuses;
+void kh_KeyStatuses_Init()
+{
+	if (keyStatuses)
+	{
+		backtrace("Can't spawn keyStatuses again!");
+		return;
+	}
+	Net_LinkEntity(keyStatuses = new_pure(keyStatuses), false, 0, kh_KeyStatuses_SendEntity);
+}
+
 const int ST_KH_CAPS = 1;
 void kh_ScoreRules(int teams)
 {
@@ -122,32 +158,6 @@ bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity
 
 	return !this.owner || !this.owner.owner; // draw only when key is not owned
 }
-
-void kh_update_state()
-{
-	entity key;
-	int f;
-	int s = 0;
-	FOR_EACH_KH_KEY(key)
-	{
-		if(key.owner)
-			f = key.team;
-		else
-			f = 30;
-		s |= (32 ** key.count) * f;
-	}
-
-	FOREACH_CLIENT(true, { STAT(OBJECTIVE_STATUS, it) = s; });
-
-	FOR_EACH_KH_KEY(key)
-	{
-		if(key.owner)
-			STAT(OBJECTIVE_STATUS, key.owner) |= (32 ** key.count) * 31;
-	}
-	//print(ftos((nextent(NULL)).kh_state), "\n");
-}
-
-
 
 
 var kh_Think_t kh_Controller_Thinkfunc;
@@ -264,6 +274,8 @@ void kh_Key_Attach(entity key)  // runs when a player picks up a key and several
 	key.takedamage = DAMAGE_NO;
 	key.modelindex = kh_key_carried;
 	navigation_dynamicgoal_unset(key);
+
+	keyStatuses.SendFlags |= SF_KH_KEYS;
 }
 
 void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs several times times when all the keys are captured
@@ -308,6 +320,8 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	navigation_dynamicgoal_set(key, key.owner);
 	key.previous_owner = key.owner;
 	key.kh_previous_owner_playerid = key.owner.playerid;
+
+	keyStatuses.SendFlags |= SF_KH_KEYS;
 }
 
 void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is picked up or assigned. Runs prior to kh_key_attach
@@ -338,6 +352,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 	}
 
 	key.owner = player;
+	keyStatuses.SendFlags |= SF_KH_KEYS;
 
 	if(player)
 	{
@@ -369,9 +384,6 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 				WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
 		}
 	}
-
-	// moved that here, also update if there's no player
-	kh_update_state();
 
 	key.pusher = NULL;
 
@@ -498,8 +510,6 @@ void kh_Key_Remove(entity key)  // runs after when all the keys have been collec
 	}
 
 	delete(key);
-
-	kh_update_state();
 }
 
 void kh_FinishRound()  // runs when a team captures the keys
@@ -515,6 +525,7 @@ void kh_FinishRound()  // runs when a team captures the keys
 
 	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
+	keyStatuses.SendFlags = SF_KH_RESET;
 }
 
 void nades_GiveBonus(entity player, float score);
@@ -872,7 +883,6 @@ int kh_GetMissingTeams()
 
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
-	static int prev_missing_teams_mask;
 	missing_teams_mask = kh_GetMissingTeams();
 	if(time < game_starttime)
 	{
@@ -886,14 +896,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 	}
 	else
-	{
-		if(player_count != 0)
-		{
-			if(prev_missing_teams_mask != missing_teams_mask)
-				prev_missing_teams_mask = missing_teams_mask;
-		}
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
-	}
 }
 
 void kh_EnableTrackingDevice()  // runs after each round
@@ -998,6 +1001,7 @@ void kh_Initialize()  // sets up th KH environment
 	kh_Controller_SetThink(0, kh_WaitForPlayers);
 
 	kh_ScoreRules(kh_teams);
+	kh_KeyStatuses_Init();
 }
 
 void kh_finalize()

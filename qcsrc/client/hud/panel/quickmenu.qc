@@ -49,7 +49,7 @@ const int QM_PCT_NONE    = 0;
 const int QM_PCT_TOGGLE  = 1;
 const int QM_PCT_KEEP    = 2;
 
-#define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
+#define QuickMenu_Buffer_Set(tag, str) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, str))
 #define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
 
 void QuickMenu_Entry_WithTag(string title, string command, string tag)
@@ -659,7 +659,7 @@ void HUD_QuickMenu(bool should_draw)
 			for (; QuickMenu_Page_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Page_Entries)
 				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Command%d"), QuickMenu_Page_Entries), "-");
 			++QuickMenu_Page_Entries;
-			QuickMenu_Page_ClearEntry(QuickMenu_Page_Entries);
+			QuickMenu_Page_ClearEntry(QUICKMENU_MAXLINES - 1);
 			QuickMenu_IsLastPage = false;
 		}
 	}
@@ -941,7 +941,8 @@ void QuickMenu_Default(string target_submenu)
 #undef QuickMenu_Buffer_Set
 #undef QuickMenu_Buffer_Get
 #undef QUICKMENU_ENTRY
+#undef QUICKMENU_ENTRY_TAG
 #undef QUICKMENU_ENTRY_SPECIAL
 #undef QUICKMENU_SMENU
-#undef QUICKMENU_ENTRY
+#undef QUICKMENU_SMENU_PL
 #undef QUICKMENU_ENTRY_TC

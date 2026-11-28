@@ -138,7 +138,7 @@ float StrafeHUD_DetermineWaterLevel(entity e)
 float StrafeHUD_DetermineFrameTime()
 {
 	static float dt_update = 0;
-	static int dt_time = 0;
+	static float dt_time = 0;
 	static float dt_sum = 0;
 	static float dt = 0;
 	if (csqcplayer_status == CSQCPLAYERSTATUS_PREDICTED && input_timelength > 0)
@@ -247,6 +247,8 @@ float StrafeHUD_DetermineHudAngle(float absolute_wishangle, float absolute_overt
 	//   this angle has to be multiplied by two since the HUD extends in both directions which
 	//   halves the amount it extends in a single direction
 	float range_minangle = max(absolute_wishangle, absolute_overturnangle - absolute_wishangle) * 2;
+	if (range_minangle <= 0)
+		range_minangle = 90; // prevents DivZero errors
 
 	float range_normal = autocvar_hud_panel_strafehud_range;
 	float range_side   = autocvar_hud_panel_strafehud_range_sidestrafe;

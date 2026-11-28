@@ -1,8 +1,8 @@
 #include "timer.qh"
-#include "scoreboard.qh"
 
 #include <client/draw.qh>
 #include <client/hud/panel/racetimer.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/view.qh>
 #include <common/gametypes/_mod.qh>
 

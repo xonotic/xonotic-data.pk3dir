@@ -287,20 +287,22 @@ void StrafeHUD_DrawStrafeArrow(vector origin, float size, vector color, float al
 
 	origin = HUD_Shift(origin);
 	float width  = HUD_ScaleX(size * 2 + connection_width);
+	float half_con_width = HUD_ScaleX(connection_width * 0.5);
 	float height = HUD_ScaleY(size);
+	float y_diff = (flipped ? height : 0);
 	if (flipped)
-		origin.y -= size;
+		origin.y -= height;
 	R_BeginPolygon("", DRAWFLAG_NORMAL, true);
 	if (connection_width > 0)
 	{
-		R_PolygonVertex(origin + (connection_width / 2 * eX) + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
-		R_PolygonVertex(origin - (connection_width / 2 * eX) + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
+		R_PolygonVertex(origin + vec2( half_con_width, y_diff), '0 0 0', color, alpha);
+		R_PolygonVertex(origin + vec2(-half_con_width, y_diff), '0 0 0', color, alpha);
 	}
 	else
-		R_PolygonVertex(origin + (flipped ? height * eY : '0 0 0'), '0 0 0', color, alpha);
+		R_PolygonVertex(origin + vec2(0, y_diff), '0 0 0', color, alpha);
 
-	R_PolygonVertex(origin + (flipped ? '0 0 0' : height * eY) - (width / 2) * eX, '0 0 0', color, alpha);
-	R_PolygonVertex(origin + (flipped ? '0 0 0' : height * eY) + (width / 2) * eX, '0 0 0', color, alpha);
+	R_PolygonVertex(origin + vec2(-width * 0.5, y_diff), '0 0 0', color, alpha);
+	R_PolygonVertex(origin + vec2( width * 0.5, y_diff), '0 0 0', color, alpha);
 	R_EndPolygon();
 }
 
@@ -309,8 +311,10 @@ void StrafeHUD_DrawTextIndicator(
 	string text, float height, vector color, float fadetime, float lasttime,
 	vector pos, float offset_top, float offset_bottom)
 {
+	if (height <= 0 || lasttime <= 0 || fadetime <= 0)
+		return;
 	float time_frac = (time - lasttime) / fadetime;
-	if (height <= 0 || lasttime <= 0 || fadetime <= 0 || time_frac > 1)
+	if (time_frac > 1)
 		return;
 
 	float alpha = cos(time_frac * M_PI_2); // fade non-linear like the physics panel does

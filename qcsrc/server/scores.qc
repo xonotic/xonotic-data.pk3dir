@@ -207,15 +207,18 @@ bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 	int i;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
 	WriteRegistered(Gametypes, MSG_ENTITY, MapInfo_LoadedGametype);
-	string gt_name = "";
+	WriteString(MSG_ENTITY, loaded_gametype_custom_string);
 	if (loaded_gametype_custom_string != "")
-		gt_name = cvar_string(strcat("sv_vote_gametype_", loaded_gametype_custom_string, "_name"));
-	WriteString(MSG_ENTITY, gt_name);
-	FOREACH(Scores, true, {
+	{
+		WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", loaded_gametype_custom_string, "_name")));
+		WriteString(MSG_ENTITY, cvar_string(strcat("sv_vote_gametype_", loaded_gametype_custom_string, "_type")));
+	}
+	FOREACH(Scores, true,
+	{
 		WriteString(MSG_ENTITY, scores_label(it));
 		WriteByte(MSG_ENTITY, scores_flags(it));
 	});
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
+	for (i = 0; i < MAX_TEAMSCORE; ++i)
 	{
 		WriteString(MSG_ENTITY, teamscores_label(i));
 		WriteByte(MSG_ENTITY, teamscores_flags(i));

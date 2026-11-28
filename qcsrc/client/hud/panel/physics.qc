@@ -10,6 +10,7 @@
 void HUD_Physics_Export(int fh)
 {
 	// allow saving cvars that aesthetically change the panel into hud skin files
+	HUD_Write_Cvar("hud_panel_physics_speed_colored");
 	HUD_Write_Cvar("hud_panel_physics_speed_unit_show");
 	HUD_Write_Cvar("hud_panel_physics_speed_max");
 	HUD_Write_Cvar("hud_panel_physics_speed_vertical");
@@ -206,7 +207,7 @@ void HUD_Physics(bool should_draw)
 			speed_text_color = autocvar_hud_progressbar_acceleration_color;
 		else if (autocvar_hud_panel_physics_speed_colored)
 		{
-			float accel_pixels_drawn = accel / accel_max * accel_progressbar_scale * panel_size.x;
+			float accel_pixels_drawn = accel / accel_max * max(1, accel_progressbar_scale) * panel_size.x;
 			// this calculates how wide the accel/decel bar would be (if it were drawn), so that the text is only colored if something shows on the bar
 			// this workaround prevents tiny floating point errors that would otherwise cause the color to flicker
 			// positive means accel, negative means decel
@@ -290,16 +291,25 @@ void HUD_Physics(bool should_draw)
 					peak_offsetX = min(top_speed, max_speed) / max_speed * panel_size.x * 0.5;
 				peak_size.x = floor(panel_size.x * 0.01 + 1.5);
 				peak_size.y = panel_size.y;
-				if (speed_baralign == 2) // draw two peaks, on both sides
+
+				vector pos_offset;
+				pos_offset.z = 0;
+				pos_offset.y = 0;
+			#define DRAW_PEAK() \
+				drawfill(panel_pos + speed_offset + pos_offset, peak_size, \
+					autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL)
+				if (speed_baralign == 2) // draw two peaks, on each side
 				{
-					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x + peak_offsetX - peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-					drawfill(panel_pos + speed_offset + eX * (0.5 * panel_size.x - peak_offsetX + peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+					pos_offset.x = 0.5 * panel_size.x + peak_offsetX - peak_size.x; // right
+					DRAW_PEAK();
+					pos_offset.x = 0.5 * panel_size.x - peak_offsetX; // left
 				}
+				else if (speed_baralign == 1)
+					pos_offset.x = peak_offsetX; // left
 				else
-					drawfill(panel_pos + speed_offset + eX * (peak_offsetX - peak_size.x), peak_size,
-						autocvar_hud_progressbar_speed_color, top_speed_f * autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+					pos_offset.x = peak_offsetX - peak_size.x; // right
+				DRAW_PEAK();
+			#undef DRAW_PEAK
 			}
 		}
 		else

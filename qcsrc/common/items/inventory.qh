@@ -38,6 +38,7 @@ STATIC_INIT(Inventory)
 
 #ifdef CSQC
 #include <client/hud/panel/pickup.qh>
+#include <client/hud/panel/scoreboard/accuracy_items.qh>
 
 Inventory g_inventory;
 
@@ -71,6 +72,7 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
             LOG_DEBUGF("%s: %.0f -> %.0f", it.m_name, prev, next);
         }
     }
+    Scoreboard_ItemStats_UpdateCache();
     return true;
 }
 

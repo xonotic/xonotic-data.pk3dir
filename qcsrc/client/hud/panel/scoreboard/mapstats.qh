@@ -1,0 +1,3 @@
+#pragma once
+
+vector Scoreboard_MapStats_Draw(vector pos, vector rgb, vector bg_size);

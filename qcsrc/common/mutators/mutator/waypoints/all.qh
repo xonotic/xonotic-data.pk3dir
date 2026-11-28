@@ -33,7 +33,13 @@ REGISTER_REGISTRY(RadarIcons)
 REGISTRY_CHECK(RadarIcons)
 
 .int m_radaricon;
-#define REGISTER_RADARICON(id, num) REGISTER(RadarIcons, RADARICON, id, m_id, new_pure(RadarIcon)) { this.m_radaricon = num; this.netname = #id; }
+#define REGISTER_RADARICON(id, num) \
+	REGISTER(RadarIcons, RADARICON, id, m_id, new_pure(RadarIcon)) \
+	{ \
+		this.m_radaricon = num; \
+		this.m_icon = strzone(strcat("gfx/teamradar_icon_", itos(num))); \
+		this.netname = #id; \
+	}
 
 REGISTER_WAYPOINT(Null, "", "", '0 0 0', 1);
 REGISTRY_DEFINE_GET(Waypoints, WP_Null)
