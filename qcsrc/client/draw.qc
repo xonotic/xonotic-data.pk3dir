@@ -58,6 +58,14 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 	return boxsize * (0.5 * (1 - sz));
 }
 
+vector draw_getimagesize_skin(string pic)
+{
+	_drawpic_picpath = strcat(hud_skin_path, "/", pic);
+	if (precache_pic(_drawpic_picpath) == "")
+		_drawpic_picpath = strcat("gfx/hud/default/", pic);
+	return draw_getimagesize(_drawpic_picpath);
+}
+
 void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp)
 {
 	float sz = expandingbox_sizefactor_from_fadelerp(fadelerp);

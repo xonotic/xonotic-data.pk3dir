@@ -3,7 +3,7 @@
 #include <client/draw.qh>
 #include <client/hud/hud.qh>
 #include <client/hud/panel/chat.qh>
-#include <client/hud/panel/scoreboard.qh>
+#include <client/hud/panel/scoreboard/scoreboard.qh>
 #include <client/view.qh>
 
 // Save the config
