@@ -11,7 +11,7 @@ void flipflop_use(entity this, entity actor, entity trigger)
 
     this.state = !this.state;
     if(this.state)
-        SUB_UseTargets(this, actor, trigger);
+        SUB_UseTargets(this, actor);
 }
 
 spawnfunc(trigger_flipflop)

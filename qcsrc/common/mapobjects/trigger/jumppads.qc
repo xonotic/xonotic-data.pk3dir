@@ -414,7 +414,7 @@ bool jumppad_push(entity this, entity targ, bool is_velocity_pad)
 	}
 
 	if(this.enemy.target)
-		SUB_UseTargets(this.enemy, targ, this);
+		SUB_UseTargets(this.enemy, targ);
 
 	if (targ.flags & FL_PROJECTILE)
 	{
@@ -850,7 +850,7 @@ spawnfunc(trigger_push)
 {
 	SetMovedir(this);
 
-	WarpZoneLib_ExactTrigger_Init(this, false);
+	WarpZoneLib_ExactTrigger_Init(this, false, true);
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;
@@ -882,7 +882,7 @@ spawnfunc(trigger_push)
  */
 spawnfunc(trigger_push_velocity)
 {
-	WarpZoneLib_ExactTrigger_Init(this, false);
+	WarpZoneLib_ExactTrigger_Init(this, false, true);
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;

@@ -79,22 +79,20 @@ spawnfunc(func_rotating)
 
 	this.pos1 = this.avelocity;
 
-    if(this.dmg && (this.message == ""))
-        this.message = " was squished";
-    if(this.dmg && (this.message2 == ""))
+	if(this.dmg && (this.message == ""))
+		this.message = " was squished";
+	if(this.dmg && (this.message2 == ""))
 		this.message2 = "was squished by";
 
-
-    if(this.dmg && (!this.dmgtime))
-        this.dmgtime = 0.25;
-
-    this.dmgtime2 = time;
+	if(this.dmg && (!this.dmgtime))
+		this.dmgtime = 0.25;
 
 	if (!InitMovingBrushTrigger(this))
 		return;
+	SetBrushEntityModel2(this); // TODO: when CSQC movers are enabled move model2 ents to CSQC
 	// no EF_LOWPRECISION here, as rounding angles is bad
 
-    setblocked(this, generic_plat_blocked);
+	setblocked(this, generic_plat_blocked);
 
 	// wait for targets to spawn
 	this.nextthink = this.ltime + 999999999;

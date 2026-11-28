@@ -60,8 +60,8 @@ spawnfunc(func_plat)
 {
 	if (q3compat)
 	{
-		this.spawnflags = 0; // Q3 plats have no spawnflags
-		if (!this.dmg) this.dmg = 2;
+		this.spawnflags &= CRUSH; // Q3 plats have only this undocumented spawnflag
+		G_SpawnFloat("dmg", 2, this, dmg); // explicit 0 is supported
 	}
 	else if (this.spawnflags & CRUSH)
 	{
@@ -85,7 +85,7 @@ spawnfunc(func_plat)
 
 	if (this.sounds == 2 || q3compat)
 	{
-		// Plats in Q3 always have sounds (they're hard coded in Q3 engine)
+		// Plats in Q3 always have sounds (they're hard coded)
 		this.noise = "plats/medplat1.wav";
 		this.noise1 = "plats/medplat2.wav";
 	}
@@ -138,13 +138,14 @@ spawnfunc(func_plat)
 	this.draggable = drag_undraggable;
 	if (!InitMovingBrushTrigger(this))
 		return;
+	SetBrushEntityModel2(this); // TODO: when CSQC movers are enabled move model2 ents to CSQC
 	this.effects |= EF_LOWPRECISION;
 	setsize (this, this.mins , this.maxs);
 
-	setblocked(this, plat_crush);
+	setblocked(this, plat_blocked);
 
+	G_SpawnFloat("lip", (q3compat ? 8 : 16), this, lip); // explicit 0 is supported
 	if (!this.speed) this.speed = q3compat ? 200 : 150;
-	if (!this.lip) this.lip = q3compat ? 8 : 16;
 	if (!this.height) this.height = this.size.z - this.lip;
 
 	this.pos1 = this.origin;

@@ -178,7 +178,7 @@ void target_init_use(entity this, entity actor, entity trigger)
 		// We don't have holdables.
 	}
 
-	SUB_UseTargets(this, actor, trigger);
+	SUB_UseTargets(this, actor);
 }
 
 spawnfunc(target_init)
@@ -217,7 +217,7 @@ void fragsfilter_use(entity this, entity actor, entity trigger)
 			actor.fragsfilter_cnt = 0;
 		else if(this.spawnflags & FRAGSFILTER_REMOVER)
 			actor.fragsfilter_cnt -= this.frags;
-		SUB_UseTargets(this, actor, trigger);
+		SUB_UseTargets(this, actor);
 	}
 	else if(!(this.spawnflags & FRAGSFILTER_SILENT))
 	{
