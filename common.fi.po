@@ -8625,6 +8625,8 @@ msgid ""
 "The %s supercharges then fires a massive fireball in a straight line, "
 "dealing heaps of splash damage over a large radius on impact."
 msgstr ""
+"%s superlatautuu, sitten laukoo massiivisen tulipallon suorana viivana "
+"tehden osutessa paljon roiskevahinkoa suurelle alalle."
 
 #: qcsrc/common/weapons/weapon/fireball.qc:402
 msgid ""
@@ -8772,6 +8774,9 @@ msgid ""
 "around the map at high speeds, making both surprise ambushes and miraculous "
 "escapes possible."
 msgstr ""
+"%s sallii päästä aiemmin pääsemättömiin paikkoihin kartalla ja suhahtaa "
+"pitkin kartaa pikavauhdilla, mikä mahdollistaa sekä väijytykset että "
+"ihmepaot."
 
 #: qcsrc/common/weapons/weapon/hook.qc:402
 #, c-format
@@ -8886,6 +8891,10 @@ msgid ""
 "exploding, it can be bounced against walls to damage enemies lurking around "
 "a corner."
 msgstr ""
+"%s toimii parhaiten lähi- ja keskimatkoilla, mutta sillä on aika hankala "
+"osua ilmassa olevaan viholliseen. Toissijaisen tulituksen kranaatit "
+"kimpoavat ennen räjähtämistä, joten niillä voi vahingoittaa vihollisia "
+"kulmien takaa seinistä kimmottamalla."
 
 #: qcsrc/common/weapons/weapon/mortar.qh:35
 msgid "Mortar"
@@ -8935,6 +8944,8 @@ msgid ""
 "The %s fires bullets that traverse the map instantaneously and deal a "
 "significant chunk of damage on impact."
 msgstr ""
+"%s tulittaa luoteja, jotka kulkevat kartalla välittömästi ja tekevät "
+"huomattavaa vahinkoa osuessaan."
 
 #: qcsrc/common/weapons/weapon/rifle.qc:250
 msgid ""
@@ -9066,11 +9077,14 @@ msgid ""
 "Since your enemies need to be close by to hear your rubbish music, the %s is "
 "only effective at very close ranges."
 msgstr ""
+"Koska vihollistesi pitää olla lähellä kuullakseen roskamusiikkiasi, %s on "
+"tehokas vain hyvin läheltä."
 
 #: qcsrc/common/weapons/weapon/tuba.qc:608
 #, c-format
 msgid "The pitch the %s plays depends on the movement keys pressed."
 msgstr ""
+"Sävelkorkeus, jonka %s soittaa, riippuu painetuista liikkumispainikkeista."
 
 #: qcsrc/common/weapons/weapon/tuba.qh:39
 #, no-c-format
@@ -9574,7 +9588,7 @@ msgstr "Mukautettu"
 #: qcsrc/menu/menu.qc:520
 #, c-format
 msgid "^3%s^7 not equal to \"%s\""
-msgstr ""
+msgstr "^3%s^7 on erisuuri kuin \"%s\""
 
 #: qcsrc/menu/menu.qc:525
 #, c-format
@@ -9734,7 +9748,7 @@ msgstr "Ranska"
 
 #: qcsrc/menu/xonotic/credits.qc:288
 msgid "Galician"
-msgstr ""
+msgstr "Galicia"
 
 #: qcsrc/menu/xonotic/credits.qc:292
 msgid "German"
@@ -11115,6 +11129,8 @@ msgstr "Botit vastaan ihmiset"
 msgid ""
 "Force humans to play on the same team against an equal-sized team of bots"
 msgstr ""
+"Pakota ihmiset pelaamaan samalla joukkueella yhtä suurta bottijoukkuetta "
+"vastaan."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:158
 msgid "Maplist"
@@ -11574,7 +11590,7 @@ msgstr "Rajatun hiekkalaatikoinnin työkalut"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:16
 msgid "Graphics"
-msgstr ""
+msgstr "Grafiikat"
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:17
 msgid "Game"
@@ -11598,7 +11614,7 @@ msgstr "Muuta peliasetuksia"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:29
 msgid "Volume"
-msgstr ""
+msgstr "Äänenvoimakkuus"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:32
 msgid "Master:"
@@ -11650,7 +11666,7 @@ msgstr "Mykistä äänet ikkunan ollessa passiivinen"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:108
 msgid "Sound Settings"
-msgstr ""
+msgstr "Ääniasetukset"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:110
 msgid "Frequency:"
@@ -12323,11 +12339,11 @@ msgstr "Oikea tasaus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:94
 msgid "Swaying"
-msgstr ""
+msgstr "Keinuminen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:98
 msgid "Bobbing"
-msgstr ""
+msgstr "Keikkuminen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:111
 msgid "Apply team colors to weapon beam effects:"
@@ -12563,7 +12579,7 @@ msgstr "Partikkeleita ei piirretä tätä kauempana"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:42
 msgid "Realtime"
-msgstr ""
+msgstr "Tosiaika"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qc:44
 msgid "Corona brightness:"
@@ -12663,7 +12679,7 @@ msgstr "Ota käyttöön tuettuja hohtokarttoja niitä tukevissa tekstuureissa"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_lighting.qh:7
 msgid "Lighting"
-msgstr ""
+msgstr "Valaistus"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_perspective.qc:24
 #: qcsrc/menu/xonotic/dialog_settings_graphics_perspective.qh:7
@@ -12717,7 +12733,7 @@ msgstr "Salli seinien läpi kulkeminen katsojana"
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:27
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qh:7
 msgid "Rendering"
-msgstr ""
+msgstr "Renderöinti"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_rendering.qc:29
 msgid "Brightness:"
@@ -13001,7 +13017,7 @@ msgstr "Näytön tarkkuus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_video.qc:52
 msgid "Display:"
-msgstr ""
+msgstr "Näyttö:"
 
 #: qcsrc/menu/xonotic/dialog_settings_graphics_video.qc:56
 msgid "Font/UI size:"
@@ -13177,11 +13193,11 @@ msgstr "Kiihtyvyyden kerroin:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:118
 msgid "MOUSEACCEL^Fully disabled"
-msgstr ""
+msgstr "Kokonaan pois käytöstä"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:119
 msgid "MOUSEACCEL^Linear disabled"
-msgstr ""
+msgstr "Lineaarisesti pois käytöstä"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:124
 msgid "Speed bounds:"
@@ -14405,7 +14421,7 @@ msgstr "Monia hauskoja muutoksia fysiikkaan ja liikkumiseen."
 
 #: qcsrc/menu/xonotic/mutatortab.qc:477
 msgid "Dynamic respawn time"
-msgstr ""
+msgstr "Dynaaminen jälleensyntymisaika"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:480 qcsrc/menu/xonotic/mutatortab.qc:494
 #: qcsrc/menu/xonotic/mutatortab.qc:500
@@ -14416,16 +14432,16 @@ msgstr ""
 #: qcsrc/menu/xonotic/mutatortab.qc:480 qcsrc/menu/xonotic/mutatortab.qc:500
 #, c-format
 msgid "Maximum multiplier"
-msgstr ""
+msgstr "Enimmäiskerroin"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:486
 msgid "Dynamic handicap"
-msgstr ""
+msgstr "Dynaaminen tasoitus"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:494
 #, c-format
 msgid "Minimum multiplier"
-msgstr ""
+msgstr "Vähimmäiskerroin"
 
 #: qcsrc/menu/xonotic/mutatortab.qc:496
 msgid "Values less than 1 buff players with low scores"
@@ -14453,7 +14469,7 @@ msgstr "Mukautetut fysiikat"
 
 #: qcsrc/menu/xonotic/mutatortab.qh:83
 msgid "Dynamic balancing"
-msgstr ""
+msgstr "Dynaaminen tasapainotus"
 
 #: qcsrc/menu/xonotic/playerlist.qc:114
 msgid "spectator"
@@ -14586,7 +14602,7 @@ msgstr "%s dB"
 
 #: qcsrc/menu/xonotic/slider_display.qc:12
 msgid "Display number"
-msgstr ""
+msgstr "Näytön numero"
 
 #: qcsrc/menu/xonotic/slider_picmip.qc:12
 msgid ""
