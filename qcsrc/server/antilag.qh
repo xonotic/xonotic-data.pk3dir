@@ -4,6 +4,39 @@
 
 int autocvar_g_antilag;
 float autocvar_g_antilag_nudge;
+int autocvar_g_antilag_inputtime;
+float autocvar_sv_clmovement_inputtimeout; // engine cvar
+// All antilag_input_* fields are on CS(client). They're written for every real client
+// regardless of g_antilag_inputtime (pure bookkeeping, nothing reads them with the cvar 0),
+// so flipping the cvar never sees stale state.
+// server time (== engine receivetime) of the newest genuinely new move, 0 = none yet
+.float antilag_input_recv;
+.float antilag_input_ping; // ping (ms) of that move, so recv - ping*0.001 == its client cmd.time
+// that move was executed asynchronously (clmovement, SV_ExecuteClientMoves)
+.bool antilag_input_async;
+.bool antilag_input_atk_raw; // raw button0 of the previous apply (for antilag_input_isnew)
+// true between StartFrame and EndFrame: a move applied then comes from the engine's
+// synchronous path (sv_phys.c SV_Physics_ClientEntity_PreThink), which re-applies
+// host_client->cmd every frame in sync mode (vehicles, cl_movement 0, sv_clmovement_minping)
+// and after sv_clmovement_inputtimeout expires
+bool antilag_inframe;
+bool antilag_input_isnew(entity this, entity store);
+void antilag_input_update(entity this, entity store, bool isnew, bool prev_atk);
+float antilag_latency(entity e);
+int autocvar_g_antilag_taplatch;
+// g_antilag_taplatch (bug #2b), on CS(client): the first fire press (button0 0 -> 1) among
+// the moves applied since the last EndFrame, with its aim and time, for a press the frame's
+// last move already released
+.bool antilag_tap_pending;
+// secondary fire or hook held in a move of this frame (blocks the aim swap)
+.bool antilag_tap_other;
+.vector antilag_tap_va;
+.float antilag_tap_recv, antilag_tap_ping;
+.bool antilag_tap_active, antilag_tap_va_swapped, antilag_tap_saved_atk;
+.vector antilag_tap_saved_va, antilag_tap_va_set;
+.float antilag_tap_saved_recv, antilag_tap_saved_ping;
+void antilag_tap_begin(entity this);
+void antilag_tap_end(entity this);
 
 void antilag_record(entity e, entity store, float t);
 vector antilag_takebackorigin(entity e, entity store, float t);
@@ -18,7 +51,9 @@ float antilag_getlag(entity e); // returns antilag latency for clients, plus any
 
 .float antilag_debug;
 
-#define ANTILAG_LATENCY(e) min(0.4, CS(e).ping * 0.001)
+#define ANTILAG_LATENCY_PING(e) min(0.4, CS(e).ping * 0.001)
+// with g_antilag_inputtime: ping + age of the client move whose aim is in use (see antilag_latency)
+#define ANTILAG_LATENCY(e) antilag_latency(e)
 // add one ticrate?
 
 

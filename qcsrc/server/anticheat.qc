@@ -243,7 +243,7 @@ void anticheat_startframe()
 
 void anticheat_fixangle(entity this)
 {
-	CS(this).anticheat_fixangle_endtime = servertime + ANTILAG_LATENCY(this) + 0.2;
+	CS(this).anticheat_fixangle_endtime = servertime + ANTILAG_LATENCY_PING(this) + 0.2;
 }
 
 void anticheat_endframe()

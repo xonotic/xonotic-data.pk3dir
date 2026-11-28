@@ -2475,6 +2475,9 @@ void Physics_Frame()
 void systems_update();
 void EndFrame()
 {
+	// moves applied from now until StartFrame come from SV_ExecuteClientMoves (async)
+	antilag_inframe = false;
+
 	anticheat_endframe();
 
 	Physics_Frame();
@@ -2510,6 +2513,9 @@ void EndFrame()
 			it.maxs.z = max(h, it.mins.z + 1);
 			setsize(it, it.mins, it.maxs);
 		}
+		// the bug #2b latch only spans the moves of one server frame
+		CS(it).antilag_tap_pending = false;
+		CS(it).antilag_tap_other = false;
 	});
 	IL_EACH(g_monsters, true,
 	{

@@ -5,6 +5,7 @@
 #include <common/stats.qh>
 #include <common/vehicles/all.qh>
 #include <common/weapons/_all.qh>
+.float warpzone_teleport_time; // declared in lib/warpzone/server.qc; read by antilag_tap_begin
 #include <server/antilag.qh>
 #include <server/weapons/common.qh>
 
@@ -145,6 +146,129 @@ void antilag_restore_all(entity ignore)
 	{
 		antilag_restore(it, it);
 	});
+}
+
+// Is the move PM_UpdateButtons is copying a genuinely new client move, or the engine
+// re-applying the old host_client->cmd? Called before the copy, so store still holds the
+// previous apply.
+//  - async (clmovement, outside StartFrame..EndFrame, from SV_ExecuteClientMoves): always a
+//    new move, except the second half of a > 50ms move split (same time, same cmd)
+//  - in-frame (sync path, SV_Physics_ClientEntity_PreThink): SV_ApplyClientMove re-applies
+//    the same cmd every frame. The engine only writes a new ping when it reads a move
+//    (sv_user.c SV_ExecuteClientMoves), so any change in ping/aim/movement/attack means a
+//    new move. If nothing changed:
+//    - the newest new move came in async: this is the clmovement input timeout
+//      (sv_phys.c SV_Physics_ClientEntity_PreThink) re-applying it
+//    - pure sync mode (vehicles, cl_movement 0, sv_clmovement_minping): a new packet
+//      identical in all of these (still player, steady lag) can't be told apart from a
+//      re-apply, so it's only treated as one for up to sv_clmovement_inputtimeout, which
+//      bounds the age that can be wrongly added
+bool antilag_input_isnew(entity this, entity store)
+{
+	bool same = (this.ping == store.ping
+		&& this.v_angle == store.v_angle
+		&& this.movement == store.movement
+		&& boolean(this.button0) == store.antilag_input_atk_raw);
+	if (!antilag_inframe)
+		return !(same && store.antilag_input_recv == time);
+	if (!same)
+		return true;
+	if (store.antilag_input_async)
+		return false;
+	return (time - store.antilag_input_recv >= autocvar_sv_clmovement_inputtimeout);
+}
+
+// bookkeeping for g_antilag_inputtime, written regardless of the cvar and read only when it is set
+void antilag_input_update(entity this, entity store, bool isnew, bool prev_atk)
+{
+	store.antilag_input_atk_raw = boolean(this.button0);
+	if (!isnew)
+		return; // recv/ping keep describing the move whose aim is still in the edict fields
+	store.antilag_input_recv = time; // QC time == sv.time == this move's receivetime for a new move
+	store.antilag_input_ping = this.ping;
+	store.antilag_input_async = !antilag_inframe;
+	// secondary fire / hook used in this frame's moves: the offhand and secondary code also
+	// runs inside W_WeaponFrame and reads v_angle, so the press aim must not be swapped in
+	// for them (see antilag_tap_begin)
+	if (store.button3 || store.button6)
+		store.antilag_tap_other = true;
+	// bug #2b: weapons only see the last move of a frame. Latch the first fire press and its
+	// aim so the per-frame W_WeaponFrame can use it even if a later move in the same frame
+	// released it. prev_atk is the raw button of the previous apply: QC code that clears
+	// CS(this).button0 after the copy (vehicle physplugs) must not make every held-fire move
+	// look like a new press. Never latch in vehicles.
+	if (store.button0 && !prev_atk && !store.antilag_tap_pending && !this.vehicle)
+	{
+		store.antilag_tap_pending = true;
+		store.antilag_tap_va = this.v_angle;
+		store.antilag_tap_recv = time;
+		store.antilag_tap_ping = this.ping;
+	}
+}
+
+
+// around the per-frame W_WeaponFrame loop (PlayerThink, frametime != 0), only with
+// g_antilag_taplatch and a pending latch whose press the last move already released
+void antilag_tap_begin(entity this)
+{
+	entity s = CS(this);
+	s.antilag_tap_active = true;
+	s.antilag_tap_saved_atk = s.button0;
+	s.button0 = 1; // the press is never lost, even when its aim and time can't be used
+	s.antilag_tap_saved_va = this.v_angle;
+	s.antilag_tap_saved_recv = s.antilag_input_recv;
+	s.antilag_tap_saved_ping = s.antilag_input_ping;
+	// Use the press move's aim AND time (always together, so aim and rewind never mismatch)
+	// only if:
+	//  - nothing adjusted v_angle since the last apply (WarpZone_PlayerPhysics_FixVAngle,
+	//    fixangle locks)
+	//  - the press move isn't inside the warpzone v_angle fixup window (its raw aim lacks
+	//    that transform)
+	//  - no secondary fire / hook was used in this frame's moves (offhand code in
+	//    W_WeaponFrame reads v_angle)
+	// Otherwise fire with the last move's aim and time, which are consistent with each other.
+	s.antilag_tap_va_swapped = (this.v_angle == s.v_angle
+		&& !s.antilag_tap_other
+		&& s.antilag_tap_recv - s.antilag_tap_ping * 0.001 >= this.warpzone_teleport_time);
+	if (s.antilag_tap_va_swapped)
+	{
+		this.v_angle = s.antilag_tap_va;
+		// antilag_latency() now rewinds to the press move's cmd.time
+		s.antilag_input_recv = s.antilag_tap_recv;
+		s.antilag_input_ping = s.antilag_tap_ping;
+	}
+	s.antilag_tap_va_set = this.v_angle;
+}
+
+void antilag_tap_end(entity this)
+{
+	entity s = CS(this);
+	if (!s.antilag_tap_active)
+		return;
+	// keep anything the weapon frame itself changed
+	if (s.button0 == 1)
+		s.button0 = s.antilag_tap_saved_atk;
+	if (s.antilag_tap_va_swapped && this.v_angle == s.antilag_tap_va_set)
+		this.v_angle = s.antilag_tap_saved_va;
+	s.antilag_input_recv = s.antilag_tap_saved_recv;
+	s.antilag_input_ping = s.antilag_tap_saved_ping;
+	s.antilag_tap_active = false;
+	s.antilag_tap_pending = false;
+}
+
+float antilag_latency(entity e)
+{
+	if (autocvar_g_antilag_inputtime && IS_REAL_CLIENT(e))
+	{
+		entity s = CS(e);
+		// antilag_input_recv/ping belong to the newest genuinely new move (see
+		// antilag_input_isnew), i.e. the move whose aim is in v_angle. The age term grows on
+		// frames where the engine got no new move, including the sync path (vehicles,
+		// cl_movement 0) and input-timeout re-applies of the old cmd.
+		if (s.antilag_input_recv)
+			return min(0.4, max(0, time - s.antilag_input_recv) + s.antilag_input_ping * 0.001);
+	}
+	return ANTILAG_LATENCY_PING(e);
 }
 
 float antilag_getlag(entity e)
