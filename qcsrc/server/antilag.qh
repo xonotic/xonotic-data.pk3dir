@@ -3,9 +3,11 @@
 #include <lib/warpzone/common.qh>
 
 int autocvar_g_antilag;
+bool autocvar_g_antilag_bbox;
 float autocvar_g_antilag_nudge;
 
 void antilag_record(entity e, entity store, float t);
+void antilag_record_size(entity e, entity store, float t);
 vector antilag_takebackorigin(entity e, entity store, float t);
 void antilag_takeback(entity e, entity store, float t);
 void antilag_restore(entity e, entity store);
