@@ -72,6 +72,12 @@ vector vsnap(vector point, float fsize)
 }
 
 ERASEABLE
+float smoothstep(float f)
+{
+	return f * f * (3 - 2 * f);
+}
+
+ERASEABLE
 float lerpratio(float f0, float f1, float ratio)
 {
 	return f0 * (1 - ratio) + f1 * ratio;

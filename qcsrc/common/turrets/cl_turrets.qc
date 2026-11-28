@@ -18,7 +18,6 @@ void turret_changeteam(entity this)
 
 	this.tur_head.colormap = this.colormap;
 	this.tur_head.glowmod = this.glowmod;
-
 }
 
 // unused?
@@ -39,7 +38,6 @@ void turret_draw(entity this)
 	if (GetResource(this, RES_HEALTH) < 127)
 	{
 		dt = random();
-
 		if (dt < 0.03)
 			te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 	}
@@ -56,6 +54,7 @@ void turret_draw(entity this)
 
 void turret_draw2d(entity this)
 {
+	// NOTE: similar to Draw_WaypointSprite
 	if (this.netname == "")
 		return;
 	if (!autocvar_g_waypointsprite_turrets || autocvar_cl_hidewaypoints)
@@ -141,7 +140,6 @@ void turret_draw2d(entity this)
 	||  o.x > vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)
 	||  o.y > vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom))
 		return; // Dont draw wp's for turrets out of view
-
 	o.z = 0;
 
 	float edgedistance_min = min(
@@ -153,22 +151,21 @@ void turret_draw2d(entity this)
 
 	float crosshairdistance = sqrt((o.x - vid_conwidth * 0.5) ** 2 + (o.y - vid_conheight * 0.5) ** 2);
 
-	t = waypointsprite_scale;
 	a *= waypointsprite_alpha;
-
+	t = waypointsprite_scale;
 	{
-		a *= 1 - (1 - waypointsprite_distancefadealpha) * (bound(0, dist / waypointsprite_distancefadedistance, 1));
-		t *= 1 - (1 - waypointsprite_distancefadescale) * (bound(0, dist / waypointsprite_distancefadedistance, 1));
+		a *= 1 - (1 - waypointsprite_distancefadealpha) * smoothstep(bound(0, dist / waypointsprite_distancefadedistance, 1));
+		t *= 1 - (1 - waypointsprite_distancefadescale) * smoothstep(bound(0, dist / waypointsprite_distancefadedistance, 1));
 	}
 	if (edgedistance_min < waypointsprite_edgefadedistance)
 	{
-		a *= 1 - (1 - waypointsprite_edgefadealpha) * (1 - bound(0, edgedistance_min / waypointsprite_edgefadedistance, 1));
-		t *= 1 - (1 - waypointsprite_edgefadescale) * (1 - bound(0, edgedistance_min / waypointsprite_edgefadedistance, 1));
+		a *= 1 - (1 - waypointsprite_edgefadealpha) * (1 - smoothstep(bound(0, edgedistance_min / waypointsprite_edgefadedistance, 1)));
+		t *= 1 - (1 - waypointsprite_edgefadescale) * (1 - smoothstep(bound(0, edgedistance_min / waypointsprite_edgefadedistance, 1)));
 	}
 	if (crosshairdistance < waypointsprite_crosshairfadedistance)
 	{
-		a *= 1 - (1 - waypointsprite_crosshairfadealpha) * (1 - bound(0, crosshairdistance / waypointsprite_crosshairfadedistance, 1));
-		t *= 1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance / waypointsprite_crosshairfadedistance, 1));
+		a *= 1 - (1 - waypointsprite_crosshairfadealpha) * (1 - smoothstep(bound(0, crosshairdistance / waypointsprite_crosshairfadedistance, 1)));
+		t *= 1 - (1 - waypointsprite_crosshairfadescale) * (1 - smoothstep(bound(0, crosshairdistance / waypointsprite_crosshairfadedistance, 1)));
 	}
 
 	bool draw_healthbar = ((this.helpme && time < this.helpme) || !autocvar_g_waypointsprite_turrets_onlyhurt || hud != HUD_NORMAL);

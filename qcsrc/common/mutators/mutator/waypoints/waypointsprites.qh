@@ -1,12 +1,12 @@
 #pragma once
 
+#ifdef GAMEQC
 #include "all.qh"
 
-/** Additional networked waypoint state, used for items, weapons, buffs */
-.int wp_extra;
+.int wp_extra; ///< Additional networked waypoint state, used for items, weapons, buffs
 
-const int SPRITERULE_DEFAULT = 0;
-const int SPRITERULE_TEAMPLAY = 1;
+const int SPRITERULE_DEFAULT   = 0;
+const int SPRITERULE_TEAMPLAY  = 1;
 const int SPRITERULE_SPECTATOR = 2;
 
 #ifdef CSQC
@@ -44,6 +44,7 @@ float autocvar_g_waypointsprite_edgeoffset_bottom;
 float autocvar_g_waypointsprite_edgeoffset_left;
 float autocvar_g_waypointsprite_edgeoffset_right;
 float autocvar_g_waypointsprite_edgeoffset_top;
+float autocvar_g_waypointsprite_edgesmooth = 0.5;
 float autocvar_g_waypointsprite_fontsize;
 int autocvar_g_waypointsprite_itemstime;
 float autocvar_g_waypointsprite_minalpha;
@@ -101,10 +102,8 @@ void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, f
 
 void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f);
 
-// returns location of sprite text
 vector drawspritearrow(vector o, float ang, vector rgb, float a, float t);
 
-// returns location of sprite healthbar
 vector drawsprite_TextOrIcon(bool is_text, vector o, float ang, float minwidth, vector rgb, float a, vector sz, string str);
 
 float spritelookupblinkvalue(entity this, string s);
@@ -116,16 +115,12 @@ vector fixrgbexcess(vector rgb);
 
 // they are drawn using a .draw function
 
-void Ent_RemoveWaypointSprite(entity this);
-
-void Ent_WaypointSprite(entity this, bool isnew);
-
 void WaypointSprite_Load_Frames(string ext);
 
 void WaypointSprite_Load();
 .float alpha;
 void Draw_WaypointSprite(entity this);
-#endif
+#endif // CSQC
 
 #ifdef SVQC
 .entity sprite;
@@ -143,15 +138,10 @@ float autocvar_sv_waypointsprite_limitedrange;
 .bool(entity, entity, entity) waypointsprite_visible_for_player;
 
 void WaypointSprite_UpdateSprites(entity e, entity m1, entity m2, entity m3);
-
 void WaypointSprite_UpdateHealth(entity e, float f);
-
 void WaypointSprite_UpdateMaxHealth(entity e, float f);
-
 void WaypointSprite_UpdateBuildFinished(entity e, float f);
-
 void WaypointSprite_UpdateOrigin(entity e, vector o);
-
 void WaypointSprite_UpdateRule(entity e, float t, float r);
 
 void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col);
@@ -182,67 +172,65 @@ float WaypointSprite_isteammate(entity e, entity e2);
 
 bool WaypointSprite_Customize(entity this, entity client);
 
-bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
-
 void WaypointSprite_Reset(entity this);
 
 entity WaypointSprite_Spawn(
-    entity spr, // sprite
-    float lifetime, float maxdistance, // lifetime, max distance
-    entity ref, vector ofs, // position
-    entity showto, float t, // show to whom? Use a flag to indicate a team
-    entity own, .entity ownfield, // remove when own gets killed
-    float hideable, // true when it should be controlled by cl_hidewaypoints
-    entity icon // initial icon
+	entity spr, // sprite
+	float lifetime, float maxdistance, // lifetime, max distance
+	entity ref, vector ofs, // position
+	entity showto, float t, // show to whom? Use a flag to indicate a team
+	entity own, .entity ownfield, // remove when own gets killed
+	float hideable, // true when it should be controlled by cl_hidewaypoints
+	entity icon // initial icon
 );
 
 entity WaypointSprite_SpawnFixed(
-    entity spr,
-    vector ofs,
-    entity own,
-    .entity ownfield,
-    entity icon // initial icon
+	entity spr,
+	vector ofs,
+	entity own,
+	.entity ownfield,
+	entity icon // initial icon
 );
 
 .entity waypointsprite_deployed_fixed;
 entity WaypointSprite_DeployFixed(
-    entity spr,
-    bool limited_range,
-    entity player,
-    vector ofs,
-    entity icon // initial icon
+	entity spr,
+	bool limited_range,
+	entity player,
+	vector ofs,
+	entity icon // initial icon
 );
 
 .entity waypointsprite_deployed_personal;
 entity WaypointSprite_DeployPersonal(
-    entity spr,
-    entity player,
-    vector ofs,
-    entity icon // initial icon
+	entity spr,
+	entity player,
+	vector ofs,
+	entity icon // initial icon
 );
 
 .entity waypointsprite_attached;
 .entity waypointsprite_attachedforcarrier;
 entity WaypointSprite_Attach(
-    entity spr,
-    entity player,
-    bool limited_range,
-    entity icon // initial icon
+	entity spr,
+	entity player,
+	bool limited_range,
+	entity icon // initial icon
 );
 
 entity WaypointSprite_AttachCarrier(
-    entity spr,
-    entity carrier,
-    entity icon // initial icon
+	entity spr,
+	entity carrier,
+	entity icon // initial icon
 );
 
 void WaypointSprite_DetachCarrier(entity carrier);
 
 void WaypointSprite_ClearPersonal(entity this);
-
 void WaypointSprite_ClearOwned(entity this);
 
 void WaypointSprite_PlayerDead(entity this);
-
 void WaypointSprite_PlayerGone(entity this);
-#endif
+#endif // SVQC
+
+#endif // GAMEQC
